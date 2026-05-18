@@ -116,6 +116,10 @@ def main():
                         help="Preset da API: last_7d, last_14d, last_30d, last_60d")
     parser.add_argument("--output", default="diagnostico",
                         help="Tipo de output: diagnostico, performance, criativos, etc.")
+    parser.add_argument("--status", default="ACTIVE,PAUSED,WITH_ISSUES",
+                        help="Lista de effective_status separados por virgula. "
+                             "Valores: ACTIVE, PAUSED, WITH_ISSUES, ARCHIVED, DELETED. "
+                             "Default ACTIVE,PAUSED,WITH_ISSUES (visao do presente sem arquivadas).")
     parser.add_argument("--cache-dir", default="skill-analise/cache")
     parser.add_argument("--force", action="store_true",
                         help="Ignora cache e busca da API mesmo que cache exista")
@@ -126,9 +130,19 @@ def main():
     cache_dir = project_root / args.cache_dir
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    # Nome do arquivo de cache
+    # Parsear status e montar slug curto pro cache (ex: "ACTIVE,PAUSED" -> "ap")
+    status_list = [s.strip().upper() for s in args.status.split(",") if s.strip()]
+    status_valid = {"ACTIVE", "PAUSED", "WITH_ISSUES", "ARCHIVED", "DELETED"}
+    status_list = [s for s in status_list if s in status_valid]
+    if not status_list:
+        err(f"--status invalido: {args.status}. Use ACTIVE, PAUSED, WITH_ISSUES, ARCHIVED ou DELETED.")
+        write_out({"error": "status_invalido"})
+        return
+    status_slug = "".join(s[0].lower() for s in status_list)
+
+    # Nome do arquivo de cache (inclui status_slug pra cache nao colidir)
     filtro_slug = args.filtro.replace(" ", "_").replace("-", "").lower() or "all"
-    cache_file = cache_dir / f"{args.account}_{args.periodo}_{filtro_slug}_{args.output}.json"
+    cache_file = cache_dir / f"{args.account}_{args.periodo}_{filtro_slug}_{status_slug}_{args.output}.json"
 
     # Usar cache se existir e nao forcar
     if cache_file.exists() and not args.force:
@@ -165,6 +179,34 @@ def main():
         wow_until = inicio_atual - timedelta(days=1)
         wow_since = wow_until - timedelta(days=dias_periodo - 1)
 
+    # ── CHAMADA 0: Listar IDs de campanhas permitidos pelo --status ──
+    # /insights nao aceita effective_status. Solucao: buscar a lista de campanhas
+    # via /campaigns (que aceita) e filtrar todas as chamadas seguintes pelo conjunto
+    # de IDs permitidos. Sem isso, /insights retorna metricas de qualquer campanha
+    # que teve gasto no periodo, incluindo PAUSED/ARCHIVED/DELETED — inflando os dados.
+    status_filter_param = json.dumps(status_list)
+    todas_camps = fetch_all_pages(
+        {
+            "fields": "id,name,status,effective_status,daily_budget,lifetime_budget,budget_remaining",
+            "effective_status": status_filter_param,
+            "limit": 500,
+        },
+        account, "campaigns", token
+    )
+    if todas_camps is None:
+        err("Falha ao listar campanhas com filtro de status. Abortando.")
+        write_out({"error": "falha_listar_campanhas"})
+        return
+    todas_camps_filtradas = filtrar(todas_camps, filtro)
+    ids_permitidos = {c["id"] for c in todas_camps_filtradas if c.get("id")}
+    info(f"Campanhas no escopo (status={','.join(status_list)}, filtro='{filtro}'): {len(ids_permitidos)}")
+
+    def filtrar_por_id(lista):
+        """Mantem apenas campanhas cujo campaign_id esta no conjunto permitido."""
+        if lista is None:
+            return []
+        return [c for c in lista if c.get("campaign_id") in ids_permitidos]
+
     # ── CHAMADA 1A: Metricas principais do periodo ──
     # Campos do nivel campaign (sem landing_page_views que so existe em ad level)
     campos_1a = ",".join([
@@ -176,7 +218,7 @@ def main():
         {"fields": campos_1a, "level": "campaign", "date_preset": periodo, "limit": 500},
         account, "insights", token
     )
-    camps_1a = filtrar(all_1a, filtro)
+    camps_1a = filtrar_por_id(all_1a)
 
     # ── CHAMADA 1B: Comparativo do periodo anterior (mesma duracao) ──
     # Usa time_range com datas explicitas em vez de preset combinado com time_increment.
@@ -192,25 +234,19 @@ def main():
             },
             account, "insights", token
         )
-        camps_1b = filtrar(all_1b, filtro) if all_1b is not None else []
+        camps_1b = filtrar_por_id(all_1b)
 
     # ── CHAMADA 1C: Orcamentos das campanhas ──
-    all_1c = fetch_all_pages(
-        {
-            "fields": "id,name,status,daily_budget,lifetime_budget,budget_remaining",
-            "effective_status": json.dumps(["ACTIVE"]),
-            "limit": 500,
-        },
-        account, "campaigns", token
-    )
-    camps_1c = filtrar(all_1c, filtro) if all_1c is not None else []
+    # Reusa a lista ja buscada na Chamada 0 (mesmo filtro de status, mesmos campos
+    # de orcamento). Evita uma chamada redundante a Graph API.
+    camps_1c = todas_camps_filtradas
 
     # ── CHAMADA 1D: Gasto de hoje ──
     all_1d = fetch_all_pages(
         {"fields": "campaign_id,campaign_name,spend", "level": "campaign", "date_preset": "today", "limit": 500},
         account, "insights", token
     )
-    camps_1d = filtrar(all_1d, filtro) if all_1d is not None else []
+    camps_1d = filtrar_por_id(all_1d)
 
     result = {
         "_meta": {
@@ -218,6 +254,8 @@ def main():
             "filtro": filtro,
             "periodo": periodo,
             "output": args.output,
+            "status_filter": status_list,
+            "campanhas_no_escopo": len(ids_permitidos),
             "gerado_em": datetime.now().isoformat(),
             "camps_1a": len(camps_1a),
             "camps_1b": len(camps_1b),

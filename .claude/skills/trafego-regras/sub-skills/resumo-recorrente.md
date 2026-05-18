@@ -40,7 +40,7 @@ meus-produtos/{ativo}/trafego/regras/resumos/{schedule_id}.md
 Conteúdo:
 ```yaml
 schedule_id: <uuid>
-nome: "[WS] Resumo-segunda-8h-curso-tarot"
+nome: "[FC] Resumo-segunda-8h-curso-tarot"
 ad_account_id: act_<id>
 
 frequencia: weekly
@@ -103,7 +103,7 @@ A skill aciona `/schedule create` com o cron + comando que faz:
 
 ```yaml
 sub_fluxo: resumo_recorrente
-nome_final: "[WS] Resumo-segunda-8h-curso-tarot"
+nome_final: "[FC] Resumo-segunda-8h-curso-tarot"
 
 agendamento:
   frequencia: semanal
@@ -133,7 +133,7 @@ confirma criar? (digite SIM)
 ## Após criar
 
 ```
-✅ Resumo recorrente configurado: [WS] Resumo-segunda-8h-curso-tarot
+✅ Resumo recorrente configurado: [FC] Resumo-segunda-8h-curso-tarot
    Schedule ID: sched_abc123
    Próxima execução: segunda-feira 11/05/2026 às 08:00 (Brasília)
    Canal: Telegram (chat 123456789)

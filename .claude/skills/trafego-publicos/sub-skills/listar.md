@@ -6,7 +6,7 @@ Lista as audiences existentes na conta de anúncios com nome, tamanho, status, i
 
 - "Quais audiences eu já tenho?"
 - "Lista meus públicos"
-- "Quais são as audiences criadas pelo Workshop?"
+- "Quais são as audiences criadas pelo Fluxo Criativo?"
 - "Tem algum público inativo ou expirando?"
 
 ## Endpoint
@@ -33,7 +33,7 @@ Total: 12 audiences
 - Lookalike:            3
 - Saved Audiences:      3
 
-Criadas via Workshop (prefixo [WS]): 8
+Criadas via Fluxo Criativo (prefixo [FC]): 8
 Criadas manualmente:                 4
 ```
 
@@ -42,11 +42,11 @@ Criadas manualmente:                 4
 ```
 | Nome                                            | Tipo       | Tamanho   | Status        | Origem        | Criada    |
 |-------------------------------------------------|------------|-----------|---------------|---------------|-----------|
-| [WS] Purchase-90d-curso-tarot                  | WEBSITE    | 580       | 🟢 Ready      | Workshop      | há 12 dias|
-| [WS] AddToCart-30d-curso-tarot                 | WEBSITE    | 1.420     | 🟢 Ready      | Workshop      | há 12 dias|
-| [WS] Video50pct-VSL-30d-curso-tarot            | ENGAGEMENT | 2.180     | 🟢 Ready      | Workshop      | há 9 dias |
-| [WS] LAL1pct-Compradores-curso-tarot           | LOOKALIKE  | 2.000.000 | 🟢 Ready      | Workshop      | há 9 dias |
-| [WS] Saved-Iniciantes-curso-tarot              | SAVED      | 18.000.000| 🟢 —          | Workshop      | há 5 dias |
+| [FC] Purchase-90d-curso-tarot                  | WEBSITE    | 580       | 🟢 Ready      | Fluxo Criativo      | há 12 dias|
+| [FC] AddToCart-30d-curso-tarot                 | WEBSITE    | 1.420     | 🟢 Ready      | Fluxo Criativo      | há 12 dias|
+| [FC] Video50pct-VSL-30d-curso-tarot            | ENGAGEMENT | 2.180     | 🟢 Ready      | Fluxo Criativo      | há 9 dias |
+| [FC] LAL1pct-Compradores-curso-tarot           | LOOKALIKE  | 2.000.000 | 🟢 Ready      | Fluxo Criativo      | há 9 dias |
+| [FC] Saved-Iniciantes-curso-tarot              | SAVED      | 18.000.000| 🟢 —          | Fluxo Criativo      | há 5 dias |
 | Visitantes 30d (manual)                        | WEBSITE    | 14.500    | 🟢 Ready      | Manual        | há 60 dias|
 | Pixel-old-broken                                | WEBSITE    | 0         | 🔴 Empty      | Manual        | há 180 dias|
 ...
@@ -63,12 +63,12 @@ Criadas manualmente:                 4
 | 🔴 Expired | Sem atualização há 90+ dias (pode estar obsoleta) |
 | ⚪ Paused | Manualmente pausada |
 
-### Bloco 3. Audiences criadas pelo Workshop (drill-down)
+### Bloco 3. Audiences criadas pelo Fluxo Criativo (drill-down)
 
-Para cada audience com prefixo `[WS]`, ler o arquivo `meus-produtos/{ativo}/trafego/publicos/{id}.md` e mostrar mais detalhes:
+Para cada audience com prefixo `[FC]`, ler o arquivo `meus-produtos/{ativo}/trafego/publicos/{id}.md` e mostrar mais detalhes:
 
 ```
-🔍 [WS] Purchase-90d-curso-tarot
+🔍 [FC] Purchase-90d-curso-tarot
 
 ID: 6123456789
 Tipo: WEBSITE (evento Purchase)
@@ -92,14 +92,14 @@ Detectar e listar:
 
 🟡 2 audiences encolhendo > 20% nos últimos 30d
    - "Visitantes 30d (manual)" (-23%)
-   - "[WS] AddToCart-30d-curso-tarot" (-18%)
+   - "[FC] AddToCart-30d-curso-tarot" (-18%)
    Causa provável: queda de tráfego ou pixel sem evento.
    Próximo: /trafego-pixel para diagnosticar.
 
 🟡 3 audiences podem ser usadas como source de Lookalike
-   - "[WS] Purchase-90d-curso-tarot" (580 pessoas) — pequeno, mas funciona
-   - "[WS] AddToCart-30d-curso-tarot" (1.420)
-   - "[WS] Video75pct-VSL-30d-curso-tarot" (820)
+   - "[FC] Purchase-90d-curso-tarot" (580 pessoas) — pequeno, mas funciona
+   - "[FC] AddToCart-30d-curso-tarot" (1.420)
+   - "[FC] Video75pct-VSL-30d-curso-tarot" (820)
    Quer criar lookalike? /trafego-publicos opção 5
 ```
 
@@ -114,7 +114,7 @@ A skill regenera `meus-produtos/{ativo}/trafego/publicos/INDEX.md` com a listage
 > Conta: act_<id>
 
 ## Custom Audiences (Website)
-- [WS] Purchase-90d-curso-tarot — 580 pessoas — 🟢 Ready — `meus-produtos/curso-tarot/trafego/publicos/6123456789.md`
+- [FC] Purchase-90d-curso-tarot — 580 pessoas — 🟢 Ready — `meus-produtos/curso-tarot/trafego/publicos/6123456789.md`
 - ...
 
 ## Engagement (Vídeo)
@@ -136,7 +136,7 @@ A skill aceita filtros para listagem mais focada:
 
 | Filtro | Comando |
 |---|---|
-| Só audiences criadas pelo Workshop | "lista só do Workshop" |
+| Só audiences criadas pelo Fluxo Criativo | "lista só do Fluxo Criativo" |
 | Só de um tipo | "só lookalikes" / "só de website" |
 | Só com status saudável | "só as que estão Ready" |
 | Só passíveis de virar source de LAL | "audiences que dá pra usar de lookalike" |

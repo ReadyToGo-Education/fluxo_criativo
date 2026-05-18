@@ -83,7 +83,7 @@ Para inclusão + exclusão:
 ```
 POST /act_<id>/customaudiences
 {
-  "name": "[WS] {Evento}-{nome_extra}-{janela}d-{produto-slug}",
+  "name": "[FC] {Evento}-{nome_extra}-{janela}d-{produto-slug}",
   "subtype": "WEBSITE",
   "description": "Audience criada via Workshop. Evento {evento}, janela {janela}d.",
   "rule": { ... },
@@ -95,7 +95,7 @@ POST /act_<id>/customaudiences
 
 ```yaml
 sub_fluxo: publico_evento_padrao
-nome_final: "[WS] Purchase-90d-curso-tarot"
+nome_final: "[FC] Purchase-90d-curso-tarot"
 subtype: WEBSITE
 pixel: "{nome_do_pixel}" ({pixel_id})
 evento_principal: Purchase
@@ -115,7 +115,7 @@ confirma? (digite SIM para criar)
 - Sugere próximos passos:
 
 ```
-✅ Audience criada: [WS] Purchase-90d-curso-tarot
+✅ Audience criada: [FC] Purchase-90d-curso-tarot
    ID: 6123456789
 
 Próximos passos:

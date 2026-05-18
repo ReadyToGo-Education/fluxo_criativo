@@ -1064,20 +1064,65 @@ def _baixar_post_imgs(args):
     result['carouselPaths'] = carousel_paths
     return i, result
 
+# ── Concorrente meta.json helper ─────────────────────────────────────────────
+def atualizar_meta_concorrente(conc_dir, slug: str, nome: str, plat: str, handle: str):
+    """Cria ou atualiza meta.json com info do concorrente.
+    `conc_dir` aponta para entregas/concorrentes/{slug}/ (Path)."""
+    from datetime import datetime as _dt
+    meta_path = conc_dir / 'meta.json'
+    meta = {}
+    if meta_path.exists():
+        try:
+            meta = json.loads(meta_path.read_text(encoding='utf-8'))
+        except Exception:
+            meta = {}
+    meta['slug'] = slug
+    if nome and (not meta.get('nome') or meta.get('nome') == slug):
+        meta['nome'] = nome
+    meta['atualizado_em'] = _dt.now().strftime('%d/%m/%Y %H:%M')
+    handles = meta.get('handles', {})
+    handles[plat] = handle
+    meta['handles'] = handles
+    plats = meta.get('plataformas', [])
+    if plat not in plats:
+        plats.append(plat)
+    meta['plataformas'] = plats
+    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--abrir', action='store_true')
+    parser.add_argument('--usuario', help='Handle Instagram (substitui IG_USER do .env)')
+    parser.add_argument('--concorrente', help='Slug do concorrente. Salva em entregas/concorrentes/{slug}/instagram/')
+    parser.add_argument('--nome-bonito', dest='nome_bonito', help='Nome do concorrente para exibir no painel')
     args = parser.parse_args()
 
-    # Resolver caminhos de output a partir do produto ativo
-    base_dir      = get_output_dir()
     env = ler_env()
-    ig_user = env.get('IG_USER', '')
     token   = env.get('APIFY_API_TOKEN', '')
+    ig_user = args.usuario or env.get('IG_USER', '')
 
-    # Subpasta por perfil (cada @ tem seus proprios arquivos)
-    output_dir    = base_dir / ig_user if ig_user else base_dir
+    # Resolver caminhos de output: meu vs concorrente
+    if args.concorrente:
+        ativo_file = PROJECT_ROOT / 'meus-produtos' / '.ativo'
+        if not ativo_file.exists():
+            print('ERRO: meus-produtos/.ativo nao encontrado.'); sys.exit(1)
+        ativo = ativo_file.read_text(encoding='utf-8').strip()
+        if not ativo:
+            print('ERRO: meus-produtos/.ativo esta vazio.'); sys.exit(1)
+        if not ig_user:
+            print('ERRO: --usuario obrigatorio quando usar --concorrente.'); sys.exit(1)
+        conc_root = PROJECT_ROOT / 'meus-produtos' / ativo / 'entregas' / 'concorrentes' / args.concorrente
+        output_dir = conc_root / 'instagram'
+        base_dir   = output_dir  # historico fica isolado dentro da pasta do concorrente
+        # Sanity check: nunca deixar passar caminho fora de entregas/concorrentes
+        assert 'entregas' in output_dir.parts and 'concorrentes' in output_dir.parts, \
+            f'ERRO interno: caminho de concorrente invalido: {output_dir}'
+    else:
+        base_dir   = get_output_dir()
+        output_dir = base_dir / ig_user if ig_user else base_dir
+
     images_dir    = output_dir / 'imagens'
     log_file      = output_dir / 'log.txt'
     insights_file = output_dir / 'insights.json'
@@ -1173,6 +1218,17 @@ def main():
     html = gerar_html(perfil, posts, metricas, historico, variacoes)
     dashboard_file.write_text(html, encoding='utf-8')
     log.info(f'dashboard.html salvo: {dashboard_file}')
+
+    # Se for concorrente, atualiza meta.json
+    if args.concorrente:
+        atualizar_meta_concorrente(
+            conc_root,
+            args.concorrente,
+            args.nome_bonito or args.concorrente,
+            'instagram',
+            ig_user,
+        )
+        log.info(f'meta.json do concorrente atualizado: {conc_root}/meta.json')
 
     log.info('=== Concluido com sucesso ===')
 

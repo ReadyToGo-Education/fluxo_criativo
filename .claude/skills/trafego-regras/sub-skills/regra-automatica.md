@@ -41,7 +41,7 @@ Cria uma Automated Rule no Meta Ads que avalia campanhas/adsets/ads contra um tr
 ```
 POST /act_<id>/adrules_library
 {
-  "name": "[WS] AutoRule-PauseCPAGT40-curso-tarot",
+  "name": "[FC] AutoRule-PauseCPAGT40-curso-tarot",
   "evaluation_spec": {
     "evaluation_type": "SCHEDULE",
     "filters": [{
@@ -146,7 +146,7 @@ Quer que eu adicione esse gasto mínimo automaticamente? (sim/não)
 
 ```yaml
 sub_fluxo: regra_automatica
-nome_final: "[WS] AutoRule-PauseCPAGT40-curso-tarot"
+nome_final: "[FC] AutoRule-PauseCPAGT40-curso-tarot"
 status_inicial: PAUSED
 
 trigger:
@@ -174,7 +174,7 @@ confirma criar como PAUSED? (digite SIM)
 ## Após criar
 
 ```
-✅ Regra criada (PAUSED): [WS] AutoRule-PauseCPAGT40-curso-tarot
+✅ Regra criada (PAUSED): [FC] AutoRule-PauseCPAGT40-curso-tarot
    ID: 7654321098
 
 A regra está PAUSED. Para ativar:

@@ -139,7 +139,7 @@ A busca aceita `locale=pt_BR` para priorizar nomenclatura em português. Default
 ```
 POST /act_<id>/saved_audiences
 {
-  "name": "[WS] Saved-Iniciantes-{produto-slug}",
+  "name": "[FC] Saved-Iniciantes-{produto-slug}",
   "description": "Saved Audience nível Iniciante. Gerada via Workshop a partir de {produto-slug}/idconsumidor.md.",
   "targeting": {
     "geo_locations": { "countries": ["BR"] },
@@ -165,7 +165,7 @@ sub_fluxo: bases_niveis
 produto: curso-tarot
 
 audiences:
-  - nome: "[WS] Saved-Iniciantes-curso-tarot"
+  - nome: "[FC] Saved-Iniciantes-curso-tarot"
     targeting:
       geo: BR
       idade: 25-55
@@ -174,12 +174,12 @@ audiences:
       interesses: [Espiritualidade, Autoconhecimento, Astrologia, Mindfulness]
       tamanho_estimado: 18000000
 
-  - nome: "[WS] Saved-Intermediarios-curso-tarot"
+  - nome: "[FC] Saved-Intermediarios-curso-tarot"
     targeting:
       ...
       tamanho_estimado: 3200000
 
-  - nome: "[WS] Saved-Avancados-curso-tarot"
+  - nome: "[FC] Saved-Avancados-curso-tarot"
     targeting:
       ...
       tamanho_estimado: 480000
@@ -191,9 +191,9 @@ confirma criar as 3? (digite SIM)
 
 ```
 ✅ 3 Saved Audiences criadas:
-1. [WS] Saved-Iniciantes-curso-tarot      ID: 6123456792
-2. [WS] Saved-Intermediarios-curso-tarot  ID: 6123456793
-3. [WS] Saved-Avancados-curso-tarot       ID: 6123456794
+1. [FC] Saved-Iniciantes-curso-tarot      ID: 6123456792
+2. [FC] Saved-Intermediarios-curso-tarot  ID: 6123456793
+3. [FC] Saved-Avancados-curso-tarot       ID: 6123456794
 
 Como usar no funil:
 

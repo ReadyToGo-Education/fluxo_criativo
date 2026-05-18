@@ -387,3 +387,23 @@ Resumo do que vou criar:
 - NUNCA usar os termos "low ticket" ou "Low Ticket" com o aluno
 - SEMPRE mostrar o entregável ao aluno antes de salvar (exceto HTML)
 - SEMPRE salvar somente após aprovação do aluno
+
+## Anúncio de próximo passo (regra obrigatória)
+
+Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada operação que demora mais de 10 segundos (concepção, criação do produto digital, página low ticket, anúncios), anuncie em UMA linha:
+
+```
+🔍 Próximo passo: {ação no infinitivo}. Tempo estimado: {faixa de .claude/rules/tempo-estimado.md}.
+```
+
+Ao terminar, confirme em UMA linha:
+
+```
+✅ Concluído: {o que foi entregue}. Caminho: {caminho relativo, quando aplicável}.
+```
+
+Regras:
+- Tempo em segundos quando ≤ 120s, em minutos acima de 120s.
+- Consultar `.claude/rules/tempo-estimado.md`, nunca inventar número de cabeça.
+- Quando uma sub-skill é chamada, este agente faz o anúncio Nível 1 (com tempo); a sub-skill usa Nível 2 (`⏳ Passo X/Y:`) sem repetir o tempo.
+- Proibido travessão (—) e "Processando..." sem contexto.

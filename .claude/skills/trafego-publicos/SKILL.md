@@ -132,18 +132,18 @@ A skill **sempre pergunta a janela** explicitamente, com default = 30d.
 Toda audience criada por esta skill segue convenção de nome para facilitar identificação no Audiences Manager:
 
 ```
-[WS] {tipo}-{descricao}-{janela}d-{produto-slug}
+[FC] {tipo}-{descricao}-{janela}d-{produto-slug}
 ```
 
 Exemplos:
-- `[WS] PageView-loja-30d-curso-tarot`
-- `[WS] Purchase-90d-curso-tarot`
-- `[WS] LAL1pct-Compradores-90d-curso-tarot`
-- `[WS] Video25pct-VSL-30d-curso-tarot`
-- `[WS] CustomEvent-ClickWhatsApp-30d-curso-tarot`
-- `[WS] Saved-Iniciantes-curso-tarot`
+- `[FC] PageView-loja-30d-curso-tarot`
+- `[FC] Purchase-90d-curso-tarot`
+- `[FC] LAL1pct-Compradores-90d-curso-tarot`
+- `[FC] Video25pct-VSL-30d-curso-tarot`
+- `[FC] CustomEvent-ClickWhatsApp-30d-curso-tarot`
+- `[FC] Saved-Iniciantes-curso-tarot`
 
-O prefixo `[WS]` (Workshop) deixa claro o que veio desta automação. O slug do produto vem de `meus-produtos/.ativo`.
+O prefixo `[FC]` (Fluxo Criativo) deixa claro o que veio desta automação. O slug do produto vem de `meus-produtos/.ativo`.
 
 ---
 
@@ -189,7 +189,7 @@ sub_fluxo: evento_padrao | evento_personalizado | video_view | bases_niveis | lo
 ad_account_id: act_<id>
 audiences_criadas:
   - id: <audience_id>
-    nome: "[WS] PageView-loja-30d-curso-tarot"
+    nome: "[FC] PageView-loja-30d-curso-tarot"
     subtype: WEBSITE | ENGAGEMENT | LOOKALIKE | SAVED_AUDIENCE
     janela_dias: 30
     regra: { ... }                    # JSON da rule conforme Marketing API
@@ -240,7 +240,7 @@ Com: nome, ID, regra completa, janela, tamanho na criação, comando de rollback
 
 1. **Preview antes de write.** Sempre.
 2. **Confirmação explícita "SIM".** Sem isso, não cria.
-3. **Convenção de nomenclatura.** Toda audience criada segue o padrão `[WS] tipo-descricao-janela-produto`.
+3. **Convenção de nomenclatura.** Toda audience criada segue o padrão `[FC] tipo-descricao-janela-produto`.
 4. **Alerta para audience micro.** < 1.000 sempre dispara confirmação extra.
 5. **Não conecta a adset automaticamente.** Só cria. A skill que pediu é responsável por conectar.
 6. **Não deleta.** Operação de delete é manual.

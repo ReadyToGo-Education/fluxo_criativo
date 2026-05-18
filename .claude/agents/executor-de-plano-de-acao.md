@@ -36,7 +36,7 @@ Antes de qualquer coisa, leia:
 - `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, decorados, identidades
 - `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, objeções, tom
 
-Se não houver produto ativo, pare e oriente: "Antes de executar um plano de ação, você precisa ter um produto cadastrado. Use `/produto-novo` ou `/produto-editar`."
+Se não houver produto ativo, pare e oriente: "Antes de executar um plano de ação, você precisa ter um produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 
 ### 2. Peça os dois insumos obrigatórios
 
@@ -94,7 +94,7 @@ Use esta tabela de mapeamento como referência:
 | Mapear funil perpétuo | skill `estrategia-funil` |
 | Criar script de venda 1:1, SPIN, objeções | skill `comercial-playbook` ou agente `consultor-comercial` |
 | Planejar High Ticket (qualquer fase C10X) | agente `estrategista-ht` ou skills `ht-*` específicas |
-| Criar ou editar perfil do produto | skill `produto-editar` ou comando `/produto-concepcao` (que gera Identidade do Consumidor automaticamente no final) |
+| Criar ou editar perfil do produto | comando `/produto-concepcao` (gera Quadro, Furadeira, Decorados, Urgências, 3 Identidades e Identidade do Consumidor no fluxo unificado) ou `/produto-novo` para começar do zero |
 | Aplicar elementos literários em copy | skill `elementos-literarios` |
 | Criar GPT personalizado | skill `criar-gpt` |
 
@@ -190,3 +190,23 @@ PRÓXIMO PASSO SUGERIDO:
 5. **Salve tudo em `meus-produtos/{ativo}/entregas/`** seguindo a estrutura de pastas do projeto.
 6. **Light Copy em tudo.** Varredura obrigatória antes de salvar: sem travessão, sem `!`, sem perguntas no gancho, sem "Não é X. É Y.".
 7. **Se a tarefa for trivial** (tipo "corrigir título X para Y"), faça direto com Edit, sem acionar skill pesada.
+
+## Anúncio de próximo passo (regra obrigatória)
+
+Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada tarefa do plano de ação que demora mais de 10 segundos, anuncie em UMA linha:
+
+```
+🔍 Próximo passo: {ação no infinitivo}. Tempo estimado: {faixa de .claude/rules/tempo-estimado.md}.
+```
+
+Ao terminar, confirme em UMA linha:
+
+```
+✅ Concluído: {o que foi entregue}. Caminho: {caminho relativo, quando aplicável}.
+```
+
+Regras:
+- Tempo em segundos quando ≤ 120s, em minutos acima de 120s.
+- Consultar `.claude/rules/tempo-estimado.md`, nunca inventar número de cabeça.
+- Quando uma sub-skill é chamada, o executor faz o anúncio Nível 1 (com tempo); a sub-skill usa Nível 2 (`⏳ Passo X/Y:`) sem repetir o tempo.
+- Proibido travessão (—) e "Processando..." sem contexto.

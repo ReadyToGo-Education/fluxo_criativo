@@ -30,7 +30,7 @@ A skill aceita 4 formas:
 ```
 POST /act_<id>/customaudiences
 {
-  "name": "[WS] Video{percentual}pct-{nome_extra}-{janela}d-{produto-slug}",
+  "name": "[FC] Video{percentual}pct-{nome_extra}-{janela}d-{produto-slug}",
   "subtype": "ENGAGEMENT",
   "description": "Quem assistiu {percentual}% do vídeo {video_id} nos últimos {janela}d.",
   "rule": {
@@ -76,7 +76,7 @@ percentual: 50
 evento_meta: video_view_50_percent
 janela_dias: 30
 retention_seconds: 2592000
-nome_final: "[WS] Video50pct-VSL-30d-curso-tarot"
+nome_final: "[FC] Video50pct-VSL-30d-curso-tarot"
 tamanho_estimado: ~2.100 (estimativa baseada em 50% de retenção média do vídeo)
 
 confirma? (digite SIM)
@@ -100,7 +100,7 @@ Esses valores são apenas estimativa. Tamanho real é calculado pelo Meta após 
 ## Após criar
 
 ```
-✅ Audience criada: [WS] Video50pct-VSL-30d-curso-tarot
+✅ Audience criada: [FC] Video50pct-VSL-30d-curso-tarot
    ID: 6123456791
 
 Tamanho estimado: ~2.100 pessoas. Tamanho real disponível no Audiences Manager em ~24h.

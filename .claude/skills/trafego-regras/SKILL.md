@@ -102,14 +102,14 @@ Importante: `adset_schedule` exige que o adset tenha `lifetime_budget` (não fun
 Toda regra criada por esta skill segue padrão:
 
 ```
-[WS] {tipo}-{descricao}-{produto-slug}
+[FC] {tipo}-{descricao}-{produto-slug}
 ```
 
 Exemplos:
-- `[WS] AutoRule-PauseCPAGT40-curso-tarot`
-- `[WS] AutoRule-Boost20PctROAS3-curso-tarot`
-- `[WS] Resumo-segunda-8h-curso-tarot`
-- `[WS] Schedule-segxsex-8x22-curso-tarot`
+- `[FC] AutoRule-PauseCPAGT40-curso-tarot`
+- `[FC] AutoRule-Boost20PctROAS3-curso-tarot`
+- `[FC] Resumo-segunda-8h-curso-tarot`
+- `[FC] Schedule-segxsex-8x22-curso-tarot`
 
 ---
 
@@ -142,7 +142,7 @@ ad_account_id: act_<id>
 
 regra_criada:
   id: <rule_id>
-  nome: "[WS] AutoRule-PauseCPAGT40-curso-tarot"
+  nome: "[FC] AutoRule-PauseCPAGT40-curso-tarot"
   tipo: meta_adrule | schedule_workshop | adset_schedule
   status: paused                 # toda regra nasce PAUSED
   trigger:
@@ -197,7 +197,7 @@ meus-produtos/{ativo}/trafego/regras/
 4. **Cooldown mínimo** para evitar oscilação.
 5. **Rollback documentado** sempre.
 6. **Não cria regra com janela de dado imaturo.**
-7. **Convenção de nomenclatura** `[WS] tipo-descricao-produto`.
+7. **Convenção de nomenclatura** `[FC] tipo-descricao-produto`.
 8. **Schedule de adset exige lifetime_budget.** Avisa antes de tentar.
 9. **Resumo recorrente exige canal configurado.** Aciona `/configurar-telegram` ou `/configurar-zapi` se faltar.
 10. **Não inventa regra.** Se aluno pedir algo fora dos 3 sub-fluxos, encaminha para criação manual no Gerenciador de Anúncios.

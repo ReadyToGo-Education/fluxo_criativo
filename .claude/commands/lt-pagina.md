@@ -52,6 +52,29 @@ A copy nunca vende. Ela informa, avisa ou ensina. O produto não existe nos prim
 Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`. Se não existir, oriente a usar `/produto-editar` primeiro.
 Leia também `meus-produtos/{ativo}/idconsumidor.md` se existir.
 
+### 1.4.5. Detecção de primeira página low ticket (Categoria Padrão automática)
+
+Antes do framework Quiz vs. Página, verifique se a pasta `meus-produtos/{ativo}/entregas/paginas/` está vazia ou se nenhum arquivo dela começa com `pagina-`. Se está vazia, é a primeira página low ticket do aluno. Nesse caso, recomende a Categoria **Padrão** automaticamente.
+
+Apresente:
+
+```
+Esta é a primeira página low ticket que você está criando. A recomendação para começar é a Categoria Padrão.
+
+A Padrão é uma estrutura completa de 14 seções que cobre todos os ângulos clássicos de uma página low ticket: cabeçalho com gancho, comparações visuais, diálogo mental negativo, "a culpa não é sua", prova matemática, centro da atenção, dinâmica de acesso, demonstração, autoridade, depoimentos, entregáveis, ancoragem final e FAQ. É a base mais segura para quem está começando.
+
+1. Seguir com a Padrão (recomendado)
+2. Quero ver as outras 4 categorias mesmo assim
+
+Digite o número:
+```
+
+**Se escolher 1:** pule direto para a Seção 5.3 (Entrevista Específica da Padrão) e depois a Seção 6 com a Estrutura E. Pular as Etapas 2, 3 e 4 (entrevista de público, geração das 4 copies, matriz de decisão).
+
+**Se escolher 2:** continue para a Etapa 1.5 abaixo.
+
+Se a pasta já tem páginas anteriores, NÃO ofereça a Padrão automaticamente. Siga direto para a Etapa 1.5 (o framework Quiz vs. Página vai decidir o fluxo).
+
 ### 1.5. Framework de Decisão: Página vs. Quiz
 
 Antes de iniciar a entrevista, analise os dados do perfil e do consumidor e aplique este framework. **Nunca pergunte de cara qual formato o aluno quer**. Recomende com base nos critérios abaixo e explique o porquê.
@@ -366,6 +389,115 @@ Resumo do que vou criar:
 2. Quero ajustar algo
 ```
 
+### 5.3. Entrevista Específica: Padrão (Estrutura E)
+
+Esta seção é acionada quando o aluno escolheu a Categoria Padrão na Etapa 1.4.5. As outras 4 estruturas (A, B, C, D) NÃO passam por aqui.
+
+**Antes de qualquer pergunta, leia `.claude/skills/paginas/references/categoria-padrao-lt.md`.** Esse arquivo contém o processo detalhado de cada uma das 18 seções (prompt, regras e layout). Use-o como fonte de verdade ao gerar a página.
+
+**Fazer UMA pergunta por vez.**
+
+**Pergunta 1. Modo de geração:**
+
+```
+A Categoria Padrão tem 3 modos de geração. Qual você prefere?
+
+1. Híbrido (recomendado). As seções que dependem só do perfil rodam automáticas. As que exigem dado real (Faça a Conta, Demonstração, Quem É, Depoimentos) entram em modo guiado.
+2. Guiado. A skill faz uma seção por vez, perguntando o que precisa, gerando, aprovando e seguindo pra próxima. Mais lento, mais profundo.
+3. Automático. A skill gera as 14 seções de uma vez usando só o que está no perfil.md e idconsumidor.md. Mais rápido.
+
+Digite o número:
+```
+
+**Pergunta 2. Preço:**
+
+```
+Qual o preço do produto?
+(ex: "R$37" ou "R$97 ou 12x R$9")
+```
+
+**Pergunta 3. Acesso:**
+
+```
+O acesso ao produto é vitalício?
+
+1. Sim, acesso vitalício
+2. Não, tem prazo de acesso
+```
+
+Se tiver prazo, perguntar qual é.
+
+**Pergunta 4. Link de checkout:**
+
+```
+Link de checkout (Hotmart, Kiwify)?
+```
+
+**Pergunta 5. Preferência de cor:**
+
+```
+Preferência de cor?
+
+1. Azul (confiança, autoridade)
+2. Verde (saúde, resultados)
+3. Roxo (marketing, criatividade)
+4. Vermelho (urgência, paixão)
+5. Rosa (beleza, feminino)
+6. Preto/Dourado (premium)
+7. Deixa comigo
+
+Digite o número:
+```
+
+**Perguntas 6 a 10. Mesmo fluxo da Seção 5.1** (Logo, Depoimentos, História do criador, Imagem da seção Quem Sou, Suporte). Repetir exatamente as mesmas perguntas e regras de cópia de arquivo.
+
+**Perguntas específicas da Padrão (só se modo Guiado ou Híbrido). Pular se modo Automático.**
+
+**Pergunta 11. Demonstração:**
+
+```
+Para a seção Demonstração, você tem material visual real do produto rodando?
+
+1. Tenho print da ferramenta/template preenchido
+2. Tenho vídeo curto (30 a 60 segundos)
+3. Tenho foto de antes e depois real
+4. Não tenho material visual ainda
+
+Digite o número:
+```
+
+Se tiver: pedir o caminho do arquivo e copiar para `meus-produtos/{ativo}/entregas/paginas/`.
+Se não tiver: avisar que essa seção fica com placeholder visual e sugerir gravar 30 segundos no celular abrindo o produto depois.
+
+**Pergunta 12. Faça as Contas (se produto tem resultado mensurável):**
+
+Antes de perguntar, analisar o perfil. Se o produto é puramente emocional (autoestima, espiritualidade, luto, ansiedade), pular essa pergunta e marcar a seção 5 como "não se aplica" (substituir por reforço da Tabela Comparação).
+
+Se tem resultado mensurável:
+
+```
+Para a seção Faça as Contas, qual é a métrica principal que muda com o produto?
+
+(ex: "ticket médio sobe de R$ 12 para R$ 45", "fatura sobe de 14 mil para 38 mil", "perde 4 kg por mês", "economiza R$ 600 por mês na conta de luz")
+
+Pode dar uma estimativa realista. Os números viram exemplo hipotético na página, o aluno depois substitui pelos reais.
+```
+
+**Confirmação antes de gerar HTML:**
+
+```
+Resumo do que vou criar:
+- Tipo: Página de vendas low ticket (Categoria Padrão, Estrutura E, 14 seções)
+- Modo: [Híbrido / Guiado / Automático]
+- Produto, Preço, Acesso, Cor
+- Logo, Depoimentos, História, Imagem Quem Sou, Suporte
+- Demonstração: [tem material / placeholder]
+- Faça as Contas: [aplica com métrica X / não se aplica]
+
+1. Tudo certo, pode gerar
+2. Quero ajustar algo
+```
+
 ---
 
 ### 6. Geração da Página HTML
@@ -392,6 +524,30 @@ Exemplo (Quadro = "Ter lucratividade real em todos os procedimentos da agenda"):
 2. **Acesso vitalício ou prazo:** exibir "Pagamento único. Acesso vitalício." em todos os pontos de preço (ou "Acesso por [prazo]").
 
 3. **Suporte:** incluir como card próprio ao lado da garantia. Copy emocional: "Você não fica sozinha" + canal + prazo.
+
+#### REGRA DE OURO #3: Header sem logo placeholder gerado (aplicar em TODAS as páginas)
+
+**PROIBIDO** gerar header sticky com placeholder visual no logo (quadradinho/círculo/forma colorida gerada por CSS `::before` ou `::after`, ícone genérico, gradiente decorativo no lugar de logo real). Esse padrão deixa a página com cara de template de IA não finalizado.
+
+Comportamento obrigatório:
+
+1. **Se o aluno tem logo PNG/SVG real:** usar a logo dele dentro de `<img>` no header. Pedir o caminho do arquivo na Seção 5.x correspondente. Copiar pra `meus-produtos/{ativo}/entregas/paginas/`.
+2. **Se o aluno não tem logo:** usar APENAS o nome do produto em tipografia limpa (sans-serif, peso 700 a 800, sem ícone decorativo ao lado). Sem quadrado colorido, sem círculo gradiente, sem placeholder gráfico.
+3. **Se o aluno preferir página mais limpa:** pode optar por não ter header sticky no topo. O Hero da Seção 1 já cumpre o papel de identificação visual do produto.
+
+Pergunta a fazer durante a Seção 5.3 (entrevista da Padrão):
+
+```
+Você tem a logo do produto em PNG/SVG?
+
+1. Tenho, vou informar o caminho do arquivo
+2. Não tenho. Usar só o nome do produto em texto no header.
+3. Não tenho e prefiro página sem header sticky (Hero vira o topo da página)
+
+Digite o número:
+```
+
+Aplicar a mesma regra nas Estruturas A, B, C, D (Identificação, Inadequação, Promessa Boa Demais, Plug & Play). Nenhuma página gerada pela skill pode sair com logo placeholder colorido decorativo.
 
 #### Design Rules (aplicar obrigatoriamente)
 
@@ -549,11 +705,68 @@ Salvar em: `meus-produtos/{ativo}/entregas/paginas/pagina-plug-play-[produto].ht
 
 ---
 
+### Estrutura E. Padrão (recomendada para a primeira página low ticket do aluno)
+
+#### REGRA DE OURO desta estrutura: 14 seções na ordem fixa
+
+A Categoria Padrão é a recomendação default quando o aluno está criando a primeira página low ticket no sistema (acionada pela Etapa 1.4.5). Cobre 14 seções que mapeiam todos os ângulos clássicos de venda de produto digital de entrada: cabeçalho com gancho, comparações visuais, diálogo mental negativo, absolvição (A Culpa Não É Sua), prova matemática, centro da atenção, dinâmica de acesso, demonstração, autoridade, depoimentos, entregáveis, ancoragem final e FAQ.
+
+#### Fonte de verdade do processo detalhado
+
+Antes de gerar qualquer seção, leia `.claude/skills/paginas/references/categoria-padrao-lt.md`. Esse arquivo contém o prompt completo de cada uma das 14 seções (contexto, passos, exemplos de referência, regras e layout HTML). Use-o como manual de execução. Esta skill só lista a estrutura e as regras de orquestração.
+
+#### Modo de geração (definido na Pergunta 1 da Seção 5.3)
+
+- **Híbrido (default).** Seções que vêm do perfil rodam automáticas. Seções que exigem dado real (Faça a Conta, Demonstração, Quem É, Depoimentos) entram em modo guiado.
+- **Guiado.** Faz uma seção por vez, pergunta o que precisa, gera, aprova, próxima.
+- **Automático.** Gera as 14 de uma vez usando só `perfil.md` e `idconsumidor.md`. Seções que dependem de input real entram com placeholder claro pra revisão posterior.
+
+#### Seções obrigatórias (14, conferir TODAS antes de salvar)
+
+**1. Cabeçalho (Headline + Pitadas de Desejo).** Headline principal seguindo fórmula obrigatória (verbo de ação concreto + identificação com problema + resultado imediato). Subhead com 3 a 4 pitadas de desejo (máximo 6 palavras cada). Layout: fundo escuro com gradiente, logo no topo (header sticky), headline em destaque grande, CTA com Quadro adaptado, nota "Acesso imediato após o pagamento".
+
+**2. Comparação Primária (visual).** Peça única de alto impacto com 2 lados. Esquerdo (✗) com título do estado ruim + cena identificável + 2 métricas. Direito (✓) com título do estado aspiracional + cena desejável + 2 métricas. Nunca usar "Antes" e "Depois" como título. Layout: grid 2 colunas (1 mobile), ícones grandes ✗ e ✓, contraste vermelho/verde óbvio.
+
+**3. Tabela Comparação.** 2 categorias (Resultado e Processo), 6 itens cada. Para produto subjetivo: 3 itens técnicos + 3 emocionais por categoria. Layout: tabela 2 colunas no desktop, stack vertical no mobile.
+
+**4. Diálogo Mental Negativo.** Título com a dor principal em negrito. Subtítulo "e você sofre todo dia com pensamentos como...". 4 pensamentos escolhidos do mapa de 12 (6 emocionais + 6 racionais). Layout: fundo escuro, cards estilo balão de pensamento, parte mais dolorosa em negrito.
+
+**5. A Culpa Não É Sua.** Identificação + absolvição + revelação. 3 blocos com subtítulos personalizados ao nicho (nunca "Identificação/Absolvição/Revelação"). Bloco 1: EXATAMENTE 3 situações com esforço + problema real. Bloco 2: parágrafo curto de 2-3 linhas de absolvição. Bloco 3: 2-3 mudanças contraintuitivas em parágrafos curtos. Título e subtítulo personalizados ao nicho. Layout: fundo claro acolhedor, 3 blocos com hierarquia visual, bloco 2 com fundo levemente diferente.
+
+**6. Faça as Contas pro Cliente.** SÓ usar se o produto tem resultado mensurável. Título conectando ação do dia a dia com "faz a conta comigo". 2 cenários numéricos (A sem o produto, B com o produto). Cálculos simples até o resultado final no bolso. Linha de impacto final. Se o produto for puramente emocional, substituir essa seção por reforço da Tabela Comparação ou expandir o Diálogo Mental Negativo.
+
+**7. Centro da Atenção.** 1 elemento físico do produto no centro (objeto, ferramenta, parte do corpo, prato, documento). 8 elementos curtos (máximo 4 palavras cada) ao redor com setas apontando pro centro. Centro DEVE ser visualmente representável.
+
+**8. Dinâmica de Acesso.** Mostra que o caminho entre comprar e ter resultado é curto, simples e óbvio. Sempre Acesso → Execução → Resultado. Gerar 2 versões (A com 3 passos, B com 5 passos) e o aluno escolhe. Cada passo com título ultra curto (máximo 3-4 palavras) + frase de apoio de 1 linha. Primeiro passo SEMPRE acesso; último passo SEMPRE resultado. Nunca "na mesma semana": usar "hoje", "no mesmo dia", "agora", "em minutos". Layout: trilha horizontal numerada com badges, fundo claro.
+
+**9. Demonstração.** Peça visual REAL do produto rodando (print, vídeo curto, foto antes/depois). 10 opções de "momento mágico" para o aluno escolher 1. Título com verbo visual ("veja", "olha", "assista", "repara"). 3 orientações práticas de gravação. Se aluno não tiver material, marcar com placeholder visual e sugerir gravar 30 segundos no celular depois. Para temas sensíveis (luto, trauma, saúde mental), aplicar regras de acolhimento silencioso.
+
+**10. Quem É o Especialista.** Entrevista em 3 blocos (Autoridade e credenciais, História pessoal e motivação, Valores e humanidade). Texto final em 3 parágrafos de até 6 linhas: parágrafo 1 (autoridade), parágrafo 2 (história e fragilidade), parágrafo 3 (valores e humanidade). Última frase OBRIGATORIAMENTE conclui no Quadro do produto. 3 a 5 destaques em accent. Antes de escrever o texto real, mostrar um exemplo hipotético do nicho do aluno marcado como fictício. Layout: grid imagem + texto, fundo escuro, borda dourada na foto.
+
+**11. Depoimentos.** Mínimo 10 depoimentos reais distribuídos em 5 categorias (Resultado rápido, Resultado impressionante, Já tentei outras coisas, Perfil improvável, Mudança de vida). Cada categoria com no mínimo 2 depoimentos. A skill gera 10 exemplos fictícios + 5 exemplos ruins (com explicação) + 5 orientações de coleta. Caption "Depoimento real via [canal], [mês/ano]". Comprovação visual obrigatória sempre que possível (print de WhatsApp, antes/depois, foto do resultado). NUNCA inventar depoimento.
+
+**12. Entregáveis Complementares.** A skill gera 30 entregáveis divididos em 3 categorias (Copia e Aplica Agora mín. 12, Ferramentas Práticas mín. 6, Aulas Estratégicas mín. 6) para o aluno escolher 4 a 5. Todo entregável DEVE ter nome próprio (nunca genérico). Cada um com descrição de 1 linha + valor de ancoragem entre R$ 27 e R$ 97. Soma total entre 5x e 10x o preço real do low ticket. Pelo menos 3 entregáveis devem envolver IA. Pelo menos 2 devem ser ferramentas práticas. Layout: grid 2 colunas (1 mobile), nunca 3 colunas.
+
+**13. Resumo da Ópera (Ancoragem Final).** Lista ULTRA RESUMIDA de tudo que a pessoa leva (só nome + valor riscado). Soma total riscada. Preço real grande. Ancoragem em 3 camadas: valor riscado + frase de retorno (compara com gasto fútil + contrasta com resultado real) + mini depoimento de exemplo (sempre marcar como exemplo a substituir). CTA = Quadro adaptado. NUNCA comparar com serviços profissionais de saúde, com produtos similares ao do criador, ou com vícios/substâncias. Layout: bloco de oferta em destaque, preço real em tipografia gigante, frase de retorno em destaque, mini depoimento em card separado.
+
+**14. FAQ.** Mínimo 12 perguntas divididas em duas categorias: Dúvidas sobre acesso (4 a 5 perguntas) e Dúvidas sobre o produto (7 a 8 perguntas). Respostas sobre acesso: 2-3 linhas. Respostas sobre o produto: 3-5 linhas com confirmação + argumento lógico. NUNCA responder só "sim, funciona". NUNCA excluir outro perfil de comprador ao responder pra um perfil específico (sempre acolher todos). Última pergunta liga ao CTA. NUNCA revelar formato exato do produto. Layout: acordeão (FAQ accordion), com separação visual entre as duas categorias.
+
+**CTA Final.** Entre a seção 14 e o footer. Headline = Quadro. Preço com ancoragem + acesso vitalício. CTA = Quadro adaptado. Nota de garantia.
+
+**Footer.** Nome do produto + links (política, termos, contato).
+
+**CTA Flutuante Mobile.** Barra fixa no rodapé apenas em mobile. Texto = Quadro adaptado.
+
+Salvar em: `meus-produtos/{ativo}/entregas/paginas/pagina-padrao-[produto].html`
+
+---
+
 ## Checklist Final de Seções (OBRIGATÓRIO antes de salvar)
 
-Antes de salvar QUALQUER uma das 4 estruturas, conferir item por item. Se faltar qualquer seção, voltar e adicionar ANTES de salvar:
+Antes de salvar QUALQUER estrutura, conferir item por item. Se faltar qualquer seção, voltar e adicionar ANTES de salvar.
 
-**Estrutura comum (aplicar às 4 categorias):**
+**Estruturas A, B, C, D (Identificação, Inadequação, Promessa Boa Demais, Plug & Play). 11 seções:**
+
 - [ ] 1. Header com logo
 - [ ] 2. Hero com CTA = Quadro adaptado
 - [ ] 3. Seção específica da categoria (Depoimentos / Comparativo / Citações / Ferramenta)
@@ -566,12 +779,32 @@ Antes de salvar QUALQUER uma das 4 estruturas, conferir item por item. Se faltar
 - [ ] 10. CTA Final com headline = Quadro + Footer
 - [ ] 11. CTA Flutuante Mobile = Quadro adaptado
 
-**Regras de conteúdo:**
+**Estrutura E (Categoria Padrão). 14 seções:**
+
+- [ ] 1. Cabeçalho com headline na fórmula obrigatória + pitadas de desejo (máximo 6 palavras cada)
+- [ ] 2. Comparação Primária visual (2 lados ✗ e ✓, sem "Antes/Depois")
+- [ ] 3. Tabela Comparação (Resultado e Processo, 6 itens cada)
+- [ ] 4. Diálogo Mental Negativo (título com dor em negrito + 4 pensamentos)
+- [ ] 5. A Culpa Não É Sua (3 blocos com subtítulos personalizados ao nicho, 3 situações + absolvição + 2-3 revelações)
+- [ ] 6. Faça as Contas (2 cenários numéricos + linha de impacto) OU substituição declarada se produto emocional
+- [ ] 7. Centro da Atenção (elemento físico + 8 elementos ao redor)
+- [ ] 8. Dinâmica de Acesso (2 versões A/B, 3 ou 5 passos com título ultra curto)
+- [ ] 9. Demonstração (peça visual real ou placeholder declarado, com regras de acolhimento se tema sensível)
+- [ ] 10. Quem É o Especialista (entrevista em 3 blocos, 3 parágrafos, fechamento no Quadro)
+- [ ] 11. Depoimentos mínimo 10 reais em 5 categorias com comprovação visual (ou avisos claros se sem prints)
+- [ ] 12. Entregáveis Complementares (30 sugestões em 3 categorias, escolha 4-5, nomes próprios, ancoragem 5x a 10x)
+- [ ] 13. Resumo da Ópera (lista ultra resumida + soma riscada + preço real + frase de retorno + mini depoimento)
+- [ ] 14. FAQ mínimo 12 perguntas (4-5 acesso + 7-8 produto), sem excluir outro perfil de comprador
+- [ ] CTA Final entre seção 14 e footer (headline = Quadro)
+- [ ] CTA Flutuante Mobile = Quadro adaptado
+- [ ] Detalhes processuais de cada seção lidos em `.claude/skills/paginas/references/categoria-padrao-lt.md`
+
+**Regras de conteúdo (todas as estruturas):**
 - [ ] Todos os CTAs usam variações do Quadro (zero "Comprar agora", "Saiba mais")
 - [ ] Todos os pontos de preço têm ancoragem riscada (preço + R$200)
 - [ ] "Acesso vitalício" (ou prazo) em todos os pontos de preço
-- [ ] Suporte aparece como card ao lado da garantia
-- [ ] Última frase de "Quem Sou" conclui no Quadro
+- [ ] Suporte aparece como card ao lado da garantia (estruturas A a D) ou como seção 17 (Estrutura E)
+- [ ] Última frase de "Quem Sou" / "Quem É" conclui no Quadro
 
 **Regras de design:**
 - [ ] Mínimo 4 tipos de fundo diferentes

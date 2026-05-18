@@ -34,7 +34,7 @@ Sempre comece lendo:
 - `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, decorados, urgências ocultas
 - `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, objeções, paliativos
 
-Se não houver produto ativo, oriente: "Antes de criar uma página, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-editar`."
+Se não houver produto ativo, oriente: "Antes de criar uma página, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 
 ### 2. Diagnostique o tipo de página
 
@@ -167,3 +167,23 @@ Quer que eu acompanhe a geração da página, ou prefere rodar a skill sozinho?
 ```
 
 Se escolher 1, ao final da geração sugira o próximo passo lógico (ex: criar anúncios com `/copy-anuncio` para levar tráfego à página).
+
+## Anúncio de próximo passo (regra obrigatória)
+
+Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada operação que demora mais de 10 segundos (gerar página HTML com 11 seções 8D, criar copy, montar visual da Furadeira), anuncie em UMA linha:
+
+```
+🔍 Próximo passo: {ação no infinitivo}. Tempo estimado: {faixa de .claude/rules/tempo-estimado.md}.
+```
+
+Ao terminar, confirme em UMA linha:
+
+```
+✅ Concluído: {o que foi entregue}. Caminho: {caminho relativo, quando aplicável}.
+```
+
+Regras:
+- Tempo em segundos quando ≤ 120s, em minutos acima de 120s.
+- Consultar `.claude/rules/tempo-estimado.md`, nunca inventar número de cabeça.
+- Quando uma sub-skill é chamada, este agente faz o anúncio Nível 1 (com tempo); a sub-skill usa Nível 2 (`⏳ Passo X/Y:`) sem repetir o tempo.
+- Proibido travessão (—) e "Processando..." sem contexto.

@@ -1118,10 +1118,37 @@ window.addEventListener('DOMContentLoaded',()=>{{renderGrade(VD);renderTop3(VD);
 # Main
 # ---------------------------------------------------------------------------
 
+def atualizar_meta_concorrente(conc_dir, slug: str, nome: str, plat: str, handle: str):
+    """Cria ou atualiza meta.json com info do concorrente."""
+    import json as _json
+    from datetime import datetime as _dt
+    meta_path = conc_dir / "meta.json"
+    meta = {}
+    if meta_path.exists():
+        try:
+            meta = _json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception:
+            meta = {}
+    meta["slug"] = slug
+    if nome and (not meta.get("nome") or meta.get("nome") == slug):
+        meta["nome"] = nome
+    meta["atualizado_em"] = _dt.now().strftime("%d/%m/%Y %H:%M")
+    handles = meta.get("handles", {})
+    handles[plat] = handle
+    meta["handles"] = handles
+    plats = meta.get("plataformas", [])
+    if plat not in plats:
+        plats.append(plat)
+    meta["plataformas"] = plats
+    meta_path.write_text(_json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main():
     parser = argparse.ArgumentParser(description="YouTube Dashboard - Workshop Marketing IA")
     parser.add_argument("--abrir", action="store_true", help="Abre o dashboard no navegador ao terminar")
     parser.add_argument("--canal", help="URL ou @handle do canal (substitui YOUTUBE_CHANNEL do .env)")
+    parser.add_argument("--concorrente", help="Slug do concorrente. Salva em entregas/concorrentes/{slug}/youtube/")
+    parser.add_argument("--nome-bonito", dest="nome_bonito", help="Nome do concorrente para exibir no painel")
     args = parser.parse_args()
 
     env = carregar_env()
@@ -1139,8 +1166,29 @@ def main():
 
     canal_url = normalizar_canal_url(canal_raw)
     canal_slug = re.sub(r"[^a-zA-Z0-9_-]", "", canal_raw.lstrip("@").split("/")[-1])[:50] or "canal"
-    base_dir = get_output_dir()
-    output_dir = base_dir / canal_slug
+
+    # Resolver caminhos: meu vs concorrente
+    # IMPORTANTE: para concorrente, computa o caminho ABSOLUTO a partir de raiz_projeto().
+    # Nao usar .parent magic em cima de get_output_dir() (causou bug onde os arquivos foram pra
+    # leitura-10x/concorrentes/ em vez de leitura-10x/entregas/concorrentes/).
+    if args.concorrente:
+        raiz = raiz_projeto()
+        ativo_path = raiz / "meus-produtos" / ".ativo"
+        if not ativo_path.exists():
+            print("ERRO: meus-produtos/.ativo nao encontrado."); sys.exit(1)
+        ativo = ativo_path.read_text(encoding="utf-8").strip()
+        if not ativo:
+            print("ERRO: meus-produtos/.ativo esta vazio."); sys.exit(1)
+        conc_root = raiz / "meus-produtos" / ativo / "entregas" / "concorrentes" / args.concorrente
+        output_dir = conc_root / "youtube"
+        base_dir = output_dir
+        # Sanity check: nunca deixar passar caminho fora de entregas/concorrentes
+        assert "entregas" in output_dir.parts and "concorrentes" in output_dir.parts, \
+            f"ERRO interno: caminho de concorrente invalido: {output_dir}"
+    else:
+        base_dir = get_output_dir()
+        output_dir = base_dir / canal_slug
+
     output_dir.mkdir(parents=True, exist_ok=True)
     log = configurar_log(output_dir)
     log.info(f"=== YouTube Dashboard iniciado para {canal_url} ===")
@@ -1190,6 +1238,16 @@ def main():
     log.info("Gerando dashboard...")
     html_path = gerar_html(canal, videos, metricas, historico, canal_url, output_dir, log)
     log.info(f"=== Pronto: {html_path} ===")
+
+    if args.concorrente:
+        atualizar_meta_concorrente(
+            conc_root,
+            args.concorrente,
+            args.nome_bonito or args.concorrente,
+            "youtube",
+            canal_slug,
+        )
+        log.info(f"meta.json do concorrente atualizado: {conc_root}/meta.json")
 
     if args.abrir:
         webbrowser.open(html_path.as_uri())

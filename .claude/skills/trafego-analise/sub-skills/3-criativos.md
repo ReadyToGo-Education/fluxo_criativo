@@ -25,12 +25,13 @@ Análise completa dos criativos ativos: formato, retenção de vídeo, CTA, fadi
 ## Dados necessários
 
 Pedir ao `/trafego-insights`:
-- Escopo: `conta_completa`
-- Período: padrão 30 dias (perguntar)
+- **Escopo: usar `ESCOPO_FILTRO` definido no Passo 0.6 do command principal.** Não forçar `conta_completa`. Se o aluno escolheu um grupo (ex: "VTSD"), só puxar criativos das campanhas desse grupo.
+- **Status: usar `STATUS_FILTRO` definido no Passo 0.55** (ACTIVE, PAUSED+WITH_ISSUES, ambos, ou histórico completo). Não assumir só ACTIVE.
+- Período: usar período definido no Passo 3. Não perguntar de novo.
 - Breakdown `publisher_platform` para split vídeo x imagem x carrossel
 - Métricas de vídeo por ad: `video_avg_time_watched_actions`, `video_p25_watched_actions` (Thumbstop), `video_thruplay_watched_actions` (Hook Rate 25%), `video_p50_watched_actions` (Hold Rate), `video_p100_watched_actions` (Play-Through)
 - Métricas por anúncio: `inline_link_clicks`, `link_clicks`, `cost_per_inline_link_click`, `actions[purchase]`, `spend`, `impressions`, `frequency`, `quality_ranking`, `engagement_rate_ranking`, `conversion_rate_ranking`
-- Para Fadiga Map: filtrar anúncios com `impressions > 50000` e status ACTIVE
+- Para Fadiga Map: filtrar anúncios com `impressions > 50000` (status já filtrado pelo `STATUS_FILTRO` acima)
 - Para ranking de CTR: filtrar anúncios com `spend > 100` no período
 
 ---

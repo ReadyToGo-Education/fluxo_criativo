@@ -3,9 +3,9 @@ name: trafego-analise
 description: >
   Análise narrada de tráfego pago Meta Ads com terminologia VTSD (Mandala de 18 tipos, Urgência
   Oculta, Quadro na Parede, Furadeira, Decorados, 3 Identidades, HOT/COLD/SUPERCOLD, Caixa Rápido,
-  Pico vs Evergreen). Hub de menu com 9 outputs narrativos: Diagnóstico Rápido, Performance & Funil,
+  Pico vs Evergreen). Hub de menu com 10 outputs narrativos: Diagnóstico Rápido, Performance & Funil,
   Criativos & Copy, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle &
-  Histórico, Problemas Ocultos, Orçamento & Projeção. Aluno escolhe um output por vez, recebe
+  Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B. Aluno escolhe um output por vez, recebe
   análise completa pelo método VTSD com handoff para skill executora quando ação for necessária.
   Lê dados via /trafego-insights (com cache local em arquivo .md). Use quando o aluno pedir
   análise narrada, ranking, comparativo, diagnóstico, mapa do funil, ou quiser ensinar tráfego
@@ -242,11 +242,14 @@ Que tipo de análise você quer hoje?
 [9]  ORÇAMENTO & PROJEÇÃO       projeção até o fim do mês, candidatos a
                                 escala, redistribuição de budget
 
-[10] descrever em texto livre o que precisa
+[10] COMPARATIVO A x B          confronta duas campanhas lado a lado,
+                                qual vence em cada etapa do funil, qual escalar
+
+[11] descrever em texto livre o que precisa
 ```
 
 ### Passo 2. Aluno escolhe UM output
-Aguardar escolha. Aceitar número (1 a 10) ou descrição livre. Se descrição livre, identificar qual output melhor cobre.
+Aguardar escolha. Aceitar número (1 a 11) ou descrição livre. Se descrição livre, identificar qual output melhor cobre.
 
 ### Passo 3. Pergunta período
 ```
@@ -269,12 +272,24 @@ python3 .claude/skills/trafego-analise/scripts/trafego_fetch.py \
   --account {CONTA_ATIVA_ID} \
   --filtro "{ESCOPO_FILTRO_TEXTO}" \
   --periodo {PERIODO} \
+  --status "{STATUS_FILTRO_LISTA}" \
   --output {SLUG_OUTPUT} \
   --project-root . \
   --cache-dir skill-analise/cache
 ```
 
-Faz as 4 chamadas (1a métricas, 1b WoW, 1c budgets, 1d hoje) em sequência única com retry em rate limit. Salva em `skill-analise/cache/`. Em chamadas seguintes da mesma sessão, reutiliza o cache sem chamar a API.
+**Mapeamento de `--status` a partir do `STATUS_FILTRO` escolhido no Passo 0.55:**
+
+| Escolha do Passo 0.55 | Valor de `--status` |
+|---|---|
+| [1] Somente ativas | `ACTIVE` |
+| [2] Somente pausadas | `PAUSED,WITH_ISSUES` |
+| [3] Ativas + pausadas | `ACTIVE,PAUSED,WITH_ISSUES` |
+| [4] Histórico completo | `ACTIVE,PAUSED,WITH_ISSUES,ARCHIVED` |
+
+Se o aluno não passou pelo Passo 0.55 (ex: chamada direta sem menu), default do script é `ACTIVE,PAUSED,WITH_ISSUES`.
+
+Faz 5 chamadas em sequência: (0) lista IDs de campanhas com `effective_status` aplicado, (1a) métricas do período filtradas pelos IDs permitidos, (1b) comparativo WoW com mesmo filtro, (1c) reusa lista da Chamada 0 (orçamentos), (1d) gasto de hoje com mesmo filtro. Tudo com retry em rate limit. Salva em `skill-analise/cache/`. O nome do cache inclui slug do status (ex: `_apw_` para `ACTIVE,PAUSED,WITH_ISSUES`) pra evitar colisão entre filtros diferentes.
 
 **Script 2 — processar (KPIs e sinais):**
 
@@ -311,7 +326,7 @@ Após entregar a análise narrada, sempre apresentar as opções em uma única m
 O que quer fazer agora?
 
 [1]  Salvar como dashboard com os dados desta análise
-[2]  Rodar outra análise  — digite o número (1 a 10)
+[2]  Rodar outra análise  — digite o número (1 a 11)
 [3]  Encerrar
 ```
 
@@ -319,7 +334,7 @@ O que quer fazer agora?
 Acionar `sub-skills/_export-html.md`, que gera o arquivo em `meus-produtos/{ativo}/trafego/analise/{slug-output}-{YYYY-MM-DD-HHMM}.html` e abre no navegador. Devolver o caminho absoluto. Depois perguntar se quer rodar outra análise ou encerrar (opções [2] e [3] acima).
 
 **Se escolher [2] — Outra análise:**
-Aceitar o número do output (1 a 10) digitado junto ou na mensagem seguinte. Retornar ao Passo 3 (período) mantendo conta e escopo já definidos.
+Aceitar o número do output (1 a 11) digitado junto ou na mensagem seguinte. Retornar ao Passo 3 (período) mantendo conta e escopo já definidos.
 
 **Se escolher [3] ou "não" / "encerrar":**
 Encerrar sem perguntar mais nada.
@@ -327,7 +342,7 @@ Encerrar sem perguntar mais nada.
 **Regras desta etapa:**
 - Nunca usar o termo "HTML" na pergunta. O aluno vê "dashboard com os dados", não detalhes técnicos.
 - Nunca pular esta pergunta. Ela é obrigatória após cada análise entregue.
-- Se o aluno responder com um número entre 1 e 10 sem escolher [1] explicitamente, interpretar como escolha de novo output (opção [2]).
+- Se o aluno responder com um número entre 1 e 11 sem escolher [1] explicitamente, interpretar como escolha de novo output (opção [2]).
 
 ---
 
@@ -346,11 +361,12 @@ Cada escolha do menu carrega um sub-skill específico. Dependências de breakdow
 | [7] Lifecycle & Histórico | `sub-skills/7-lifecycle-historico.md` | base por mês x 6 meses (`historico_mensal`) |
 | [8] Problemas Ocultos | `sub-skills/8-problemas-ocultos.md` | base + diagnóstico de pixel via `/trafego-pixel` |
 | [9] Orçamento & Projeção | `sub-skills/9-orcamento-projecao.md` | base |
-| [10] Livre | usa o sub-skill mais próximo da intenção identificada | conforme necessidade |
+| [10] Comparativo A x B | `sub-skills/10-comparativo.md` | base por campanha + métricas de vídeo (`video_p25/p50/p75/p95_watched_actions`) |
+| [11] Livre | usa o sub-skill mais próximo da intenção identificada | conforme necessidade |
 
 **Sub-skill compartilhada (Passo 6.5):** `sub-skills/_export-html.md` — gera HTML standalone do output usando o design system Fluxo Criativo, salvando em `meus-produtos/{ativo}/trafego/analise/`. Acionada apenas quando o aluno confirma o export.
 
-**Total:** 9 outputs narrativos + 1 sub-skill utilitária de export. Cada output entrega análise completa em uma sessão. Aluno pode rodar quantos quiser em sequência.
+**Total:** 10 outputs narrativos + 1 sub-skill utilitária de export. Cada output entrega análise completa em uma sessão. Aluno pode rodar quantos quiser em sequência.
 
 ---
 

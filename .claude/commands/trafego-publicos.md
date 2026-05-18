@@ -73,7 +73,7 @@ Digite o número:
 ## Passo 3. Coletar inputs (varia por sub-fluxo)
 
 Cada sub-skill define os inputs específicos. Padrão geral:
-- Nome / descrição (gerado pela skill com convenção `[WS] tipo-descricao-janela-produto`)
+- Nome / descrição (gerado pela skill com convenção `[FC] tipo-descricao-janela-produto`)
 - Janela (default 30d, aceita 1-180d para WEBSITE, 1-365d para vídeo)
 - Tamanho mínimo da source (apenas Lookalike)
 
@@ -122,7 +122,7 @@ Próximos passos:
 
 1. **Preview antes de write. Sempre.**
 2. **Confirmação SIM** explícita antes de criar.
-3. **Convenção de nome `[WS]`** padrão.
+3. **Convenção de nome `[FC]`** padrão.
 4. **Audience nasce disponível** (não há PAUSED para audience).
 5. **Não conecta a adset automaticamente.** Só cria.
 6. **Não deleta.** Operação manual no Audiences Manager.

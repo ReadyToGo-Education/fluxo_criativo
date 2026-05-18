@@ -2,10 +2,10 @@
 name: dashboard-social
 description: >
   Porta de entrada unificada para configurar e atualizar os dashboards de
-  métricas do Instagram, TikTok e YouTube. Verifica quais dashboards já existem,
-  oferece apenas os que ainda não foram gerados, consulta o .env antes de pedir
-  qualquer dado e executa os scripts na sequência. O token Apify é pedido uma
-  só vez e vale para todas as plataformas.
+  métricas do Instagram, TikTok, YouTube e LinkedIn. Verifica quais dashboards
+  já existem, oferece apenas os que ainda não foram gerados, consulta o .env
+  antes de pedir qualquer dado e executa os scripts na sequência. O token Apify
+  é pedido uma só vez e vale para todas as plataformas.
 ---
 
 # Dashboard. Central de Métricas das Redes Sociais
@@ -16,7 +16,7 @@ description: >
 - Quando quiser ver o estado geral de todos os dashboards.
 - Quando quiser atualizar os dados de plataformas já configuradas.
 
-**Alternativa:** cada plataforma também pode ser configurada individualmente pelas skills `instagram-dashboard`, `tiktok-dashboard` e `youtube-dashboard`.
+**Alternativa:** cada plataforma também pode ser configurada individualmente pelas skills `instagram-dashboard`, `tiktok-dashboard`, `youtube-dashboard` e `linkedin-dashboard`.
 
 ---
 
@@ -71,11 +71,12 @@ Guarde o resultado como `{python}` e use essa variável em todos os comandos Bas
 ### 0c. Detectar Estado das Plataformas
 
 Execute em paralelo:
-1. Leia o `.env` na raiz do projeto e extraia: `IG_USER`, `TIKTOK_USER`, `YOUTUBE_CHANNEL`, `APIFY_API_TOKEN`
-2. Verifique a existência dos três arquivos de dashboard usando glob (cada script salva dentro de uma subpasta com o username):
+1. Leia o `.env` na raiz do projeto e extraia: `IG_USER`, `TIKTOK_USER`, `YOUTUBE_CHANNEL`, `LINKEDIN_PROFILE`, `APIFY_API_TOKEN`
+2. Verifique a existência dos quatro arquivos de dashboard usando glob (cada script salva dentro de uma subpasta com o username/handle):
    - `meus-produtos/{ativo}/entregas/instagram-dashboard/*/dashboard.html`
    - `meus-produtos/{ativo}/entregas/tiktok-dashboard/*/dashboard.html`
    - `meus-produtos/{ativo}/entregas/youtube-dashboard/*/dashboard.html`
+   - `meus-produtos/{ativo}/entregas/linkedin-dashboard/*/dashboard.html`
 
 Monte a tabela de estado interna:
 
@@ -84,6 +85,7 @@ Monte a tabela de estado interna:
 | Instagram | sim/não | IG_USER=valor ou ausente | — |
 | TikTok | sim/não | TIKTOK_USER=valor ou ausente | — |
 | YouTube | sim/não | YOUTUBE_CHANNEL=valor ou ausente | — |
+| LinkedIn | sim/não | LINKEDIN_PROFILE=valor ou ausente | — |
 
 **Regras de estado:**
 
@@ -91,6 +93,22 @@ Monte a tabela de estado interna:
 - `PENDENTE` — `dashboard.html` não existe
 
 O username no `.env` é informação de apoio — nunca perguntar o que já está salvo.
+
+### 0d. Bifurcacao. Meu perfil ou concorrente?
+
+ANTES de exibir o Passo 1, pergunte ao aluno:
+
+```
+O que voce quer analisar?
+
+1. Meu(s) proprio(s) perfil(is)
+2. Um concorrente
+```
+
+- Se responder 1 (meu perfil): segue o fluxo normal abaixo (Passo 1 em diante).
+- Se responder 2 (concorrente): pula para a secao "Fluxo Concorrente" no fim deste arquivo.
+
+Excecao: se a Fila de Geracao Interrompida (0a) estiver ativa e for opcao "Continuar de onde parou", nao perguntar a bifurcacao. A fila ja sabe se era meu ou de concorrente (campo `tipo` no JSON).
 
 ---
 
@@ -104,9 +122,10 @@ Central de Dashboards
 Instagram:  [GERADO @{IG_USER}]   ou   [PENDENTE]
 TikTok:     [GERADO @{TIKTOK_USER}]   ou   [PENDENTE]
 YouTube:    [GERADO {YOUTUBE_CHANNEL}]   ou   [PENDENTE]
+LinkedIn:   [GERADO {LINKEDIN_PROFILE}]   ou   [PENDENTE]
 ```
 
-**Regra: se todos os três estiverem GERADOS**, exibir apenas:
+**Regra: se todos os quatro estiverem GERADOS**, exibir apenas:
 
 ```
 O que quer fazer?
@@ -143,6 +162,7 @@ Dashboards ainda não gerados:
 1. Instagram
 2. TikTok
 3. YouTube
+4. LinkedIn
 
 Quais quer gerar agora? (pode marcar mais de um)
 Digite os números separados por vírgula (ex: 1,3) ou o número único:
@@ -188,6 +208,13 @@ Qual o endereço do seu canal no YouTube?
 (ex: @meuperfil  ou  https://www.youtube.com/@meuperfil)
 ```
 Aceitar @handle, URL completa ou channel ID. Salve `YOUTUBE_CHANNEL=<valor>` no `.env`.
+
+**LinkedIn (só se `LINKEDIN_PROFILE` não existir no .env):**
+```
+Qual o handle ou URL do seu perfil no LinkedIn?
+(ex: leandroladeira  ou  https://www.linkedin.com/in/leandroladeira)
+```
+Aceitar handle puro, URL completa ou `/in/handle`. Normalize removendo `https://www.linkedin.com/in/` e trailing slash. Salve `LINKEDIN_PROFILE=<handle>` no `.env`.
 
 ### Etapa 3. Token Apify (uma vez para todas)
 
@@ -238,7 +265,7 @@ Quer gerar os dashboards ao mesmo tempo ou um por vez?
 2. Um por vez (mais facil de acompanhar)
 ```
 
-Nota interna (nao exibir ao usuario): gerar as tres plataformas ao mesmo tempo e seguro no plano gratuito do Apify.
+Nota interna (nao exibir ao usuario): gerar as quatro plataformas ao mesmo tempo e seguro no plano gratuito do Apify.
 
 ---
 
@@ -246,17 +273,18 @@ Nota interna (nao exibir ao usuario): gerar as tres plataformas ao mesmo tempo e
 
 Anuncie:
 ```
-Iniciando os tres dashboards ao mesmo tempo.
+Iniciando os dashboards ao mesmo tempo.
 Cada um pode levar ate 10 minutos. Aviso quando todos terminarem.
 ```
 
-Execute os tres scripts como chamadas Bash em paralelo (numa mesma mensagem de tool calls). Nao use `| tail` nem background — rode cada script direto com `2>&1` para capturar a saida completa.
+Execute os scripts como chamadas Bash em paralelo (numa mesma mensagem de tool calls). Nao use `| tail` nem background — rode cada script direto com `2>&1` para capturar a saida completa.
 
 | Plataforma | Script |
 |---|---|
 | Instagram | `{python} .claude/skills/instagram-dashboard/scripts/atualizar.py 2>&1` |
 | TikTok | `{python} .claude/skills/tiktok-dashboard/scripts/atualizar.py 2>&1` |
 | YouTube | `{python} .claude/skills/youtube-dashboard/scripts/atualizar.py 2>&1` |
+| LinkedIn | `{python} .claude/skills/linkedin-dashboard/scripts/atualizar.py 2>&1` |
 
 Apos todos concluirem, leia a saida de cada um e informe:
 
@@ -266,6 +294,7 @@ Concluido.
 Instagram (@leandroladeiran): 30 posts coletados. Engajamento: X%
 TikTok (@leandroladeiran): 30 videos. Seguidores: X. Engajamento: X%
 YouTube (@VTSD): 30 videos. Inscritos: X. Engajamento: X%
+LinkedIn (leandroladeira): 30 posts coletados. Engajamento: X%
 ```
 
 Se algum falhar, exiba o erro em linguagem simples (sem traceback Python) e oriente o que fazer.
@@ -274,7 +303,7 @@ Se algum falhar, exiba o erro em linguagem simples (sem traceback Python) e orie
 
 **Modo: um por vez (sequencial)**
 
-Para cada plataforma selecionada, na ordem Instagram → TikTok → YouTube:
+Para cada plataforma selecionada, na ordem Instagram → TikTok → YouTube → LinkedIn:
 
 Anuncie antes de cada uma:
 ```
@@ -341,7 +370,7 @@ Para atualizar os dados quando quiser, chame este comando de novo.
 
 Apos a Entrega Final, verifique se alguma plataforma PENDENTE nao foi selecionada pelo aluno.
 
-**Pule este passo se:** todas as 3 plataformas foram geradas nesta sessao, ou se o aluno nao selecionou nenhuma (encerrou sem gerar).
+**Pule este passo se:** todas as 4 plataformas foram geradas nesta sessao, ou se o aluno nao selecionou nenhuma (encerrou sem gerar).
 
 **Se sobrou 1 plataforma nao gerada:**
 ```
@@ -369,7 +398,7 @@ Se o aluno aceitar: volta para a Etapa 2 (coletar usernames que faltam) e execut
 
 ## Opção: Atualizar os que Ja Existem
 
-Para cada plataforma com estado GERADO (na ordem Instagram → TikTok → YouTube):
+Para cada plataforma com estado GERADO (na ordem Instagram → TikTok → YouTube → LinkedIn):
 
 ```
 Atualizando Instagram (@{IG_USER})...
@@ -392,6 +421,7 @@ Atualizacao concluida.
 Instagram:  atualizado   /   erro: {mensagem}
 TikTok:     atualizado   /   erro: {mensagem}
 YouTube:    atualizado   /   erro: {mensagem}
+LinkedIn:   atualizado   /   erro: {mensagem}
 ```
 
 ---
@@ -404,15 +434,17 @@ Qual dashboard quer abrir?
 1. Instagram (@{IG_USER})
 2. TikTok (@{TIKTOK_USER})
 3. YouTube ({YOUTUBE_CHANNEL})
+4. LinkedIn ({LINKEDIN_PROFILE})
 ```
 
 Exibir apenas as plataformas com estado GERADO.
 
-Antes de abrir, localize o caminho real com glob (cada script salva dentro de uma subpasta com o username):
+Antes de abrir, localize o caminho real com glob (cada script salva dentro de uma subpasta com o username/handle):
 
 - Instagram: `meus-produtos/{ativo}/entregas/instagram-dashboard/*/dashboard.html`
 - TikTok: `meus-produtos/{ativo}/entregas/tiktok-dashboard/*/dashboard.html`
 - YouTube: `meus-produtos/{ativo}/entregas/youtube-dashboard/*/dashboard.html`
+- LinkedIn: `meus-produtos/{ativo}/entregas/linkedin-dashboard/*/dashboard.html`
 
 Execute o comando de abertura para o sistema operacional detectado, usando o caminho encontrado pelo glob:
 
@@ -447,6 +479,12 @@ YOUTUBE
   Melhores dias para publicar
   Top 3 videos, analise de titulos, linha do tempo, grade completa de videos
 
+LINKEDIN
+  Seguidores, conexoes, engajamento medio, tipo de post mais publicado
+  Desempenho por tipo (Texto, Imagem, Video, Documento/PDF, Artigo, Repost)
+  Melhores dias para postar
+  Top 3 posts, analise de hashtags, tamanho do texto vs engajamento, linha do tempo, grade completa de posts
+
 Todos os dashboards abrem direto no navegador, funcionam offline e tem filtros interativos.
 ```
 
@@ -454,10 +492,10 @@ Todos os dashboards abrem direto no navegador, funcionam offline e tem filtros i
 
 ## Regras
 
-- **Verificar o `.env` antes de pedir qualquer dado.** Se `IG_USER`, `TIKTOK_USER`, `YOUTUBE_CHANNEL` ou `APIFY_API_TOKEN` ja estiverem presentes, usar diretamente sem perguntar.
+- **Verificar o `.env` antes de pedir qualquer dado.** Se `IG_USER`, `TIKTOK_USER`, `YOUTUBE_CHANNEL`, `LINKEDIN_PROFILE` ou `APIFY_API_TOKEN` ja estiverem presentes, usar diretamente sem perguntar.
 - **O indicador primario de estado e a existencia do `dashboard.html`.** Nao depender de flags para decidir o que oferecer.
 - **Token Apify e pedido uma unica vez** mesmo quando multiplas plataformas estao sendo geradas.
-- **Ordem de execucao sequencial:** Instagram, TikTok, YouTube. No modo paralelo, os tres rodam simultaneamente como chamadas Bash independentes numa mesma mensagem.
+- **Ordem de execucao sequencial:** Instagram, TikTok, YouTube, LinkedIn. No modo paralelo, as quatro plataformas rodam simultaneamente como chamadas Bash independentes numa mesma mensagem.
 - **Sem agendamento automatico:** nao configurar CronCreate nem schtasks. O aluno roda manualmente.
 - **Nao usar travessao** em nenhum texto exibido ao usuario.
 - **Usernames sao salvos no `.env` imediatamente apos o aluno informar**, antes de executar qualquer script.
@@ -470,4 +508,140 @@ Todos os dashboards abrem direto no navegador, funcionam offline e tem filtros i
 - `/copy-variacao-post` — criar variacoes dos posts do Instagram com mais engajamento
 - `/copy-social` — criar conteudo baseado nos videos do TikTok que performaram melhor
 - `/copy-roteiro` — criar roteiros baseados nos videos do YouTube com mais views
+- `/copy-social` — criar conteudo para o LinkedIn baseado nos posts com mais engajamento
 - `/dados-instagram` — analise profunda de um perfil concorrente no Instagram
+
+---
+
+## Fluxo Concorrente
+
+Acionado quando a bifurcacao (0d) for opcao 2.
+
+### Passo C1. Coletar dados do concorrente
+
+Pergunte UMA pergunta por vez:
+
+1. **Nome do concorrente** (texto livre, ex: "Erico Rocha"). Use para exibir no painel.
+2. **Quais plataformas voce quer analisar?**
+   ```
+   1. Instagram
+   2. TikTok
+   3. YouTube
+   4. LinkedIn
+
+   Digite os numeros separados por virgula (ex: 1,3) ou um numero unico.
+   ```
+3. Para cada plataforma escolhida, pergunte o handle. Use uma pergunta por vez, na ordem Instagram, TikTok, YouTube, LinkedIn:
+
+   - **Instagram:** "Qual o @ do Instagram dele? (ex: ericosanrocha)"
+
+   - **TikTok:** se o aluno ja informou o Instagram nesta sessao, pergunte primeiro:
+     ```
+     O TikTok dele usa o mesmo @ do Instagram?
+
+     1. Sim (@{instagram_handle})
+     2. Nao, e outro
+     ```
+     Se "Sim", reaproveite o handle do Instagram. Se "Nao", pergunte: "Qual o @ do TikTok dele? (ex: ericorochaoficial)"
+     Se o aluno NAO escolheu Instagram, pergunte direto: "Qual o @ do TikTok dele?"
+
+   - **YouTube:** se o aluno ja informou Instagram ou TikTok, pergunte primeiro:
+     ```
+     O canal do YouTube dele usa o mesmo @ do {Instagram/TikTok}?
+
+     1. Sim (@{handle_anterior})
+     2. Nao, e outro
+     ```
+     Se "Sim", monte a URL como `https://www.youtube.com/@{handle}`. Se "Nao", pergunte: "Qual o @ ou URL do canal no YouTube? (ex: @ericorochaoficial)"
+
+   - **LinkedIn:** mesmo padrao do YouTube. Se ja tem um handle anterior, pergunte se reaproveita; senao, pergunte direto: "Qual o handle ou URL do perfil no LinkedIn? (ex: ericorocha)"
+
+   **Regra de prioridade do handle sugerido:** se o aluno escolheu varias plataformas, sugira sempre o handle da PRIMEIRA plataforma informada (geralmente Instagram). Se Instagram nao foi escolhido, use o TikTok. E assim por diante.
+
+### Passo C2. Gerar slug e confirmar
+
+Gere o `slug` a partir do nome (ASCII, minusculo, hifens):
+- "Erico Rocha" -> `erico-rocha`
+- "Joao da Silva" -> `joao-da-silva`
+
+Confirme com o aluno:
+
+```
+Vou analisar:
+
+Nome:        Erico Rocha
+Plataformas: Instagram (@ericosanrocha), YouTube (@ericorochaoficial)
+Pasta:       entregas/concorrentes/erico-rocha/
+
+Tempo estimado: 3 a 6 minutos.
+
+1. Pode comecar
+2. Quero ajustar algo
+```
+
+Se o aluno aprovar, prossiga. Se ja existir uma pasta `entregas/concorrentes/{slug}/`, avisar que vai mesclar com os dados existentes (substituindo a(s) plataforma(s) analisada(s) agora).
+
+### Passo C3. Verificar token Apify
+
+Se `APIFY_API_TOKEN` nao estiver no `.env`, acione a skill `configurar-apify` e espere a conclusao.
+
+### Passo C4. Criar fila de concorrente
+
+Antes do primeiro script, crie `meus-produtos/{ativo}/.dashboard-queue.json` com:
+
+```json
+{
+  "tipo": "concorrente",
+  "slug": "erico-rocha",
+  "nome": "Erico Rocha",
+  "pendentes": ["instagram", "youtube"],
+  "concluidos": [],
+  "handles": {"instagram": "ericosanrocha", "youtube": "@ericorochaoficial"},
+  "criado_em": "2026-05-11T14:30:00"
+}
+```
+
+### Passo C5. Executar os scripts
+
+Para cada plataforma da lista, rode o `atualizar.py` correspondente com `--concorrente <slug> --nome-bonito "<nome>"` e o flag de handle da plataforma. Cada script vai salvar em `entregas/concorrentes/{slug}/{plataforma}/dashboard.html` e atualizar o `meta.json`.
+
+Mapeamento dos flags:
+
+| Plataforma | Comando |
+|---|---|
+| Instagram | `{python} .claude/skills/instagram-dashboard/scripts/atualizar.py --usuario {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| TikTok | `{python} .claude/skills/tiktok-dashboard/scripts/atualizar.py --usuario {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| YouTube | `{python} .claude/skills/youtube-dashboard/scripts/atualizar.py --canal {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| LinkedIn | `{python} .claude/skills/linkedin-dashboard/scripts/atualizar.py --perfil {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+
+Pode rodar em paralelo (uma chamada Bash por plataforma na mesma mensagem) ou sequencial. Pergunte ao aluno se ele preferir.
+
+Apos cada script terminar, atualize a fila (mova da lista pendentes para concluidos). Ao final, delete o arquivo `.dashboard-queue.json`.
+
+### Passo C6. Regerar a secao do painel
+
+Execute:
+
+```
+{python} scripts/painel-incremental.py --secao dashboards --slug {produto-ativo}
+```
+
+Isso vai detectar o novo concorrente e adicionar na lista "Concorrentes" do hub do painel.
+
+### Passo C7. Entrega final
+
+```
+Concluido. Concorrente "Erico Rocha" analisado.
+
+Pasta: meus-produtos/{ativo}/entregas/concorrentes/erico-rocha/
+Plataformas: Instagram, YouTube
+
+Para ver no painel:
+1. Abra o painel de entregas
+2. Va na secao "Redes Sociais"
+3. Clique em "Analise de concorrentes"
+4. Clique no card "Erico Rocha"
+
+Para remover este concorrente depois:
+- /dashboard-concorrente-remover
+```

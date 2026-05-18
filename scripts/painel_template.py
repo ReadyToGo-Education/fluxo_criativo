@@ -67,7 +67,7 @@ SECOES: list[dict] = [
      "subtitulo": "16 blocos da página de vendas 8D. Aprove um bloco por vez em /copy-pagina.",
      "proxima": "Será preenchida conforme você aprova os blocos em /copy-pagina."},
     {"id": "dashboards", "grupo": "DADOS", "titulo": "Redes Sociais", "ix": "11",
-     "subtitulo": "Metricas das redes sociais. Instagram, TikTok e YouTube em abas.",
+     "subtitulo": "Metricas das redes sociais. Instagram, TikTok, YouTube e LinkedIn em abas.",
      "proxima": "Sera preenchido ao rodar /dashboard-social."},
     {"id": "analise-trafego", "grupo": "DADOS", "titulo": "Análise de Tráfego", "ix": "12",
      "subtitulo": "Histórico de análises narradas do Meta Ads. Geradas via /trafego-analise.",
@@ -788,7 +788,7 @@ def build_shell(nome_produto: str, owner: str = "", timestamp: str = "") -> str:
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark" aria-hidden="true"></div>
-      <div class="brand-text">fluxo<br/>criativo<span class="tiny">Painel &middot; v1.1</span></div>
+      <div class="brand-text">fluxo<br/>criativo<span class="tiny">Painel &middot; v1.0</span></div>
     </div>
     <div class="sala-link" id="sala-link" data-id="sala-dos-agentes" onclick="showSala()" title="Ver agentes trabalhando ao vivo">
       <span>Sala dos Agentes</span>
@@ -2237,39 +2237,65 @@ def _proximo_bloco(por_numero: dict[int, dict]) -> str:
     return "16"
 
 
-def render_dashboards(dados: dict) -> str:
-    plataformas = dados.get("plataformas", [])
-
-    if not plataformas:
-        return (
-            "<!-- SECTION:dashboards -->\n"
-            + _placeholder("Sera preenchido ao rodar /dashboard-social.")
-            + "\n<!-- /SECTION:dashboards -->"
-        )
-
-    tabs_html = ""
-    frames_html = ""
+def _render_dash_tabs(plataformas: list, prefix: str) -> str:
+    """Renderiza tabstrip + iframes para um conjunto de plataformas.
+    `prefix` namespacia os ids para nao colidir entre views (ex: 'minhas', 'conc-erico-rocha')."""
+    tabs = ""
+    frames = ""
     for i, p in enumerate(plataformas):
         active_cls = " dash-tab-active" if i == 0 else ""
         display_style = "" if i == 0 else ' style="display:none"'
         user_span = (
             f'<span class="dash-user">{_escape(p["user"])}</span>' if p.get("user") else ""
         )
-        tabs_html += (
+        tab_id = f'{prefix}-{p["id"]}'
+        tabs += (
             f'<button class="dash-tab{active_cls}" '
-            f'onclick="showDashTab(\'{p["id"]}\')">'
+            f'data-group="{_escape(prefix)}" data-target="{_escape(tab_id)}" '
+            f'onclick="showDashTab(this)">'
             f'{_escape(p["label"])}{user_span}'
             f"</button>"
         )
-        frames_html += (
-            f'<div class="dash-frame" id="dash-frame-{p["id"]}"{display_style}>'
+        frames += (
+            f'<div class="dash-frame" data-group="{_escape(prefix)}" '
+            f'id="dash-frame-{_escape(tab_id)}"{display_style}>'
             f'<iframe src="{_escape(p["caminho"])}" class="dash-iframe" '
             f'title="Dashboard {_escape(p["label"])}"></iframe>'
             f"</div>"
         )
+    return f'<div class="dash-tabstrip">{tabs}</div><div class="dash-frames">{frames}</div>'
 
-    inner = (
+
+def render_dashboards(dados: dict) -> str:
+    # Aceita tanto shape novo {minhas, concorrentes} quanto antigo {plataformas} (compat)
+    minhas = dados.get("minhas") or dados.get("plataformas") or []
+    concorrentes = dados.get("concorrentes") or []
+
+    if not minhas and not concorrentes:
+        return (
+            "<!-- SECTION:dashboards -->\n"
+            + _placeholder("Sera preenchido ao rodar /dashboard-social.")
+            + "\n<!-- /SECTION:dashboards -->"
+        )
+
+    css = (
         "<style>"
+        ".dash-view{width:100%}"
+        ".dash-hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));"
+        "gap:18px;margin-top:8px}"
+        ".dash-hub-card{background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);"
+        "padding:28px 24px;cursor:pointer;transition:border-color .15s;"
+        "display:flex;flex-direction:column;gap:8px;text-align:center}"
+        ".dash-hub-card:hover{border-color:var(--neon,#c4ff5e)}"
+        ".dash-hub-title{font-family:'JetBrains Mono',monospace;font-size:16px;"
+        "color:var(--text-hi,#fff);font-weight:600}"
+        ".dash-hub-sub{font-size:12px;color:var(--text-faint,#a8a8a3);"
+        "font-family:'JetBrains Mono',monospace}"
+        ".dash-back{background:transparent;border:1px solid var(--line-2,#262626);"
+        "color:var(--text-faint,#a8a8a3);padding:6px 14px;"
+        "font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;"
+        "margin-bottom:14px;transition:border-color .15s}"
+        ".dash-back:hover{border-color:var(--neon,#c4ff5e);color:var(--text-hi,#fff)}"
         ".dash-tabstrip{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}"
         ".dash-tab{background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);"
         "color:var(--text-faint,#a8a8a3);padding:10px 18px;cursor:pointer;"
@@ -2278,24 +2304,426 @@ def render_dashboards(dados: dict) -> str:
         ".dash-tab:hover{border-color:var(--text-dim,#cfcfcb)}"
         ".dash-tab-active{border-color:var(--neon,#c4ff5e);color:var(--text-hi,#fff)}"
         ".dash-user{font-size:11px;color:var(--neon,#c4ff5e)}"
-        ".dash-iframe{width:100%;height:calc(100vh - 230px);border:none;background:#000;"
-        "display:block}"
+        ".dash-iframe{width:100%;height:calc(100vh - 280px);border:none;background:#000;display:block}"
         ".dash-frame{width:100%}"
+        ".dash-conc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));"
+        "gap:14px;margin-top:8px}"
+        ".dash-conc-card{background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);"
+        "padding:18px;cursor:pointer;transition:border-color .15s;"
+        "display:flex;flex-direction:column;gap:6px;position:relative}"
+        ".dash-conc-card:hover{border-color:var(--neon,#c4ff5e)}"
+        ".dash-conc-nome{font-family:'JetBrains Mono',monospace;font-size:14px;"
+        "color:var(--text-hi,#fff);font-weight:600}"
+        ".dash-conc-meta{font-size:11px;color:var(--text-faint,#a8a8a3);"
+        "font-family:'JetBrains Mono',monospace}"
+        ".dash-conc-plats{font-size:11px;color:var(--neon,#c4ff5e);"
+        "font-family:'JetBrains Mono',monospace;margin-top:4px}"
+        ".dash-conc-remover{align-self:flex-end;background:transparent;"
+        "border:1px solid var(--line-2,#262626);color:var(--text-faint,#a8a8a3);"
+        "padding:4px 10px;font-family:'JetBrains Mono',monospace;"
+        "font-size:10px;cursor:pointer;margin-top:8px}"
+        ".dash-conc-remover:hover{border-color:#ff6b6b;color:#ff6b6b}"
+        ".dash-conc-header{margin-bottom:14px}"
+        ".dash-conc-nome-grande{font-family:'JetBrains Mono',monospace;font-size:18px;"
+        "color:var(--text-hi,#fff);font-weight:700}"
+        ".dash-conc-atualizado{font-size:11px;color:var(--text-faint,#a8a8a3);"
+        "font-family:'JetBrains Mono',monospace;margin-top:2px}"
+        ".dash-empty{padding:40px;text-align:center;color:var(--text-faint,#a8a8a3);"
+        "background:var(--ink-3,#141414);border:1px dashed var(--line-2,#262626);"
+        "font-family:'JetBrains Mono',monospace;font-size:13px}"
+        ".dash-hub-card-off{opacity:.45;cursor:not-allowed}"
+        ".dash-hub-card-off:hover{border-color:var(--line-2,#262626)}"
+        ".cmp-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;"
+        "background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);"
+        "padding:16px 18px;margin-bottom:18px}"
+        ".cmp-label{font-family:'JetBrains Mono',monospace;font-size:11px;"
+        "color:var(--text-faint,#a8a8a3);text-transform:uppercase;letter-spacing:.05em;"
+        "display:block;margin-bottom:4px}"
+        ".cmp-select{background:#0d0d0d;border:1px solid var(--line-2,#262626);"
+        "color:var(--text-hi,#fff);font-family:'JetBrains Mono',monospace;font-size:13px;"
+        "padding:8px 12px;min-width:200px;cursor:pointer}"
+        ".cmp-select:focus{outline:none;border-color:var(--neon,#c4ff5e)}"
+        ".cmp-btn{background:var(--neon,#c4ff5e);border:none;color:#000;font-weight:700;"
+        "font-family:'JetBrains Mono',monospace;font-size:13px;padding:9px 22px;cursor:pointer;"
+        "transition:opacity .15s}"
+        ".cmp-btn:hover{opacity:.85}"
+        ".cmp-btn:disabled{opacity:.4;cursor:not-allowed}"
+        ".cmp-result{width:100%}"
+        ".cmp-header{display:flex;justify-content:space-between;align-items:center;"
+        "padding:14px 18px;background:var(--ink-3,#141414);border-left:3px solid var(--neon,#c4ff5e);"
+        "margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:13px}"
+        ".cmp-header strong{color:var(--text-hi,#fff)}"
+        ".cmp-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));"
+        "gap:12px;margin-bottom:18px}"
+        ".cmp-kpi{background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);padding:14px}"
+        ".cmp-kpi-label{font-size:11px;color:var(--text-faint,#a8a8a3);"
+        "font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}"
+        ".cmp-kpi-row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:4px}"
+        ".cmp-kpi-row-me{color:var(--neon,#c4ff5e)}"
+        ".cmp-kpi-row-them{color:var(--text-dim,#cfcfcb)}"
+        ".cmp-kpi-row-name{color:var(--text-faint,#a8a8a3)}"
+        ".cmp-kpi-row-val{font-weight:700}"
+        ".cmp-kpi-delta{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line-2,#262626);"
+        "font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}"
+        ".cmp-kpi-delta-pos{color:var(--neon,#c4ff5e)}"
+        ".cmp-kpi-delta-neg{color:#ff6b6b}"
+        ".cmp-kpi-delta-eq{color:var(--text-faint,#a8a8a3)}"
+        ".cmp-bars{background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);"
+        "padding:18px;margin-bottom:18px}"
+        ".cmp-bars-title{font-family:'JetBrains Mono',monospace;font-size:12px;"
+        "color:var(--text-faint,#a8a8a3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}"
+        ".cmp-bar-row{margin-bottom:14px}"
+        ".cmp-bar-row:last-child{margin-bottom:0}"
+        ".cmp-bar-label{font-family:'JetBrains Mono',monospace;font-size:12px;"
+        "color:var(--text-dim,#cfcfcb);margin-bottom:6px}"
+        ".cmp-bar-pair{display:flex;gap:8px}"
+        ".cmp-bar-side{flex:1}"
+        ".cmp-bar-track{height:18px;background:#0d0d0d;border:1px solid var(--line-2,#262626);position:relative;overflow:hidden}"
+        ".cmp-bar-fill-me{height:100%;background:var(--neon,#c4ff5e)}"
+        ".cmp-bar-fill-them{height:100%;background:#7aa8c9}"
+        ".cmp-bar-val{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-faint,#a8a8a3);margin-top:3px}"
+        ".cmp-top3{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}"
+        ".cmp-top3-col-title{font-family:'JetBrains Mono',monospace;font-size:12px;"
+        "color:var(--text-faint,#a8a8a3);text-transform:uppercase;margin-bottom:8px}"
+        ".cmp-top3-card{background:var(--ink-3,#141414);border:1px solid var(--line-2,#262626);"
+        "padding:10px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-size:12px}"
+        ".cmp-top3-card .met{color:var(--text-faint,#a8a8a3);font-size:11px;margin-top:4px}"
+        ".cmp-top3-card .txt{color:var(--text-dim,#cfcfcb);line-height:1.4;"
+        "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}"
+        ".cmp-insight{padding:14px 18px;background:var(--acl,#1a1a1a);border-left:3px solid var(--neon,#c4ff5e);"
+        "font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim,#cfcfcb);"
+        "line-height:1.5;margin-bottom:14px}"
         "</style>"
-        f'<div class="dash-tabstrip">{tabs_html}</div>'
-        f'<div class="dash-frames">{frames_html}</div>'
+    )
+
+    # Hub view (Nivel 1)
+    n_min = len(minhas)
+    n_conc = len(concorrentes)
+    sub_min = f"{n_min} plataforma{'s' if n_min != 1 else ''} configurada{'s' if n_min != 1 else ''}" if n_min else "Nenhuma configurada ainda"
+    sub_conc = f"{n_conc} concorrente{'s' if n_conc != 1 else ''} analisado{'s' if n_conc != 1 else ''}" if n_conc else "Nenhum analisado ainda"
+
+    # Pares comparaveis: plataformas que existem em minhas E em pelo menos 1 concorrente
+    plats_minhas = {p["id"] for p in minhas}
+    plats_conc = set()
+    for c in concorrentes:
+        for p in c["plataformas"]:
+            plats_conc.add(p["id"])
+    plats_comparaveis = plats_minhas & plats_conc
+    sub_cmp = (
+        f"{len(plats_comparaveis)} plataforma{'s' if len(plats_comparaveis) != 1 else ''} disponivel{'is' if len(plats_comparaveis) != 1 else ''}"
+        if plats_comparaveis else "Sem pares disponiveis ainda"
+    )
+    cmp_disabled = "" if plats_comparaveis else " dash-hub-card-off"
+
+    hub = (
+        '<div class="dash-view dash-view-active" id="dash-view-hub">'
+        '<div class="dash-hub">'
+        '<div class="dash-hub-card" onclick="dashGoTo(\'minhas\')">'
+        '<div class="dash-hub-title">Minhas redes sociais</div>'
+        f'<div class="dash-hub-sub">{sub_min}</div>'
+        '</div>'
+        '<div class="dash-hub-card" onclick="dashGoTo(\'concorrentes\')">'
+        '<div class="dash-hub-title">Analise de concorrentes</div>'
+        f'<div class="dash-hub-sub">{sub_conc}</div>'
+        '</div>'
+        f'<div class="dash-hub-card{cmp_disabled}" onclick="dashGoTo(\'comparar\')">'
+        '<div class="dash-hub-title">Comparar</div>'
+        f'<div class="dash-hub-sub">{sub_cmp}</div>'
+        '</div>'
+        '</div>'
+        '</div>'
+    )
+
+    # Minhas view (Nivel 2A)
+    if minhas:
+        minhas_inner = _render_dash_tabs(minhas, "minhas")
+    else:
+        minhas_inner = '<div class="dash-empty">Nenhuma plataforma configurada. Use /dashboard-social.</div>'
+
+    minhas_view = (
+        '<div class="dash-view" id="dash-view-minhas" style="display:none">'
+        '<button class="dash-back" onclick="dashGoTo(\'hub\')">&larr; Voltar</button>'
+        f'{minhas_inner}'
+        '</div>'
+    )
+
+    # Concorrentes list view (Nivel 2B)
+    cards_html = ""
+    for c in concorrentes:
+        plats_str = ", ".join(p["label"] for p in c["plataformas"])
+        data_str = _escape(c.get("atualizado_em", "")) or "data desconhecida"
+        slug_esc = _escape(c["slug"])
+        nome_esc = _escape(c["nome"])
+        cards_html += (
+            f'<div class="dash-conc-card" onclick="dashGoTo(\'conc-{slug_esc}\')">'
+            f'<div class="dash-conc-nome">{nome_esc}</div>'
+            f'<div class="dash-conc-meta">Gerado em {data_str}</div>'
+            f'<div class="dash-conc-plats">{_escape(plats_str)}</div>'
+            f'<button class="dash-conc-remover" onclick="event.stopPropagation();'
+            f'alert(\'Para remover este concorrente:\\n\\n'
+            f'1. Apague a pasta entregas/concorrentes/{slug_esc}\\n'
+            f'2. Ou rode o comando /dashboard-concorrente-remover\\n\\n'
+            f'Em seguida regenere o painel.\');">Remover</button>'
+            f'</div>'
+        )
+    if not cards_html:
+        cards_html = (
+            '<div class="dash-empty">'
+            'Nenhum concorrente analisado ainda. Use /dashboard-social e escolha a opcao "Concorrente".'
+            '</div>'
+        )
+
+    concs_view = (
+        '<div class="dash-view" id="dash-view-concorrentes" style="display:none">'
+        '<button class="dash-back" onclick="dashGoTo(\'hub\')">&larr; Voltar</button>'
+        f'<div class="dash-conc-grid">{cards_html}</div>'
+        '</div>'
+    )
+
+    # Views individuais por concorrente (Nivel 3)
+    conc_views = ""
+    for c in concorrentes:
+        slug_esc = _escape(c["slug"])
+        nome_esc = _escape(c["nome"])
+        data_str = _escape(c.get("atualizado_em", "")) or "data desconhecida"
+        tabs_inner = _render_dash_tabs(c["plataformas"], f'conc-{c["slug"]}')
+        conc_views += (
+            f'<div class="dash-view" id="dash-view-conc-{slug_esc}" style="display:none">'
+            f'<button class="dash-back" onclick="dashGoTo(\'concorrentes\')">'
+            f'&larr; Voltar para a lista</button>'
+            f'<div class="dash-conc-header">'
+            f'<div class="dash-conc-nome-grande">{nome_esc}</div>'
+            f'<div class="dash-conc-atualizado">Atualizado em {data_str}</div>'
+            f'</div>'
+            f'{tabs_inner}'
+            f'</div>'
+        )
+
+    # Comparar view (Nivel 2C). Selectors + container que recebe o resultado via JS
+    import json as _json
+    # Monta metadata pra injetar no JS
+    cmp_minhas: dict = {}
+    for p in minhas:
+        cmp_minhas[p["id"]] = {
+            "label": p["label"],
+            "user": p.get("user", ""),
+            "caminho": p["caminho"],
+            "metricas_cmp": p.get("metricas_cmp", {}),
+        }
+    cmp_concorrentes: list = []
+    for c in concorrentes:
+        plats = {}
+        for p in c["plataformas"]:
+            plats[p["id"]] = {
+                "label": p["label"],
+                "user": p.get("user", ""),
+                "caminho": p["caminho"],
+                "metricas_cmp": p.get("metricas_cmp", {}),
+            }
+        cmp_concorrentes.append({
+            "slug": c["slug"],
+            "nome": c["nome"],
+            "plataformas": plats,
+        })
+    cmp_data_json = _json.dumps({
+        "minhas": cmp_minhas,
+        "concorrentes": cmp_concorrentes,
+    }, ensure_ascii=False)
+
+    comparar_view = (
+        '<div class="dash-view" id="dash-view-comparar" style="display:none">'
+        '<button class="dash-back" onclick="dashGoTo(\'hub\')">&larr; Voltar</button>'
+        '<div class="cmp-controls">'
+        '<label class="cmp-label">Plataforma</label>'
+        '<select id="cmp-plat" class="cmp-select" onchange="cmpFiltraConc()"></select>'
+        '<label class="cmp-label">Concorrente</label>'
+        '<select id="cmp-conc" class="cmp-select"></select>'
+        '<button class="cmp-btn" onclick="cmpComparar()">Comparar</button>'
+        '</div>'
+        '<div id="cmp-result" class="cmp-result">'
+        '<div class="dash-empty">Escolha uma plataforma e um concorrente acima.</div>'
+        '</div>'
+        '</div>'
+    )
+
+    js = (
         "<script>"
-        "function showDashTab(id){"
-        "document.querySelectorAll('.dash-tab').forEach(function(t){"
-        "t.classList.remove('dash-tab-active')});"
-        "document.querySelectorAll('.dash-frame').forEach(function(f){"
-        "f.style.display='none'});"
-        "var btn=document.querySelector('.dash-tab[onclick*=\"'+id+'\"]');"
-        "if(btn)btn.classList.add('dash-tab-active');"
-        "var frame=document.getElementById('dash-frame-'+id);"
-        "if(frame)frame.style.display=''}"
+        "function dashGoTo(view){"
+        "document.querySelectorAll('.dash-view').forEach(function(v){v.style.display='none';});"
+        "var target=document.getElementById('dash-view-'+view);"
+        "if(target)target.style.display='';"
+        "}"
+        "function showDashTab(btn){"
+        "var group=btn.dataset.group;var target=btn.dataset.target;"
+        "document.querySelectorAll('.dash-tab[data-group=\"'+group+'\"]').forEach(function(t){"
+        "t.classList.remove('dash-tab-active');});"
+        "document.querySelectorAll('.dash-frame[data-group=\"'+group+'\"]').forEach(function(f){"
+        "f.style.display='none';});"
+        "btn.classList.add('dash-tab-active');"
+        "var frame=document.getElementById('dash-frame-'+target);"
+        "if(frame)frame.style.display='';"
+        "}"
         "</script>"
     )
+
+    # JS especifico da view de comparacao. Em raw string pra evitar conflito com f-string.
+    cmp_js = (
+        "<script>"
+        f"window.COMP_DATA={cmp_data_json};"
+        + r"""
+function _fmtN(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(Math.round(n||0));}
+function _fmtPct(p){return((Math.round((p||0)*100)/100))+'%';}
+function _delta(meu,conc){if(!conc||conc===0)return null;return((meu-conc)/Math.abs(conc))*100;}
+function _deltaHtml(d){if(d===null)return'';var cls=d>0?'cmp-kpi-delta-pos':d<0?'cmp-kpi-delta-neg':'cmp-kpi-delta-eq';var sign=d>0?'+':'';return'<div class="cmp-kpi-delta '+cls+'">'+sign+d.toFixed(1)+'% vs concorrente</div>';}
+function _kpi(label,mL,mV,cL,cV,fmt,useDelta){var d=useDelta?_delta(mV,cV):null;return '<div class="cmp-kpi"><div class="cmp-kpi-label">'+label+'</div><div class="cmp-kpi-row cmp-kpi-row-me"><span class="cmp-kpi-row-name">'+mL+'</span><span class="cmp-kpi-row-val">'+fmt(mV)+'</span></div><div class="cmp-kpi-row cmp-kpi-row-them"><span class="cmp-kpi-row-name">'+cL+'</span><span class="cmp-kpi-row-val">'+fmt(cV)+'</span></div>'+_deltaHtml(d)+'</div>';}
+function _kpiText(label,mL,mV,cL,cV){return '<div class="cmp-kpi"><div class="cmp-kpi-label">'+label+'</div><div class="cmp-kpi-row cmp-kpi-row-me"><span class="cmp-kpi-row-name">'+mL+'</span><span class="cmp-kpi-row-val">'+(mV||'-')+'</span></div><div class="cmp-kpi-row cmp-kpi-row-them"><span class="cmp-kpi-row-name">'+cL+'</span><span class="cmp-kpi-row-val">'+(cV||'-')+'</span></div></div>';}
+function _ordTop(arr,campo,n){return (arr||[]).slice().sort(function(a,b){return(b[campo]||0)-(a[campo]||0);}).slice(0,n);}
+function _bars(titulo,pairs,fmt,mL,cL){if(!pairs.length)return '';var vals=[];pairs.forEach(function(p){vals.push(p[1]);vals.push(p[2]);});var max=Math.max.apply(null,vals.concat([0.01]));var rows=pairs.map(function(p){var mP=(p[1]/max*100)||0;var cP=(p[2]/max*100)||0;return '<div class="cmp-bar-row"><div class="cmp-bar-label">'+p[0]+'</div><div class="cmp-bar-pair"><div class="cmp-bar-side"><div class="cmp-bar-track"><div class="cmp-bar-fill-me" style="width:'+mP+'%"></div></div><div class="cmp-bar-val">'+mL+': '+fmt(p[1])+'</div></div><div class="cmp-bar-side"><div class="cmp-bar-track"><div class="cmp-bar-fill-them" style="width:'+cP+'%"></div></div><div class="cmp-bar-val">'+cL+': '+fmt(p[2])+'</div></div></div></div>';}).join('');return '<div class="cmp-bars"><div class="cmp-bars-title">'+titulo+'</div>'+rows+'</div>';}
+function _postCard(p){var t=p.texto||p.legenda||p.titulo||'';var tipo=p.tipo||'-';var eng=_fmtPct(p.engajamento||0);var likes=_fmtN(p.likes||p.numLikes||0);return '<div class="cmp-top3-card"><div><strong>'+tipo+'</strong> '+eng+'</div><div class="txt">'+(t.substring(0,80)||'(sem texto)')+'</div><div class="met">'+likes+' likes</div></div>';}
+function _videoCard(v){var t=v.titulo||v.texto||'';var eng=_fmtPct(v.engajamento||0);var views=_fmtN(v.views||v.numViews||0);var likes=_fmtN(v.likes||0);return '<div class="cmp-top3-card"><div><strong>'+likes+' likes</strong> '+eng+'</div><div class="txt">'+(t.substring(0,80)||'(sem titulo)')+'</div><div class="met">'+views+' views</div></div>';}
+function _top3Pair(mArr,cArr,mL,cL,cardFn){return '<div class="cmp-top3"><div><div class="cmp-top3-col-title">Top 3 de '+mL+'</div>'+mArr.map(cardFn).join('')+'</div><div><div class="cmp-top3-col-title">Top 3 de '+cL+'</div>'+cArr.map(cardFn).join('')+'</div></div>';}
+function _insight(linhas){if(!linhas.length)linhas.push('As duas contas tem metricas equivalentes nas categorias principais.');return '<div class="cmp-insight">'+linhas.join(' ')+'</div>';}
+function _cmpIG(meu,conc,mL,cL){
+  var segM=(meu.perfil||{}).seguidores||0;var segC=(conc.perfil||{}).seguidores||0;
+  var engM=(meu.metricas||{}).media_engajamento||0;var engC=(conc.metricas||{}).media_engajamento||0;
+  var tipoM=(meu.metricas||{}).tipo_mais_postado||(meu.metricas||{}).tipo_top||'-';
+  var tipoC=(conc.metricas||{}).tipo_mais_postado||(conc.metricas||{}).tipo_top||'-';
+  var nM=meu.total_posts||0;var nC=conc.total_posts||0;
+  var h='<div class="cmp-kpi-grid">';
+  h+=_kpi('Seguidores',mL,segM,cL,segC,_fmtN,true);
+  h+=_kpi('Engajamento medio',mL,engM,cL,engC,_fmtPct,true);
+  h+=_kpiText('Tipo mais postado',mL,tipoM,cL,tipoC);
+  h+=_kpi('Posts analisados',mL,nM,cL,nC,_fmtN,false);
+  h+='</div>';
+  var dM=(meu.metricas||{}).desempenho_por_tipo||{};var dC=(conc.metricas||{}).desempenho_por_tipo||{};
+  var tipos=Object.keys(dM);Object.keys(dC).forEach(function(k){if(tipos.indexOf(k)<0)tipos.push(k);});
+  var pairs=tipos.map(function(t){var m=(dM[t]||{}).media_eng||(dM[t]||{}).engajamento||(dM[t]||{}).media_engajamento||0;var c=(dC[t]||{}).media_eng||(dC[t]||{}).engajamento||(dC[t]||{}).media_engajamento||0;return [t,m,c];}).filter(function(p){return p[1]||p[2];});
+  if(pairs.length)h+=_bars('Engajamento por tipo de post',pairs,_fmtPct,mL,cL);
+  h+=_top3Pair(_ordTop(meu.posts||[],'engajamento',3),_ordTop(conc.posts||[],'engajamento',3),mL,cL,_postCard);
+  var ins=[];
+  if(segC>0&&segM/segC<0.5)ins.push(cL+' tem '+(segC/Math.max(segM,1)).toFixed(1)+'x mais seguidores que voce.');
+  else if(segC>0&&segM/segC>2)ins.push('Voce tem '+(segM/segC).toFixed(1)+'x mais seguidores que '+cL+'.');
+  if(engC>0){var d=((engM-engC)/engC)*100;if(Math.abs(d)>10)ins.push('Seu engajamento medio e '+Math.abs(d).toFixed(0)+'% '+(d>0?'maior':'menor')+' que o de '+cL+'.');}
+  h+=_insight(ins);
+  return h;
+}
+function _cmpTT(meu,conc,mL,cL){
+  var segM=(meu.perfil||{}).seguidores||0;var segC=(conc.perfil||{}).seguidores||0;
+  var likM=(meu.perfil||{}).likes_totais||0;var likC=(conc.perfil||{}).likes_totais||0;
+  var engM=(meu.metricas||{}).media_engajamento||0;var engC=(conc.metricas||{}).media_engajamento||0;
+  var nM=meu.total_posts||0;var nC=conc.total_posts||0;
+  var h='<div class="cmp-kpi-grid">';
+  h+=_kpi('Seguidores',mL,segM,cL,segC,_fmtN,true);
+  h+=_kpi('Likes totais',mL,likM,cL,likC,_fmtN,true);
+  h+=_kpi('Engajamento medio',mL,engM,cL,engC,_fmtPct,true);
+  h+=_kpi('Videos analisados',mL,nM,cL,nC,_fmtN,false);
+  h+='</div>';
+  var dM=(meu.metricas||{}).desempenho_por_duracao||(meu.metricas||{}).desempenho_duracao||{};
+  var dC=(conc.metricas||{}).desempenho_por_duracao||(conc.metricas||{}).desempenho_duracao||{};
+  var durs=Object.keys(dM);Object.keys(dC).forEach(function(k){if(durs.indexOf(k)<0)durs.push(k);});
+  var pairs=durs.map(function(t){var m=(dM[t]||{}).media_eng||(dM[t]||{}).engajamento||(dM[t]||{}).media_engajamento||0;var c=(dC[t]||{}).media_eng||(dC[t]||{}).engajamento||(dC[t]||{}).media_engajamento||0;return [t,m,c];}).filter(function(p){return p[1]||p[2];});
+  if(pairs.length)h+=_bars('Engajamento por duracao do video',pairs,_fmtPct,mL,cL);
+  h+=_top3Pair(_ordTop(meu.videos||[],'engajamento',3),_ordTop(conc.videos||[],'engajamento',3),mL,cL,_videoCard);
+  var ins=[];
+  if(engC>0){var d=((engM-engC)/engC)*100;if(Math.abs(d)>10)ins.push('Engajamento '+(d>0?'+':'')+d.toFixed(0)+'% vs '+cL+'.');}
+  if(likC>0&&likM/likC>2)ins.push('Voce tem '+(likM/likC).toFixed(1)+'x mais likes acumulados que '+cL+'.');
+  h+=_insight(ins);
+  return h;
+}
+function _cmpYT(meu,conc,mL,cL){
+  var inscM=(meu.canal||{}).inscritos||0;var inscC=(conc.canal||{}).inscritos||0;
+  var vwM=(meu.canal||{}).total_views||0;var vwC=(conc.canal||{}).total_views||0;
+  var engM=(meu.metricas||{}).media_engajamento||0;var engC=(conc.metricas||{}).media_engajamento||0;
+  var nM=meu.total_posts||0;var nC=conc.total_posts||0;
+  var h='<div class="cmp-kpi-grid">';
+  h+=_kpi('Inscritos',mL,inscM,cL,inscC,_fmtN,true);
+  h+=_kpi('Total de views',mL,vwM,cL,vwC,_fmtN,true);
+  h+=_kpi('Engajamento medio',mL,engM,cL,engC,_fmtPct,true);
+  h+=_kpi('Videos analisados',mL,nM,cL,nC,_fmtN,false);
+  h+='</div>';
+  var dM=(meu.metricas||{}).desempenho_por_duracao||(meu.metricas||{}).desempenho_duracao||{};
+  var dC=(conc.metricas||{}).desempenho_por_duracao||(conc.metricas||{}).desempenho_duracao||{};
+  var durs=Object.keys(dM);Object.keys(dC).forEach(function(k){if(durs.indexOf(k)<0)durs.push(k);});
+  var pairs=durs.map(function(t){var m=(dM[t]||{}).media_eng||(dM[t]||{}).engajamento||(dM[t]||{}).media_engajamento||0;var c=(dC[t]||{}).media_eng||(dC[t]||{}).engajamento||(dC[t]||{}).media_engajamento||0;return [t,m,c];}).filter(function(p){return p[1]||p[2];});
+  if(pairs.length)h+=_bars('Engajamento por duracao do video',pairs,_fmtPct,mL,cL);
+  h+=_top3Pair(_ordTop(meu.videos||[],'engajamento',3),_ordTop(conc.videos||[],'engajamento',3),mL,cL,_videoCard);
+  var ins=[];
+  if(inscC>0&&inscM/inscC<0.3)ins.push(cL+' tem '+(inscC/Math.max(inscM,1)).toFixed(1)+'x mais inscritos.');
+  if(engC>0){var d=((engM-engC)/engC)*100;if(Math.abs(d)>10)ins.push('Seu engajamento e '+Math.abs(d).toFixed(0)+'% '+(d>0?'maior':'menor')+' que '+cL+'.');}
+  h+=_insight(ins);
+  return h;
+}
+function _cmpLI(meu,conc,mL,cL){
+  var segM=(meu.perfil||{}).seguidores||0;var segC=(conc.perfil||{}).seguidores||0;
+  var conM=(meu.perfil||{}).conexoes||0;var conC=(conc.perfil||{}).conexoes||0;
+  var engM=(meu.metricas||{}).media_engajamento||0;var engC=(conc.metricas||{}).media_engajamento||0;
+  var tipoM=(meu.metricas||{}).tipo_top||(meu.metricas||{}).tipo_mais_postado||'-';
+  var tipoC=(conc.metricas||{}).tipo_top||(conc.metricas||{}).tipo_mais_postado||'-';
+  var nM=meu.total_posts||0;var nC=conc.total_posts||0;
+  var h='<div class="cmp-kpi-grid">';
+  h+=_kpi('Seguidores',mL,segM,cL,segC,_fmtN,true);
+  h+=_kpi('Conexoes',mL,conM,cL,conC,_fmtN,true);
+  h+=_kpi('Engajamento medio',mL,engM,cL,engC,_fmtPct,true);
+  h+=_kpiText('Tipo mais postado',mL,tipoM,cL,tipoC);
+  h+='</div>';
+  var dM=(meu.metricas||{}).desempenho_tipo||(meu.metricas||{}).desempenho_por_tipo||{};
+  var dC=(conc.metricas||{}).desempenho_tipo||(conc.metricas||{}).desempenho_por_tipo||{};
+  var tipos=Object.keys(dM);Object.keys(dC).forEach(function(k){if(tipos.indexOf(k)<0)tipos.push(k);});
+  var pairs=tipos.map(function(t){var m=(dM[t]||{}).media_eng||(dM[t]||{}).engajamento||(dM[t]||{}).media_engajamento||0;var c=(dC[t]||{}).media_eng||(dC[t]||{}).engajamento||(dC[t]||{}).media_engajamento||0;return [t,m,c];}).filter(function(p){return p[1]||p[2];});
+  if(pairs.length)h+=_bars('Engajamento por tipo de post',pairs,_fmtPct,mL,cL);
+  h+=_top3Pair(_ordTop(meu.posts||[],'engajamento',3),_ordTop(conc.posts||[],'engajamento',3),mL,cL,_postCard);
+  var ins=[];
+  if(segC>0&&segM/segC<0.5)ins.push(cL+' tem '+(segC/Math.max(segM,1)).toFixed(1)+'x mais seguidores.');
+  if(engC>0){var d=((engM-engC)/engC)*100;if(Math.abs(d)>10)ins.push('Engajamento '+(d>0?'+':'')+d.toFixed(0)+'% vs '+cL+'.');}
+  h+=_insight(ins);
+  return h;
+}
+function cmpInit(){
+  var platSel=document.getElementById('cmp-plat');
+  if(!platSel||!window.COMP_DATA)return;
+  var platsMinhas=Object.keys(COMP_DATA.minhas||{});
+  var platsConc={};
+  (COMP_DATA.concorrentes||[]).forEach(function(c){Object.keys(c.plataformas||{}).forEach(function(p){platsConc[p]=true;});});
+  var disponiveis=platsMinhas.filter(function(p){return platsConc[p];});
+  if(!disponiveis.length){
+    document.getElementById('cmp-result').innerHTML='<div class="dash-empty">Sem pares disponiveis. Analise pelo menos 1 concorrente em alguma plataforma que voce ja tem dashboard configurado.</div>';
+    platSel.disabled=true;document.getElementById('cmp-conc').disabled=true;
+    return;
+  }
+  platSel.innerHTML=disponiveis.map(function(p){return '<option value="'+p+'">'+COMP_DATA.minhas[p].label+'</option>';}).join('');
+  cmpFiltraConc();
+}
+function cmpFiltraConc(){
+  var platSel=document.getElementById('cmp-plat');var concSel=document.getElementById('cmp-conc');
+  if(!platSel||!concSel)return;
+  var plat=platSel.value;
+  var opts=(COMP_DATA.concorrentes||[]).filter(function(c){return c.plataformas&&c.plataformas[plat];}).map(function(c){return '<option value="'+c.slug+'">'+c.nome+'</option>';}).join('');
+  concSel.innerHTML=opts||'<option value="">Nenhum disponivel para essa plataforma</option>';
+}
+function _adapt(mc){return {perfil:{seguidores:mc.seguidores||0,conexoes:mc.conexoes||0,likes_totais:mc.likes_totais||0},canal:{inscritos:mc.inscritos||0,total_views:mc.total_views||0},metricas:{media_engajamento:mc.media_engajamento||0,tipo_mais_postado:mc.tipo_mais_postado||'-',desempenho_por_tipo:mc.desempenho_por_tipo||{},desempenho_por_duracao:mc.desempenho_por_duracao||{}},posts:mc.top3||[],videos:mc.top3||[],total_posts:mc.total_posts||0};}
+function cmpComparar(){
+  var plat=document.getElementById('cmp-plat').value;
+  var slug=document.getElementById('cmp-conc').value;
+  if(!plat||!slug)return;
+  var meu=COMP_DATA.minhas[plat];
+  var conc=(COMP_DATA.concorrentes||[]).filter(function(c){return c.slug===slug;})[0];
+  if(!meu||!conc||!conc.plataformas[plat])return;
+  var meuI=_adapt(meu.metricas_cmp||{});
+  var concI=_adapt(conc.plataformas[plat].metricas_cmp||{});
+  var mL=meu.user||'voce';var cL=conc.plataformas[plat].user||conc.nome;
+  var h='<div class="cmp-header"><strong>'+meu.label+'</strong><span>'+mL+' (voce) <strong>vs</strong> '+cL+'</span></div>';
+  if(plat==='instagram')h+=_cmpIG(meuI,concI,mL,cL);
+  else if(plat==='tiktok')h+=_cmpTT(meuI,concI,mL,cL);
+  else if(plat==='youtube')h+=_cmpYT(meuI,concI,mL,cL);
+  else if(plat==='linkedin')h+=_cmpLI(meuI,concI,mL,cL);
+  document.getElementById('cmp-result').innerHTML=h;
+}
+window.addEventListener('DOMContentLoaded',cmpInit);
+"""
+        + "</script>"
+    )
+
+    inner = css + hub + minhas_view + concs_view + conc_views + comparar_view + js + cmp_js
 
     return (
         "<!-- SECTION:dashboards -->\n"

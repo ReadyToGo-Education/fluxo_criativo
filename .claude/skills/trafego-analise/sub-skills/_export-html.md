@@ -476,14 +476,14 @@ Onde `{RAIZ_PROJETO}` é o caminho absoluto da raiz do workspace (descoberta no 
 **Exemplo concreto (Windows):**
 
 ```bash
-python3 "C:/Users/gabri/Documents/GitHub/workshop_inteligente/scripts/abrir-html.py" "C:/Users/gabri/Documents/GitHub/workshop_inteligente/meus-produtos/curso-tarot/trafego/analise/index.html"
+python3 "C:/Users/<seu-usuario>/Documents/GitHub/workshop_inteligente/scripts/abrir-html.py" "C:/Users/<seu-usuario>/Documents/GitHub/workshop_inteligente/meus-produtos/<seu-produto>/trafego/analise/index.html"
 ```
 
 **Forma alternativa (sem o script, comando nativo direto):**
 
 ```bash
 # Windows Bash
-start "" "C:/Users/gabri/Documents/GitHub/workshop_inteligente/meus-produtos/curso-tarot/trafego/analise/index.html"
+start "" "C:/Users/<seu-usuario>/Documents/GitHub/workshop_inteligente/meus-produtos/<seu-produto>/trafego/analise/index.html"
 ```
 
 **Erros comuns a evitar:**

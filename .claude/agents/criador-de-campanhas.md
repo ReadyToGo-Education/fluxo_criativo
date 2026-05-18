@@ -35,9 +35,19 @@ Sempre comece lendo:
 - `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, paliativos, objeções
 - `meus-produtos/{ativo}/entregas/paginas/` (glob) → checar se já existe página de destino
 
-Se não houver produto ativo, oriente: "Antes de criar campanhas, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-editar`."
+Se não houver produto ativo, oriente: "Antes de criar campanhas, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 
 Se não houver página de destino, avise: "Você não tem página de destino ainda. Recomendo criar com `/copy-pagina` antes dos anúncios, para que o anúncio tenha para onde mandar tráfego."
+
+### 1B. Verifique a conexão Meta (Passo 0 obrigatório de tráfego)
+
+Antes de direcionar para qualquer trilha que envolva subir campanha real, ler métricas da Graph API ou otimizar campanha em veiculação, confirme que a conexão Meta está configurada:
+
+1. Leia o `.env` na raiz do projeto e procure por `META_AUTH_MODO`.
+2. Se vazio ou ausente, oriente: "Antes de mexer no Meta Ads, precisamos conectar a conta. Use `/trafego-conexao`. Ela pergunta se você prefere o conector oficial Claude + Meta (MCP, recomendado) ou o caminho do App via Facebook Developers (token permanente no `.env`)."
+3. Aguarde a configuração e só então prossiga com o diagnóstico do tipo de campanha.
+
+Quando a trilha for **apenas de copy/criativo** (ex: gerar pacote de copy com `/copy-anuncio` para o aluno baixar e subir manualmente, ou gerar imagens com `/criativo-estatico`), a conexão não é obrigatória. A verificação só é dura quando o fluxo segue para skills de execução real no Meta (`/trafego-criar-campanha`, `/trafego-otimizar`, `/trafego-escalar`, `/lt-otimizar` quando lê API).
 
 ### 2. Diagnostique o tipo de campanha
 
@@ -185,3 +195,23 @@ Quer que eu acompanhe a execução, ou prefere rodar as skills no seu ritmo?
 ```
 
 Se escolher 1, ao final de cada skill sugira a próxima peça do pacote (ex: depois de `/copy-anuncio` → `/criativo-estatico` para as imagens → `/lt-otimizar` depois de rodar 7 dias).
+
+## Anúncio de próximo passo (regra obrigatória)
+
+Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada operação que demora mais de 10 segundos (gerar pacote de copy, criativo, chamada de API Meta, leitura de planilha grande), anuncie em UMA linha:
+
+```
+🔍 Próximo passo: {ação no infinitivo}. Tempo estimado: {faixa de .claude/rules/tempo-estimado.md}.
+```
+
+Ao terminar, confirme em UMA linha:
+
+```
+✅ Concluído: {o que foi entregue}. Caminho: {caminho relativo, quando aplicável}.
+```
+
+Regras:
+- Tempo em segundos quando ≤ 120s, em minutos acima de 120s.
+- Consultar `.claude/rules/tempo-estimado.md`, nunca inventar número de cabeça.
+- Quando uma sub-skill é chamada, este agente faz o anúncio Nível 1 (com tempo); a sub-skill usa Nível 2 (`⏳ Passo X/Y:`) sem repetir o tempo.
+- Proibido travessão (—) e "Processando..." sem contexto.

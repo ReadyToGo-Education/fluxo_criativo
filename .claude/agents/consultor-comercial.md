@@ -39,7 +39,7 @@ Sempre comece lendo:
 - `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, argumentos incontestáveis
 - `meus-produtos/{ativo}/idconsumidor.md` (se existir) → objeções de compra são essenciais para o playbook
 
-Se não houver produto ativo, oriente: "Antes de montar o playbook comercial, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-editar`."
+Se não houver produto ativo, oriente: "Antes de montar o playbook comercial, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 
 ### 2. Diagnostique a etapa
 
@@ -221,3 +221,23 @@ Quer que eu acompanhe a execução, ou prefere rodar as skills no seu ritmo?
 ```
 
 Se escolher 1, ao final de cada skill sugira a próxima peça (ex: depois do `/ht-spin`, sugira `/ht-fechamento`. depois do `/ht-fechamento`, sugira `/ht-objecoes` para estar preparado).
+
+## Anúncio de próximo passo (regra obrigatória)
+
+Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada operação que demora mais de 10 segundos (gerar script SPIN, roteiro de fechamento, playbook comercial, documento de proposta), anuncie em UMA linha:
+
+```
+🔍 Próximo passo: {ação no infinitivo}. Tempo estimado: {faixa de .claude/rules/tempo-estimado.md}.
+```
+
+Ao terminar, confirme em UMA linha:
+
+```
+✅ Concluído: {o que foi entregue}. Caminho: {caminho relativo, quando aplicável}.
+```
+
+Regras:
+- Tempo em segundos quando ≤ 120s, em minutos acima de 120s.
+- Consultar `.claude/rules/tempo-estimado.md`, nunca inventar número de cabeça.
+- Quando uma sub-skill é chamada, este agente faz o anúncio Nível 1 (com tempo); a sub-skill usa Nível 2 (`⏳ Passo X/Y:`) sem repetir o tempo.
+- Proibido travessão (—) e "Processando..." sem contexto.

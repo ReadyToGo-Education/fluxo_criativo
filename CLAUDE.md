@@ -44,6 +44,253 @@ O hook automático em `scripts/verificar-acentuacao.py` roda ao fim de cada gera
 
 ---
 
+## TOKENS E SEGREDOS APENAS NO .env (REGRA GLOBAL)
+
+> Esta regra tem prioridade absoluta sobre qualquer skill, agente ou conveniência operacional. Aplica-se a 100% dos arquivos do projeto.
+
+**Token Meta, API key, secret, credencial ou qualquer valor sensível NUNCA pode aparecer escrito (literal, hardcoded) em qualquer arquivo do projeto que não seja o `.env`.** O `.env` está no `.gitignore` e é o único local autorizado.
+
+### Proibido em qualquer arquivo `.py`, `.md`, `.json`, `.sh`, `.yml`, `.yaml`, `.txt`, `.html`, etc.
+
+```python
+# PROIBIDO
+TOKEN = "EAANfZAM9oNX..."
+ACCESS_TOKEN = "Bearer eyJhbGc..."
+```
+
+```bash
+# PROIBIDO
+TOKEN="EAA..."
+curl "https://graph.facebook.com/...?access_token=EAA..."
+```
+
+```json
+// PROIBIDO em settings.local.json, *.json
+"Bash(curl ... access_token=EAA...)"
+```
+
+### Padrão correto
+
+**Em scripts Python:**
+```python
+import os
+from pathlib import Path
+
+def _load_token_from_env():
+    cur = Path(__file__).resolve().parent
+    while cur.parent != cur:
+        candidate = cur / ".env"
+        if candidate.exists():
+            for line in candidate.read_text(encoding="utf-8").splitlines():
+                if line.startswith("FB_ACCESS_TOKEN_PERMANENTE="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+        cur = cur.parent
+    raise SystemExit("FB_ACCESS_TOKEN_PERMANENTE não encontrado no .env")
+
+TOKEN = os.environ.get("FB_ACCESS_TOKEN_PERMANENTE") or _load_token_from_env()
+```
+
+**Em scripts shell:**
+```bash
+# Carregar do .env e usar
+source .env
+curl -s "https://graph.facebook.com/...?access_token=${FB_ACCESS_TOKEN_PERMANENTE}"
+```
+
+**Em comandos `Bash` executados pelo Claude (single-call, casa com pattern do allow):**
+- O token vai inline na URL **só dentro do comando que o Claude executa naquele momento**.
+- O comando NÃO é salvo em arquivo. É exibido (mascarado) e executado.
+- Nenhum arquivo do projeto recebe o valor literal.
+
+### Verificação obrigatória antes de salvar qualquer arquivo
+
+Antes de chamar `Edit` ou `Write` em qualquer arquivo do projeto:
+
+1. O conteúdo a salvar contém uma string com 30+ caracteres alfanuméricos parecida com token (prefixos `EAA`, `eyJ`, `sk-`, `xoxp-`, `xoxb-`, `bot`, etc.)?
+2. Sim → **abortar a operação**, mascarar o valor por placeholder (`{{TOKEN_DO_ENV}}` ou `os.environ.get(...)`), e refazer.
+3. Se o aluno explicitamente pedir "salva esse token no script", recusar e propor leitura do `.env` em vez disso.
+
+### Exceção única
+
+Linha de exemplo em documentação (CLAUDE.md, SKILL.md, README) com placeholder claramente marcado: `EAA...`, `<TOKEN>`, `<seu_token>`, `EAA<sua_chave>`. **Nunca** o valor real.
+
+### O que fazer se descobrir token vazado em arquivo
+
+1. Avisar o usuário **imediatamente**.
+2. Recomendar revogar o token no provedor (Facebook Developers, OpenAI, etc.).
+3. Substituir o valor literal por leitura do `.env` (padrão acima).
+4. Sugerir verificação `git log` pra ver se o token foi commitado em algum momento — se sim, o problema é maior (tem que rotacionar e considerar histórico comprometido).
+
+---
+
+## MASCARAMENTO DE TOKENS SENSÍVEIS (REGRA GLOBAL)
+
+> Esta regra tem prioridade absoluta sobre qualquer outra diretriz de exibição. Aplica-se a todo comando, log, output ou mensagem mostrada ao usuário em qualquer skill, agente ou resposta direta.
+
+Quando precisar exibir no chat um comando ou string que contenha token, API key, secret, credencial ou qualquer valor sensível, **mascarar o valor antes de mostrar**. A execução real (chamada à API, leitura do `.env`) continua usando o valor verdadeiro. Apenas a exibição visual é mascarada.
+
+**O que mascarar (lista não exaustiva):**
+- Token Meta Ads / Facebook (`access_token=EAA...`, `Bearer eyJ...`)
+- API key OpenRouter, Anthropic, OpenAI, Apify, HeyGen
+- Credenciais de Z-API (instance ID + token)
+- Bot token Telegram, Chat ID
+- Qualquer linha lida ou escrita no `.env` que contenha `TOKEN`, `KEY`, `SECRET`, `PASSWORD`, `API_KEY`
+
+**Padrão de mascaramento:**
+Substituir o valor real por `***TOKEN_MASCARADO***`. Quando útil pro debug, mostrar apenas os 4 primeiros e 4 últimos caracteres (ex: `EAA1...wxyz`).
+
+**Aplica-se a (casos concretos do projeto):**
+
+1. **Comandos `curl` para a Graph API.** Quando mostrar:
+   ```
+   curl "https://graph.facebook.com/v25.0/me?access_token=EAA1234567890abcdef..."
+   ```
+   exibir como:
+   ```
+   curl "https://graph.facebook.com/v25.0/me?access_token=***TOKEN_MASCARADO***"
+   ```
+
+2. **Confirmações de salvamento no `.env`.** Quando mostrar o conteúdo gravado:
+   ```
+   ✅ Salvo no .env:
+   - FB_ACCESS_TOKEN_PERMANENTE = (token salvo, mascarado)
+   - HEYGEN_API_KEY = (chave salva, mascarada)
+   ```
+   Nunca mostrar o valor real.
+
+3. **Headers HTTP em exemplos.** `Authorization: Bearer ***TOKEN_MASCARADO***`.
+
+4. **Output de skills de configuração** (`/configurar-heygen`, `/configurar-imagens`, `/configurar-apify`, `/configurar-telegram`, `/configurar-zapi`, `/gerar-token-permanente-facebook-ads`): nunca ecoar o valor recebido do usuário no chat. Apenas confirmar com "salvo".
+
+5. **Quando o usuário precisar copiar o comando manualmente:** oferecer a versão mascarada e instruir explicitamente "substitua `***TOKEN_MASCARADO***` pelo valor de `FB_ACCESS_TOKEN_PERMANENTE` no seu `.env` antes de rodar".
+
+**Verificação antes de exibir qualquer comando:**
+1. O comando contém uma string longa parecida com token (geralmente acima de 30 caracteres alfanuméricos)?
+2. O comando contém alguma das chaves sensíveis listadas acima?
+3. Se sim em qualquer ponto: mascarar antes de exibir.
+
+**Exceção única:** quando o usuário pedir explicitamente "me mostra o token" ou "imprime a chave", e for uma operação dele pra ele (debug pessoal), pode ser exibido. Mas alertar: "atenção, esse valor é sensível, não compartilhe screenshot deste chat".
+
+---
+
+## EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API (REGRA GLOBAL)
+
+> Esta regra tem prioridade absoluta. Aplica-se a toda skill ou agente que faça chamada para `https://graph.facebook.com/*`.
+
+### Padrão obrigatório
+
+1. **Cada chamada Graph API = 1 chamada `Bash(curl ...)` separada.** Token vai inline na URL.
+2. **Cada cálculo de data = 1 `Bash(date ...)` separado.** Já autorizado em `.claude/settings.local.json`.
+3. **Processamento dos JSONs retornados = feito pelo Claude lendo a saída do curl como texto.** Sem rodar Python adicional.
+
+### Proibições absolutas
+
+- **PROIBIDO `python3 << 'EOF' ... EOF`** (heredoc bash com Python). O detector "expansion obfuscation" do Claude Code dispara em qualquer heredoc que carregue token e ignora o allow list, forçando pop-up nativo com token visível.
+- **PROIBIDO `curl ... | python3 -c "..."`** (pipe com Python que lê stdin). Mesma classe de detector dispara.
+- **PROIBIDO `python3 -c "<código longo com token>"`.** Apenas `python3 -c` com expressões curtas e sem token (ex: `python3 -c "import json; print(json.load(open('/tmp/x.json')))"`).
+- **PROIBIDO scripts bash multi-linha começando com `TOKEN="..."`** + múltiplos `curl`. Mesmo problema.
+
+### Padrão correto para análises complexas (ex: comparativo CPM/ROAS, ranking, lifecycle, períodos múltiplos)
+
+Quando uma skill precisa de várias chamadas Graph API + cálculos:
+
+1. Calcular timestamps via `Bash(date +%s)` separados (cada um = 1 Bash call).
+2. Para cada chamada Graph API, disparar `Bash(curl -s "https://graph.facebook.com/...?access_token=<TOKEN_DO_ENV>")` **individual**, com `<TOKEN_DO_ENV>` substituído pelo valor de `FB_ACCESS_TOKEN_PERMANENTE` lido do `.env` no momento da execução.
+3. Receber o JSON de retorno como texto.
+4. Processar mentalmente os JSONs (somar, comparar, calcular delta) — Claude faz o cálculo direto na resposta, sem código intermediário.
+5. Apresentar resultado ao aluno em linguagem natural, mascarando qualquer token na exibição.
+
+### Por que essa restrição existe
+
+O Claude Code tem proteções anti-injection que ignoram allow list quando detectam padrões suspeitos:
+- Heredoc bash + variável interpolada
+- Pipe com Python que recebe stdin
+- Script bash com aspas duplas dentro de aspas simples
+- Brace expansion combinada com aspas (`${...}`, `$(...)`)
+
+Em todas essas situações, o pop-up nativo dispara e exibe o comando completo — incluindo o token. Mantendo cada chamada Graph API como uma `Bash(curl ...)` simples e direta, o pattern do allow casa, o pop-up não dispara, e o token continua invisível pro aluno.
+
+### Exceção controlada
+
+Se a análise realmente precisa de processamento que não dá pra fazer mentalmente (ex: agrupar 200+ ads por idade × posicionamento × hora):
+
+1. Salvar JSONs em arquivos via `curl ... > /tmp/insights-{nome}.json` (cada um = 1 Bash call, casa com `Bash(curl ...)`).
+2. Processar com `Bash(python3 /tmp/script.py)` onde `/tmp/script.py` foi escrito previamente via `Edit` ou `Write` no arquivo (sem token dentro do script — script lê os JSONs locais).
+3. Limpar `/tmp/insights-*.json` ao final.
+
+Esse caminho mantém cada chamada Bash simples e cobre o pattern matching.
+
+---
+
+## GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESCRITA NA META GRAPH API (REGRA GLOBAL)
+
+> Esta regra tem prioridade absoluta sobre qualquer skill ou agente. Aplica-se a toda chamada `curl` (ou equivalente) com método **POST, PUT, PATCH ou DELETE** em `https://graph.facebook.com/*`.
+
+**Contexto:** as operações de escrita na Graph API (criar campanha, pausar/ativar adset, subir criativo, criar audience, criar regra automática, deletar entidade, atualizar orçamento) são autorizadas no `.claude/settings.local.json` pra evitar o pop-up nativo do Claude — porque esse pop-up exibiria o `access_token=EAA...` literal na tela. Em troca dessa autorização, **o gate de aprovação migra para o chat**.
+
+**Regra dura:** antes de executar QUALQUER operação de escrita na Graph API, a skill ou agente **DEVE** apresentar ao aluno um bloco de confirmação no chat e aguardar resposta explícita. Nunca executar direto.
+
+### Formato obrigatório do bloco de confirmação
+
+```
+🛡️ Confirmação necessária antes de tocar na conta Meta
+
+Operação: {verbo claro: criar campanha | pausar adset | subir criativo | atualizar orçamento | deletar anúncio | criar audience | ...}
+Endpoint: {humano-legível, ex: "POST /act_<id>/campaigns"}
+Objeto: {campaign_id | adset_id | ad_id | nome se ainda não tem id}
+O que vai mudar:
+  - {linha por linha, em português, com valores concretos}
+  - Ex: "orçamento diário de R$ 200 → R$ 240 (+20%)"
+  - Ex: "status PAUSED → ACTIVE"
+  - Ex: "novo conjunto duplicado a partir do conjunto X com teste pt_mundo"
+Reset de aprendizado esperado: {sim | não | parcial}
+Reversível? {sim, com qual comando | não}
+
+Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
+```
+
+**Regras de execução:**
+
+1. Bloquear até a resposta. Sem resposta `sim` (ou variantes claras como "aprovo", "pode", "manda"), não executar.
+2. **Nunca exibir o `curl` completo no chat.** O comando completo carrega o token. Mostrar apenas a descrição em linguagem natural acima.
+3. Quando a operação envolve um lote (ex: pausar 8 anúncios filtrados), listar todos os objetos afetados antes da pergunta. Se forem mais de 5 itens, mostrar os 5 primeiros + "e mais N itens, lista completa abaixo" + lista colapsada.
+4. Se o aluno responder "não" ou variante (cancelar, abortar, espera), abortar e não chamar a API.
+5. Quando o aluno aprova, executar e devolver resposta resumida — sem ecoar o `curl` que foi rodado.
+6. **Nunca usar Python heredoc nem pipe `curl | python3`** para executar a operação. Esses formatos disparam o detector de "expansion obfuscation" e exibem o token completo. Ver seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" acima — toda escrita segue o mesmo padrão de curl direto.
+
+### Aplica-se a estas operações (lista não exaustiva)
+
+| Operação semântica | Método HTTP | Skill que executa |
+|---|---|---|
+| Criar campanha | POST `/campaigns` | `/trafego-criar-campanha` |
+| Atualizar campanha (status, budget) | POST `/{campaign_id}` | `/trafego-otimizar`, `/trafego-escalar` |
+| Pausar / ativar adset | POST `/{adset_id}` | `/trafego-otimizar`, `/trafego-regras` |
+| Atualizar orçamento de adset/campanha | POST `/{id}` com `daily_budget` | `/trafego-otimizar`, `/trafego-escalar` |
+| Pausar / ativar / deletar anúncio | POST `/{ad_id}`, DELETE `/{ad_id}` | `/trafego-otimizar` |
+| Criar audience custom / lookalike | POST `/customaudiences` | `/trafego-publicos` |
+| Criar regra automática | POST `/adrules_library` | `/trafego-regras` |
+| Subir imagem ou vídeo de criativo | POST `/adimages`, POST `/advideos` | `/trafego-criar-campanha`, `/trafego-testes` |
+| Duplicar adset / campanha (cria novo) | POST `/{id}/copies` | `/trafego-escalar`, `/trafego-testes` |
+| Lote (em massa) | qualquer combinação acima | `acoes-lote.md` (sub-skill de `/trafego-otimizar`) |
+
+### Não se aplica a (operações de leitura)
+
+`GET` em qualquer endpoint da Graph API (`/insights`, `/campaigns?fields=...`, listagens, métricas, relatórios) **não passa pelo gate** — leitura não muda estado e o token aparece no settings já autorizado. Skills de leitura puras: `/trafego-insights`, `/trafego-pixel` (apenas leitura de status), `/trafego-analise` (consome insights).
+
+### Exceção controlada — modo "lote pré-aprovado"
+
+Se o aluno disser explicitamente algo como "aprova tudo desse plano de ação", "executa o plano inteiro sem perguntar de novo" ou "modo direto", a skill pode encadear as operações sem repetir o gate **a cada item**, mas:
+- Mostra o plano completo numerado UMA vez antes de começar.
+- Pede confirmação UMA vez ("aprovar tudo? sim/não").
+- Após confirmação, executa em sequência, devolvendo resumo por item.
+- Se uma operação falhar no meio, parar e perguntar antes de continuar.
+
+### Princípio de fundo
+
+A autorização no settings é confiança operacional (evita pop-up + vazamento visual de token). O gate em camada de chat é confiança semântica (aluno aprova o QUE vai ser feito, não o COMO). As duas camadas juntas dão segurança sem fricção tóxica.
+
+---
+
 ## REGRA DE ABERTURA DE SESSÃO (EXECUÇÃO DETERMINÍSTICA)
 
 > Esta regra tem prioridade sobre qualquer outra instrução deste arquivo, inclusive a seção "Primeira Interação". Não há exceção a não ser as listadas abaixo.
@@ -201,16 +448,16 @@ Proibido criar CSS ou componentes que não estejam nos arquivos de referência.
 
 > Esta regra tem prioridade sobre qualquer outra instrução de execução das skills de tráfego. Aplica-se a todo command que comece com `/trafego-*` ou que precise tocar a Marketing API do Meta (Facebook Ads, Instagram Ads).
 
-**Toda skill que faz operação no Meta Ads precisa de conexão configurada antes de qualquer outra ação.** A conexão é estabelecida pelo command `/meta-conexao`, que pergunta ao aluno se quer usar o conector oficial Claude + Meta (recomendado, MCP via OAuth) ou o caminho do App via Facebook Developers (token permanente no `.env`), valida e salva a preferência em `META_AUTH_MODO` no `.env`.
+**Toda skill que faz operação no Meta Ads precisa de conexão configurada antes de qualquer outra ação.** A conexão é estabelecida pelo command `/trafego-conexao`, que pergunta ao aluno se quer usar o conector oficial Claude + Meta (recomendado, MCP via OAuth) ou o caminho do App via Facebook Developers (token permanente no `.env`), valida e salva a preferência em `META_AUTH_MODO` no `.env`.
 
 ### Passo 0 obrigatório de toda skill de tráfego
 
 Antes de executar qualquer ação, a skill deve:
 
 1. **Ler `META_AUTH_MODO`** no `.env`.
-2. **Se vazio ou ausente:** acionar `/meta-conexao` e aguardar conclusão. Não tentar adivinhar, não cair em fallback, não pedir credenciais ad-hoc.
-3. **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, instruir o aluno a reabrir o Claude Code (MCP recém-adicionado pode precisar de reload). Se persistir, voltar ao `/meta-conexao` para diagnosticar.
-4. **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` (e, em `/trafego-criar-campanha`, também `FB_PAGE_ID`) existem no `.env`. Se faltar algum, acionar `/meta-conexao`.
+2. **Se vazio ou ausente:** acionar `/trafego-conexao` e aguardar conclusão. Não tentar adivinhar, não cair em fallback, não pedir credenciais ad-hoc.
+3. **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, instruir o aluno a reabrir o Claude Code (MCP recém-adicionado pode precisar de reload). Se persistir, voltar ao `/trafego-conexao` para diagnosticar.
+4. **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` (e, em `/trafego-criar-campanha`, também `FB_PAGE_ID`) existem no `.env`. Se faltar algum, acionar `/trafego-conexao`.
 
 A skill **nunca prossegue** sem essa validação passar.
 
@@ -233,7 +480,7 @@ Os commands legados (`/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar`) 
 
 ### Quando outras skills de tráfego forem criadas no futuro
 
-Toda skill nova que precise se conectar ao Meta Ads deve seguir o mesmo padrão de Passo 0: ler `META_AUTH_MODO` antes de qualquer outra ação, e acionar `/meta-conexao` se a variável não estiver configurada. A skill `/meta-conexao` é idempotente, pode ser chamada várias vezes sem efeito colateral.
+Toda skill nova que precise se conectar ao Meta Ads deve seguir o mesmo padrão de Passo 0: ler `META_AUTH_MODO` antes de qualquer outra ação, e acionar `/trafego-conexao` se a variável não estiver configurada. A skill `/trafego-conexao` é idempotente, pode ser chamada várias vezes sem efeito colateral.
 
 ---
 
@@ -316,7 +563,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
 
 **Tráfego Pago (Meta Ads via API ou MCP):**
-- `/meta-conexao`. Configurar conexão com Meta Ads (MCP do Claude ou App Facebook Developers) e salvar preferência em META_AUTH_MODO
+- `/trafego-conexao`. Configurar conexão com Meta Ads (MCP do Claude ou App Facebook Developers) e salvar preferência em META_AUTH_MODO
 - `/trafego-insights`. Ler métricas de campanhas com cálculo automático de derivadas (connect rate, conversão por etapa, custo por etapa). Modo campanha única ou conta completa com ranking de urgência
 - `/trafego-criar-campanha`. Subir campanha nova via Marketing API (PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo). Cobre Sales e Leads
 - `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência + gargalo) para 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Quando a campanha está pronta, aciona automaticamente a escala.
@@ -331,6 +578,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `instagram-dashboard`. Dashboard HTML de métricas do Instagram (seguidores, engajamento, posts recentes) via Apify. O aluno roda o script manualmente para atualizar.
 - `tiktok-dashboard`. Dashboard HTML de métricas do TikTok (seguidores, likes totais, views, engajamento, heatmap de horários, top videos) via Apify. O aluno roda o script manualmente para atualizar.
 - `youtube-dashboard`. Dashboard HTML de métricas do YouTube (inscritos, views, engajamento, desempenho por duração, análise de títulos) via Apify. O aluno roda o script manualmente para atualizar.
+- `linkedin-dashboard`. Dashboard HTML de métricas do LinkedIn (seguidores, engajamento por tipo de post, hashtags, melhores dias para postar) via Apify. O aluno roda o script manualmente para atualizar.
 - `/dados-instagram`. Analisar perfil do Instagram com insights de copy (análise pontual, sem agendamento).
 - `/adaptar-plataforma`. Converter scripts e instruções Windows/PowerShell para Mac ou Linux. Adapta agendamento (Task Scheduler → cron/launchd) e comandos de instalação para o SO do aluno.
 

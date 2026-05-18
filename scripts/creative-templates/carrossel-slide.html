@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #000;
+    scrollbar-width: none;
+  }
+  body::-webkit-scrollbar { display: none; }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Camada 1: imagem de fundo (IA) */
+  .bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  /* Camada 2: overlay escuro/claro para legibilidade */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  /* Camada 3: conteudo (texto, icones) */
+  .content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+  }
+
+  /* === VARIANTES DE LAYOUT === */
+
+  /* GANCHO: texto grande, impactante */
+  .layout-gancho .content {
+    justify-content: center;
+    text-align: left;
+  }
+  .layout-gancho .headline {
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    max-width: 900px;
+  }
+  .layout-gancho .subtitle {
+    font-size: 28px;
+    font-weight: 500;
+    margin-top: 24px;
+    opacity: 0.85;
+    max-width: 750px;
+    line-height: 1.4;
+  }
+
+  /* CONTEUDO: texto medio com suporte visual */
+  .layout-conteudo .content {
+    justify-content: center;
+    text-align: left;
+  }
+  .layout-conteudo .headline {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+    max-width: 850px;
+  }
+  .layout-conteudo .body-text {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 28px;
+    max-width: 800px;
+    opacity: 0.9;
+  }
+
+  /* DADO: numero em destaque */
+  .layout-dado .content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .layout-dado .big-number {
+    font-size: 160px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -4px;
+  }
+  .layout-dado .headline {
+    font-size: 42px;
+    font-weight: 700;
+    margin-top: 20px;
+    max-width: 750px;
+    line-height: 1.2;
+  }
+
+  /* CHECKLIST: items com marcador */
+  .layout-checklist .content {
+    justify-content: center;
+    text-align: left;
+  }
+  .layout-checklist .headline {
+    font-size: 44px;
+    font-weight: 800;
+    margin-bottom: 32px;
+    line-height: 1.15;
+  }
+  .layout-checklist .check-item {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    padding-left: 48px;
+    position: relative;
+  }
+  .layout-checklist .check-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 28px;
+    height: 28px;
+    border: 3px solid currentColor;
+    border-radius: 6px;
+    opacity: 0.7;
+  }
+
+  /* CTA: call to action final */
+  .layout-cta .content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .layout-cta .headline {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.2;
+    max-width: 750px;
+  }
+  .layout-cta .cta-button {
+    margin-top: 40px;
+    padding: 20px 56px;
+    font-size: 26px;
+    font-weight: 700;
+    border-radius: 60px;
+    border: none;
+    letter-spacing: 0.5px;
+  }
+  .layout-cta .social-icons {
+    margin-top: 32px;
+    font-size: 24px;
+    opacity: 0.7;
+    font-weight: 500;
+  }
+
+  /* COMPARACAO: lado a lado */
+  .layout-comparacao .content {
+    flex-direction: row;
+    padding: 60px;
+    gap: 40px;
+  }
+  .layout-comparacao .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    border-radius: 24px;
+  }
+  .layout-comparacao .col-label {
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+  .layout-comparacao .col-text {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* EVENTO: layout para captura com foto do expert e data em destaque */
+  .layout-evento .content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  .layout-evento .expert-photo {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid currentColor;
+    opacity: 0.95;
+    margin-bottom: 8px;
+  }
+  .layout-evento .event-name {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    max-width: 850px;
+  }
+  .layout-evento .event-date {
+    font-size: 68px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin: 12px 0;
+  }
+  .layout-evento .event-details {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.5;
+    opacity: 0.9;
+    max-width: 800px;
+  }
+  .layout-evento .cta-button {
+    margin-top: 24px;
+    padding: 22px 60px;
+    font-size: 28px;
+    font-weight: 700;
+    border-radius: 60px;
+    border: none;
+    letter-spacing: 0.5px;
+  }
+
+  /* Badge de slide (ex: 1/7) */
+  .slide-badge {
+    position: absolute;
+    bottom: 36px;
+    right: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0.5;
+    z-index: 4;
+  }
+
+  /* Barra de progresso visual */
+  .progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 6px;
+    z-index: 4;
+    border-radius: 0 3px 0 0;
+  }
+
+  /* === TEMAS DE COR === */
+
+  .theme-dark {
+    background: #0f0f0f;
+    color: #ffffff;
+  }
+  .theme-dark .overlay {
+    background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
+  }
+  .theme-dark .accent { color: #fbbf24; }
+  .theme-dark .cta-button { background: #fbbf24; color: #0f0f0f; }
+  .theme-dark .progress-bar { background: #fbbf24; }
+  .theme-dark .col-wrong { background: rgba(239,68,68,0.15); }
+  .theme-dark .col-right { background: rgba(34,197,94,0.15); }
+
+  .theme-light {
+    background: #fafafa;
+    color: #1a1a1a;
+  }
+  .theme-light .overlay {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+  }
+  .theme-light .accent { color: #2563eb; }
+  .theme-light .cta-button { background: #2563eb; color: #ffffff; }
+  .theme-light .progress-bar { background: #2563eb; }
+  .theme-light .col-wrong { background: rgba(239,68,68,0.08); }
+  .theme-light .col-right { background: rgba(34,197,94,0.08); }
+
+  .theme-blue {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+  .theme-blue .overlay {
+    background: linear-gradient(135deg, rgba(15,23,42,0.88) 0%, rgba(30,58,138,0.7) 100%);
+  }
+  .theme-blue .accent { color: #38bdf8; }
+  .theme-blue .cta-button { background: #38bdf8; color: #0f172a; }
+  .theme-blue .progress-bar { background: #38bdf8; }
+
+  .theme-green {
+    background: #052e16;
+    color: #dcfce7;
+  }
+  .theme-green .overlay {
+    background: linear-gradient(135deg, rgba(5,46,22,0.88) 0%, rgba(22,101,52,0.7) 100%);
+  }
+  .theme-green .accent { color: #4ade80; }
+  .theme-green .cta-button { background: #4ade80; color: #052e16; }
+  .theme-green .progress-bar { background: #4ade80; }
+
+  .theme-warm {
+    background: #fef3c7;
+    color: #451a03;
+  }
+  .theme-warm .overlay {
+    background: linear-gradient(135deg, rgba(254,243,199,0.92) 0%, rgba(253,230,138,0.7) 100%);
+  }
+  .theme-warm .accent { color: #d97706; }
+  .theme-warm .cta-button { background: #d97706; color: #ffffff; }
+  .theme-warm .progress-bar { background: #d97706; }
+
+  .theme-red-soft {
+    background: #fef2f2;
+    color: #450a0a;
+  }
+  .theme-red-soft .overlay {
+    background: linear-gradient(135deg, rgba(254,242,242,0.92) 0%, rgba(254,226,226,0.7) 100%);
+  }
+  .theme-red-soft .accent { color: #dc2626; }
+  .theme-red-soft .progress-bar { background: #dc2626; }
+
+  .theme-green-soft {
+    background: #f0fdf4;
+    color: #052e16;
+  }
+  .theme-green-soft .overlay {
+    background: linear-gradient(135deg, rgba(240,253,244,0.92) 0%, rgba(220,252,231,0.7) 100%);
+  }
+  .theme-green-soft .accent { color: #16a34a; }
+  .theme-green-soft .progress-bar { background: #16a34a; }
+
+  /* TEMA CUSTOM: cores definidas via JSON do produto */
+  .theme-custom {
+    background: var(--bg, #0f0f0f);
+    color: var(--text, #ffffff);
+  }
+  .theme-custom .overlay {
+    background: var(--overlay, linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%));
+  }
+  .theme-custom .accent { color: var(--accent, #fbbf24); }
+  .theme-custom .cta-button { background: var(--accent, #fbbf24); color: var(--bg, #0f0f0f); }
+  .theme-custom .progress-bar { background: var(--accent, #fbbf24); }
+  .theme-custom .col-wrong { background: rgba(239,68,68,0.15); }
+  .theme-custom .col-right { background: rgba(34,197,94,0.15); }
+</style>
+</head>
+<body>
+<!--
+  TEMPLATE DE SLIDE DE CARROSSEL
+
+  Substituir os placeholders:
+    {{THEME}}       = theme-dark | theme-light | theme-blue | theme-green | theme-warm | theme-red-soft | theme-green-soft
+    {{LAYOUT}}      = layout-gancho | layout-conteudo | layout-dado | layout-checklist | layout-cta | layout-comparacao
+    {{BG_IMAGE}}    = caminho da imagem IA (ou vazio se so cor)
+    {{CONTENT}}     = HTML do conteudo do slide
+    {{SLIDE_NUM}}   = numero do slide
+    {{TOTAL}}       = total de slides
+    {{PROGRESS}}    = largura em % da barra de progresso
+-->
+<div class="slide {{THEME}} {{LAYOUT}}">
+  <img class="bg-image" src="{{BG_IMAGE}}" alt="" onerror="this.style.display='none'">
+  <div class="overlay"></div>
+  <div class="content">
+    {{CONTENT}}
+  </div>
+  <span class="slide-badge">{{SLIDE_NUM}}/{{TOTAL}}</span>
+  <div class="progress-bar" style="width: {{PROGRESS}}%"></div>
+</div>
+</body>
+</html>

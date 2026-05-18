@@ -971,14 +971,19 @@ def parse_dashboards(produto_dir: Path) -> dict:
 
     plataformas = []
 
-    def _achar_dashboard(pasta: str) -> str:
-        """Retorna o caminho relativo ao produto_dir do primeiro dashboard.html encontrado."""
+    def _achar_dashboard(pasta: str, preferido: str = "") -> str:
+        """Retorna o caminho relativo ao produto_dir do dashboard.html encontrado.
+        Se `preferido` for informado, tenta primeiro a subpasta com esse nome."""
         base = produto_dir / "entregas" / pasta
         if not base.exists():
             return ""
         direto = base / "dashboard.html"
         if direto.exists():
             return f"entregas/{pasta}/dashboard.html"
+        if preferido:
+            cand = base / preferido / "dashboard.html"
+            if cand.exists():
+                return f"entregas/{pasta}/{preferido}/dashboard.html"
         for sub in sorted(base.iterdir()):
             if sub.is_dir():
                 candidato = sub / "dashboard.html"
@@ -986,37 +991,190 @@ def parse_dashboards(produto_dir: Path) -> dict:
                     return f"entregas/{pasta}/{sub.name}/dashboard.html"
         return ""
 
-    ig_caminho = _achar_dashboard("instagram-dashboard")
+    def _handle_do_caminho(caminho_rel: str) -> str:
+        """Extrai o handle de `entregas/{pasta}/{handle}/dashboard.html`."""
+        partes = caminho_rel.split("/")
+        return partes[2] if len(partes) >= 4 else ""
+
+    def _extrair_metricas_cmp(caminho_rel: str) -> dict:
+        """Le insights.json da plataforma e devolve dict compacto pra comparacao.
+        Inline assim, evita fetch via file:// que e bloqueado pelo browser."""
+        import json as _json
+        if not caminho_rel:
+            return {}
+        insights_path = produto_dir / caminho_rel.replace("dashboard.html", "insights.json")
+        if not insights_path.exists():
+            return {}
+        try:
+            data = _json.loads(insights_path.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+
+        perfil = data.get("perfil") or data.get("canal") or {}
+        metricas = data.get("metricas") or {}
+        posts = data.get("posts") or data.get("videos") or []
+
+        # Top 3 por engajamento, so campos essenciais
+        top3 = sorted(posts, key=lambda p: p.get("engajamento", 0), reverse=True)[:3]
+        top3_slim = [
+            {
+                "tipo": p.get("tipo", "-"),
+                "texto": (p.get("texto") or p.get("legenda") or p.get("titulo") or "")[:120],
+                "likes": p.get("likes") or p.get("numLikes") or 0,
+                "engajamento": p.get("engajamento", 0),
+                "views": p.get("views") or p.get("numViews") or 0,
+            }
+            for p in top3
+        ]
+
+        # Fallback: se nao tiver bloco "metricas" no insights.json (caso do Instagram),
+        # computa as basicas a partir dos posts.
+        from collections import Counter as _Counter
+        media_eng = metricas.get("media_engajamento")
+        if media_eng is None and posts:
+            engs = [p.get("engajamento", 0) for p in posts]
+            media_eng = round(sum(engs) / len(engs), 2) if engs else 0
+
+        tipo_top = metricas.get("tipo_mais_postado") or metricas.get("tipo_top")
+        if not tipo_top and posts:
+            tipos_cnt = _Counter(p.get("tipo", "-") for p in posts)
+            tipo_top = tipos_cnt.most_common(1)[0][0] if tipos_cnt else "-"
+
+        desempenho_tipo = metricas.get("desempenho_por_tipo") or metricas.get("desempenho_tipo") or {}
+        if not desempenho_tipo and posts:
+            # Agrupa engajamento por tipo
+            grupos: dict = {}
+            for p in posts:
+                t = p.get("tipo", "-")
+                grupos.setdefault(t, []).append(p.get("engajamento", 0))
+            desempenho_tipo = {
+                t: {"engajamento": round(sum(es) / len(es), 2), "count": len(es)}
+                for t, es in grupos.items()
+            }
+
+        return {
+            "seguidores": perfil.get("seguidores") or perfil.get("followersCount") or 0,
+            "conexoes": perfil.get("conexoes") or 0,
+            "inscritos": perfil.get("inscritos") or 0,
+            "likes_totais": perfil.get("likes_totais") or 0,
+            "total_views": perfil.get("total_views") or perfil.get("total_views_canal") or 0,
+            "media_engajamento": media_eng or 0,
+            "tipo_mais_postado": tipo_top or "-",
+            "total_posts": len(posts),
+            "desempenho_por_tipo": desempenho_tipo,
+            "desempenho_por_duracao": metricas.get("desempenho_por_duracao") or metricas.get("desempenho_duracao") or {},
+            "top3": top3_slim,
+        }
+
+    ig_caminho = _achar_dashboard("instagram-dashboard", env_vars.get("IG_USER", ""))
     if ig_caminho:
-        user = env_vars.get("IG_USER", "")
+        user = env_vars.get("IG_USER", "") or _handle_do_caminho(ig_caminho)
         plataformas.append({
             "id": "instagram",
             "label": "Instagram",
             "user": f"@{user}" if user else "",
             "caminho": ig_caminho,
+            "metricas_cmp": _extrair_metricas_cmp(ig_caminho),
         })
 
-    tt_caminho = _achar_dashboard("tiktok-dashboard")
+    tt_caminho = _achar_dashboard("tiktok-dashboard", env_vars.get("TIKTOK_USER", ""))
     if tt_caminho:
-        user = env_vars.get("TIKTOK_USER", "")
+        user = env_vars.get("TIKTOK_USER", "") or _handle_do_caminho(tt_caminho)
         plataformas.append({
             "id": "tiktok",
             "label": "TikTok",
             "user": f"@{user}" if user else "",
             "caminho": tt_caminho,
+            "metricas_cmp": _extrair_metricas_cmp(tt_caminho),
         })
 
-    yt_caminho = _achar_dashboard("youtube-dashboard")
+    yt_caminho = _achar_dashboard("youtube-dashboard", env_vars.get("YOUTUBE_CHANNEL", ""))
     if yt_caminho:
-        channel = env_vars.get("YOUTUBE_CHANNEL", "")
+        channel = env_vars.get("YOUTUBE_CHANNEL", "") or _handle_do_caminho(yt_caminho)
         plataformas.append({
             "id": "youtube",
             "label": "YouTube",
             "user": channel,
             "caminho": yt_caminho,
+            "metricas_cmp": _extrair_metricas_cmp(yt_caminho),
         })
 
-    return {"plataformas": plataformas}
+    li_caminho = _achar_dashboard("linkedin-dashboard", env_vars.get("LINKEDIN_PROFILE", ""))
+    if li_caminho:
+        user = env_vars.get("LINKEDIN_PROFILE", "") or _handle_do_caminho(li_caminho)
+        plataformas.append({
+            "id": "linkedin",
+            "label": "LinkedIn",
+            "user": f"@{user}" if user else "",
+            "caminho": li_caminho,
+            "metricas_cmp": _extrair_metricas_cmp(li_caminho),
+        })
+
+    # Concorrentes: entregas/concorrentes/{slug}/{plataforma}/dashboard.html
+    concorrentes: list[dict] = []
+    concorrentes_dir = produto_dir / "entregas" / "concorrentes"
+    if concorrentes_dir.exists():
+        labels_plat = {
+            "instagram": "Instagram",
+            "tiktok": "TikTok",
+            "youtube": "YouTube",
+            "linkedin": "LinkedIn",
+        }
+        for sub in sorted(concorrentes_dir.iterdir()):
+            if not sub.is_dir():
+                continue
+            slug = sub.name
+            # le meta.json (nome bonito + data); se nao existir, usa fallbacks
+            meta_path = sub / "meta.json"
+            nome = slug
+            atualizado_em = ""
+            handle_por_plat: dict[str, str] = {}
+            if meta_path.exists():
+                try:
+                    import json as _json
+                    meta = _json.loads(meta_path.read_text(encoding="utf-8"))
+                    nome = meta.get("nome") or slug
+                    atualizado_em = meta.get("atualizado_em", "")
+                    handle_por_plat = meta.get("handles", {}) or {}
+                except Exception:
+                    pass
+
+            plats_concorrente = []
+            for pid, plabel in labels_plat.items():
+                cand = sub / pid / "dashboard.html"
+                if cand.exists():
+                    handle = handle_por_plat.get(pid, "")
+                    cam_rel = f"entregas/concorrentes/{slug}/{pid}/dashboard.html"
+                    plats_concorrente.append({
+                        "id": pid,
+                        "label": plabel,
+                        "user": f"@{handle}" if handle else "",
+                        "caminho": cam_rel,
+                        "metricas_cmp": _extrair_metricas_cmp(cam_rel),
+                    })
+
+            if not plats_concorrente:
+                continue
+
+            # se nao tem data no meta.json, usa o mtime do arquivo mais recente
+            if not atualizado_em:
+                try:
+                    from datetime import datetime as _dt
+                    arquivos = list(sub.rglob("dashboard.html"))
+                    if arquivos:
+                        ts = max(a.stat().st_mtime for a in arquivos)
+                        atualizado_em = _dt.fromtimestamp(ts).strftime("%d/%m/%Y %H:%M")
+                except Exception:
+                    pass
+
+            concorrentes.append({
+                "slug": slug,
+                "nome": nome,
+                "atualizado_em": atualizado_em,
+                "plataformas": plats_concorrente,
+            })
+
+    return {"minhas": plataformas, "concorrentes": concorrentes}
 
 
 def parse_comercial_playbook(slug: str, produto_dir: Path) -> dict:

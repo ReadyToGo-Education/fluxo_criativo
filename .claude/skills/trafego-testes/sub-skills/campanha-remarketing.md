@@ -106,11 +106,11 @@ receita: R1 (Carrinho abandonado)
 audience_origem:
   status: criar (não existe)
   spec:
-    nome: "[WS] CarrinhoAbandonado-30d-curso-tarot"
+    nome: "[FC] CarrinhoAbandonado-30d-curso-tarot"
     inclusions: AddToCart 30d
     exclusions: Purchase 30d
 
-audience_excluir: "[WS] Purchase-90d-curso-tarot" (já existe, ID 6123456789)
+audience_excluir: "[FC] Purchase-90d-curso-tarot" (já existe, ID 6123456789)
 
 campanha:
   objective: OUTCOME_SALES
@@ -137,7 +137,7 @@ confirma criar audience + campanha? (digite SIM)
 ## Após criar
 
 ```
-✅ Audience criada: [WS] CarrinhoAbandonado-30d-curso-tarot
+✅ Audience criada: [FC] CarrinhoAbandonado-30d-curso-tarot
    ID: 6123456800
 
 ✅ Campanha de remarketing criada (PAUSED): [WS-RMK] carrinho-abandonado-curso-tarot

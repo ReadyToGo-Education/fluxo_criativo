@@ -10,9 +10,9 @@ Atalhos que orquestram múltiplas skills em uma única operação. Pensados para
 **Orquestração:**
 ```
 1. /trafego-publicos opção 1 (evento padrão Purchase, 90d)
-   └── cria audience "[WS] Purchase-90d-curso-tarot"
+   └── cria audience "[FC] Purchase-90d-curso-tarot"
 2. /trafego-publicos opção 5 (lookalike 1%)
-   └── cria audience "[WS] LAL1pct-Compradores-curso-tarot"
+   └── cria audience "[FC] LAL1pct-Compradores-curso-tarot"
 3. /trafego-criar-campanha (objetivo OUTCOME_SALES, audience da etapa 2)
    └── cria campanha PAUSED
 4. Devolve IDs + handoff para acompanhamento

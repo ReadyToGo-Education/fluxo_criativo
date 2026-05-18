@@ -53,7 +53,7 @@ A skill recomenda começar em 1% e ampliar conforme a campanha satura.
 ```
 POST /act_<id>/customaudiences
 {
-  "name": "[WS] LAL{percentual}pct-{nome_source}-{produto-slug}",
+  "name": "[FC] LAL{percentual}pct-{nome_source}-{produto-slug}",
   "subtype": "LOOKALIKE",
   "origin_audience_id": "<source_audience_id>",
   "lookalike_spec": {
@@ -72,9 +72,9 @@ POST /act_<id>/customaudiences
 sub_fluxo: lookalike
 source:
   id: 6123456789
-  nome: "[WS] Purchase-90d-curso-tarot"
+  nome: "[FC] Purchase-90d-curso-tarot"
   tamanho: 580
-nome_final: "[WS] LAL1pct-Compradores-curso-tarot"
+nome_final: "[FC] LAL1pct-Compradores-curso-tarot"
 percentual: 1
 pais: BR
 type: similarity
@@ -91,7 +91,7 @@ Quer criar mesmo assim? (digite SIM)
 A skill aceita criar múltiplas LAL da mesma source numa única confirmação:
 
 ```
-A partir de "[WS] Purchase-90d-curso-tarot", criar:
+A partir de "[FC] Purchase-90d-curso-tarot", criar:
 [1] LAL 1% (similarity)
 [2] LAL 2% (similarity)
 [3] LAL 5% (similarity)
@@ -105,7 +105,7 @@ Quer criar:
 ## Após criar
 
 ```
-✅ Lookalike criada: [WS] LAL1pct-Compradores-curso-tarot
+✅ Lookalike criada: [FC] LAL1pct-Compradores-curso-tarot
    ID: 6123456795
 
 Tamanho estimado: ~2.000.000 (BR)

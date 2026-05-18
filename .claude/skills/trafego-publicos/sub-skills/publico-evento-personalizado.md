@@ -115,7 +115,7 @@ passo_1_evento:
   rule: { ... }
 
 passo_2_audience:
-  nome_final: "[WS] CustomEvent-ClickWhatsApp-30d-curso-tarot"
+  nome_final: "[FC] CustomEvent-ClickWhatsApp-30d-curso-tarot"
   janela_dias: 30
   retention_seconds: 2592000
   tamanho_estimado: "calculando" (audience só popula quando o evento começar a disparar)
@@ -129,7 +129,7 @@ confirma os 2 passos? (digite SIM)
 ✅ Evento personalizado criado: ClickWhatsApp
    Custom Conversion ID: 9876543210
 
-✅ Audience criada: [WS] CustomEvent-ClickWhatsApp-30d-curso-tarot
+✅ Audience criada: [FC] CustomEvent-ClickWhatsApp-30d-curso-tarot
    Audience ID: 6123456790
 
 A audience começa a popular assim que o evento dispara pela primeira vez no pixel.
