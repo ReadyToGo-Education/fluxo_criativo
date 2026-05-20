@@ -1,65 +1,25 @@
 # Estilo. Carrossel "Notícia"
 
-> Carrossel que pega uma notícia (da semana, Trend) ou uma curiosidade (Atemporal) do nicho e transforma em narrativa de 7 a 9 slides.
-> Este estilo **delega o prompt-base** para a skill `programar-carrossel-noticia` (que já existe no projeto). A diferença é: lá o prompt vai pra Routine na nuvem. Aqui, executa no chat do Claude Code agora.
+> Carrossel que pega uma NOTÍCIA TEMPORAL (acontecimentos dos últimos 7 dias) do nicho e transforma em narrativa de revista de 7 a 9 slides com prompts visuais em 3 modos.
+> Este estilo **delega o prompt-base** para `references/prompt-noticia.md`. O prompt é executado EXATAMENTE como está, sem reescrita. A única adaptação permitida é pré-preencher a Etapa 1 com dados do produto ativo.
+> A âncora é o calendário (frescor obrigatório). Para curiosidades atemporais, use a opção 8 (Curiosidade) do menu.
 
 ---
 
-## Coleta extra do Passo 1
+## Coleta do Passo 1
 
-O fluxo de coleta da Notícia é **mais simples** que os outros 6 estilos. Ignore o `passo-coleta-base.md` padrão. Use este:
+O fluxo de coleta da Notícia **ignora** o `passo-coleta-base.md` padrão. A coleta é a Etapa 1 do `prompt-noticia.md` (3 perguntas):
 
 ### 1.1. @ do Instagram
-Igual ao passo-coleta-base.md.
+Se `.env` tiver `IG_USER` ou `perfil.md` tiver handle, pré-preencha como sugestão.
 
-### 1.2. Nicho e produto em uma frase
-Igual ao passo-coleta-base.md.
+### 1.2. Nicho
+Se `perfil.md` tiver nicho, pré-preencha como sugestão.
 
-### 1.3. Categoria de notícia
+### 1.3. Produto
+Se `perfil.md` tiver Quadro/formato/público, pré-preencha como sugestão.
 
-```
-Qual categoria de notícia você quer?
-
-1. Trend (notícia da semana, últimos 7 dias)
-2. Atemporal (curiosidade ou fato chocante sem prazo)
-3. Mista (3 Trend + 3 Atemporais, você escolhe depois)
-
-Digite o número.
-```
-
-Salve como `categoria_noticia` (`TREND`, `ATEMPORAL` ou `MISTA`).
-
-### 1.4. Modo de escolha
-
-```
-Como você quer escolher a notícia que vai virar carrossel?
-
-1. Eu escolho entre as 6 ideias que você me apresentar
-2. Aleatório (você escolhe a mais quente entre as 6)
-
-Digite o número.
-```
-
-Salve como `modo` (`MANUAL` ou `ALEATORIO`).
-
-### 1.5. Tom do carrossel
-
-```
-Qual tom você quer no carrossel?
-
-1. Enérgico (motivação, ritmo rápido)
-2. Polêmico (provocador, defende tese forte)
-3. Engraçado (ironia, leve)
-4. Reflexivo (pausado, filosófico)
-5. Didático (explicador, professor)
-6. Jornalístico (apurado, sóbrio, foco no fato)
-7. Confessional (primeira pessoa, vulnerável)
-8. Aleatório (você escolhe o mais adequado à notícia escolhida)
-
-Digite o número.
-```
-
-Salve como `tom_noticia`.
+> Tema e tom NÃO são coletados aqui. Tema é escolhido na Etapa 3 do prompt (depois da busca na web); tom na Etapa 4. No modo "Gerar todos", veja a regra abaixo.
 
 ---
 
@@ -67,47 +27,50 @@ Salve como `tom_noticia`.
 
 A skill `/carrossel` no estilo Notícia faz o seguinte:
 
-1. **Lê o prompt-base** em `.claude/skills/programar-carrossel-noticia/references/prompt-carrossel-noticia.md` e monta o prompt final concatenando:
-   - **Bloco A** (cabeçalho fixo com handle, nicho, produto, data de hoje)
-   - **Bloco B** (busca de 6 notícias, sempre executa)
-   - Se `modo == MANUAL`: para aqui, mostra as 6 ideias, espera o aluno escolher uma + tom (se `tom_noticia == 8`).
-   - Se `modo == ALEATORIO`: continua para **Bloco C-CARROSSEL.1** (seleção automática) + **C-CARROSSEL.2** (escrita do carrossel) + **C-CARROSSEL.3** (prompts visuais) + **C-CARROSSEL.4** (arquivo consolidado).
+1. **Carrega** `references/prompt-noticia.md` inteiro.
+2. **Executa a Etapa 1** (coleta de @, nicho, produto), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`/`.env`.
+3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
+4. **Executa o prompt da Etapa 2 à Etapa 7 exatamente como está**, na sessão atual:
+   - Etapa 2: busca de 5 notícias trend dos últimos 7 dias via `WebSearch`.
+   - Etapa 3: aluno escolhe 1 das 5.
+   - Etapa 4: aluno escolhe o tom (7 opções).
+   - Etapa 5: escreve os 7 a 9 slides.
+   - Etapa 6: gate de aprovação do texto.
+   - Etapa 7: prompts visuais nos 3 modos + arquivo consolidado.
+5. A data para o nome do arquivo consolidado é calculada via `Bash` com `Get-Date -Format "yyyy-MM-dd"` (PowerShell).
+6. O texto dos slides passa pelo **Manual da Copy + revisora** de forma silenciosa antes de ser exibido na Etapa 6. As regras de copy do prompt (sem travessão, sem exclamação, sem pergunta na capa) já estão alinhadas com o Manual.
 
-2. **Substitui os placeholders** do prompt-base com os valores coletados:
-   - `{{HANDLE}}` → `handle`
-   - `{{NICHO}}` → `nicho_produto` (parte do nicho)
-   - `{{PRODUTO}}` → `nicho_produto` (parte do produto)
-   - `{{DATA_HOJE_REF}}` → data atual (a skill calcula via `Get-Date` em PowerShell antes de injetar)
-   - `{{ESCOPO}}` → `CARROSSEL_INTEIRO` (sempre, porque é geração imediata)
-   - `{{MODO}}` → `ALEATORIO` ou `FIXO`
-   - `{{CATEGORIA_FIXA}}` → `TREND`, `ATEMPORAL` ou `LIVRE` (se MISTA)
-   - `{{TOM_FIXO}}` → nome do tom (Enérgico, Polêmico, etc.) ou `LIVRE`
-
-3. **Executa o prompt** dentro da sessão atual (não dispara pra Routine). Usa `WebSearch` para buscar as 6 notícias e gera o carrossel.
+> **Diferença para o `/programar-carrossel-noticia`:** aquela skill (agendamento) usa um arquivo separado (`programar-carrossel-noticia/references/prompt-carrossel-noticia.md`) com placeholders e configurações de categoria/modo/tom para o modo Routine. O `/carrossel` opção 7 (geração imediata) usa o `prompt-noticia.md` interativo que está aqui.
 
 ---
 
-## Diferenças importantes em relação aos 6 estilos atemporais
+## Diferenças importantes em relação aos 6 estilos clássicos
 
-O carrossel Notícia tem **estrutura interna diferente** dos outros 6:
-
-| Aspecto | 6 estilos atemporais | Notícia |
+| Aspecto | 6 estilos clássicos | Notícia |
 |---|---|---|
 | Número de slides | 6 fixos | 7 a 9 (variável) |
-| Estrutura do slide 1 | Frase começando com "Nunca/Sempre/..." | Capa com o FATO em até 8 palavras |
-| Slide N (último) | CTA criativa | CTA fixo: "Todos os dias, conteudo sobre {{NICHO}} aqui no {{HANDLE}}. Me segue para receber a proxima." |
-| Prompts visuais | Template único 4:5 dois blocos | 3 modos (foto real composta, DALL-E, composição limpa) |
-| Saída no projeto | `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-noticia/` + texto + prompts + legenda | Mesma pasta, mas com formato consolidado do prompt-carrossel-noticia |
-| Coleta extra | Sem Desejo, sem Objetivo | Categoria + Modo + Tom |
-| Dependência externa | Não | WebSearch (busca real de notícias) |
+| Estrutura do slide 1 | Frase começando com "Nunca/Sempre/..." | Capa com o FATO em até 8 palavras + subtítulo curto opcional |
+| Slide N (último) | CTA criativa | CTA fixo: "Todos os dias, conteúdo sobre [nicho] aqui no @[handle]. Me segue para receber a próxima." |
+| Prompts visuais | Template único 4:5 dois blocos | 3 modos (foto real composta, DALL-E ilustrativo, composição limpa) |
+| Coleta extra | 5 dados (@, nicho, paleta, tom, estilo de design) | @, nicho, produto (Etapa 1) + tema (Etapa 3) + tom (Etapa 4) |
+| Dependência externa | Não | `WebSearch` (busca real de notícias trend) |
+| Frescor | Atemporal | Obrigatório: últimos 7 dias |
+| Arquivo consolidado | Não | `carrossel-noticia-[slug]-[data].txt` com delimitadores `=== SLIDE N ===` |
 
 ---
 
-## Passo 3 e Passo 4
+## Modo "Gerar todos"
 
-A skill **NÃO usa** o `passo-output-triplo.md` nem o `passo-legenda.md` padrão para o estilo Notícia, porque o prompt-carrossel-noticia já tem `ETAPA 4` (prompts visuais) e `ETAPA 5` (arquivo consolidado) próprios.
+No fluxo "Gerar todos" (Passo 2 da SKILL.md, ramo `todos`), Notícia roda com **escolha automática de tema**, igual à Curiosidade e ao Editorial:
 
-A legenda do Instagram para o carrossel Notícia já vem embutida no slide N (CTA fixo). Se o aluno quiser uma legenda mais elaborada, ele pode rodar a skill `revisora` separadamente em cima do texto do slide N.
+- A skill executa a Etapa 2 (busca das 5 notícias) e, em vez de perguntar, **seleciona automaticamente a notícia mais quente** das 5 (mais recente + maior potencial de gancho).
+- O tom usado é o coletado no Passo 2.B da SKILL.md (`noticia_tom`).
+- O restante do prompt (Etapas 5 a 7) roda normalmente.
+- **Se nenhuma notícia dos últimos 7 dias existir**, a Notícia desse lote é PULADA com aviso no log do batch (o lote continua sem ela).
+
+---
+
+## Saída no projeto
 
 Pasta de saída:
 
@@ -116,15 +79,13 @@ meus-produtos/{ativo}/entregas/conteudo-social/carrossel-noticia/
 ```
 
 Arquivos gerados:
-- `texto.md` (slides 1 a N)
-- `prompts.txt` (prompts visuais por slide, formato do `ETAPA 5` do prompt-carrossel-noticia)
-- `legenda.txt` (opcional, se o aluno quiser uma legenda separada do slide CTA final)
+- `texto.md` (slides 1 a N, já aprovados)
+- `carrossel-noticia-[slug]-[data].txt` (arquivo consolidado da Etapa 7, Parte B, com os prompts visuais delimitados)
+
+> A legenda do Instagram para a Notícia já vem embutida no slide N (CTA fixo). Não há `legenda.txt` separado.
 
 ---
 
 ## Paleta
 
-Sem paleta default rígida. A paleta é determinada pelo aluno ou pelo modo MISTA. Use:
-- 3 cores em hex consistentes entre os 7 a 9 slides
-- Tipografia serif editorial
-- Sem ícones, formas geométricas decorativas ou emoji na arte
+Sem paleta default rígida. A paleta vem das regras do prompt (3 cores hex consistentes entre todos os slides, tipografia serif editorial, sem ícones nem emoji).

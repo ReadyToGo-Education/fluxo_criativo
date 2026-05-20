@@ -372,7 +372,7 @@ meus-produtos/{ativo}/entregas/trafego/escala-{campanha-slug}-ciclo-{N}-{YYYY-MM
 
 Conteúdo: estado atual + ação aplicada + riscos + próxima revisão.
 
-Caminho absoluto: `C:\Users\gabri\Documents\GitHub\workshop_inteligente\meus-produtos\{ativo}\entregas\trafego\escala-{...}.md`
+Caminho absoluto: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\escala-{...}.md`
 
 ---
 

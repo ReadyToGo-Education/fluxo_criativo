@@ -1,123 +1,87 @@
-# Estilo. Carrossel "Eu odeio"
+# Estilo. Carrossel "Odeio"
 
-> Carrossel polêmico que defende pautas e causas no nicho via take forte e justificado. Identificação tribal por oposição.
-
----
-
-## Coleta extra do Passo 1
-
-**Substituição na pergunta 1.4 (tom).** Para o "Odeio", trocar a lista padrão de tons por:
-
-```
-Qual tom de polêmica você quer?
-
-1. Polêmica clássica/sóbria (argumento direto e elegante)
-2. Polêmica bem-humorada (trocadilho, ironia)
-3. Polêmica técnica (defende com dado)
-4. Polêmica provocativa direta (sem rodeio)
-5. Polêmica inspiracional (manifesto)
-
-Default: polêmica direta com argumento.
-
-Digite o número.
-```
+> Carrossel viral de 6 slides que entrega 5 takes polêmicos no formato "Eu odeio quem [comportamento, crença ou atitude]" + justificativa que sustenta o take + CTA tribal. Identificação tribal por oposição.
+> Este estilo **delega o prompt-base** para `references/prompt-odeio.md`. O prompt é executado EXATAMENTE como está, sem reescrita. A única adaptação permitida é pré-preencher o Passo 1 (Coleta) com dados do produto ativo quando existirem.
 
 ---
 
-## Passo 2. Geração dos 6 slides (texto)
+## Coleta do Passo 1
 
-### Estrutura
+O fluxo de coleta do Odeio **ignora** o `passo-coleta-base.md` padrão. A coleta é a do `prompt-odeio.md` (5 perguntas):
 
-- **Slides 1-5**. Começam com "Eu odeio quem [comportamento, crença ou atitude]" + justificativa que sustenta o take.
-- **Slide 6**. CTA polêmica (convocação tribal).
+### 1.1. Nicho e produto em UMA frase
+Se `perfil.md` tiver Quadro/categoria do produto, pré-preencha como sugestão.
 
-### Critério das ideias. REGRA CENTRAL
+### 1.2. @ do Instagram
+Se `.env` tiver `IG_USER` ou `perfil.md` tiver handle, pré-preencha como sugestão.
 
-**POLÊMICO + DEFENDIDO + TRIBAL.**
+### 1.3. Cores padrão da marca
+Default sem paleta: bloco preto `#111111` + texto creme `#F2EAD9` (slides 1-5) + bloco creme `#F2EAD9` + texto preto `#111111` (slide 6). Contraste forte invertido no fechamento.
 
-- **Polêmico**. Take forte, posição clara, divide águas.
-- **Defendido**. Argumento concreto (dado, lógica, consequência, exemplo). Não é raiva gratuita.
-- **Tribal**. Faz a audiência sentir "exatamente, eu tambem odeio isso". Cria pertencimento.
+### 1.4. Tipo de polêmica (texto)
+5 opções: polêmica clássica/sóbria, polêmica bem-humorada, polêmica técnica, polêmica provocativa direta, polêmica inspiracional. Default: "polêmica direta com argumento".
 
-### Cuidados com a polêmica
-
-**Atacar comportamentos, crenças e atitudes. NUNCA pessoas, grupos protegidos ou identidades.** A polêmica é sobre o que se faz, não sobre quem se é.
-
-### Exemplos de referência
-
-**Certos:**
-- "Eu odeio quem diz que energia não existe" / "Física quântica já provou: tudo é vibração. Negar é preguiça intelectual."
-- "Eu odeio quem terceiriza problemas e cobra resultado" / "Quem não enfrenta a raiz não merece colher o fruto."
-
-**Errados (genéricos):**
-- "Eu odeio gente preguiçosa."
-- "Eu odeio quem não acredita."
-
-### Regras OBRIGATÓRIAS da CTA (slide 6)
-
-1. **Motivo claro.**
-2. **Relação** com a pauta defendida.
-3. **Geração de desejo** (identidade tribal).
-
-**Exemplos:**
-- "Siga @x e faça parte de quem leva [pauta] a sério."
-- "Siga @x se você também não engole [comportamento odiado]."
-
-### Tamanho do texto
-
-- **Título** até 12 palavras (mais espaço porque o take precisa caber).
-- **Subtítulo** até 15 palavras.
+### 1.5. Estilo de design visual
+7 opções (Polêmica Clássica/Sóbria, Polêmica Bem-humorada, Polêmica Técnica, Polêmica Provocativa Direta, Polêmica Inspiracional, Editorial, Street/Urbano) ou descrição livre.
 
 ---
 
-## Passo 3 e Passo 4
+## Passo 2. Execução
 
-Use o output triplo e a legenda compartilhados. Pasta de saída:
+A skill `/carrossel` no estilo Odeio faz o seguinte:
+
+1. **Carrega** `references/prompt-odeio.md` inteiro.
+2. **Executa o Passo 1 do prompt** (coleta de 5 dados), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`/`.env`.
+3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
+4. **Executa o prompt do Passo 2 ao Passo 4 exatamente como está**, na sessão atual:
+   - Passo 2: gera os 6 slides com aprovação interna.
+   - Passo 3: 3 outputs (chat slide por slide, arquivo `prompts.txt`, comando Cowork).
+   - Passo 4: gera a legenda do Instagram com Manual da Copy e salva `legenda.txt`.
+5. O texto dos 6 slides passa pelo **Manual da Copy + revisora** silenciosamente antes do gate de aprovação do Passo 2 do prompt.
+
+---
+
+## Diferenças importantes em relação aos outros estilos clássicos ainda não migrados
+
+| Aspecto | Odeio (verbatim) | Estilos clássicos no modelo leve (Sempre, Erros, Amo, Ninguém Conta) |
+|---|---|---|
+| Fonte de regras | `references/prompt-odeio.md` (prompt completo, verbatim) | `references/estilos/{estilo}.md` (rules leves) + `passo-coleta-base.md` |
+| Execução | A skill executa o prompt do estilo do início ao fim | A skill conduz Passo 3 padrão usando guidance leve |
+| Output de prompts visuais | Output Triplo do próprio prompt (chat + `prompts.txt` + comando Cowork) | `passo-output-triplo.md` compartilhado |
+| Output de legenda | Passo 4 do próprio prompt (com Manual da Copy citado explicitamente) | `passo-legenda.md` compartilhado |
+
+---
+
+## Modo "Gerar todos"
+
+No fluxo "Gerar todos" (Passo 2 da SKILL.md, ramo `todos`), Odeio roda com **valores pré-coletados** no Passo 2.B da SKILL.md (handle, nicho_produto, cores_marca, tom_texto, estilo_design):
+
+- A skill pula o Passo 1 do `prompt-odeio.md` (Coleta interativa) e injeta os valores diretamente.
+- Em seguida executa o Passo 2 do prompt sem o gate de aprovação interativa (aprovação acontece depois, em lote, no Passo 2.D da SKILL.md).
+- Passo 3 e Passo 4 do prompt rodam normalmente (visuais e legenda).
+
+---
+
+## Saída no projeto
+
+Pasta de saída:
 
 ```
 meus-produtos/{ativo}/entregas/conteudo-social/carrossel-odeio/
 ```
 
+Arquivos gerados (definidos pelo próprio `prompt-odeio.md`):
+- `texto.md` (6 slides aprovados — convenção da skill, ver Passo 3 da SKILL.md)
+- `prompts.txt` (6 prompts visuais em inglês, separados por linha em branco — Passo 3.2 do prompt)
+- `legenda.txt` (legenda do Instagram, revisada pelo Manual da Copy — Passo 4.5 do prompt)
+
+Adicionalmente, durante a execução o prompt entrega no chat o **comando Cowork** pronto para automatizar a geração das imagens no ChatGPT via Claude in Chrome.
+
 ---
 
-## Paleta default (contraste forte)
+## Paleta default
 
 - **Slides 1-5.** Fundo preto `#111111` + texto creme `#F2EAD9`.
 - **Slide 6 (CTA).** Fundo creme `#F2EAD9` + texto preto `#111111`.
 
-Inversão proposital pra fechar com força.
-
----
-
-## Atmosfera fotográfica
-
-Cenas que **ilustram o comportamento criticado** ou que carregam **gravidade visual**:
-- Situação reconhecível que ilustra o take (ex: para "Eu odeio quem terceiriza problemas" → mãos apontando algo, papel rasgado, copo vazio sob luz dura)
-- Gesto simbólico, sombra, contraste forte
-- Luz cinematográfica dramática (não naturalista solar)
-- Sem rosto humano nítido
-- Mood que sustenta o tom polêmico
-
----
-
-## Ajuste no template de prompt de imagem
-
-No template (`template-prompt-imagem.md`), troque:
-
-```
-Cinematic naturalistic lighting
-```
-
-por:
-
-```
-Cinematic dramatic lighting, mood that supports a polemic statement
-```
-
-E aumente o tamanho do título no bloco inferior:
-
-```
-occupying ~30-38% of the bottom block height (heavier presence for polemic tone)
-```
-
-(Em vez de `~28-35%`.)
+Inverte o jogo de contraste no slide 6 para fechar com peso polêmico. Se o aluno responder com outra paleta no Passo 1.3, use a dele.

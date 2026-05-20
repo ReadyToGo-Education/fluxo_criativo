@@ -1,5 +1,5 @@
 ---
-name: workshop-marketing:banner-visual
+name: banner-visual
 description: Gera banner estático para Instagram (1080x1350) com foto cinematográfica por IA. OpenRouter como provider único (google/gemini-3.1-flash-image-preview), prompt cinemático obrigatório (85mm telephoto, rim lighting, Hollywood color grade), gradiente dinâmico na base e texto com efeito outline. Executa gerar-banner-estatico.py.
 allowed-tools: Read, Write, Bash
 ---

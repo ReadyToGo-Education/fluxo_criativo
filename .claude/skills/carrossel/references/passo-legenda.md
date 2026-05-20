@@ -1,24 +1,11 @@
 # Passo de Geração de Legenda (compartilhado)
 
 > Passo 5 do fluxo. Roda depois da entrega dos prompts de imagem (Passo 4).
-> Comportamento depende da variável `legenda_origem` definida no Passo 4.
-
----
-
-## 4.0. Gate antes de gerar (legenda_origem)
-
-Antes de gerar qualquer legenda, **leia a variável `legenda_origem` definida no Passo 4**:
-
-- **`legenda_origem == LOCAL`** (caminho 1 manual OU 2a só imagens): gere a legenda local normalmente seguindo este arquivo.
-- **`legenda_origem == CHATGPT`** (caminho 2b com Chrome MCP automatizado): a legenda já foi capturada do ChatGPT no Passo 4 e já passou pela revisora. **NÃO gere legenda local automaticamente.** Pule direto para a aprovação (item 4.7) usando a legenda capturada.
-
-A skill só gera legenda local automaticamente quando `legenda_origem == LOCAL`. Quando o aluno escolheu 2b, a intenção foi receber a legenda do ChatGPT, então respeite essa escolha.
+> Fluxo único: a legenda é gerada localmente pela skill aplicando o Manual da Copy e a revisora, independente do caminho escolhido para gerar as imagens (manual, Chrome ou API). Isso garante alinhamento com o tom do produto e elimina round-trip desnecessário.
 
 ---
 
 ## 4.1. Regras obrigatórias (Manual da Copy)
-
-> Aplica quando `legenda_origem == LOCAL`. Quando `legenda_origem == CHATGPT`, a legenda já passou pela revisora; pule para 4.7.
 
 Carregue `.claude/skills/revisora/references/manual-copy.md` na cabeça antes de escrever a legenda. Em particular:
 
@@ -69,7 +56,7 @@ Exemplos de adaptação:
 
 ## 4.4. Tamanho
 
-Entre **600 e 1200 caracteres** (sem contar hashtags). Garantir que o CTA caia ANTES do "...mais" do Instagram cortar (geralmente ~125 caracteres no preview, então o gancho precisa ser potente nas primeiras linhas).
+Entre **600 e 1200 caracteres** (sem contar hashtags). Garantir que o CTA caia ANTES do "...mais" do Instagram cortar (geralmente cerca de 125 caracteres no preview, então o gancho precisa ser potente nas primeiras linhas).
 
 ---
 
@@ -94,9 +81,7 @@ Aplique todas as correções da revisora DIRETO no texto. Não entregue lista de
 
 ## 4.7. Aprovação
 
-### Se `legenda_origem == LOCAL`
-
-Após mostrar a legenda local, pergunte. **As 4 opções abaixo são obrigatórias. Não simplifique para 2 opções, mesmo que a legenda pareça ótima de primeira:**
+Após mostrar a legenda, pergunte. **As 4 opções abaixo são obrigatórias. Não simplifique para 2 opções, mesmo que a legenda pareça ótima de primeira:**
 
 ```
 1. Aprovar e salvar
@@ -111,30 +96,3 @@ Digite o número.
 - **Opção 2**: pergunte o que ajustar, refaça a legenda (passando de novo pela revisora) e mostre. Loop até aprovação.
 - **Opção 3**: regenere a legenda do zero (mesmo input, prompt diferente, nova passagem pela revisora). Volta a perguntar.
 - **Opção 4**: encerre o fluxo sem salvar a legenda.
-
-### Se `legenda_origem == CHATGPT`
-
-A legenda já foi mostrada no Passo 4 quando foi capturada do ChatGPT (e já revisada pela revisora). Não regere local. Apenas confirme aprovação:
-
-```
-1. Aprovar a legenda do ChatGPT e seguir
-2. Quero ajustar algo na legenda do ChatGPT
-3. Quero também gerar uma legenda LOCAL pra comparar
-4. Refazer a legenda no ChatGPT (vou reabrir o Claude in Chrome)
-
-Digite o número.
-```
-
-- **Opção 1**: legenda já está salva em `legenda.txt`. Siga para a entrega.
-- **Opção 2**: pergunte o que ajustar e regere via revisora local (sem voltar ao ChatGPT). Ou abra o Chrome de novo se for ajuste estrutural.
-- **Opção 3**: gere a legenda local agora (executa toda a sequência 4.1 a 4.6) e salve em `legenda-local.txt` (sem sobrescrever a do ChatGPT). Mostre as duas lado a lado.
-- **Opção 4**: refaça o Passo 4 caminho 2b (reabre Chrome, captura nova legenda).
-
----
-
-## 4.8. Resumo de comportamento por `legenda_origem`
-
-| `legenda_origem` | Gera local? | Roda revisora? | Mostra ao aluno? | Aprovação? | Pode comparar com outra? |
-|---|---|---|---|---|---|
-| `LOCAL` | Sim, automaticamente | Sim | Sim, neste passo | Sim, opções 1/2/3/4 (aprovar / ajustar / regenerar / cancelar) | Não aplicável |
-| `CHATGPT` | Não (já capturada no Passo 4) | Sim (no Passo 4 mesmo) | Já foi mostrada no Passo 4 | Sim, opções 1/2/3/4 (aprovar / ajustar / gerar local pra comparar / refazer no ChatGPT) | Sim, opção 3 gera local pra comparar |

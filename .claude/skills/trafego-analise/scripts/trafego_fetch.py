@@ -8,7 +8,7 @@ da mesma sessao sem bater na API novamente.
 
 Uso:
     python3 trafego_fetch.py \
-        --account 1210963877470650 \
+        --account <AD_ACCOUNT_ID> \
         --filtro "VTSD - CV" \
         --periodo last_30d \
         --output diagnostico \

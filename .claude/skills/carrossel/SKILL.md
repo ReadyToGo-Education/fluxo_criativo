@@ -1,13 +1,13 @@
 ---
 name: carrossel
-description: Gera carrosséis virais para Instagram nos 7 estilos do workshop (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana). Coleta o contexto do produto ativo + estilo escolhido, gera os 6 slides de texto, os prompts visuais em inglês, a legenda revisada e oferece 3 caminhos para gerar as imagens (Manual, Claude in Chrome só no Desktop, API paralela). Opção "Gerar todos" cria os 7 carrosséis em sequência com aprovação em lotes.
+description: Gera carrosséis virais para Instagram nos 9 estilos do workshop (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). Coleta o contexto do produto ativo + estilo escolhido, gera os slides de texto, os prompts visuais, a legenda revisada e oferece 3 caminhos para gerar as imagens (Manual, Claude in Chrome só no Desktop, API paralela). Opção "Gerar todos" cria os 9 carrosséis em sequência com aprovação em lotes.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch, Skill
 model: sonnet
 ---
 
 # Carrossel de Instagram
 
-Gera carrossel viral em 1 dos 7 estilos do workshop, com texto + prompts visuais + legenda. O aluno escolhe o estilo, a skill conduz a entrevista guiada e entrega tudo pronto para postar.
+Gera carrossel viral em 1 dos 9 estilos do workshop, com texto + prompts visuais + legenda. O aluno escolhe o estilo, a skill conduz a entrevista guiada e entrega tudo pronto para postar.
 
 ---
 
@@ -67,7 +67,7 @@ Verifique se existe `meus-produtos/{ativo}/entregas/conteudo-social/.carrossel-q
   "pular_noticia": false,
   "criado_em": "2026-05-14T15:00:00",
   "concluidos": ["nunca", "sempre"],
-  "pendentes": ["odeio", "erros", "amo", "ninguem-conta", "noticia"],
+  "pendentes": ["odeio", "erros", "amo", "ninguem-conta", "curiosidade", "editorial", "noticia"],
   "variaveis": {
     "handle": "@inglesatleta",
     "nicho_produto": "inglês para atletas, curso online de 12 semanas",
@@ -76,6 +76,8 @@ Verifique se existe `meus-produtos/{ativo}/entregas/conteudo-social/.carrossel-q
     "estilo_design": "Editorial e cinematográfico",
     "desejo_publico": "atender em inglês com fluência total",
     "objetivo_publico": "ganhar contratos no exterior",
+    "curiosidade_tom": "Jornalístico",
+    "editorial_cta_tipo": "ManyChat",
     "noticia_categoria": "TREND",
     "noticia_modo": "MANUAL",
     "noticia_tom": "Aleatório"
@@ -111,13 +113,13 @@ Digite o número.
 Antes do Passo 1, anuncie:
 
 ```
-🔍 Próximo passo: gerar o carrossel completo (texto + 6 prompts visuais + legenda revisada). Tempo estimado: 7 a 12 minutos (mais se você escolher o caminho Claude in Chrome ou aguardar geração de imagens).
+🔍 Próximo passo: gerar o carrossel completo (texto + prompts visuais + legenda revisada). Tempo estimado: 7 a 12 minutos (mais se você escolher o caminho Claude in Chrome ou aguardar geração de imagens).
 ```
 
-Para a opção "Gerar todos", anuncie depois que o aluno escolher 8 no Passo 1:
+Para a opção "Gerar todos", anuncie depois que o aluno escolher 10 no Passo 1:
 
 ```
-🔍 Próximo passo: gerar os 7 carrosséis (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana). Tempo estimado: 20 a 35 minutos.
+🔍 Próximo passo: gerar os 9 carrosséis (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). Tempo estimado: 30 a 55 minutos.
 ```
 
 ---
@@ -135,36 +137,120 @@ Qual carrossel você quer gerar?
 4. Erros. 5 erros comuns que sabotam um desejo + CTA. Precisa do desejo do público.
 5. Amo. 5 takes afirmativos defendidos + CTA tribal. Identificação por admiração.
 6. Ninguém Conta. 5 verdades ocultas sobre um objetivo + CTA insider. Precisa do objetivo do público.
-7. Notícia da semana. 7 a 9 slides a partir de uma notícia do nicho (fluxo próprio, com busca na web e 5 perguntas diferentes da base padrão).
-8. Gerar todos. Faz os 7 em sequência (fluxo longo, 10 perguntas e 20 a 35 minutos de geração).
+7. Notícia da semana. 7 a 9 slides a partir de uma notícia recente do nicho (fluxo próprio, com busca na web e 5 perguntas diferentes da base padrão).
+8. Curiosidade. 7 a 9 slides a partir de uma curiosidade atemporal do nicho, fato chocante ou dado contraintuitivo sem prazo de validade (fluxo próprio, com busca na web).
+9. Editorial. 6 slides com narrativa de especialista (notícia real, pesquisa, polêmica, conta maluca, dados). Slide 1 abre com notícia/dado impactante; venda só no slide 6 (fluxo próprio, com escolha entre 10 ideias).
+10. Gerar todos. Faz os 9 em sequência (fluxo longo, 12 perguntas e 30 a 55 minutos de geração).
 
 Digite o número (ou digite "cancelar" para sair).
 ```
 
-AGUARDE A RESPOSTA. Se a resposta for `cancelar`, `0`, `sair` ou variação clara, encerre. Caso contrário, salve como `estilo_carrossel` (valores: `nunca`, `sempre`, `odeio`, `erros`, `amo`, `ninguem-conta`, `noticia`, `todos`).
+AGUARDE A RESPOSTA. Se a resposta for `cancelar`, `0`, `sair` ou variação clara, encerre. Caso contrário, salve como `estilo_carrossel` (valores: `nunca`, `sempre`, `odeio`, `erros`, `amo`, `ninguem-conta`, `noticia`, `curiosidade`, `editorial`, `todos`).
 
 ---
 
 ## Passo 2. Ramo do fluxo
 
-### Se `estilo_carrossel` está entre 1 e 6 (atemporais)
+### Nota. Output triplo nos 6 estilos clássicos (verbatim)
 
-1. **Carregue** o arquivo do estilo em `references/estilos/{estilo}.md`.
-2. **Carregue** `references/passo-coleta-base.md`.
-3. **Execute as 5 perguntas base**, uma por turno, parando entre cada uma. Use o cabeçalho "Pergunta X de Y" com o total correto (5 ou 6 conforme o estilo).
-4. **Após cada resposta**, exiba o **micro-resumo de progresso** documentado no `passo-coleta-base.md`.
-5. Se o estilo substitui a pergunta de tom (caso de Odeio, Amo, Ninguém Conta), use a versão dele.
-6. **Execute a pergunta extra** se aplicável (Erros: Desejo. Ninguém Conta: Objetivo).
-7. **Vá para o Passo 2.5** (confirmação consolidada).
+Os 6 estilos clássicos (`nunca`, `sempre`, `odeio`, `erros`, `amo`, `ninguem-conta`) executam o respectivo `prompt-{estilo}.md` verbatim, MAS o Passo 3.4 desses prompts foi deprecado. A skill assume o controle entre o Passo 3.3 (comando Cowork) e o Passo 4 (legenda) do prompt verbatim, e aciona `references/passo-output-triplo.md` a partir da seção 3.3:
+
+1. **Verbatim Passo 2 do prompt**. Gera 6 slides com gate de aprovação interno (Manual da Copy + revisora silenciosamente antes do gate).
+2. **Verbatim Passo 3.1 do prompt**. Mostra os 6 prompts visuais em inglês no chat, slide por slide.
+3. **Verbatim Passo 3.2 do prompt**. Salva `prompts.txt` consolidado em `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-{estilo}/prompts.txt`.
+4. **Verbatim Passo 3.3 do prompt**. Exibe o comando pronto pra colar no Cowork (Claude in Chrome).
+5. **Interceptação da skill**. Aciona `references/passo-output-triplo.md` a partir da seção 3.3 (detecção de capacidades) e 3.4 (menu dinâmico). Passa `tem_prompts_txt = true` para que a seção 3.5 caminho API reaproveite o arquivo já salvo. O menu sempre mostra "Manual no ChatGPT", e mostra "Claude in Chrome (só imagens)" quando MCP do Chrome está presente, e mostra "API paralela (OpenRouter ou OpenAI)" sempre (com aviso quando indisponível).
+6. **Execução conforme escolha** (seção 3.5 do `passo-output-triplo.md`). Manual = nada extra; Chrome = abre via MCP e roda os 6 prompts; API = `scripts/gerar-imagens-api.py` em paralelo gerando 6 PNGs.
+7. **Verbatim Passo 4 do prompt**. Gera a legenda do Instagram localmente (Manual da Copy + revisora), salva `legenda.txt`, mostra com aprovação obrigatória (4 opções). Não há mais variável `legenda_origem` nem captura de legenda do ChatGPT — fluxo único, sempre local.
+
+A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas declara qual prompt usar.
+
+### Se `estilo_carrossel == nunca`
+
+1. **Carregue** `references/estilos/nunca.md` e `references/prompt-nunca.md`.
+2. **Execute o Passo 1 do `prompt-nunca.md`** (Coleta: 5 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `perfil.md` / `.env` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+3. **Vá para o Passo 2.5** (confirmação consolidada).
+4. Após confirmação, **execute o `prompt-nunca.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima. Sequência: Passo 2 do prompt → Passo 3.1, 3.2, 3.3 do prompt → menu dinâmico via `passo-output-triplo.md` → execução do caminho escolhido → Passo 4 do prompt (legenda).
+5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-nunca/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/` se o aluno escolheu API paralela).
+6. **Vá direto para o Passo 6** (entrega).
+
+### Se `estilo_carrossel == sempre`
+
+1. **Carregue** `references/estilos/sempre.md` e `references/prompt-sempre.md`.
+2. **Execute o Passo 1 do `prompt-sempre.md`** (Coleta: 5 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `.env` quando existir.
+3. **Vá para o Passo 2.5** (confirmação consolidada).
+4. Após confirmação, **execute o `prompt-sempre.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
+5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-sempre/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
+6. **Vá direto para o Passo 6** (entrega).
+
+### Se `estilo_carrossel == odeio`
+
+1. **Carregue** `references/estilos/odeio.md` e `references/prompt-odeio.md`.
+2. **Execute o Passo 1 do `prompt-odeio.md`** (Coleta: 5 perguntas), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `.env`.
+3. **Vá para o Passo 2.5**.
+4. Após confirmação, **execute o `prompt-odeio.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
+5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-odeio/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
+6. **Vá direto para o Passo 6**.
+
+### Se `estilo_carrossel == erros`
+
+1. **Carregue** `references/estilos/erros.md` e `references/prompt-erros.md`.
+2. **Execute o Passo 1 do `prompt-erros.md`** (Coleta: 6 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design e desejo do público), uma pergunta por turno, cabeçalho "Pergunta X de 6" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `idconsumidor.md` / `.env`. O desejo é derivado do Quadro do produto quando possível.
+3. **Vá para o Passo 2.5**.
+4. Após confirmação, **execute o `prompt-erros.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
+5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-erros/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
+6. **Vá direto para o Passo 6**.
+
+### Se `estilo_carrossel == amo`
+
+1. **Carregue** `references/estilos/amo.md` e `references/prompt-amo.md`.
+2. **Execute o Passo 1 do `prompt-amo.md`** (Coleta: 5 perguntas), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `.env`.
+3. **Vá para o Passo 2.5**.
+4. Após confirmação, **execute o `prompt-amo.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
+5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-amo/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
+6. **Vá direto para o Passo 6**.
+
+### Se `estilo_carrossel == ninguem-conta`
+
+1. **Carregue** `references/estilos/ninguem-conta.md` e `references/prompt-ninguem-conta.md`.
+2. **Execute o Passo 1 do `prompt-ninguem-conta.md`** (Coleta: 6 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design e objetivo do público), uma pergunta por turno, cabeçalho "Pergunta X de 6" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `idconsumidor.md` / `.env`. O objetivo é derivado do Quadro do produto quando possível.
+3. **Vá para o Passo 2.5**.
+4. Após confirmação, **execute o `prompt-ninguem-conta.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
+5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-ninguem-conta/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
+6. **Vá direto para o Passo 6**.
 
 ### Se `estilo_carrossel == noticia`
 
-1. **Carregue** `references/estilos/noticia.md`.
-2. **Execute o fluxo de coleta da Notícia** (@ + nicho/produto + categoria + modo + tom), com cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma.
+1. **Carregue** `references/estilos/noticia.md` e `references/prompt-noticia.md`.
+2. **Execute a Etapa 1 do `prompt-noticia.md`** (@ do Instagram, nicho, produto), uma pergunta por turno, cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `perfil.md` / `.env` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
 3. **Vá para o Passo 2.5** (confirmação consolidada).
-4. Após confirmação, **carregue o prompt-base** em `.claude/skills/programar-carrossel-noticia/references/prompt-carrossel-noticia.md`, monte com placeholders, calcule data atual via `Bash` com `Get-Date -Format "yyyy-MM-dd"`, e execute o prompt na sessão atual via `WebSearch`.
-5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-noticia/`.
-6. **Vá direto para o Passo 6** (entrega).
+4. Após confirmação, **execute o `prompt-noticia.md` exatamente como está**, da Etapa 2 à Etapa 7, na sessão atual. Não reescreva nem resuma o prompt. A busca de notícias trend (Etapa 2) usa `WebSearch` com regra de frescor obrigatório (últimos 7 dias). A data para o nome do arquivo consolidado é calculada via `Bash` com `Get-Date -Format "yyyy-MM-dd"` (PowerShell).
+5. O texto dos slides passa pelo **Manual da Copy + revisora** de forma silenciosa antes da Etapa 6. As regras de copy do prompt (sem travessão, sem exclamação, sem pergunta na capa) já estão alinhadas com o Manual.
+6. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-noticia/` (`texto.md` + o arquivo consolidado `carrossel-noticia-{slug}-{data}.txt`).
+7. **Vá direto para o Passo 6** (entrega).
+
+> **Diferença para o `/programar-carrossel-noticia`.** Aquela skill (agendamento) continua usando o arquivo parametrizado `programar-carrossel-noticia/references/prompt-carrossel-noticia.md` com placeholders e configurações de categoria/modo/tom. Esta branch (`/carrossel` opção 7, geração imediata) usa o novo `references/prompt-noticia.md` interativo. Os dois arquivos coexistem por desenho: um pra Routine, outro pra sessão interativa.
+
+### Se `estilo_carrossel == curiosidade`
+
+1. **Carregue** `references/estilos/curiosidade.md` e `references/prompt-curiosidade.md`.
+2. **Execute a Etapa 1 do `prompt-curiosidade.md`** (@ do Instagram, nicho, produto), uma pergunta por turno, com cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com o valor correspondente do `perfil.md` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+3. **Vá para o Passo 2.5** (confirmação consolidada).
+4. Após confirmação, **execute o `prompt-curiosidade.md` exatamente como está**, da Etapa 2 à Etapa 7, na sessão atual. Não reescreva nem resuma o prompt. A busca de curiosidades atemporais (Etapa 2) usa `WebSearch`. A data para o nome do arquivo consolidado é calculada via `Bash` com `Get-Date -Format "yyyy-MM-dd"` (PowerShell).
+5. O texto dos slides passa pelo **Manual da Copy + revisora** de forma silenciosa antes da Etapa 6. As regras de copy do prompt já estão alinhadas com o Manual, então a revisão garante o padrão sem alterar o prompt.
+6. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-curiosidade/` (`texto.md` + o arquivo consolidado `carrossel-curiosidade-{slug}-{data}.txt`).
+7. **Vá direto para o Passo 6** (entrega).
+
+### Se `estilo_carrossel == editorial`
+
+1. **Carregue** `references/estilos/editorial.md` e `references/prompt-editorial.md`.
+2. **Execute o Passo 1 do `prompt-editorial.md`** (Briefing: produto/serviço e público), uma pergunta por turno, cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `perfil.md` / `idconsumidor.md` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+3. **Execute o Passo 2 do prompt** (Tipo de CTA do slide 6: ManyChat, Seguir, Engajar, Salvar). Salve como `editorial_cta_tipo`.
+4. **Vá para o Passo 2.5** (confirmação consolidada).
+5. Após confirmação, **execute o `prompt-editorial.md` exatamente como está**, do Passo 3 ao Passo 5, na sessão atual. Não reescreva nem resuma o prompt. O Passo 3 gera as 10 ideias com ângulos variados (notícia real, polêmica, conta maluca, pesquisa científica, comparação) e pede a escolha; o Passo 4 entrega os 6 slides + a legenda do Instagram e pede aprovação; o Passo 5 entrega o prompt único pra colar no ChatGPT.
+6. O texto dos 6 slides passa pelo **Manual da Copy + revisora** de forma silenciosa antes do gate de aprovação do Passo 4 do prompt. As regras de copy do prompt (sem travessão, dados específicos em negrito, corpo em fonte regular, compliance sem doença/remédio) já estão alinhadas com o Manual.
+7. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-editorial/` (`texto.md` com os 6 slides + legenda embutida + `prompt-chatgpt.txt` com o prompt único do Passo 5).
+8. **Vá direto para o Passo 6** (entrega).
 
 ### Se `estilo_carrossel == todos`
 
@@ -175,17 +261,19 @@ AGUARDE A RESPOSTA. Se a resposta for `cancelar`, `0`, `sair` ou variação clar
 Exiba SOMENTE este bloco e pare:
 
 ```
-Vou gerar os 7 carrosséis em sequência. Para isso, preciso coletar:
+Vou gerar os 9 carrosséis em sequência. Para isso, preciso coletar:
 
 - 5 dados base (@, nicho/produto, paleta, tom default, estilo de design)
 - 1 dado específico de Erros (desejo do público)
 - 1 dado específico de Ninguém Conta (objetivo do público)
+- 1 dado específico de Curiosidade (tom)
+- 1 dado específico de Editorial (tipo de CTA do slide 6)
 - 3 dados específicos de Notícia (categoria, modo, tom)
 
-São 10 perguntas no total. Depois eu gero os textos e te mostro 1 carrossel por vez para você aprovar (você pode aprovar todos automaticamente também).
+São 12 perguntas no total. Depois eu gero os textos e te mostro 1 carrossel por vez para você aprovar (você pode aprovar todos automaticamente também).
 
-1. Sim, gerar todos os 7 (inclui Notícia da semana, com WebSearch)
-2. Pular Notícia (mais rápido, gera 6)
+1. Sim, gerar todos os 9 (inclui Notícia da semana, Curiosidade e Editorial, com WebSearch quando necessário)
+2. Pular Notícia (mais rápido, gera 8, ainda inclui Curiosidade e Editorial)
 3. Cancelar
 
 Digite o número.
@@ -193,9 +281,11 @@ Digite o número.
 
 AGUARDE A RESPOSTA. Se `2`, salve `pular_noticia = true`. Se `3`, encerre.
 
+> A Curiosidade e o Editorial não são puláveis pela opção 2. A opção 2 pula apenas a Notícia da semana (busca de trend dos últimos 7 dias). A Curiosidade e o Editorial são atemporais e permanecem no lote.
+
 #### 2.B. Coleta consolidada
 
-Colete TODAS as variáveis necessárias em sequência, **uma pergunta por turno**, com cabeçalho "Pergunta X de 10" (ou X de 7 se pulou Notícia) e micro-resumo entre cada uma:
+Colete TODAS as variáveis necessárias em sequência, **uma pergunta por turno**, com cabeçalho "Pergunta X de 12" (ou X de 9 se pulou Notícia) e micro-resumo entre cada uma:
 
 1. Handle (1.1 do `passo-coleta-base.md`)
 2. Nicho e produto (1.2)
@@ -204,9 +294,13 @@ Colete TODAS as variáveis necessárias em sequência, **uma pergunta por turno*
 5. Estilo de design (1.5)
 6. Desejo do público (extra de Erros)
 7. Objetivo do público (extra de Ninguém Conta)
-8. Notícia: categoria (se não pulou)
-9. Notícia: modo (se não pulou)
-10. Notícia: tom (se não pulou)
+8. Curiosidade: tom (use as 7 opções de tom da Etapa 4 do `prompt-curiosidade.md`. Salve como `curiosidade_tom`)
+9. Editorial: tipo de CTA do slide 6 (4 opções do Passo 2 do `prompt-editorial.md`: ManyChat, Seguir, Engajar, Salvar. Salve como `editorial_cta_tipo`)
+10. Notícia: categoria (se não pulou)
+11. Notícia: modo (se não pulou)
+12. Notícia: tom (se não pulou)
+
+> No modo "todos", o tema da Curiosidade e o tema do Editorial não são perguntados. A skill executa a busca da Etapa 2 do `prompt-curiosidade.md` e seleciona automaticamente a curiosidade mais forte das 5; e executa o Passo 3 do `prompt-editorial.md` e seleciona automaticamente a ideia mais forte das 10 (maior gancho com o público + dado mais sólido).
 
 #### 2.C. Geração silenciosa dos textos + criação da fila
 
@@ -223,27 +317,28 @@ Com:
   "pular_noticia": {true ou false},
   "criado_em": "{ISO}",
   "concluidos": [],
-  "pendentes": ["nunca", "sempre", "odeio", "erros", "amo", "ninguem-conta", "noticia"],
+  "pendentes": ["nunca", "sempre", "odeio", "erros", "amo", "ninguem-conta", "curiosidade", "editorial", "noticia"],
   "variaveis": { ... }
 }
 ```
 
-(Remova `noticia` da lista de pendentes se `pular_noticia = true`.)
+(Remova `noticia` da lista de pendentes se `pular_noticia = true`. `curiosidade` e `editorial` nunca são removidos pela opção 2.)
 
-Para cada estilo da lista de pendentes, em ordem:
+Seja `{total}` o número de estilos na lista de pendentes (9 normalmente, 8 se pulou Notícia). Para cada estilo da lista, em ordem:
 
 ```
-⏳ Passo {N}/7: gerando texto do carrossel "{Estilo}"...
+⏳ Passo {N}/{total}: gerando texto do carrossel "{Estilo}"...
 ```
 
-1. Aplique o critério central do estilo.
-2. Aplique o Manual da Copy + revisora silenciosamente.
-3. Salve o `texto.md` em `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-{estilo}/texto.md`.
-4. Atualize o arquivo de fila movendo o estilo de `pendentes` para `concluidos`.
+1. Para os 6 estilos clássicos (`nunca`, `sempre`, `odeio`, `erros`, `amo`, `ninguem-conta`): execute o sub-fluxo do `references/estilos/{estilo}.md` no modo "Gerar todos" (pula o Passo 1 do respectivo `prompt-{estilo}.md` injetando os valores já coletados em 2.B; roda os Passos 2 a 4 sem gate interativo). Para Erros use o `desejo_publico` coletado em 2.B; para Ninguém Conta use o `objetivo_publico`.
+2. Para `curiosidade`: execute o sub-fluxo do `references/estilos/curiosidade.md` no modo "Gerar todos" (busca via `WebSearch`, seleção automática do tema mais forte, tom = `curiosidade_tom`). Para `editorial`: execute o sub-fluxo do `references/estilos/editorial.md` no modo "Gerar todos" (gera as 10 ideias internamente, seleciona a mais forte, tipo de CTA = `editorial_cta_tipo`). Para `noticia`: execute o sub-fluxo do `references/estilos/noticia.md`.
+3. Aplique o Manual da Copy + revisora silenciosamente.
+4. Salve o `texto.md` em `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-{estilo}/texto.md`.
+5. Atualize o arquivo de fila movendo o estilo de `pendentes` para `concluidos`.
 
 #### 2.D. Aprovação em lotes (1 carrossel por vez)
 
-Depois que os 6 (ou 7) textos estiverem gerados, ofereça ao aluno:
+Depois que os 8 (ou 7, se pulou Notícia) textos estiverem gerados, ofereça ao aluno:
 
 ```
 Textos dos {N} carrosséis gerados. Como você quer revisar?
@@ -269,7 +364,7 @@ SLIDE 1
 Título: {...}
 Subtítulo: {...}
 
-(... até slide 6 ...)
+(... até o último slide: 6 nos estilos atemporais, 7 a 9 na Notícia e na Curiosidade ...)
 
 ═══════════════════════════════════════
 
@@ -291,12 +386,13 @@ Digite o número.
 Para cada carrossel aprovado:
 
 ```
-⏳ Passo {N}/7: gerando prompts visuais e legenda do carrossel "{Estilo}"...
+⏳ Passo {N}/{total}: gerando prompts visuais e legenda do carrossel "{Estilo}"...
 ```
 
 1. Gere os 6 prompts visuais em inglês (usando `template-prompt-imagem.md` + ajustes do estilo) e mostre-os no chat. **Não salve `prompts.txt` em disco.**
-2. Gere a legenda do Instagram (Manual da Copy + revisora silenciosamente).
-3. Salve `legenda.txt`.
+   - Exceção `noticia`, `curiosidade` e `editorial`: os prompts visuais já são gerados pelo prompt-base do estilo (3 modos em português para Notícia e Curiosidade; UM prompt único para Editorial). Salve no formato próprio do estilo. Não use o `template-prompt-imagem.md` para esses três.
+2. Gere a legenda do Instagram (Manual da Copy + revisora silenciosamente). Para `noticia` e `curiosidade`, a legenda já vem embutida no slide CTA final, não gere `legenda.txt` separado. Para `editorial`, a legenda é gerada junto com os 6 slides no Passo 4 do `prompt-editorial.md` e fica dentro do `texto.md`, sem `legenda.txt` separado.
+3. Salve `legenda.txt` (estilos clássicos).
 
 #### 2.F. Entrega consolidada
 
@@ -305,7 +401,7 @@ Após gerar tudo, **delete o arquivo `.carrossel-queue.json`** e exiba:
 ```
 ✅ {N} carrosséis gerados.
 
-Cada carrossel tem: texto + 6 prompts visuais + legenda revisada.
+Cada carrossel tem: texto + prompts visuais + legenda (nos estilos atemporais a legenda é revisada à parte; na Notícia e na Curiosidade ela já vem no slide CTA final).
 
 Pastas criadas em:
 meus-produtos/{ativo}/entregas/conteudo-social/
@@ -315,13 +411,17 @@ meus-produtos/{ativo}/entregas/conteudo-social/
 ├── carrossel-erros/
 ├── carrossel-amo/
 ├── carrossel-ninguem-conta/
+├── carrossel-curiosidade/
+├── carrossel-editorial/
 └── carrossel-noticia/ (se você não pulou)
 
 Em cada pasta:
-- texto.md (slides 1 a 6)
-- legenda.txt (legenda revisada do Instagram)
+- texto.md (slides do carrossel; no Editorial inclui a legenda do Instagram embutida)
+- legenda.txt (legenda revisada, estilos clássicos)
+- carrossel-curiosidade-{slug}-{data}.txt (arquivo consolidado, só na pasta da Curiosidade)
+- prompt-chatgpt.txt (prompt único pra colar no ChatGPT, só na pasta do Editorial)
 
-Os 6 prompts visuais de cada carrossel já foram exibidos no chat durante a geração. Para gerar as imagens, copie-os e cole no ChatGPT (ou outra ferramenta), OU configure a `OPENROUTER_API_KEY` no `.env` rodando `/configurar-imagens` para usar a opção 3 (API paralela) na próxima execução.
+Os prompts visuais de cada carrossel já foram exibidos no chat durante a geração. Para gerar as imagens, copie-os e cole no ChatGPT (ou outra ferramenta), OU configure a `OPENROUTER_API_KEY` no `.env` rodando `/configurar-imagens` para usar a opção 3 (API paralela) na próxima execução. A Curiosidade também tem o arquivo consolidado `carrossel-curiosidade-{slug}-{data}.txt` na pasta dela.
 
 Digite /carrossel para gerar outro, ou /programar-carrossel para agendar.
 ```
@@ -330,7 +430,7 @@ Digite /carrossel para gerar outro, ou /programar-carrossel para agendar.
 
 ## Passo 2.5. Confirmação consolidada (modo individual e Notícia)
 
-> Aplica para `estilo_carrossel` entre 1 e 6 e para Notícia. NÃO aplica para "todos" (que tem fluxo próprio).
+> Aplica para todos os 9 estilos no modo individual (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia, Curiosidade, Editorial). NÃO aplica para "todos" (que tem fluxo próprio). Todos os 6 clássicos agora têm ramo próprio (verbatim) e passam por aqui antes de executar o respectivo prompt-base.
 
 Depois de coletar todas as respostas, antes de gerar qualquer coisa, exiba o resumo:
 
@@ -346,11 +446,13 @@ Estilo de design visual: {estilo_design}
 {se Erros} Desejo do público: {desejo_publico}
 {se Ninguém Conta} Objetivo do público: {objetivo_publico}
 {se Notícia} Categoria: {categoria} / Modo: {modo} / Tom: {tom_noticia}
+{se Curiosidade} Vou buscar 5 curiosidades atemporais do nicho na web. Você escolhe 1 e o tom logo depois.
+{se Editorial} Produto/serviço: {produto_servico} / Público: {publico} / Tipo de CTA do slide 6: {editorial_cta_tipo}. Vou gerar 10 ideias editoriais (notícia real, polêmica, conta maluca, pesquisa, comparação) e você escolhe 1.
 
 Vou gerar:
-- 6 slides de texto (estilos atemporais) ou 7 a 9 slides (Notícia)
-- 6 prompts visuais em inglês para ChatGPT
-- 1 legenda do Instagram revisada
+- 6 slides de texto (estilos clássicos e Editorial) ou 7 a 9 slides (Notícia e Curiosidade)
+- prompts visuais (6 em inglês nos clássicos; 3 modos em português na Notícia e na Curiosidade; 1 prompt único em português no Editorial)
+- 1 legenda do Instagram revisada (estilos clássicos; na Notícia e na Curiosidade a legenda já está no slide CTA; no Editorial a legenda vem junto com os slides)
 - 1 prompt opcional para Claude in Chrome
 
 1. Tudo certo, gerar
@@ -360,9 +462,11 @@ Vou gerar:
 Digite o número.
 ```
 
+> Para Notícia e Curiosidade, exiba no resumo apenas os campos coletados (@, nicho e produto, mais o que for específico do estilo). Os campos de paleta, tom da copy e estilo de design não se aplicam a esses dois e podem ser omitidos.
+
 AGUARDE A RESPOSTA.
 
-- **Opção 1**: prossiga para o Passo 3 (modo individual) ou para a execução da Notícia (modo Notícia).
+- **Opção 1**: prossiga para a execução do prompt verbatim do estilo escolhido, a partir do passo correspondente do próprio prompt. Para os 6 clássicos (`nunca`, `sempre`, `odeio`, `erros`, `amo`, `ninguem-conta`) e para Notícia: a partir do Passo 2. Para Curiosidade: a partir da Etapa 2. Para Editorial: a partir do Passo 3.
 - **Opção 2**: pergunte qual campo ajustar, refaça aquela pergunta, volte para mostrar o resumo de novo.
 - **Opção 3**: encerre sem gerar.
 
@@ -370,7 +474,7 @@ AGUARDE A RESPOSTA.
 
 ## Passo 3. Geração dos 6 slides de texto (estilos atemporais individuais)
 
-> Aplica APENAS para `estilo_carrossel` entre 1 e 6 (modo individual). Para `todos` use o Passo 2.D. Para `noticia` o fluxo é outro.
+> **SEÇÃO LEGADA.** Nenhum estilo do modo individual usa o Passo 3 atualmente. Todos os 9 estilos (6 clássicos + Notícia + Curiosidade + Editorial) têm ramo próprio no Passo 2 que executa o respectivo prompt-base verbatim. Esta seção é mantida apenas como referência histórica do modelo leve que existia antes da migração. Para `todos` use o Passo 2.D.
 
 Anuncie:
 
@@ -448,67 +552,34 @@ Gerado em: {data}
 
 ## Passo 4. Prompts visuais (output triplo)
 
-Anuncie:
+> **SEÇÃO LEGADA.** Nenhum estilo do modo individual usa este Passo 4 atualmente. Os 9 estilos têm prompt verbatim que cuida do output dos prompts visuais (chat slide-a-slide + `prompts.txt` + comando Cowork), e a interceptação para o menu dinâmico é feita pela "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima, que chama `references/passo-output-triplo.md` a partir da seção 3.3. Esta seção é mantida apenas como referência para futuros estilos leves que não usem prompt verbatim.
+
+Para estilos leves que não tenham prompt verbatim, anuncie:
 
 ```
 ⏳ Etapa 2/3: gerando os 6 prompts visuais em inglês...
 ```
 
-Carregue `references/passo-output-triplo.md` e execute as ações documentadas:
-
-1. **Mostrar os 6 prompts no chat** (em inglês, usando `template-prompt-imagem.md` com ajustes do estilo). Os prompts ficam visíveis no chat para o aluno copiar. **Não salve `prompts.txt` em disco** (evita gravação de arquivo grande duplicando o que já está no chat).
-2. **Detectar capacidades da sessão** (Passo 3.3 do `passo-output-triplo.md`):
-   - **3.3.A**. Disponibilidade do MCP `mcp__Claude_in_Chrome__*`. Salva `tem_chrome_mcp = true | false`. **Nota Desktop-only**: o MCP do Claude in Chrome só existe na versão Desktop do Claude (app claude.ai pelo navegador). Se o aluno está rodando esta skill pelo Claude Code no terminal/CLI, `tem_chrome_mcp` sempre será `false`. A skill explica esse motivo ao aluno no menu.
-   - **3.3.B**. Presença de `OPENROUTER_API_KEY` ou `OPENAI_API_KEY` no `.env`. Salva `tem_api_imagem = true | false` + `provider_api`.
-3. **Oferecer caminhos** conforme as capacidades detectadas. **Renumere as opções dinamicamente, sem buracos** (o aluno nunca vê "1, 3" pulando o "2"). Mantenha um mapa interno `{numero_visivel → caminho_logico}` para interpretar a resposta:
-   - Sempre: caminho **Manual** (1 no menu).
-   - Se `tem_chrome_mcp == true`: caminhos **Chrome só imagens** (próximo número) e **Chrome imagens + legenda** (próximo número).
-   - Caminho **API paralela OpenRouter** sempre exibido (próximo número). Se `tem_api_imagem == false`, descreva o item com aviso "Indisponível agora, precisa configurar `OPENROUTER_API_KEY` no `.env` rodando `/configurar-imagens` antes de escolher".
-   - Quando o caminho Chrome não está disponível (CLI ou Desktop sem extensão), exiba **abaixo do menu** o aviso explicativo (Chrome só funciona no Claude Desktop com a extensão). Não numere a opção ausente.
-
-   Exemplo de menu em sessão CLI sem API:
-   ```
-   1. Manual no ChatGPT...
-   2. Automatizado via API (OpenRouter)... — Indisponível agora, precisa configurar OPENROUTER_API_KEY no .env rodando /configurar-imagens.
-   ```
-
-   Exemplo de menu em Desktop com Chrome MCP e com API:
-   ```
-   1. Manual no ChatGPT...
-   2. Automatizado via Claude in Chrome (só imagens, sequencial)...
-   3. Automatizado via Claude in Chrome (imagens + legenda)...
-   4. Automatizado via API (OpenRouter, paralela)...
-   ```
-
-4. **Executar conforme escolha** (use o mapa interno do passo 3 para resolver o número visível):
-   - Manual: seta `legenda_origem = LOCAL`. Os prompts já estão no chat; o aluno copia direto. Não grava arquivo extra.
-   - Chrome sequencial: executa via MCP (navigate → enviar 6 prompts em sequência → aguardar cada imagem). Seta `legenda_origem = LOCAL`.
-   - Chrome + legenda: executa Chrome sequencial + envia Parte 3 (instrução de legenda) → captura legenda via `get_page_text` → passa pela revisora → salva em `legenda.txt`. Seta `legenda_origem = CHATGPT`.
-   - API paralela com `tem_api_imagem == true`: roda `scripts/gerar-imagens-api.py` com `concurrent.futures` disparando as 6 chamadas em paralelo. Salva `slide-1.png` até `slide-6.png` na subpasta `imagens/`. Seta `legenda_origem = LOCAL`.
-   - API paralela com `tem_api_imagem == false`: pare e instrua o aluno a rodar `/configurar-imagens` antes. Não tente executar.
-
-A variável `legenda_origem` é lida no Passo 5 para decidir se a legenda local deve ser gerada ou se a do ChatGPT já basta.
+E acione `references/passo-output-triplo.md` do começo (seção 3.1), passando `tem_prompts_txt = false`. O arquivo cuida de mostrar os 6 prompts no chat, detectar capacidades (Chrome MCP + API de imagem) e oferecer o menu dinâmico de 2 ou 3 opções (Manual / Chrome só imagens / API paralela). Não há mais variável `legenda_origem`, nem caminho "Chrome + legenda" (removido por desnecessário, já que a legenda sempre passa pelo Manual da Copy local).
 
 ---
 
 ## Passo 5. Geração da legenda
 
-Anuncie:
+> **SEÇÃO LEGADA.** Nos 6 estilos clássicos verbatim, a legenda é gerada pelo Passo 4 do próprio `prompt-{estilo}.md`. Nos estilos Notícia, Curiosidade e Editorial, a legenda vem embutida no fluxo do prompt do estilo. Esta seção é mantida como referência para estilos leves futuros.
+
+Para estilos leves que não tenham prompt verbatim, anuncie:
 
 ```
 ⏳ Etapa 3/3: processando a legenda do Instagram...
 ```
 
-Carregue `references/passo-legenda.md` e execute o **gate inicial** (seção 4.0):
-
-### Se `legenda_origem == LOCAL` (caminho 1 manual OU 2a só imagens)
-
-Gera a legenda local seguindo o passo-legenda.md:
+E acione `references/passo-legenda.md`. Fluxo único, sem branches:
 
 1. Aplique o **Manual da Copy** + estrutura de gancho/desenvolvimento/pico/virada/ponte/CTA/hashtags.
-2. Acione a **revisora** e aplique correções direto.
+2. Acione a **revisora** e aplique correções direto no texto.
 3. **Mostre a legenda** no chat em bloco copiável.
-4. **Salve em `legenda.txt`** na mesma pasta.
+4. **Salve em `legenda.txt`** na pasta do carrossel.
 5. **Aprovação OBRIGATÓRIA com as 4 opções abaixo. Não simplifique para 2 opções, mesmo que pareça que tudo deu certo:**
 
 ```
@@ -522,31 +593,6 @@ Digite o número.
 
 Loop até aprovação. As opções 3 (regenerar) e 4 (cancelar) são parte do contrato do aluno com a skill, não devem ser cortadas em nenhuma execução.
 
-### Se `legenda_origem == CHATGPT` (caminho 2b com MCP automatizado)
-
-A legenda já foi capturada do ChatGPT no Passo 4 e já passou pela revisora. **NÃO gere legenda local automaticamente.** Apenas confirme aprovação:
-
-```
-✅ Legenda do ChatGPT capturada e revisada (Manual da Copy aplicado).
-
-{conteúdo da legenda}
-
-Salva em legenda.txt.
-
-1. Aprovar e seguir para a entrega
-2. Quero ajustar algo na legenda do ChatGPT (refaço com revisora local)
-3. Quero também gerar uma legenda LOCAL pra comparar (vou gerar agora)
-4. Refazer a legenda no ChatGPT (reabro Claude in Chrome)
-
-Digite o número.
-```
-
-Comportamento por opção:
-- **1**: encerra Passo 5 e segue pra entrega.
-- **2**: pergunta o que ajustar, refaz com a revisora local, mostra de novo.
-- **3**: gera legenda local agora (executa 4.1 a 4.6 do passo-legenda.md), salva em `legenda-local.txt` (sem sobrescrever a do ChatGPT), mostra as duas lado a lado.
-- **4**: reabre Chrome MCP e refaz captura.
-
 ---
 
 ## Passo 6. Entrega
@@ -558,8 +604,10 @@ Exiba:
 
 Arquivos salvos em:
 meus-produtos/{ativo}/entregas/conteudo-social/carrossel-{estilo}/
-├── texto.md (slides 1 a 6, já aprovados)
-├── legenda.txt (legenda revisada do Instagram)
+├── texto.md (slides do carrossel, já aprovados; no Editorial inclui a legenda embutida)
+├── legenda.txt (legenda revisada do Instagram, estilos clássicos)
+├── carrossel-curiosidade-{slug}-{data}.txt (arquivo consolidado, só na Curiosidade)
+├── prompt-chatgpt.txt (prompt único pra colar no ChatGPT, só no Editorial)
 └── imagens/ (se você escolheu a opção 3 da API paralela)
 
 {Se aluno usou caminho Chrome MCP, incluir o link da conversa do ChatGPT aqui}
@@ -573,7 +621,7 @@ Legenda pronta pra colar no Instagram:
 ---
 
 Próximos passos:
-- Os 6 prompts visuais já estão visíveis acima neste chat. Para gerar manualmente, copie cada bloco e cole no ChatGPT (ou outra ferramenta de imagem).
+- Os prompts visuais já estão visíveis acima neste chat. Para gerar manualmente, copie cada bloco e cole no ChatGPT (ou outra ferramenta de imagem).
 - Para automatizar tudo de uma vez no futuro, configure a `OPENROUTER_API_KEY` no `.env` rodando `/configurar-imagens` e use a opção 3.
 - A legenda acima também está salva em legenda.txt na pasta do carrossel.
 
@@ -582,6 +630,8 @@ Quer agendar carrosséis recorrentes? Digite /programar-carrossel.
 ```
 
 **REGRA OBRIGATÓRIA. Exiba a legenda inline na entrega final, mesmo que ela já tenha sido mostrada antes no Passo 5.** O aluno acabou de aprovar os slides, ver os prompts visuais, talvez aguardar o Chrome rodar as imagens. O fluxo dele é longo e a legenda ficou no histórico do chat lá em cima. Repetir a legenda no bloco final é prática padrão pra ele copiar com 1 clique direto do último output da skill, sem precisar rolar a conversa nem abrir o `legenda.txt`.
+
+> **Notícia, Curiosidade e Editorial.** Esses três estilos não geram `legenda.txt` separado. Notícia e Curiosidade têm a legenda dentro do slide CTA final; Editorial tem a legenda dentro do próprio `texto.md` (gerada junto com os slides no Passo 4 do prompt). Na entrega, omita as linhas de `legenda.txt`. Para a Curiosidade, informe o caminho do arquivo consolidado `carrossel-curiosidade-{slug}-{data}.txt`. Para o Editorial, informe o caminho de `prompt-chatgpt.txt` (o prompt único pra colar no ChatGPT) e instrua o aluno a colar esse prompt no ChatGPT e pedir "cria o 1", "cria o 2", até o 6. A árvore de arquivos acima é o caso geral; ajuste-a para o estilo entregue.
 
 Exiba os caminhos absolutos no formato copiável conforme regra do `CLAUDE.md` (texto, não link).
 
@@ -621,7 +671,9 @@ meus-produtos/{ativo}/entregas/conteudo-social/
 ├── carrossel-erros/
 ├── carrossel-amo/
 ├── carrossel-ninguem-conta/
+├── carrossel-curiosidade/
+├── carrossel-editorial/
 └── carrossel-noticia/
 ```
 
-Cada pasta contém os arquivos descritos no Passo 6: `texto.md`, `legenda.txt` e (opcionalmente) a subpasta `imagens/` quando a opção 3 da API paralela é usada.
+Cada pasta contém os arquivos descritos no Passo 6: `texto.md`, `legenda.txt` e (opcionalmente) a subpasta `imagens/` quando a opção 3 da API paralela é usada. A pasta `carrossel-curiosidade/` também recebe o arquivo consolidado `carrossel-curiosidade-{slug}-{data}.txt` (prompts visuais delimitados para automações). A pasta `carrossel-editorial/` recebe o `prompt-chatgpt.txt` (prompt único pra colar no ChatGPT).

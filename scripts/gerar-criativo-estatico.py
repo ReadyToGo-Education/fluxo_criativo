@@ -15,6 +15,14 @@ Uso:
       --aspect 4:5 \
       --out meus-produtos/{slug}/entregas/criativos/criativo-aida-1.png
 
+  # Uso com imagem de referência (image-to-image):
+  py -3 scripts/gerar-criativo-estatico.py \
+      --prompt-file .../prompt-stories.txt \
+      --reference-image .../criativo-feed.png \
+      --model google/gemini-3.1-flash-image-preview \
+      --aspect 9:16 \
+      --out .../criativo-stories.png
+
 Modelos usados pela skill:
   openai/gpt-5.4-image-2                  (GPT Image 2, recomendado)
   google/gemini-3.1-flash-image-preview   (Gemini Nano Banana 2)
@@ -61,11 +69,45 @@ def load_env_file(path: Path) -> None:
             os.environ[key] = val
 
 
-def gerar_imagem(api_key: str, model: str, prompt: str, aspect_ratio: str) -> str:
-    """Chama a OpenRouter e devolve a data URL da imagem gerada."""
+def _png_to_data_url(path: Path) -> str:
+    """Lê um PNG/JPG/WEBP local e devolve uma data URL base64."""
+    raw = path.read_bytes()
+    ext = path.suffix.lower().lstrip(".")
+    if ext == "jpg":
+        ext = "jpeg"
+    if ext not in {"png", "jpeg", "webp"}:
+        raise ValueError(f"Formato de imagem nao suportado para referencia: {path.suffix}")
+    b64 = base64.b64encode(raw).decode("ascii")
+    return f"data:image/{ext};base64,{b64}"
+
+
+def gerar_imagem(
+    api_key: str,
+    model: str,
+    prompt: str,
+    aspect_ratio: str,
+    reference_image: Path | None = None,
+) -> str:
+    """Chama a OpenRouter e devolve a data URL da imagem gerada.
+
+    Se reference_image for passado, o content vira multimodal (texto + imagem)
+    e o modelo trata como image-to-image, mantendo a cena, cores e elementos
+    da imagem de referencia e ajustando para a nova proporcao.
+    """
+    if reference_image is not None:
+        content: Any = [
+            {"type": "text", "text": prompt},
+            {
+                "type": "image_url",
+                "image_url": {"url": _png_to_data_url(reference_image)},
+            },
+        ]
+    else:
+        content = prompt
+
     payload: dict[str, Any] = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [{"role": "user", "content": content}],
         "modalities": ["image", "text"],
         "image_config": {"aspect_ratio": aspect_ratio, "image_size": "1K"},
     }
@@ -129,6 +171,9 @@ def main() -> int:
                     help="Proporcao da imagem (ex: 4:5, 9:16, 1:1)")
     ap.add_argument("--out", required=True,
                     help="Caminho do PNG de saida, relativo a raiz do projeto")
+    ap.add_argument("--reference-image", default=None,
+                    help="Imagem PNG/JPG/WEBP de referencia para image-to-image. "
+                         "Quando passada, o modelo recebe a imagem junto com o prompt.")
     args = ap.parse_args()
 
     api_key = os.environ.get("OPENROUTER_API_KEY", "").strip()
@@ -158,11 +203,26 @@ def main() -> int:
         return 1
     dest = ROOT / raw_out
 
+    reference_image_path: Path | None = None
+    if args.reference_image:
+        ref_raw = args.reference_image.strip().replace("\\", "/")
+        ref = Path(ref_raw)
+        if not ref.is_absolute():
+            ref = ROOT / ref
+        if not ref.is_file():
+            print(f"Imagem de referencia nao encontrada: {ref}", file=sys.stderr)
+            return 1
+        reference_image_path = ref
+
     print(f"Modelo: {args.model}")
     print(f"Proporcao: {args.aspect}")
     print(f"Arquivo: {raw_out}")
+    if reference_image_path is not None:
+        print(f"Referencia visual: {reference_image_path}")
     try:
-        data_url = gerar_imagem(api_key, args.model, prompt, args.aspect)
+        data_url = gerar_imagem(
+            api_key, args.model, prompt, args.aspect, reference_image_path
+        )
         salvar_imagem(data_url, dest)
     except urllib.error.HTTPError as e:
         err_body = e.read().decode("utf-8", errors="replace")

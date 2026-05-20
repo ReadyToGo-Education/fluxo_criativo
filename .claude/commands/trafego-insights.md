@@ -300,7 +300,7 @@ meus-produtos/{ativo}/entregas/trafego/insights-{campanha-ou-conta}-{YYYY-MM-DD}
 
 Conteúdo: a apresentação do Passo 5 em markdown puro.
 
-Caminho absoluto a exibir: `C:\Users\gabri\Documents\GitHub\workshop_inteligente\meus-produtos\{ativo}\entregas\trafego\insights-{...}.md`
+Caminho absoluto a exibir: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\insights-{...}.md`
 
 ---
 

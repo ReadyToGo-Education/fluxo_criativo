@@ -11,13 +11,13 @@ Le o cache gerado pelo trafego_fetch.py e calcula todos os KPIs:
 
 Uso:
     python3 trafego_processar.py \
-        --cache-file skill-analise/cache/1210963877470650_last_30d_vtsdcv_diagnostico.json \
+        --cache-file skill-analise/cache/<AD_ACCOUNT_ID>_last_30d_vtsdcv_diagnostico.json \
         --ticket 497 \
         --output diagnostico
 
 Ou informando os mesmos args do fetch (o script monta o caminho do cache):
     python3 trafego_processar.py \
-        --account 1210963877470650 \
+        --account <AD_ACCOUNT_ID> \
         --filtro "VTSD - CV" \
         --periodo last_30d \
         --output diagnostico \

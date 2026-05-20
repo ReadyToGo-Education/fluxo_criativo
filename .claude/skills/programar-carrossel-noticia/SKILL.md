@@ -1,5 +1,5 @@
 ---
-name: workshop-marketing:programar-carrossel-noticia
+name: programar-carrossel-noticia
 description: Programa uma tarefa recorrente que gera carrossel de notícia para Instagram automaticamente, usando o /schedule do Claude Code. Configura escopo (só busca de notícia ou carrossel inteiro), modo (aleatório ou fixo), dimensões travadas (tom, categoria de notícia), frequência e horário. Coleta @, nicho e produto uma única vez.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet

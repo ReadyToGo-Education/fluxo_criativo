@@ -1,5 +1,5 @@
 ---
-name: workshop-marketing:usar-referencia-visual
+name: usar-referencia-visual
 description: Cria banner estático ou carrossel a partir de uma imagem de referência enviada pelo usuário. Segue o processo da Máquina de Conteúdo: pergunta quantidade, nome da sessão, origem da imagem (link ou caminho), modo de edição (trocar personagem, alterar texto, cor, edição pontual) e executa gerar-banner-estatico.py via OpenRouter.
 allowed-tools: Read, Write, Bash
 ---

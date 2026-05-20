@@ -473,17 +473,19 @@ python3 "{RAIZ_PROJETO}/scripts/abrir-html.py" "{caminho-absoluto-do-index.html}
 
 Onde `{RAIZ_PROJETO}` é o caminho absoluto da raiz do workspace (descoberta no início da sessão e usada sempre — nunca relativo, nunca `./scripts/...`).
 
-**Exemplo concreto (Windows):**
+**Exemplo concreto (com placeholders):**
 
 ```bash
-python3 "C:/Users/<seu-usuario>/Documents/GitHub/workshop_inteligente/scripts/abrir-html.py" "C:/Users/<seu-usuario>/Documents/GitHub/workshop_inteligente/meus-produtos/<seu-produto>/trafego/analise/index.html"
+python3 "{RAIZ_PROJETO}/scripts/abrir-html.py" "{RAIZ_PROJETO}/meus-produtos/<seu-produto>/trafego/analise/index.html"
 ```
+
+`{RAIZ_PROJETO}` é resolvido em runtime para o caminho absoluto onde o repositório foi clonado (qualquer pasta, qualquer disco, qualquer SO). Nunca presumir que está em `Documents/GitHub/...` ou em qualquer estrutura fixa.
 
 **Forma alternativa (sem o script, comando nativo direto):**
 
 ```bash
 # Windows Bash
-start "" "C:/Users/<seu-usuario>/Documents/GitHub/workshop_inteligente/meus-produtos/<seu-produto>/trafego/analise/index.html"
+start "" "{RAIZ_PROJETO}/meus-produtos/<seu-produto>/trafego/analise/index.html"
 ```
 
 **Erros comuns a evitar:**
@@ -511,6 +513,6 @@ Se o comando de abertura falhar (sem display em servidor remoto, ferramenta ause
 
 ```
 ✅ Snapshot gerado: diagnostico-rapido-2026-05-05-1432.html
-✅ Dashboard atualizado: C:\Users\gabri\...\meus-produtos\curso-tarot\trafego\analise\index.html
+✅ Dashboard atualizado: {raiz-do-projeto}\meus-produtos\curso-tarot\trafego\analise\index.html
 🌐 Abrindo no navegador...
 ```

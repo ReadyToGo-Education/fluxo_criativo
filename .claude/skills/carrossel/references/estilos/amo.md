@@ -1,110 +1,87 @@
 # Estilo. Carrossel "Eu amo"
 
-> Carrossel afirmativo que defende pautas exaltando comportamentos certos. Celebra explicitamente quem age, pensa ou vive da forma que merece reconhecimento. Identificação tribal positiva.
+> Carrossel viral de 6 slides que entrega 5 declarações afirmativas, defendidas e tribais (comportamentos que merecem ser celebrados explicitamente) + CTA tribal positiva.
+> Este estilo **delega o prompt-base** para `references/prompt-amo.md`. O prompt é executado EXATAMENTE como está, sem reescrita. A única adaptação permitida é pré-preencher o Passo 1 (Coleta) com dados do produto ativo quando existirem.
 
 ---
 
-## Coleta extra do Passo 1
+## Coleta do Passo 1
 
-**Substituição na pergunta 1.4 (tom).** Para o "Amo", trocar a lista padrão de tons por:
+O fluxo de coleta do Amo **ignora** o `passo-coleta-base.md` padrão. A coleta é a do `prompt-amo.md` (5 perguntas):
 
-```
-Qual tom você quer no texto dos slides?
+### 1.1. Nicho e produto em UMA frase
+Se `perfil.md` tiver Quadro/categoria do produto, pré-preencha como sugestão.
 
-1. Clássica/profissional (afirmação elegante e direta)
-2. Bem-humorada (trocadilho, ironia leve)
-3. Técnica (defende com dado)
-4. Inspiracional (aspiracional)
-5. Descontraída/casual (conversa de amigo)
-6. Apaixonada/intensa (declaração com peso)
+### 1.2. @ do Instagram
+Se `.env` tiver `IG_USER` ou `perfil.md` tiver handle, pré-preencha como sugestão.
 
-Default: afirmativa apaixonada.
+### 1.3. Cores padrão da marca
+Default sem paleta (atmosfera quente): marfim `#F5F0E5` (slides 1-5) + verde-sálvia `#3D4A3F` (slide 6).
 
-Digite o número.
-```
+### 1.4. Tipo de comunicação (texto)
+6 opções: clássica/profissional, bem-humorada, técnica, inspiracional, descontraída, apaixonada/intensa. Default: "afirmativa apaixonada".
 
----
-
-## Passo 2. Geração dos 6 slides (texto)
-
-### Estrutura
-
-- **Slides 1-5**. Começam com "Eu amo quem [comportamento, atitude ou postura]" + justificativa que celebra com peso.
-- **Slide 6**. CTA tribal positiva.
-
-### Critério das ideias. REGRA CENTRAL
-
-**AFIRMATIVO + DEFENDIDO + TRIBAL.**
-
-- **Afirmativo**. Take positivo forte, declaração de admiração com peso.
-- **Defendido**. Argumento concreto. Não é elogio genérico.
-- **Tribal**. Faz a audiência sentir "exatamente, e assim que eu sou".
-
-### Exemplos de referência
-
-**Certos:**
-- "Eu amo quem cai e volta tentando de novo" / "Santidade não é não cair. É a coragem teimosa de levantar todas as vezes."
-- "Eu amo quem cobra o preço justo sem pedir desculpa" / "Quem se desvaloriza ensina o cliente a fazer o mesmo."
-
-**Errados:**
-- "Eu amo gente boa."
-- "Eu amo quem é dedicado."
-
-### Regras OBRIGATÓRIAS da CTA (slide 6)
-
-1. **Motivo claro.**
-2. **Relação** com a pauta exaltada.
-3. **Geração de desejo** (pertencimento).
-
-**Exemplos:**
-- "Siga @x se você é (ou quer ser) desse time."
-- "Siga @x e cerque-se de gente que vive assim."
-
-### Tamanho do texto
-
-- **Título** até 12 palavras.
-- **Subtítulo** até 15 palavras.
+### 1.5. Estilo de design visual
+7 opções (Clássico/Profissional, Bem-humorado, Técnico, Inspiracional, Descontraída, Apaixonada/Intensa, Editorial) ou descrição livre.
 
 ---
 
-## Passo 3 e Passo 4
+## Passo 2. Execução
 
-Use o output triplo e a legenda compartilhados. Pasta de saída:
+A skill `/carrossel` no estilo Amo faz o seguinte:
+
+1. **Carrega** `references/prompt-amo.md` inteiro.
+2. **Executa o Passo 1 do prompt** (coleta de 5 dados), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`/`.env`.
+3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
+4. **Executa o prompt do Passo 2 ao Passo 4 exatamente como está**, na sessão atual:
+   - Passo 2: gera os 6 slides com aprovação interna.
+   - Passo 3: 3 outputs (chat slide por slide, arquivo `prompts.txt`, comando Cowork).
+   - Passo 4: gera a legenda do Instagram com Manual da Copy e salva `legenda.txt`.
+5. O texto dos 6 slides passa pelo **Manual da Copy + revisora** silenciosamente antes do gate de aprovação do Passo 2 do prompt.
+
+---
+
+## Diferenças importantes em relação aos outros estilos clássicos ainda não migrados
+
+| Aspecto | Amo (verbatim) | Estilos clássicos no modelo leve (Sempre, Odeio, Erros, Ninguém Conta) |
+|---|---|---|
+| Fonte de regras | `references/prompt-amo.md` (prompt completo, verbatim) | `references/estilos/{estilo}.md` (rules leves) + `passo-coleta-base.md` |
+| Execução | A skill executa o prompt do estilo do início ao fim | A skill conduz Passo 3 padrão usando guidance leve |
+| Output de prompts visuais | Output Triplo do próprio prompt (chat + `prompts.txt` + comando Cowork) | `passo-output-triplo.md` compartilhado |
+| Output de legenda | Passo 4 do próprio prompt (com Manual da Copy citado explicitamente) | `passo-legenda.md` compartilhado |
+
+---
+
+## Modo "Gerar todos"
+
+No fluxo "Gerar todos" (Passo 2 da SKILL.md, ramo `todos`), Amo roda com **valores pré-coletados** no Passo 2.B da SKILL.md (handle, nicho_produto, cores_marca, tom_texto, estilo_design):
+
+- A skill pula o Passo 1 do `prompt-amo.md` (Coleta interativa) e injeta os valores diretamente.
+- Em seguida executa o Passo 2 do prompt sem o gate de aprovação interativa (aprovação acontece depois, em lote, no Passo 2.D da SKILL.md).
+- Passo 3 e Passo 4 do prompt rodam normalmente (visuais e legenda).
+
+---
+
+## Saída no projeto
+
+Pasta de saída:
 
 ```
 meus-produtos/{ativo}/entregas/conteudo-social/carrossel-amo/
 ```
 
+Arquivos gerados (definidos pelo próprio `prompt-amo.md`):
+- `texto.md` (6 slides aprovados — convenção da skill, ver Passo 3 da SKILL.md)
+- `prompts.txt` (6 prompts visuais em inglês, separados por linha em branco — Passo 3.2 do prompt)
+- `legenda.txt` (legenda do Instagram, revisada pelo Manual da Copy — Passo 4.5 do prompt)
+
+Adicionalmente, durante a execução o prompt entrega no chat o **comando Cowork** pronto para automatizar a geração das imagens no ChatGPT via Claude in Chrome.
+
 ---
 
 ## Paleta default (atmosfera quente)
 
-- **Slides 1-5.** Fundo marfim `#F5F0E5` + texto marrom escuro (sugestão: `#3D2E1F`).
+- **Slides 1-5.** Fundo marfim `#F5F0E5` + texto marrom escuro (sugestão `#3D2E1F`).
 - **Slide 6 (CTA).** Fundo verde-sálvia `#3D4A3F` + texto creme `#F5F0E5`.
 
----
-
-## Atmosfera fotográfica
-
-Cenas que **sugerem presença, convicção, momento real de admiração**:
-- Mão segurando ferramenta, gesto de quem está no ofício, copo brindando, planta crescendo
-- **Luz dourada quente (golden hour)** característica do carrossel "Amo"
-- Texturas reais, leve granulação de filme
-- Sem rosto humano nítido
-- Mood íntimo, quente, presente
-
----
-
-## Ajuste no template de prompt de imagem
-
-Troque no template:
-
-```
-Cinematic naturalistic lighting
-```
-
-por:
-
-```
-Cinematic warm golden-hour lighting, intimate mood
-```
+A atmosfera do "Eu amo" pede luz dourada quente (golden hour), texturas reais e mood íntimo. Se o aluno responder com outra paleta no Passo 1.3, use a dele.

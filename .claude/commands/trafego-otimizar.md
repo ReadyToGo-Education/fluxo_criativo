@@ -321,7 +321,7 @@ meus-produtos/{ativo}/entregas/trafego/diagnostico-{campanha-slug}-{YYYY-MM-DD}.
 
 Conteúdo: o diagnóstico completo + ações aplicadas + próximas observações.
 
-Caminho absoluto: `C:\Users\gabri\Documents\GitHub\workshop_inteligente\meus-produtos\{ativo}\entregas\trafego\diagnostico-{...}.md`
+Caminho absoluto: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\diagnostico-{...}.md`
 
 ---
 

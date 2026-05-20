@@ -2,7 +2,19 @@
 
 > Prompts-base que a skill `/programar-carrossel` injeta na tarefa programada do `/schedule`. A skill substitui os placeholders `{{...}}` pelos valores coletados antes de enviar pro `/schedule create`.
 > 
-> Para o estilo **Notícia**, este arquivo NÃO é usado. A skill `/programar-carrossel-noticia` tem o próprio prompt em `programar-carrossel-noticia/references/prompt-carrossel-noticia.md`.
+> **ARQUIVO LEGADO.** Após a migração dos 6 estilos clássicos para o modelo verbatim, NENHUM estilo do menu atual usa este arquivo. Cada estilo tem o próprio prompt-base autônomo:
+>
+> - Nunca → `prompt-nunca-routine.md`
+> - Sempre → `prompt-sempre-routine.md`
+> - Odeio → `prompt-odeio-routine.md`
+> - Erros → `prompt-erros-routine.md`
+> - Amo → `prompt-amo-routine.md`
+> - Ninguém Conta → `prompt-ninguem-conta-routine.md`
+> - Notícia → `programar-carrossel-noticia/references/prompt-carrossel-noticia.md`
+> - Curiosidade → `prompt-curiosidade-routine.md`
+> - Editorial → `prompt-editorial-routine.md`
+>
+> Este arquivo é mantido apenas como referência histórica do modelo leve (Bloco A/B/C/D) que existia antes da migração. Se um estilo futuro precisar do padrão Bloco A/B/C/D, ele pode reutilizá-lo.
 
 ---
 

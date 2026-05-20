@@ -24,15 +24,14 @@ Extraia (combinando dado real + inferência):
 
 SEMPRE mostre o resumo, mesmo se algum campo veio de inferência. Marque o que é real e o que foi inferido:
 
+(Nota para o modelo: marque "✓ do perfil" nos campos extraídos diretamente do perfil.md ou idconsumidor.md. Marque "○ inferido" nos campos que foram um chute a partir do slug, tipo ou preço. Essas marcações devem aparecer ao lado de cada campo no bloco exibido ao aluno.)
+
 ```
 Vou usar estes dados do seu produto ativo ({slug}):
 
-Produto: [nome do produto]
-Nicho: [nicho]
-Público: [resumo do público]
-
-(Marque "✓ do perfil" pros campos extraídos diretamente do perfil.md ou idconsumidor.md.
-Marque "○ inferido" pros campos que foram um chute a partir do slug, tipo ou preço.)
+Produto: [nome do produto] [✓ do perfil / ○ inferido]
+Nicho: [nicho] [✓ do perfil / ○ inferido]
+Público: [resumo do público] [✓ do perfil / ○ inferido]
 
 Está tudo certo?
 
@@ -131,6 +130,8 @@ Aqui estão 10 ideias surreais pro seu nicho.
 Qual número você quer transformar em criativo?
 ```
 
+Se o número for inválido, peça de novo de forma curta, sem repetir a lista inteira.
+
 ### 3. Escolha e geração do criativo
 
 Após o aluno escolher um número de 1 a 10, anuncie:
@@ -206,7 +207,7 @@ A descrição visual e o prompt em inglês NÃO passam pela revisora (são instr
 ```
 Pronto. Aqui está o seu Criativo Surreal:
 
-📌 IDEIA ESCOLHIDA (nº {numero})
+📌 IDEIA ESCOLHIDA (nº {numero_ideia})
 [descrição visual da ideia escolhida]
 
 📌 TÍTULO DO ANÚNCIO (headline)
@@ -241,7 +242,7 @@ Como você quer gerar a imagem?
 1. Colar no ChatGPT ou Gemini (grátis)
    Eu te entrego os prompts prontos. Você cola, gera as artes e salva.
 
-2. Gerar agora pela API (tem custo)
+2. Gerar agora pelo OpenRouter (tem custo)
    Eu mando o prompt direto pro modelo de imagem e já salvo o PNG na sua
    pasta. Custa centavos por imagem.
 
@@ -298,12 +299,12 @@ Conteúdo do arquivo:
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
-[opcional: listar as 10 ideias geradas, pra o aluno usar depois sem precisar rodar a sub-skill de novo]
+Liste aqui todas as 10 ideias geradas nesta sessão, no mesmo formato da apresentação (Descrição + Headline), para o aluno consultar depois sem precisar rodar a sub-skill de novo.
 ```
 
 ### 6b. Modo API (só se o aluno escolheu a opção 2)
 
-Depois de salvar o `.md`, gere a imagem pela API:
+Depois de salvar o `.md`, gere apenas a imagem do Feed pela API. A versão Stories sai depois, como opção no menu do Passo 7, reaproveitando a imagem do Feed como referência visual.
 
 1. Leia `OPENROUTER_API_KEY` no `.env`. Se faltar, ofereça configurar com o `/configurar-imagens` ou voltar pro modo ChatGPT.
 
@@ -320,40 +321,25 @@ Qual modelo de imagem?
 Digite o número:
 ```
 
-Opção 1 vira `openai/gpt-5.4-image-2`, opção 2 vira `google/gemini-3.1-flash-image-preview`.
+Opção 1 vira `openai/gpt-5.4-image-2`, opção 2 vira `google/gemini-3.1-flash-image-preview`. Guarde o modelo escolhido, ele vai ser reaproveitado se o aluno pedir Stories no Passo 7.
 
-3. Pergunte o formato:
+3. Grave o Prompt Feed num arquivo `.txt` na pasta de criativos. Conteúdo é o Prompt Feed apresentado ao aluno, sem alterações.
 
-```
-Qual formato você quer gerar?
-
-1. Feed (4:5)
-2. Stories (9:16)
-3. Os dois
-
-Digite o número:
-```
-
-4. Para cada formato escolhido, grave o prompt num arquivo `.txt` na pasta de criativos:
-   - Feed: o conteúdo é o Prompt Feed. Proporção `4:5`.
-   - Stories: o conteúdo é o Prompt Feed mais a linha abaixo colada no fim. Proporção `9:16`. Não use o Prompt Stories do modo ChatGPT, que depende da imagem anterior e não funciona numa chamada isolada.
-
-   Linha de adaptação para Stories (colar no fim do prompt):
-   `FORMAT OVERRIDE: render this exact creative recomposed for a vertical 9:16 Instagram Stories canvas (1080x1920). Keep the same scene, text, colors and elements, only recompose the framing to fill the full vertical screen.`
-
-5. Anuncie e rode o script, um comando por formato:
+4. Anuncie e rode o script no formato Feed (4:5):
 
 ```
-🔍 Próximo passo: gerar a imagem do criativo via API. Tempo estimado: cerca de 1 minuto.
+🔍 Próximo passo: gerar a imagem do Feed via API. Tempo estimado: 2 a 3 minutos.
 ```
+
+Use o comando Python correto da sessão (`python3` ou `py -3`), conforme a seção Execução de Scripts Python do CLAUDE.md.
 
 ```bash
 py -3 scripts/gerar-criativo-estatico.py --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-surreal-{numero}-feed.txt" --model "{modelo}" --aspect "4:5" --out "meus-produtos/{ativo}/entregas/criativos/criativo-surreal-{numero}-feed.png"
 ```
 
-Para Stories, troque `feed` por `stories` no nome dos arquivos e `4:5` por `9:16`.
+5. Se o script falhar (erro de chave, rede ou modelo), avise o aluno em linguagem simples e ofereça o modo ChatGPT mostrando os prompts.
 
-6. Se o script falhar (erro de chave, rede ou modelo), avise o aluno em linguagem simples e ofereça o modo ChatGPT mostrando os prompts.
+6. NÃO gere Stories automaticamente. A opção aparece como primeira no menu do Passo 7 e usa a imagem do Feed como referência (image-to-image), economizando chamada quando o aluno só quer Feed.
 
 ### 7. Confirmação final e próximo passo
 
@@ -362,7 +348,7 @@ Apresente o resultado conforme o modo escolhido. Sempre mostrar o caminho absolu
 **No modo ChatGPT:**
 
 ```
-✅ Concluído: criativo Surreal salvo.
+✅ Concluído: criativo Criativo Surreal salvo.
 
 Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-surreal-{numero}.md
 
@@ -373,24 +359,64 @@ Como usar:
 4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
-**No modo API:**
-
-```
-✅ Concluído: criativo Surreal gerado e salvo.
-
-Imagem: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-surreal-{numero}-feed.png
-(mais a versão Stories, se o aluno pediu)
-Briefing: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-surreal-{numero}.md
-```
-
-Depois, nos dois modos, ofereça:
+No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:
 
 ```
 Quer fazer mais alguma coisa?
 1. Gerar outro Criativo Surreal com outra das 10 ideias
 2. Trocar o nicho ou público e gerar 10 ideias novas
-3. Voltar e escolher outro formato (Promessa Simples, Caixinha de Perguntas ou AIDA Completo)
+3. Voltar e escolher outro formato
 ```
+
+**No modo API:**
+
+```
+✅ Concluído: criativo Criativo Surreal gerado e salvo.
+
+Imagem do Feed: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-surreal-{numero}-feed.png
+Briefing: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-surreal-{numero}.md
+```
+
+Depois ofereça o menu com "Gerar para o formato de Stories" como nova primeira opção:
+
+```
+Quer fazer mais alguma coisa?
+1. Gerar para o formato de Stories (a partir da imagem do Feed)
+2. Gerar outro Criativo Surreal com outra das 10 ideias
+3. Trocar o nicho ou público e gerar 10 ideias novas
+4. Voltar e escolher outro formato
+```
+#### Sub-fluxo "Gerar para o formato de Stories" (opção 1 do menu acima)
+
+Quando o aluno escolher 1, execute:
+
+a) Grave num arquivo `.txt` na pasta de criativos o prompt curto de recomposição abaixo (sem placeholders), com o nome `prompt-surreal-{numero}-stories.txt`:
+
+```
+Recompose this exact same creative for a vertical 9:16 Instagram Stories and Reels canvas (1080x1920). Keep the same scene, same person, same colors, same text content, same on-image text boxes, same CTA, same elements, same design language. Only recompose the framing to fill the entire vertical screen. Do not redesign, do not change typography, do not change wording. Only adapt the proportion from 4:5 to 9:16.
+```
+
+b) Anuncie:
+
+```
+🔍 Próximo passo: gerar a versão Stories a partir da imagem do Feed. Tempo estimado: 2 a 3 minutos.
+```
+
+c) Rode o script reaproveitando o modelo escolhido no Passo 6b, passando a imagem do Feed como referência visual (image-to-image):
+
+```bash
+py -3 scripts/gerar-criativo-estatico.py --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-surreal-{numero}-stories.txt" --model "{modelo}" --aspect "9:16" --reference-image "meus-produtos/{ativo}/entregas/criativos/criativo-surreal-{numero}-feed.png" --out "meus-produtos/{ativo}/entregas/criativos/criativo-surreal-{numero}-stories.png"
+```
+
+d) Confirme:
+
+```
+✅ Concluído: versão Stories gerada e salva.
+
+Imagem do Stories: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-surreal-{numero}-stories.png
+```
+
+e) Reapresente o mesmo menu de opções.
 
 ## Referências de paleta e tipografia por tipo de nicho
 
@@ -399,6 +425,7 @@ Use estas referências para preencher os placeholders `[paleta temática]` e `[d
 | Tipo de nicho | Paleta | Tipografia |
 |---|---|---|
 | Cafeteria, brunch, gastronomia | Bege quente, terracota, mostarda apagada, verde musgo | Serifada editorial vintage premium (estilo café histórico) |
+| Alimentação saudável, meal prep, nutrição | Verde-folha apagado, branco natural, bege neutro, terracota suave | Sans-serif moderna limpa ou serifada leve estilo editorial de bem-estar |
 | Artesanato, hobby, costura | Rosa pálido, creme antigo, off-white | Serifada delicada estilo livro de receitas vintage ou revista de bordado |
 | Feng Shui, casa, espiritualidade | Bege quente, off-white com toque de terracota, tons serenos | Serifada elegante com personalidade ancestral ou oriental refinada |
 | Tráfego pago, tecnologia, IA | Azul-acinzentado profundo, grafite, azul-meia-noite, verde-petróleo apagado | Sans-serif condensada bold estilo Bloomberg ou interface editorial premium tech |

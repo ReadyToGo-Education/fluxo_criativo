@@ -7,7 +7,7 @@
 
 ## Quando usar este template
 
-Para os carrosséis de **personalidade fixa** (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta). O estilo **Notícia** tem template próprio (ver `programar-carrossel-noticia/references/prompt-carrossel-noticia.md`, que usa 3 modos: foto real composta, geração DALL-E, composição limpa).
+Para os carrosséis de **personalidade fixa** (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta). Os estilos **Notícia** e **Curiosidade** têm template próprio e NÃO usam este arquivo (Notícia: `programar-carrossel-noticia/references/prompt-carrossel-noticia.md`; Curiosidade: `references/prompt-curiosidade.md`). Os dois usam 3 modos: foto real composta, geração DALL-E, composição limpa.
 
 ---
 

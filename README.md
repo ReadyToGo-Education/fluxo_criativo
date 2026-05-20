@@ -418,7 +418,6 @@ Gera briefing a partir do perfil, monta o HTML do playbook (exportável para PDF
 ### Utilitários
 - `abrir-html.py`. Abre HTML no navegador padrão (Windows/Mac/Linux).
 - `workshop-copy-template-tema.py`. Copia templates de tema entre produtos.
-- `atualizar-utms-leitura10x.py`, `criar-anuncios-leitura10x.py`, `criar-campanha-leitura10x.py`. Scripts legados de um produto específico (referência histórica).
 
 ## Integrações externas (opcionais)
 

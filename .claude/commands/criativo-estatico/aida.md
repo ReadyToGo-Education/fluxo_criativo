@@ -58,7 +58,7 @@ Demora cerca de 60 segundos e melhora a qualidade visual.
 **Se escolher 1**, anuncie e execute:
 
 ```
-🔍 Próximo passo: pesquisar formatos virais de anúncio estático no nicho. Tempo estimado: cerca de 1 minuto.
+🔍 Próximo passo: pesquisar formatos virais de anúncio estático no nicho. Tempo estimado: cerca de 60 segundos.
 ```
 
 Faça 2 buscas (WebSearch):
@@ -94,6 +94,8 @@ Qual formato de imagem?
 Digite o número:
 ```
 
+Se o número for inválido, peça de novo de forma curta, sem repetir a lista inteira.
+
 **Pergunta 2/2. Urgência base:**
 
 Use as 5 urgências extraídas no Passo 0 (reais do `perfil.md` ou inferidas a partir do nicho/público quando o perfil não existir). Priorize Dores, Urgências Quentes e Desejos.
@@ -110,6 +112,8 @@ Qual situação vai inspirar o criativo?
 
 Digite o número (ou descreva outra situação se nenhuma encaixar):
 ```
+
+Se o número for inválido, peça de novo de forma curta, sem repetir a lista inteira.
 
 Se as 5 urgências forem todas inferidas (perfil ausente), avise no topo: "As urgências abaixo são inferidas do nicho do produto. Se nenhuma encaixar, descreva a situação específica que quer atacar no criativo."
 
@@ -404,7 +408,7 @@ Como você quer gerar a imagem?
 1. Colar no ChatGPT ou Gemini (grátis)
    Eu te entrego o prompt pronto. Você cola, gera a arte e salva a imagem.
 
-2. Gerar agora pela API (tem custo)
+2. Gerar agora pelo OpenRouter (tem custo)
    Eu mando o prompt direto pro modelo de imagem e já salvo o PNG na sua
    pasta de entregas. Custa centavos por imagem.
 
@@ -412,7 +416,7 @@ Digite o número:
 ```
 
 Em qualquer um dos dois modos, salve o briefing legível em:
-`meus-produtos/{ativo}/entregas/criativos/criativo-estatico-{numero}.md`
+`meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.md`
 
 Conteúdo do briefing:
 - Nome do criativo, data, formato, urgência base
@@ -421,7 +425,7 @@ Conteúdo do briefing:
 - Texto escolhido (kicker, headline, apoio, instrução)
 - Prompt final consolidado em inglês em bloco de código
 
-O número do criativo é sequencial dentro da pasta. Verifique os arquivos existentes antes de numerar.
+O número do criativo é sequencial dentro da pasta. Verifique os arquivos `criativo-aida-*.md` existentes antes de numerar.
 
 #### Modo ChatGPT (escolha 1)
 
@@ -437,7 +441,9 @@ Adaptar para sua ferramenta:
 - Midjourney: adicione ao final: --ar [ratio] --v 6.1 --style raw --s 250 --no text, faces, watermark
 - Ideogram: adicione ao final: Style: Realistic, Aspect Ratio: [ratio]
 
-Criativo salvo em meus-produtos/{ativo}/entregas/criativos/
+Antes de entregar este bloco ao aluno, substitua `[ratio]` pelo valor real do formato escolhido na Entrevista: feed retrato = 4:5, quadrado = 1:1, stories ou reels = 9:16. O placeholder `[ratio]` não pode aparecer literal no texto entregue.
+
+Briefing salvo em meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.md
 ```
 
 #### Modo API (escolha 2)
@@ -471,16 +477,18 @@ Mapa de modelo: opção 1 vira `openai/gpt-5.4-image-2`, opção 2 vira `google/
 4. Anuncie:
 
 ```
-🔍 Próximo passo: gerar a imagem do criativo via API. Tempo estimado: cerca de 1 minuto.
+🔍 Próximo passo: gerar a imagem do criativo via API. Tempo estimado: 2 a 3 minutos.
 ```
 
 5. Grave o prompt final consolidado num arquivo de texto. Isso evita erro de aspas no comando:
-`meus-produtos/{ativo}/entregas/criativos/prompt-criativo-estatico-{numero}.txt`
+`meus-produtos/{ativo}/entregas/criativos/prompt-criativo-aida-{numero}.txt`
 
 6. Rode o script, substituindo os campos entre chaves pelos valores reais:
 
+Use o comando Python correto da sessão (`python3` ou `py -3`), conforme a seção Execução de Scripts Python do CLAUDE.md. Nos comandos abaixo, troque `py -3` pelo comando detectado se necessário.
+
 ```bash
-py -3 scripts/gerar-criativo-estatico.py --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-criativo-estatico-{numero}.txt" --model "{modelo escolhido}" --aspect "{proporcao}" --out "meus-produtos/{ativo}/entregas/criativos/criativo-estatico-{numero}.png"
+py -3 scripts/gerar-criativo-estatico.py --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-criativo-aida-{numero}.txt" --model "{modelo escolhido}" --aspect "{proporcao}" --out "meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.png"
 ```
 
 7. Se o script terminar com sucesso, apresente:
@@ -488,13 +496,13 @@ py -3 scripts/gerar-criativo-estatico.py --prompt-file "meus-produtos/{ativo}/en
 ```
 ✅ Concluído: criativo gerado e salvo.
 
-Imagem: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-estatico-{numero}.png
-Briefing: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-estatico-{numero}.md
+Imagem: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-aida-{numero}.png
+Briefing: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-aida-{numero}.md
 ```
 
 Se o script falhar (erro de chave, de rede ou de modelo), avise o aluno em linguagem simples, mostre o prompt consolidado e ofereça gerar pelo modo ChatGPT.
 
-#### Depois de gerar (qualquer um dos modos)
+#### Depois de gerar — modo ChatGPT
 
 ```
 Quer ajustar algum dos 3 passos?
@@ -502,6 +510,69 @@ Quer ajustar algum dos 3 passos?
 2. Mudar a cor ou o layout
 3. Reescrever o texto
 ```
+
+#### Depois de gerar — modo API
+
+```
+Quer fazer mais alguma coisa?
+
+1. Gerar em outro formato a partir da arte atual (image-to-image)
+2. Trocar a cena
+3. Mudar a cor ou o layout
+4. Reescrever o texto
+```
+
+##### Sub-fluxo "Gerar em outro formato" (opção 1 do menu API)
+
+Quando o aluno escolher 1, pergunte qual formato gerar (excluindo o que já foi feito na entrevista inicial):
+
+```
+Qual formato você quer gerar a partir da arte atual?
+
+[Listar somente os 2 formatos que NÃO foram gerados]
+- Feed retrato (4:5, 1080x1350)
+- Quadrado (1:1, 1080x1080)
+- Stories ou Reels (9:16, 1080x1920)
+
+Digite o número:
+```
+
+Depois execute:
+
+a) Grave num arquivo `.txt` na pasta de criativos o prompt curto de recomposição abaixo (sem placeholders), com o nome `prompt-criativo-aida-{numero}-{novo-formato}.txt`. Onde `{novo-formato}` é `feed`, `quadrado` ou `stories`:
+
+```
+Recompose this exact same creative for a {NOVO_ASPECT} canvas. Keep the same scene, same person, same colors, same text content, same on-image text, same elements, same design language. Only recompose the framing to fill the new proportion. Do not redesign, do not change typography, do not change wording. Only adapt the proportion.
+```
+
+Substitua `{NOVO_ASPECT}` por:
+- `vertical 9:16 Instagram Stories and Reels (1080x1920)` se Stories
+- `square 1:1 (1080x1080)` se Quadrado
+- `vertical 4:5 Instagram Feed (1080x1350)` se Feed
+
+b) Anuncie:
+
+```
+🔍 Próximo passo: gerar a versão em outro formato a partir da arte atual. Tempo estimado: 2 a 3 minutos.
+```
+
+c) Rode o script reaproveitando o modelo escolhido no passo Modo API, passando a arte atual como referência visual (image-to-image):
+
+```bash
+py -3 scripts/gerar-criativo-estatico.py --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-criativo-aida-{numero}-{novo-formato}.txt" --model "{modelo}" --aspect "{novo-aspect}" --reference-image "meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.png" --out "meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}-{novo-formato}.png"
+```
+
+Onde `{novo-aspect}` é `4:5`, `1:1` ou `9:16` conforme o formato escolhido.
+
+d) Confirme:
+
+```
+✅ Concluído: versão em novo formato gerada e salva.
+
+Imagem: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-aida-{numero}-{novo-formato}.png
+```
+
+e) Reapresente o menu de 4 opções, removendo a opção 1 se o aluno já gerou todos os formatos disponíveis.
 
 ### 7. Modo Iterativo
 

@@ -43,14 +43,14 @@ Ler `FB_AD_ACCOUNT_IDS` no `.env` (campo com múltiplas contas separadas por ví
 Construir a string `act_<id1>,act_<id2>,...` a partir de `FB_AD_ACCOUNT_IDS` e disparar:
 
 ```
-curl -s "https://graph.facebook.com/v21.0/?ids=act_1495774484021523,act_370754184010467,act_672637689134915,act_1210963877470650&fields=name&access_token=<TOKEN_DO_ENV>"
+curl -s "https://graph.facebook.com/v21.0/?ids=act_1234567890,act_0987654321,act_1122334455,act_5566778899&fields=name&access_token=<TOKEN_DO_ENV>"
 ```
 
 A resposta vem em JSON único:
 ```json
 {
-  "act_1495774484021523": {"name": "Conta A", "id": "act_1495774484021523"},
-  "act_370754184010467":  {"name": "Conta B", "id": "act_370754184010467"},
+  "act_1234567890": {"name": "Conta A", "id": "act_1234567890"},
+  "act_0987654321": {"name": "Conta B", "id": "act_0987654321"},
   ...
 }
 ```
@@ -73,7 +73,7 @@ Digite o número:
 ```
 Se a chamada de nome falhar para alguma conta, exibir só o ID sem nome. A conta padrão ainda recebe a etiqueta `"padrão"` mesmo sem nome.
 
-**Após a escolha:** definir `CONTA_ATIVA_ID` como variável de sessão (ex: `act_1210963877470650`). Usar esse ID em todas as chamadas subsequentes à Graph API desta sessão, inclusive ao chamar `/trafego-insights`.
+**Após a escolha:** definir `CONTA_ATIVA_ID` como variável de sessão (ex: `act_1234567890`). Usar esse ID em todas as chamadas subsequentes à Graph API desta sessão, inclusive ao chamar `/trafego-insights`.
 
 ### Passo 0.55. Filtro de status das campanhas
 

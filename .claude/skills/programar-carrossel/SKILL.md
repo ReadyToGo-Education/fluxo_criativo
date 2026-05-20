@@ -1,6 +1,6 @@
 ---
 name: programar-carrossel
-description: Programa uma tarefa recorrente que gera carrossel para Instagram automaticamente, em 1 dos 7 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana). A tarefa roda na nuvem do Claude via /schedule, na frequência escolhida (diária, semanal, quinzenal, customizada). O resultado aparece no painel de Routines.
+description: Programa uma tarefa recorrente que gera carrossel para Instagram automaticamente, em 1 dos 9 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). A tarefa roda na nuvem do Claude via /schedule, na frequência escolhida (diária, semanal, quinzenal, customizada). O resultado aparece no painel de Routines.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
@@ -14,7 +14,7 @@ Configura uma tarefa que gera carrossel de Instagram automaticamente, no estilo 
 ## Anúncio inicial
 
 ```
-🔍 Próximo passo: configurar a tarefa programada de carrossel (entre 8 e 14 perguntas, dependendo do estilo e do modo escolhido). Tempo estimado: 3 a 6 minutos.
+🔍 Próximo passo: configurar a tarefa programada de carrossel (entre 6 e 14 perguntas, dependendo do estilo e do modo escolhido). Tempo estimado: 3 a 6 minutos.
 ```
 
 > Use exatamente esse texto. A faixa "8 a 14" é só uma estimativa de esforço, não um total exato. NÃO mostre total fixo nos cabeçalhos das perguntas: o número real só é conhecido no fim, porque a frequência escolhida no Passo 4 muda a conta. Numere as perguntas em sequência simples: "Pergunta 1", "Pergunta 2", e assim por diante.
@@ -40,7 +40,7 @@ Próximo: {label da próxima pergunta}
 
 Numere as perguntas em sequência: "Pergunta 1", "Pergunta 2", "Pergunta 3", e assim por diante. NÃO use "de {total}" nos cabeçalhos. O número total de perguntas varia conforme o estilo, o modo de tema e a frequência, e só é conhecido no fim. Prometer um total no começo entrega um número errado.
 
-Quando o estilo escolhido não pede input extra (Nunca, Sempre, Odeio, Amo), a pergunta da seção 2.3 é pulada: ajuste a numeração das perguntas seguintes para continuar sequencial, sem buraco.
+Quando o estilo escolhido não pede input extra (Sempre, Odeio, Amo), a pergunta da seção 2.3 é pulada: ajuste a numeração das perguntas seguintes para continuar sequencial, sem buraco. Nunca, Curiosidade e Editorial têm ramo próprio (Passos 1.x dedicados) e nem chegam ao 2.3.
 
 PROIBIDO bulkar perguntas no mesmo turno.
 
@@ -80,6 +80,8 @@ Qual estilo você quer programar?
 5. Amo. 5 takes afirmativos defendidos + CTA tribal.
 6. Ninguém Conta. 5 verdades ocultas sobre um objetivo + CTA. Precisa do objetivo do público.
 7. Notícia da semana. Abre o fluxo /programar-carrossel-noticia (skill própria, configurações extras).
+8. Curiosidade. Carrossel a partir de uma curiosidade atemporal do nicho (fato chocante, recorde, dado contraintuitivo). Busca na web a cada execução, 7 a 9 slides.
+9. Editorial. Carrossel editorial de 6 slides com narrativa de especialista baseada em notícias reais, pesquisas, polêmicas e contas malucas do nicho. A tarefa gera 10 ideias internamente e escolhe sozinha a mais forte a cada execução. Entrega o prompt único pra colar no ChatGPT.
 
 Digite o número (ou digite "cancelar" para sair).
 ```
@@ -104,9 +106,46 @@ Em seguida, invoque a skill `workshop-marketing:programar-carrossel-noticia` via
 
 **Se `estilo_carrossel` está entre 1 e 6**, prossiga para o Passo 2.
 
+**Se `estilo_carrossel == 8` (Curiosidade)**, prossiga para o Passo 1.2.
+
+**Se `estilo_carrossel == 9` (Editorial)**, prossiga para o Passo 1.3.
+
 ---
 
-## Passo 2. Coleta de contexto (para os 6 estilos atemporais)
+## Passo 1.2. Ramo Curiosidade
+
+O estilo Curiosidade é atemporal, mas tem fluxo próprio: a tarefa programada busca uma curiosidade na web a cada execução e escolhe o tema sozinha. Não há modo FIXO, não há Desejo nem Objetivo. Em relação ao fluxo dos 6 estilos atemporais, valem estas diferenças:
+
+1. **Passo 2.1 e 2.2** (@ do Instagram, nicho e produto): iguais aos atemporais, execute normalmente.
+2. **Passo 2.3** (input extra Desejo/Objetivo): não se aplica, pule.
+3. **Passo 2.4** (tom): use a **versão Curiosidade** da pergunta de tom (ver o bloco "Se Curiosidade" na seção 2.4).
+4. **Passo 3** (modo de geração de tema): não se aplica, pule o Passo 3 inteiro. Salve `modo_geracao = AUTO_WEB`.
+5. **Passo 4** (frequência e horário): igual aos atemporais.
+6. **Passo 5** (confirmação): igual, com a linha específica de Curiosidade no preview.
+7. **Passo 6** (montar prompt): não use o `prompts-routine.md`. Use `references/prompt-curiosidade-routine.md` (ver o bloco "Se Curiosidade" no Passo 6).
+
+Siga agora para o Passo 2.
+
+---
+
+## Passo 1.3. Ramo Editorial
+
+O estilo Editorial é atemporal, mas tem fluxo próprio: a tarefa programada gera 10 ideias internamente e escolhe sozinha a mais forte a cada execução. Não há modo FIXO, não há tom (o tom de especialista/newsletter é parte do estilo), não há Desejo nem Objetivo, mas tem 2 dados próprios (público e tipo de CTA). Em relação ao fluxo dos 6 estilos clássicos, valem estas diferenças:
+
+1. **Passo 2.1 e 2.2** (@ do Instagram, nicho e produto): iguais aos clássicos, execute normalmente. O `nicho_produto` será interpretado como "produto/serviço" pelo prompt Editorial.
+2. **Passo 2.3** (Erros/Ninguém Conta): não se aplica, pule.
+3. **Passo 2.3.E** (extras de Editorial): execute as 2 perguntas adicionais (público e tipo de CTA), ver o bloco "Se Editorial" no fim da seção 2.3.
+4. **Passo 2.4** (tom): não se aplica, pule. Editorial não usa tom variável.
+5. **Passo 3** (modo de geração de tema): não se aplica, pule o Passo 3 inteiro. Salve `modo_geracao = AUTO_INTERNAL`.
+6. **Passo 4** (frequência e horário): igual aos clássicos.
+7. **Passo 5** (confirmação): igual, com a linha específica de Editorial no preview.
+8. **Passo 6** (montar prompt): não use o `prompts-routine.md`. Use `references/prompt-editorial-routine.md` (ver o bloco "Se Editorial" no Passo 6).
+
+Siga agora para o Passo 2.
+
+---
+
+## Passo 2. Coleta de contexto (para os 6 estilos clássicos, Curiosidade e Editorial)
 
 ### 2.1. @ do Instagram
 
@@ -260,6 +299,60 @@ Em ambos: se o aluno responder `1`, salve a sugestão. Se responder `2` ou colar
 
 Mostre micro-resumo se aplicável.
 
+**Se `estilo_carrossel == 9` (Editorial):** pule a pergunta de Desejo/Objetivo acima e execute as 2 perguntas extras de Editorial abaixo, em sequência, uma por turno.
+
+#### 2.3.E.1. Público (só Editorial)
+
+**Antes de exibir**, monte uma `sugestao_publico` lendo o `idconsumidor.md` (se existir) ou o `perfil.md`:
+
+1. Procure a descrição de público-alvo do produto, incluindo dor principal, contexto e o que o produto resolve para ele.
+2. Combine numa frase clara. Ex: "atletas amadores e profissionais que precisam falar inglês em entrevistas, contratos e patrocínios internacionais".
+3. Se não conseguir montar uma frase clara, `sugestao_publico = null`.
+
+Com sugestão:
+
+```
+Pergunta {N}. Público
+
+Sugestão a partir do seu produto: {sugestao_publico}
+
+1. Sim, é esse mesmo
+2. Outro (eu digito)
+
+Digite o número ou cole a descrição.
+```
+
+Sem sugestão:
+
+```
+Pergunta {N}. Público
+
+Descreva o público do seu produto em UMA frase (quem é, qual a dor, o que o produto resolve).
+
+(ex: atletas amadores e profissionais que precisam falar inglês em entrevistas, contratos e patrocínios internacionais)
+
+Digite a frase.
+```
+
+Salve como `editorial_publico`. Mostre micro-resumo.
+
+#### 2.3.E.2. Tipo de CTA do slide 6 (só Editorial)
+
+```
+Pergunta {N}. Tipo de CTA do slide 6
+
+Qual ação você quer pedir ao final do carrossel?
+
+1. ManyChat (comente uma palavra-chave X e receba isca no direct)
+2. Seguir o perfil
+3. Engajar (pedir opinião nos comentários)
+4. Salvar o post
+
+Digite o número.
+```
+
+AGUARDE. Salve como `editorial_cta_tipo` (`ManyChat`, `Seguir`, `Engajar` ou `Salvar`). Mostre micro-resumo.
+
 ### 2.4. Tom da copy
 
 Pergunta única (sem desdobrar em 2 turnos):
@@ -284,9 +377,42 @@ Digite o número.
 
 AGUARDE. Se `1`, salve `tom_fixo = LIVRE`. Senão, salve o nome do tom em `tom_fixo`. Mostre micro-resumo.
 
+**Se `estilo_carrossel == 8` (Curiosidade), use ESTA versão da pergunta de tom no lugar da acima** (os tons são os do prompt de Curiosidade):
+
+```
+Pergunta {N}. Tom da copy
+
+Qual tom você quer no carrossel de Curiosidade?
+
+1. Variar a cada execução (o Claude escolhe o melhor para o tema do dia)
+2. Enérgico (motivação, ritmo rápido, frases curtas)
+3. Polêmico (provocador, defende uma tese forte)
+4. Engraçado (irônico, leve, observa o absurdo)
+5. Reflexivo (pausado, filosófico)
+6. Didático (explicador, professor)
+7. Jornalístico (apurado, sóbrio, foco no fato)
+8. Confessional (primeira pessoa, vulnerável)
+
+Para a maioria, recomendo opção 1 (variar).
+
+Digite o número.
+```
+
+AGUARDE. Se `1`, salve `tom_fixo = LIVRE`. Senão, salve o nome do tom (Enérgico, Polêmico, Engraçado, Reflexivo, Didático, Jornalístico ou Confessional) em `tom_fixo`. Mostre micro-resumo.
+
+> **Editorial (estilo 9).** Pule esta pergunta de tom. Editorial não usa tom variável (o tom de especialista/newsletter é parte do estilo).
+
 ---
 
 ## Passo 3. Modo de geração de tema
+
+> **Clássicos migrados (estilos 1 a 6: Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta).** Pule o Passo 3 inteiro. Cada um usa o respectivo `prompt-{estilo}-routine.md` (verbatim), que implementa "aleatório" internamente (escolhe um ângulo novo a cada execução, evitando repetir temas anteriores). Não existe mais modo FIXO para estes estilos. Salve `modo_geracao = AUTO_VERBATIM`. Vá direto para o Passo 4.
+
+> **Curiosidade (estilo 8).** Pule o Passo 3 inteiro. A Curiosidade agendada sempre busca a curiosidade na web e escolhe o tema sozinha a cada execução, não existe modo FIXO. O `modo_geracao` já foi definido como `AUTO_WEB` no Passo 1.2. Vá direto para o Passo 4.
+
+> **Editorial (estilo 9).** Pule o Passo 3 inteiro. O Editorial agendado sempre gera 10 ideias internamente e escolhe sozinho a mais forte a cada execução, não existe modo FIXO. O `modo_geracao` já foi definido como `AUTO_INTERNAL` no Passo 1.3. Vá direto para o Passo 4.
+
+> **TODOS OS ESTILOS ATUAIS PULAM O PASSO 3.** A pergunta abaixo (ALEATORIO vs FIXO) é seção legada do modelo leve e não é mais invocada por nenhum estilo do menu atual. Mantida para referência histórica.
 
 ```
 Pergunta {N}. Tema dos slides
@@ -312,7 +438,7 @@ Pergunta {N}.1. Tema do slide 1
 
 Lead obrigatório do estilo "{Estilo}": {lead_do_estilo}.
 
-(ex para Nunca: "Nunca corte carboidrato no jantar")
+(ex para Sempre: "Sempre coma proteína no café da manhã")
 
 Digite o título do slide 1.
 ```
@@ -477,6 +603,8 @@ Cada vez que rodar, a tarefa vai gerar um carrossel de Instagram no estilo **{Es
 
 {se modo == ALEATORIO} O Claude vai criar um ângulo novo a cada execução, baseado nas Urgências Ocultas e Decorados do seu produto. {fim}
 {se modo == FIXO} Os 5 temas dos slides ficam travados nos títulos que você definiu. Só a legenda e os prompts visuais mudam a cada execução. {fim}
+{se Curiosidade} A cada execução, a tarefa busca curiosidades atemporais do seu nicho na web, escolhe sozinha a mais forte e monta um carrossel de 7 a 9 slides no formato editorial (capa com o fato, narrativa de revista, CTA fixo de seguir o perfil). {fim}
+{se Editorial} A cada execução, a tarefa gera 10 ideias editoriais (notícia real, polêmica, conta maluca, pesquisa, comparação) para o público "{editorial_publico}", escolhe sozinha a mais forte e entrega o texto dos 6 slides + legenda + o prompt único pra colar no ChatGPT. CTA do slide 6: {editorial_cta_tipo}. {fim}
 {se tom_fixo == LIVRE} O tom vai variar conforme o tema escolhido em cada execução. {fim}
 {se tom_fixo != LIVRE} O tom fica travado em **{tom_fixo}** em todas as execuções. {fim}
 
@@ -499,17 +627,35 @@ Digite o número.
 
 ## Passo 6. Montar prompt da tarefa
 
-Carregue `references/prompts-routine.md` e monte o prompt final concatenando:
+**Se `estilo_carrossel == 8` (Curiosidade):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-curiosidade-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os placeholders: `{{HANDLE}}` → `handle`, `{{NICHO_PRODUTO}}` → `nicho_produto`, `{{TOM}}` → nome do tom OU `LIVRE`, `{{DATA_HOJE_REF}}` → `[calcule a data de hoje no início da execução]`. Pule o resto deste Passo 6 (o Bloco A/B/C/D não se aplica à Curiosidade) e siga para o Passo 7.
+
+**Se `estilo_carrossel == 9` (Editorial):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-editorial-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os placeholders: `{{HANDLE}}` → `handle`, `{{NICHO_PRODUTO}}` → `nicho_produto`, `{{PUBLICO}}` → `editorial_publico`, `{{CTA_TIPO}}` → `editorial_cta_tipo`, `{{DATA_HOJE_REF}}` → `[calcule a data de hoje no início da execução]`. Pule o resto deste Passo 6 (o Bloco A/B/C/D não se aplica ao Editorial) e siga para o Passo 7.
+
+**Se `estilo_carrossel == 1` (Nunca):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-nunca-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os placeholders: `{{HANDLE}}` → `handle`, `{{NICHO_PRODUTO}}` → `nicho_produto`, `{{CORES_MARCA}}` → `cores_marca` (ou `DEFAULT` se o aluno não respondeu), `{{TOM_FIXO}}` → nome do tom OU `LIVRE`, `{{ESTILO_DESIGN}}` → `estilo_design`, `{{DATA_HOJE_REF}}` → `[calcule a data de hoje no início da execução]`. Pule o resto deste Passo 6 (o Bloco A/B/C/D não se aplica ao Nunca migrado) e siga para o Passo 7.
+
+**Se `estilo_carrossel == 2` (Sempre):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-sempre-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os placeholders: `{{HANDLE}}` → `handle`, `{{NICHO_PRODUTO}}` → `nicho_produto`, `{{CORES_MARCA}}` → `cores_marca` (ou `DEFAULT`), `{{TOM_FIXO}}` → nome do tom OU `LIVRE`, `{{ESTILO_DESIGN}}` → `estilo_design`, `{{DATA_HOJE_REF}}` → `[calcule a data de hoje no início da execução]`. Pule o resto deste Passo 6 e siga para o Passo 7.
+
+**Se `estilo_carrossel == 3` (Odeio):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-odeio-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os 6 placeholders padrão (`{{HANDLE}}`, `{{NICHO_PRODUTO}}`, `{{CORES_MARCA}}`, `{{TOM_FIXO}}`, `{{ESTILO_DESIGN}}`, `{{DATA_HOJE_REF}}`). Pule o resto deste Passo 6 e siga para o Passo 7.
+
+**Se `estilo_carrossel == 4` (Erros):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-erros-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os 7 placeholders: os 6 padrão (`{{HANDLE}}`, `{{NICHO_PRODUTO}}`, `{{CORES_MARCA}}`, `{{TOM_FIXO}}`, `{{ESTILO_DESIGN}}`, `{{DATA_HOJE_REF}}`) **+ `{{DESEJO}}` → `desejo_publico`** (pergunta extra do Erros). Pule o resto deste Passo 6 e siga para o Passo 7.
+
+**Se `estilo_carrossel == 5` (Amo):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-amo-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os 6 placeholders padrão (`{{HANDLE}}`, `{{NICHO_PRODUTO}}`, `{{CORES_MARCA}}`, `{{TOM_FIXO}}`, `{{ESTILO_DESIGN}}`, `{{DATA_HOJE_REF}}`). Pule o resto deste Passo 6 e siga para o Passo 7.
+
+**Se `estilo_carrossel == 6` (Ninguém Conta):** NÃO use o `prompts-routine.md`. Carregue `references/prompt-ninguem-conta-routine.md` inteiro e use o bloco "Prompt final injetado na tarefa programada" dele como prompt da routine, substituindo os 7 placeholders: os 6 padrão (`{{HANDLE}}`, `{{NICHO_PRODUTO}}`, `{{CORES_MARCA}}`, `{{TOM_FIXO}}`, `{{ESTILO_DESIGN}}`, `{{DATA_HOJE_REF}}`) **+ `{{OBJETIVO}}` → `objetivo_publico`** (pergunta extra do Ninguém Conta). Pule o resto deste Passo 6 e siga para o Passo 7.
+
+> **SEÇÃO LEGADA.** O bloco abaixo (`prompts-routine.md` com Bloco A/B/C/D + lista de placeholders) NÃO é mais invocado por nenhum estilo após a migração dos 6 clássicos. Mantida apenas como referência histórica do modelo leve. Se um estilo futuro precisar do padrão Bloco A/B/C/D, ele pode reutilizar este caminho.
+
+Para referência (sem aplicação ativa hoje): Carregue `references/prompts-routine.md` e monte o prompt final concatenando:
 
 - **Bloco A. Cabeçalho** (sempre)
 - **Bloco B-{Estilo}** (específico do estilo, com o critério central e estrutura dos slides)
 - **Bloco C-ALEATORIO** ou **Bloco C-FIXO** conforme `modo_geracao`
 - **Bloco D. Output** (sempre): formato esperado, salvamento, formato do arquivo consolidado
 
-Substitua placeholders:
+Placeholders padrão do modelo leve:
 - `{{HANDLE}}` → `handle`
 - `{{NICHO_PRODUTO}}` → `nicho_produto`
-- `{{ESTILO}}` → nome do estilo (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta)
+- `{{ESTILO}}` → nome do estilo
 - `{{TOM_FIXO}}` → nome do tom OU `LIVRE`
 - `{{DESEJO}}` → `desejo_publico` (se Erros)
 - `{{OBJETIVO}}` → `objetivo_publico` (se Ninguém Conta)

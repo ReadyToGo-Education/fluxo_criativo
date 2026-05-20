@@ -46,6 +46,16 @@
 
 ---
 
+## Criativos Estáticos (/criativo-estatico)
+
+| Operação | Tempo estimado | Unidade |
+|----------|----------------|---------|
+| Gerar lista de ideias do criativo (10, 15 ou 20 itens) | cerca de 60 segundos | segundos |
+| Gerar o criativo (título, legenda e prompts) | cerca de 30 segundos | segundos |
+| Gerar a imagem do criativo via API (Feed ou Stories image-to-image) | 2 a 3 minutos | minutos |
+
+---
+
 ## Painel e Scripts
 
 | Operação | Tempo estimado | Unidade |
