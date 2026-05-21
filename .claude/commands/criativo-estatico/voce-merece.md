@@ -1,6 +1,6 @@
 # Você Merece. Sub-skill do `/criativo-estatico`
 
-Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 22 (Você Merece). Mostra uma pessoa vivendo o sucesso ou resultado que o produto promete, com título "Você merece [conquista específica do nicho]", 3 desejos reais do público e CTA. Gera 10 ideias de "Você Merece", o aluno escolhe uma, e a sub-skill entrega título, legenda longa, prompt de Feed pro ChatGPT, prompt de animação pro Freepik e, ao final, pergunta se quer Stories também.
+Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 22 (Você Merece). Mostra uma pessoa vivendo o sucesso ou resultado que o produto promete, com título "Você merece [conquista específica do nicho]", 3 desejos reais do público e CTA. Gera 10 ideias de "Você Merece", o aluno escolhe uma, e a sub-skill entrega título, legenda longa, prompt de Feed pro ChatGPT, prompt de animação pro Freepik e o prompt no formato Stories (9:16) já junto, entregue de uma vez.
 
 **Por que esse formato funciona:**
 A foto parece um frame de TikTok ou Reels pausado, não anúncio. A pessoa já tá vivendo o resultado, ativando projeção positiva imediata. Os 3 desejos com tracinho são coisas concretas que o público quer, gerando identificação direta. O título nominal e o CTA amarelo no padrão nativo de TikTok criam um meme emocional de conquista que é compartilhável pela identificação com o desejo.
@@ -237,15 +237,15 @@ REGRA CRÍTICA: os textos na imagem (título, 3 desejos e CTA) são ESTÁTICOS. 
 MÚSICA DE FUNDO SUGERIDA: [MÚSICA EMOCIONAL/INSPIRACIONAL RECONHECÍVEL que amplifique o sentimento de conquista e merecimento.]
 ````
 
-Se o aluno responder que sim, entregue o prompt de Stories abaixo. Esse é fixo, não precisa preencher placeholders.
+O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma pessoa, mesma roupa, mesmo objeto, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
+
+Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
 
 ````
-Agora cria a exata mesma foto, mesma pessoa, mesma roupa, mesma expressão, mesmo objeto, mesmos textos, só diagramada pro formato Stories.
-
-Os textos mantêm a mesma posição relativa (título no topo acima do rosto, 3 desejos no centro-inferior, CTA na base). A foto pode mostrar mais do cenário verticalmente.
-
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
+
+O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
 ### 5. Apresentação e aprovação
 
@@ -350,9 +350,9 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** e espere a arte ser gerada.
-3. Pegue a imagem gerada e cole no Freepik junto com o **Prompt de Animação** pra animar (mesmo prompt serve pro Feed e pro Stories).
-4. Se gerou também o **Prompt Stories**, mande "ok" no chat depois do Feed e cole o Stories pra gerar a versão vertical da mesma arte.
+2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
+3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+4. Pegue qualquer uma das imagens (Feed ou Stories) e cole no Freepik junto com o **Prompt de Animação** pra animar. O mesmo prompt serve pro Feed e pro Stories.
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -411,9 +411,8 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed do arquivo salvo.
-3. Quando a arte de Feed estiver pronta, mande "ok".
-4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
+2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
+3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:

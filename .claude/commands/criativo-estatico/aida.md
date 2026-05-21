@@ -423,28 +423,42 @@ Conteúdo do briefing:
 - Cena escolhida (descrição em português)
 - Layout em tópicos (zonas, fontes, cores)
 - Texto escolhido (kicker, headline, apoio, instrução)
-- Prompt final consolidado em inglês em bloco de código
+- Prompts finais consolidados em inglês, um por formato (Feed 4:5, Quadrado 1:1, Stories 9:16), cada um em bloco de código
 
 O número do criativo é sequencial dentro da pasta. Verifique os arquivos `criativo-aida-*.md` existentes antes de numerar.
 
 #### Modo ChatGPT (escolha 1)
 
+No caminho grátis, entregue os TRÊS formatos de uma vez. Cada um é o prompt consolidado completo, mudando apenas a linha de dimensões (a primeira linha) e o aspect ratio final. Mesma cena, mesmo layout, mesmo texto, mesma hierarquia. O aluno cola o que quiser, cada prompt gera a arte sozinho, sem depender dos outros.
+
+Monte os três a partir do prompt consolidado da seção 6:
+- Feed retrato (4:5): primeira linha "Generate a complete Instagram feed ad (1080x1350px)." e, onde aparecer ratio, use 4:5.
+- Quadrado (1:1): primeira linha "Generate a complete Instagram square ad (1080x1080px)." e ratio 1:1.
+- Stories e Reels (9:16): primeira linha "Generate a complete Instagram story and reels ad (1080x1920px)." e ratio 9:16. Mantenha a mesma cena e o mesmo texto, só deixe um respiro maior no rodapé como safe zone do Instagram.
+
 Apresente:
 
 ```
-Pronto. Cole esse prompt no seu gerador de imagem:
+Pronto. Aqui estão os 3 formatos. Cole o que você quiser no seu gerador de imagem. Cada prompt gera a arte sozinho.
 
-[PROMPT CONSOLIDADO EM INGLES]
+🎨 FORMATO FEED (4:5, 1080x1350)
+[PROMPT CONSOLIDADO, formato Feed]
 
-Adaptar para sua ferramenta:
+⬜ FORMATO QUADRADO (1:1, 1080x1080)
+[PROMPT CONSOLIDADO, formato Quadrado]
+
+📱 FORMATO STORIES (9:16, 1080x1920)
+[PROMPT CONSOLIDADO, formato Stories]
+
+Adaptar para sua ferramenta (vale pros três, troque o ratio conforme o formato):
 - ChatGPT / Gemini: cole como está, sem alteração
-- Midjourney: adicione ao final: --ar [ratio] --v 6.1 --style raw --s 250 --no text, faces, watermark
-- Ideogram: adicione ao final: Style: Realistic, Aspect Ratio: [ratio]
-
-Antes de entregar este bloco ao aluno, substitua `[ratio]` pelo valor real do formato escolhido na Entrevista: feed retrato = 4:5, quadrado = 1:1, stories ou reels = 9:16. O placeholder `[ratio]` não pode aparecer literal no texto entregue.
+- Midjourney: adicione ao final: --ar [ratio do formato] --v 6.1 --style raw --s 250 --no text, faces, watermark
+- Ideogram: adicione ao final: Style: Realistic, Aspect Ratio: [ratio do formato]
 
 Briefing salvo em meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.md
 ```
+
+Substitua os placeholders pelos prompts reais de cada formato. Nenhum colchete pode aparecer literal no texto entregue ao aluno.
 
 #### Modo API (escolha 2)
 

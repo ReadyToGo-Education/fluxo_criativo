@@ -222,13 +222,15 @@ IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story compo
 
 #### D) Prompt pro ChatGPT (formato Stories)
 
-Esse é fixo. Não precisa preencher placeholders.
+O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma pessoa, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
+
+Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
 
 ````
-Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, só diagramada pro formato Stories.
-
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
+
+O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
 ### 4. Auto-revisão obrigatória
 
@@ -331,9 +333,8 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** e espere a arte ser gerada.
-3. Quando estiver pronto, mande "ok" no chat.
-4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
+3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
 
 ## Banco completo (as 10 headlines geradas nesta sessão)
 
@@ -392,9 +393,8 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed do arquivo salvo.
-3. Quando a arte de Feed estiver pronta, mande "ok".
-4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
+2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
+3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:

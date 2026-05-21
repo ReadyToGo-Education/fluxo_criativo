@@ -356,19 +356,17 @@ PROIBIDO usar travessão (— ou –). Use vírgula ou ponto final.
 IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story composition. Exact size reference: 1080x1350.
 ````
 
-Pare e espere a resposta.
-
 #### C) Prompt de Stories (9:16)
 
-Se o usuário disser sim, entregue o prompt de Stories. Esse é fixo, não precisa preencher placeholders.
+O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma arte, mesmos personagens, mesmos cenários, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
+
+Para montar: copie o texto inteiro do Prompt de Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
 
 ````
-Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, mesmos personagens, mesmos cenários, só diagramada pro formato Stories.
-
-O grid 2x2 pode ter painéis ligeiramente mais altos. O título pode ter fonte um pouco maior. O CTA mantém a mesma posição na base. Manter os mesmos personagens, mesmas expressões, mesmos balões.
-
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
+
+O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
 #### D) Prompt de Animação (Freepik)
 
@@ -399,7 +397,7 @@ CRITICAL CONSTRAINTS:
 
 Depois de entregar os prompts, diga pro usuário:
 
-1. Colar o primeiro prompt no ChatGPT pra gerar o Feed, mandar "ok", e colar o segundo pra gerar o Stories.
+1. Colar o Prompt Feed no ChatGPT pra gerar a arte no formato de feed (4:5), e colar o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
 2. Baixar a imagem gerada (Feed ou Stories, ou as duas).
 3. Subir a imagem no Freepik (ferramenta de image-to-video) e colar o terceiro texto como prompt de animação. O Freepik vai entregar um vídeo curto em loop com a arte animada de forma sutil, sem mexer em texto, balões, título nem CTA.
 
@@ -517,11 +515,10 @@ CTA: [texto] ↓
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** e espere a arte ser gerada.
-3. Quando estiver pronto, mande "ok" no chat.
-4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
-5. Baixe a imagem gerada (Feed ou Stories, ou as duas).
-6. Suba a imagem no Freepik (ferramenta de image-to-video) e cole o **Prompt Freepik** como prompt de animação. O Freepik vai entregar um vídeo curto em loop com a arte animada de forma sutil, sem mexer em texto, balões, título nem CTA.
+2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
+3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+4. Baixe a imagem gerada (Feed ou Stories, ou as duas).
+5. Suba a imagem no Freepik (ferramenta de image-to-video) e cole o **Prompt Freepik** como prompt de animação. O Freepik vai entregar um vídeo curto em loop com a arte animada de forma sutil, sem mexer em texto, balões, título nem CTA.
 
 ## Banco completo (as 10 objeções e as 10 ideias geradas nesta sessão)
 
@@ -589,9 +586,8 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed do arquivo salvo.
-3. Quando a arte de Feed estiver pronta, mande "ok".
-4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
+2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
+3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:

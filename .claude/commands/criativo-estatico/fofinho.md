@@ -246,15 +246,19 @@ REGRA CRÍTICA: os textos na imagem (título, promessas e CTA) são ESTÁTICOS. 
 MÚSICA DE FUNDO SUGERIDA: [MÚSICA DOCE E ACOLHEDORA — preferencialmente versão music box/caixinha de música de uma música conhecida. Tom delicado que amplifique a fofura.]
 ````
 
-Se o aluno disser sim, entregue o template fixo abaixo:
+#### D) Prompt de Stories (9:16) pro ChatGPT
+
+Entregue junto com o Prompt Feed, automaticamente, sem perguntar antes.
+
+O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
+
+Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
 
 ````
-Agora cria a exata mesma ilustração 3D, mesmos personagens, mesmas texturas, mesma iluminação, mesmos textos, só diagramada pro formato Stories.
-
-O personagem pode ocupar mais espaço vertical. Os textos mantêm a mesma posição relativa (título no topo, promessas no centro-inferior, CTA na base).
-
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
+
+O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
 ### Auto-revisão obrigatória
 
@@ -281,6 +285,9 @@ CTA: Clique aqui para [ação] + [produto/nicho] 👉
 
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories completo, dentro de bloco de código]
 
 🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
 [prompt de animação preenchido, dentro de bloco de código]
@@ -362,10 +369,9 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** e espere a arte ser gerada.
-3. Quando estiver pronto, mande "ok" no chat.
-4. (Se gerou o Stories) Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
-5. Depois, abra o Freepik (ferramenta de animação) e cole o **Prompt de Animação** sobre a imagem gerada. O mesmo prompt serve pros dois formatos (Feed e Stories).
+2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
+3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+4. Depois, abra o Freepik (ferramenta de animação) e cole o **Prompt de Animação** sobre a imagem gerada. O mesmo prompt serve pros dois formatos (Feed e Stories).
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -424,9 +430,8 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed do arquivo salvo.
-3. Quando a arte de Feed estiver pronta, mande "ok".
-4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
+2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
+3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:
