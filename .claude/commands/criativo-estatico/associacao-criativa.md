@@ -323,9 +323,6 @@ Pronto. Aqui está o seu criativo Associação Criativa:
 Objeto: [objeto]
 Ponte: [a sacada]
 
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada, mínimo 3 linhas]
-
 🎯 DESENVOLVIMENTO (vai dentro da arte)
 TÍTULO: [pergunta provocativa]
 01. [frase de impacto 1]
@@ -342,6 +339,9 @@ CTA: [texto do CTA] →
 
 🎬 PROMPT PRO FREEPIK, ANIMAÇÃO
 [prompt Freepik, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada, mínimo 3 linhas]
 
 ---
 1. Aprovar e salvar

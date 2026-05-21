@@ -254,9 +254,44 @@ Antes de mostrar ao aluno: aplicar a rotina de auto-revisão de copy do CLAUDE.m
 
 O texto da arte (título "SEMPRE [faça isso]", explicação de 3 linhas e CTA), a descrição de movimento da animação e a sugestão de música NÃO passam pela revisora (são conteúdo da peça com tom específico de meme), mas devem respeitar Light Copy: sem travessão, sem exclamação, e a dica precisa ser surpreendente e específica.
 
+### Apresentação e aprovação
+
+Apresente tudo junto:
+
+```
+Pronto. Aqui está o seu criativo Sempre:
+
+📌 IDEIA ESCOLHIDA (nº {numero_ideia} das 10)
+CENA: [cena]
+TÍTULO: "SEMPRE [dica surpreendente]."
+EXPLICAÇÃO: [3 linhas]
+CTA: "Clique aqui para [promessa] + [produto/nicho]" 👉
+
+🎨 PROMPT PRO CHATGPT, FORMATO FEED
+[prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories, dentro de bloco de código]
+
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
+[prompt de animação preenchido, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
+---
+1. Aprovar e salvar
+2. Quero ajustar algo
+3. Voltar e escolher outra ideia (das 10)
+```
+
+Se escolher 2, perguntar o que ajustar (legenda, cena, explicação, CTA, movimento da animação ou música) e refazer apenas a parte indicada.
+
+Se escolher 3, apresentar a lista das 10 ideias novamente e perguntar o novo número.
+
 ### Gerar e salvar
 
-Após a aprovação do Passo 3 e entrega do Passo 4, pergunte como o aluno quer gerar a imagem:
+Após a aprovação, pergunte como o aluno quer gerar a imagem:
 
 ```
 Como você quer gerar a imagem?

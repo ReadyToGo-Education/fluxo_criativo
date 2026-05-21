@@ -261,17 +261,17 @@ TÍTULO: "Você merece [conquista específica do nicho]."
 — [Desejo 3]
 CTA: Clique aqui para [ação] + [produto/nicho] 👉
 
-📝 LEGENDA PRO INSTAGRAM
-[legenda longa gerada]
-
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories, dentro de bloco de código]
 
 🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
 [prompt de animação preenchido, dentro de bloco de código]
 
-📱 PROMPT PRO CHATGPT, FORMATO STORIES
-[prompt Stories, dentro de bloco de código]
+📝 LEGENDA PRO INSTAGRAM
+[legenda longa gerada]
 
 ---
 1. Aprovar e salvar

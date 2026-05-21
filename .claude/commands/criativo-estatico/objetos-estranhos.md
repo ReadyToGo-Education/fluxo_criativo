@@ -382,17 +382,17 @@ TEXTO NA IMAGEM:
 "[consequência]"
 CTA: "[CTA leve]"
 
-📝 LEGENDA LONGA PRO INSTAGRAM
-[legenda gerada com lead, descoberta, erro, virada e CTA]
-
 🎨 PROMPT PRO CHATGPT, FORMATO FEED (4:5)
 [prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES (9:16)
+[prompt Stories completo, dentro de bloco de código]
 
 🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
 [prompt de animação preenchido, dentro de bloco de código]
 
-📱 PROMPT PRO CHATGPT, FORMATO STORIES (9:16)
-[prompt Stories completo, dentro de bloco de código]
+📝 LEGENDA LONGA PRO INSTAGRAM
+[legenda gerada com lead, descoberta, erro, virada e CTA]
 
 ---
 1. Aprovar e salvar

@@ -280,9 +280,6 @@ TÍTULO: [título]
 — [Promessa 3]
 CTA: Clique aqui para [ação] + [produto/nicho] 👉
 
-📝 LEGENDA PRO INSTAGRAM
-[legenda longa gerada]
-
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
@@ -291,6 +288,9 @@ CTA: Clique aqui para [ação] + [produto/nicho] 👉
 
 🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
 [prompt de animação preenchido, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda longa gerada]
 
 ---
 1. Aprovar e salvar

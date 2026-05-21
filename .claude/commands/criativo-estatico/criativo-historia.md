@@ -413,9 +413,27 @@ As falas dos 4 quadros, o título do criativo (que vai dentro do prompt) e o tex
 
 ## Aprovação final e salvamento
 
-Após entregar os prompts, pergunte:
+Apresente tudo junto:
 
 ```
+Pronto. Aqui está o seu Criativo História:
+
+📌 ROTEIRO ESCOLHIDO (nº {numero_ideia} das 10, objeção nº {numero_objecao})
+[resumo do diálogo dos 4 quadros]
+
+🎨 PROMPT PRO CHATGPT, FORMATO FEED
+[prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories, dentro de bloco de código]
+
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
+[prompt de animação preenchido, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
+---
 1. Aprovar e salvar
 2. Quero ajustar algo
 3. Voltar e escolher outra ideia (das 10) ou outra objeção

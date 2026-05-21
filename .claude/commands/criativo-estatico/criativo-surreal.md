@@ -215,14 +215,14 @@ Pronto. Aqui está o seu Criativo Surreal:
 📌 TÍTULO DO ANÚNCIO (headline)
 [headline gerado]
 
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada terminando em "Link na bio"]
-
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
 📱 PROMPT PRO CHATGPT, FORMATO STORIES
 [prompt Stories, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada terminando em "Link na bio"]
 
 ---
 1. Aprovar e salvar

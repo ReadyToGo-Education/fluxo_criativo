@@ -248,11 +248,32 @@ IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and S
 
 O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
-### 5. Aprovação e ajustes
+### 5. Apresentação e aprovação
 
-Após apresentar Legenda + Prompt Feed + Prompt de Animação (e Stories se pedido), pergunte:
+Apresente tudo junto:
 
 ```
+Pronto. Aqui está o seu criativo O Desespero de Quem:
+
+📌 IDEIA ESCOLHIDA (nº {numero_ideia} das 10)
+CENA: [cena]
+TÍTULO: "O DESESPERO DE QUEM:"
+DORES: [dor 1] / [dor 2] / [dor 3]
+CTA: "Clique aqui para [ação] + [produto/nicho]" 👉
+
+🎨 PROMPT PRO CHATGPT, FORMATO FEED
+[prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories, dentro de bloco de código]
+
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
+[prompt de animação preenchido, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
+---
 1. Aprovar e salvar
 2. Quero ajustar algo
 3. Voltar e escolher outra ideia (das 10)

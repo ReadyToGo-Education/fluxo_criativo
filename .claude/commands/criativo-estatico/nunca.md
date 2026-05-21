@@ -294,17 +294,17 @@ TÍTULO: "NUNCA [faça isso]."
 EXPLICAÇÃO: [3 linhas]
 CTA: "Clique aqui para [promessa] + [produto/nicho]" 👉
 
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
-
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories, dentro de bloco de código]
 
 🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
 [prompt de animação preenchido, dentro de bloco de código]
 
-📱 PROMPT PRO CHATGPT, FORMATO STORIES
-[prompt Stories, dentro de bloco de código]
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
 
 ---
 1. Aprovar e salvar

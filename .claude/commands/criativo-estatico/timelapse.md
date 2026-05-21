@@ -239,9 +239,30 @@ A cena, o título "COMECE HOJE", os 3 passos e o CTA da arte NÃO passam pela re
 
 ### Aprovação e salvamento
 
-Apresente a entrega final e pergunte:
+Apresente tudo junto:
 
 ```
+Pronto. Aqui está o seu criativo Timelapse:
+
+📌 IDEIA ESCOLHIDA (nº {numero_ideia} das 10)
+CENA: [cena, ângulo aéreo]
+TÍTULO: "COMECE HOJE" (ou variação com o nicho)
+3 PASSOS: [passo 1] / [passo 2] / [passo 3]
+CTA: [CTA]
+
+🎨 PROMPT PRO CHATGPT, FORMATO FEED
+[prompt Feed preenchido, dentro de bloco de código]
+
+📱 PROMPT PRO CHATGPT, FORMATO STORIES
+[prompt Stories, dentro de bloco de código]
+
+🎬 PROMPT DE ANIMAÇÃO TIMELAPSE PRO FREEPIK
+[prompt de animação preenchido, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
+---
 1. Aprovar e salvar
 2. Quero ajustar algo
 3. Voltar e escolher outra ideia (das 10)

@@ -357,14 +357,14 @@ Pronto. Aqui está o seu criativo ASMR/Sensação:
 📌 TÍTULO DO ANÚNCIO
 [título gerado]
 
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
-
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
 📱 PROMPT PRO CHATGPT, FORMATO STORIES
 [prompt Stories, dentro de bloco de código]
+
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
 
 ---
 1. Aprovar e salvar
