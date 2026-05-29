@@ -302,7 +302,7 @@ py -3 scripts/gerar-banner-estatico.py \
   --skip-html
 ```
 
-Provider: **OpenRouter obrigatório** em todos os modos. Freepik não é usado neste fluxo.
+Provider: **OpenRouter obrigatório** em todos os modos. Freepik (Magnific) não é usado neste fluxo.
 
 ---
 
@@ -325,7 +325,7 @@ Se **2**: rodar novamente com o mesmo config (o modelo gera variação natural).
 
 ## REGRAS INVIOLÁVEIS
 
-- Provider obrigatório: **sempre OpenRouter**. Freepik não é usado em nenhuma hipótese neste fluxo
+- Provider obrigatório: **sempre OpenRouter**. Freepik (Magnific) não é usado em nenhuma hipótese neste fluxo
 - LAYOUT REFERÊNCIA sempre salvo em `REFERENCIA/` dentro da pasta da sessão
 - PERSONAGEM sempre salvo em `REFERENCIA/personagem.png`
 - Nunca chamar "referência" sem qualificador: use sempre LAYOUT REFERÊNCIA ou PERSONAGEM

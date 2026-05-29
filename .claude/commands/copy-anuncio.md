@@ -473,7 +473,7 @@ Salve em: `meus-produtos/{ativo}/entregas/criativos/img-variacao-[N]-[produto].p
 **Se não existir**, informe como configurar e ofereça a opção de prompt como alternativa imediata:
 
 ```
-Não encontrei a chave do Freepik no .env. Você tem duas opções:
+Não encontrei a chave do Freepik (Magnific) no .env. Você tem duas opções:
 
 1. Configurar agora (leva 2 minutos) — eu te explico o passo a passo
 2. Gerar os prompts para você colar em outra IA
@@ -483,7 +483,7 @@ Digite o número:
 
 Se escolher opção 2: siga o fluxo da **Opção 2 — Gerar prompts para colar em IA** acima (perguntar qual IA antes de gerar).
 
-**Como configurar o Freepik AI (gratuito para começar):**
+**Como configurar o Freepik (Magnific) AI (gratuito para começar):**
 1. Acesse freepik.com e crie uma conta gratuita (ou faça login)
 2. Vá em: perfil > API Keys > Create API Key
 3. Copie a chave gerada

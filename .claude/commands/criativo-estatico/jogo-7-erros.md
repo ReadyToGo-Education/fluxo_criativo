@@ -238,15 +238,28 @@ Construa a frase complementar no mesmo padrão pro nicho do produto ativo: come�
 
 #### D) Prompt pro ChatGPT (formato Stories)
 
-O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS os blocos de formato. Mesma cena, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed e troque toda menção de formato 4:5 por 9:16. Ou seja, o bloco de abertura `IMPORTANTE, FORMATO E ASPECT RATIO (LER PRIMEIRO)` e o bloco final `REFORÇO DO FORMATO (IMPORTANTE)` passam a indicar Stories vertical (1080x1920, 9:16) no lugar do feed 4:5, e o bloco final fica assim:
+Esse é fixo. Não precisa preencher placeholders.
 
 ````
+Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, só diagramada pro formato Stories.
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
 
-O resultado é um prompt Stories completo, com todo o texto do Feed, todos os 7 erros e o reforço de formato apontando para 9:16.
+#### E) Prompt de Animação pro Freepik (Magnific)
+
+Texto pronto pra colar na ferramenta de imagem-pra-vídeo do Freepik (Magnific). Serve tanto pro Feed quanto pro Stories. **Atenção a esse formato:** o gimmick do "Jogo dos 7 Erros" depende do espectador pausar pra contar. A animação tem que ser MUITO SUTIL, no ambiente, sem mexer nos 7 erros nem distrair o olhar do exercício.
+
+````
+Anima essa imagem com movimento AMBIENTAL EXTREMAMENTE SUTIL. APENAS detalhes secundários do fundo se mexem (luz, ar, nuvem, água, partícula). Os 7 erros embutidos na cena, o título, qualquer instrução ("Encontre os 7 erros") e o CTA ficam 100% ESTÁTICOS, não se movem em nenhum momento.
+
+MOVIMENTO DA CENA:
+Movimento ambiental quase imperceptível: leve oscilação de luz natural, partículas drifting devagar, leve respiração geral da cena (1-2% de zoom no eixo central). NADA que mexa nos 7 erros principais ou em elementos centrais do quadro. O objetivo é dar vida à imagem sem quebrar o jogo. Loop de 5-7 segundos, contemplativo, que dê tempo do espectador parar e olhar.
+
+REGRA CRÍTICA: TODOS os 7 erros embutidos, o título do jogo, qualquer texto ou instrução (incluindo "Encontre os 7 erros") e o CTA são ESTÁTICOS. Não balançam, não aparecem com animação, não se movem. Ficam fixos o tempo todo pra preservar o desafio de encontrar. Se algum dos 7 erros se mover, o jogo está quebrado.
+
+MÚSICA DE FUNDO SUGERIDA: trilha calma e contemplativa, instrumental, sem letra. Lo-fi suave, ambient atmosférico ou ASMR de fundo. Som que convide o espectador a parar e olhar com calma, não que apressie.
+````
 
 ### 4. Auto-revisão obrigatória
 
@@ -265,14 +278,17 @@ Pronto. Aqui está o seu criativo Jogo dos 7 Erros:
 📌 TÍTULO DO ANÚNCIO
 [título gerado]
 
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)
+[prompt de animação ambiental sutil, dentro de bloco de código]
+
 📱 PROMPT PRO CHATGPT, FORMATO STORIES
 [prompt Stories, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
 
 ---
 1. Aprovar e salvar
@@ -343,6 +359,12 @@ Conteúdo do arquivo:
 [prompt Feed preenchido]
 \`\`\`
 
+## Prompt de Animação pro Freepik (Magnific) (serve pro Feed e pro Stories)
+
+\`\`\`
+[prompt de animação preenchido]
+\`\`\`
+
 ## Prompt pro ChatGPT. Formato Stories (1080x1920, 9:16)
 
 \`\`\`
@@ -352,8 +374,10 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Quando estiver pronto, mande "ok" no chat.
+4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+5. Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba a imagem gerada e cole o **Prompt de Animação**. O mesmo prompt serve pro Feed e pro Stories. Nesse formato a animação é AMBIENTAL e SUTIL pra não distrair do jogo de encontrar os 7 erros.
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -412,8 +436,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:

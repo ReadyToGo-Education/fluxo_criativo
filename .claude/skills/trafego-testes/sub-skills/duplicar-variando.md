@@ -19,6 +19,36 @@ Pega uma entidade Meta Ads existente e duplica, alterando UMA dimensão. Diferen
 | `nome_sufixo` | gerado | Sufixo do nome (ex: `-25_34`) |
 | `manter_status_original` | true | Original continua rodando |
 
+## Padrão de coleta de inputs (uma pergunta por mensagem)
+
+Regra dura: **NUNCA agrupar 2+ inputs na mesma mensagem**. Reforça a regra global do CLAUDE.md ("NUNCA fazer duas perguntas na mesma mensagem"). Aluno **nunca digita ID** — sempre via nome ou listagem.
+
+### Ordem fixa
+
+1. **Qual campanha duplicar.** Pergunta neutra: "Qual campanha você quer duplicar? (digite o nome — completo ou parcial — ou peça pra eu listar)". Aceita 3 modos:
+   - **(a) Nome (total ou parcial):** `GET /act_<id>/campaigns?fields=name,status,effective_status,insights.date_preset(last_7d){spend}` → match case-insensitive `contains`. 1 match: confirma. Múltiplos: lista numerada filtrada. Zero: oferece listar todas.
+   - **(b) Listar:** mostra campanhas ACTIVE/PAUSED dos últimos 90d, numeradas com nome + status + gasto 7d.
+   - **(c) ID direto:** valida via `GET /<id>?fields=name` e confirma.
+
+   **Bloqueio:** se a conta não tem campanha, encaminhar pra `/trafego-criar-campanha` e encerrar.
+
+2. **Granularidade da duplicata.** Pergunta numerada: "Duplicar (1) a campanha inteira com todos os conjuntos, (2) só um conjunto da campanha, ou (3) só um anúncio?".
+   - Se (2) ou (3): mostrar lista numerada dos adsets/ads dentro da campanha (com nome + CPA 7d + gasto 7d) e pedir escolha.
+
+3. **`dimensao_a_alterar`** (lista numerada: idade, geo, audience, criativo, posicionamento, lance, headline).
+
+4. **`valor_novo`** específico da dimensão escolhida no passo 3. Ex: se `idade`, pergunta a nova faixa. Se `criativo` ou `headline`: rodar o **Helper: Coleta de criativos** documentado em [ab-generico.md](./ab-generico.md#helper-coleta-de-criativos-para-criativo-headline-cta) (lista da biblioteca com filtro temporal 30d default, esconde Auto_Cropped/untitled, código curto V1/I1, id/hash indentado, upload local ou ID direto como alternativas). **Não pedir image_hash ou video_id direto ao aluno.**
+
+   **Atenção ao construir o creative novo:** se o criativo escolhido tem `asset_feed_spec` (Advantage+ Creative) com múltiplos vídeos/imagens, simplificar pra `object_story_spec.video_data` ou `object_story_spec.link_data` (1 criativo só), seguindo o mesmo padrão da [Construção do payload da ab-generico](./ab-generico.md#construção-do-payload-algoritmo-genérico) (passo 2 — detecção e simplificação). Senão a duplicata vira Adv+ Creative também e contamina a comparação com o original.
+
+5. **`hipotese`** (frase: "Espero que com {valor_novo} eu consiga ___ porque ___").
+
+6. **`manter_status_original`** apenas se o aluno mencionar que quer pausar o original (default: sim).
+
+**Proibido**:
+- Pedir `entity_id`, `creative_id` ou qualquer ID Marketing API diretamente. Sempre via nome ou listagem.
+- Pular pra confirmação (`🛡️` ou preview YAML) sem ter respostas para os passos 1-5. Cada passo bloqueia o próximo.
+
 ## Endpoint
 
 ```

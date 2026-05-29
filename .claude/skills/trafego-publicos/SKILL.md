@@ -29,7 +29,24 @@ Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes
 - POST /<custom_audience_id> (atualizar audience)
 - POST /<adaccount>/custom_conversions (criar evento custom para audience)
 
-**Não passam pelo gate:** chamadas GET para leitura (insights, listagens, fields). Estado não muda.
+**Não passam pelo gate:**
+- Chamadas GET para leitura (insights, listagens, fields). Estado não muda.
+- Sub-fluxo `bases-niveis`: grava recipe local (`.md` no projeto), não faz POST na Graph API. Bastará uma **confirmação textual simples** ("Digite SIM pra gravar os 3 arquivos") antes do `Write`. O bloco 🛡️ completo não se aplica.
+
+---
+
+## 🔌 Passo 0 obrigatório (TODAS as sub-skills, antes de qualquer GET ou POST)
+
+Antes da primeira chamada à Graph API em qualquer sub-fluxo:
+
+1. **Ler `META_AUTH_MODO`** do `.env` via `grep -q "^META_AUTH_MODO=" .env` (presença, não conteúdo).
+2. **Se ausente:** acionar `/trafego-conexao` e aguardar conclusão. **Não tentar fallback nem pedir credenciais ad-hoc.**
+3. **Se `APP`:** confirmar via `grep -q` presença de `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` no `.env`. Se faltar algum, acionar `/trafego-conexao`.
+4. **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool `mcp__*__ads_*` está disponível.
+
+A sub-skill **nunca prossegue** sem essa validação passar. Aplica-se mesmo a `listar` (read-only) — sem token, GET falha sem mensagem clara, gerando frustração.
+
+Cada sub-skill (`bases-niveis`, `lookalike`, `publico-evento-padrao`, `publico-evento-personalizado`, `publico-video-view`, `customer-match`, `engajamento-ig-fb`, `listar`) tem o Passo 0 documentado no seu próprio arquivo.
 
 ---
 
@@ -42,7 +59,7 @@ Você cria e gerencia públicos (audiences) na conta de anúncios via Marketing 
 - Audiences criadas começam disponíveis (não há `PAUSED` para audience). Mas a skill **não as conecta automaticamente** a nenhum adset — só cria. Conexão é responsabilidade da skill que pediu.
 - Cache do `/trafego-insights` é invalidado a cada criação (uma audience nova muda a leitura de "audiences existentes").
 - Sempre informar tamanho estimado **antes** da confirmação. Audiência micro (< 1.000) gera alerta automático.
-- Esta skill **pode** criar evento personalizado no pixel **somente** quando o evento serve para alimentar uma audience que está sendo criada na mesma sessão. Configurar evento isolado é tarefa manual no Events Manager.
+- Esta skill **NÃO cria o Evento Personalizado no pixel** — a Meta não expõe endpoint API pra isso (eventos personalizados nascem via Event Setup Tool, snippet `fbq trackCustom` ou Conversion API, todos manuais). Esta skill apenas guia o aluno no caminho escolhido. A skill **pode** criar uma **Conversão Personalizada** apontando para o evento, mas somente como opção dentro do sub-fluxo de audience por evento personalizado.
 
 ---
 
@@ -52,11 +69,13 @@ A skill é orquestrada pelo command `/trafego-publicos`, que apresenta o menu:
 
 ```
 [1] Público por evento padrão do pixel       (PageView, ViewContent, AddToCart, IC, Purchase, Lead, ...)
-[2] Público por evento personalizado          (cria o evento + a audience)
+[2] Público por evento personalizado          (audience filtrada por evento custom do pixel, Conversão Personalizada opcional)
 [3] Público por engajamento de vídeo          (viu 25%, 50%, 75%, 100%)
 [4] Bases por nível                           (iniciante, intermediário, avançado, do produto ativo)
 [5] Lookalike                                 (1%, 2%, 5%, 10% a partir de uma custom audience)
-[6] Listar audiences existentes
+[6] Customer Match                            (upload CSV de compradores — Hotmart, Eduzz, etc.)
+[7] Engajamento Instagram/Facebook            (perfil, posts, ads, Lead Form — sem pixel)
+[8] Listar audiences existentes
 ```
 
 Cada sub-fluxo está documentado em `sub-skills/`:
@@ -65,6 +84,8 @@ Cada sub-fluxo está documentado em `sub-skills/`:
 - `publico-video-view.md`
 - `bases-niveis.md`
 - `lookalike.md`
+- `customer-match.md` (NOVO — upload CSV de base de compradores; sinal direto, gera LAL super qualificada)
+- `engajamento-ig-fb.md` (NOVO — engajamento orgânico com Page/IG/ads/Lead Form; não depende de pixel)
 - `listar.md`
 
 ---
@@ -72,12 +93,16 @@ Cada sub-fluxo está documentado em `sub-skills/`:
 ## 2. Endpoints Marketing API
 
 ```
-POST   /act_<id>/customaudiences            (custom + lookalike + video)
+POST   /act_<id>/customaudiences            (custom + lookalike + video + engagement + customer_match)
+POST   /<audience_id>/users                 (subir hashes SHA-256 — Customer Match)
 GET    /act_<id>/customaudiences            (listar)
 POST   /<pixel_id>/customconversions        (criar evento personalizado / regra)
 POST   /act_<id>/customaudiences            (com `rule` apontando para o custom event)
-GET    /act_<id>/saved_audiences            (listar saved audiences)
-GET    /<custom_audience_id>?fields=name,subtype,approximate_count,delivery_status,operation_status,description,rule
+GET    /act_<id>/saved_audiences            (listar saved audiences existentes — Meta v25 não aceita POST aqui; sub-fluxo bases-niveis grava recipe local em vez de criar)
+GET    /<custom_audience_id>?fields=name,subtype,approximate_count_lower_bound,approximate_count_upper_bound,delivery_status,operation_status,description,rule,data_source
+GET    /me/accounts                         (listar Pages — Engajamento)
+GET    /<page_id>?fields=instagram_business_account  (descobrir conta IG — Engajamento)
+GET    /<page_id>/leadgen_forms             (listar Lead Forms — Engajamento)
 ```
 
 API version: `v25.0`.
@@ -101,9 +126,9 @@ Sem essas permissões, encerrar com link para `/trafego-conexao` para regenerar 
 | **Engagement Custom (IG / Page)** | `ENGAGEMENT` (`ig_business`, `page`) | Quem engajou com perfil do Instagram ou Página do Facebook (não foco desta skill, mas suportado) |
 | **Customer File** | `CUSTOM` (upload de CSV) | Lista de emails / telefones (foge ao escopo desta skill no MVP) |
 | **Lookalike** | `LOOKALIKE` | Semelhantes a uma source audience |
-| **Saved Audience** | `SAVED_AUDIENCE` | Combinação de interesses + behaviors. Salva no Audiences. |
+| **Saved Targeting (recipe local)** | n/a (arquivo local) | Combinação de geo + idade + interesses + behaviors. **Meta v25 não aceita POST em `/saved_audiences`**, então sub-skill `bases-niveis` salva como `.md` em `meus-produtos/{produto}/trafego/publicos/`. Consumido por `/trafego-criar-campanha` via injeção de `targeting_spec` no adset. |
 
-No MVP, a skill foca em: `WEBSITE` (eventos padrão e custom), `ENGAGEMENT video`, `LOOKALIKE`, e `SAVED_AUDIENCE` (para bases por nível).
+No MVP, a skill foca em: `WEBSITE` (eventos padrão e custom), `ENGAGEMENT video`, `LOOKALIKE`, `CUSTOM` (Customer Match), e **Saved Targeting local** (para bases por nível — não cria Saved Audience nativa por limitação Meta v25).
 
 ---
 
@@ -149,7 +174,15 @@ O prefixo `[FC]` (Fluxo Criativo) deixa claro o que veio desta automação. O sl
 
 ## 6. Tamanho estimado e alertas
 
-Antes de criar, a skill consulta `approximate_count` (em audiences de website event a contagem chega ~24h após criação; em saved audiences é estimado pelo Meta na hora) e classifica:
+> ⚠️ **Campo `approximate_count` puro foi removido na Marketing API v25** — retorna `error code 100 — Tried accessing nonexisting field`. Usar a faixa `approximate_count_lower_bound` + `approximate_count_upper_bound` (que existem) ou verificar o tamanho real no Audiences Manager (Meta não expõe contagem precisa via API atualmente).
+
+Antes de criar, a skill estima a faixa de tamanho via:
+
+1. **Saúde da audience** (após criação): `delivery_status.code` + `operation_status.code`. Se `delivery_status.code == 200` → audience pronta pra uso. Códigos diferentes (300, 400, 441) indicam estados específicos (populando, erro, etc).
+2. **Faixa estimada via API**: `approximate_count_lower_bound` e `approximate_count_upper_bound` retornam um range (ex: 1100-1300) atualizado periodicamente pelo Meta. Útil pra alertar tamanhos micro/grandes.
+3. **Tamanho real**: instruir o aluno a abrir o Audiences Manager (Públicos → audience → coluna "Tamanho") quando precisar de número exato. A API v25 não expõe contagem precisa.
+
+Classificação por faixa (usando `approximate_count_lower_bound` quando disponível):
 
 | Faixa | Status | Ação |
 |---|---|---|
@@ -183,14 +216,18 @@ Para audience baseada em evento de pixel ainda sem histórico (pixel sem disparo
 
 ## 8. Output esperado
 
+O formato varia se o sub-fluxo cria audience nativa (POST na Graph API) ou recipe local (Write em arquivo `.md`):
+
+### 8.1 Audience nativa (custom, lookalike, video, customer_match, evento_padrao, evento_personalizado, engajamento_ig_fb)
+
 ```yaml
 operacao: criar_audience
-sub_fluxo: evento_padrao | evento_personalizado | video_view | bases_niveis | lookalike | listar
+sub_fluxo: evento_padrao | evento_personalizado | video_view | lookalike | customer_match | engajamento_ig_fb
 ad_account_id: act_<id>
 audiences_criadas:
   - id: <audience_id>
     nome: "[FC] PageView-loja-30d-curso-tarot"
-    subtype: WEBSITE | ENGAGEMENT | LOOKALIKE | SAVED_AUDIENCE
+    subtype: WEBSITE | ENGAGEMENT | LOOKALIKE | CUSTOM
     janela_dias: 30
     regra: { ... }                    # JSON da rule conforme Marketing API
     tamanho_estimado: 14500 | "indisponivel" | "calculando"
@@ -206,6 +243,38 @@ handoffs_sugeridos:
     skill: /trafego-criar-campanha
   - texto: "Para criar lookalike a partir dela"
     skill: /trafego-publicos opção 5
+```
+
+### 8.2 Recipe local (bases_niveis)
+
+```yaml
+operacao: gravar_recipe_targeting
+sub_fluxo: bases_niveis
+ad_account_id: n/a (recipe é local, não tem ad account associado)
+saved_targetings_criados:
+  - arquivo_local: "meus-produtos/curso-tarot/trafego/publicos/saved-targeting-iniciantes-curso-tarot.md"
+    nome_interno: "[FC] Saved-Iniciantes-curso-tarot"
+    nivel: iniciantes
+    tipo: saved_targeting_local
+    tamanho_estimado: { users_lower_bound: 3200000, users_upper_bound: 3700000 }
+    rollback_comando: "rm <arquivo_local>"
+
+  - arquivo_local: "meus-produtos/curso-tarot/trafego/publicos/saved-targeting-intermediarios-curso-tarot.md"
+    nome_interno: "[FC] Saved-Intermediarios-curso-tarot"
+    nivel: intermediarios
+    tipo: saved_targeting_local
+    rollback_comando: "rm <arquivo_local>"
+
+  - arquivo_local: "meus-produtos/curso-tarot/trafego/publicos/saved-targeting-avancados-curso-tarot.md"
+    nome_interno: "[FC] Saved-Avancados-curso-tarot"
+    nivel: avancados
+    tipo: saved_targeting_local
+    rollback_comando: "rm <arquivo_local>"
+
+handoffs_sugeridos:
+  - texto: "Para criar campanha usando uma dessas bases"
+    skill: /trafego-criar-campanha
+    frase_pronta: "usa a base {nivel} do {produto}"
 ```
 
 ---
@@ -244,6 +313,7 @@ Com: nome, ID, regra completa, janela, tamanho na criação, comando de rollback
 4. **Alerta para audience micro.** < 1.000 sempre dispara confirmação extra.
 5. **Não conecta a adset automaticamente.** Só cria. A skill que pediu é responsável por conectar.
 6. **Não deleta.** Operação de delete é manual.
+   - **Exceção `bases_niveis`:** como é recipe local (arquivo `.md`), o "delete" é `rm` do arquivo. Não toca conta Meta. Aluno pode executar diretamente sem gate.
 7. **Invalida cache** do `/trafego-insights` após criar.
 8. **Salva registro local** de toda audience criada com comando de rollback.
-9. **Evento personalizado só nesta skill** quando ele serve a uma audience da mesma sessão. Senão, instruir Events Manager manual.
+9. **Conversão Personalizada só nesta skill** (sub-fluxo evento personalizado) quando ela serve a uma audience da mesma sessão E o aluno explicitamente optou por criá-la. Criação isolada de Conversão é tarefa manual no Events Manager.

@@ -13,7 +13,7 @@ Quando voce usa o comando `/criativo-estatico`, o assistente cria imagens pronta
 
 Para isso funcionar automaticamente, voce precisa conectar uma API de geracao de imagens. E como dar ao assistente acesso a uma "impressora de imagens".
 
-**Sem a API:** o assistente gera os prompts (descricoes detalhadas da imagem) e voce copia e cola manualmente em qualquer gerador de imagem (Midjourney, Leonardo.ai, Freepik, etc.).
+**Sem a API:** o assistente gera os prompts (descricoes detalhadas da imagem) e voce copia e cola manualmente em qualquer gerador de imagem (Midjourney, Leonardo.ai, Freepik (Magnific), etc.).
 
 **Com a API:** o assistente gera a imagem automaticamente e salva na sua pasta de entregas. Pronto para subir no Meta Ads.
 
@@ -215,7 +215,7 @@ Depende de quantas imagens voce gera. Com OpenRouter, a maioria dos usuarios gas
 Sim. As imagens geradas por IA sao de uso comercial. Voce pode usar em anuncios, posts, paginas, onde quiser.
 
 **E se eu nao quiser pagar nada?**
-Sem problema. O assistente gera os prompts detalhados e voce usa qualquer ferramenta gratuita para criar a imagem: Canva, Leonardo.ai (plano free), ou o proprio site do Freepik (com limite de geracoes gratuitas). Use `/criativo-estatico` no modo "prompt" (entrega prompt consolidado em ingles, sem API) para isso.
+Sem problema. O assistente gera os prompts detalhados e voce usa qualquer ferramenta gratuita para criar a imagem: Canva, Leonardo.ai (plano free), ou o proprio site do Freepik (Magnific) (com limite de geracoes gratuitas). Use `/criativo-estatico` no modo "prompt" (entrega prompt consolidado em ingles, sem API) para isso.
 
 **Posso trocar de API depois?**
 Sim. Basta mudar a chave no arquivo `.env`. O assistente detecta automaticamente qual API esta configurada.

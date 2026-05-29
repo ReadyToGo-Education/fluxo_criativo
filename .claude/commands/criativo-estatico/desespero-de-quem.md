@@ -1,6 +1,6 @@
 # O Desespero de Quem. Sub-skill do `/criativo-estatico`
 
-Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 16 (O Desespero de Quem). Cria criativos UGC estáticos e animados onde uma pessoa vive um momento de frustração específica do nicho, com expressão exagerada de desespero, título fixo "O desespero de quem:" e 3 dores concretas do público. Gera 10 ideias, o aluno escolhe uma, e a sub-skill entrega legenda longa, prompt Feed VERBATIM e prompt de animação Freepik prontos pra colar. Stories é oferecido como entrega opcional ao final.
+Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 16 (O Desespero de Quem). Cria criativos UGC estáticos e animados onde uma pessoa vive um momento de frustração específica do nicho, com expressão exagerada de desespero, título fixo "O desespero de quem:" e 3 dores concretas do público. Gera 10 ideias, o aluno escolhe uma, e a sub-skill entrega legenda longa, prompt Feed VERBATIM e prompt de animação Freepik (Magnific) prontos pra colar. Stories é oferecido como entrega opcional ao final.
 
 **Por que esse formato funciona:**
 A foto parece frame de TikTok pausado no momento exato da derrota, não anúncio. A expressão performática é o que prende o scroll, as 3 dores específicas geram identificação imediata, e o CTA amarelo oferece a saída. É conteúdo compartilhável pela identificação com a dor antes de a pessoa perceber que é venda.
@@ -221,7 +221,7 @@ PROIBIDO usar travessão nos textos de copy (use vírgula ou ponto final). O tra
 IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story composition. Exact size reference: 1080x1350.
 ````
 
-#### C) Prompt de Animação pro Freepik
+#### C) Prompt de Animação pro Freepik (Magnific)
 
 Esse prompt serve tanto pro Feed quanto pro Stories. Preencha o movimento da cena e a música sugerida conforme a ideia escolhida.
 
@@ -236,44 +236,20 @@ REGRA CRÍTICA: os textos na imagem (título, 3 dores e CTA) são ESTÁTICOS. N�
 MÚSICA DE FUNDO SUGERIDA: [MÚSICA MEME RECONHECÍVEL que amplifique o momento de derrota/frustração. O contraste entre a dramaticidade da música e a situação cotidiana cria o humor.]
 ````
 
-Em seguida, entregue o prompt no formato Stories.
-
-O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma pessoa, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
-
+Em seguida, entregue o prompt no formato Stories:
 ````
+Agora cria a exata mesma foto, mesma pessoa, mesma roupa, mesma expressão, mesmo objeto, mesmos textos, só diagramada pro formato Stories.
+
+Os textos mantêm a mesma posição relativa (título no centro-topo, 3 dores no centro-inferior, CTA na base). A foto pode mostrar mais do cenário verticalmente.
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
 
-O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
+### 5. Aprovação e ajustes
 
-### 5. Apresentação e aprovação
-
-Apresente tudo junto:
+Após apresentar Legenda + Prompt Feed + Prompt de Animação (e Stories se pedido), pergunte:
 
 ```
-Pronto. Aqui está o seu criativo O Desespero de Quem:
-
-📌 IDEIA ESCOLHIDA (nº {numero_ideia} das 10)
-CENA: [cena]
-TÍTULO: "O DESESPERO DE QUEM:"
-DORES: [dor 1] / [dor 2] / [dor 3]
-CTA: "Clique aqui para [ação] + [produto/nicho]" 👉
-
-🎨 PROMPT PRO CHATGPT, FORMATO FEED
-[prompt Feed preenchido, dentro de bloco de código]
-
-📱 PROMPT PRO CHATGPT, FORMATO STORIES
-[prompt Stories, dentro de bloco de código]
-
-🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
-[prompt de animação preenchido, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
-
----
 1. Aprovar e salvar
 2. Quero ajustar algo
 3. Voltar e escolher outra ideia (das 10)
@@ -341,7 +317,7 @@ Conteúdo do arquivo:
 [prompt Stories]
 \`\`\`
 
-## Prompt de Animação pro Freepik (Feed e Stories)
+## Prompt de Animação pro Freepik (Magnific) (Feed e Stories)
 
 \`\`\`
 [prompt de animação preenchido]
@@ -350,9 +326,9 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
-4. Pra animar, abra o Freepik, suba a imagem (Feed ou Stories) e cole o **Prompt de Animação**. O mesmo prompt serve pros dois formatos.
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Se você gerou o Prompt Stories, cole logo depois pra ter a versão vertical da mesma arte.
+4. Pra animar, abra o Freepik (Magnific), suba a imagem (Feed ou Stories) e cole o **Prompt de Animação**. O mesmo prompt serve pros dois formatos.
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -411,8 +387,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:
@@ -482,7 +459,7 @@ e) Reapresente o mesmo menu de opções.
 - Produto NÃO aparece no lead da legenda.
 - As 3 dores, o título fixo "O desespero de quem:", o CTA da arte e os prompts visuais seguem regras próprias e NÃO passam pela revisora, mas devem respeitar Light Copy.
 - Auto-revisão obrigatória de copy (Manual da Copy + revisora) antes de apresentar a legenda.
-- Substituir TODOS os placeholders dos prompts pro ChatGPT e Freepik. O texto final no chat e no arquivo salvo NÃO pode ter colchetes.
+- Substituir TODOS os placeholders dos prompts pro ChatGPT e Freepik (Magnific). O texto final no chat e no arquivo salvo NÃO pode ter colchetes.
 - Texto pro ChatGPT em linguagem coloquial brasileira misturada com as diretrizes técnicas em inglês.
 
 ### Sobre as ideias
@@ -530,7 +507,7 @@ e) Reapresente o mesmo menu de opções.
 - CTA com emoji 👉 e chamada pro link
 - **Exceção documentada: emoji no CTA da legenda.** O Manual da Copy proíbe emojis em geral, mas a legenda termina com emoji (ex: "👉") no CTA porque integra o padrão visual de creator amador, que é o que confere autenticidade ao formato. Essa exceção vale SOMENTE para o CTA da legenda.
 
-### Sobre a animação (Freepik)
+### Sobre a animação (Freepik (Magnific))
 
 - Só a foto se mexe, textos ficam 100% estáticos
 - Movimento sutil, performático, reforça o desespero

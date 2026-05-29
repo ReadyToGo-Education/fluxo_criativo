@@ -2,6 +2,17 @@
 
 Lista as audiences existentes na conta de anúncios com nome, tamanho, status, idade e fonte. Modo apenas leitura.
 
+## Passo 0 (todas as sub-skills da `trafego-publicos`)
+
+Antes de qualquer chamada GET ou POST:
+
+1. Ler `META_AUTH_MODO` do `.env` via `grep -q "^META_AUTH_MODO=" .env` (presença, não conteúdo sensível).
+2. Se ausente: acionar `/trafego-conexao` e aguardar conclusão. **Não tentar fallback nem chutar credenciais.**
+3. Se `APP`: confirmar via `grep -q` presença de `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` no `.env`. Se faltar algum, acionar `/trafego-conexao`.
+4. Se `MCP_CONECTOR`: confirmar que pelo menos uma tool `mcp__*__ads_*` está disponível.
+
+Esta sub-skill é read-only (GET), **não passa pelo gate 🛡️**. Mas o Passo 0 vale igual — sem token, GET falha sem mensagem clara.
+
 ## Perguntas que cobre
 
 - "Quais audiences eu já tenho?"

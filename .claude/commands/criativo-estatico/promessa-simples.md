@@ -121,15 +121,28 @@ IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story compo
 
 #### D) Prompt pro ChatGPT (formato Stories)
 
-O Prompt Stories é o **Prompt Feed completo** (item C) repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed (item C) e troque o bloco final `IMPORTANT: exact 4:5...` por:
+Esse é fixo. Não precisa preencher placeholders.
 
 ````
+Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, só diagramada pro formato Stories.
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
 
-O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
+#### E) Prompt de Animação pro Freepik (Magnific)
+
+Texto pronto pra colar na ferramenta de imagem-pra-vídeo do Freepik (Magnific). Serve tanto pro Feed quanto pro Stories.
+
+````
+Anima essa imagem com um movimento sutil e elegante. APENAS o fundo e os elementos visuais se mexem. Os textos ficam 100% ESTÁTICOS, não se movem em nenhum momento.
+
+MOVIMENTO DA CENA:
+Micro-movimento de respiração na imagem (leve zoom in/out de 1-2% no eixo central), com leve parallax horizontal se houver fundo. Sem cortes, sem panning agressivo. Loop suave de 3-5 segundos que entrega presença sem distrair do texto.
+
+REGRA CRÍTICA: todo texto na imagem (título, legenda, CTA) é ESTÁTICO. Não balança, não aparece com animação, não se move. Fica fixo o tempo todo. Só os elementos visuais por trás é que respiram.
+
+MÚSICA DE FUNDO SUGERIDA: trilha cinematográfica leve, instrumental, sem letra. Algo que dê presença sem competir com a leitura do texto. Lo-fi suave, piano minimalista ou trilha tipo Apple ad funcionam bem.
+````
 
 ### 4. Auto-revisão obrigatória
 
@@ -145,14 +158,17 @@ Pronto. Aqui está o seu Promessa Simples:
 📌 TÍTULO DO ANÚNCIO
 [título gerado]
 
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)
+[prompt de animação, dentro de bloco de código]
+
 📱 PROMPT PRO CHATGPT, FORMATO STORIES
 [prompt Stories, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
 
 ---
 1. Aprovar e salvar
@@ -209,6 +225,12 @@ Conteúdo do arquivo:
 [prompt Feed preenchido]
 \`\`\`
 
+## Prompt de Animação pro Freepik (Magnific) (serve pro Feed e pro Stories)
+
+\`\`\`
+[prompt de animação preenchido]
+\`\`\`
+
 ## Prompt pro ChatGPT. Formato Stories (1080x1920, 9:16)
 
 \`\`\`
@@ -218,8 +240,10 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Numa conversa nova (ou logo em seguida), cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Quando estiver pronto, mande "ok" no chat.
+4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+5. Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba a imagem gerada e cole o **Prompt de Animação**. O mesmo prompt serve pro Feed e pro Stories.
 ```
 
 ### 6b. Modo API (só se o aluno escolheu a opção 2)
@@ -274,8 +298,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Os dois prompts são completos e independentes, cada um gera a arte sozinho.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 Depois ofereça o menu padrão (3 opções):
@@ -349,7 +374,7 @@ e) Reapresente o mesmo menu de opções (com a primeira agora marcada como "Gera
 - Texto pro ChatGPT em linguagem coloquial brasileira, como se estivesse pedindo pra um designer do lado. Nada técnico, nada rebuscado.
 - Nunca colocar preço na arte. Esse limite já está no template.
 - A arte deve ter pouco texto, no máximo 80 caracteres no total. Esse limite já está no template.
-- Os dois formatos (Feed e Stories) usam o mesmo prompt completo, mudando só o bloco de formato (4:5 no Feed, 9:16 no Stories). Cada prompt gera a arte de forma independente, sem depender de o Feed ter sido gerado antes.
+- Os dois formatos (Feed e Stories) são a exata mesma arte, só rediagramada. O template do Stories já garante isso.
 - Aprovação obrigatória antes de salvar (regra 5 do CLAUDE.md). Pular só se o aluno pediu explicitamente "ir direto à versão final" na mesma sessão.
 - Acentuação correta em todo o texto gerado: não, são, você, está, três, público, próximo, último, vídeo, página.
 - Número do criativo é sequencial dentro da pasta do produto. Verificar arquivos existentes antes de numerar.

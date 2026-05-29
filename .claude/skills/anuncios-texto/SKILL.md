@@ -22,7 +22,7 @@ Criativos estaticos: imagem + copy. Para anuncios em video, consulte a skill `an
 
 ## Tres Caminhos de Execucao para Imagens
 
-**Caminho 1 — Geracao via Freepik AI (API automatica)**
+**Caminho 1 — Geracao via Freepik (Magnific) AI (API automatica)**
 Requer `FREEPIK_API_KEY` no `.env`.
 O sistema gera o prompt e chama a API automaticamente apos aprovacao.
 
@@ -242,9 +242,9 @@ Em 3 segundos o espectador decide se para ou continua scrollando. Ele precisa:
 
 ---
 
-## Geracao Automatica de Imagens (Freepik API)
+## Geracao Automatica de Imagens (Freepik (Magnific) API)
 
-O comando `/copy-anuncio` gera a copy e, se configurado, cria as imagens automaticamente via Freepik.
+O comando `/copy-anuncio` gera a copy e, se configurado, cria as imagens automaticamente via Freepik (Magnific).
 
 ### Configuracao necessaria no `.env`
 

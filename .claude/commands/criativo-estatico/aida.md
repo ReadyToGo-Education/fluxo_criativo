@@ -400,6 +400,19 @@ No background bands, no colored rectangles, no overlay boxes,
 no percentage labels, no zone markers, no annotations.
 ```
 
+Em seguida, monte também o **PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)**. Texto pronto pra colar na ferramenta de imagem-pra-vídeo do Freepik (Magnific). Serve pra animar o criativo gerado.
+
+```
+Anima essa imagem com micro-movimento sutil. APENAS a cena fotográfica da parte superior se mexe. O kicker, o headline em destaque, as linhas de apoio e a instrução de clique na zona escura inferior ficam 100% ESTÁTICOS, não se movem em nenhum momento.
+
+MOVIMENTO DA CENA:
+Micro-movimento na cena fotográfica do topo, leve respiração ou parallax de 1-3% no eixo central. Se houver pessoa, mantém a postura mas com micro-movimento natural (respiração, leve oscilação). Sem zoom agressivo, sem panning, sem cortes. Loop suave de 4-5 segundos pra parecer cinematográfico, no padrão Apple ad.
+
+REGRA CRÍTICA: todo o bloco de texto da zona escura inferior (kicker, headline grande em CAIXA ALTA, apoio linha 1, apoio linha 2 e instrução de clique com ícone) é ESTÁTICO. Não balança, não aparece com animação, não se move. Fica fixo o tempo todo. Só a cena fotográfica do topo é que tem o micro-movimento.
+
+MÚSICA DE FUNDO SUGERIDA: trilha cinematográfica leve, instrumental, sem letra. Piano minimalista, cordas suaves ou ambient atmosférico. Algo que dê peso de campanha publicitária, no padrão Apple ou Cannes Lions, sem competir com a leitura do texto.
+```
+
 Depois pergunte como o usuário quer gerar a imagem:
 
 ```
@@ -423,42 +436,34 @@ Conteúdo do briefing:
 - Cena escolhida (descrição em português)
 - Layout em tópicos (zonas, fontes, cores)
 - Texto escolhido (kicker, headline, apoio, instrução)
-- Prompts finais consolidados em inglês, um por formato (Feed 4:5, Quadrado 1:1, Stories 9:16), cada um em bloco de código
+- Prompt final consolidado em inglês em bloco de código
+- Prompt de animação pro Freepik (Magnific) em bloco de código separado
+- Seção "Como usar" com passo extra: "Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba o PNG gerado e cole o Prompt de Animação."
 
 O número do criativo é sequencial dentro da pasta. Verifique os arquivos `criativo-aida-*.md` existentes antes de numerar.
 
 #### Modo ChatGPT (escolha 1)
 
-No caminho grátis, entregue os TRÊS formatos de uma vez. Cada um é o prompt consolidado completo, mudando apenas a linha de dimensões (a primeira linha) e o aspect ratio final. Mesma cena, mesmo layout, mesmo texto, mesma hierarquia. O aluno cola o que quiser, cada prompt gera a arte sozinho, sem depender dos outros.
-
-Monte os três a partir do prompt consolidado da seção 6:
-- Feed retrato (4:5): primeira linha "Generate a complete Instagram feed ad (1080x1350px)." e, onde aparecer ratio, use 4:5.
-- Quadrado (1:1): primeira linha "Generate a complete Instagram square ad (1080x1080px)." e ratio 1:1.
-- Stories e Reels (9:16): primeira linha "Generate a complete Instagram story and reels ad (1080x1920px)." e ratio 9:16. Mantenha a mesma cena e o mesmo texto, só deixe um respiro maior no rodapé como safe zone do Instagram.
-
 Apresente:
 
 ```
-Pronto. Aqui estão os 3 formatos. Cole o que você quiser no seu gerador de imagem. Cada prompt gera a arte sozinho.
+Pronto. Cole esse prompt no seu gerador de imagem:
 
-🎨 FORMATO FEED (4:5, 1080x1350)
-[PROMPT CONSOLIDADO, formato Feed]
+[PROMPT CONSOLIDADO EM INGLES]
 
-⬜ FORMATO QUADRADO (1:1, 1080x1080)
-[PROMPT CONSOLIDADO, formato Quadrado]
-
-📱 FORMATO STORIES (9:16, 1080x1920)
-[PROMPT CONSOLIDADO, formato Stories]
-
-Adaptar para sua ferramenta (vale pros três, troque o ratio conforme o formato):
+Adaptar para sua ferramenta:
 - ChatGPT / Gemini: cole como está, sem alteração
-- Midjourney: adicione ao final: --ar [ratio do formato] --v 6.1 --style raw --s 250 --no text, faces, watermark
-- Ideogram: adicione ao final: Style: Realistic, Aspect Ratio: [ratio do formato]
+- Midjourney: adicione ao final: --ar [ratio] --v 6.1 --style raw --s 250 --no text, faces, watermark
+- Ideogram: adicione ao final: Style: Realistic, Aspect Ratio: [ratio]
+
+Antes de entregar este bloco ao aluno, substitua `[ratio]` pelo valor real do formato escolhido na Entrevista: feed retrato = 4:5, quadrado = 1:1, stories ou reels = 9:16. O placeholder `[ratio]` não pode aparecer literal no texto entregue.
+
+Pra animar a imagem depois de gerada, cole no Freepik (Magnific) (ferramenta de imagem-pra-vídeo):
+
+[PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)]
 
 Briefing salvo em meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.md
 ```
-
-Substitua os placeholders pelos prompts reais de cada formato. Nenhum colchete pode aparecer literal no texto entregue ao aluno.
 
 #### Modo API (escolha 2)
 

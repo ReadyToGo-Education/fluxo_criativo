@@ -102,6 +102,114 @@ end_minute: 1380    # 23:00
 ### Receita 5. Custom
 Aluno define dias e horários manualmente.
 
+## Padrão de coleta de inputs (uma pergunta por mensagem)
+
+Regra dura: **NUNCA agrupar 2+ inputs na mesma mensagem**. Reforça a regra global do CLAUDE.md.
+
+### Ordem fixa
+
+1. **Adset alvo.** Pergunta neutra: "Qual adset você quer programar liga/pausa? (digite o nome — completo ou parcial — ou peça pra eu listar)". Aceita 3 modos (mesmo padrão da [`ab-generico` Helper de molde](../../trafego-testes/sub-skills/ab-generico.md#padrão-de-coleta-de-inputs-uma-pergunta-por-mensagem)):
+   - **(a) Nome (total ou parcial):** `GET /act_<id>/adsets?fields=name,status,effective_status,daily_budget,lifetime_budget` → match case-insensitive `contains`. 1 match: confirma. Múltiplos: lista numerada filtrada.
+   - **(b) Listar:** "lista", "não lembro" → mostra adsets ACTIVE/PAUSED dos últimos 90d, numerados, com nome + status + budget atual.
+   - **(c) ID direto** (raro): valida e confirma.
+
+   **Aluno nunca digita ID cru sem ter sido pedido.**
+
+2. **Receita.** Mostrar as 5 receitas numeradas. Aluno digita o número.
+
+3. **Dias.** *Só se receita = 5 (custom).* Lista numerada: seg-sex (1-5), todos os dias (0-6), só fim de semana (0,6), customizado. Se customizado: pedir os números (0=dom até 6=sáb) separados por vírgula.
+
+4. **Horários.** *Só se receita = 5.* Em sequência (1 pergunta cada):
+   - Hora de início (formato HH:MM, ex: 08:00)
+   - Hora de fim (formato HH:MM, ex: 22:00)
+
+5. **Conversão de budget (condicional).** *Só se o adset escolhido tem `daily_budget` (e não `lifetime_budget`).* `adset_schedule` exige `lifetime_budget`. Mostrar:
+   ```
+   ⚠️ O adset "{nome}" usa orçamento diário (R$ X/dia).
+   Pra programar liga/pausa, preciso converter pra orçamento total.
+
+   Não muda o valor do que você gasta, só a forma de cobrança.
+   Cálculo: R$ X/dia × {N dias} = R$ Y total.
+
+   1. Pode converter
+   2. Não, prefiro deixar como está (cancelo o schedule)
+
+   Digite o número:
+   ```
+   Se (1) e o adset não tem `end_time`: pedir "Até quando essa campanha deve rodar? (data)".
+
+6. **Escopo de aplicação.** Numerada:
+   ```
+   Quer aplicar essa programação:
+   1. Só nesse adset
+   2. Em todos os adsets ativos da campanha {nome}
+   3. Em todos os adsets ativos da conta (cuidado, reset em todos)
+
+   Digite o número:
+   ```
+
+**Proibido:**
+- Pedir `start_minute`, `end_minute`, `pacing_type`, ou qualquer chave da Marketing API direto ao aluno (sempre converter HH:MM internamente).
+- Agrupar 2+ inputs na mesma mensagem.
+- Pular pro Preview YAML sem passar pelos passos 1-6.
+
+## Resumo em linguagem natural antes do Preview YAML (obrigatório)
+
+**Quando exibir:** sempre, depois de coletar todos os inputs (passos 1-6 da seção "Padrão de coleta"). ANTES do Preview YAML.
+
+**Por que existe:** o Preview YAML mostra `start_minute: 480`, `end_minute: 1320`, `days: [1,2,3,4,5]`, `pacing_type` — números arbitrários que o aluno precisa decodificar. Esse resumo traduz pro português corrente.
+
+**Formato fixo:**
+
+```
+📋 Antes de eu mexer no adset, deixa eu te resumir o plano:
+
+O que vai acontecer:
+  O adset "{nome}" vai entregar apenas:
+  - {Dias em português, ex: "segunda a sexta"}
+  - {Janela horária em português, ex: "das 08:00 às 22:00"}
+  - Timezone: {timezone, ex: "horário de Brasília"}
+
+  Fora desses horários, o adset fica pausado automaticamente.
+
+Cobertura: {N horas semanais} de entrega vs 168h (semana inteira) → {%}% do tempo.
+
+{Se houve conversão de budget:}
+Antes disso, vou converter seu orçamento de R$ X/dia para R$ Y total
+(porque programação só funciona com orçamento total). Não muda o que
+você gasta, só a forma de cobrança.
+
+Efeito colateral: isso vai disparar reset de aprendizado do adset.
+Não use se a campanha tá em fase de aprendizado ativa, exceto se a
+perda de dado compensar.
+
+Para reverter (voltar a entregar 24/7): te passo o comando depois.
+
+Tá certo? (sim segue pro YAML, não cancela aqui)
+```
+
+**Regras de tradução obrigatórias:**
+
+| Campo técnico | Tradução pro resumo |
+|---|---|
+| `days: [1,2,3,4,5]` | "segunda a sexta" |
+| `days: [0,6]` | "sábado e domingo" |
+| `days: [0,1,2,3,4,5,6]` | "todos os dias" |
+| `start_minute: 480` | "08:00" |
+| `end_minute: 1320` | "22:00" |
+| `start_minute: 0` + `end_minute: 1440` | "24 horas (dia inteiro)" |
+| `lifetime_budget: 500000` (centavos) | "R$ 5.000 total" |
+| `daily_budget: 5000` (centavos) | "R$ 50/dia" |
+| `pacing_type: day_parting` | "entrega controlada por horário" |
+
+**Proibido neste resumo:**
+- Mostrar minutos desde meia-noite, dias como `[1,2,3,4,5]`, valores em centavos, chaves da Marketing API.
+- Pular esse resumo pra ir direto pro YAML.
+
+**Comportamento depois:**
+- "sim" → segue pro Preview YAML.
+- "não" → "1. Quer ajustar algo, 2. cancelar de vez?". Se ajustar, volta ao passo da coleta correspondente.
+
 ## Preview YAML
 
 ```yaml

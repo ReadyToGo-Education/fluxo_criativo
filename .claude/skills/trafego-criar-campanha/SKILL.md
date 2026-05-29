@@ -149,7 +149,7 @@ Se NÃO houver pixel no `.env`, perguntar:
 > "Qual pixel você quer usar nesta campanha? Digite o número da lista."
 
 Casos especiais:
-- Conta sem nenhum pixel: parar e instruir "essa conta não tem pixel cadastrado. Crie um no Gerenciador de Eventos (https://business.facebook.com/events_manager) ou rode `/pagina-pixel` para instalar em uma página HTML."
+- Conta sem nenhum pixel: parar e instruir "essa conta não tem pixel cadastrado. Crie um no Gerenciador de Eventos (https://eventsmanager.facebook.com) ou rode `/pagina-pixel` para instalar em uma página HTML."
 - Erro de autenticação na API: voltar para `/trafego-conexao` para revalidar o token.
 
 **5.1. Salvar a escolha.**
