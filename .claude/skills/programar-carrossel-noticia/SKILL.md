@@ -566,7 +566,7 @@ Exiba o caminho do arquivo de configuração no formato copiável (texto, não l
 ## Quando NÃO usar esta skill
 
 - O aluno quer só **um** carrossel agora (sem agendamento recorrente). Nesse caso, use `/carrossel` (que pega Urgência Oculta do produto) ou rode o prompt de carrossel de notícia direto no chat.
-- O aluno quer agendar **outra coisa** (resumo de tráfego, post viral, email). Use `/trafego-regras` ou crie outra skill específica.
+- O aluno quer agendar **outra coisa** (resumo de tráfego, post viral, email). Use Gerenciador (Regras automáticas) ou crie outra skill específica.
 - O aluno ainda não cadastrou produto. Use `/produto-novo` primeiro.
 
 ---

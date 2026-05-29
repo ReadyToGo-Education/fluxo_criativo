@@ -236,7 +236,7 @@ Filtrar as campanhas com melhor performance e calcular o headroom estimado para 
 | 3.1 a 3.5 | até +20% | horizontal (duplicar adset ou nova audience) |
 | > 3.5 | não escalar — público saturando | investigar primeiro |
 
-**Atenção:** se só uma campanha for candidata a escala e ela já concentrar > 70% do orçamento total, alertar: "Dependência excessiva de um único winner. Escalar aumenta risco de ruptura. Criar campanha paralela via 'trafego-testes' (duplicar-variando) antes de aumentar o orçamento desta."
+**Atenção:** se só uma campanha for candidata a escala e ela já concentrar > 70% do orçamento total, alertar: "Dependência excessiva de um único winner. Escalar aumenta risco de ruptura. Criar campanha paralela duplicando entidade no Gerenciador (variando 1 dimensão) (duplicar-variando) antes de aumentar o orçamento desta."
 
 ---
 
@@ -291,7 +291,7 @@ Para verificar os orçamentos em modo ABO, executar chamada adicional ao nível 
 
   Colocar:
   + {nome}  +R$ {X}/dia  (winner — CPL R$ {Y}, {Z%} abaixo do benchmark)
-  + {nome}  +R$ {X}/dia  (testar nova audience via "trafego-publicos")
+  + {nome}  +R$ {X}/dia  (testar nova audience no Gerenciador de Audiences)
 
   ─────────────────────────────────────────────────────────────────────
   Antes:   CPL médio R$ {A}  ·  Leads/dia ~{B}  ·  Budget/dia R$ {C}
@@ -413,7 +413,7 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 1. **Diagnóstico** — projeção do mês, distribuição atual com veredictos, campanhas candidatas a escala e candidatas a pausar.
 2. **Causa provável** — desbalanceamento da alocação: por que o orçamento está concentrado em campanhas ineficientes. Ex: "Campanha D era winner há 60 dias e nunca foi revisada. O algoritmo aprendeu a gastar o budget dela mesmo sem resultado."
-3. **No VTSD, isso significa…** — "Funil perpétuo saudável exige no mínimo 70% do budget no winner do momento. Você está em {X%}. O restante está pulverizado em campanhas que já deram o que podiam. Concentrar é mais importante que criar campanhas novas agora." Ou, para leads: "CPL subindo enquanto volume cai é sinal clássico de público esgotando. Antes de redistribuir, criar nova audience via 'trafego-publicos' para abrir espaço."
+3. **No VTSD, isso significa…** — "Funil perpétuo saudável exige no mínimo 70% do budget no winner do momento. Você está em {X%}. O restante está pulverizado em campanhas que já deram o que podiam. Concentrar é mais importante que criar campanhas novas agora." Ou, para leads: "CPL subindo enquanto volume cai é sinal clássico de público esgotando. Antes de redistribuir, criar nova audience no Gerenciador de Audiences para abrir espaço."
 4. **Ação recomendada** — 1 a 3 ações concretas com handoff para skill executora. Priorizar a ação de maior impacto imediato (pausar perdedor > escalar winner > testar nova campanha).
 
 ---
@@ -429,9 +429,9 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Perdedor com gasto significativo (venda direta) | "trafego-otimizar" — atalho "pausar com filtro" (ROAS < 1 OU gasto > X + zero conversão) |
 | Perdedor com gasto significativo (captação de leads) | "trafego-otimizar" — atalho "pausar com filtro" (CPL > 150% do benchmark OU gasto > X + zero leads) |
 | Pulverização — nenhuma campanha > 25% do budget | "trafego-otimizar" — consolidar manualmente: pausar os menores e redirecionar |
-| Top 1 concentra > 70% do budget | "trafego-testes" — duplicar variando criativo ou audience para criar redundância |
+| Top 1 concentra > 70% do budget | Duplicar entidade no Gerenciador (variando 1 dimensão) — duplicar variando criativo ou audience para criar redundância |
 | Projeção do mês > 20% acima do mês anterior com piora de ROAS/CPL | "trafego-otimizar" — diagnóstico de ineficiência antes de continuar investindo |
-| Budget esgotando antes do horário nobre (estimativa de hoje) | "trafego-regras" — criar regra automática de alerta por budget diário |
+| Budget esgotando antes do horário nobre (estimativa de hoje) | Gerenciador (Regras automáticas) — criar regra automática de alerta por budget diário |
 
 ---
 

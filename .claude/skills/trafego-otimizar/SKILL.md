@@ -5,8 +5,7 @@ description: >
   veiculação. Aplica diagnóstico em duas camadas (tendência cruzando 3 janelas + gargalo identificando
   onde está o problema), 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high), regras de pausar
   e reduzir orçamento (-20%), proteções contra reset de aprendizado e emite sinal de prontidão para
-  /trafego-escalar. Inclui ações em lote por filtro (sub-skill acoes-lote) e atalhos compostos
-  (sub-skill atalhos-compostos) que orquestram /trafego-publicos + /trafego-criar-campanha. Consultada
+  /trafego-escalar. Inclui ações em lote por filtro (sub-skill acoes-lote). Consultada
   pelo command /trafego-otimizar. Use quando o aluno pedir "analisar campanha", "otimizar",
   "diagnóstico", "campanha não está performando", "CPA alto", "CPL caro", "criativo cansou",
   "pausar criativo", "reduzir orçamento", "pausa tudo com ROAS<1", "lookalike de compradores",
@@ -767,22 +766,3 @@ Funções disponíveis:
 Critérios suportados: `roas`, `cpa`, `cpl`, `ctr`, `frequency`, `cpm`, `spend`, `impressions`, `purchases`, `leads`, `cpc`. Operadores: `less_than`, `greater_than`, `between`, `equal`. Períodos: `today`, `last_3d`, `last_7d`, `last_14d`, `last_30d`.
 
 **Sempre exige preview** com lista de entidades afetadas + confirmação SIM antes de aplicar. Bloqueia automaticamente se mais de 50% dos adsets ativos da conta forem afetados (confirmação tripla).
-
----
-
-## 16. Atalhos compostos
-
-> Detalhes completos em `sub-skills/atalhos-compostos.md`.
-
-Atalhos que orquestram múltiplas skills numa única operação:
-
-- **Atalho A. Lookalike de compradores → campanha**. Orquestra `/trafego-publicos` (audience Purchase + LAL) + `/trafego-criar-campanha`.
-- **Atalho B. Duplicar melhor anúncio em outro público**. Orquestra `/trafego-analise` [3] (identifica melhor) + `/trafego-publicos` (sugere alternativa) + `/trafego-testes` (duplicar-variando).
-- **Atalho C. Faxina + lookalike**. Pausa queimadores (acoes-lote) + cria LAL de compradores.
-- **Atalho D. Refresh criativo**. `/trafego-analise` [3] identifica ângulos da Mandala em uso + sugere ângulos novos + `/copy-anuncio` + `/trafego-testes`.
-
-Toda execução de atalho composto:
-1. Anuncia o plano completo antes.
-2. Pede 1 confirmação SIM para todo o fluxo.
-3. Executa em sequência, pausando se uma etapa falha.
-4. Devolve resumo com IDs criados + comandos de reversão.

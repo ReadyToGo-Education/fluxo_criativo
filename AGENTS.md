@@ -678,10 +678,6 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/trafego-criar-campanha`: criar campanha via Marketing API.
 - `/trafego-otimizar`: diagnosticar e otimizar campanhas.
 - `/trafego-analise`: análise narrada VTSD em outputs.
-- `/trafego-pixel`: diagnosticar pixels e datasets.
-- `/trafego-publicos`: criar e gerenciar públicos.
-- `/trafego-regras`: criar regras automáticas e rotinas.
-- `/trafego-testes`: criar testes A/B disciplinados.
 
 ### Dados e Automações
 
@@ -911,10 +907,6 @@ Skills que herdam essa regra:
 - `/trafego-criar-campanha`.
 - `/trafego-otimizar`.
 - `/trafego-analise`.
-- `/trafego-pixel`.
-- `/trafego-publicos`.
-- `/trafego-regras`.
-- `/trafego-testes`.
 
 Commands legados como `/ads-relatorio`, `/enviar-relatorio-ads` e `/lt-otimizar` podem usar variáveis próprias. Leia o command antes de assumir o padrão novo.
 

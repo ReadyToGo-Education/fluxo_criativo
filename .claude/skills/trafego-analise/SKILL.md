@@ -20,7 +20,6 @@ Análise narrada de campanhas Meta Ads pela lente da metodologia VTSD (Venda Tod
 - `/trafego-insights` é a **fonte de dados** (lê e cacheia, não narra).
 - `/trafego-otimizar` é **técnico**, calcula, executa pausa/ajuste de budget. Foca em **operação**.
 - `/trafego-escalar` **escala** campanhas validadas com freios.
-- `/trafego-regras`, `/trafego-publicos`, `/trafego-pixel`, `/trafego-testes` **executam** ações específicas.
 - `/trafego-analise` **narra** com terminologia VTSD. **Não executa edição.** Quando a análise sugere ação, ela faz handoff para a skill executora correspondente.
 
 ---
@@ -359,7 +358,7 @@ Cada escolha do menu carrega um sub-skill específico. Dependências de breakdow
 | [5] Timing & Sazonalidade | `sub-skills/5-timing-sazonalidade.md` | `hourly_stats_aggregated_by_advertiser_time_zone` + base por dia |
 | [6] Investigação Profunda | `sub-skills/6-investigacao-profunda.md` | `device_platform`, `impression_device`, `publisher_platform` |
 | [7] Lifecycle & Histórico | `sub-skills/7-lifecycle-historico.md` | base por mês x 6 meses (`historico_mensal`) |
-| [8] Problemas Ocultos | `sub-skills/8-problemas-ocultos.md` | base + diagnóstico de pixel via `/trafego-pixel` |
+| [8] Problemas Ocultos | `sub-skills/8-problemas-ocultos.md` | base + diagnóstico de pixel (endpoint `/adspixels` direto) |
 | [9] Orçamento & Projeção | `sub-skills/9-orcamento-projecao.md` | base |
 | [10] Comparativo A x B | `sub-skills/10-comparativo.md` | base por campanha + métricas de vídeo (`video_p25/p50/p75/p95_watched_actions`) |
 | [11] Livre | usa o sub-skill mais próximo da intenção identificada | conforme necessidade |
@@ -380,10 +379,7 @@ Todo sub-skill entrega obrigatoriamente:
 4. **Ação recomendada** — próximo passo concreto. Se exigir execução, apontar para skill executora:
    - Pausa/ajuste de campanha → `/trafego-otimizar`
    - Escala de winner → `/trafego-escalar`
-   - Criar regra automática ou alerta → `/trafego-regras`
-   - Criar audience custom/lookalike → `/trafego-publicos`
-   - Diagnóstico aprofundado de pixel → `/trafego-pixel`
-   - Montar teste A/B → `/trafego-testes`
+   - Criar campanha nova → `/trafego-criar-campanha`
 
 ---
 

@@ -198,7 +198,7 @@ Usar a mesma tabela gerada na Resposta 1. Destacar a linha de resumo comparativo
 - Fim de semana (sábado e domingo): CPA/CPL médio R$ {X}, volume {N} conversões.
 - Diferença: CPA/CPL {X%} {melhor | pior} nos fins de semana vs. dias úteis.
 
-Se a diferença for ≥ 20%: recomendar ajuste de budget por dia da semana via `trafego-regras` (delivery schedule ou regra automática).
+Se a diferença for ≥ 20%: recomendar ajuste de budget por dia da semana no Gerenciador (Regras automáticas) (delivery schedule ou regra automática).
 
 Se a diferença for < 20%: informar "Distribuição uniforme entre dias úteis e fim de semana — sem padrão que justifique dayparting por dia da semana no momento."
 
@@ -258,9 +258,9 @@ Usar dados da Chamada 5a (24 linhas, uma por hora). Agrupar em 4 faixas para vis
   Vale (CPL alto):    {hora exata}h  ·  CPL R$ {X} ({Y%} acima da média) → candidato a dayparting
 ```
 
-Threshold para candidato prioritário a dayparting: faixa horária com CPA/CPL ≥ 50% acima da média da conta E spend da faixa > 10% do total. Sinalizar como `⚠️ programar pausa via "trafego-regras"`.
+Threshold para candidato prioritário a dayparting: faixa horária com CPA/CPL ≥ 50% acima da média da conta E spend da faixa > 10% do total. Sinalizar como `⚠️ programar pausa no Gerenciador (Regras automáticas)`.
 
-Se `actions` retornar zero em todas as horas (pixel sem conversão configurada): exibir somente CPM e CTR por faixa e alertar: "Conversões não rastreadas por hora — configure o evento de compra/lead no pixel via 'trafego-pixel' para análise completa."
+Se `actions` retornar zero em todas as horas (pixel sem conversão configurada): exibir somente CPM e CTR por faixa e alertar: "Conversões não rastreadas por hora — configure o evento de compra/lead no pixel no Gerenciador de Eventos para análise completa."
 
 ---
 
@@ -456,13 +456,13 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Vale horário claro (CPA/CPL ≥ 50% acima da média em faixa específica com gasto > 10%) | "trafego-regras" — programação liga/pausa (delivery schedule) |
-| Dia da semana crítico (CPA/CPL ≥ 40% acima da média) | "trafego-regras" — regra automática para reduzir budget no dia problemático |
-| Data comemorativa com CPM alto confirmado | "trafego-regras" — regra automática para reduzir budget na semana do evento |
-| Efeito salário detectado (dias 1-10 mais baratos ≥ 15%) | "trafego-regras" — regra: aumentar budget +20% nos dias 1-10 do mês |
+| Vale horário claro (CPA/CPL ≥ 50% acima da média em faixa específica com gasto > 10%) | Gerenciador (Regras automáticas) — programação liga/pausa (delivery schedule) |
+| Dia da semana crítico (CPA/CPL ≥ 40% acima da média) | Gerenciador (Regras automáticas) — regra automática para reduzir budget no dia problemático |
+| Data comemorativa com CPM alto confirmado | Gerenciador (Regras automáticas) — regra automática para reduzir budget na semana do evento |
+| Efeito salário detectado (dias 1-10 mais baratos ≥ 15%) | Gerenciador (Regras automáticas) — regra: aumentar budget +20% nos dias 1-10 do mês |
 | Feriado com CPM baixo + CPA manteve | "trafego-escalar" — oportunidade de escalar quando concorrentes pausam |
-| Mês com CPA/CPL melhor identificado (hipótese clara) | "trafego-testes" — reproduzir condições do mês vencedor (criativo, público, orçamento) |
-| Tendência de CPM subindo por 3 ou mais meses | "trafego-publicos" — explorar audiências novas antes que o CPM torne inviável |
+| Mês com CPA/CPL melhor identificado (hipótese clara) | Duplicar entidade no Gerenciador (variando 1 dimensão) — reproduzir condições do mês vencedor (criativo, público, orçamento) |
+| Tendência de CPM subindo por 3 ou mais meses | Gerenciador de Audiences — explorar audiências novas antes que o CPM torne inviável |
 
 ---
 

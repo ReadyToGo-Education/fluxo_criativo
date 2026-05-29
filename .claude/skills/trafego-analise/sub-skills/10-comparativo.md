@@ -251,7 +251,7 @@ VENCEDORA NA MÉTRICA-NORTE: {A | B}
 
 **Marcação de vencedora:** `<- A` ou `<- B` na coluna da direita. Se a diferença for menor que 5%, marcar `aprox.` (empate técnico).
 
-**Linhas de LP View:** omitir Connect Rate, Checkout Rate e Lead Rate se `landing_page_views` não retornar para nenhuma das campanhas. Alertar: "LP views não rastreado. Conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
+**Linhas de LP View:** omitir Connect Rate, Checkout Rate e Lead Rate se `landing_page_views` não retornar para nenhuma das campanhas. Alertar: "LP views não rastreado. Conecte o evento no pixel no Gerenciador de Eventos para ver o funil completo."
 
 ---
 
@@ -349,7 +349,7 @@ Recomendação:
 - {campanha_perdedora}: {pausar | revisar criativo | revisar página} via "trafego-otimizar"
 ```
 
-Se as campanhas tiverem eficiência muito próxima (diferença < 10% no CPA/CPL), declarar empate técnico e recomendar um A/B formal via "trafego-testes" antes de decidir escala.
+Se as campanhas tiverem eficiência muito próxima (diferença < 10% no CPA/CPL), declarar empate técnico e recomendar um A/B formal duplicando entidade no Gerenciador (variando 1 dimensão) antes de decidir escala.
 
 Incluir o handoff correspondente conforme o achado (ver tabela de handoffs abaixo).
 
@@ -398,7 +398,7 @@ Campanha B — Frequência: {X,X} | CTR: {X,XX%}
 
 **Limitação de tendência de CTR:** este output trabalha com dados agregados do período e não detecta se o CTR está caindo ao longo do tempo. Para detectar queda gradual de CTR (fadiga progressiva), usar o output [5] (Timing e Sazonalidade, chamada 5b), que fornece a série diária com `time_increment=1`.
 
-Se houver fadiga em alguma campanha, incluir handoff para "trafego-publicos" para criar nova audiência (Lookalike ou aberto) e rodar o mesmo criativo com público fresco.
+Se houver fadiga em alguma campanha, incluir handoff para Gerenciador de Audiences para criar nova audiência (Lookalike ou aberto) e rodar o mesmo criativo com público fresco.
 
 ---
 
@@ -460,12 +460,12 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 |---|---|
 | Campanha vencedora com CPA dentro do benchmark e frequência < 3 | "trafego-escalar" — candidata a escala vertical ou horizontal |
 | Campanha perdedora com gasto alto e conversões zero | "trafego-otimizar" — pausar via ação em lote (filtro: gasto > X e zero conversão) |
-| Diferença principal em Hook Rate ou Hold Rate | "trafego-testes" — A/B de criativo com nova Urgência Oculta ou Decorado diferente |
+| Diferença principal em Hook Rate ou Hold Rate | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B de criativo com nova Urgência Oculta ou Decorado diferente |
 | Diferença principal em Connect Rate | "feedback-pagina" — headline e promessa da página não batem com o anúncio |
 | Diferença principal em Checkout Rate ou Conversion Rate | "feedback-pagina" ou "pagina-checkout" — revisar oferta, garantia e stack de valor |
 | Diferença principal em Lead Rate | "copy-pagina" — revisar isca digital e formulário de captura |
-| Frequência acima de 4 em alguma das campanhas | "trafego-publicos" — criar nova audience (Lookalike ou aberto) para rodar a mesma campanha |
-| Campanhas com eficiência próxima (diferença < 10% no CPA/CPL) | "trafego-testes" — A/B formal antes de decidir qual escalar |
+| Frequência acima de 4 em alguma das campanhas | Gerenciador de Audiences — criar nova audience (Lookalike ou aberto) para rodar a mesma campanha |
+| Campanhas com eficiência próxima (diferença < 10% no CPA/CPL) | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B formal antes de decidir qual escalar |
 | Objetivos diferentes entre A e B (SALES vs. LEADS) | Não comparar CPA vs. CPL — avaliar cada uma contra seu benchmark individual |
 
 ---

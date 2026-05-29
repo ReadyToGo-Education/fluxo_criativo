@@ -354,7 +354,7 @@ Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivad
 
   Ação recomendada por grupo:
   • Candidatas a reativar: reativar com budget mínimo de R$ 30/dia via "trafego-otimizar"
-    OU duplicar variando uma dimensão via "trafego-testes" antes de reativar.
+    OU duplicar variando uma dimensão duplicando entidade no Gerenciador (variando 1 dimensão) antes de reativar.
   • Testes incompletos: avaliar se o objetivo ainda é relevante antes de continuar.
   • Pausadas com razão: reformular oferta/criativo via "copy-anuncio" antes de qualquer reativação.
 ```
@@ -408,7 +408,7 @@ Usar dados da Chamada 7d. Ordenar por total de `offsite_conversion.fb_pixel_purc
 
   Candidatos a reativar (PAUSED com histórico forte):
   • {nome} — pausado há {X dias}, gerou {N} compras com CPA R$ {Y}. CPA abaixo da média atual.
-    Ação: reativar diretamente OU duplicar variando headline via "trafego-testes".
+    Ação: reativar diretamente OU duplicar variando headline duplicando entidade no Gerenciador (variando 1 dimensão).
 
   Nota: anúncios ARCHIVED não podem ser reativados diretamente. Recriar com os mesmos criativos
   e copy via "copy-anuncio" usando o histórico como referência.
@@ -491,12 +491,12 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Campanha longeva com CPA/CPL degradado > 30% | "trafego-testes" (A/B de criativo novo) ou "trafego-otimizar" (refresh defensivo com pausa parcial) |
-| Anúncio pausado com histórico forte (top 5) | Sugerir reativar manualmente OU duplicar variando uma dimensão via "trafego-testes" |
+| Campanha longeva com CPA/CPL degradado > 30% | Duplicar entidade no Gerenciador (variando 1 dimensão) (A/B de criativo novo) ou "trafego-otimizar" (refresh defensivo com pausa parcial) |
+| Anúncio pausado com histórico forte (top 5) | Sugerir reativar manualmente OU duplicar variando uma dimensão duplicando entidade no Gerenciador (variando 1 dimensão) |
 | Anúncio arquivado com histórico forte | "copy-anuncio" para recriar no mesmo estilo + "trafego-criar-campanha" para subir novamente |
 | Tendência de deterioração > +30% em 3 meses | output [6] Investigação Profunda para isolar a causa raiz |
 | Melhor mês distante da performance atual | output [2] Performance & Funil para mapear onde o funil piorou desde então |
-| Público/audience do melhor mês não em uso | "trafego-publicos" (recriar Lookalike a partir da base do período pico) |
+| Público/audience do melhor mês não em uso | Gerenciador de Audiences (recriar Lookalike a partir da base do período pico) |
 | Campanha do melhor mês pausada e elegível | "trafego-otimizar" para reativar em modo controlado (budget pequeno + monitoramento) |
 
 ---

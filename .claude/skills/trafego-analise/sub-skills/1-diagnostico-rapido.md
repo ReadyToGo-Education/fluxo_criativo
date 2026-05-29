@@ -141,7 +141,7 @@ Critério: campanha com objetivo de tráfego frio (`OUTCOME_SALES` ou `LINK_CLIC
 🚨 [SATURAÇÃO]  {nome_campanha}
    Frequência: {X.X}  ·  CPM: R$ {Y}  ·  CTR: {Z%}
    Mesmo público viu o criativo {X} vezes — leilão encarecendo, resposta caindo
-   Ação: criar nova audience via "trafego-publicos" (Lookalike ou público aberto) ou expandir targeting
+   Ação: criar nova audience no Gerenciador de Audiences (Lookalike ou público aberto) ou expandir targeting
 ```
 
 **Below average rankings**
@@ -185,7 +185,7 @@ Para campanhas com **lifetime budget**: usar `budget_remaining` da Chamada 1c di
 🚨 [BUDGET]  {nome_campanha}
    Gasto hoje: R$ {X}  ·  Budget diário: R$ {Y}  ·  Restante estimado: R$ {Z}
    Risco: orçamento pode esgotar antes do horário nobre (18h-22h), pausando a veiculação
-   Ação: aumentar budget via "trafego-escalar" OU criar regra de alerta via "trafego-regras"
+   Ação: aumentar budget via "trafego-escalar" OU criar regra de alerta no Gerenciador (Regras automáticas)
 ```
 
 Se restante = 0 E campanha ainda ativa → sinal crítico imediato, listar no topo independente da ordem.
@@ -377,11 +377,11 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Sinal predominante | Para onde mandar |
 |---|---|
 | Queima de dinheiro | "trafego-otimizar" — ações em lote: pausar campanhas com gasto > X e zero conversão |
-| Fadiga de criativo | "trafego-testes" (A/B de criativo novo) ou "trafego-publicos" (nova audience) |
+| Fadiga de criativo | Duplicar entidade no Gerenciador (variando 1 dimensão) (A/B de criativo novo) ou Gerenciador de Audiences (nova audience) |
 | Conta saudável + ROAS alto | "trafego-escalar" — aumentar budget das campanhas vencedoras |
-| Budget estourando | "trafego-regras" — criar regra automática de freio por budget diário |
+| Budget estourando | Gerenciador (Regras automáticas) — criar regra automática de freio por budget diário |
 | Connect Rate baixo | "feedback-pagina" ou "pagina-performance" — gargalo está na página, não no anúncio |
-| Pixel sem conversão | "trafego-pixel" — diagnóstico aprofundado do rastreamento |
+| Pixel sem conversão | Gerenciador de Eventos — diagnóstico aprofundado do rastreamento |
 
 ---
 

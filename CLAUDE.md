@@ -264,18 +264,16 @@ Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 |---|---|---|
 | Criar campanha | POST `/campaigns` | `/trafego-criar-campanha` |
 | Atualizar campanha (status, budget) | POST `/{campaign_id}` | `/trafego-otimizar`, `/trafego-escalar` |
-| Pausar / ativar adset | POST `/{adset_id}` | `/trafego-otimizar`, `/trafego-regras` |
+| Pausar / ativar adset | POST `/{adset_id}` | `/trafego-otimizar` |
 | Atualizar orçamento de adset/campanha | POST `/{id}` com `daily_budget` | `/trafego-otimizar`, `/trafego-escalar` |
 | Pausar / ativar / deletar anúncio | POST `/{ad_id}`, DELETE `/{ad_id}` | `/trafego-otimizar` |
-| Criar audience custom / lookalike | POST `/customaudiences` | `/trafego-publicos` |
-| Criar regra automática | POST `/adrules_library` | `/trafego-regras` |
-| Subir imagem ou vídeo de criativo | POST `/adimages`, POST `/advideos` | `/trafego-criar-campanha`, `/trafego-testes` |
-| Duplicar adset / campanha (cria novo) | POST `/{id}/copies` | `/trafego-escalar`, `/trafego-testes` |
+| Subir imagem ou vídeo de criativo | POST `/adimages`, POST `/advideos` | `/trafego-criar-campanha` |
+| Duplicar adset / campanha (cria novo) | POST `/{id}/copies` | `/trafego-escalar` |
 | Lote (em massa) | qualquer combinação acima | `acoes-lote.md` (sub-skill de `/trafego-otimizar`) |
 
 ### Não se aplica a (operações de leitura)
 
-`GET` em qualquer endpoint da Graph API (`/insights`, `/campaigns?fields=...`, listagens, métricas, relatórios) **não passa pelo gate** — leitura não muda estado e o token aparece no settings já autorizado. Skills de leitura puras: `/trafego-insights`, `/trafego-pixel` (apenas leitura de status), `/trafego-analise` (consome insights).
+`GET` em qualquer endpoint da Graph API (`/insights`, `/campaigns?fields=...`, listagens, métricas, relatórios) **não passa pelo gate** — leitura não muda estado e o token aparece no settings já autorizado. Skills de leitura puras: `/trafego-insights`, `/trafego-analise` (consome insights).
 
 ### Exceção controlada — modo "lote pré-aprovado"
 
@@ -463,15 +461,11 @@ A skill **nunca prossegue** sem essa validação passar.
 
 ### Skills que herdam essa regra
 
-Todos os 8 commands `/trafego-*` invocáveis pelo usuário:
+Todos os 4 commands `/trafego-*` invocáveis pelo usuário:
 - `/trafego-insights`. Leitura de métricas (com cache local em arquivo .md).
 - `/trafego-criar-campanha`. Criação de campanha via Marketing API.
-- `/trafego-otimizar`. Diagnóstico e otimização. Inclui ações em lote por filtro e atalhos compostos.
+- `/trafego-otimizar`. Diagnóstico e otimização. Inclui ações em lote por filtro.
 - `/trafego-analise`. Análise narrada VTSD em 9 outputs (exceto Modo Demo, que usa dados fictícios).
-- `/trafego-pixel`. Diagnóstico de pixels (apenas leitura).
-- `/trafego-publicos`. Cria audiences (Custom, Lookalike, Saved).
-- `/trafego-regras`. Cria regras automáticas, resumo recorrente e schedule de adset.
-- `/trafego-testes`. Cria testes A/B disciplinados e variações estruturadas.
 
 **Skill interna (não invocável diretamente pelo usuário):**
 - `trafego-escalar`. Invocada automaticamente por `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
@@ -568,10 +562,6 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/trafego-criar-campanha`. Subir campanha nova via Marketing API (PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo). Cobre Sales e Leads
 - `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência + gargalo) para 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Quando a campanha está pronta, aciona automaticamente a escala.
 - `/trafego-analise`. Análise narrada VTSD reorganizada em 9 outputs (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção). Aluno escolhe um output por vez e recebe diagnóstico com handoff para skill executora.
-- `/trafego-pixel`. Diagnóstico de pixels da conta (Meta Pixel / Datasets). Lê status, último disparo, eventos rastreados nos últimos 7 dias e destaca pixels sem atividade. Apenas leitura, não configura evento.
-- `/trafego-publicos`. Cria, lista e gerencia audiences via Marketing API. Cobre Custom Audiences (evento padrão do pixel, evento personalizado, video view %), Lookalike (1% a 10%), Saved Audiences (bases por nível iniciante/intermediário/avançado a partir do produto ativo). Toda criação passa por preview YAML e confirmação SIM.
-- `/trafego-regras`. Cria automações no Meta Ads. Regra automática (adrules_library) com triggers de CPA/CPL/ROAS, resumo recorrente agendado por Telegram/WhatsApp, e programação liga/pausa de adsets (delivery schedule). Toda regra nasce PAUSED.
-- `/trafego-testes`. Cria testes A/B disciplinados (criativo, headline, audiência, faixa etária, posicionamento, lance, estrutura), duplica entidade existente alterando UMA dimensão, e fluxo composto de campanha de remarketing (audience + campanha). Hipótese documentada e handoff para /trafego-analise [3] após D+7.
 
 **Dados e Automações:**
 - `/ads-relatorio`. Criar rotina diária automática que busca métricas do Facebook Ads e envia relatório pelo WhatsApp via Z-API. Agente agendado na nuvem do Claude, roda todo dia às 8h sem precisar do computador ligado.

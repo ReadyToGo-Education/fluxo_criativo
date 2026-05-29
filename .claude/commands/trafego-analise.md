@@ -169,7 +169,7 @@ video_p75_watched_actions,video_p95_watched_actions
 | [5] Timing & Sazonalidade | campaign | hourly_stats_aggregated_by_advertiser_time_zone | + chamada diária com `time_increment=1`; + chamada mensal com `last_180d` e `time_increment=monthly` |
 | [6] Investigação Profunda | ad | device_platform, impression_device, publisher_platform | + chamada com `time_increment=1` e `since/until` dos primeiros dias de cada campanha (análise das primeiras 24h) |
 | [7] Lifecycle & Histórico | campaign | — | + chamada com `time_range` 6 meses e `time_increment=monthly`; + chamada com `start_time` e `updated_time`; + chamada `effective_status=["PAUSED","ARCHIVED"]` |
-| [8] Problemas Ocultos | adset + ad | — | + ad sets `WITH_ISSUES/LIMITED`; + ads `DISAPPROVED/WITH_ISSUES`; + audiences (`approximate_count_lower_bound/upper_bound`); + dataset stats de pixel; + budget por adset (ABO); acionar `/trafego-pixel` para diagnóstico de pixel |
+| [8] Problemas Ocultos | adset + ad | — | + ad sets `WITH_ISSUES/LIMITED`; + ads `DISAPPROVED/WITH_ISSUES`; + audiences (`approximate_count_lower_bound/upper_bound`); + dataset stats de pixel; + budget por adset (ABO); acionar Gerenciador de Eventos para diagnóstico de pixel |
 | [9] Orçamento & Projeção | campaign | — | + `daily_budget/lifetime_budget/spend_cap` das campanhas; + `daily_budget` dos adsets quando conta usa ABO |
 | [10] Comparativo A × B | campaign + ad (por campanha) | — | 2 chamadas separadas por `campaign_id` + métricas derivadas (connect rate, hook rate, funil completo por campanha) |
 
@@ -223,7 +223,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/ads
   &access_token={TOKEN}"
 ```
 
-Para diagnóstico de pixel dentro do output [8], acionar `/trafego-pixel` (apenas leitura).
+Para diagnóstico de pixel dentro do output [8], acionar Gerenciador de Eventos (apenas leitura).
 
 ### Chamada extra para output [9] Orçamento & Projeção
 
@@ -313,10 +313,10 @@ Em seguida, listar alternativas conforme o gargalo identificado na análise:
 Outras skills executoras conforme o gargalo identificado:
 
 - Escalar campanhas validadas: /trafego-escalar
-- Criar regra automática ou alerta: /trafego-regras
-- Criar audience custom/lookalike: /trafego-publicos
-- Diagnóstico aprofundado de pixel: /trafego-pixel
-- Montar teste A/B: /trafego-testes
+- Criar regra automática ou alerta: Gerenciador (Regras automáticas)
+- Criar audience custom/lookalike: Gerenciador de Audiences
+- Diagnóstico aprofundado de pixel: Gerenciador de Eventos
+- Montar teste A/B: Duplicar entidade no Gerenciador (variando 1 dimensão)
 - Criar criativos novos: /copy-anuncio + /criativo-estatico
 - Atacar gargalo de página: /feedback-pagina ou /pagina-performance
 - Atacar gargalo de checkout: /pagina-checkout

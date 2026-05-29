@@ -225,7 +225,7 @@ Dados vêm do breakdown `publisher_platform` + `platform_position` já incluído
   (outros se houver)
 
   Vencedor: {posicionamento} — CPA {X%} abaixo da média
-  Perdedor: {posicionamento} — CPA {X%} acima da média → testar excluir via /trafego-testes
+  Perdedor: {posicionamento} — CPA {X%} acima da média → testar excluir duplicando entidade no Gerenciador (variando 1 dimensão)
 ```
 
 Se um posicionamento tiver gasto > 10% do total E conversões = 0 → marcar como `⚠️ queimando`.
@@ -294,7 +294,7 @@ CPL: R$ {X}  ·  Total leads: {N}  ·  Spend: R$ {Y}
 | Conversion Rate | < 20% | 20% a 35% | > 35% |
 | Lead Rate | < 5% | 5% a 15% | > 15% |
 
-Se `landing_page_views` não retornar (pixel sem evento de LP view), omitir as linhas "LP VIEWS", "Connect Rate" e tudo que depende delas. Alertar: "LP views não rastreado — conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
+Se `landing_page_views` não retornar (pixel sem evento de LP view), omitir as linhas "LP VIEWS", "Connect Rate" e tudo que depende delas. Alertar: "LP views não rastreado — conecte o evento no pixel no Gerenciador de Eventos para ver o funil completo."
 
 ---
 
@@ -385,8 +385,8 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 |---|---|
 | Top winner com ROAS > 3x e freq < 3 | "trafego-escalar" — escalar com cautela |
 | Top loser com gasto alto + zero conversão | "trafego-otimizar" — pausar com filtro |
-| Posicionamento perdedor com gasto > 15% do total | "trafego-testes" — criar teste A/B de posicionamento |
-| Gargalo em Hook Rate | "trafego-testes" — A/B de criativo com nova Urgência Oculta |
+| Posicionamento perdedor com gasto > 15% do total | Duplicar entidade no Gerenciador (variando 1 dimensão) — criar teste A/B de posicionamento |
+| Gargalo em Hook Rate | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B de criativo com nova Urgência Oculta |
 | Gargalo em Connect Rate | "feedback-pagina" — headline e promessa da página não batem com o anúncio |
 | Gargalo em Checkout Rate ou Conversion Rate | "feedback-pagina" ou "pagina-checkout" — oferta, garantia, stack |
 | CPM subindo > 20% WoW | Investigar fadiga → output [3] Criativos & Copy |

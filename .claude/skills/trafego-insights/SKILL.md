@@ -253,7 +253,7 @@ A skill mantém dois níveis de cache, complementares:
 
 ### 7.4 Invalidação automática
 Ambos os caches da `ad_account_id` (memória + todos os arquivos da pasta) são invalidados **imediatamente** quando:
-- Qualquer skill de edição executa write (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-criar-campanha`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`).
+- Qualquer skill de edição executa write (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-criar-campanha`, Gerenciador (Regras automáticas), Gerenciador de Audiences, Duplicar entidade no Gerenciador (variando 1 dimensão)).
 - Gestor pede explicitamente "atualizar dados" ou "puxar de novo sem cache".
 - TTL expirou.
 

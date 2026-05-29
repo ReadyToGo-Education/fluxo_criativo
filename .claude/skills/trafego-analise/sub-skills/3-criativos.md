@@ -95,7 +95,7 @@ Vencedor: {CTA} — CPA R$ X, ILC X%
 ```
 
 Se dados de CTA não estiverem disponíveis (limite de requisições ou breakdowns não suportados):
-- Informar claramente e sugerir ação concreta: "Duplicar o winner atual trocando apenas o CTA via /trafego-testes" com o CTA alternativo recomendado.
+- Informar claramente e sugerir ação concreta: "Duplicar o winner atual trocando apenas o CTA duplicando entidade no Gerenciador (variando 1 dimensão)" com o CTA alternativo recomendado.
 - Nunca deixar o bloco vazio sem a sugestão de ação.
 
 Benchmark CPA: inferir do `perfil.md` conforme tabela de output [1] (low/mid/high ticket).
@@ -205,8 +205,8 @@ Gap Finder: tipos ausentes = portas fechadas para perfis diferentes de Identidad
 | Achado | Para onde |
 |---|---|
 | Formato perdedor com gasto significativo | `/trafego-otimizar` (reduzir budget do formato) |
-| Hook Rate < 25% | `/trafego-testes` (ab-criativo: mesmo vídeo, hooks diferentes) + `/copy-anuncio` (reescrever abertura com Urgência Oculta mais forte) |
+| Hook Rate < 25% | Duplicar entidade no Gerenciador (variando 1 dimensão) (ab-criativo: mesmo vídeo, hooks diferentes) + `/copy-anuncio` (reescrever abertura com Urgência Oculta mais forte) |
 | Criativo Tier D ou Fadiga score >= 4 | `/trafego-otimizar` (pausar) |
-| Winner com ROAS > 3x e freq < 3 | `/trafego-escalar` (vertical) + `/trafego-testes` (duplicar variando CTA ou público) |
+| Winner com ROAS > 3x e freq < 3 | `/trafego-escalar` (vertical) + Duplicar entidade no Gerenciador (variando 1 dimensão) (duplicar variando CTA ou público) |
 | Gap na Mandala (tipo ausente) | `/copy-anuncio` (criar anúncio no tipo faltante) |
 | Budget > 30% em Tier C | `/trafego-otimizar` (redistribuição) |

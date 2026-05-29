@@ -126,7 +126,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/adspixels
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-`last_fired_time` indica o último disparo de qualquer evento. Para ver breakdown por evento nos últimos 7 dias, usar `trafego-pixel` (diagnóstico aprofundado). Aqui só verificar se o pixel disparou nas últimas 24h.
+`last_fired_time` indica o último disparo de qualquer evento. Para ver breakdown por evento nos últimos 7 dias, usar Gerenciador de Eventos (diagnóstico aprofundado). Aqui só verificar se o pixel disparou nas últimas 24h.
 
 **Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=adset` para 8a; `mcp__*__ads_insights_performance_trend` para 8b e 8d; `mcp__*__ads_get_ad_entities` com `entity_type=ad` para 8c; `mcp__*__ads_get_dataset_stats` para 8f. Para audiences (8e), não há tool MCP equivalente — fazer chamada REST direta via `access_token`.
 
@@ -388,9 +388,9 @@ Classificação por `last_fired_time`:
 | Não disparou há mais de 72h | 🔴 sem atividade | Pixel provavelmente quebrado ou script removido |
 | `last_fired_time` ausente | 🔴 sem registro | Pixel nunca disparou ou foi recriado recentemente |
 
-**Limitação importante:** este bloco mostra apenas se o pixel disparou algum evento recente. Para ver breakdown por tipo de evento (Purchase, Lead, ViewContent etc.) e detectar quais eventos pararam de disparar, usar o diagnóstico completo via `trafego-pixel`.
+**Limitação importante:** este bloco mostra apenas se o pixel disparou algum evento recente. Para ver breakdown por tipo de evento (Purchase, Lead, ViewContent etc.) e detectar quais eventos pararam de disparar, usar o diagnóstico completo no Gerenciador de Eventos.
 
-**Atenção — falso positivo:** `last_fired_time` indica o último disparo de qualquer evento, não necessariamente o evento de conversão configurado na campanha. Um pixel que dispara `PageView` continuamente mas não dispara `Purchase` vai aparecer como "ativo" (🟢) neste bloco, mesmo sem conversões rastreadas. Para verificar se o evento específico da campanha está sendo disparado, cruzar com os dados de `event_stats` do dataset (Chamada 8f aprofundada ou `/trafego-pixel`).
+**Atenção — falso positivo:** `last_fired_time` indica o último disparo de qualquer evento, não necessariamente o evento de conversão configurado na campanha. Um pixel que dispara `PageView` continuamente mas não dispara `Purchase` vai aparecer como "ativo" (🟢) neste bloco, mesmo sem conversões rastreadas. Para verificar se o evento específico da campanha está sendo disparado, cruzar com os dados de `event_stats` do dataset (Chamada 8f aprofundada ou Gerenciador de Eventos).
 
 ---
 
@@ -502,14 +502,14 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Ad set ativo sem gasto por problema de público micro | "trafego-publicos" — recriar audience com critérios mais amplos ou usar Advantage+ Audience |
+| Ad set ativo sem gasto por problema de público micro | Gerenciador de Audiences — recriar audience com critérios mais amplos ou usar Advantage+ Audience |
 | Ad set ativo sem gasto por anúncios pausados | Verificar manualmente no Gerenciador e reativar os anúncios |
-| Anúncio com impressão alta e zero clique | "trafego-otimizar" (pausar) seguido de "trafego-testes" (novo criativo com CTA mais claro) |
-| Audiência micro em campanha ativa | "trafego-publicos" — recriar com janela maior, evento de mais volume ou Lookalike |
+| Anúncio com impressão alta e zero clique | "trafego-otimizar" (pausar) seguido de Duplicar entidade no Gerenciador (variando 1 dimensão) (novo criativo com CTA mais claro) |
+| Audiência micro em campanha ativa | Gerenciador de Audiences — recriar com janela maior, evento de mais volume ou Lookalike |
 | Ad set com zero conversão e gasto > R$ 50 | "trafego-otimizar" — atalho pausar com filtro: conversoes=0 E spend>50 |
 | Anúncio desaprovado | "copy-anuncio" (refazer copy respeitando política) e recurso manual no Meta se copy estiver correta |
-| Pixel sem atividade | "trafego-pixel" (diagnóstico completo de eventos) — pode exigir "pagina-pixel" para reinstalar script |
-| Remarketing secando por pixel quebrado | "trafego-pixel" (verificar evento que alimenta a audience) seguido de "trafego-publicos" (recriar audience com critério maior enquanto corrige o evento) |
+| Pixel sem atividade | Gerenciador de Eventos (diagnóstico completo de eventos) — pode exigir "pagina-pixel" para reinstalar script |
+| Remarketing secando por pixel quebrado | Gerenciador de Eventos (verificar evento que alimenta a audience) seguido de Gerenciador de Audiences (recriar audience com critério maior enquanto corrige o evento) |
 
 ---
 

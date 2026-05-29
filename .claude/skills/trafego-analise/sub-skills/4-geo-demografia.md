@@ -282,7 +282,7 @@ Dados vêm da Chamada 4a. Identificar clusters demográficos (faixa etária + g�
   Conversões:     {N}
   Estimativa:     se receber 10% do budget total (R$ {10%_do_spend_total}),
                   projeção de {floor(R$_10pct / CPA_atual)} compras adicionais no período.
-  Ação: criar adset segmentado para este perfil via "trafego-publicos" + validar via "trafego-testes"
+  Ação: criar adset segmentado para este perfil no Gerenciador de Audiences + validar duplicando entidade no Gerenciador (variando 1 dimensão)
 ```
 
 #### Template B — Captação de leads:
@@ -296,7 +296,7 @@ Dados vêm da Chamada 4a. Identificar clusters demográficos (faixa etária + g�
   Leads:          {N}
   Estimativa:     se receber 10% do budget total (R$ {10%_do_spend_total}),
                   projeção de {floor(R$_10pct / CPL_atual)} leads adicionais no período.
-  Ação: criar adset segmentado para este perfil via "trafego-publicos" + validar via "trafego-testes"
+  Ação: criar adset segmentado para este perfil no Gerenciador de Audiences + validar duplicando entidade no Gerenciador (variando 1 dimensão)
 ```
 
 **Fórmula da estimativa (obrigatório usar):**
@@ -366,7 +366,7 @@ A API não permite cruzar faixa etária + gênero + estado numa única chamada. 
   Conversões:     {N}
   Estimativa:     se receber 10% do budget total (R$ {10%_do_spend_total}),
                   projeção de {floor(R$_10pct / CPA_atual)} compras adicionais no período.
-  Ação: criar adset com targeting geográfico isolado via "trafego-testes" — duplicar campanha winner
+  Ação: criar adset com targeting geográfico isolado duplicando entidade no Gerenciador (variando 1 dimensão) — duplicar campanha winner
         restringindo a este estado
 ```
 
@@ -381,7 +381,7 @@ A API não permite cruzar faixa etária + gênero + estado numa única chamada. 
   Leads:          {N}
   Estimativa:     se receber 10% do budget total (R$ {10%_do_spend_total}),
                   projeção de {floor(R$_10pct / CPL_atual)} leads adicionais no período.
-  Ação: criar adset com targeting geográfico isolado via "trafego-testes" — duplicar campanha winner
+  Ação: criar adset com targeting geográfico isolado duplicando entidade no Gerenciador (variando 1 dimensão) — duplicar campanha winner
         restringindo a este estado
 ```
 
@@ -449,12 +449,12 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Cluster demográfico vencedor com gasto < 10% do total | "trafego-publicos" — criar Saved Audience segmentada para o cluster + "trafego-testes" — adset isolado para validar em escala |
+| Cluster demográfico vencedor com gasto < 10% do total | Gerenciador de Audiences — criar Saved Audience segmentada para o cluster + Duplicar entidade no Gerenciador (variando 1 dimensão) — adset isolado para validar em escala |
 | Estado com gasto > 5% e CPA ou CPL > 150% do benchmark | "trafego-otimizar" — excluir região via ajuste de targeting no adset |
-| Ponto cego demográfico identificado | "trafego-testes" — duplicar adset winner com segmentação de faixa etária + gênero isolados |
-| Ponto cego geográfico identificado | "trafego-testes" — duplicar adset winner com targeting geográfico restrito ao estado |
+| Ponto cego demográfico identificado | Duplicar entidade no Gerenciador (variando 1 dimensão) — duplicar adset winner com segmentação de faixa etária + gênero isolados |
+| Ponto cego geográfico identificado | Duplicar entidade no Gerenciador (variando 1 dimensão) — duplicar adset winner com targeting geográfico restrito ao estado |
 | Vencedor real difere do público declarado no perfil | "produto-concepcao" — revisar Identidade do Consumidor com os dados reais da API |
-| Capital vs. interior com diferença > 30% de CPA ou CPL | "trafego-testes" — criar adsets separados com targeting geográfico distinto (capitais em um, interior em outro) |
+| Capital vs. interior com diferença > 30% de CPA ou CPL | Duplicar entidade no Gerenciador (variando 1 dimensão) — criar adsets separados com targeting geográfico distinto (capitais em um, interior em outro) |
 
 ---
 

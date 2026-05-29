@@ -228,12 +228,8 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/trafego-conexao`. Configura conexão com Meta Ads. Pergunta se quer usar o **conector oficial Claude + Meta (MCP via OAuth)** ou o caminho do **App Facebook Developers (token permanente no `.env`)**. Salva preferência em `META_AUTH_MODO`. Toda skill de tráfego depende dessa variável e aciona `/trafego-conexao` se ela não existir (Passo 0 obrigatório).
 - `/trafego-insights`. Leitura de métricas (campanha única ou conta completa com ranking de urgência) com cálculo automático de derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate).
 - `/trafego-criar-campanha`. Cria campanha via Marketing API. PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo. Cobre objetivos OUTCOME_SALES (perpétuo) e OUTCOME_LEADS (lançamento).
-- `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh) e emite sinal de prontidão para escala. Inclui sub-skill `acoes-lote` (em massa por filtro) e `atalhos-compostos` (orquestra `/trafego-publicos` + `/trafego-criar-campanha`).
+- `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh) e emite sinal de prontidão para escala. Inclui sub-skill `acoes-lote` (em massa por filtro).
 - `/trafego-analise`. Análise narrada VTSD em 9 outputs (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B).
-- `/trafego-pixel`. Diagnóstico de pixels da conta (status, último disparo, eventos rastreados nos últimos 7 dias). Apenas leitura.
-- `/trafego-publicos`. Cria audiences via API (Custom Audiences a partir de evento padrão do pixel, evento personalizado ou video view %, Lookalike 1% a 10%, Saved Audiences por nível iniciante/intermediário/avançado a partir do produto ativo). Toda criação passa por preview YAML e confirmação SIM.
-- `/trafego-regras`. Cria automações no Meta Ads. Regra automática (`adrules_library`) com triggers de CPA/CPL/ROAS, resumo recorrente agendado por Telegram/WhatsApp, e programação liga/pausa de adsets (delivery schedule). Toda regra nasce PAUSED.
-- `/trafego-testes`. Cria testes A/B disciplinados (criativo, headline, audiência, faixa etária, posicionamento, lance, estrutura), duplica entidade existente alterando UMA dimensão, e fluxo composto de campanha de remarketing. Hipótese documentada e handoff para `/trafego-analise` após D+7.
 
 Skill interna acionada automaticamente: `trafego-escalar` (5 modos de escala, 3 velocidades, freios escalonados, tetos), invocada por `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
 
@@ -337,13 +333,9 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 - `trafego-conexao/`. Setup de conexão (MCP oficial ou App Facebook Developers).
 - `trafego-insights/`. Fonte única de leitura da Graph API com cálculo de derivadas.
 - `trafego-criar-campanha/`. Fluxo de criação com preview YAML.
-- `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + sub-skills (acoes-lote, atalhos-compostos).
+- `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + sub-skill acoes-lote.
 - `trafego-escalar/`. 5 modos de escala (vertical, horizontal, vertical+horizontal, consolidação CBO, Advantage).
 - `trafego-analise/`. 9 outputs narrativos VTSD.
-- `trafego-pixel/`. Diagnóstico de pixels (leitura).
-- `trafego-publicos/`. Custom, Lookalike, Saved Audiences.
-- `trafego-regras/`. Regras automáticas, resumos agendados, delivery schedule.
-- `trafego-testes/`. Testes A/B disciplinados, remarketing.
 
 **Pesquisa e dados**
 - `pesquisa-mercado/`. 9 eixos completos.
@@ -467,13 +459,11 @@ Configuradas via `.env` (veja `.env.example`). Token sempre lido do `.env`, nunc
 
 ### Tráfego Pago (Meta Ads)
 1. `/trafego-conexao` (uma vez, define MCP ou App, salva `META_AUTH_MODO`)
-2. `/trafego-pixel` (diagnóstico de pixel)
-3. `/trafego-publicos` (audiences base)
-4. `/trafego-criar-campanha` (PAUSED por padrão)
-5. `/trafego-insights` (após 48h rodando)
-6. `/trafego-otimizar` (diagnóstico em 2 camadas + 6 trilhas)
-7. `/trafego-analise` (análise narrada VTSD em 9 outputs)
-8. `/trafego-testes` ou escala automática (`/trafego-otimizar` → `trafego-escalar` quando `sinal_para_escala.pronta: true`)
+2. `/trafego-criar-campanha` (PAUSED por padrão)
+3. `/trafego-insights` (após 48h rodando)
+4. `/trafego-otimizar` (diagnóstico em 2 camadas + 6 trilhas)
+5. `/trafego-analise` (análise narrada VTSD em 9 outputs)
+6. Escala automática (`/trafego-otimizar` → `trafego-escalar` quando `sinal_para_escala.pronta: true`)
 
 ### High Ticket C10X
 Use o agente `estrategista-ht` ou invoque diretamente as skills globais do plugin C10X. Fluxo típico:

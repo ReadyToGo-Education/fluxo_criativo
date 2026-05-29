@@ -228,7 +228,7 @@ Dados vêm dos campos `clicks`, `landing_page_views` e `cost_per_action_type` da
 | Baixo (≤ R$ 3) | Baixo (< 50%) | 🟠 Problema de página | Clique barato mas a página perde o visitante — auditar velocidade |
 | Baixo (≤ R$ 3) | Alto (> 70%) | 🟢 Eficiente | Tráfego qualificado chegando. Próximo gargalo está na conversão |
 
-Se `landing_page_views` não retornar (pixel sem evento de LP view configurado): suprimir esta seção e alertar: "LP views não rastreado — sem essa métrica, não é possível identificar abandono entre clique e página. Configurar via 'trafego-pixel'."
+Se `landing_page_views` não retornar (pixel sem evento de LP view configurado): suprimir esta seção e alertar: "LP views não rastreado — sem essa métrica, não é possível identificar abandono entre clique e página. Configurar no Gerenciador de Eventos."
 
 ---
 
@@ -270,7 +270,7 @@ Dados vêm da Chamada 6d. Usar tipos canônicos conforme objetivo.
 
 **Nota:** a API retorna contagens por janela (1d_click, 7d_click, 28d_click), não a janela média ponderada diretamente. A "janela predominante" é inferida pela maior contagem — não é um valor exato.
 
-**Se o produto for de consideração** e não houver campanha de remarketing ativa (verificar pelo objetivo das campanhas no Passo 4): recomendar criar audience de retargeting via "trafego-publicos" e campanha via "trafego-testes" (fluxo de campanha de remarketing).
+**Se o produto for de consideração** e não houver campanha de remarketing ativa (verificar pelo objetivo das campanhas no Passo 4): recomendar criar audience de retargeting no Gerenciador de Audiences e campanha duplicando entidade no Gerenciador (variando 1 dimensão) (fluxo de campanha de remarketing).
 
 ---
 
@@ -333,15 +333,15 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Aprendizado não convergiu (CPA subiu após aprendizado) | "trafego-otimizar" — diagnóstico de gargalo + "trafego-publicos" (nova audiência) |
-| Dispositivo perdedor com gasto > 15% do total | "trafego-testes" — A/B de posicionamento excluindo dispositivo |
-| Anúncio com CPA WoW > +50% e freq ≥ 4 | "trafego-testes" — A/B de criativo com nova Urgência Oculta |
+| Aprendizado não convergiu (CPA subiu após aprendizado) | "trafego-otimizar" — diagnóstico de gargalo + Gerenciador de Audiences (nova audiência) |
+| Dispositivo perdedor com gasto > 15% do total | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B de posicionamento excluindo dispositivo |
+| Anúncio com CPA WoW > +50% e freq ≥ 4 | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B de criativo com nova Urgência Oculta |
 | Anúncio com CPA WoW > +50% e freq < 4 | "trafego-otimizar" — pausar anúncio específico |
 | Hold Rate < 8% em Reels | "copy-anuncio" — reescrever criativo adaptado para formato vertical curto com Decorados nos primeiros 10s |
-| Produto de consideração sem retargeting | "trafego-publicos" (criar audience de visitantes) + "trafego-testes" (campanha de remarketing) |
+| Produto de consideração sem retargeting | Gerenciador de Audiences (criar audience de visitantes) + Duplicar entidade no Gerenciador (variando 1 dimensão) (campanha de remarketing) |
 | Connect Rate < 30% | "pagina-performance" — auditar velocidade e URL do anúncio |
 | CPC alto + Connect Rate baixo | "pagina-performance" (velocidade) e output [2] (CPM do leilão) — problemas distintos |
-| Pixel sem LP view configurado | "trafego-pixel" — configurar evento de landing page view |
+| Pixel sem LP view configurado | Gerenciador de Eventos — configurar evento de landing page view |
 
 ---
 

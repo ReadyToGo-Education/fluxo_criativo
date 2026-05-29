@@ -773,5 +773,5 @@ Exiba o caminho absoluto em formato copiável conforme regra do `CLAUDE.md`.
 ## Quando NÃO usar esta skill
 
 - O aluno quer **um carrossel agora** (sem agendamento recorrente). Use `/carrossel`.
-- O aluno quer agendar **outra coisa** (resumo de tráfego, post avulso). Use `/trafego-regras` ou crie skill específica.
+- O aluno quer agendar **outra coisa** (resumo de tráfego, post avulso). Use Gerenciador (Regras automáticas) ou crie skill específica.
 - O aluno ainda não cadastrou produto. Use `/produto-novo`.
