@@ -255,15 +255,28 @@ IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story compo
 
 #### D) Prompt pro ChatGPT (formato Stories)
 
-O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma pessoa, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
+Esse é fixo. Não precisa preencher placeholders.
 
 ````
+Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, só diagramada pro formato Stories.
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
 
-O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
+#### E) Prompt de Animação pro Freepik (Magnific)
+
+Texto pronto pra colar na ferramenta de imagem-pra-vídeo do Freepik (Magnific). Serve tanto pro Feed quanto pro Stories.
+
+````
+Anima essa imagem com timing cômico de meme. APENAS os elementos visuais e a pessoa do meme se mexem. O texto principal do meme (legenda do topo, fala ou frase final) e qualquer CTA ficam 100% ESTÁTICOS, não se movem em nenhum momento.
+
+MOVIMENTO DA CENA:
+Movimento cômico que amplifica a piada do meme: expressão facial exagerada que muda do neutro pro cômico, leve zoom da câmera no rosto da pessoa pro punch line, sacudir leve de cabeça, virada brusca, movimento performático que reforça o humor. Pode ter freeze frame curto no momento mais engraçado. Loop de 3-5 segundos com timing de comédia (preparação + punch + reação). Sem cortes longos, sem panning.
+
+REGRA CRÍTICA: o texto do meme (que carrega a piada) e qualquer CTA são ESTÁTICOS. Não balançam, não aparecem com animação, não se movem. Ficam fixos o tempo todo pra leitura instantânea. Só a pessoa/elemento visual é que tem o movimento cômico.
+
+MÚSICA DE FUNDO SUGERIDA: áudio meme brasileiro reconhecível do momento (vinheta de humor, som de viral, trecho de música que casa com o tom da piada). Ou trilha cômica genérica tipo "doinks" do TikTok. Áudio reconhecível amplifica o riso, áudio neutro mata o meme.
+````
 
 ### 4. Auto-revisão obrigatória
 
@@ -282,14 +295,17 @@ Pronto. Aqui está o seu criativo Meme:
 📌 TÍTULO DO ANÚNCIO
 [título gerado]
 
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)
+[prompt de animação, dentro de bloco de código]
+
 📱 PROMPT PRO CHATGPT, FORMATO STORIES
 [prompt Stories, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
 
 ---
 1. Aprovar e salvar
@@ -352,6 +368,12 @@ Conteúdo do arquivo:
 [prompt Feed preenchido]
 \`\`\`
 
+## Prompt de Animação pro Freepik (Magnific) (serve pro Feed e pro Stories)
+
+\`\`\`
+[prompt de animação preenchido]
+\`\`\`
+
 ## Prompt pro ChatGPT. Formato Stories (1080x1920, 9:16)
 
 \`\`\`
@@ -361,8 +383,10 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Quando estiver pronto, mande "ok" no chat.
+4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+5. Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba a imagem gerada e cole o **Prompt de Animação**. O mesmo prompt serve pro Feed e pro Stories.
 
 ## Banco completo (as 20 ideias geradas nesta sessão)
 
@@ -421,8 +445,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:

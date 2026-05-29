@@ -83,7 +83,7 @@ Antes de escrever qualquer linha de código, apresente ao usuário a lista compl
 ```
 📦 ASSETS NECESSÁRIOS PARA O VÍDEO
 
-IMAGENS (banco de imagens sugerido: Unsplash, Pexels, Freepik):
+IMAGENS (banco de imagens sugerido: Unsplash, Pexels, Freepik (Magnific)):
   [ ] cena1_hook.jpg. [descrição do que deve mostrar, ex: "esteticista atendendo cliente, close no rosto, luz natural"]
   [ ] cena2_problema.jpg. [descrição...]
   ...

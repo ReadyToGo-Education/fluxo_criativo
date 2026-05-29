@@ -330,15 +330,28 @@ A cor do CTA puxa a paleta do nicho. Texto SEMPRE em preto puro sobre o fundo co
 
 #### D) Prompt pro ChatGPT (formato Stories)
 
-O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma pessoa, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
+Esse é fixo. Não precisa preencher placeholders.
 
 ````
+Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, só diagramada pro formato Stories.
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
 
-O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
+#### E) Prompt de Animação pro Freepik (Magnific)
+
+Texto pronto pra colar na ferramenta de imagem-pra-vídeo do Freepik (Magnific). Serve tanto pro Feed quanto pro Stories. Esse formato é especialmente poderoso animado porque ASMR + macro + movimento lento = retenção máxima em Reels.
+
+````
+Anima essa imagem com movimento ASMR ultra-sensorial, em SLOW MOTION exagerada. APENAS o objeto/textura macro central se mexe. Qualquer texto, título ou CTA na arte fica 100% ESTÁTICO, não se move em nenhum momento.
+
+MOVIMENTO DA CENA:
+Movimento ultra-lento e hipnótico do elemento sensorial central, no padrão de vídeo ASMR de TikTok: líquido pingando devagar em câmera lenta, espuma se formando, fumaça subindo em espiral, fio de mel descendo, vapor saindo, partículas de pó caindo, textura sendo tocada com micro-resolução, tinta espalhando na água, vela acesa com chama tremulando. Loop perfeito de 4-6 segundos, sem corte visível, sem cortes bruscos, sem panning. O movimento tem que ser tão sensorial que dá vontade de tocar a tela.
+
+REGRA CRÍTICA: qualquer texto, título de campanha ou CTA que esteja sobreposto na arte é ESTÁTICO. Não balança, não aparece com animação, não se move. Fica fixo o tempo todo. Só o elemento macro sensorial é que tem o movimento ultra-lento.
+
+MÚSICA DE FUNDO SUGERIDA: trilha ASMR com som ambiente ou trilha de tensão lenta crescente, sem letra. Pode ser apenas som ambiente do próprio elemento (líquido caindo, sopro, chama). Trilhas viral de ASMR no TikTok funcionam, ou ambient atmosférico tipo Lo-Fi suave.
+````
 
 ### 4. Auto-revisão obrigatória
 
@@ -357,14 +370,17 @@ Pronto. Aqui está o seu criativo ASMR/Sensação:
 📌 TÍTULO DO ANÚNCIO
 [título gerado]
 
+📝 LEGENDA PRO INSTAGRAM
+[legenda gerada]
+
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)
+[prompt de animação, dentro de bloco de código]
+
 📱 PROMPT PRO CHATGPT, FORMATO STORIES
 [prompt Stories, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
 
 ---
 1. Aprovar e salvar
@@ -428,6 +444,12 @@ Conteúdo do arquivo:
 [prompt Feed preenchido]
 \`\`\`
 
+## Prompt de Animação pro Freepik (Magnific) (serve pro Feed e pro Stories)
+
+\`\`\`
+[prompt de animação preenchido]
+\`\`\`
+
 ## Prompt pro ChatGPT. Formato Stories (1080x1920, 9:16)
 
 \`\`\`
@@ -437,8 +459,10 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Quando estiver pronto, mande "ok" no chat.
+4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+5. Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba a imagem gerada e cole o **Prompt de Animação**. O mesmo prompt serve pro Feed e pro Stories. Em formato ASMR, animar é praticamente obrigatório — é onde o formato performa melhor.
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -497,8 +521,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:

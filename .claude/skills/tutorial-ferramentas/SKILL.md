@@ -330,7 +330,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
   <div class="nav-title">Imagem e Vídeo</div>
   <ul class="nav-list">
     <li class="nav-item" data-target="heygen"><span class="nav-dot"></span>HeyGen</li>
-    <li class="nav-item" data-target="freepik"><span class="nav-dot"></span>Freepik</li>
+    <li class="nav-item" data-target="freepik"><span class="nav-dot"></span>Freepik (Magnific)</li>
     <li class="nav-item" data-target="openrouter"><span class="nav-dot"></span>OpenRouter</li>
     <li class="nav-item" data-target="whisk"><span class="nav-dot"></span>Google Whisk</li>
     <li class="nav-item" data-target="canva"><span class="nav-dot"></span>Canva</li>
@@ -813,7 +813,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-head">
       <div class="tool-icon blue">F</div>
       <div class="tool-title">
-        <h3>Freepik (com Pikaso)</h3>
+        <h3>Freepik (Magnific)</h3>
         <div class="sub">Banco de imagens, vetores e, principalmente, o Pikaso: gerador de imagem e vídeo com IA integrado. Usado para criar criativos de anúncio.</div>
       </div>
       <label class="checkbox-big" data-item="freepik"><input type="checkbox"><span class="check-box"></span>Feito</label>
@@ -867,7 +867,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-section">
       <h4><i class="ph ph-sparkle"></i>Usar o Pikaso</h4>
       <ol>
-        <li>No menu do Freepik, vá em <b>AI Tools</b> e escolha <b>Pikaso</b></li>
+        <li>No menu do Freepik (Magnific), vá em <b>AI Tools</b> e escolha <b>Pikaso</b></li>
         <li>Cole o prompt gerado pelo comando <span class="inline">/criativo-estatico</span> do workshop</li>
         <li>Escolha o formato (quadrado, vertical, horizontal)</li>
         <li>Gere e baixe a imagem</li>
@@ -1117,7 +1117,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <tr><td>Vercel</td><td class="mono">VERCEL_TOKEN</td><td>Opcional (use o conector)</td></tr>
         <tr><td>Vercel</td><td class="mono">VERCEL_PROJECT_ID</td><td>Opcional (use o conector)</td></tr>
         <tr><td>HeyGen</td><td class="mono">HEYGEN_API_KEY</td><td>Para <span class="inline">/video-heygen</span></td></tr>
-        <tr><td>Freepik</td><td class="mono">FREEPIK_API_KEY</td><td>Para <span class="inline">/criativo-estatico</span></td></tr>
+        <tr><td>Freepik (Magnific)</td><td class="mono">FREEPIK_API_KEY</td><td>Para <span class="inline">/criativo-estatico</span></td></tr>
         <tr><td>OpenRouter</td><td class="mono">OPENROUTER_API_KEY</td><td>Para criativos IA</td></tr>
         <tr><td>OpenRouter</td><td class="mono">OPENROUTER_IMAGE_MODEL</td><td>Opcional</td></tr>
         <tr><td>Apify</td><td class="mono">APIFY_API_TOKEN</td><td>Para <span class="inline">/instagram-dashboard</span></td></tr>
@@ -1149,7 +1149,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <li>Claude Max: R$ 550/mês (plano oficial do workshop, obrigatório)</li>
         <li>Lovable Starter: US$ 5/mês (cerca de R$ 28, obrigatório para rodar quiz e SaaS do funil low ticket)</li>
         <li>Node.js, Claude in Chrome, Conector Vercel, Vercel, Whisk, Canva: gratuito</li>
-        <li>HeyGen, Freepik, Apify: começam nos planos gratuitos</li>
+        <li>HeyGen, Freepik (Magnific), Apify: começam nos planos gratuitos</li>
         <li>OpenRouter (API): <b>variável</b>, pague conforme usa. US$ 10 de crédito costumam durar 2 a 3 meses para quem roda /dados-instagram, /criar-gpt e automações esporádicas</li>
         <li><b>Total fixo: cerca de R$ 578/mês + variável da API</b></li>
       </ul>

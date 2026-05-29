@@ -1,6 +1,6 @@
 ---
 name: workshop-marketing:criativo-estatico
-description: Gera criativo estático de anúncio (imagem) para Instagram. Orquestrador que pergunta o formato e direciona para a sub-skill correspondente. Cobre 24 formatos. Promessa Simples, Caixinha de Perguntas, Criativo Surreal, AIDA Completo, UGC Rotina Real, POV, Problema-Solução, Jeito Certo x Jeito Errado, Checklist, ASMR/Sensação, Meme, Jogo dos 7 Erros, Criativo Notícia, Associação Criativa, Criativo História com Quebra de Objeção, O Desespero de Quem, Fofinho, Nunca, Sempre, Timelapse, UGC Coisas Estranhas, Você Merece, Objetos Estranhos e Reflexão Editorial. Em todos, no fim o aluno escolhe gerar a imagem colando o prompt no ChatGPT ou direto pela API. Use sempre que o usuário pedir criativo estático, anúncio em imagem, arte de anúncio, promessa simples, caixinha de perguntas, criativo surreal, anúncio surreal, anúncio AIDA, UGC, POV, problema e solução, jeito certo e errado, checklist, ASMR, meme, jogo dos 7 erros, criativo notícia, associação criativa, criativo história, desespero de quem, fofinho, criativo nunca, criativo sempre, timelapse, UGC coisas estranhas, você merece, objetos estranhos, reflexão editorial ou variantes desses formatos.
+description: Gera criativo estático de anúncio (imagem) para Instagram. Orquestrador que pergunta o formato e direciona para a sub-skill correspondente. Cobre 26 formatos. Promessa Simples, Caixinha de Perguntas, Criativo Surreal, AIDA Completo, UGC Rotina Real, POV, Problema-Solução, Jeito Certo x Jeito Errado, Checklist, ASMR/Sensação, Meme, Jogo dos 7 Erros, Criativo Notícia, Associação Criativa, Criativo História com Quebra de Objeção, O Desespero de Quem, Fofinho, Nunca, Sempre, Timelapse, UGC Coisas Estranhas, Você Merece, Objetos Estranhos, Reflexão Editorial, Copa / Futebol e Eleições. Em todos, no fim o aluno escolhe gerar a imagem colando o prompt no ChatGPT ou direto pela API. Use sempre que o usuário pedir criativo estático, anúncio em imagem, arte de anúncio, promessa simples, caixinha de perguntas, criativo surreal, anúncio surreal, anúncio AIDA, UGC, POV, problema e solução, jeito certo e errado, checklist, ASMR, meme, jogo dos 7 erros, criativo notícia, associação criativa, criativo história, desespero de quem, fofinho, criativo nunca, criativo sempre, timelapse, UGC coisas estranhas, você merece, objetos estranhos, reflexão editorial, copa, criativo copa, copa do mundo, criativo futebol, eleições, criativo eleições, criativo político, criativo eleitoral, ou variantes desses formatos.
 allowed-tools: Read, Write, Bash, WebSearch
 ---
 
@@ -36,7 +36,7 @@ Da combinação desses arquivos, extrair pra passar pras sub-skills:
 - **Tipo**: do `tipo.md` se existir.
 - **Preço**: do `preco.md` se existir.
 
-Esse contexto enriquecido (real + inferido) é compartilhado entre as 13 sub-skills. As sub-skills SEMPRE mostram o resumo do contexto ao aluno antes de prosseguir, marcando claramente o que veio do perfil e o que foi inferido, pedindo confirmação ou correção.
+Esse contexto enriquecido (real + inferido) é compartilhado entre as 26 sub-skills. As sub-skills SEMPRE mostram o resumo do contexto ao aluno antes de prosseguir, marcando claramente o que veio do perfil e o que foi inferido, pedindo confirmação ou correção.
 
 **Importante**: o objetivo é NUNCA fazer entrevista do zero quando há contexto disponível. Mesmo com perfil ausente, o slug + tipo + preço já dão pistas suficientes pra montar um chute inicial que o aluno confirma ou ajusta.
 
@@ -70,12 +70,14 @@ Se a mensagem inicial do aluno mencionar EXPLICITAMENTE o nome do formato, pular
 | "você merece", "voce merece", "aspiracional", "resultado visível", "3 desejos" | Você Merece | `.claude/commands/criativo-estatico/voce-merece.md` |
 | "objetos estranhos", "objeto perto da câmera", "objeto curioso", "objeto metáfora", "frame de TikTok com objeto" | Objetos Estranhos | `.claude/commands/criativo-estatico/objetos-estranhos.md` |
 | "reflexão editorial", "reflexao editorial", "criativo editorial", "post jornalístico", "estilo tweet expandido", "criativo com dados", "conta maluca", "polêmica do nicho" | Reflexão Editorial | `.claude/commands/criativo-estatico/reflexao-editorial.md` |
+| "copa", "criativo copa", "anúncio copa", "campanha copa", "copa do mundo", "criativo futebol", "anúncio futebol", "campanha futebol", "temático futebol", "estilo copa", "ads copa", "creative copa", "criativo esportivo" | Copa / Futebol | `.claude/commands/criativo-estatico/copa.md` |
+| "eleições", "eleicoes", "criativo eleições", "anúncio eleições", "campanha eleições", "criativo político", "criativo politico", "criativo eleitoral", "ads eleições", "criativo votação", "criativo voto", "tema eleição", "anúncio eleitoral" | Eleições | `.claude/commands/criativo-estatico/eleicoes.md` |
 
 Se não tiver atalho claro, seguir pro Passo 2 (menu).
 
 ### 2. Pergunta de roteamento (menu padrão)
 
-Apresente as 24 opções:
+Apresente as 26 opções:
 
 ```
 Qual formato de criativo você quer criar?
@@ -175,6 +177,17 @@ Qual formato de criativo você quer criar?
     Texto estático estilo post jornalístico com dado, notícia ou conta
     maluca do nicho. Venda sutil no final. 10 reflexões, escolhe uma.
 
+25. Copa / Futebol
+    Conecta o seu nicho ao universo do futebol e da Copa do Mundo. 10
+    ideias com distribuição emocional (2 desejo, 2 medo, 2 oportunidade,
+    2 curiosidade, 2 prova). Escolhe uma. Estética campanha publicitária.
+
+26. Eleições
+    Conecta o seu nicho ao universo das eleições brasileiras (santinho,
+    carro de som, palanque, urna) como metáfora apartidária. 10 ideias
+    com distribuição emocional. Escolhe uma. Tom institucional, nunca
+    militante.
+
 Em qualquer formato, no fim você escolhe gerar a imagem colando o prompt no
 ChatGPT (grátis) ou direto pela API (tem custo, salva o arquivo automático).
 
@@ -209,6 +222,8 @@ Conforme a resposta:
 - **22** ou termos relacionados a Você Merece: leia `.claude/commands/criativo-estatico/voce-merece.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 - **23** ou termos relacionados a Objetos Estranhos: leia `.claude/commands/criativo-estatico/objetos-estranhos.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 - **24** ou termos relacionados a Reflexão Editorial: leia `.claude/commands/criativo-estatico/reflexao-editorial.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **25** ou termos relacionados a Copa / Futebol: leia `.claude/commands/criativo-estatico/copa.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **26** ou termos relacionados a Eleições: leia `.claude/commands/criativo-estatico/eleicoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 
 O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO precisam ler `perfil.md` e `idconsumidor.md` de novo, podem usar o que já foi extraído.
 
@@ -218,5 +233,5 @@ O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO pr
 - As sub-skills herdam todas as regras globais do CLAUDE.md. Light Copy, auto-revisão obrigatória de copy, anúncio de próximo passo, aprovação antes de salvar, acentuação correta em pt_BR.
 - O orquestrador NÃO gera copy nem texto de anúncio. Apenas roteia.
 - Cada sub-skill tem fluxo próprio. O orquestrador não define perguntas, opções de saída ou regras de geração. Quem define isso é o arquivo da sub-skill.
-- Se o aluno escolher um número inválido (fora de 1 a 24), repetir o menu de forma curta sem mostrar a descrição das opções de novo.
+- Se o aluno escolher um número inválido (fora de 1 a 26), repetir o menu de forma curta sem mostrar a descrição das opções de novo.
 - Se a sub-skill terminar e o aluno quiser criar outro criativo de outro formato, retornar a esta skill (`/criativo-estatico`) em vez de chamar a outra sub-skill direto. O Passo 0 garante contexto fresco.

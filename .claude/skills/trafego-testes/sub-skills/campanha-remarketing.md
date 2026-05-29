@@ -36,6 +36,29 @@ Cria uma campanha de remarketing completa em um único fluxo. Orquestra `/trafeg
 | `duracao_dias` | indefinido (ACTIVE) | |
 | `excluir_compradores` | `true` | Excluir audience de compradores das últimas 90d (boa prática) |
 
+## Padrão de coleta de inputs (uma pergunta por mensagem)
+
+Regra dura: **NUNCA agrupar 2+ inputs na mesma mensagem**. Reforça a regra global do CLAUDE.md ("NUNCA fazer duas perguntas na mesma mensagem"). O `## Fluxo composto` acima descreve as 6 etapas; cada etapa que pede algo ao aluno gera **exatamente uma pergunta**.
+
+Ordem fixa de coleta:
+
+1. **`descricao_audiencia`** — antes de listar, oferecer as 5 receitas pré-configuradas (R1 a R5) numeradas. Aluno escolhe receita ou descreve audience própria.
+2. **`objective`** (numerada: 1. Vendas, 2. Leads). Default Vendas.
+3. **`criativo_id`** — rodar o **Helper: Coleta de criativos** documentado em [ab-generico.md](./ab-generico.md#helper-coleta-de-criativos-para-criativo-headline-cta) (lista da biblioteca com filtro temporal 30d default, esconde Auto_Cropped/untitled, código curto V1/I1, id/hash indentado, upload local ou ID direto como alternativas). **Não pedir image_hash ou video_id direto ao aluno.**
+
+   **Atenção ao construir o creative do ad de remarketing:** se o criativo escolhido tem `asset_feed_spec` (Advantage+ Creative) com múltiplos vídeos/imagens, simplificar pra `object_story_spec.video_data` ou `object_story_spec.link_data` (1 criativo só), seguindo o mesmo padrão da [Construção do payload da ab-generico](./ab-generico.md#construção-do-payload-algoritmo-genérico) (passo 2 — detecção e simplificação). Caso raro em remarketing, mas vale a checagem.
+4. **`headline`**.
+5. **`primary_text`**.
+6. **`cta`** (numerada com os 4-5 CTAs mais comuns + opção "outro"). Default sugerido conforme a receita.
+7. **`budget_diario`** (R$/dia).
+8. **`duracao_dias`** apenas se aluno mencionar prazo (default: indefinido).
+9. **`excluir_compradores`** apenas se aluno questionar a exclusão automática (default: sim).
+
+**Proibido**:
+- Listar 3+ perguntas pendentes em formato "responda os 5".
+- Misturar pergunta principal + sub-opção na mesma mensagem (ex: "qual receita? E qual criativo?"). Faça **primeiro** a receita, **depois** o criativo.
+- Pular pro preview YAML sem ter respostas para os passos 1-7.
+
 ## Receitas pré-configuradas
 
 A skill oferece 5 receitas comuns:

@@ -176,7 +176,7 @@ py -3 scripts/gerar-banner-estatico.py --config [caminho-do-config]
 ```
 
 O script:
-1. Gera foto via Freepik (padrão) ou OpenRouter
+1. Gera foto via Freepik (Magnific) (padrão) ou OpenRouter
 2. Renderiza HTML com gradiente e texto
 3. Screenshot via Chrome headless
 4. Salva PNG em output_dir

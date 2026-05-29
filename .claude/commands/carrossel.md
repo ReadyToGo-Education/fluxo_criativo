@@ -1,6 +1,6 @@
 ---
 name: workshop-marketing:carrossel
-description: Gera carrossel para Instagram com foto real por card via IA (OpenRouter/Freepik). Usa Urgências Ocultas do produto ativo. Requer OPENROUTER_API_KEY ou FREEPIK_API_KEY no .env.
+description: Gera carrossel para Instagram com foto real por card via IA (OpenRouter/Freepik (Magnific)). Usa Urgências Ocultas do produto ativo. Requer OPENROUTER_API_KEY ou FREEPIK_API_KEY no .env.
 allowed-tools: Read, Write, Bash
 ---
 

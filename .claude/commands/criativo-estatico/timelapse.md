@@ -1,6 +1,6 @@
 # Timelapse. Sub-skill do `/criativo-estatico`
 
-Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 20 (Timelapse). Cria criativos UGC estáticos e animados no formato Timelapse, foto aérea estilo flat lay de uma pessoa executando uma ação do nicho, que depois vira timelapse de produtividade no Freepik. Gera 10 ideias de cena flat lay vista de cima, o aluno escolhe uma, e a sub-skill entrega título, legenda, prompt Feed e prompt de animação Freepik.
+Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 20 (Timelapse). Cria criativos UGC estáticos e animados no formato Timelapse, foto aérea estilo flat lay de uma pessoa executando uma ação do nicho, que depois vira timelapse de produtividade no Freepik (Magnific). Gera 10 ideias de cena flat lay vista de cima, o aluno escolhe uma, e a sub-skill entrega título, legenda, prompt Feed e prompt de animação Freepik (Magnific).
 
 **Por que esse formato funciona:**
 A foto aérea flat lay cheia de elementos do nicho parece frame pausado de timelapse de produtividade do TikTok ou YouTube, não anúncio. O cenário aesthetic visto de cima conta uma história visual hipnótica, cada objeto é reconhecível como parte do nicho. A regra dos 3 primeiros passos concretos no centro-inferior entrega valor imediato e abre o gancho pro CTA, que promete a continuação completa no produto.
@@ -8,7 +8,7 @@ A foto aérea flat lay cheia de elementos do nicho parece frame pausado de timel
 O entregável final inclui:
 1. Prompt da imagem pro ChatGPT (Feed)
 2. Legenda longa do Instagram com lead e CTA
-3. Prompt de animação TIMELAPSE pro Freepik com sugestão de música
+3. Prompt de animação TIMELAPSE pro Freepik (Magnific) com sugestão de música
 4.
 
 ## O que você está criando
@@ -196,7 +196,7 @@ PROIBIDO usar travessão nos textos de copy. O tracinho (—) é usado APENAS co
 IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story composition. Exact size reference: 1080x1350.
 ````
 
-**C) Prompt de Animação TIMELAPSE pro Freepik**, texto pronto pra colar. Substitua os placeholders pelos dados da cena escolhida. **O texto final ao usuário não pode ter colchetes.**
+**C) Prompt de Animação TIMELAPSE pro Freepik (Magnific)**, texto pronto pra colar. Substitua os placeholders pelos dados da cena escolhida. **O texto final ao usuário não pode ter colchetes.**
 
 ````
 Transforma essa imagem num TIMELAPSE. APENAS a foto se mexe. Os textos ficam 100% ESTÁTICOS.
@@ -219,17 +219,14 @@ MÚSICA DE FUNDO SUGERIDA: [MÚSICA com ritmo que combina com o timelapse — lo
 
 Este mesmo texto de animação serve tanto pro formato Feed quanto pro Stories.
 
-**D) Prompt de Stories (9:16)**. entregue junto com o Feed, de uma vez.
-
-O Prompt Stories é o **Prompt Feed completo** (item B) repetido por inteiro, mudando APENAS o bloco final de formato. Mesma foto, mesmo ângulo aéreo, mesmos elementos, mesma composição flat lay, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
-
+Em seguida, entregue o prompt no formato Stories:
 ````
+Agora cria a exata mesma foto, mesmo ângulo aéreo, mesmos elementos, mesma composição flat lay, mesmos textos, só diagramada pro formato Stories.
+
+O ângulo de cima pode mostrar mais da superfície verticalmente. Os textos mantêm a mesma posição relativa.
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
-
-O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
 ### Auto-revisão obrigatória
 
@@ -239,30 +236,9 @@ A cena, o título "COMECE HOJE", os 3 passos e o CTA da arte NÃO passam pela re
 
 ### Aprovação e salvamento
 
-Apresente tudo junto:
+Apresente a entrega final e pergunte:
 
 ```
-Pronto. Aqui está o seu criativo Timelapse:
-
-📌 IDEIA ESCOLHIDA (nº {numero_ideia} das 10)
-CENA: [cena, ângulo aéreo]
-TÍTULO: "COMECE HOJE" (ou variação com o nicho)
-3 PASSOS: [passo 1] / [passo 2] / [passo 3]
-CTA: [CTA]
-
-🎨 PROMPT PRO CHATGPT, FORMATO FEED
-[prompt Feed preenchido, dentro de bloco de código]
-
-📱 PROMPT PRO CHATGPT, FORMATO STORIES
-[prompt Stories, dentro de bloco de código]
-
-🎬 PROMPT DE ANIMAÇÃO TIMELAPSE PRO FREEPIK
-[prompt de animação preenchido, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda gerada]
-
----
 1. Aprovar e salvar
 2. Quero ajustar algo
 3. Voltar e escolher outra ideia (das 10)
@@ -322,7 +298,7 @@ Conteúdo do arquivo:
 [prompt Feed preenchido]
 \`\`\`
 
-## Prompt de Animação TIMELAPSE pro Freepik (serve pro Feed e pro Stories)
+## Prompt de Animação TIMELAPSE pro Freepik (Magnific) (serve pro Feed e pro Stories)
 
 \`\`\`
 [prompt de animação preenchido]
@@ -337,9 +313,10 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
-4. Pegue a imagem (Feed ou Stories) e leve pro Freepik com o **Prompt de Animação TIMELAPSE** pra gerar o vídeo final.
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Quando estiver pronto, mande "ok" no chat.
+4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+5. Pegue a imagem (Feed ou Stories) e leve pro Freepik (Magnific) com o **Prompt de Animação TIMELAPSE** pra gerar o vídeo final.
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -398,9 +375,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Os dois prompts são completos e independentes, cada um gera a arte sozinho.
-4. Pegue a imagem (Feed ou Stories) e leve pro Freepik com o Prompt de Animação TIMELAPSE pra gerar o vídeo final.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:
@@ -543,7 +520,7 @@ e) Reapresente o mesmo menu de opções.
 - Produto NÃO aparece no lead da legenda.
 - A cena, o título "COMECE HOJE", os 3 passos e o CTA da arte seguem regras próprias e NÃO passam pela revisora, mas devem respeitar Light Copy.
 - Auto-revisão obrigatória de copy (Manual da Copy + revisora) antes de apresentar a legenda.
-- Substituir TODOS os placeholders dos prompts pro ChatGPT e pro Freepik. O texto final no chat e no arquivo salvo NÃO pode ter colchetes.
+- Substituir TODOS os placeholders dos prompts pro ChatGPT e pro Freepik (Magnific). O texto final no chat e no arquivo salvo NÃO pode ter colchetes.
 - Texto pro ChatGPT em linguagem coloquial brasileira misturada com as diretrizes técnicas em inglês.
 - Aprovação obrigatória antes de salvar (regra 5 do CLAUDE.md). Pular só se o aluno pediu explicitamente "ir direto à versão final" na mesma sessão.
 - Se o aluno não especificou público, assumir um plausível com base no produto e avisar antes de gerar as 10 ideias.

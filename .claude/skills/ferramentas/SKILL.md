@@ -27,7 +27,7 @@ Apos gerar o HTML, o Claude Code executa `vercel deploy` e retorna a URL publica
 
 ---
 
-### Freepik. Geracao de Imagens com IA
+### Freepik (Magnific). Geracao de Imagens com IA
 
 **O que faz:** Gera imagens a partir de prompts de texto (text-to-image).
 **Usada por:** `/criativo-estatico`
@@ -39,9 +39,9 @@ Apos gerar o HTML, o Claude Code executa `vercel deploy` e retorna a URL publica
 3. Copie a chave para o arquivo `.env`
 
 **Como o toolkit usa:**
-Apos gerar os prompts de imagem, o Claude Code envia cada prompt para a API do Freepik e salva as imagens geradas em `entregas/criativos/`.
+Apos gerar os prompts de imagem, o Claude Code envia cada prompt para a API do Freepik (Magnific) e salva as imagens geradas em `entregas/criativos/`.
 
-**Sem a chave:** Os prompts sao salvos em arquivo. O aluno copia e cola no site do Freepik, Midjourney ou DALL-E manualmente.
+**Sem a chave:** Os prompts sao salvos em arquivo. O aluno copia e cola no site do Freepik (Magnific), Midjourney ou DALL-E manualmente.
 
 **Formatos suportados:**
 - Square (1:1). Feed do Instagram, anuncios
@@ -101,7 +101,7 @@ OPCIONAL e AVANCADO. O toolkit gera a copy e a estrutura de campanha em arquivo.
 **Chave necessaria:** `META_PIXEL_ID`
 
 **Como configurar:**
-1. Acesse Gerenciador de Eventos do Facebook (business.facebook.com/events_manager)
+1. Acesse Gerenciador de Eventos do Facebook (eventsmanager.facebook.com)
 2. Crie um novo Pixel (se nao tiver)
 3. Copie o Pixel ID (numero de 15-16 digitos)
 4. Cole no arquivo `.env`
@@ -213,7 +213,7 @@ O OpenRouter nao gera video diretamente. Para videos, use o fluxo:
 2. O aluno grava o video com o roteiro, ou usa HeyGen (se configurado) para avatar IA
 3. OpenRouter pode ser usado para gerar a **miniatura do video** (thumbnail) como imagem
 
-**Sem a chave:** Os prompts de imagem sao salvos em arquivo `.md`. O aluno copia e cola manualmente no Midjourney, Leonardo.ai, Freepik ou qualquer gerador de imagem.
+**Sem a chave:** Os prompts de imagem sao salvos em arquivo `.md`. O aluno copia e cola manualmente no Midjourney, Leonardo.ai, Freepik (Magnific) ou qualquer gerador de imagem.
 
 ---
 
@@ -261,7 +261,7 @@ Anuncio -> Quiz (Lovable) -> Pagina Final do Quiz (toolkit) -> Checkout (Hotmart
 | --- | --- | --- | --- |
 | Vercel | VERCEL_TOKEN | Intermediario | Deploy de paginas |
 | OpenRouter | OPENROUTER_API_KEY | Intermediario | Criativos de anuncio (`/criativo-estatico`) e assets de landing (`generate-openrouter-nano-banana-images.py`, ver playbook) |
-| Freepik | FREEPIK_API_KEY | Intermediario | Geracao de imagens (alternativa) |
+| Freepik (Magnific) | FREEPIK_API_KEY | Intermediario | Geracao de imagens (alternativa) |
 | HeyGen | HEYGEN_API_KEY | Intermediario | Criacao de videos com avatar IA |
 | Meta Pixel | META_PIXEL_ID | Intermediario | Tracking nas paginas |
 | Hotmart | HOTMART_TOKEN | Intermediario | Links de checkout |

@@ -162,6 +162,10 @@ Ex: CPA da variação vencedora ≤ 90% do CPA da perdedora, com 50+ conversões
 - Significância: alta | média | baixa | inconclusivo
 - Aprendizado: ___
 
+## Observações
+{preenchido automaticamente quando aplicável}
+- Viés conhecido: teste paralelo de {criativo|headline|cta}. Algoritmo do Meta pode favorecer um lado em 24-48h. Pra teste 100% limpo, usar Experimento nativo no Gerenciador.
+
 ## Próximos passos
 - Pausar perdedora? Sim/Não
 - Escalar vencedora? Sim/Não → /trafego-escalar

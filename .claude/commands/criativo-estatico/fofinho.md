@@ -1,6 +1,6 @@
 # Fofinho. Sub-skill do `/criativo-estatico`
 
-Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 17 (Fofinho). Cria criativos com ilustração 3D hiper-detalhada estilo Pixar moderno (Toy Story 4, Monstros SA, Elemental) onde um elemento específico do nicho é transformado em personagem/bichinho ultra fofo. Gera 10 ideias, o aluno escolhe uma, e a sub-skill entrega título, legenda longa, prompt Feed pro ChatGPT, prompt de animação pro Freepik com sugestão de música, e pergunta se quer o prompt no formato Stories também.
+Sub-skill chamada pelo orquestrador `/criativo-estatico` quando o aluno escolhe a opção 17 (Fofinho). Cria criativos com ilustração 3D hiper-detalhada estilo Pixar moderno (Toy Story 4, Monstros SA, Elemental) onde um elemento específico do nicho é transformado em personagem/bichinho ultra fofo. Gera 10 ideias, o aluno escolhe uma, e a sub-skill entrega título, legenda longa, prompt Feed pro ChatGPT, prompt de animação pro Freepik (Magnific) com sugestão de música, e pergunta se quer o prompt no formato Stories também.
 
 **Por que esse formato funciona:**
 A fofura extrema para o scroll. O elemento do nicho transformado em bichinho 3D é imediatamente reconhecível como pertencente àquele universo, então a pessoa identifica o tema antes mesmo de perceber que é anúncio. A renderização tipo frame de filme Pixar (não cartoon 2D, não foto) gera o efeito "que fofo!" que faz parar, ler o título e as 3 promessas. A imagem é compartilhável pela fofura, o título e as promessas vendem.
@@ -231,7 +231,7 @@ PROIBIDO usar travessão nos textos de copy. O tracinho (—) é usado APENAS co
 IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story composition. Exact size reference: 1080x1350.
 ````
 
-#### C) Prompt de Animação pro Freepik
+#### C) Prompt de Animação pro Freepik (Magnific)
 
 Esse serve tanto pro Feed quanto pro Stories. Substitua os placeholders pela descrição do movimento da cena escolhida e por uma sugestão de música doce (preferencialmente versão music box/caixinha de música de uma música conhecida).
 
@@ -246,19 +246,15 @@ REGRA CRÍTICA: os textos na imagem (título, promessas e CTA) são ESTÁTICOS. 
 MÚSICA DE FUNDO SUGERIDA: [MÚSICA DOCE E ACOLHEDORA — preferencialmente versão music box/caixinha de música de uma música conhecida. Tom delicado que amplifique a fofura.]
 ````
 
-#### D) Prompt de Stories (9:16) pro ChatGPT
-
-Entregue junto com o Prompt Feed, automaticamente, sem perguntar antes.
-
-O Prompt Stories é o **Prompt Feed completo** repetido por inteiro, mudando APENAS o bloco final de formato. Mesma cena, mesma copy, mesmo layout, mesmos placeholders já preenchidos. Não é prompt de recomposição: o aluno tem que conseguir colar o Stories sozinho, sem precisar ter gerado o Feed antes.
-
-Para montar: copie o texto inteiro do Prompt Feed e troque o bloco final `IMPORTANT: exact 4:5...` por:
+Se o aluno disser sim, entregue o template fixo abaixo:
 
 ````
+Agora cria a exata mesma ilustração 3D, mesmos personagens, mesmas texturas, mesma iluminação, mesmos textos, só diagramada pro formato Stories.
+
+O personagem pode ocupar mais espaço vertical. Os textos mantêm a mesma posição relativa (título no topo, promessas no centro-inferior, CTA na base).
+
 IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
 ````
-
-O resultado é um prompt Stories completo, com todo o texto do Feed, terminando nesse bloco 9:16.
 
 ### Auto-revisão obrigatória
 
@@ -280,17 +276,14 @@ TÍTULO: [título]
 — [Promessa 3]
 CTA: Clique aqui para [ação] + [produto/nicho] 👉
 
+📝 LEGENDA PRO INSTAGRAM
+[legenda longa gerada]
+
 🎨 PROMPT PRO CHATGPT, FORMATO FEED
 [prompt Feed preenchido, dentro de bloco de código]
 
-📱 PROMPT PRO CHATGPT, FORMATO STORIES
-[prompt Stories completo, dentro de bloco de código]
-
-🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK
+🎬 PROMPT DE ANIMAÇÃO PRO FREEPIK (MAGNIFIC)
 [prompt de animação preenchido, dentro de bloco de código]
-
-📝 LEGENDA PRO INSTAGRAM
-[legenda longa gerada]
 
 ---
 1. Aprovar e salvar
@@ -354,7 +347,7 @@ Conteúdo do arquivo:
 [prompt Feed preenchido]
 \`\`\`
 
-## Prompt de Animação pro Freepik (serve pro Feed e pro Stories)
+## Prompt de Animação pro Freepik (Magnific) (serve pro Feed e pro Stories)
 
 \`\`\`
 [prompt de animação preenchido]
@@ -369,9 +362,10 @@ Conteúdo do arquivo:
 ## Como usar
 
 1. Abra o ChatGPT (com geração de imagem habilitada).
-2. Cole o **Prompt Feed** pra gerar a arte no formato de feed (4:5).
-3. Cole o **Prompt Stories** pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
-4. Depois, abra o Freepik (ferramenta de animação) e cole o **Prompt de Animação** sobre a imagem gerada. O mesmo prompt serve pros dois formatos (Feed e Stories).
+2. Cole o **Prompt Feed** e espere a arte ser gerada.
+3. Quando estiver pronto, mande "ok" no chat.
+4. (Se gerou o Stories) Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
+5. Depois, abra o Freepik (Magnific) (ferramenta de animação) e cole o **Prompt de Animação** sobre a imagem gerada. O mesmo prompt serve pros dois formatos (Feed e Stories).
 
 ## Banco completo (as 10 ideias geradas nesta sessão)
 
@@ -430,8 +424,9 @@ Caminho: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativ
 
 Como usar:
 1. Abra o ChatGPT ou o Gemini (com geração de imagem habilitada).
-2. Cole o Prompt Feed pra gerar a arte no formato de feed (4:5).
-3. Cole o Prompt Stories pra gerar a arte no formato vertical (9:16). Cada prompt é completo e gera a arte sozinho, não precisa ter feito o Feed antes.
+2. Cole o Prompt Feed do arquivo salvo.
+3. Quando a arte de Feed estiver pronta, mande "ok".
+4. Cole o Prompt Stories pra gerar a versão vertical da mesma arte.
 ```
 
 No modo ChatGPT, depois da mensagem de confirmação, ofereça o menu padrão:
@@ -582,8 +577,8 @@ Esta diretriz deve ser incorporada ao descrever a pessoa dentro do prompt para o
 - Produto NÃO aparece no lead do título nem da legenda.
 - A cena, as 3 promessas, o CTA e o prompt de animação seguem regras próprias e NÃO passam pela revisora, mas devem respeitar Light Copy.
 - Auto-revisão obrigatória de copy (Manual da Copy + revisora) antes de apresentar o título e a legenda.
-- Substituir TODOS os placeholders dos prompts pro ChatGPT e pro Freepik. O texto final no chat e no arquivo salvo NÃO pode ter colchetes.
-- Texto pro ChatGPT e pro Freepik em linguagem coloquial brasileira misturada com as diretrizes técnicas em inglês quando aplicável.
+- Substituir TODOS os placeholders dos prompts pro ChatGPT e pro Freepik (Magnific). O texto final no chat e no arquivo salvo NÃO pode ter colchetes.
+- Texto pro ChatGPT e pro Freepik (Magnific) em linguagem coloquial brasileira misturada com as diretrizes técnicas em inglês quando aplicável.
 - Aprovação obrigatória antes de salvar (regra 5 do CLAUDE.md). Pular só se o aluno pediu explicitamente "ir direto à versão final" na mesma sessão.
 - Se o aluno não especificou público, assumir um plausível com base no produto e avisar antes de gerar as 10 ideias.
 - Acentuação correta em todo o texto gerado: não, são, você, está, três, público, próximo, último, vídeo, página, específico, lógico, estratégia, técnica.

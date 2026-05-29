@@ -1,12 +1,14 @@
 ---
 name: trafego-regras
 description: >
-  Cria regras automáticas no Meta Ads (adrules_library), agendamentos de resumo recorrente
-  (via /schedule + Telegram/WhatsApp) e schedules de liga/pausa de adsets (delivery schedule).
-  Cobre triggers como "se CPA > X pause", "se ROAS > Y aumenta budget %", "me avisa toda
-  segunda" e "ligar campanha segunda 8h, pausar domingo 22h". Use quando o aluno pedir
-  "automatizar", "criar regra", "alerta automático", "resumo recorrente", "programar
-  liga/pausa", "rodar campanha só em horário comercial".
+  Cria automações no Meta Ads via Marketing API: (1) regras automáticas que pausam,
+  ajustam budget OU notificam por email quando trigger bate (adrules_library com ação
+  PAUSE / CHANGE_BUDGET / CHANGE_CAMPAIGN_BUDGET / NOTIFICATION — todas no mesmo mecanismo nativo do Meta), e
+  (2) schedule de liga/pausa de adset por hora/dia (adset_schedule). Tudo roda na
+  infraestrutura do Meta, sem dependência do Mac do aluno. Cobre triggers como "se CPA
+  > X pause", "se ROAS > Y aumenta budget %", "me avisa por email se gasto passar de
+  R$ 500" e "rodar campanha só em horário comercial". Use quando o aluno pedir
+  "automatizar", "criar regra", "alerta automático", "programar liga/pausa".
 user-invocable: false
 ---
 
@@ -33,7 +35,7 @@ Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes
 
 # Tráfego Regras. Automação, Alertas e Agendamento
 
-Você cria automações de tráfego em 3 dimensões: regras automáticas do Meta Ads, agendamentos de resumo recorrente e programação de delivery schedule de adsets. Toda criação passa por preview e confirmação.
+Você cria automações de tráfego em 3 dimensões: regras automáticas do Meta Ads (pausar/ajustar budget), alertas automáticos via email nativo do Meta e programação de delivery schedule de adsets. Toda criação passa por preview e confirmação. Tudo roda na infraestrutura do Meta, sem dependência do Mac do aluno estar ligado.
 
 **Princípios:**
 - Toda regra criada nasce **PAUSED**. Aluno ativa explicitamente após confirmar.
@@ -49,15 +51,17 @@ Você cria automações de tráfego em 3 dimensões: regras automáticas do Meta
 A skill é orquestrada pelo command `/trafego-regras`, que apresenta o menu:
 
 ```
-[1] Regra automática Meta Ads          se CPA/CPL/ROAS bater limite, pausa/aumenta budget/notifica
-[2] Resumo recorrente                  envio agendado de relatório por Telegram/WhatsApp
-[3] Programação liga/pausa adset       schedule de delivery por hora/dia da semana
+[1] Regra automática Meta Ads          criar nova regra (trigger + ação)
+[2] Programação liga/pausa adset       schedule de delivery por hora/dia da semana
+[3] Gerir regras existentes            listar, ativar, pausar, editar, excluir, ver histórico
 ```
 
 Cada sub-fluxo está documentado em:
-- `sub-skills/regra-automatica.md`
-- `sub-skills/resumo-recorrente.md`
+- `sub-skills/regra-automatica.md` (cobre as 4 ações: PAUSE, CHANGE_BUDGET, CHANGE_CAMPAIGN_BUDGET, NOTIFICATION)
 - `sub-skills/liga-pausa-schedule.md`
+- `sub-skills/gerir-regras.md` (gestão completa de regras já criadas)
+
+> **Nota arquitetural:** versões anteriores da skill tinham um menu separado pra "alerta automático" via Telegram/WhatsApp (`/schedule` + canal externo). Isso foi descartado em 2026-05-16 porque o `/schedule` da Anthropic não foi projetado pra carregar credenciais locais (`.env`) no momento do disparo remoto, criando dependência do Mac do aluno estar ligado. A notificação por email do Meta, que cobre o mesmo caso de uso, foi consolidada como **uma das ações** da regra automática (sub-fluxo [1], opção 4 do passo "Ação"). Pra digest semanal agendado (toda segunda 8h, resumo da semana), usar a UI do BM (Configurações > Relatórios Agendados).
 
 ---
 
@@ -74,10 +78,32 @@ GET    /<rule_id>/history                                      (histórico de ex
 
 API version: `v25.0`. Permissões: `ads_management`.
 
-### 2.2 Resumo recorrente
-- **Skill `/schedule`** (cron interno do Workshop) — cria a recorrência.
-- **Skill `/configurar-telegram`** ou **`/configurar-zapi`** — canal de envio.
-- **Skill `/trafego-analise` [1] Diagnóstico Rápido** — gera o conteúdo do resumo na hora do envio.
+A mesma chamada (`POST /adrules_library`) cobre **4 ações possíveis** via campo `execution_spec.execution_type`:
+
+| Ação (Marketing API) | O que faz | Quando usar |
+|---|---|---|
+| `PAUSE` | Pausa a entidade quando trigger bate | Cortar gasto ruim automaticamente (ex: CPA estourou) |
+| `CHANGE_BUDGET` | Ajusta budget de **adset** em % (positivo ou negativo) | Escalar/desacelerar adsets ABO com budget próprio. ⚠️ Não funciona em CBO — usar `CHANGE_CAMPAIGN_BUDGET`. |
+| `CHANGE_CAMPAIGN_BUDGET` | Ajusta budget de **campanha** em % (positivo ou negativo) | Escalar/desacelerar campanha inteira (CBO ou ABO). Único caminho automatizado de mexer em budget de CBO. |
+| `NOTIFICATION` | Envia email pro admin do BM | Só alertar sem agir (monitoramento preventivo, oportunidade) |
+
+Notificação chega por email pro admin do BM, push no Ads Manager mobile (se instalado) e sino do business.facebook.com. **Não vai pra Telegram/WhatsApp** (decisão arquitetural — ver nota acima do menu).
+
+A skill `regra-automatica.md` cobre as 4 ações no mesmo fluxo. O aluno escolhe qual no passo "Ação".
+
+### 2.2 Gestão de regras existentes (Marketing API)
+
+```
+GET    /act_<id>/adrules_library?fields=...        (listar todas)
+POST   /<rule_id>  { status: ENABLED|DISABLED }   (ativar/pausar)
+POST   /<rule_id>  { evaluation_spec|execution_spec|... }  (editar campo)
+DELETE /<rule_id>                                  (excluir)
+GET    /<rule_id>/history?fields=...               (histórico de execução)
+```
+
+Listagem e histórico são GET (não passam pelo gate). Ativar, pausar, editar e excluir são POST/DELETE (passam pelo gate 🛡️ obrigatório). Excluir exige confirmação dupla (texto "EXCLUIR" em maiúsculas + sim no gate).
+
+Sub-skill `gerir-regras.md` cobre os 6 fluxos (listar/ativar/pausar/editar/excluir/histórico) reusando a tabela de tradução PT e o resumo natural da `regra-automatica.md`.
 
 ### 2.3 Liga/pausa schedule (Marketing API)
 ```
@@ -137,7 +163,7 @@ A skill **bloqueia** criação de regra se:
 
 ```yaml
 operacao: criar_regra
-sub_fluxo: regra_automatica | resumo_recorrente | liga_pausa_schedule
+sub_fluxo: regra_automatica | liga_pausa_schedule
 ad_account_id: act_<id>
 
 regra_criada:
@@ -199,5 +225,5 @@ meus-produtos/{ativo}/trafego/regras/
 6. **Não cria regra com janela de dado imaturo.**
 7. **Convenção de nomenclatura** `[FC] tipo-descricao-produto`.
 8. **Schedule de adset exige lifetime_budget.** Avisa antes de tentar.
-9. **Resumo recorrente exige canal configurado.** Aciona `/configurar-telegram` ou `/configurar-zapi` se faltar.
-10. **Não inventa regra.** Se aluno pedir algo fora dos 3 sub-fluxos, encaminha para criação manual no Gerenciador de Anúncios.
+9. **A ação "notificar" usa canal nativo do Meta.** Email pro admin do BM, push no Ads Manager mobile, sino do business.facebook.com. Não usa Telegram/WhatsApp (decisão arquitetural — ver nota acima do menu).
+10. **Não inventa regra.** Se aluno pedir algo fora dos 3 sub-fluxos (criar regra automática + liga/pausa schedule + gerir regras existentes), encaminha para o Gerenciador de Anúncios.
