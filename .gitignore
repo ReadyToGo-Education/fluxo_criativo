@@ -100,6 +100,25 @@ scripts/*.log
 docs/
 
 # ══════════════════════════════════════════
+# Referências locais (livros com direitos autorais, PDFs pesados
+# e repositórios git clonados). Só sobem os destilados próprios:
+# FRAMEWORK-CEO.md, PLAYBOOK-DECISOES.md e os resumos de estudo.
+# ══════════════════════════════════════════
+referencias/*
+!referencias/FRAMEWORK-CEO.md
+!referencias/PLAYBOOK-DECISOES.md
+!referencias/livros/
+referencias/livros/*
+!referencias/livros/resumos/
+
+# Transcrições de cursos de terceiros (180 MB, uso local)
+transcrição-cursos/
+
+# Runtime do Claude dentro de painel/ e marcador de instalação
+painel/.claude/
+.installed
+
+# ══════════════════════════════════════════
 # Sistema operacional
 # ══════════════════════════════════════════
 .DS_Store
