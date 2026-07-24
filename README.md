@@ -214,7 +214,7 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/video-efeitos`. Aplica efeitos visuais em vídeo (transições, scrub, otimização).
 
 ### Carrossel
-- `/carrossel`. Gera carrosséis virais para Instagram em 7 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana). Inclui 3 caminhos de geração de imagem (manual, Claude in Chrome, API paralela).
+- `/carrossel`. Gera carrosséis virais para Instagram em 9 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). Inclui 3 caminhos de geração de imagem (manual, Claude in Chrome, API paralela).
 - `/programar-carrossel-noticia`. Programa tarefa recorrente no `/schedule` do Claude para gerar carrossel de notícia automaticamente.
 
 ### Low Ticket
