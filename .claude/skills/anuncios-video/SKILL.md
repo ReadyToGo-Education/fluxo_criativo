@@ -157,6 +157,18 @@ Tamanho alvo: ~130 palavras por roteiro (~35-45 segundos de fala natural). Calib
 | Resolucao minima | 720p |
 | Taxa de quadros | 30fps minimo |
 
+**Zona segura (margem de respiro) obrigatória em 9:16:**
+
+O vídeo preenche os 1080x1920 inteiros, mas texto, headline, legenda queimada e CTA precisam ficar dentro da área segura. Fora dela, a interface do Instagram cobre o conteúdo.
+
+| Área | Reservar | O que cobre |
+| --- | --- | --- |
+| Rodapé | 14% | Nome do anunciante e botão nativo "Saiba mais" do Meta Ads |
+| Topo | 12% | Barra de perfil e status |
+| Lateral direita | 15% | Coluna de ícones (curtir, comentar, compartilhar, áudio) |
+
+Nenhum texto encosta na borda. Se o roteiro pedir texto na tela em algum desses trechos, reposicione para o miolo do quadro.
+
 ### YouTube Ads
 
 | Especificacao | Valor |
@@ -213,6 +225,7 @@ Antes de publicar, verifique:
 - [ ] Legendas incluidas?
 - [ ] CTA claro no final?
 - [ ] Formato vertical (9:16) para Reels/Stories?
+- [ ] Zona segura respeitada (rodapé 14%, topo 12%, lateral direita 15% livres de texto)?
 - [ ] Duracao adequada ao formato?
 - [ ] Copy segue regras Light Copy (sem pontos de exclamacao, sem perguntas no gancho)?
 - [ ] Audio limpo e audivel?
@@ -258,8 +271,25 @@ Quando possível, dar nome próprio ao conceito ensinado no vídeo ("Método da 
 | --- | --- | --- |
 | Descoberta | Atrair novas pessoas que ainda nao conhecem | "Me segue para mais" / "Salva esse video" |
 | Relacionamento | Criar conexao com quem ja segue | "Comenta aqui" / "Marca alguem" / "Compartilha" |
-| Conversao | Vender | "Link na bio" / "Clica no botao" / "Garante sua vaga" |
+| Conversao | Vender | "Clique em Saiba mais" / "Clica no botão aqui embaixo" / "Garante sua vaga" |
 | RMKT | Converter quem ja viu a pagina | "Ultimas vagas" / "So ate amanha" / "Garanta agora" |
+
+**Regra de CTA em anúncio pago:** o padrão é "Saiba mais", que é o botão nativo do Meta Ads. Se o aluno indicou outro em qualquer momento, usar esse. Nunca inventar CTA. Nunca usar "Link na bio" nem "Clique no link da bio", porque em anúncio pago o clique acontece no botão, não na bio.
+
+**Perguntar o CTA antes de gerar.** Se o aluno ainda não indicou a chamada, pergunte antes de escrever o roteiro:
+
+```
+Qual chamada você quer no vídeo?
+
+1. Saiba mais (padrão do Meta Ads)
+2. Cadastre-se
+3. Comprar agora
+4. Outra (me diga qual)
+
+Digite o número:
+```
+
+Se o aluno já indicou o CTA antes, não repita a pergunta, apenas confirme em uma linha.
 
 ## Pesquisa de Tendencias (OBRIGATORIA antes de gerar)
 
