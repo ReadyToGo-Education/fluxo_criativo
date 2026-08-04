@@ -1318,6 +1318,10 @@ def montar_visao_geral(html_txt: str, perfil: str, slug: str, tipo: str) -> dict
     kv_ic = kv_bullets(ic)
 
     preco = kv_ip.get("Preco", "") or kv_ip.get("Preço", "")
+    if not preco:
+        preco_file = REPO_ROOT / "meus-produtos" / slug / "preco.md"
+        if preco_file.exists():
+            preco = preco_file.read_text(encoding="utf-8").strip()
     diferencial = kv_ip.get("Diferencial", "")
     nicho = (
         kv_ip.get("Nicho", "")
