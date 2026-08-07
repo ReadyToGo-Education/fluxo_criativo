@@ -71,7 +71,7 @@ def fetch_all_pages(base_params, account, endpoint, token):
     """Busca todas as paginas de um endpoint de insights ou campaigns."""
     params = dict(base_params)
     params["access_token"] = token
-    url = "https://graph.facebook.com/v21.0/act_{}/{}?{}".format(
+    url = "https://graph.facebook.com/v25.0/act_{}/{}?{}".format(
         account, endpoint, urllib.parse.urlencode(params)
     )
     results = []

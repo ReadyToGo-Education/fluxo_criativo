@@ -131,7 +131,7 @@ Confirmar com o aluno:
 Velocidade de escala:
 
 1. Conservadora (+15% a cada 72h). High ticket, audiência pequena.
-2. Normal (+20% a cada 48h). Default. Perpétuo low/mid.
+2. Normal (+20% a cada 24h). Default. Perpétuo low/mid.
 3. Agressiva (+30 a 50% a cada 24h). Lançamento captação ou sazonal
    declarado. Exige ≥3 criativos backup.
 
@@ -153,9 +153,12 @@ Por quê: [justificativa baseada em frequência/audiência/ciclo]
 3. Horizontal (duplicar conjunto com nova segmentação)
 4. Vertical + Horizontal alternado
 5. Consolidação em CBO (3+ conjuntos vencedores)
+6. Campanha Advantage (5+ anúncios vencedores validados)
 
 Digite o número:
 ```
+
+O modo 6 exige pelo menos 5 anúncios vencedores validados e aceita até 50. Abaixo de 5, recusar e explicar que o Advantage+ precisa de variedade criativa para o algoritmo ter espaço de iteração. Ver seção 3.5 da skill.
 
 ### 2.3 Teto operacional (opcional)
 ```
