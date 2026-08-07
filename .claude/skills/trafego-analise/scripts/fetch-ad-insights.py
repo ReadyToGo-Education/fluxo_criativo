@@ -149,7 +149,7 @@ params_a = urllib.parse.urlencode({
     'limit':       100,         # NUNCA usar >100 com este volume de campos
     'access_token': TOKEN,
 })
-url_a = f'https://graph.facebook.com/v21.0/act_{ACCOUNT}/insights?{params_a}'
+url_a = f'https://graph.facebook.com/v25.0/act_{ACCOUNT}/insights?{params_a}'
 
 print(f"Buscando metricas de performance (chamada A)...")
 registros_a = api_get(url_a, "chamada A - performance")
@@ -171,7 +171,7 @@ params_b = urllib.parse.urlencode({
     'limit':       100,
     'access_token': TOKEN,
 })
-url_b = f'https://graph.facebook.com/v21.0/act_{ACCOUNT}/insights?{params_b}'
+url_b = f'https://graph.facebook.com/v25.0/act_{ACCOUNT}/insights?{params_b}'
 
 print(f"Buscando rankings de leilao (chamada B)...")
 registros_b = api_get(url_b, "chamada B - rankings")

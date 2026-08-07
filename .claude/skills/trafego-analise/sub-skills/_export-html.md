@@ -1,6 +1,6 @@
 # Sub-skill utilitária. Export HTML de Análise
 
-Sub-skill compartilhada por TODOS os 9 outputs da `/trafego-analise`. Não tem opção própria no menu — é acionada opcionalmente ao final de cada output, quando o aluno responde "sim" à pergunta de export.
+Sub-skill compartilhada por TODOS os 10 outputs da `/trafego-analise`. Não tem opção própria no menu — é acionada opcionalmente ao final de cada output, quando o aluno responde "sim" à pergunta de export.
 
 **Propósito:** transformar o output narrado de uma análise em um HTML standalone usando o design system Fluxo Criativo, salvar no produto ativo e devolver o caminho absoluto pro aluno abrir no navegador.
 
@@ -286,7 +286,7 @@ A pasta `meus-produtos/{ativo}/trafego/analise/` ganha um arquivo **`index.html`
 
 ## 4. Mapeamento de blocos → componentes do design system
 
-Cada um dos 9 outputs tem blocos próprios descritos na sua sub-skill respectiva. Regra de mapeamento:
+Cada um dos 10 outputs tem blocos próprios descritos na sua sub-skill respectiva. Regra de mapeamento:
 
 | Tipo de conteúdo no output narrado | Componente HTML |
 |---|---|

@@ -6,7 +6,9 @@ description: >
   campanha Advantage), 3 velocidades (conservadora +15%/72h, normal +20%/24h, agressiva +30 a
   +50%/24h), revalidação de gatilhos a cada incremento, confirmação obrigatória antes de executar,
   freios escalonados (leve, médio, total), tetos de escala (audiência exausta, CPM ceiling, volume
-  ceiling, operacional) e devolução para /trafego-otimizar quando freio total aciona. Recusa rodar
+  ceiling, operacional) e devolução para /trafego-otimizar quando freio total aciona. Inclui duas
+  sub-skills de detalhamento operacional: matriz-scoring (sinais, pontuação e histórico de ciclos) e
+  freios-tetos (payloads ABO e CBO, duplicação, tetos e cooldown). Recusa rodar
   sem sinal de prontidão. Use quando o aluno pedir "escalar campanha", "aumentar budget", "subir
   verba", "duplicar conjunto vencedor", "expandir audiência", "consolidar em CBO", "campanha
   Advantage", ou quando /trafego-otimizar emitiu sinal_para_escala.pronta=true.
@@ -254,6 +256,8 @@ Conta: {nome}  |  Funil: {tipo}  |  Ticket: R$ {valor}  |  Meta: R$ {cpa_cpl}  |
 ---
 
 ### Passo 0.75. Análise + Recomendação técnica (modo e velocidade)
+
+> **Detalhamento operacional:** `sub-skills/matriz-scoring.md`. Traz o schema do arquivo de histórico de escala, as fórmulas exatas dos 9 sinais, a matriz de pontuação com a penalidade do Vertical, o critério de desempate, um exemplo numérico completo e a política de dado ausente. Carregue antes de calcular qualquer score.
 
 Antes de pedir aprovação de execução, a skill faz **três leituras** e devolve um bloco de recomendação composta (primário + alternativo) por campanha. O aluno valida ou ajusta.
 
@@ -523,6 +527,8 @@ Se **qualquer uma** falhar, a skill **não escala**. Emite output de `aguardar` 
 ---
 
 ## 6. Freios. Quando a escala para ou volta atrás
+
+> **Detalhamento operacional:** `sub-skills/freios-tetos.md`. Traz os payloads reais de incremento e reversão separados por ABO e CBO, a conversão de orçamento para centavos, a duplicação com `deep_copy`, os 4 tetos, o cooldown do handoff e o registro no histórico. **A API recebe centavos, não reais.**
 
 ### 6.1 Freio leve. Pausar próximo incremento
 Qualquer das condições, após o último incremento:
