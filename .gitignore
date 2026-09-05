@@ -146,3 +146,6 @@ package.json
 # Exportacoes locais para outros agentes (contem caminhos da maquina local)
 .agents/
 .codex/
+
+# Marcador local do instalador (timestamp da maquina, nao versionar)
+.installed
