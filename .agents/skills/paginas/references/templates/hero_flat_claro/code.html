@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilhas Pro. Gestão com modelos prontos</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: "#fafafa",
+                        surface: "#f0f0f2",
+                        ink: "#18181b",
+                        accent: "#d4d4d8",
+                        warm: "#c2956b"
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #fafafa;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(194, 149, 107, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(194, 149, 107, 0.04) 0%, transparent 40%);
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .cta-button {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-button:hover {
+            background-color: #c2956b;
+            border-color: #c2956b;
+            transform: translateY(-1px);
+        }
+
+        .check-item {
+            transition: transform 0.2s ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .video-wrapper {
+            position: relative;
+        }
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: -8px;
+            bottom: -8px;
+            border: 1.5px solid #d4d4d8;
+            z-index: 0;
+        }
+
+        .tag {
+            letter-spacing: 0.15em;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+        .animate-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .animate-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .animate-in-delay-5 { animation-delay: 0.5s; opacity: 0; }
+    </style>
+</head>
+<body class="text-ink font-sans antialiased selection:bg-ink selection:text-base min-h-screen flex flex-col">
+
+    <header class="w-full border-b border-accent/60 bg-base/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-center items-center">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">Planilhas<span class="text-warm">Pro</span></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-16 md:py-24 flex-grow flex items-center">
+
+        <section class="grid md:grid-cols-12 gap-12 lg:gap-20 items-center w-full">
+
+            <div class="md:col-span-5 flex flex-col gap-6">
+
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.08] tracking-tighter text-ink animate-in animate-in-delay-2">
+                    O faturamento sobe e o número no Excel não acompanha no mesmo ritmo.
+                </h1>
+
+                <p class="text-lg text-gray-500 max-w-lg leading-relaxed font-light animate-in animate-in-delay-3">
+                    Quando o controle vive em planilhas soltas e modelos genéricos, a saída é padronizar a gestão com modelos prontos para usar, no ritmo de quem ainda faz venda, entrega e caixa no mesmo dia.
+                </p>
+
+                <ul class="flex flex-col gap-3.5 my-2 animate-in animate-in-delay-4">
+                    <li class="flex items-center gap-3 check-item">
+                        <span class="w-5 h-5 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-white text-sm">check</span>
+                        </span>
+                        <span class="text-ink font-medium text-[15px]">Fechamento de mês sem herói na equipe: modelo já desenhado para repetir a lógica</span>
+                    </li>
+                    <li class="flex items-center gap-3 check-item">
+                        <span class="w-5 h-5 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-white text-sm">check</span>
+                        </span>
+                        <span class="text-ink font-medium text-[15px]">Mesmo padrão mês a mês para cruzar resultado e falar com sócio ou contador</span>
+                    </li>
+                    <li class="flex items-center gap-3 check-item">
+                        <span class="w-5 h-5 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-white text-sm">check</span>
+                        </span>
+                        <span class="text-ink font-medium text-[15px]">Pacotes para MEI e pequeno negócio com vídeo no clique certo</span>
+                    </li>
+                </ul>
+
+                <div class="flex flex-col gap-3 animate-in animate-in-delay-5">
+                    <button class="flat-border bg-ink text-white w-fit px-8 py-4 uppercase tracking-widest text-sm font-bold cta-button flex items-center gap-3">
+                        Ver como padronizar sem começar do zero
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+                    <span class="text-xs text-gray-400 font-light ml-1">Acesso à área de membros após confirmação do pagamento</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-7 w-full animate-in animate-in-delay-4">
+                <div class="video-wrapper">
+                    <div class="relative w-full aspect-video flat-border bg-ink z-10">
+                        <iframe
+                            class="absolute top-0 left-0 w-full h-full"
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentação Planilhas Pro"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mt-6 ml-1">
+                    <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                        <span class="material-symbols-outlined text-sm">play_circle</span>
+                        Assista a aula gratuita
+                    </div>
+                    <div class="w-px h-3 bg-accent"></div>
+                    <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                        <span class="material-symbols-outlined text-sm">timer</span>
+                        15 minutos
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

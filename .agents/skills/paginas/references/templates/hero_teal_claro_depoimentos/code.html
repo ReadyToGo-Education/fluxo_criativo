@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depoimentos - Atelier</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #F8F8F8;
+            --white: #ffffff;
+            --teal: #00A99D;
+            --teal-dark: #0A6561;
+            --text-dark: #363636;
+            --text-mid: #666666;
+            --text-light: #B8B8B8;
+            --border: #EAEAEA;
+            --mint: #90FFEB;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::selection { background: rgba(0, 169, 157, 0.2); color: var(--text-dark); }
+
+        header {
+            position: sticky; top: 0; z-index: 50;
+            height: 64px; display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(248, 248, 248, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.375rem; font-weight: 700; letter-spacing: -0.48px;
+        }
+        .logo span { color: var(--teal); }
+
+        main {
+            max-width: 1280px; margin: 0 auto; padding: 72px 24px;
+            flex-grow: 1; width: 100%;
+        }
+
+        .section-header { text-align: center; margin-bottom: 56px; }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem; font-weight: 700; line-height: 1.1;
+            letter-spacing: -0.96px; color: var(--text-dark);
+            margin-bottom: 14px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem; color: var(--text-mid); max-width: 520px; margin: 0 auto;
+        }
+
+        .carousel-wrapper { overflow: hidden; width: 100%; }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide { min-width: 100%; padding: 0 8px; }
+
+        .card-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+        }
+
+        .testimonial-card {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            padding: 28px;
+            display: flex; flex-direction: column; gap: 18px;
+            box-shadow: 0 2px 4px -2px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.1);
+        }
+
+        .stars { display: flex; gap: 2px; }
+        .stars .material-symbols-outlined {
+            font-size: 16px; color: var(--teal);
+            font-variation-settings: 'FILL' 1, 'wght' 400;
+        }
+
+        .quote {
+            font-size: 0.9375rem; color: var(--text-mid); line-height: 1.6;
+        }
+
+        .author {
+            display: flex; align-items: center; gap: 12px;
+            margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--teal); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8125rem; font-weight: 600;
+        }
+
+        .author-name { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); }
+        .author-role { font-size: 0.75rem; color: var(--text-light); }
+
+        .controls {
+            display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 48px;
+        }
+
+        .nav-btn {
+            width: 48px; height: 48px; border-radius: 50%;
+            border: 1px solid var(--border); background: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-dark);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px -2px rgba(0,0,0,0.06);
+        }
+        .nav-btn:hover {
+            background: var(--teal); color: #fff; border-color: var(--teal);
+        }
+
+        .dots { display: flex; gap: 8px; }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--border); transition: all 0.3s ease; cursor: pointer;
+        }
+        .dot.active { background: var(--teal); width: 24px; border-radius: 4px; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .anim { animation: fadeUp 0.6s ease-out forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        @media (max-width: 768px) {
+            main { padding: 48px 16px; }
+            .card-grid { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Atelier<span>.</span></div>
+    </header>
+
+    <main>
+        <div class="section-header anim delay-1">
+            <h2>O que nossas alunas dizem</h2>
+            <p>Historias reais de quem transformou o croche em renda com o metodo Atelier.</p>
+        </div>
+
+        <div class="carousel-wrapper anim delay-2">
+            <div class="carousel-track" id="carousel">
+
+                <!-- Slide 1 -->
+                <div class="carousel-slide">
+                    <div class="card-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Faturei mais do que no meu emprego"</p>
+                            <p class="quote">"Eu fazia croche ha 8 anos e nunca consegui viver disso. Em 3 meses aplicando o metodo, faturei mais do que no meu emprego anterior. Mudou minha vida."</p>
+                            <div class="author">
+                                <div class="avatar">MC</div>
+                                <div>
+                                    <div class="author-name">Maria Clara</div>
+                                    <div class="author-role">Artesa em Belo Horizonte</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Hoje tenho lista de espera"</p>
+                            <p class="quote">"A parte de precificacao foi o divisor de aguas. Eu cobrava R$30 em pecas que valiam R$150. Hoje tenho lista de espera e consigo planejar meu mes."</p>
+                            <div class="author">
+                                <div class="avatar">AF</div>
+                                <div>
+                                    <div class="author-name">Ana Flavia</div>
+                                    <div class="author-role">Artesa em Curitiba</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Em 2 semanas ja tinha encomendas"</p>
+                            <p class="quote">"Montei minha vitrine no Instagram seguindo o passo a passo e em 2 semanas ja tinha encomendas. O metodo e simples e funciona de verdade."</p>
+                            <div class="author">
+                                <div class="avatar">RL</div>
+                                <div>
+                                    <div class="author-name">Renata Lima</div>
+                                    <div class="author-role">Artesa em Recife</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-slide">
+                    <div class="card-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Vendo pelo WhatsApp todos os dias"</p>
+                            <p class="quote">"Sempre tive medo de vender online. O modulo de vitrine digital me deu a confianca que eu precisava. Hoje vendo pelo WhatsApp e Instagram todos os dias."</p>
+                            <div class="author">
+                                <div class="avatar">PS</div>
+                                <div>
+                                    <div class="author-name">Patricia Santos</div>
+                                    <div class="author-role">Artesa em Salvador</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Minha renda triplicou em 4 meses"</p>
+                            <p class="quote">"Minha renda triplicou em 4 meses. O segredo foi entender quais pecas dao lucro e focar nelas. Parece obvio, mas ninguem tinha me ensinado isso antes."</p>
+                            <div class="author">
+                                <div class="avatar">JO</div>
+                                <div>
+                                    <div class="author-name">Julia Oliveira</div>
+                                    <div class="author-role">Artesa em Florianopolis</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Do zero ao primeiro cliente em 60 dias"</p>
+                            <p class="quote">"Sai do zero e em 60 dias ja tinha meu primeiro cliente recorrente. O metodo Atelier e direto ao ponto, sem enrolacao. Recomendo para todas as artesas."</p>
+                            <div class="author">
+                                <div class="avatar">CM</div>
+                                <div>
+                                    <div class="author-name">Camila Martins</div>
+                                    <div class="author-role">Artesa em Goiania</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="controls anim delay-2">
+            <button class="nav-btn" onclick="moveCarousel(-1)">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div class="dots" id="dots"></div>
+            <button class="nav-btn" onclick="moveCarousel(1)">
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const carousel = document.getElementById('carousel');
+        const dotsContainer = document.getElementById('dots');
+        const slides = carousel.children;
+        let current = 0;
+        const total = slides.length;
+
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goTo(i);
+            dotsContainer.appendChild(dot);
+        }
+
+        function goTo(index) {
+            current = index;
+            carousel.style.transform = `translateX(-${current * 100}%)`;
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+        function moveCarousel(dir) {
+            let next = current + dir;
+            if (next < 0) next = total - 1;
+            if (next >= total) next = 0;
+            goTo(next);
+        }
+    </script>
+
+</body>
+</html>

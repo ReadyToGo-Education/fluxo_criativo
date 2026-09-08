@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oferta Final. Minimal Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .oferta-inclui-label {
+      text-align: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #71717a;
+      margin-bottom: 1.25rem;
+    }
+
+    .stack-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px dashed #d4d4d8;
+    }
+    .stack-row--last {
+      border-bottom: none;
+      padding-bottom: 1.25rem;
+    }
+
+    .stack-row-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stack-check-wrap {
+      flex-shrink: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 9999px;
+      background: #ccfbf1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stack-check-wrap .material-symbols-outlined {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0d9488;
+    }
+
+    .stack-row .stack-label {
+      font-size: 0.875rem;
+      line-height: 1.45;
+      font-weight: 500;
+      color: #3f3f46;
+      text-align: left;
+    }
+    @media (min-width: 768px) {
+      .stack-row .stack-label {
+        font-size: 1rem;
+      }
+    }
+
+    .stack-price {
+      flex-shrink: 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #27272a;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    @media (min-width: 768px) {
+      .stack-price {
+        font-size: 1rem;
+      }
+    }
+
+    .stack-total-real {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 1rem 0 1.25rem;
+      border-top: 1px solid #a1a1aa;
+      border-bottom: 1px solid #a1a1aa;
+      margin-bottom: 0.5rem;
+    }
+    .stack-total-real-label {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #3f3f46;
+    }
+    .stack-total-real-value {
+      font-size: 1.125rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .price-old {
+      text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+      color: #3f3f46;
+    }
+
+    .oferta-trust-line {
+      color: #3f3f46;
+    }
+    .oferta-trust-line .material-symbols-outlined {
+      color: #27272a;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: #18181b;
+      color: #ffffff;
+      padding: 20px 48px;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+      border: 1.5px solid #18181b;
+    }
+    .cta-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-2xl mx-auto">
+
+      <div class="fade-up text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Sua entrada para o
+          <span class="text-zinc-700">método completo.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-zinc-700 leading-relaxed font-light">
+          Veja tudo que entra na sua mão hoje e quanto cada peça custaria por fora.
+        </p>
+      </div>
+
+      <div class="fade-up oferta-card-shell rounded-xl border border-zinc-200 bg-canvas p-8 md:p-10 shadow-sm">
+
+        <p class="oferta-inclui-label">O que está incluído</p>
+
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Método em 7 módulos</span>
+          </div>
+          <span class="stack-price">R$ 897</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Caderno de exercícios</span>
+          </div>
+          <span class="stack-price">R$ 147</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Banco de legendas</span>
+          </div>
+          <span class="stack-price">R$ 197</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Comunidade fechada</span>
+          </div>
+          <span class="stack-price">R$ 297</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Bônus 01. Planilha de precificação</span>
+          </div>
+          <span class="stack-price">R$ 197</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Bônus 02. Mini curso de fotografia</span>
+          </div>
+          <span class="stack-price">R$ 297</span>
+        </div>
+        <div class="stack-row stack-row--last">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Bônus 03. Encontros ao vivo</span>
+          </div>
+          <span class="stack-price">R$ 397</span>
+        </div>
+
+        <div class="stack-total-real">
+          <span class="stack-total-real-label">Valor total real</span>
+          <span class="stack-total-real-value price-old">R$ 2.429</span>
+        </div>
+
+        <div class="mt-8 text-center">
+          <p class="text-sm text-ink uppercase tracking-wider font-semibold mb-2">Por apenas</p>
+          <p class="text-5xl md:text-6xl font-bold tracking-tight leading-none text-ink tabular-nums">R$ 297</p>
+          <p class="text-sm text-zinc-800 mt-3 font-medium">à vista ou em até 12x de R$ 29,70</p>
+        </div>
+
+        <div class="mt-10 text-center">
+          <a href="#" class="cta-btn">Quero entrar agora</a>
+        </div>
+
+        <div class="oferta-trust-line mt-8 flex items-center justify-center gap-2 text-xs sm:text-sm font-medium">
+          <span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">lock</span>
+          <span>Pagamento seguro. Garantia de 14 dias.</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

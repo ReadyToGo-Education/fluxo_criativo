@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O que você já tentou</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .paliativo-card {
+      transition: transform 0.2s ease;
+    }
+    .paliativo-card:hover {
+      transform: translateY(-2px);
+    }
+    .card-img-wrapper {
+      overflow: hidden;
+    }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%);
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Headline -->
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Você já tentou de tudo para vender seu crochê.
+          <span class="text-gray-400">E nada funcionou de verdade.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          O problema nunca foi a qualidade das suas peças. É que ninguém te ensinou a transformar talento em faturamento.
+        </p>
+      </div>
+
+      <!-- Cards Grid 2x2 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Card 1 -->
+        <div class="paliativo-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/phone/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Postar no Instagram sem estratégia</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Fotos caprichadas, hashtags populares, stories todo dia. O feed ficou lindo, mas o caixa continuou vazio. Curtida não vira pedido quando não existe um caminho claro entre o post e a venda.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paliativo-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/market/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Vender em feiras e bazares</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Horas em pé debaixo do sol, montando e desmontando barraca, disputando espaço com produto industrializado de R$&nbsp;10. No fim do dia, o cansaço é enorme e o lucro mal cobre o almoço.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paliativo-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/friends/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Pedir para amigos e família divulgarem</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Eles compartilham por carinho, não por convicção. Compram uma vez por pena, nunca voltam, e você fica sem jeito de insistir. Quando o ciclo de conhecidos acaba, as vendas secam junto.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paliativo-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/coins/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Baixar o preço para competir</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Parecia lógico: preço menor, mais vendas. Mas virou uma corrida para o fundo. Margem zero, horas de trabalho por centavos. Quem compete por preço sempre perde para quem tem menos custo que você.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Bridge -->
+      <div class="fade-up mt-14 md:mt-20 text-center">
+        <p class="text-base md:text-lg text-gray-500 font-light max-w-xl mx-auto leading-relaxed">
+          Nenhuma dessas saídas funciona porque todas atacam o sintoma, não a causa.
+          <span class="text-ink font-semibold">O que falta é um método.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

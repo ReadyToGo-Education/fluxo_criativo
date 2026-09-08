@@ -1,0 +1,5235 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nome do Produto. Transformação Principal</title>
+  <meta name="description" content="Descrição de até 160 caracteres com a promessa principal do produto.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <style>
+/* === hero_glass_escuro === */
+
+*, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000000;
+            --surface-1: #0a0a0a;
+            --surface-2: #111113;
+            --surface-3: #1c1c1e;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::selection {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        /* ── Header ── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: var(--accent);
+        }
+
+        /* ── Main ── */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 96px 32px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 72px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* ── Left column ── */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to bottom right, #ffffff 30%, rgba(255, 255, 255, 0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 .accent-word {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-weight: 400;
+            -webkit-text-fill-color: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.0625rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 420px;
+        }
+
+        /* ── Checklist ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            list-style: none;
+            margin: 4px 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 200ms ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .check-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+        }
+        .check-icon .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--accent);
+        }
+
+        .check-item span:last-child {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        /* ── CTA Button (glassmorphism) ── */
+        .cta-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            height: 48px;
+            padding: 0 24px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            background: linear-gradient(104deg, rgba(253, 253, 253, 0.06) 5%, rgba(240, 240, 228, 0.1) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            color: #fff;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: all 200ms ease;
+            width: fit-content;
+        }
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.92);
+            color: #000;
+            border-color: transparent;
+            box-shadow:
+                0px 0px 4px rgba(255, 255, 255, 0.06),
+                0px 1px 14px rgba(255, 255, 255, 0.12),
+                0px 3px 32px rgba(255, 255, 255, 0.18);
+        }
+        .cta-button:hover .material-symbols-outlined {
+            color: #000;
+        }
+        .cta-button .material-symbols-outlined {
+            font-size: 18px;
+            transition: color 200ms ease;
+        }
+
+        .cta-sub {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+            padding-left: 2px;
+        }
+
+        /* ── Right column. Video ── */
+        .video-card {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: var(--surface-1);
+            position: relative;
+        }
+
+        /* Shimmer line on top */
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 300px;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(255, 255, 255, 0) 10%,
+                rgba(143, 143, 143, 0.5) 50%,
+                rgba(255, 255, 255, 0) 90%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            z-index: 2;
+        }
+        /* Glow under shimmer */
+        .video-card::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            max-width: 200px;
+            height: 4px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(143, 143, 143, 0.15),
+                transparent
+            );
+            filter: blur(3px);
+            z-index: 1;
+        }
+
+        .video-chrome {
+            height: 48px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 8px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #e5484d; }
+        .dot-yellow { background: #f5d90a; }
+        .dot-green { background: #30a46c; }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+        }
+        .video-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        .video-meta-item .material-symbols-outlined {
+            font-size: 16px;
+        }
+        .video-meta-divider {
+            width: 1px;
+            height: 12px;
+            background: var(--border);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes scaleIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+            30% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .anim-up {
+            animation: fadeUpIn 0.8s cubic-bezier(0.36, 0.66, 0.6, 1) forwards;
+            opacity: 0;
+        }
+        .anim-scale {
+            animation: scaleIn 1s cubic-bezier(0.36, 0.66, 0.6, 1) forwards;
+            opacity: 0;
+        }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.15s; }
+        .delay-3 { animation-delay: 0.25s; }
+        .delay-4 { animation-delay: 0.35s; }
+        .delay-5 { animation-delay: 0.45s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            main {
+                padding: 64px 20px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+
+/* === dor === */
+
+:root {
+            --bg-base: #000000;
+            --bg-surface-1: #0a0a0a;
+            --bg-surface-2: #111113;
+            --bg-surface-3: #1c1c1e;
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+            --accent-glow: rgba(194, 149, 107, 0.15);
+            --accent-glow-strong: rgba(194, 149, 107, 0.25);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(17, 17, 19, 0.6);
+            --glass-bg-hover: rgba(28, 28, 30, 0.7);
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .brand-dot {
+            color: var(--accent);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .header-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .header-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            background: var(--accent);
+            color: var(--bg-base);
+            font-family: var(--font-family);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header-cta:hover {
+            background: #d4a87d;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* ========== SECTION: PROBLEMA / DOR ========== */
+        .section-dor {
+            padding: 10rem 2rem 6rem;
+            position: relative;
+        }
+
+        .section-dor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(194, 149, 107, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .section-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Shimmer line */
+        .section-dor .shimmer-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 0 auto 2rem;
+            border-radius: 2px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.4; width: 60px; }
+            50% { opacity: 1; width: 90px; }
+        }
+
+        .section-label {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 1.5rem;
+            animation: fadeUpIn 0.8s ease both;
+        }
+
+        .section-headline {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.25rem;
+            animation: fadeUpIn 0.8s ease 0.1s both;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 50%, var(--text-primary) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 4rem;
+            line-height: 1.7;
+            animation: fadeUpIn 0.8s ease 0.2s both;
+        }
+
+        /* ========== PAIN CARDS ========== */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .pain-card {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fadeUpIn 0.8s ease both;
+            overflow: hidden;
+        }
+
+        .pain-card:nth-child(1) { animation-delay: 0.3s; }
+        .pain-card:nth-child(2) { animation-delay: 0.4s; }
+        .pain-card:nth-child(3) { animation-delay: 0.5s; }
+        .pain-card:nth-child(4) { animation-delay: 0.6s; }
+
+        .pain-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .pain-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+        }
+
+        .pain-card:hover::before {
+            opacity: 1;
+        }
+
+        .pain-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(194, 149, 107, 0.08);
+            border: 1px solid rgba(194, 149, 107, 0.12);
+            margin-bottom: 1.25rem;
+            transition: all 0.4s ease;
+        }
+
+        .pain-card:hover .pain-card-icon {
+            background: rgba(194, 149, 107, 0.14);
+            border-color: rgba(194, 149, 107, 0.25);
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        .pain-card-icon .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .pain-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+            line-height: 1.35;
+        }
+
+        .pain-card-text {
+            font-size: 0.925rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ========== BOTTOM EMPHASIS ========== */
+        .pain-emphasis {
+            margin-top: 3.5rem;
+            text-align: center;
+            animation: fadeUpIn 0.8s ease 0.7s both;
+        }
+
+        .pain-emphasis-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pain-emphasis-text strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ========== KEYFRAMES ========== */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.875rem 1.25rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .section-dor {
+                padding: 7rem 1.25rem 4rem;
+            }
+
+            .pain-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .pain-card {
+                padding: 1.5rem;
+            }
+
+            .section-subtitle {
+                margin-bottom: 3rem;
+            }
+
+            .pain-emphasis {
+                margin-top: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                font-size: 1.25rem;
+            }
+
+            .section-headline {
+                font-size: 1.75rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+            }
+
+            .pain-card {
+                padding: 1.25rem;
+            }
+
+            .pain-card-title {
+                font-size: 1rem;
+            }
+
+            .pain-card-text {
+                font-size: 0.875rem;
+            }
+        }
+
+/* === paliativo === */
+
+/* ── CSS Custom Properties ── */
+    :root {
+      --bg-base: #000000;
+      --bg-surface-1: #0a0a0a;
+      --bg-surface-2: #111113;
+      --bg-surface-3: #1c1c1e;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --fail-red: #e05a5a;
+      --fail-red-dim: rgba(224, 90, 90, 0.12);
+      --fail-red-glow: rgba(224, 90, 90, 0.08);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ── Base ── */
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUpIn {
+      from {
+        opacity: 0;
+        transform: translateY(32px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ── Section ── */
+    .paliativo-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .paliativo-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, var(--fail-red-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .paliativo-container {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ── Shimmer Line ── */
+    .paliativo-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--accent) 50%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    /* ── Headline ── */
+    .paliativo-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .paliativo-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 60%, var(--fail-red) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .paliativo-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    /* ── Cards Grid ── */
+    .paliativo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    /* ── Card ── */
+    .paliativo-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .paliativo-card:nth-child(1) { animation-delay: 0.15s; }
+    .paliativo-card:nth-child(2) { animation-delay: 0.25s; }
+    .paliativo-card:nth-child(3) { animation-delay: 0.35s; }
+    .paliativo-card:nth-child(4) { animation-delay: 0.45s; }
+
+    .paliativo-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 32px var(--fail-red-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* ── Fail Indicator ── */
+    .fail-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--fail-red-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.35s ease;
+    }
+
+    .paliativo-card:hover .fail-icon {
+      background: rgba(224, 90, 90, 0.18);
+    }
+
+    .fail-icon .material-symbols-outlined {
+      font-size: 24px;
+      color: var(--fail-red);
+    }
+
+    /* ── Card Image Wrapper ── */
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      margin: -32px -28px 20px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .card-img-wrap img {
+      display: block;
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      filter: brightness(0.4);
+    }
+
+    .card-img-wrap .card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(17, 17, 19, 0.8) 100%);
+      pointer-events: none;
+    }
+
+    /* ── Card Body (icon + text row) ── */
+    .card-body {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    /* ── Card Content ── */
+    .card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .card-reason {
+      font-size: 0.925rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── Closing Bridge ── */
+    .paliativo-bridge {
+      text-align: center;
+      margin-top: 64px;
+      animation: fadeUpIn 0.7s ease 0.55s both;
+    }
+
+    .bridge-line {
+      width: 40px;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 0 auto 28px;
+    }
+
+    .paliativo-bridge p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .paliativo-bridge strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Responsive ── */
+    @media (min-width: 640px) {
+      .paliativo-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .paliativo-card {
+        padding: 28px 24px;
+      }
+
+      .card-body {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .card-img-wrap {
+        margin: -28px -24px 20px;
+      }
+    }
+
+    @media (min-width: 960px) {
+      .paliativo-section {
+        padding: 120px 32px 140px;
+      }
+
+      .paliativo-card {
+        padding: 32px 28px;
+      }
+
+      .card-img-wrap {
+        margin: -32px -28px 20px;
+      }
+
+      .card-img-wrap img {
+        height: 176px;
+      }
+    }
+
+/* === provas === */
+
+:root {
+      --bg-base: #000000;
+      --bg-surface-1: #0a0a0a;
+      --bg-surface-2: #111113;
+      --bg-surface-3: #1c1c1e;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .provas-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .provas-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 420px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .provas-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .provas-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .provas-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .provas-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .provas-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .provas-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .prova-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .prova-card:nth-child(1) { animation-delay: 0.15s; }
+    .prova-card:nth-child(2) { animation-delay: 0.25s; }
+    .prova-card:nth-child(3) { animation-delay: 0.35s; }
+    .prova-card:nth-child(4) { animation-delay: 0.45s; }
+
+    .prova-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 32px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .prova-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .prova-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    .prova-identity {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .prova-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .prova-location {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prova-location .material-symbols-outlined {
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .prova-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .prova-block {
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 2px solid var(--border-hover);
+    }
+
+    .prova-block.depois {
+      border-left-color: var(--accent);
+      background: rgba(194, 149, 107, 0.05);
+    }
+
+    .prova-block-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+    }
+
+    .prova-block.depois .prova-block-label {
+      color: var(--accent);
+    }
+
+    .prova-block-text {
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .prova-block.depois .prova-block-text {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    @media (min-width: 720px) {
+      .provas-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .provas-grid { grid-template-columns: 1fr 1fr 1fr; }
+      .provas-section { padding: 120px 32px 140px; }
+    }
+
+/* === cta === */
+
+:root {
+            --bg: #000000;
+            --surface-1: #0a0a0a;
+            --surface-2: #111113;
+            --surface-3: #1c1c1e;
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* ── Section ── */
+        .cta-section {
+            position: relative;
+            padding: 120px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .cta-content {
+            max-width: 640px;
+            animation: fadeUpIn 0.8s ease-out both;
+        }
+
+        /* ── Shimmer line ── */
+        .cta-section .shimmer-line {
+            width: 120px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto 48px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1px;
+        }
+
+        .cta-section .shimmer-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        /* ── Headline ── */
+        .cta-headline {
+            font-size: 2.25rem;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Paragraph ── */
+        .cta-paragraph {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ── Glassmorphic Button ── */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            color: var(--text-primary);
+            background: rgba(194, 149, 107, 0.12);
+            border: 1px solid rgba(194, 149, 107, 0.25);
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            opacity: 0;
+            background: var(--text-primary);
+            transition: opacity 0.35s ease;
+            z-index: 0;
+        }
+
+        .cta-button span,
+        .cta-button .material-symbols-outlined {
+            position: relative;
+            z-index: 1;
+            transition: color 0.35s ease;
+        }
+
+        .cta-button .material-symbols-outlined {
+            font-size: 20px;
+        }
+
+        .cta-button:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 24px rgba(194, 149, 107, 0.15), 0 0 48px rgba(194, 149, 107, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+
+        .cta-button:hover span,
+        .cta-button:hover .material-symbols-outlined {
+            color: var(--bg);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* ── Trust element ── */
+        .cta-trust {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+        }
+
+        .cta-trust .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--text-tertiary);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .cta-section {
+                padding: 88px 20px;
+            }
+
+            .cta-headline {
+                font-size: 1.75rem;
+            }
+
+            .cta-paragraph {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 0.9375rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cta-section {
+                padding: 72px 16px;
+            }
+
+            .cta-headline {
+                font-size: 1.5rem;
+            }
+
+            .cta-paragraph {
+                font-size: 0.9375rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+                padding: 16px 24px;
+            }
+        }
+
+/* === metodo === */
+
+:root {
+            --bg: #000000;
+            --surface-1: #0a0a0a;
+            --surface-2: #111113;
+            --surface-3: #1c1c1e;
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* ── Section ── */
+        .metodo-section {
+            position: relative;
+            padding: 120px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .metodo-inner {
+            max-width: 1120px;
+            width: 100%;
+        }
+
+        /* ── Shimmer line ── */
+        .metodo-section .shimmer-line {
+            width: 120px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto 48px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1px;
+        }
+
+        .metodo-section .shimmer-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        /* ── Headline ── */
+        .metodo-headline {
+            font-size: 2.25rem;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeUpIn 0.8s ease-out both;
+        }
+
+        /* ── Philosophy paragraph ── */
+        .metodo-philosophy {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 580px;
+            margin: 0 auto 64px;
+            animation: fadeUpIn 0.8s ease-out 0.1s both;
+        }
+
+        /* ── Steps grid ── */
+        .metodo-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        /* ── Step card ── */
+        .metodo-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metodo-card:nth-child(1) { animation: fadeUpIn 0.8s ease-out 0.2s both; }
+        .metodo-card:nth-child(2) { animation: fadeUpIn 0.8s ease-out 0.35s both; }
+        .metodo-card:nth-child(3) { animation: fadeUpIn 0.8s ease-out 0.5s both; }
+
+        .metodo-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 0 32px rgba(194, 149, 107, 0.08), 0 0 64px rgba(194, 149, 107, 0.04);
+            transform: translateY(-4px);
+        }
+
+        /* ── Card image ── */
+        .metodo-card-image {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .metodo-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.35);
+            transition: filter 0.35s ease;
+        }
+
+        .metodo-card:hover .metodo-card-image img {
+            filter: brightness(0.42);
+        }
+
+        .metodo-card-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, rgba(10, 10, 10, 1), transparent);
+            pointer-events: none;
+        }
+
+        /* ── Card body ── */
+        .metodo-card-body {
+            padding: 28px 28px 32px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metodo-microsteps {
+            margin-top: auto;
+        }
+
+        /* ── Step number ── */
+        .metodo-step-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+
+        /* ── Card icon ── */
+        .metodo-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(194, 149, 107, 0.1);
+            margin-bottom: 16px;
+        }
+
+        .metodo-card-icon .material-symbols-outlined {
+            font-size: 22px;
+            color: var(--accent);
+        }
+
+        /* ── Step title ── */
+        .metodo-step-title {
+            font-size: 1.1875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── Micro-steps ── */
+        .metodo-microsteps {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .metodo-microsteps li {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .metodo-microsteps li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.6;
+        }
+
+        /* ── Shimmer divider between steps (desktop) ── */
+        .step-divider {
+            display: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 960px) {
+            .metodo-steps {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin: 0 auto;
+                gap: 32px;
+            }
+
+            .step-divider {
+                display: block;
+                width: 80px;
+                height: 1px;
+                background: var(--border);
+                margin: 0 auto;
+                position: relative;
+                overflow: hidden;
+                border-radius: 1px;
+            }
+
+            .step-divider::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 60%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, var(--accent), transparent);
+                animation: shimmer 3s ease-in-out infinite;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .metodo-section {
+                padding: 88px 20px;
+            }
+
+            .metodo-headline {
+                font-size: 1.75rem;
+            }
+
+            .metodo-philosophy {
+                font-size: 1rem;
+                margin-bottom: 48px;
+            }
+
+            .metodo-card-image {
+                height: 180px;
+            }
+
+            .metodo-card-body {
+                padding: 24px 24px 28px;
+            }
+
+            .metodo-step-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metodo-section {
+                padding: 72px 16px;
+            }
+
+            .metodo-headline {
+                font-size: 1.5rem;
+            }
+
+            .metodo-philosophy {
+                font-size: 0.9375rem;
+            }
+
+            .metodo-card-image {
+                height: 160px;
+            }
+
+            .metodo-card-body {
+                padding: 20px 20px 24px;
+            }
+
+            .metodo-step-number {
+                font-size: 2.25rem;
+            }
+
+            .metodo-step-title {
+                font-size: 1.0625rem;
+            }
+
+            .metodo-microsteps li {
+                font-size: 0.875rem;
+            }
+        }
+
+/* === para_quem === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+      --fail-red: #e05a5a;
+      --fail-red-dim: rgba(224, 90, 90, 0.12);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .paraquem-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .paraquem-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .paraquem-container {
+      position: relative; z-index: 1;
+      max-width: 1080px; margin: 0 auto;
+    }
+
+    .paraquem-section .shimmer-line {
+      width: 64px; height: 2px; margin: 0 auto 40px; border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .paraquem-headline {
+      text-align: center; margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+    .paraquem-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .paraquem-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px; margin: 0 auto 56px; line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .paraquem-grid {
+      display: grid; grid-template-columns: 1fr; gap: 24px;
+    }
+
+    .paraquem-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 36px 28px 32px;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+    .paraquem-card:nth-child(1) { animation-delay: 0.15s; }
+    .paraquem-card:nth-child(2) { animation-delay: 0.25s; }
+
+    .paraquem-card:hover {
+      border-color: var(--accent-glow-strong);
+      box-shadow: 0 0 40px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .paraquem-label {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      margin-bottom: 24px;
+    }
+    .label-yes { color: var(--accent); }
+    .label-no { color: var(--text-tertiary); }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+
+    .icon-yes {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: var(--accent-glow); border: 1px solid var(--accent-glow-strong);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-yes .material-symbols-outlined { font-size: 16px; color: var(--accent); }
+
+    .icon-no {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: var(--fail-red-dim); border: 1px solid rgba(224, 90, 90, 0.25);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-no .material-symbols-outlined { font-size: 16px; color: var(--fail-red); }
+
+    .text-dim { color: var(--text-tertiary); }
+
+    @media (min-width: 820px) {
+      .paraquem-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1024px) {
+      .paraquem-section { padding: 120px 32px 140px; }
+    }
+
+/* === entregaveis === */
+
+:root {
+      --bg-base: #000000;
+      --bg-surface-2: #111113;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .entregaveis-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .entregaveis-section::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 640px;
+      height: 480px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .entregaveis-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .entregaveis-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .entregaveis-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .entregaveis-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .entregaveis-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .entregaveis-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .entregavel-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 28px 26px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .entregavel-card:nth-child(1) { animation-delay: 0.10s; }
+    .entregavel-card:nth-child(2) { animation-delay: 0.18s; }
+    .entregavel-card:nth-child(3) { animation-delay: 0.26s; }
+    .entregavel-card:nth-child(4) { animation-delay: 0.34s; }
+    .entregavel-card:nth-child(5) { animation-delay: 0.42s; }
+    .entregavel-card:nth-child(6) { animation-delay: 0.50s; }
+
+    .entregavel-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 32px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .entregavel-icon {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.35s ease;
+    }
+
+    .entregavel-card:hover .entregavel-icon {
+      background: var(--accent-glow-strong);
+    }
+
+    .entregavel-icon .material-symbols-outlined {
+      font-size: 26px;
+      color: var(--accent);
+    }
+
+    .entregavel-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .entregavel-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .entregavel-desc {
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @media (min-width: 720px) {
+      .entregaveis-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .entregaveis-section { padding: 120px 32px 140px; }
+    }
+
+/* === bonus === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .bonus-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .bonus-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bonus-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .bonus-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .bonus-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .bonus-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .bonus-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .bonus-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 36px 28px 32px;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .bonus-card:nth-child(1) { animation-delay: 0.15s; }
+    .bonus-card:nth-child(2) { animation-delay: 0.25s; }
+    .bonus-card:nth-child(3) { animation-delay: 0.35s; }
+
+    .bonus-card:hover {
+      border-color: var(--accent-glow-strong);
+      box-shadow: 0 0 40px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .bonus-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 18px;
+    }
+
+    .bonus-badge .material-symbols-outlined {
+      font-size: 14px;
+    }
+
+    .bonus-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .bonus-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+
+    .bonus-value {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .bonus-value-label {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .bonus-value-price {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-decoration: line-through;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+    }
+
+    @media (min-width: 820px) {
+      .bonus-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .bonus-section { padding: 120px 32px 140px; }
+    }
+
+/* === stack === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .stack-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .stack-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 720px; height: 560px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .stack-container {
+      position: relative; z-index: 1;
+      max-width: 640px; margin: 0 auto;
+    }
+
+    .stack-section .shimmer-line {
+      width: 64px; height: 2px; margin: 0 auto 40px; border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .stack-headline {
+      text-align: center; margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+    .stack-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .stack-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 540px; margin: 0 auto 48px; line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .stack-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      padding: 40px 32px;
+      animation: fadeUpIn 0.7s ease 0.2s both;
+    }
+
+    .stack-card .stack-label {
+      font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--accent); margin-bottom: 18px; text-align: center;
+    }
+
+    .stack-card .stack-list { list-style: none; margin-bottom: 28px; }
+
+    .stack-card .stack-item {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+    .stack-card .stack-item:last-child { border-bottom: none; }
+
+    .stack-card .stack-item-name {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.95rem; color: var(--text-primary); line-height: 1.5;
+    }
+    .stack-card .stack-item-name .material-symbols-outlined {
+      font-size: 18px; color: var(--accent); margin-top: 2px; flex-shrink: 0;
+    }
+
+    .stack-card .stack-item-value {
+      font-size: 0.9rem; color: var(--text-tertiary);
+      font-weight: 500; white-space: nowrap;
+    }
+
+    .stack-card .stack-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 0; margin-top: 8px;
+      border-top: 1px solid var(--border-hover);
+    }
+    .stack-card .stack-total-label {
+      font-size: 0.875rem; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .stack-card .stack-total-value {
+      font-size: 1.35rem; color: var(--text-tertiary); font-weight: 700;
+      text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 2px;
+    }
+
+    .stack-card .stack-footer {
+      text-align: center; margin-top: 20px;
+      font-size: 0.9rem; color: var(--text-tertiary); line-height: 1.7;
+    }
+
+    @media (min-width: 1024px) {
+      .stack-section { padding: 120px 32px 140px; }
+    }
+
+/* === suporte === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .suporte-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .suporte-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 620px;
+      height: 420px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .suporte-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .suporte-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .suporte-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .suporte-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .suporte-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .suporte-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .suporte-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px 26px;
+      text-align: center;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .suporte-card:nth-child(1) { animation-delay: 0.15s; }
+    .suporte-card:nth-child(2) { animation-delay: 0.25s; }
+    .suporte-card:nth-child(3) { animation-delay: 0.35s; }
+    .suporte-card:nth-child(4) { animation-delay: 0.45s; }
+
+    .suporte-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 32px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .suporte-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 16px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.35s ease;
+    }
+
+    .suporte-card:hover .suporte-icon {
+      background: var(--accent-glow-strong);
+    }
+
+    .suporte-icon .material-symbols-outlined {
+      font-size: 32px;
+      color: var(--accent);
+    }
+
+    .suporte-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .suporte-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @media (min-width: 640px) {
+      .suporte-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .suporte-grid { grid-template-columns: repeat(4, 1fr); }
+      .suporte-section { padding: 120px 32px 140px; }
+    }
+
+/* === garantia === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 48px var(--accent-glow), 0 0 96px var(--accent-glow); }
+      50% { box-shadow: 0 0 72px var(--accent-glow-strong), 0 0 128px var(--accent-glow); }
+    }
+
+    .garantia-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .garantia-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 720px;
+      height: 560px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .garantia-container {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .garantia-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .garantia-seal {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(194, 149, 107, 0.25), rgba(17, 17, 19, 0.9));
+      border: 2px solid var(--accent-glow-strong);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUpIn 0.8s ease both, pulseGlow 4s ease-in-out infinite 0.8s;
+    }
+
+    .garantia-seal::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 1px dashed var(--accent-glow-strong);
+    }
+
+    .garantia-seal .material-symbols-outlined {
+      font-size: 72px;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .garantia-seal-days {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .garantia-headline {
+      margin-bottom: 20px;
+      animation: fadeUpIn 0.7s ease 0.15s both;
+    }
+
+    .garantia-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .garantia-body {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 36px 32px;
+      animation: fadeUpIn 0.7s ease 0.3s both;
+    }
+
+    .garantia-body p {
+      font-size: 1.0625rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+
+    .garantia-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .garantia-body strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .garantia-sign {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      font-style: italic;
+    }
+
+    @media (min-width: 1024px) {
+      .garantia-section { padding: 120px 32px 140px; }
+      .garantia-seal { width: 220px; height: 220px; }
+      .garantia-seal .material-symbols-outlined { font-size: 80px; }
+    }
+
+/* === autoridade === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .autoridade-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .autoridade-section::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 680px;
+      height: 440px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .autoridade-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .autoridade-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .autoridade-headline {
+      text-align: center;
+      margin-bottom: 56px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .autoridade-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .autoridade-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      align-items: center;
+      margin-bottom: 48px;
+      animation: fadeUpIn 0.7s ease 0.15s both;
+    }
+
+    .autoridade-photo {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(194, 149, 107, 0.12), rgba(17, 17, 19, 0.9));
+      border: 1px solid var(--border-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 380px;
+      margin: 0 auto;
+      box-shadow: 0 0 48px var(--accent-glow), 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .autoridade-photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .autoridade-photo-placeholder .material-symbols-outlined {
+      font-size: 56px;
+      color: var(--accent);
+    }
+
+    .autoridade-photo-placeholder span:last-child {
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+
+    .autoridade-bio-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .autoridade-bio h3 {
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+
+    .autoridade-bio p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .autoridade-bio p:last-child {
+      margin-bottom: 0;
+    }
+
+    .autoridade-bio strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .creds-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      animation: fadeUpIn 0.7s ease 0.3s both;
+    }
+
+    .cred-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 22px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: border-color 0.35s ease, transform 0.35s ease;
+    }
+
+    .cred-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .cred-icon {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cred-icon .material-symbols-outlined {
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    .cred-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cred-number {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .cred-label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    @media (min-width: 820px) {
+      .autoridade-main { grid-template-columns: 360px 1fr; gap: 48px; }
+      .autoridade-photo { max-width: none; }
+      .creds-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .autoridade-section { padding: 120px 32px 140px; }
+      .creds-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+/* === faq === */
+
+:root {
+      --bg: #000000;
+      --surface-1: #0a0a0a;
+      --surface-2: #111113;
+      --surface-3: #1c1c1e;
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Animations */
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Section */
+    .faq-section {
+      position: relative;
+      padding: 120px 24px;
+      overflow: hidden;
+    }
+
+    .faq-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(194, 149, 107, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .faq-container {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 56px;
+      animation: fadeUpIn 0.8s ease-out both;
+    }
+
+    /* Shimmer line */
+    .faq-section .shimmer-line {
+      width: 120px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 auto 40px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 1px;
+    }
+
+    .faq-section .shimmer-line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .faq-headline {
+      font-size: 2.25rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .faq-subtitle {
+      font-size: 1.0625rem;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Accordion */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeUpIn 0.8s ease-out 0.15s both;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-hover);
+    }
+
+    .faq-item.open {
+      border-color: rgba(194, 149, 107, 0.25);
+      box-shadow: 0 0 24px rgba(194, 149, 107, 0.06);
+    }
+
+    .faq-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      gap: 16px;
+    }
+
+    .faq-trigger .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--accent);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-trigger .material-symbols-outlined {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    .faq-answer-inner {
+      padding: 0 24px 20px;
+      font-size: 0.9375rem;
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .faq-footer {
+      text-align: center;
+      margin-top: 48px;
+      animation: fadeUpIn 0.8s ease-out 0.3s both;
+    }
+
+    .faq-footer p {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .faq-section { padding: 88px 20px; }
+      .faq-headline { font-size: 1.75rem; }
+      .faq-subtitle { font-size: 1rem; }
+      .faq-trigger { padding: 18px 20px; font-size: 0.9375rem; }
+      .faq-answer-inner { padding: 0 20px 18px; font-size: 0.875rem; }
+    }
+
+    @media (max-width: 480px) {
+      .faq-section { padding: 72px 16px; }
+      .faq-headline { font-size: 1.5rem; }
+      .faq-trigger { padding: 16px 18px; }
+    }
+
+/* === oferta === */
+
+:root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-hover: #d4a87d;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.35);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 0 32px var(--accent-glow-strong), 0 8px 32px rgba(0, 0, 0, 0.4); }
+      50% { box-shadow: 0 0 56px var(--accent-glow-strong), 0 8px 48px rgba(0, 0, 0, 0.4); }
+    }
+
+    .oferta-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .oferta-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 720px;
+      height: 560px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .oferta-container {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .oferta-section .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .oferta-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .oferta-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .oferta-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .oferta-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      padding: 40px 32px;
+      animation: fadeUpIn 0.7s ease 0.2s both;
+    }
+
+    .oferta-card .stack-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .oferta-card .stack-list {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .oferta-card .stack-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+
+    .oferta-card .stack-item:last-child {
+      border-bottom: none;
+    }
+
+    .oferta-card .stack-item-name {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .oferta-card .stack-item-name .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--accent);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .oferta-card .stack-item-value {
+      font-size: 0.9rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .oferta-card .stack-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      margin-bottom: 8px;
+      border-top: 1px solid var(--border-hover);
+      border-bottom: 1px solid var(--border-hover);
+    }
+
+    .oferta-card .stack-total-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .oferta-card .stack-total-value {
+      font-size: 1.15rem;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      text-decoration: line-through;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+    }
+
+    .price-block {
+      text-align: center;
+      padding: 28px 0 8px;
+    }
+
+    .price-intro {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .price-amount {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .price-currency {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 14px;
+    }
+
+    .price-value {
+      font-size: clamp(3rem, 7vw, 4rem);
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .price-footer {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      margin-bottom: 28px;
+    }
+
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: #1a0f06;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.35s ease, filter 0.35s ease;
+      animation: ctaPulse 2.8s ease-in-out infinite;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .cta-btn .material-symbols-outlined {
+      font-size: 22px;
+    }
+
+    .security-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .security-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+    }
+
+    .security-row .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    @media (min-width: 1024px) {
+      .oferta-section { padding: 120px 32px 140px; }
+    }
+
+/* === hero_glass_escuro_depoimentos === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --surface-1: #0a0a0a;
+            --surface-2: #111113;
+            --surface-3: #1c1c1e;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::selection { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+        header {
+            position: sticky; top: 0; z-index: 50;
+            height: 58px; display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+        }
+
+        .logo { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+
+        /* Escopo: só o main desta seção (evita conflito com outras páginas / hero) */
+        .depoimentos-wrap main {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: clamp(72px, 9vw, 120px) clamp(20px, 4vw, 48px);
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .depoimentos-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(40px, 5vw, 56px);
+            align-items: start;
+        }
+
+        @media (min-width: 1024px) {
+            .depoimentos-layout {
+                grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+                gap: clamp(48px, 6vw, 80px);
+            }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        @media (min-width: 1024px) {
+            .section-header {
+                text-align: left;
+                padding-right: 8px;
+            }
+        }
+
+        .section-header h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.85rem, 4vw, 2.75rem);
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to bottom right, #ffffff 30%, rgba(255, 255, 255, 0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            max-width: 20ch;
+        }
+
+        @media (min-width: 1024px) {
+            .section-header h2 {
+                margin-left: -2px;
+            }
+        }
+
+        .section-header p {
+            font-size: 1.0625rem;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 38ch;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 1024px) {
+            .section-header p {
+                margin: 0;
+            }
+        }
+
+        .depoimentos-carousel-col {
+            min-width: 0;
+        }
+
+        .carousel-wrapper {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.36, 0.66, 0.6, 1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            padding: 0 clamp(4px, 1.5vw, 12px);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(20px, 3vw, 32px);
+        }
+
+        .testimonial-card {
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: var(--surface-1);
+            padding: clamp(26px, 3vw, 36px) clamp(22px, 2.5vw, 32px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            min-height: 0;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .testimonial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            max-width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(143, 143, 143, 0.4), transparent);
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+
+        .stars .material-symbols-outlined {
+            font-size: 17px;
+            color: var(--accent);
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .quote-highlight {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.45;
+            letter-spacing: -0.01em;
+        }
+
+        .testimonial-card .quote-body {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.72;
+            font-weight: 400;
+        }
+
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: auto;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .author-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); line-height: 1.35; }
+        .author-role { font-size: 0.8125rem; color: var(--text-tertiary); margin-top: 4px; line-height: 1.4; }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            margin-top: clamp(36px, 5vw, 52px);
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.92);
+            color: #000;
+            border-color: transparent;
+            box-shadow: 0 0 4px rgba(255,255,255,0.06), 0 1px 14px rgba(255,255,255,0.12);
+        }
+
+        .dots { display: flex; gap: 8px; align-items: center; }
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .dot.active { background: var(--text-primary); width: 22px; border-radius: 3px; }
+
+        @keyframes fadeUpIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .anim { animation: fadeUpIn 0.8s cubic-bezier(0.36, 0.66, 0.6, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .card-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 24px;
+                max-width: 720px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .depoimentos-wrap main { padding: 64px 18px 80px; }
+            .section-header h2 { font-size: 1.75rem; }
+        }
+  </style>
+</head>
+<body>
+
+<header>
+        <div class="logo">Atelier<span>.</span></div>
+    </header>
+
+    <main>
+        <div class="grid">
+
+            <div class="content">
+
+                <h1 class="anim-up delay-2">
+                    Transforme seu croche em uma renda de verdade.
+                </h1>
+
+                <p class="subtitle anim-up delay-3">
+                    O metodo completo para voce que faz pecas lindas mas nao sabe como vender e deseja elevar sua arte ao patamar de atelier.
+                </p>
+
+                <ul class="checklist anim-up delay-4">
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Aprenda a precificar sem trabalhar no prejuizo</span>
+                    </li>
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Descubra quais pecas dao lucro e saida rapida</span>
+                    </li>
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Monte sua vitrine online e atraia clientes todos os dias</span>
+                    </li>
+                </ul>
+
+                <div class="cta-wrap anim-up delay-5">
+                    <button type="button" class="cta-button" onclick="document.getElementById('oferta').scrollIntoView({behavior:'smooth'})">
+                        Quero transformar meu croche
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                    <span class="cta-sub">Acesso imediato ao metodo completo</span>
+                </div>
+
+            </div>
+
+            <div class="anim-scale delay-3">
+                <div class="video-card">
+                    <div class="video-chrome">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+                    <div class="video-embed">
+                        <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentacao do Metodo"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-meta">
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">play_circle</span>
+                            Assista a aula gratuita
+                        </div>
+                        <div class="video-meta-divider"></div>
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">timer</span>
+                            15 minutos
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+<!-- SEÇÃO: PROBLEMA / DOR -->
+    <section class="section-dor">
+        <div class="section-inner">
+
+            <div class="shimmer-line"></div>
+
+            <p class="section-label">O problema que ninguém fala</p>
+
+            <h2 class="section-headline">
+                <span class="gradient-text">Você cria peças incríveis, mas sente<br>que o seu trabalho não é valorizado</span>
+            </h2>
+
+            <p class="section-subtitle">
+                Talento não falta. O que falta é um caminho claro para transformar cada ponto de crochê em renda de verdade, sem depender de sorte ou de quem aparece.
+            </p>
+
+            <div class="pain-grid">
+
+                <!-- Card 1 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">schedule</span>
+                    </div>
+                    <h3 class="pain-card-title">Horas de trabalho, centavos de retorno</h3>
+                    <p class="pain-card-text">
+                        Você passa a noite inteira crochetando uma peça com carinho, escolhendo cada cor, cada detalhe. Na hora de vender, recebe menos do que gastou na linha. O tempo investido simplesmente desaparece.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">trending_down</span>
+                    </div>
+                    <h3 class="pain-card-title">"Faz por quanto? Ah, tá caro"</h3>
+                    <p class="pain-card-text">
+                        Toda vez é a mesma cena: a pessoa olha, elogia, pergunta o preço e faz aquela cara. Você acaba dando desconto só para não perder a venda, e no fundo sabe que saiu no prejuízo de novo.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                    <h3 class="pain-card-title">Um armário cheio de peças encalhadas</h3>
+                    <p class="pain-card-text">
+                        Toalhas, amigurumis, bolsas, sousplats. Tudo lindo, tudo feito com dedicação, tudo parado. Cada gaveta que você abre é um lembrete silencioso de que criar não é o mesmo que vender.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">nightlight</span>
+                    </div>
+                    <h3 class="pain-card-title">Madrugadas em silêncio, enquanto todos dormem</h3>
+                    <p class="pain-card-text">
+                        A família já dormiu e você ainda está ali, com a agulha na mão, tentando dar conta de uma encomenda que mal paga a conta de luz. Você sente vergonha de cobrar o que realmente vale, e culpa por não conseguir descansar.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="pain-emphasis">
+                <p class="pain-emphasis-text">
+                    O problema nunca foi a qualidade do seu crochê.<br>
+                    O problema é que <strong>ninguém te ensinou a transformar talento em negócio</strong>.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+<section class="paliativo-section">
+    <div class="paliativo-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="paliativo-headline">
+        <h2>Você já tentou de tudo para vender mais peças, mas nada funcionou de verdade</h2>
+      </div>
+
+      <p class="paliativo-subtitle">
+        Se você é como a maioria das artesãs, provavelmente já testou alguns desses caminhos. Nenhum trouxe o resultado que merecia.
+      </p>
+
+      <div class="paliativo-grid">
+
+        <!-- Card 1 -->
+        <div class="paliativo-card">
+          <div class="card-img-wrap">
+            <img src="https://picsum.photos/seed/phone/600/300" alt="" loading="lazy">
+            <div class="card-img-overlay"></div>
+          </div>
+          <div class="card-body">
+            <div class="fail-icon">
+              <span class="material-symbols-outlined">close</span>
+            </div>
+            <div class="card-content">
+              <div class="card-title">Postar no Instagram sem estratégia</div>
+              <p class="card-reason">
+                Você tira foto, publica, espera... e nada acontece. Sem um método de atração e conversão, suas peças se perdem no feed entre milhares de outros perfis. Curtidas não pagam boletos.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paliativo-card">
+          <div class="card-img-wrap">
+            <img src="https://picsum.photos/seed/market/600/300" alt="" loading="lazy">
+            <div class="card-img-overlay"></div>
+          </div>
+          <div class="card-body">
+            <div class="fail-icon">
+              <span class="material-symbols-outlined">close</span>
+            </div>
+            <div class="card-content">
+              <div class="card-title">Vender em feiras e bazares</div>
+              <p class="card-reason">
+                Horas de preparação, custos de transporte e barraca, sol ou chuva, para voltar com menos do que investiu. A feira limita seu alcance a quem passa naquele dia, naquele horário.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paliativo-card">
+          <div class="card-img-wrap">
+            <img src="https://picsum.photos/seed/friends/600/300" alt="" loading="lazy">
+            <div class="card-img-overlay"></div>
+          </div>
+          <div class="card-body">
+            <div class="fail-icon">
+              <span class="material-symbols-outlined">close</span>
+            </div>
+            <div class="card-content">
+              <div class="card-title">Pedir para amigos e família divulgarem</div>
+              <p class="card-reason">
+                Eles até compartilham no começo, mas logo param. E mesmo quando divulgam, raramente alcançam quem realmente quer comprar. Você precisa de clientes, não de favores.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paliativo-card">
+          <div class="card-img-wrap">
+            <img src="https://picsum.photos/seed/coins/600/300" alt="" loading="lazy">
+            <div class="card-img-overlay"></div>
+          </div>
+          <div class="card-body">
+            <div class="fail-icon">
+              <span class="material-symbols-outlined">close</span>
+            </div>
+            <div class="card-content">
+              <div class="card-title">Baixar o preço para competir</div>
+              <p class="card-reason">
+                Quando você reduz o valor, atrai quem só quer pechincha e desvaloriza o seu trabalho. Logo está produzindo mais, ganhando menos e se esgotando. Preço baixo não constrói negócio.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="paliativo-bridge">
+        <div class="bridge-line"></div>
+        <p>
+          O problema nunca foi a qualidade das suas peças. O que faltou foi <strong>um método que transforma o seu crochê em um negócio de verdade</strong>.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+<section class="provas-section">
+    <div class="provas-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="provas-headline">
+        <h2>Quem aplicou já está vendo resultado</h2>
+      </div>
+
+      <p class="provas-subtitle">
+        Artesãs que seguiram o método e transformaram o crochê em renda real, dentro de casa.
+      </p>
+
+      <div class="provas-grid">
+
+        <div class="prova-card">
+          <div class="prova-header">
+            <img class="prova-avatar" src="https://i.pravatar.cc/150?img=47" alt="Foto de Marta">
+            <div class="prova-identity">
+              <div class="prova-name">Marta Rezende</div>
+              <div class="prova-location">
+                <span class="material-symbols-outlined">location_on</span>
+                Belo Horizonte, MG
+              </div>
+            </div>
+          </div>
+          <div class="prova-body">
+            <div class="prova-block">
+              <div class="prova-block-label">Antes</div>
+              <div class="prova-block-text">Vendia peças esporádicas para vizinhas e não conseguia passar dos 400 reais no mês.</div>
+            </div>
+            <div class="prova-block depois">
+              <div class="prova-block-label">Depois</div>
+              <div class="prova-block-text">Fechou 18 peças em 30 dias e bateu 3.200 reais no primeiro mês aplicando o método.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prova-card">
+          <div class="prova-header">
+            <img class="prova-avatar" src="https://i.pravatar.cc/150?img=32" alt="Foto de Juliana">
+            <div class="prova-identity">
+              <div class="prova-name">Juliana Prado</div>
+              <div class="prova-location">
+                <span class="material-symbols-outlined">location_on</span>
+                Curitiba, PR
+              </div>
+            </div>
+          </div>
+          <div class="prova-body">
+            <div class="prova-block">
+              <div class="prova-block-label">Antes</div>
+              <div class="prova-block-text">Tinha vergonha de cobrar pelo trabalho e aceitava pedidos abaixo do custo do fio.</div>
+            </div>
+            <div class="prova-block depois">
+              <div class="prova-block-label">Depois</div>
+              <div class="prova-block-text">Triplicou o preço, parou de aceitar encomendas baratas e montou lista de espera.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prova-card">
+          <div class="prova-header">
+            <img class="prova-avatar" src="https://i.pravatar.cc/150?img=20" alt="Foto de Cleide">
+            <div class="prova-identity">
+              <div class="prova-name">Cleide Moraes</div>
+              <div class="prova-location">
+                <span class="material-symbols-outlined">location_on</span>
+                Fortaleza, CE
+              </div>
+            </div>
+          </div>
+          <div class="prova-body">
+            <div class="prova-block">
+              <div class="prova-block-label">Antes</div>
+              <div class="prova-block-text">Postava no Instagram todo dia e só recebia curtida de amiga, nenhuma venda vinha do feed.</div>
+            </div>
+            <div class="prova-block depois">
+              <div class="prova-block-label">Depois</div>
+              <div class="prova-block-text">Virou referência local, fechou duas encomendas de enxoval e foi convidada para uma loja colaborativa.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prova-card">
+          <div class="prova-header">
+            <img class="prova-avatar" src="https://i.pravatar.cc/150?img=5" alt="Foto de Rosana">
+            <div class="prova-identity">
+              <div class="prova-name">Rosana Batista</div>
+              <div class="prova-location">
+                <span class="material-symbols-outlined">location_on</span>
+                Porto Alegre, RS
+              </div>
+            </div>
+          </div>
+          <div class="prova-body">
+            <div class="prova-block">
+              <div class="prova-block-label">Antes</div>
+              <div class="prova-block-text">Passava o dia inteiro em feira de bairro e voltava com menos do que gastou em barraca.</div>
+            </div>
+            <div class="prova-block depois">
+              <div class="prova-block-label">Depois</div>
+              <div class="prova-block-text">Parou de ir em feira e hoje vende direto do celular, sem sair de casa, todas as semanas.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+<section class="cta-section">
+        <div class="cta-content">
+            <div class="shimmer-line"></div>
+            <h2 class="cta-headline">Transforme suas mãos em uma fonte de renda real</h2>
+            <p class="cta-paragraph">O Método Atelier já mostrou para centenas de artesãs que é possível viver do crochê com organização, técnica e um posicionamento que valoriza cada peça.</p>
+            <div style="margin-bottom: 32px;">
+                <p style="font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">12x de R$&nbsp;29,70</p>
+                <p style="font-size: 0.9375rem; color: var(--text-tertiary);">ou R$&nbsp;297,00 à vista</p>
+            </div>
+            <a href="#oferta" class="cta-button">
+                <span>Quero começar agora</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+            <div class="cta-trust">
+                <span class="material-symbols-outlined">verified</span>
+                <span>Acesso imediato · Garantia de 7 dias</span>
+            </div>
+        </div>
+    </section>
+
+<section class="metodo-section">
+        <div class="metodo-inner">
+            <div class="shimmer-line"></div>
+            <h2 class="metodo-headline">O caminho de quem transforma linha em renda</h2>
+            <p class="metodo-philosophy">O Método Atelier foi construído para artesãs que querem sair do improviso. Três etapas claras que conectam técnica, precificação e posicionamento. na ordem certa, sem enrolação.</p>
+
+            <div class="metodo-steps">
+                <!-- Step 1 -->
+                <div class="metodo-card">
+                    <div class="metodo-card-image">
+                        <img src="https://picsum.photos/seed/yarn-thread-crochet/600/400" alt="Linhas e agulhas de crochê organizadas">
+                    </div>
+                    <div class="metodo-card-body">
+                        <div class="metodo-step-number">01</div>
+                        <div class="metodo-card-icon">
+                            <span class="material-symbols-outlined">design_services</span>
+                        </div>
+                        <h3 class="metodo-step-title">Domínio técnico e repertório</h3>
+                        <ul class="metodo-microsteps">
+                            <li>Pontos fundamentais e combinações que valorizam a peça</li>
+                            <li>Leitura e interpretação de gráficos sem depender de vídeo</li>
+                            <li>Acabamentos profissionais que eliminam o aspecto amador</li>
+                            <li>Coleção de peças com identidade visual própria</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step-divider"></div>
+
+                <!-- Step 2 -->
+                <div class="metodo-card">
+                    <div class="metodo-card-image">
+                        <img src="https://picsum.photos/seed/pricing-handmade-notebook/600/400" alt="Precificação e organização financeira">
+                    </div>
+                    <div class="metodo-card-body">
+                        <div class="metodo-step-number">02</div>
+                        <div class="metodo-card-icon">
+                            <span class="material-symbols-outlined">payments</span>
+                        </div>
+                        <h3 class="metodo-step-title">Precificação e gestão lucrativa</h3>
+                        <ul class="metodo-microsteps">
+                            <li>Cálculo real de custo por peça. materiais, tempo e energia</li>
+                            <li>Margem de lucro que sustenta o negócio sem medo de cobrar</li>
+                            <li>Organização de pedidos, prazos e fluxo de produção</li>
+                            <li>Tabela de preços pronta para aplicar no mesmo dia</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step-divider"></div>
+
+                <!-- Step 3 -->
+                <div class="metodo-card">
+                    <div class="metodo-card-image">
+                        <img src="https://picsum.photos/seed/boutique-display-artesanal/600/400" alt="Vitrine elegante de produtos artesanais">
+                    </div>
+                    <div class="metodo-card-body">
+                        <div class="metodo-step-number">03</div>
+                        <div class="metodo-card-icon">
+                            <span class="material-symbols-outlined">storefront</span>
+                        </div>
+                        <h3 class="metodo-step-title">Posicionamento e vendas consistentes</h3>
+                        <ul class="metodo-microsteps">
+                            <li>Fotos e apresentação que transmitem valor antes da conversa</li>
+                            <li>Canais de venda certos para o seu tipo de peça e público</li>
+                            <li>Rotina de divulgação simples que gera pedidos toda semana</li>
+                            <li>Clientes que voltam e indicam sem você precisar insistir</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section class="paraquem-section">
+    <div class="paraquem-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="paraquem-headline">
+        <h2>Este método foi pensado para um perfil bem específico</h2>
+      </div>
+
+      <p class="paraquem-subtitle">
+        Veja se você se encaixa antes de seguir em frente.
+      </p>
+
+      <div class="paraquem-grid">
+
+        <div class="paraquem-card">
+          <p class="paraquem-label label-yes">Para quem é</p>
+
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+            <span>Quer transformar sua habilidade manual em uma fonte de renda previsível</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+            <span>Já produz peças mas ainda não consegue vender com consistência</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+            <span>Está disposta a seguir um passo a passo e aplicar o método por pelo menos 30 dias</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+            <span>Quer aprender a precificar, fotografar e divulgar sem depender de terceiros</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+            <span>Busca independência financeira trabalhando de casa</span>
+          </div>
+        </div>
+
+        <div class="paraquem-card">
+          <p class="paraquem-label label-no">Para quem não é</p>
+
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+            <span class="text-dim">Procura resultado sem esforço ou atalhos mágicos</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+            <span class="text-dim">Não tem disposição para aprender algo novo e testar na prática</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+            <span class="text-dim">Espera que o método funcione sozinho, sem dedicação pessoal</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+            <span class="text-dim">Acredita que o problema está sempre no mercado, nunca no processo</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+            <span class="text-dim">Quer aprender a teoria mas não pretende colocar em prática</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+<section class="entregaveis-section">
+    <div class="entregaveis-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="entregaveis-headline">
+        <h2>Tudo que você recebe quando entrar</h2>
+      </div>
+
+      <p class="entregaveis-subtitle">
+        Um pacote pensado para tirar sua primeira venda online do papel em poucas semanas.
+      </p>
+
+      <div class="entregaveis-grid">
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">play_circle</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Método completo em vídeo</div>
+            <div class="entregavel-desc">48 aulas objetivas cobrindo do posicionamento da artesã até o fechamento da venda online.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">description</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Caderno de precificação</div>
+            <div class="entregavel-desc">Planilha pronta para calcular o valor justo de cada peça sem errar para mais ou para menos.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">photo_camera</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Guia de fotos com celular</div>
+            <div class="entregavel-desc">Passo a passo para tirar fotos que valorizam o crochê usando só o celular e luz natural.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">chat_bubble</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Scripts de venda no WhatsApp</div>
+            <div class="entregavel-desc">Modelos prontos para responder curiosos, enviar orçamento e fechar pedido sem parecer insistente.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">group</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Comunidade de artesãs</div>
+            <div class="entregavel-desc">Grupo exclusivo para tirar dúvidas, mostrar trabalhos e receber apoio de quem está na mesma jornada.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">auto_awesome</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Banco de legendas prontas</div>
+            <div class="entregavel-desc">Mais de 60 legendas testadas para usar no Instagram e atrair clientes que valorizam o feito à mão.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+<section class="bonus-section">
+    <div class="bonus-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="bonus-headline">
+        <h2>Bônus exclusivos para quem entrar agora</h2>
+      </div>
+
+      <p class="bonus-subtitle">
+        Três materiais complementares que aceleram sua primeira venda online e ficam no seu acesso para sempre.
+      </p>
+
+      <div class="bonus-grid">
+
+        <div class="bonus-card">
+          <div class="bonus-badge">
+            <span class="material-symbols-outlined">bolt</span>
+            Bônus 01
+          </div>
+          <div class="bonus-title">Pack de 30 receitas de crochê best-sellers</div>
+          <p class="bonus-desc">
+            Coletânea com as peças que mais vendem online em 2026, com fio sugerido, tempo médio de produção e faixa de preço validada.
+          </p>
+          <div class="bonus-value">
+            <span class="bonus-value-label">Valor individual:</span>
+            <span class="bonus-value-price">R$ 297</span>
+          </div>
+        </div>
+
+        <div class="bonus-card">
+          <div class="bonus-badge">
+            <span class="material-symbols-outlined">bolt</span>
+            Bônus 02
+          </div>
+          <div class="bonus-title">Mentoria ao vivo de estreia na Shopee</div>
+          <p class="bonus-desc">
+            Aula de 90 minutos mostrando, na prática, como cadastrar sua primeira peça, tirar a foto certa e ser aprovada na plataforma.
+          </p>
+          <div class="bonus-value">
+            <span class="bonus-value-label">Valor individual:</span>
+            <span class="bonus-value-price">R$ 197</span>
+          </div>
+        </div>
+
+        <div class="bonus-card">
+          <div class="bonus-badge">
+            <span class="material-symbols-outlined">bolt</span>
+            Bônus 03
+          </div>
+          <div class="bonus-title">Calendário anual de datas quentes</div>
+          <p class="bonus-desc">
+            Mapa com as 18 datas do ano em que peças de crochê viram desejo de compra, junto com sugestão de posts para cada uma.
+          </p>
+          <div class="bonus-value">
+            <span class="bonus-value-label">Valor individual:</span>
+            <span class="bonus-value-price">R$ 147</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+<section class="stack-section">
+    <div class="stack-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="stack-headline">
+        <h2>Veja tudo que você recebe hoje</h2>
+      </div>
+
+      <p class="stack-subtitle">
+        Cada item abaixo foi pensado para te levar do ponto A ao ponto B da forma mais direta possível.
+      </p>
+
+      <div class="stack-card">
+
+        <div class="stack-label">O que está incluído</div>
+
+        <ul class="stack-list">
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Método completo em vídeo (48 aulas)
+            </span>
+            <span class="stack-item-value">R$ 897</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Caderno de precificação
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Guia de fotos com celular
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 01. Pack de 30 receitas
+            </span>
+            <span class="stack-item-value">R$ 297</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 02. Mentoria ao vivo Shopee
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 03. Calendário anual de datas
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+        </ul>
+
+        <div class="stack-total">
+          <span class="stack-total-label">Valor real do pacote</span>
+          <span class="stack-total-value">R$ 1.882</span>
+        </div>
+
+        <p class="stack-footer">
+          Mas você não vai pagar isso. Continue para ver a condição especial.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
+<div class="depoimentos-wrap">
+<main>
+        <div class="depoimentos-layout">
+            <div class="section-header anim delay-1">
+                <h2>O que nossas alunas dizem</h2>
+                <p>Historias reais de quem transformou o croche em renda com o metodo Atelier.</p>
+            </div>
+
+            <div class="depoimentos-carousel-col">
+                <div class="carousel-wrapper anim delay-2">
+                    <div class="carousel-track" id="carousel">
+
+                <div class="carousel-slide">
+                    <div class="card-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote-highlight">"Faturei mais do que no meu emprego"</p>
+                            <p class="quote-body">"Eu fazia croche ha 8 anos e nunca consegui viver disso. Em 3 meses aplicando o metodo, faturei mais do que no meu emprego anterior. Mudou minha vida."</p>
+                            <div class="author">
+                                <div class="avatar">MC</div>
+                                <div>
+                                    <div class="author-name">Maria Clara</div>
+                                    <div class="author-role">Artesa em Belo Horizonte</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote-highlight">"Hoje tenho lista de espera"</p>
+                            <p class="quote-body">"A parte de precificacao foi o divisor de aguas. Eu cobrava R$30 em pecas que valiam R$150. Hoje tenho lista de espera e consigo planejar meu mes."</p>
+                            <div class="author">
+                                <div class="avatar">AF</div>
+                                <div>
+                                    <div class="author-name">Ana Flavia</div>
+                                    <div class="author-role">Artesa em Curitiba</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote-highlight">"Em 2 semanas ja tinha encomendas"</p>
+                            <p class="quote-body">"Montei minha vitrine no Instagram seguindo o passo a passo e em 2 semanas ja tinha encomendas. O metodo e simples e funciona de verdade."</p>
+                            <div class="author">
+                                <div class="avatar">RL</div>
+                                <div>
+                                    <div class="author-name">Renata Lima</div>
+                                    <div class="author-role">Artesa em Recife</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-slide">
+                    <div class="card-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote-highlight">"Vendo pelo WhatsApp todos os dias"</p>
+                            <p class="quote-body">"Sempre tive medo de vender online. O modulo de vitrine digital me deu a confianca que eu precisava. Hoje vendo pelo WhatsApp e Instagram todos os dias."</p>
+                            <div class="author">
+                                <div class="avatar">PS</div>
+                                <div>
+                                    <div class="author-name">Patricia Santos</div>
+                                    <div class="author-role">Artesa em Salvador</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote-highlight">"Minha renda triplicou em 4 meses"</p>
+                            <p class="quote-body">"Minha renda triplicou em 4 meses. O segredo foi entender quais pecas dao lucro e focar nelas. Parece obvio, mas ninguem tinha me ensinado isso antes."</p>
+                            <div class="author">
+                                <div class="avatar">JO</div>
+                                <div>
+                                    <div class="author-name">Julia Oliveira</div>
+                                    <div class="author-role">Artesa em Florianopolis</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote-highlight">"Do zero ao primeiro cliente em 60 dias"</p>
+                            <p class="quote-body">"Sai do zero e em 60 dias ja tinha meu primeiro cliente recorrente. O metodo Atelier e direto ao ponto, sem enrolacao. Recomendo para todas as artesas."</p>
+                            <div class="author">
+                                <div class="avatar">CM</div>
+                                <div>
+                                    <div class="author-name">Camila Martins</div>
+                                    <div class="author-role">Artesa em Goiania</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    </div>
+                </div>
+
+                <div class="controls anim delay-2">
+                    <button type="button" class="nav-btn" onclick="moveCarousel(-1)" aria-label="Depoimentos anteriores">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <div class="dots" id="dots"></div>
+                    <button type="button" class="nav-btn" onclick="moveCarousel(1)" aria-label="Proximos depoimentos">
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<section class="suporte-section">
+    <div class="suporte-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="suporte-headline">
+        <h2>Você não vai estar sozinha nessa</h2>
+      </div>
+
+      <p class="suporte-subtitle">
+        Mais do que um curso, você entra numa rede de apoio de artesãs que estão construindo o mesmo caminho.
+      </p>
+
+      <div class="suporte-grid">
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">forum</span></div>
+          <div class="suporte-title">Comunidade exclusiva</div>
+          <div class="suporte-desc">
+            Grupo fechado com outras artesãs para compartilhar peças, tirar dúvidas e trocar experiências todos os dias.
+          </div>
+        </div>
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">video_call</span></div>
+          <div class="suporte-title">Mentorias ao vivo</div>
+          <div class="suporte-desc">
+            Encontros mensais ao vivo para analisar peças, preços e postagens. Você manda o caso e a gente resolve junto.
+          </div>
+        </div>
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">support_agent</span></div>
+          <div class="suporte-title">Acesso direto ao suporte</div>
+          <div class="suporte-desc">
+            Canal exclusivo para dúvidas rápidas, com resposta em até 24 horas nos dias úteis, direto da equipe pedagógica.
+          </div>
+        </div>
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">update</span></div>
+          <div class="suporte-title">Atualizações vitalícias</div>
+          <div class="suporte-desc">
+            Sempre que o mercado mudar ou eu gravar novas aulas, você recebe tudo sem pagar nada a mais pelo acesso.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+<section class="garantia-section">
+    <div class="garantia-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="garantia-seal">
+        <span class="material-symbols-outlined">verified</span>
+        <div class="garantia-seal-days">7 dias</div>
+      </div>
+
+      <div class="garantia-headline">
+        <h2>Garantia incondicional de 7 dias</h2>
+      </div>
+
+      <div class="garantia-body">
+        <p>
+          Você entra, acessa todo o conteúdo, aplica nas suas peças e testa por <strong>7 dias completos</strong>. Se sentir que o método não é para você, por qualquer motivo, basta mandar uma mensagem.
+        </p>
+        <p>
+          Devolvemos <strong>100% do valor investido</strong>, sem perguntas, sem burocracia, sem olhar torto. O risco fica todo comigo, porque eu confio no que construí.
+        </p>
+        <p>
+          Se depois de uma semana você achar que não vale, volta para o seu ponto de partida sem ter perdido um real.
+        </p>
+        <div class="garantia-sign">
+          Essa é a minha palavra. E palavra de artesã vale contrato.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<section class="autoridade-section">
+    <div class="autoridade-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="autoridade-headline">
+        <h2>Quem está por trás do método</h2>
+      </div>
+
+      <div class="autoridade-main">
+
+        <div class="autoridade-photo">
+          <div class="autoridade-photo-placeholder">
+            <span class="material-symbols-outlined">person</span>
+            <span>[Sua foto aqui]</span>
+          </div>
+        </div>
+
+        <div class="autoridade-bio">
+          <div class="autoridade-bio-name">Criadora do método</div>
+          <h3>Olá, eu sou a Helena Vieira</h3>
+          <p>
+            Comecei a fazer crochê aos 14 anos, sentada no chão da sala da minha avó, aprendendo a primeira correntinha. O que era passatempo virou refúgio, e depois virou a forma que encontrei para sustentar minha casa quando fiquei desempregada em 2019.
+          </p>
+          <p>
+            Nos primeiros meses eu vendia para amigas e ganhava pouco. Foi quando entendi que o problema nunca foi o crochê, era a forma como eu vendia. A partir daí, estudei marketing digital aplicado ao artesanato e, em três anos, <strong>faturei mais de 400 mil reais</strong> vendendo peças pela internet.
+          </p>
+          <p>
+            Hoje, minha missão é levar esse conhecimento para outras artesãs que, assim como eu, carregam um talento nas mãos e merecem transformar isso em renda digna, sem sair de casa.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="creds-grid">
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">inventory_2</span></div>
+          <div class="cred-content">
+            <div class="cred-number">+1.200 peças</div>
+            <div class="cred-label">vendidas online desde 2020</div>
+          </div>
+        </div>
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">school</span></div>
+          <div class="cred-content">
+            <div class="cred-number">+800 alunas</div>
+            <div class="cred-label">formadas nas turmas anteriores</div>
+          </div>
+        </div>
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">star</span></div>
+          <div class="cred-content">
+            <div class="cred-number">Destaque 2024</div>
+            <div class="cred-label">Feira Mãos que Criam, Brasília</div>
+          </div>
+        </div>
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">trending_up</span></div>
+          <div class="cred-content">
+            <div class="cred-number">+400 mil</div>
+            <div class="cred-label">faturados com o crochê em 3 anos</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+<section class="faq-section">
+    <div class="faq-container">
+
+      <div class="faq-header">
+        <div class="shimmer-line"></div>
+        <h2 class="faq-headline">Dúvidas frequentes</h2>
+        <p class="faq-subtitle">Se você ainda tem alguma pergunta, provavelmente ela está aqui.</p>
+      </div>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Funciona mesmo para quem está começando do zero?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Funciona. O método foi desenhado para quem não tem experiência prévia. Cada etapa parte do básico e avança no seu ritmo. Você não precisa de conhecimento técnico para começar.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Por quanto tempo terei acesso ao conteúdo?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Acesso vitalício. Uma vez dentro, o conteúdo é seu para sempre. incluindo todas as atualizações futuras que fizermos no material.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Tem alguma garantia?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Sim. Você tem 7 dias para acessar o material, assistir às aulas e decidir se faz sentido para você. Se não fizer, devolvemos 100% do valor sem perguntas.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Preciso de alguma ferramenta ou equipamento especial?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Não. Tudo que você precisa é de um celular ou computador com acesso à internet. O método usa ferramentas simples e acessíveis que você provavelmente já tem.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Consigo conciliar com meu trabalho atual?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Com certeza. As aulas são gravadas e curtas. Você assiste quando puder. de manhã, no intervalo do almoço ou à noite. O importante é manter a constância, não a velocidade.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Como funciona o suporte?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Você terá acesso à comunidade exclusiva de alunos e ao suporte direto da equipe. Dúvidas são respondidas em até 24 horas úteis.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="faq-footer">
+        <p>Ainda tem dúvidas? Fale com a gente pelo WhatsApp.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    }
+  </script>
+
+<section id="oferta" class="oferta-section">
+    <div class="oferta-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="oferta-headline">
+        <h2>Sua entrada para o método completo</h2>
+      </div>
+
+      <p class="oferta-subtitle">
+        Tudo que você viu até aqui, reunido em um único acesso, com garantia de 7 dias e condição especial de primeira turma.
+      </p>
+
+      <div class="oferta-card">
+
+        <div class="stack-label">O que está incluído</div>
+
+        <ul class="stack-list">
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Método completo em vídeo (48 aulas)
+            </span>
+            <span class="stack-item-value">R$ 897</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Caderno de precificação
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Guia de fotos com celular
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 01. Pack de 30 receitas
+            </span>
+            <span class="stack-item-value">R$ 297</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 02. Mentoria ao vivo Shopee
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 03. Calendário anual de datas
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+        </ul>
+
+        <div class="stack-total">
+          <span class="stack-total-label">Valor real do pacote</span>
+          <span class="stack-total-value">R$ 1.882</span>
+        </div>
+
+        <div class="price-block">
+          <div class="price-intro">De entrada, por apenas</div>
+          <div class="price-amount">
+            <span class="price-currency">R$</span>
+            <span class="price-value">297</span>
+          </div>
+          <div class="price-footer">ou 12 parcelas de R$ 29,70 no cartão</div>
+        </div>
+
+        <a href="#" class="cta-btn">
+          Quero minha vaga agora
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+
+        <div class="security-row">
+          <span><span class="material-symbols-outlined">lock</span>Compra segura</span>
+          <span><span class="material-symbols-outlined">verified</span>Garantia de 7 dias</span>
+          <span><span class="material-symbols-outlined">credit_card</span>Parcelado em até 12x</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <footer style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08);">
+    <p style="font-size:0.85rem; color:#6c6c6c;">SuaMarca &copy; 2026. Todos os direitos reservados.</p>
+    <p style="font-size:0.75rem; color:#6c6c6c; margin-top:8px;"><a href="#" style="color:#6c6c6c; text-decoration:underline;">Termos de uso</a> &middot; <a href="#" style="color:#6c6c6c; text-decoration:underline;">Política de privacidade</a></p>
+  </footer>
+
+<script>
+        const carousel = document.getElementById('carousel');
+        const dotsContainer = document.getElementById('dots');
+        const slides = carousel.children;
+        let current = 0;
+        const total = slides.length;
+
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goTo(i);
+            dotsContainer.appendChild(dot);
+        }
+
+        function goTo(index) {
+            current = index;
+            carousel.style.transform = `translateX(-${current * 100}%)`;
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+        function moveCarousel(dir) {
+            let next = current + dir;
+            if (next < 0) next = total - 1;
+            if (next >= total) next = 0;
+            goTo(next);
+        }
+    </script>
+
+<script>
+function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    }
+</script>
+
+</body>
+</html>

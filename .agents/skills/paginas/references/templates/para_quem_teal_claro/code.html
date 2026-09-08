@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Quem. Teal Claro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --fail-red: #d9534f;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-paraquem {
+      padding: 80px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-paraquem__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-paraquem__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-paraquem__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .paraquem-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .paraquem-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .paraquem-card:nth-child(1) { animation-delay: 0.1s; }
+    .paraquem-card:nth-child(2) { animation-delay: 0.2s; }
+    .paraquem-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .paraquem-card__label {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+    .label-yes {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+    }
+    .label-no {
+      background: rgba(217, 83, 79, 0.1);
+      color: var(--fail-red);
+      border: 1px solid rgba(217, 83, 79, 0.25);
+    }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+
+    .icon-yes {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(0, 169, 157, 0.08);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-yes .material-symbols-outlined { font-size: 18px; color: var(--teal); }
+
+    .icon-no {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(217, 83, 79, 0.06);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-no .material-symbols-outlined { font-size: 18px; color: var(--fail-red); }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 780px) {
+      .paraquem-grid { grid-template-columns: 1fr; }
+      .section-paraquem { padding: 56px 20px; }
+      .section-paraquem__headline { font-size: 1.65rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-paraquem">
+    <div class="section-paraquem__header">
+      <h2 class="section-paraquem__headline">Este método foi pensado para um perfil bem específico</h2>
+      <p class="section-paraquem__subtitle">Veja se o seu momento combina com o que vamos entregar antes de seguir em frente.</p>
+    </div>
+
+    <div class="paraquem-grid">
+
+      <div class="paraquem-card">
+        <span class="paraquem-card__label label-yes">
+          <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span>
+          Para quem é
+        </span>
+
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Quer transformar sua habilidade manual em uma fonte de renda previsível</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Já produz peças mas ainda não consegue vender com consistência</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Está disposta a seguir um passo a passo e aplicar por pelo menos 30 dias</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Quer aprender a precificar, fotografar e divulgar sem depender de terceiros</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Busca independência financeira trabalhando de casa</span>
+        </div>
+      </div>
+
+      <div class="paraquem-card">
+        <span class="paraquem-card__label label-no">
+          <span class="material-symbols-outlined" style="font-size:14px;">cancel</span>
+          Para quem não é
+        </span>
+
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Procura resultado sem esforço ou atalhos mágicos</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Não tem disposição para aprender algo novo e testar na prática</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Espera que o método funcione sozinho, sem dedicação pessoal</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Acredita que o problema está sempre no mercado, nunca no processo</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Quer aprender a teoria mas não pretende colocar em prática</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>
