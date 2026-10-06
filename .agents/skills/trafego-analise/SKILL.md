@@ -324,13 +324,13 @@ Após entregar a análise narrada, sempre apresentar as opções em uma única m
 ```
 O que quer fazer agora?
 
-[1]  Salvar como dashboard com os dados desta análise
+[1]  Ver meus números no dashboard
 [2]  Rodar outra análise  — digite o número (1 a 11)
 [3]  Encerrar
 ```
 
-**Se escolher [1] — Dashboard:**
-Acionar `sub-skills/_export-html.md`, que gera o arquivo em `meus-produtos/{ativo}/trafego/analise/{slug-output}-{YYYY-MM-DD-HHMM}.html` e abre no navegador. Devolver o caminho absoluto. Depois perguntar se quer rodar outra análise ou encerrar (opções [2] e [3] acima).
+**Se escolher [1]. Dashboard:**
+Seguir o fluxo do `/trafego-dashboard` (`.claude/commands/trafego-dashboard.md`) a partir do Passo 1: se o aluno já tem dashboard ao vivo, entrega o link; se não tem, cria (com o conector MCP da Meta). Quando o caminho for o legado (sem MCP), o dashboard estático é a fotografia desta análise: acionar `sub-skills/_export-html.md`, que gera o arquivo em `meus-produtos/{ativo}/trafego/analise/{slug-output}-{YYYY-MM-DD-HHMM}.html` e abre no navegador, e devolver o caminho absoluto. Depois perguntar se quer rodar outra análise ou encerrar (opções [2] e [3] acima).
 
 **Se escolher [2] — Outra análise:**
 Aceitar o número do output (1 a 11) digitado junto ou na mensagem seguinte. Retornar ao Passo 3 (período) mantendo conta e escopo já definidos.
@@ -363,7 +363,7 @@ Cada escolha do menu carrega um sub-skill específico. Dependências de breakdow
 | [10] Comparativo A x B | `sub-skills/10-comparativo.md` | base por campanha + métricas de vídeo (`video_p25/p50/p75/p95_watched_actions`) |
 | [11] Livre | usa o sub-skill mais próximo da intenção identificada | conforme necessidade |
 
-**Sub-skill compartilhada (Passo 6.5):** `sub-skills/_export-html.md` — gera HTML standalone do output usando o design system Fluxo Criativo, salvando em `meus-produtos/{ativo}/trafego/analise/`. Acionada apenas quando o aluno confirma o export.
+**Sub-skill compartilhada (Passo 6.5):** `sub-skills/_export-html.md`. Gera HTML standalone do output usando o design system Fluxo Criativo, salvando em `meus-produtos/{ativo}/trafego/analise/`. É o caminho legado do dashboard: acionada só quando o aluno pede o dashboard e não usa o conector MCP da Meta (com o MCP, o dashboard é o ao vivo do `/trafego-dashboard`).
 
 **Total:** 10 outputs narrativos + 1 sub-skill utilitária de export. Cada output entrega análise completa em uma sessão. Aluno pode rodar quantos quiser em sequência.
 

@@ -1,5 +1,7 @@
 # Sub-skill utilitária. Export HTML de Análise
 
+> **Caminho legado do dashboard.** Quem tem o conector MCP da Meta recebe o dashboard ao vivo do `/trafego-dashboard`. Esta sub-skill continua valendo para quem não usa o MCP. Ver `.claude/skills/trafego-dashboard/references/legado-dashboard-estatico.md`.
+
 Sub-skill compartilhada por TODOS os 9 outputs da `/trafego-analise`. Não tem opção própria no menu — é acionada opcionalmente ao final de cada output, quando o aluno responde "sim" à pergunta de export.
 
 **Propósito:** transformar o output narrado de uma análise em um HTML standalone usando o design system Fluxo Criativo, salvar no produto ativo e devolver o caminho absoluto pro aluno abrir no navegador.

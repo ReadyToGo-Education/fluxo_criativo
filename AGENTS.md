@@ -680,6 +680,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/trafego-criar-campanha`: criar campanha via Marketing API.
 - `/trafego-otimizar`: diagnosticar e otimizar campanhas.
 - `/trafego-analise`: análise narrada VTSD em outputs.
+- `/trafego-dashboard`: abrir ou criar o dashboard de tráfego. O ao vivo é um artefato do Claude e não roda no Codex; aqui, siga o dashboard estático (legado) do command.
 
 ### Dados e Automações
 
@@ -909,6 +910,7 @@ Skills que herdam essa regra:
 - `/trafego-criar-campanha`.
 - `/trafego-otimizar`.
 - `/trafego-analise`.
+- `/trafego-dashboard`.
 
 Commands legados como `/ads-relatorio`, `/enviar-relatorio-ads` e `/lt-otimizar` podem usar variáveis próprias. Leia o command antes de assumir o padrão novo.
 
