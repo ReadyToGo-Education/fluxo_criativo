@@ -573,6 +573,8 @@ Salve o arquivo em:
 
 Após salvar o arquivo `.md` do prompt, **NÃO encerre o fluxo**. O quiz só está completo quando o link publicado no Lovable também estiver registrado, para o painel de entregas exibir os dois.
 
+Logo depois de salvar o prompt, e antes do Passo 6.1, rode em silêncio `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder). Assim o prompt já aparece na aba Low Ticket do painel quando o aluno for copiar.
+
 > **Princípio de comunicação:** o aluno SÓ INTERAGE pelo chat. Em nenhuma mensagem visível ao aluno mencione `quiz-meta.json`, `perfil.md`, `painel-incremental.py`, "rode no terminal", "edite o arquivo" ou qualquer detalhe técnico de bastidor. Esses arquivos existem nos bastidores e o agente cuida deles silenciosamente. Para o aluno, só existem: o painel de entregas (que ele abre no navegador) e o chat (onde ele fala comigo).
 
 **Passo 6.1. Confirmar que o prompt foi salvo (mensagem visível ao aluno):**
@@ -581,7 +583,7 @@ Após salvar o arquivo `.md` do prompt, **NÃO encerre o fluxo**. O quiz só est
 ✅ Quiz pronto. Para gerar o funil:
 
 1. Abra https://lovable.dev em uma aba nova
-2. Copie todo o conteúdo do prompt que está no painel de entregas (aba Copy da Página)
+2. Copie todo o conteúdo do prompt: no painel de entregas, aba Low Ticket, clique em "Abrir prompt"
 3. Cole no chat do Lovable e aguarde gerar
 4. Quando terminar, volte aqui e me mande o link do quiz publicado
 ```
@@ -609,9 +611,9 @@ Após capturar o link (ou registrar como pendente), o agente faz silenciosamente
 
 1. Salva os metadados do quiz em `meus-produtos/{ativo}/entregas/quiz/quiz-meta.json` (estrutura: `prompt_path`, `lovable_url`, `generated_at`, `url_updated_at`, `produto_nome`, `produto_slug`)
 2. Faz upsert da seção `## Quiz` no `perfil.md` (campos `_prompt`, `_lovable_url`, `_meta`, `_atualizado`)
-3. Roda `py -3 scripts/painel-incremental.py --secao copy-pagina` para atualizar a aba do quiz no painel
+3. Roda `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder) para atualizar a aba Low Ticket do painel
 
-O painel já renderiza o card do Quiz lendo o JSON automaticamente. Tudo isso é invisível para o aluno, ele só vê a mensagem do passo 6.6.
+A aba Low Ticket mostra o card do quiz lendo o JSON: o link publicado (ou o aviso de pendente) e o prompt. Tudo isso é invisível para o aluno, ele só vê a mensagem do passo 6.6.
 
 **Passo 6.6. Confirmação final ao aluno (UMA mensagem curta, sem mencionar arquivos internos):**
 

@@ -39,6 +39,28 @@ Como o seu produto funciona? O que a pessoa compra, recebe e faz com ele?
 (ex: "um guia em PDF com 40 produtos coreanos separados por tipo de cabelo, com preço médio de cada um")
 ```
 
+4. **Confira se o produto é low ticket.** Veja o `Tipo` e o `Preço` em `## Produto`. Siga direto quando o tipo for Low Ticket. Quando o tipo for Middle Ticket ou High Ticket, ou quando o preço passar de R$ 197 (o teto da régua), pare e pergunte:
+
+```
+Seu produto ativo, {nome}, está cadastrado como {tipo}, por {preço}.
+Esta régua foi feita para produto de entrada, de resultado imediato
+e decisão rápida. Para {tipo}, a página certa é a de vendas 8D.
+
+1. Criar a página de vendas 8D com /copy-pagina (recomendado)
+2. Seguir com a régua low ticket mesmo assim
+3. Trocar de produto com /produto-trocar
+
+Digite o número:
+```
+
+   - **1:** encaminhe para `/copy-pagina` e encerre este command.
+   - **2:** siga para o Passo 1.
+   - **3:** encaminhe para `/produto-trocar` e encerre.
+
+   Com tipo "a definir" ou sem tipo e preço no resumo, siga e trate o produto como low ticket.
+
+5. **O resto da régua também sai do produto.** Dor verdadeira, promessa, objeções, bullets, prova, tom e cores vêm do resumo, pela tabela do item 1 da seção "Como esta régua funciona no projeto", na skill. Não pergunte ao aluno o que o produto já tem.
+
 ---
 
 ## Passo 1. Página ou Quiz
@@ -94,7 +116,7 @@ Qual dessas aberturas você quer usar? Pode responder pelo número ou pelo nome.
 
 E pare.
 
-Quando o aluno escolher, salve as 7 aberturas e a tabela em `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` (servem para os próximos testes A/B) e informe o caminho absoluto em uma linha.
+Quando o aluno escolher, salve as 7 aberturas e a tabela em `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` (servem para os próximos testes A/B), atualize o painel (item 7 da seção "Como esta régua funciona no projeto") e informe o caminho absoluto em uma linha.
 
 ---
 
@@ -118,7 +140,7 @@ Aprovou a copy ou quer mudar alguma coisa antes de criarmos o design?
 
 E pare. Ajuste só o que o aluno pedir e pergunte de novo.
 
-Com a aprovação, salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` (a copy e, no fim, as listas para conferir e gravar) e informe o caminho absoluto.
+Com a aprovação, salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` (a copy e, no fim, as listas para conferir e gravar), atualize o painel e informe o caminho absoluto.
 
 ---
 
@@ -139,7 +161,7 @@ Mostre o prompt num único bloco, pronto para copiar, e pergunte:
 2. Quero ajustar algo
 ```
 
-Com a aprovação, salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md`, informe o caminho absoluto e explique:
+Com a aprovação, salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md`, atualize o painel, informe o caminho absoluto e explique:
 
 ```
 ✅ Concluído: prompt da página salvo. Caminho: {caminho absoluto}
@@ -166,6 +188,7 @@ Com a página no ar, crie os criativos para levar tráfego até ela.
 
 Lembre também:
 - **Teste A/B:** para testar a próxima abertura da tabela, rode `/lt-pagina` de novo e escolha outra. A copy e o prompt ganham arquivos próprios.
+- **Painel de Entregas:** a aba Low Ticket mostra a promessa, a ordem de testes, as aberturas já criadas e a copy mais recente.
 - **Revisão da página publicada:** `/feedback-low-ticket` audita a página pela mesma régua.
 
 ---

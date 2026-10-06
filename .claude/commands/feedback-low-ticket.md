@@ -75,7 +75,7 @@ Para dar um feedback preciso na sua página low ticket, preciso do link:
 Qual é o link da sua página?
 ```
 
-Aguarde a resposta. Leia também `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md), para conferir produto, preço e como ele funciona.
+Aguarde a resposta. Leia também `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md), para conferir produto, preço e como ele funciona. Ao comparar a página com o produto e ao reescrever a copy, use o resto do resumo pela tabela do item 1 da seção "Como esta régua funciona no projeto", na skill: dores e urgências do público, objeções, Decorados, prova real e tom do comunicador.
 
 ---
 
@@ -223,7 +223,7 @@ Depois, pergunte:
 2. Quero ajustar algo
 ```
 
-Salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-corrigida-{produto}.md` e informe o caminho absoluto.
+Salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-corrigida-{produto}.md`, atualize o painel (item 7 da seção "Como esta régua funciona no projeto", na skill) e informe o caminho absoluto.
 
 ### Opção 2. Copy corrigida e prompt do Lovable
 
@@ -234,7 +234,7 @@ Primeiro a Opção 1, com aprovação. Depois, com a copy congelada, monte o pro
 2. Quero ajustar algo
 ```
 
-Salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-corrigido-{produto}.md` e explique: abrir o Lovable, colar o prompt num projeto novo (ou pedir para recriar a página no projeto atual) e trocar `CHECKOUT_URL` pelo link do checkout.
+Salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-corrigido-{produto}.md`, atualize o painel e explique: abrir o Lovable, colar o prompt num projeto novo (ou pedir para recriar a página no projeto atual) e trocar `CHECKOUT_URL` pelo link do checkout.
 
 ---
 

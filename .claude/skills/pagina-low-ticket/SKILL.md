@@ -16,10 +16,26 @@ description: >
 O texto da régua começa em "Régua v11", mais abaixo, e foi mantido como o time de criativos entregou. Esta seção só diz como ela se encaixa no projeto.
 
 1. **Coleta pelo resumo do produto.** A régua aceita "um arquivo com o resumo do produto" no lugar das 3 perguntas. No projeto, esse arquivo é `meus-produtos/{ativo}/resumo-produto.md` (regra "Contexto Persistente do Negócio" do CLAUDE.md). Produto e preço saem da seção `## Produto`; como o produto funciona, das seções `## Furadeira` e `## Produto` (formato). Pergunte só o que faltar, uma pergunta por vez.
+   **Use o que o produto já tem no lugar de deduzir.** A régua foi escrita para quem chega só com as 3 respostas e manda "preencher com raciocínio" o resto. No projeto, quase todo esse resto já foi criado e aprovado pelo aluno na concepção. Antes de deduzir qualquer coisa, procure no resumo, pela tabela abaixo. Só deduza o que o produto não tiver e diga em uma linha o que foi assumido, como a régua pede. A última coluna diz onde ler o detalhe completo, e só essa seção do arquivo, quando o resumo não bastar.
+
+   | Parte da régua | De onde vem no resumo do produto | Detalhe completo (só se precisar) |
+   |---|---|---|
+   | PERSPECTIVA CORRETA (quem é o lead e o que ele deseja) | `## Público (Identidade do Consumidor)`: perfil, sonho e frases que diria | `idconsumidor.md`, `## Identidade do Consumidor` |
+   | A DOR VERDADEIRA | `## Urgências Ocultas`: Dores e Urgências Quentes. As frases do `## Público (Identidade do Consumidor)` dão as palavras do lead | |
+   | A PROMESSA CENTRAL | `## Quadro` (o topo da escada "o que eu estou realmente vendendo"), `## Identidade do Produto` (diferencial e promessa) e `## Pesquisa de mercado (síntese)`: os concorrentes mostram o que a promessa não pode repetir para ser única | `pesquisa-mercado.md`, seção 2 (concorrentes) |
+   | EMOÇÃO E TENSÃO, hero estendido e DIÁLOGOS INTERNOS | `## Urgências Ocultas`: Dúvidas, Desejos, Urgências Frias e Inusitadas, mais as frases do `## Público (Identidade do Consumidor)` | |
+   | MECANISMO | `## Furadeira` (nome do método e etapas, literais) e a parte dos `## Argumentos Incontestáveis` que explica a lógica do método | `perfil.md`, `## Furadeira` |
+   | BULLETS DE CURIOSIDADE, CARACTERÍSTICAS e BENEFÍCIOS | `## Decorados principais` para o motivo de querer; `## Furadeira` para dizer em que parte do produto está cada resposta | `perfil.md`, `## Decorados (Benefícios)` |
+   | QUEBRA DAS 4 OBJEÇÕES | `## Objeções principais`: as 4 mais fortes das 5, com o argumento de cada uma | `idconsumidor.md`, `## Objeções de Compra` (os 7 argumentos) |
+   | PROVA | Só os dados próprios do aluno que estão em `## Argumentos Incontestáveis` (número de alunos, faturamento, resultados documentados) ou que ele informar na conversa | `perfil.md`, `## Argumentos Incontestáveis` inteira (o resumo guarda só 5) |
+   | Tom de toda a copy | `## Identidade do Comunicador`: tom, mantras e jargões; nada do que está em "Não gosta" | |
+   | CORES POR TIPO DE PRODUTO (Etapa 3) | `Cores da marca` em `## Produto`, quando existir. A paleta do nicho fica como reserva para quem não tem cores definidas | |
+
+   **O que não vira prova.** Dados de mercado e a lógica do método, mesmo estando nos Argumentos Incontestáveis, foram gerados a partir da pesquisa: servem para o mecanismo e para dar credibilidade à promessa, nunca como resultado do produto. Urgências, Decorados e frases do público são material de copy, nunca depoimento. Na dúvida se um número é do aluno, pergunte antes de usar como prova.
 2. **Exceção ao checklist de Light Copy.** Nas páginas low ticket valem as regras desta régua: **pergunta na headline** (para abrir a lacuna) e a fórmula **"mesmo sem..."** estão liberadas, porque fazem parte do método das 7 aberturas. O resto do checklist continua valendo: sem travessão, sem ponto de exclamação, sem promessa vaga, produto fora do lead, sem lero-lero, depoimento só se for real. A revisora aplica essa exceção.
 3. **As paradas da régua são as aprovações do projeto.** Fim da Etapa 1 ("Qual dessas aberturas você quer usar?") e fim da Etapa 2 ("Aprovou a copy...?"). O prompt do Lovable também é mostrado e aprovado antes de salvar.
 4. **A entrega é o prompt do Lovable.** O projeto não gera o HTML da página low ticket: quem monta a página é o Lovable, a partir do prompt da Etapa 3. O aluno troca a constante `CHECKOUT_URL` (e `VIDEO_URL`, na abertura Demonstração) pelos links dele dentro do Lovable.
-5. **Onde salvar** (`{abertura}` é o nome curto da abertura escolhida, ex.: `dor-espelhada`):
+5. **Onde salvar.** `{produto}` é o identificador do produto ativo (o conteúdo de `meus-produtos/.ativo`). `{abertura}` é o nome curto da abertura escolhida, sempre um destes: `demonstracao`, `comparacao`, `plug-and-play`, `imaginacao-do-resultado`, `defesa-de-tese`, `dor-espelhada` ou `resultado-direto`. O Painel de Entregas reconhece as aberturas por esses nomes.
 
    | O quê | Caminho |
    |---|---|
@@ -28,6 +44,7 @@ O texto da régua começa em "Régua v11", mais abaixo, e foi mantido como o tim
    | Prompt do Lovable (Etapa 3) | `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md` |
 
 6. **Argumentos científicos** exigem pesquisa na web (WebSearch e WebFetch) antes de escrever a seção, como a régua manda. Sem estudo localizado e aberto, a seção não entra.
+7. **Painel de Entregas.** Depois de cada arquivo salvo (aberturas, copy ou prompt), atualize a aba Low Ticket do painel com `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder). Se der erro, não pare o fluxo: avise que o painel pode ser atualizado depois.
 
 ---
 
