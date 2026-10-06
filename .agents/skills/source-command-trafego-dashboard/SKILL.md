@@ -19,20 +19,11 @@ A especificação técnica (registro do link, como montar e publicar, métricas,
 
 ---
 
-## Passo 0. Conexão Meta (gate)
+## Passo 0. Procurar um dashboard que já existe
 
-Ler `META_AUTH_MODO` no `.env`.
+Este passo vem antes da conexão com a Meta: abrir ou ajustar um dashboard que já existe não depende do `.env`, porque quem busca os dados é o conector da conta Claude do aluno.
 
-- **Vazio ou ausente:** acionar `/trafego-conexao` e voltar aqui quando terminar.
-- **`MCP_CONECTOR` ou `APP`:** seguir. Quem decide o caminho do dashboard é o Passo 2.
-
-Não ler nem exibir token nenhum neste command. O dashboard ao vivo não usa o token do `.env`.
-
----
-
-## Passo 1. Procurar um dashboard que já existe
-
-Seguir a seção 2 da skill (registro em `meus-produtos/dashboard-trafego.md` e, se estiver vazio, a lista de artefatos do aluno).
+Seguir a seção 2 da skill (registro em `meus-produtos/dashboard-trafego.md` e, se estiver vazio, a lista de artefatos do aluno). Se a lista trouxer candidatos, perguntar (numerado) se algum é o dashboard do aluno, com a opção "Nenhum desses"; o escolhido vai para o registro.
 
 **Se encontrar um dashboard:**
 
@@ -55,12 +46,23 @@ Digite o número:
 
 - **1:** repetir o link e lembrar do botão "Atualizar agora". Encerrar.
 - **2:** ir para o Passo 5.
-- **3:** ir para o Passo 2.
+- **3:** ir para o Passo 1.
 - **4:** encerrar sem perguntar mais nada.
 
 Se houver mais de um dashboard no registro, listar todos numerados antes e perguntar qual abrir.
 
-**Se não encontrar:** ir para o Passo 2.
+**Se não encontrar:** ir para o Passo 1.
+
+---
+
+## Passo 1. Conexão Meta (só para criar)
+
+Ler `META_AUTH_MODO` no `.env`.
+
+- **Vazio ou ausente:** acionar `/trafego-conexao` e voltar aqui quando terminar.
+- **`MCP_CONECTOR` ou `APP`:** seguir. Quem decide o caminho do dashboard é o Passo 2.
+
+Não ler nem exibir token nenhum neste command. O dashboard ao vivo não usa o token do `.env`.
 
 ---
 

@@ -92,13 +92,17 @@ Antes de escrever a página:
 
 ### 4.2 Nome do conector
 
-Na lista "Your connectors this session" da `artifact-capabilities`, achar o conector da Meta (o nome sugerido pelo `/trafego-conexao` é **Meta Ads**, mas o aluno pode ter usado outro). Usar **exatamente esse nome** no manifesto e nas chamadas da página. Nunca usar o id opaco nem o prefixo `mcp__`.
+Na lista "Your connectors this session" da `artifact-capabilities`, achar o conector da Meta. O nome varia: o `/trafego-conexao` sugere **Meta Ads**, e há contas em que ele aparece como **Meta MCP**. Usar **exatamente o nome da lista** no manifesto e nas chamadas da página. Nunca usar o id opaco nem o prefixo `mcp__`.
 
 Se o conector não aparecer na lista, o requisito da seção 3 não foi cumprido: voltar ao comando.
 
 ### 4.3 Ferramentas de leitura
 
-1. Com `ToolSearch`, carregar os esquemas das ferramentas de leitura do conector da Meta (prefixo `ads_`). As do conector oficial incluem a de listar contas (ex.: `ads_get_ad_accounts`) e as de insights (`ads_insights_*` ou `ads_get_insights`, conforme a versão). **Conferir os nomes reais na sessão.** Não copiar nomes deste arquivo sem conferir.
+1. Com `ToolSearch`, carregar os esquemas das ferramentas de leitura do conector da Meta (prefixo `ads_`). No conector oficial, um dashboard completo usa só duas:
+   - **`ads_get_ad_accounts`**: lista as contas de anúncios.
+   - **`ads_get_ad_entities`**: métricas por `level` (`ad_account`, `campaign`, `adset` ou `ad`), com `ad_account_id`, `date_preset` (ex.: `last_7d`, `this_month`), `fields`, `time_increment` (`"1"` para série diária), `breakdowns` (ex.: `age`, `gender`, `publisher_platform`), `sort` e `limit`. A resposta traz as linhas em `ad_entities` e a próxima página em `pagination.next_cursor`.
+
+   **Conferir os nomes e os parâmetros reais na sessão** antes de escrever a página. O conector pode mudar de versão.
 2. Fazer **uma chamada real de leitura** de cada ferramenta que a página vai usar (ex.: listar contas; insights dos últimos 7 dias de uma conta), só para aprender o formato da resposta.
 3. **Nunca** colocar na página os valores vistos nessas chamadas (nem como exemplo). Eles são dados reais do aluno.
 4. **Nunca** declarar nem chamar ferramentas de escrita (criar, atualizar, pausar, ativar, deletar). O dashboard só lê.
@@ -116,21 +120,23 @@ Ponto de partida igual ao da mentoria. O aluno personaliza depois (seção 5).
 
 **Indicadores (cards)**, com as mesmas fórmulas do `/trafego-insights` (seções 4 e 5 de `.claude/skills/trafego-insights/SKILL.md`):
 
-| Indicador | Fórmula |
-|---|---|
-| Investimento | `spend` |
-| Impressões | `impressions` |
-| Alcance | `reach` |
-| Frequência | `frequency` |
-| CPM | `spend ÷ impressions × 1000` |
-| Cliques no link | `inline_link_clicks` |
-| CTR no link | `inline_link_clicks ÷ impressions` |
-| CPC no link | `spend ÷ inline_link_clicks` |
-| Visualizações da página | `actions[landing_page_view]` |
-| Connect rate | `landing_page_view ÷ inline_link_clicks` |
-| Resultados | `actions[purchase]` (venda) ou `actions[lead]` (captação), conforme o objetivo das campanhas |
-| CPA ou CPL | `spend ÷ resultados` |
-| ROAS | `action_values[purchase] ÷ spend` (só quando houver valor de compra) |
+| Indicador | Fórmula (Graph API) | Campo no `ads_get_ad_entities` |
+|---|---|---|
+| Investimento | `spend` | `amount_spent` |
+| Impressões | `impressions` | `impressions` |
+| Alcance | `reach` | `reach` |
+| Frequência | `frequency` | `frequency` |
+| CPM | `spend ÷ impressions × 1000` | `cpm` |
+| Cliques no link | `inline_link_clicks` | `link_click` |
+| CTR no link | `inline_link_clicks ÷ impressions` | calcular: `link_click ÷ impressions` (o `ctr` do conector conta todos os cliques) |
+| CPC no link | `spend ÷ inline_link_clicks` | calcular: `amount_spent ÷ link_click` (o `cpc` do conector conta todos os cliques) |
+| Visualizações da página | `actions[landing_page_view]` | `landing_page_view` |
+| Connect rate | `landing_page_view ÷ inline_link_clicks` | calcular: `landing_page_view ÷ link_click` |
+| Resultados | `actions[purchase]` (venda) ou `actions[lead]` (captação), conforme o objetivo | `omni_purchase` ou `lead` (`results` traz o resultado do objetivo de cada campanha) |
+| CPA ou CPL | `spend ÷ resultados` | `cost_per_result` ou `cost_per_lead` |
+| ROAS | `action_values[purchase] ÷ spend` (só com valor de compra) | `purchase_roas` |
+
+Os campos do conector podem vir como número, texto ou objeto com `value`; tratar os três casos antes de calcular.
 
 Denominador zero mostra "sem dado", nunca erro nem zero inventado.
 
