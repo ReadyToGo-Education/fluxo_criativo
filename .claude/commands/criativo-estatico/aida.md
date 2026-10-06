@@ -359,6 +359,8 @@ REGRA CRÍTICA: usar linguagem visual espacial (upper area, lower band, centered
 NUNCA porcentagens numéricas. Porcentagens são apenas para cálculo interno no Passo 2.
 O modelo de imagem não deve renderizar nenhuma anotação de layout.
 
+**Se o formato escolhido for Stories ou Reels (9:16):** troque `centered` por `left-aligned` em todas as linhas de texto do prompt e acrescente, antes de `Style:`, esta frase: `The right quarter of the canvas shows only the background, with no text, because the Instagram action icons cover that side. Break the headline into short lines so that no line goes past three quarters of the width.` Sem isso, o texto centralizado chega embaixo da coluna de ícones.
+
 ```
 Generate a complete Instagram feed ad ([dimensoes]px).
 
@@ -565,7 +567,7 @@ Depois execute:
 a) Grave num arquivo `.txt` na pasta de criativos o prompt curto de recomposição abaixo (sem placeholders), com o nome `prompt-criativo-aida-{numero}-{novo-formato}.txt`. Onde `{novo-formato}` é `feed`, `quadrado` ou `stories`:
 
 ```
-Recompose this exact same creative for a {NOVO_ASPECT} canvas. Keep the same scene, same person, same colors, same text content, same on-image text, same elements, same design language. Only recompose the framing to fill the new proportion. Do not redesign, do not change typography, do not change wording. Only adapt the proportion. SAFE ZONE: keep the bottom 14% completely empty, it is covered by the native Meta Ads overlay and the "Saiba mais" button. Keep the top 12% and the right 15% free of critical text, covered by the profile bar and the action icons column. Reposition text and CTA if needed to respect these margins, without changing wording.
+Recompose this exact same creative for a {NOVO_ASPECT} canvas. Keep the same scene, same person, same colors, same text content, same on-image text, same elements, same design language. Only recompose the framing to fill the new proportion. Do not redesign, do not change typography, do not change wording. Only adapt the proportion. SAFE ZONE: the bottom seventh of the height shows only the background, because the Meta Ads overlay and the native button cover it. On a 9:16 Stories or Reels canvas, also: left-align all the text, with a small left margin, and break lines short so that no line goes past three quarters of the width; the right quarter of the canvas and the top eighth of the height show only the background, because the Instagram action icons and the profile bar cover them. Reposition text and CTA to respect these margins, without changing wording.
 ```
 
 Substitua `{NOVO_ASPECT}` por:
@@ -695,7 +697,7 @@ Nem todo criativo vale animar: quanto mais texto na arte, maior a chance de o mo
   ```
 
   Se o aluno já indicou o CTA antes, não repita a pergunta, apenas confirme em uma linha.
-- **Zona segura no formato Stories/Reels:** o rodapé 14% fica vazio, é onde o Meta Ads sobrepõe o nome do anunciante e o botão "Saiba mais". O topo 12% e a lateral direita 15% ficam livres de texto crítico, cobertos pela barra de perfil e pela coluna de ícones. Texto nunca encosta na borda.
+- **Zona segura no formato Stories/Reels:** o rodapé 14% fica vazio, é onde o Meta Ads sobrepõe o nome do anunciante e o botão "Saiba mais". O topo 12% e a lateral direita 15% ficam livres de texto crítico, cobertos pela barra de perfil e pela coluna de ícones. Texto nunca encosta na borda. Para garantir a lateral direita, o prompt de Stories pede o texto alinhado à esquerda, em linhas curtas, com o quarto direito da tela livre: sem essa instrução, o modelo de imagem centraliza o texto e o fim das linhas cai embaixo dos ícones.
 - **Texto legível na arte:** pouco texto e fonte grande. Todo texto da arte precisa ser lido com facilidade na tela de um celular, a um braço de distância. Se o conteúdo não couber com fonte grande, corte conteúdo, nunca diminua a fonte. Título e CTA sempre em alto contraste com o fundo.
 
 - Não escrever texto antes do Passo 2 estar definido. O texto do Passo 3 depende dos limites de caractere definidos no layout.

@@ -229,7 +229,7 @@ Agora cria a exata mesma foto, mesmo ângulo aéreo, mesmos elementos, mesma com
 
 O ângulo de cima pode mostrar mais da superfície verticalmente. Os textos mantêm a mesma posição relativa.
 
-IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920. SAFE ZONE: the background art fills the entire canvas, but all essential text, the headline and the CTA must stay inside the safe area. Keep the bottom 14% completely empty, it is covered by the native Meta Ads overlay and the "Saiba mais" button. Keep the top 12% and the right 15% free of critical text as well, covered by the profile bar and the action icons column. Never let text touch the edges.
+IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920. SAFE ZONE: the background art fills the entire canvas. LAYOUT: left-align all the text. The text block starts close to the left edge, with a small margin, and every line is short: break the headline into short lines so that no line goes past three quarters of the width. The right quarter of the canvas shows only the background scene, with no letters, logo, button or arrow, because the Instagram action icons cover that side. The top eighth and the bottom seventh of the height also show only the background, because the profile bar and the Meta Ads overlay cover them. If the art has a call to action, place it right below the headline, also left-aligned, never at the bottom. Do not draw any button at the bottom: Instagram places its own button there. Never let text touch the edges.
 ````
 
 ### Auto-revisão obrigatória
@@ -418,7 +418,7 @@ Quando o aluno escolher 1, execute:
 a) Grave num arquivo `.txt` na pasta de criativos o prompt curto de recomposição abaixo (sem placeholders), com o nome `prompt-timelapse-{numero}-stories.txt`:
 
 ```
-Recompose this exact same creative for a vertical 9:16 Instagram Stories and Reels canvas (1080x1920). Keep the same scene, same person, same colors, same text content, same on-image text boxes, same CTA, same elements, same design language. Only recompose the framing to fill the entire vertical screen. Do not redesign, do not change typography, do not change wording. Only adapt the proportion from 4:5 to 9:16. SAFE ZONE: keep the bottom 14% completely empty, it is covered by the native Meta Ads overlay and the "Saiba mais" button. Keep the top 12% and the right 15% free of critical text, covered by the profile bar and the action icons column. Reposition text and CTA if needed to respect these margins, without changing wording.
+Recompose this exact same creative for a vertical 9:16 Instagram Stories and Reels canvas (1080x1920). Keep the same scene, same person, same colors, same text content, same on-image text boxes, same CTA, same elements, same design language. Only recompose the framing to fill the entire vertical screen. Do not redesign, do not change typography, do not change wording. Only adapt the proportion from 4:5 to 9:16. SAFE ZONE: the bottom seventh of the height shows only the background, because the Meta Ads overlay and the native button cover it. On a 9:16 Stories or Reels canvas, also: left-align all the text, with a small left margin, and break lines short so that no line goes past three quarters of the width; the right quarter of the canvas and the top eighth of the height show only the background, because the Instagram action icons and the profile bar cover them. Reposition text and CTA to respect these margins, without changing wording.
 ```
 
 b) Anuncie:
@@ -527,7 +527,7 @@ Nem todo criativo vale animar: quanto mais texto na arte, maior a chance de o mo
   ```
 
   Se o aluno já indicou o CTA antes, não repita a pergunta, apenas confirme em uma linha.
-- **Zona segura no formato Stories/Reels:** o rodapé 14% fica vazio, é onde o Meta Ads sobrepõe o nome do anunciante e o botão "Saiba mais". O topo 12% e a lateral direita 15% ficam livres de texto crítico, cobertos pela barra de perfil e pela coluna de ícones. Texto nunca encosta na borda.
+- **Zona segura no formato Stories/Reels:** o rodapé 14% fica vazio, é onde o Meta Ads sobrepõe o nome do anunciante e o botão "Saiba mais". O topo 12% e a lateral direita 15% ficam livres de texto crítico, cobertos pela barra de perfil e pela coluna de ícones. Texto nunca encosta na borda. Para garantir a lateral direita, o prompt de Stories pede o texto alinhado à esquerda, em linhas curtas, com o quarto direito da tela livre: sem essa instrução, o modelo de imagem centraliza o texto e o fim das linhas cai embaixo dos ícones.
 - **Texto legível na arte:** pouco texto e fonte grande. Todo texto da arte precisa ser lido com facilidade na tela de um celular, a um braço de distância. Se o conteúdo não couber com fonte grande, corte conteúdo, nunca diminua a fonte. Título e CTA sempre em alto contraste com o fundo.
 
 ### Sobre as ideias
