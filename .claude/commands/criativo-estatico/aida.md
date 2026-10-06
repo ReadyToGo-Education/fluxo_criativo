@@ -410,6 +410,10 @@ Micro-movimento na cena fotográfica do topo, leve respiração ou parallax de 1
 
 REGRA CRÍTICA: todo o bloco de texto da zona escura inferior (kicker, headline grande em CAIXA ALTA, apoio linha 1, apoio linha 2 e instrução de clique com ícone) é ESTÁTICO. Não balança, não aparece com animação, não se move. Fica fixo o tempo todo. Só a cena fotográfica do topo é que tem o micro-movimento.
 
+NÃO INVENTA: não adiciona nenhum elemento que não existe na imagem original. Nada de objeto novo, pessoa nova, texto novo, logo, partícula ou efeito que não estava lá. Anima somente o que já existe.
+
+SE HOUVER PESSOA NA IMAGEM: sem falas, sem diálogo, sem movimento labial. A pessoa não conversa com a câmera. Apenas o movimento descrito acima.
+
 MÚSICA DE FUNDO SUGERIDA: trilha cinematográfica leve, instrumental, sem letra. Piano minimalista, cordas suaves ou ambient atmosférico. Algo que dê peso de campanha publicitária, no padrão Apple ou Cannes Lions, sem competir com a leitura do texto.
 ```
 
@@ -438,7 +442,7 @@ Conteúdo do briefing:
 - Texto escolhido (kicker, headline, apoio, instrução)
 - Prompt final consolidado em inglês em bloco de código
 - Prompt de animação pro Freepik (Magnific) em bloco de código separado
-- Seção "Como usar" com passo extra: "Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba o PNG gerado e cole o Prompt de Animação."
+- Seção "Como usar" com passo extra: "Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba o PNG gerado e cole o Prompt de Animação." No modo vídeo do Magnific, defina a MESMA imagem como quadro inicial e quadro final, isso fecha o loop sem salto. Modelo recomendado: Google Veo Lite (melhor custo-benefício).
 
 O número do criativo é sequencial dentro da pasta. Verifique os arquivos `criativo-aida-*.md` existentes antes de numerar.
 
@@ -561,7 +565,7 @@ Depois execute:
 a) Grave num arquivo `.txt` na pasta de criativos o prompt curto de recomposição abaixo (sem placeholders), com o nome `prompt-criativo-aida-{numero}-{novo-formato}.txt`. Onde `{novo-formato}` é `feed`, `quadrado` ou `stories`:
 
 ```
-Recompose this exact same creative for a {NOVO_ASPECT} canvas. Keep the same scene, same person, same colors, same text content, same on-image text, same elements, same design language. Only recompose the framing to fill the new proportion. Do not redesign, do not change typography, do not change wording. Only adapt the proportion.
+Recompose this exact same creative for a {NOVO_ASPECT} canvas. Keep the same scene, same person, same colors, same text content, same on-image text, same elements, same design language. Only recompose the framing to fill the new proportion. Do not redesign, do not change typography, do not change wording. Only adapt the proportion. SAFE ZONE: keep the bottom 14% completely empty, it is covered by the native Meta Ads overlay and the "Saiba mais" button. Keep the top 12% and the right 15% free of critical text, covered by the profile bar and the action icons column. Reposition text and CTA if needed to respect these margins, without changing wording.
 ```
 
 Substitua `{NOVO_ASPECT}` por:
@@ -609,7 +613,90 @@ O que quer mudar?
 
 Ajuste apenas o passo solicitado, atualize os arquivos mantendo os outros passos intactos. No modo API, atualize o arquivo de prompt e rode o script de novo para gerar a imagem com o ajuste.
 
+#### Sub-fluxo "Animar em loop" (vídeo a partir da imagem gerada)
+
+Sempre que uma imagem do criativo estiver pronta (Feed ou Stories), inclua a opção **"Animar em loop (vídeo)"** no menu final, logo depois das opções de geração de imagem.
+
+Quando o aluno escolher animar, pergunte o caminho:
+
+```
+Como você quer animar?
+
+1. Colar o prompt numa ferramenta externa (Freepik/Magnific)
+2. Higgsfield direto por aqui (conector do Claude)
+3. Automático via Replicate (API)
+
+Digite o número:
+```
+
+Antes de mostrar o menu, verifique a disponibilidade e marque na própria linha:
+
+- **Linha 2 (Higgsfield):** disponível se existir alguma ferramenta MCP com "higgsfield" no nome nesta sessão. Se não existir, escreva a linha como "2. Higgsfield direto por aqui (não conectado, eu te ajudo a conectar)". Se o aluno escolher assim mesmo, acione a skill `configurar-higgsfield` e retome este sub-fluxo depois.
+- **Linha 3 (Replicate):** disponível se `REPLICATE_API_TOKEN` existir no `.env` da raiz. Se não existir, escreva a linha como "3. Automático via Replicate (precisa de chave, eu te ajudo a criar)". Se o aluno escolher assim mesmo, acione a skill `configurar-replicate` e retome este sub-fluxo depois.
+
+**Opção 1. Colar o prompt numa ferramenta externa:** entregue o Prompt de Animação do formato. Se este formato não tiver seção própria de Prompt de Animação, use o prompt padrão abaixo. Instrua: "Abra o Freepik (Magnific) no modo vídeo, suba a imagem gerada e defina a MESMA imagem como quadro inicial e quadro final, isso fecha o loop sem salto. Cole o prompt e gere. Modelo recomendado: Google Veo Lite, melhor custo-benefício." Se o aluno for usar outro modelo de vídeo, adapte o prompt às características dele antes de entregar (instruções mais restritivas ou prompt negativo, quando o modelo aceitar).
+
+**Opção 2. Higgsfield pelo conector:** use as ferramentas MCP do Higgsfield para gerar o vídeo image-to-video: envie a imagem gerada e o prompt de animação (o do formato, ou o padrão abaixo), pedindo loop com a mesma imagem como quadro inicial e quadro final quando a ferramenta aceitar. Salve o vídeo na pasta de criativos com o sufixo `-loop.mp4`, no mesmo padrão da Opção 3. Requer assinatura ativa do Higgsfield.
+
+**Opção 3. Automático via Replicate (API):** execute:
+
+a) Grave o prompt de animação num arquivo `.txt` na pasta de criativos, com o nome `prompt-aida-{numero}-loop.txt`. Use o Prompt de Animação do formato; se não houver, use o prompt padrão abaixo.
+
+b) Anuncie:
+
+```
+🔍 Próximo passo: animar a imagem em loop via API. Tempo estimado: 3 a 5 minutos.
+```
+
+c) Rode o script. Ele fecha o loop sozinho, mandando a mesma imagem como quadro inicial e quadro final:
+
+```bash
+py -3 scripts/animar-criativo.py --image "meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}.png" --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-aida-{numero}-loop.txt" --out "meus-produtos/{ativo}/entregas/criativos/criativo-aida-{numero}-loop.mp4"
+```
+
+d) Confirme:
+
+```
+✅ Concluído: vídeo em loop gerado e salvo.
+
+Vídeo: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-aida-{numero}-loop.mp4
+```
+
+**Prompt padrão de animação em loop** (só quando o formato não tem Prompt de Animação próprio):
+
+```
+Anima essa imagem em loop com um movimento sutil e elegante. APENAS o fundo e os elementos visuais se mexem. Os textos ficam 100% ESTÁTICOS, não se movem em nenhum momento.
+
+MOVIMENTO DA CENA: micro-movimento de respiração na imagem (leve zoom in/out de 1-2% no eixo central), com leve parallax horizontal se houver fundo. Sem cortes, sem panning agressivo. Loop suave de 3 a 5 segundos: o último frame emenda no primeiro sem salto perceptível.
+
+REGRA CRÍTICA: todo texto na imagem (título, legenda, CTA) é ESTÁTICO. Não balança, não aparece com animação, não se move. Só os elementos visuais por trás é que respiram.
+
+NÃO INVENTA: não adiciona nenhum elemento que não existe na imagem original. Nada de objeto novo, pessoa nova, texto novo, logo, partícula ou efeito que não estava lá. Anima somente o que já existe.
+
+SE HOUVER PESSOA NA IMAGEM: sem falas, sem diálogo, sem movimento labial. A pessoa não conversa com a câmera. Apenas o movimento descrito acima.
+```
+
+Nem todo criativo vale animar: quanto mais texto na arte, maior a chance de o modelo remover, alterar ou inventar texto no vídeo. Em formato de texto pesado, avise o aluno desse risco antes de gerar. Se o vídeo vier com texto distorcido ou tremido, gere de novo uma vez. Se persistir, avise que essa imagem não anima bem e sugira manter a versão estática.
+
 ## Regras
+
+- **CTA:** o padrão é "Saiba mais", que é o botão nativo do Meta Ads. Se o aluno indicou outro em qualquer momento, usar esse. Nunca inventar CTA. Nunca usar "Link na bio" nem "Clique no link da bio", porque em anúncio pago o clique acontece no botão nativo, não na bio.
+- **Perguntar o CTA antes de gerar:** se o aluno ainda não indicou a chamada, pergunte antes de montar a legenda e os prompts:
+
+  ```
+  Qual chamada você quer no criativo?
+
+  1. Saiba mais (padrão do Meta Ads)
+  2. Cadastre-se
+  3. Comprar agora
+  4. Outra (me diga qual)
+
+  Digite o número:
+  ```
+
+  Se o aluno já indicou o CTA antes, não repita a pergunta, apenas confirme em uma linha.
+- **Zona segura no formato Stories/Reels:** o rodapé 14% fica vazio, é onde o Meta Ads sobrepõe o nome do anunciante e o botão "Saiba mais". O topo 12% e a lateral direita 15% ficam livres de texto crítico, cobertos pela barra de perfil e pela coluna de ícones. Texto nunca encosta na borda.
+- **Texto legível na arte:** pouco texto e fonte grande. Todo texto da arte precisa ser lido com facilidade na tela de um celular, a um braço de distância. Se o conteúdo não couber com fonte grande, corte conteúdo, nunca diminua a fonte. Título e CTA sempre em alto contraste com o fundo.
 
 - Não escrever texto antes do Passo 2 estar definido. O texto do Passo 3 depende dos limites de caractere definidos no layout.
 - Nunca inventar urgência. A urgência base vem obrigatoriamente das Urgências Ocultas do perfil.

@@ -86,6 +86,7 @@ Exemplos:
 
 #### Regras dos temas
 
+
 - **Específicos e descritivos.** Cada tema deve identificar pra qual sub-situação do problema ele serve.
 - **Sem prazos longos.** PROIBIDO prometer resultado em 30, 60 ou 90 dias. Permitido: 24 horas, 48 horas, 7 dias, ou sem prazo (com promessa no método ou no resultado).
 - **Variedade de ângulos.** Cobrir situações diferentes: primeira vez, crise, manutenção, dia a dia, problemas específicos, sinais de melhora.
@@ -161,7 +162,7 @@ Regras obrigatórias:
 
 #### B) Legenda pro Instagram
 
-2 a 3 linhas em primeira pessoa, tom de creator amador. Gera curiosidade sem entregar o método. Termina com "Link na bio te conto tudo 👇" ou similar. Light Copy aplicada.
+2 a 3 linhas em primeira pessoa, tom de creator amador. Gera curiosidade sem entregar o método. Termina com "Clica em Saiba mais que te conto tudo 👇" ou similar. Light Copy aplicada.
 
 #### C) Prompt pro ChatGPT (formato Feed)
 
@@ -221,7 +222,7 @@ SOBREPOSIÇÃO DE TEXTO ESTILO TIKTOK/INSTAGRAM AMADOR (sobre a foto, fora do ca
 
 NO TERÇO SUPERIOR DA FOTO (sobre a parte da foto, não sobre o caderno), uma caixinha de legenda preta sólida (estilo padrão da legenda do TikTok), retangular, com cantos levemente arredondados, levemente inclinada uns 3 a 5 graus pra parecer jogada por cima. Texto em branco, sans-serif bold: "[CHAMADA QUE CONDUZ PRO LINK, NUNCA "salva", PUXANDO PALAVRA-CHAVE DO TEMA ESPECÍFICO DO CHECKLIST + EMOJI DO NICHO]"
 
-NA BASE DA FOTO, um CTA simples e discreto estilo creator amador: "👇 te conto tudo no link da bio"
+NA BASE DA FOTO, um CTA simples e discreto estilo creator amador: "👇 te conto tudo, clica em Saiba mais"
 
 REGRA DE CONTRASTE DO CTA (obrigatória): o CTA precisa ter contraste forte com a cor de fundo da região onde foi posicionado.
 - Fundo escuro: texto amarelo vivo, branco puro ou laranja vivo.
@@ -241,7 +242,7 @@ POSICIONAMENTO: TODOS OS ELEMENTOS DEVEM SUBIR um pouco do rodapé. Margem míni
 
 Fonte legível em celular.
 
-IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story composition. Composition must be optimized for feed posts and carousels. Shorter vertical framing. Exact size reference: 1080x1350.
+IMPORTANT: exact 4:5 Instagram feed aspect ratio. Do NOT create 9:16 story composition. Composition must be optimized for feed posts and carousels. Shorter vertical framing. Exact size reference: 1080x1350. SAFE ZONE: keep the bottom 12% of the image free of essential text and CTA, the Meta Ads feed overlay covers this area with the advertiser name and the "Saiba mais" button. LEGIBILITY: use as little text as possible on the art. All text must be large, bold, high contrast and easily readable on a small phone screen at arm's length. Never use small fonts, never shrink the font to fit more content, cut content instead.
 ````
 
 #### D) Prompt pro ChatGPT (formato Stories)
@@ -251,7 +252,7 @@ Esse é fixo. Não precisa preencher placeholders.
 ````
 Agora cria a exata mesma arte, mesmas cores, mesmo texto, mesmo visual, mesmos elementos, só diagramada pro formato Stories.
 
-IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920.
+IMPORTANT: exact 9:16 full-screen vertical composition for Instagram Reels and Stories. Must occupy entire smartphone screen vertically. Exact size reference: 1080x1920. SAFE ZONE: the background art fills the entire canvas, but all essential text, the headline and the CTA must stay inside the safe area. Keep the bottom 14% completely empty, it is covered by the native Meta Ads overlay and the "Saiba mais" button. Keep the top 12% and the right 15% free of critical text as well, covered by the profile bar and the action icons column. Never let text touch the edges.
 ````
 
 #### E) Prompt de Animação pro Freepik (Magnific)
@@ -265,6 +266,10 @@ MOVIMENTO DA CENA:
 A pessoa continua segurando o caderno com micro-movimento natural: respira, ajusta levemente a posição das mãos, leve oscilação do corpo. O caderno pode ter micro-tremor natural de mão humana, mas o texto escrito nele NÃO muda nem reposiciona. Loop suave de 4-5 segundos. Sem cortes, sem zoom, sem panning.
 
 REGRA CRÍTICA: o texto do checklist (os 5 itens com bullets) escrito no caderno, o título da arte, qualquer tarja ou selo, e o CTA são ESTÁTICOS. Não balançam, não aparecem com animação, não se movem. Ficam fixos o tempo todo. Só a pessoa e o ambiente é que têm micro-movimento natural.
+
+NÃO INVENTA: não adiciona nenhum elemento que não existe na imagem original. Nada de objeto novo, pessoa nova, texto novo, logo, partícula ou efeito que não estava lá. Anima somente o que já existe.
+
+SE HOUVER PESSOA NA IMAGEM: sem falas, sem diálogo, sem movimento labial. A pessoa não conversa com a câmera. Apenas o movimento descrito acima.
 
 MÚSICA DE FUNDO SUGERIDA: trilha lo-fi calma e focada, instrumental, sem letra. Padrão de "estudo concentrado" ou "produtividade leve". Beat suave, piano minimalista. Algo que case com a leitura tranquila do checklist.
 ````
@@ -393,7 +398,7 @@ Conteúdo do arquivo:
 2. Cole o **Prompt Feed** e espere a arte ser gerada.
 3. Quando estiver pronto, mande "ok" no chat.
 4. Cole o **Prompt Stories** pra gerar a versão vertical da mesma arte.
-5. Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba a imagem gerada e cole o **Prompt de Animação**. O mesmo prompt serve pro Feed e pro Stories.
+5. Pra animar, abra o Freepik (Magnific) (ferramenta de imagem-pra-vídeo), suba a imagem gerada e cole o **Prompt de Animação**. O mesmo prompt serve pro Feed e pro Stories. No modo vídeo do Magnific, defina a MESMA imagem como quadro inicial e quadro final, isso fecha o loop sem salto. Modelo recomendado: Google Veo Lite (melhor custo-benefício).
 
 ## Banco completo (os 10 temas gerados nesta sessão)
 
@@ -491,7 +496,7 @@ Quando o aluno escolher 1, execute:
 a) Grave num arquivo `.txt` na pasta de criativos o prompt curto de recomposição abaixo (sem placeholders), com o nome `prompt-checklist-{numero}-stories.txt`:
 
 ```
-Recompose this exact same creative for a vertical 9:16 Instagram Stories and Reels canvas (1080x1920). Keep the same scene, same person, same colors, same text content, same on-image text boxes, same CTA, same elements, same design language. Only recompose the framing to fill the entire vertical screen. Do not redesign, do not change typography, do not change wording. Only adapt the proportion from 4:5 to 9:16.
+Recompose this exact same creative for a vertical 9:16 Instagram Stories and Reels canvas (1080x1920). Keep the same scene, same person, same colors, same text content, same on-image text boxes, same CTA, same elements, same design language. Only recompose the framing to fill the entire vertical screen. Do not redesign, do not change typography, do not change wording. Only adapt the proportion from 4:5 to 9:16. SAFE ZONE: keep the bottom 14% completely empty, it is covered by the native Meta Ads overlay and the "Saiba mais" button. Keep the top 12% and the right 15% free of critical text, covered by the profile bar and the action icons column. Reposition text and CTA if needed to respect these margins, without changing wording.
 ```
 
 b) Anuncie:
@@ -516,7 +521,92 @@ Imagem do Stories: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativ
 
 e) Reapresente o mesmo menu de opções.
 
+#### Sub-fluxo "Animar em loop" (vídeo a partir da imagem gerada)
+
+Sempre que uma imagem do criativo estiver pronta (Feed ou Stories), inclua a opção **"Animar em loop (vídeo)"** no menu final, logo depois das opções de geração de imagem.
+
+Quando o aluno escolher animar, pergunte o caminho:
+
+```
+Como você quer animar?
+
+1. Colar o prompt numa ferramenta externa (Freepik/Magnific)
+2. Higgsfield direto por aqui (conector do Claude)
+3. Automático via Replicate (API)
+
+Digite o número:
+```
+
+Antes de mostrar o menu, verifique a disponibilidade e marque na própria linha:
+
+- **Linha 2 (Higgsfield):** disponível se existir alguma ferramenta MCP com "higgsfield" no nome nesta sessão. Se não existir, escreva a linha como "2. Higgsfield direto por aqui (não conectado, eu te ajudo a conectar)". Se o aluno escolher assim mesmo, acione a skill `configurar-higgsfield` e retome este sub-fluxo depois.
+- **Linha 3 (Replicate):** disponível se `REPLICATE_API_TOKEN` existir no `.env` da raiz. Se não existir, escreva a linha como "3. Automático via Replicate (precisa de chave, eu te ajudo a criar)". Se o aluno escolher assim mesmo, acione a skill `configurar-replicate` e retome este sub-fluxo depois.
+
+**Opção 1. Colar o prompt numa ferramenta externa:** entregue o Prompt de Animação do formato. Se este formato não tiver seção própria de Prompt de Animação, use o prompt padrão abaixo. Instrua: "Abra o Freepik (Magnific) no modo vídeo, suba a imagem gerada e defina a MESMA imagem como quadro inicial e quadro final, isso fecha o loop sem salto. Cole o prompt e gere. Modelo recomendado: Google Veo Lite, melhor custo-benefício." Se o aluno for usar outro modelo de vídeo, adapte o prompt às características dele antes de entregar (instruções mais restritivas ou prompt negativo, quando o modelo aceitar).
+
+**Opção 2. Higgsfield pelo conector:** use as ferramentas MCP do Higgsfield para gerar o vídeo image-to-video: envie a imagem gerada e o prompt de animação (o do formato, ou o padrão abaixo), pedindo loop com a mesma imagem como quadro inicial e quadro final quando a ferramenta aceitar. Salve o vídeo na pasta de criativos com o sufixo `-loop.mp4`, no mesmo padrão da Opção 3. Requer assinatura ativa do Higgsfield.
+
+**Opção 3. Automático via Replicate (API):** execute:
+
+a) Grave o prompt de animação num arquivo `.txt` na pasta de criativos, com o nome `prompt-checklist-{numero}-loop.txt`. Use o Prompt de Animação do formato; se não houver, use o prompt padrão abaixo.
+
+b) Anuncie:
+
+```
+🔍 Próximo passo: animar a imagem em loop via API. Tempo estimado: 3 a 5 minutos.
+```
+
+c) Rode o script. Ele fecha o loop sozinho, mandando a mesma imagem como quadro inicial e quadro final:
+
+```bash
+py -3 scripts/animar-criativo.py --image "meus-produtos/{ativo}/entregas/criativos/criativo-checklist-{numero}-feed.png" --prompt-file "meus-produtos/{ativo}/entregas/criativos/prompt-checklist-{numero}-loop.txt" --out "meus-produtos/{ativo}/entregas/criativos/criativo-checklist-{numero}-loop.mp4"
+```
+
+Para animar a versão Stories, troque `-feed.png` por `-stories.png` no `--image` e o sufixo do `--out` para `-stories-loop.mp4`.
+
+d) Confirme:
+
+```
+✅ Concluído: vídeo em loop gerado e salvo.
+
+Vídeo: {caminho-raiz-projeto}\meus-produtos\{ativo}\entregas\criativos\criativo-checklist-{numero}-loop.mp4
+```
+
+**Prompt padrão de animação em loop** (só quando o formato não tem Prompt de Animação próprio):
+
+```
+Anima essa imagem em loop com um movimento sutil e elegante. APENAS o fundo e os elementos visuais se mexem. Os textos ficam 100% ESTÁTICOS, não se movem em nenhum momento.
+
+MOVIMENTO DA CENA: micro-movimento de respiração na imagem (leve zoom in/out de 1-2% no eixo central), com leve parallax horizontal se houver fundo. Sem cortes, sem panning agressivo. Loop suave de 3 a 5 segundos: o último frame emenda no primeiro sem salto perceptível.
+
+REGRA CRÍTICA: todo texto na imagem (título, legenda, CTA) é ESTÁTICO. Não balança, não aparece com animação, não se move. Só os elementos visuais por trás é que respiram.
+
+NÃO INVENTA: não adiciona nenhum elemento que não existe na imagem original. Nada de objeto novo, pessoa nova, texto novo, logo, partícula ou efeito que não estava lá. Anima somente o que já existe.
+
+SE HOUVER PESSOA NA IMAGEM: sem falas, sem diálogo, sem movimento labial. A pessoa não conversa com a câmera. Apenas o movimento descrito acima.
+```
+
+Nem todo criativo vale animar: quanto mais texto na arte, maior a chance de o modelo remover, alterar ou inventar texto no vídeo. Em formato de texto pesado, avise o aluno desse risco antes de gerar. Se o vídeo vier com texto distorcido ou tremido, gere de novo uma vez. Se persistir, avise que essa imagem não anima bem e sugira manter a versão estática.
+
 ## Regras
+
+- **CTA:** o padrão é "Saiba mais", que é o botão nativo do Meta Ads. Se o aluno indicou outro em qualquer momento, usar esse. Nunca inventar CTA. Nunca usar "Link na bio" nem "Clique no link da bio", porque em anúncio pago o clique acontece no botão nativo, não na bio.
+- **Perguntar o CTA antes de gerar:** se o aluno ainda não indicou a chamada, pergunte antes de montar a legenda e os prompts:
+
+  ```
+  Qual chamada você quer no criativo?
+
+  1. Saiba mais (padrão do Meta Ads)
+  2. Cadastre-se
+  3. Comprar agora
+  4. Outra (me diga qual)
+
+  Digite o número:
+  ```
+
+  Se o aluno já indicou o CTA antes, não repita a pergunta, apenas confirme em uma linha.
+- **Zona segura no formato Stories/Reels:** o rodapé 14% fica vazio, é onde o Meta Ads sobrepõe o nome do anunciante e o botão "Saiba mais". O topo 12% e a lateral direita 15% ficam livres de texto crítico, cobertos pela barra de perfil e pela coluna de ícones. Texto nunca encosta na borda.
+- **Texto legível na arte:** pouco texto e fonte grande. Todo texto da arte precisa ser lido com facilidade na tela de um celular, a um braço de distância. Se o conteúdo não couber com fonte grande, corte conteúdo, nunca diminua a fonte. Título e CTA sempre em alto contraste com o fundo.
 
 - Light Copy obrigatória no título e na legenda. Sem travessão, sem exclamação, sem pergunta no título, sem promessa vaga, sem "não é X. É Y.".
 - Produto NÃO aparece no lead do título nem da legenda.

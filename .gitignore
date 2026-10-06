@@ -143,3 +143,6 @@ inputs/
 
 package-lock.json
 package.json
+# Exportacoes locais para outros agentes (contem caminhos da maquina local)
+.agents/
+.codex/

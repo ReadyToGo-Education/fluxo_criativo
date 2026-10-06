@@ -66,6 +66,7 @@
 | Gerar lista de ideias do criativo (10, 15 ou 20 itens) | cerca de 60 segundos | segundos |
 | Gerar o criativo (título, legenda e prompts) | cerca de 30 segundos | segundos |
 | Gerar a imagem do criativo via API (Feed ou Stories image-to-image) | 2 a 3 minutos | minutos |
+| Animar criativo em loop via API (image-to-video) | 3 a 5 minutos | minutos |
 
 ---
 
