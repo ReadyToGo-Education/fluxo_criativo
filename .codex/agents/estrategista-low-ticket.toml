@@ -231,7 +231,7 @@ Aguarde a resposta do aluno antes de acionar qualquer skill.
 
 **Se concordar com PÁGINA ou escolher PÁGINA. Página de vendas do produto:**
 
-**Skill que rege esta etapa:** `.claude/commands/lt-pagina.md` (roteiro) + `.claude/skills/pagina-low-ticket/SKILL.md` (régua v11)
+**Skill que rege esta etapa:** `.claude/commands/lt-pagina.md` (roteiro) + `.claude/skills/pagina-low-ticket/SKILL.md` (régua v16)
 
 Leia os dois antes de iniciar e siga o roteiro do `/lt-pagina` a partir do Passo 2 (o framework Quiz vs. Página já foi aplicado acima):
 

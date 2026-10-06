@@ -672,7 +672,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/lt-funil`: criar funil low ticket.
 - `/lt-criar-produto`: criar conteúdo real do produto digital.
 - `/lt-quiz`: gerar perguntas de quiz.
-- `/lt-pagina`: criar a página de vendas low ticket pela régua v11 (7 aberturas, copy completa e prompt para o Lovable).
+- `/lt-pagina`: criar a página de vendas low ticket pela régua v16 (7 aberturas, copy completa e prompt para o Lovable).
 - `/lt-otimizar`: analisar planilha ou campanhas low ticket.
 
 ### Tráfego Pago
@@ -722,7 +722,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 ### Feedback
 
 - `/feedback-pagina`: corrigir e otimizar página de vendas existente.
-- `/feedback-low-ticket`: corrigir página low ticket pela régua v11.
+- `/feedback-low-ticket`: corrigir página low ticket pela régua v16.
 
 ### Toolkit
 

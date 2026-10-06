@@ -2764,7 +2764,7 @@ def _tabela_html(cabecalho: list[str], linhas: list[list[str]]) -> str:
 
 
 def render_low_ticket(dados: dict) -> str:
-    """Entregas do produto de entrada: página de vendas (/lt-pagina, régua v11)
+    """Entregas do produto de entrada: página de vendas (/lt-pagina, régua low ticket)
     e quiz (/lt-quiz). Os dados vêm de parse_low_ticket, no painel-incremental.py."""
     pagina = dados.get("pagina") or {}
     quiz = dados.get("quiz") or {}
@@ -2785,6 +2785,16 @@ def render_low_ticket(dados: dict) -> str:
             '<div class="section-h" style="margin-top:0">Página de vendas'
             '<span class="mini">/lt-pagina</span></div>'
         )
+        com_provisorios = [t["abertura"] for t in testes if t.get("provisorios")]
+        if com_provisorios:
+            partes.append(
+                '<div class="card" style="border-top:0;padding-top:0">'
+                '<span class="pill rust">Antes de publicar</span>'
+                '<p class="card-body" style="margin-top:var(--s-3)">'
+                f'A copy de {_escape(", ".join(com_provisorios))} tem depoimentos provisórios. '
+                "Troque pelos reais antes de publicar a página: a lista está no fim do arquivo da copy.</p>"
+                "</div>"
+            )
         promessa = pagina.get("promessa") or ""
         if promessa:
             partes.append(
@@ -2816,10 +2826,17 @@ def render_low_ticket(dados: dict) -> str:
             for t in testes:
                 copy_html = _link_arquivo(t["copy"], "Abrir copy") if t.get("copy") else "Pendente"
                 prompt_html = _link_arquivo(t["prompt"], "Abrir prompt") if t.get("prompt") else "Pendente"
+                if not t.get("copy"):
+                    depo_html = "Pendente"
+                elif t.get("provisorios"):
+                    depo_html = '<span class="pill rust">Provisórios</span>'
+                else:
+                    depo_html = "Reais"
                 linhas.append(
                     "<tr>"
                     f'<td class="strong">{_escape(t.get("abertura", ""))}</td>'
                     f"<td>{copy_html}</td>"
+                    f"<td>{depo_html}</td>"
                     f"<td>{prompt_html}</td>"
                     f'<td class="mono">{_escape(t.get("atualizado_em", ""))}</td>'
                     "</tr>"
@@ -2827,7 +2844,7 @@ def render_low_ticket(dados: dict) -> str:
             partes.append(
                 '<div class="section-h">Aberturas criadas<span class="mini">uma por teste A/B</span></div>'
                 '<div style="overflow-x:auto"><table class="table"><thead><tr>'
-                "<th>Abertura</th><th>Copy</th><th>Prompt do Lovable</th><th>Atualizado em</th>"
+                "<th>Abertura</th><th>Copy</th><th>Depoimentos</th><th>Prompt do Lovable</th><th>Atualizado em</th>"
                 f'</tr></thead><tbody>{"".join(linhas)}</tbody></table></div>'
             )
 

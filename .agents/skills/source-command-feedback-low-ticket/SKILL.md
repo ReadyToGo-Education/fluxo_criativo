@@ -1,6 +1,6 @@
 ---
 name: "source-command-feedback-low-ticket"
-description: "Faz correção completa de página de vendas low ticket pela régua v11 do time de criativos. Analisa copy e estrutura (abertura, promessa central, perspectiva, prazo, ordem das seções, bullets com a resposta no produto, quebra das 4 objeções, argumentos científicos reais) e design (design system, imagem fiel à copy, botões, layout sem sobreposição) em 2 blocos. Entrega a copy corrigida e, se pedido, um prompt novo para o Lovable. Use esta skill SEMPRE que o usuário quiser revisar ou corrigir uma página de low ticket, pedir feedback de página low ticket, mencionar \"corrigir minha página low ticket\", \"analisar minha LT\", \"o que está errado na minha página de produto de entrada\", ou enviar um link de página low ticket para revisão."
+description: "Faz correção completa de página de vendas low ticket pela régua v16 do time de criativos. Analisa copy e estrutura (abertura, promessa central, perspectiva, prazo, ordem das seções, depoimentos na segunda seção, bullets com a resposta no produto, quebra das 4 objeções, argumentos científicos reais, ancoragem de preço e seção de quem criou o produto) e design (design system, imagem fiel à copy, botões, layout sem sobreposição) em 2 blocos. Entrega a copy corrigida e, se pedido, um prompt novo para o Lovable. Use esta skill SEMPRE que o usuário quiser revisar ou corrigir uma página de low ticket, pedir feedback de página low ticket, mencionar \"corrigir minha página low ticket\", \"analisar minha LT\", \"o que está errado na minha página de produto de entrada\", ou enviar um link de página low ticket para revisão."
 ---
 
 # source-command-feedback-low-ticket
@@ -11,7 +11,7 @@ Use esta skill quando o usuário pedir o comando `/feedback-low-ticket` do works
 
 ## Roteiro do comando
 
-# Feedback de Página Low Ticket. Correção pela Régua v11
+# Feedback de Página Low Ticket. Correção pela Régua v16
 
 Você é uma Nav do Fluxo de Leandro Ladeira. Seu papel aqui é dar feedback honesto, direto e acionável sobre a página de vendas low ticket de um mentorado, com os olhos de quem conhece a régua low ticket por dentro.
 
@@ -35,10 +35,10 @@ Fluxo obrigatório:
 
 ## Diferenças entre feedback de PV e feedback de LT
 
-| Aspecto | Página de Vendas (8D) | Página Low Ticket (régua v11) |
+| Aspecto | Página de Vendas (8D) | Página Low Ticket (régua v16) |
 |---|---|---|
 | Estrutura | 8D (11 seções) | Ordem recomendada da régua, de HERO sem botão até CTA FINAL |
-| Vídeo | VSL | Só na abertura Demonstração (2 a 3 min, smart autoplay) |
+| Vídeo | VSL | Só na abertura Demonstração, no lugar da foto (Shorts vertical ou tutorial horizontal, smart autoplay) |
 | Copy | Light Copy | 7 aberturas, promessa central, dor verdadeira, mecanismo, bullets com a resposta no produto |
 | Blocos de feedback | 3 (Copy, Design, Depoimentos em vídeo) | 2 (Copy + Estrutura, Design) |
 | Foco | Argumentação, Furadeira, prova social | Primeira dobra, perspectiva do lead, promessa rápida e crível |
@@ -47,7 +47,7 @@ Fluxo obrigatório:
 
 ---
 
-## Erros críticos de low ticket (pela régua v11)
+## Erros críticos de low ticket (pela régua v16)
 
 **Botão de compra na primeira dobra.** O lead precisa ler a headline, a subheadline e o primeiro visual antes de ver qualquer botão.
 
@@ -58,6 +58,10 @@ Fluxo obrigatório:
 **Promessa maior que a prova.** "Fique rico", "mude sua vida", "fórmula secreta" geram o "Ah, tá. Sei."
 
 **Elemento falso ou inventado.** Depoimento, estudo, número, garantia, desconto, preço anterior riscado, contador, estoque ou prazo que não são reais. Sem a informação real, o elemento sai da página.
+
+**Depoimento provisório no ar.** A régua cria a página com depoimentos fictícios só para ela nascer completa, e eles precisam ser trocados pelos reais antes de publicar. Depoimento que o mentorado não consegue comprovar com o print ou o contato de quem deu é tratado como provisório: sai ou é trocado antes de qualquer tráfego.
+
+**Ancoragem que não fecha.** Soma "deveria custar" diferente dos preços das linhas, "de R$ X por R$ Y" com preço que nunca existiu ou "somente hoje" sem prazo real.
 
 **Site que parece em construção.** Placeholder, colchete, instrução interna ou aviso de conteúdo fictício visível.
 
@@ -114,7 +118,8 @@ Confira cada item pela seção correspondente da régua.
 ### Estrutura
 - [ ] **Ordem das seções** (ETAPA 2, ORDEM RECOMENDADA): mapear presentes e faltantes. Bullets de curiosidade e quebra das 4 objeções são obrigatórias.
 - [ ] **Abertura Plug & Play:** tem a seção COMO USAR EM 3 PASSOS logo depois do hero?
-- [ ] **Abertura Demonstração:** tem vídeo de 2 a 3 minutos com smart autoplay, ou o visual estático sem placeholder?
+- [ ] **Depoimentos** (DEPOIMENTOS): são a segunda seção, logo depois do hero? De 3 a 6, cada um num ângulo diferente, falando do resultado, com um detalhe concreto da vida e resultado imediato? São reais? Se não forem, entram em "Elementos falsos ou inventados encontrados".
+- [ ] **Abertura Demonstração:** o vídeo (arquivo ou link do YouTube, inclusive Shorts) está no lugar da foto, com smart autoplay? Sem vídeo, o visual estático aparece sem placeholder?
 - [ ] **Hero estendido** (só Defesa de Tese e Dor Espelhada): 2 ou 3 parágrafos de imersão com cenas concretas e frase-síntese?
 
 ### Copy seção por seção
@@ -125,6 +130,8 @@ Confira cada item pela seção correspondente da régua.
 - [ ] **Bullets** (BULLETS DE CURIOSIDADE): 8 a 12, pelo menos 5 das 7 técnicas, cada um com a parte do produto onde está a resposta, headline dizendo que as respostas estão no produto e frase de fechamento.
 - [ ] **Quebra das 4 objeções** (QUEBRA DAS 4 OBJEÇÕES): as 4 razões mais fortes desse lead, com concordância, especificidade e comparação?
 - [ ] **Prova, oferta e garantia** (PROVA, OFERTA E GARANTIA): só elementos reais; FAQ com 4 a 6 dúvidas sem repetir as objeções.
+- [ ] **Ancoragem de preço** (ANCORAGEM DE PREÇO): a oferta abre com a pilha de valor (de 3 a 7 itens com preço individual riscado, soma "deveria custar" riscada e só então o preço real)? Os valores são estimativas honestas e a soma bate?
+- [ ] **Quem criou o produto** (QUEM CRIOU O PRODUTO): é a última seção antes do FAQ, sem o rótulo "Autor", "Sobre mim" ou "Biografia"? Tem 1 ou 2 parágrafos só com marcos reais, a ligação com a promessa e foto?
 - [ ] **Site limpo** (REGRAS DE PRIORIDADE MÁXIMA, itens 1 e 2): nenhum placeholder, colchete ou instrução visível.
 
 ### Light Copy (com a exceção da régua)
@@ -186,6 +193,9 @@ Confira cada item pela seção correspondente da régua.
 - [ ] **Grid, alinhamento, tipografia e espaçamento** (GRID, ALINHAMENTO, TIPOGRAFIA, ESPAÇAMENTO): grid repetido, cabeçalhos centralizados, títulos grandes e pesados, bastante espaço em branco.
 - [ ] **Produto visível** (MOCKUPS): um mockup principal grande, sem colagem exagerada.
 - [ ] **Bullets** (DESIGN DOS BULLETS): cartões com cadeado e pílula de localização?
+- [ ] **Depoimentos** (DESIGN DOS DEPOIMENTOS): cards de mesma altura, avatar, nome, cinco estrelas e texto com respiro entre eles (inclusive no mobile), sem botão de compra, sem print de conversa nem selo de "verificado"?
+- [ ] **Ancoragem** (DESIGN DA ANCORAGEM DE PREÇO): card central, preços alinhados à direita com risco visível, pílula da soma e preço real em destaque, sem contador nem selo de desconto?
+- [ ] **Quem criou o produto** (DESIGN DA SEÇÃO DO AUTOR): foto real de um lado e texto do outro (empilhados no mobile), visual discreto, sem selo nem moldura chamativa?
 - [ ] **Listas de pensamentos** (DESIGN DAS LISTAS DE PENSAMENTOS E SENTIMENTOS): divisória fina e ícone de sentimento por item?
 - [ ] **Botões** (BOTÃO DE COMPRA E BOTÃO FLUTUANTE): nenhum na primeira dobra; flutuante no centro inferior, depois da segunda dobra, rolando até a oferta e sumindo enquanto a oferta está na tela; só a oferta e o CTA final levam ao checkout.
 - [ ] **Oferta** (OFERTA): stack, lista curta, preço e CTA, sem selo em excesso, contador, desconto ou urgência falsos.
@@ -223,7 +233,7 @@ Feedback completo entregue. O que quer fazer agora?
 
 ### Opção 1. Copy corrigida
 
-Reescreva a copy aplicando as correções, seção por seção, na ordem recomendada da régua, mantendo a abertura escolhida (ou a recomendada, se o mentorado aceitar a troca). Siga as regras da ETAPA 2 da régua e a rotina de auto-revisão de copy do CLAUDE.md, com a exceção da régua. Se houver estudos, entregue no fim a lista "PARA VOCÊ CONFERIR (não vai na página)".
+Reescreva a copy aplicando as correções, seção por seção, na ordem recomendada da régua, mantendo a abertura escolhida (ou a recomendada, se o mentorado aceitar a troca). Mantenha os depoimentos reais que a página já tem; se ela não tiver nenhum, use os provisórios da régua e entregue a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)". Se faltar a seção de quem criou o produto e o resumo não tiver os marcos reais, faça a pergunta do item 2 da seção "Como esta régua funciona no projeto", na skill, antes de reescrever. Siga as regras da ETAPA 2 da régua e a rotina de auto-revisão de copy do CLAUDE.md, com a exceção da régua. Se houver estudos, entregue no fim a lista "PARA VOCÊ CONFERIR (não vai na página)".
 
 Depois, pergunte:
 ```
@@ -231,7 +241,7 @@ Depois, pergunte:
 2. Quero ajustar algo
 ```
 
-Salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-corrigida-{produto}.md`, atualize o painel (item 7 da seção "Como esta régua funciona no projeto", na skill) e informe o caminho absoluto.
+Salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-corrigida-{produto}.md`, atualize o painel (item 9 da seção "Como esta régua funciona no projeto", na skill) e informe o caminho absoluto.
 
 ### Opção 2. Copy corrigida e prompt do Lovable
 
@@ -242,7 +252,7 @@ Primeiro a Opção 1, com aprovação. Depois, com a copy congelada, monte o pro
 2. Quero ajustar algo
 ```
 
-Salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-corrigido-{produto}.md`, atualize o painel e explique: abrir o Lovable, colar o prompt num projeto novo (ou pedir para recriar a página no projeto atual) e trocar `CHECKOUT_URL` pelo link do checkout.
+Salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-corrigido-{produto}.md`, atualize o painel e explique: abrir o Lovable, colar o prompt num projeto novo (ou pedir para recriar a página no projeto atual) com a foto de quem criou o produto anexada, trocar `CHECKOUT_URL` pelo link do checkout e trocar os depoimentos provisórios pelos reais antes de publicar.
 
 ---
 

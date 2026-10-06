@@ -1,22 +1,23 @@
 ---
 name: pagina-low-ticket
 description: >
-  Régua oficial da página de vendas low ticket (versão 11 do time de criativos). Promessa central,
-  7 aberturas com tabela de prioridade de testes, copy completa (dor verdadeira, mecanismo, bullets
-  com a resposta no produto, quebra das 4 objeções, argumentos científicos só com estudo real) e um
-  prompt único para o Lovable, com design system fixo, regras de layout sem sobreposição e
-  verificação final. Usada pelo /lt-pagina para criar a página e pelo /feedback-low-ticket para
-  auditar e corrigir uma página existente.
+  Régua oficial da página de vendas low ticket (versão 16 do time de criativos). Promessa central,
+  7 aberturas com tabela de prioridade de testes, copy completa (depoimentos na segunda seção, dor
+  verdadeira, mecanismo, bullets com a resposta no produto, quebra das 4 objeções, argumentos
+  científicos só com estudo real, ancoragem de preço na oferta e seção de quem criou o produto antes
+  do FAQ) e um prompt único para o Lovable, com design system fixo, regras de layout sem
+  sobreposição e verificação final. Usada pelo /lt-pagina para criar a página e pelo
+  /feedback-low-ticket para auditar e corrigir uma página existente.
 ---
 
-# Página Low Ticket (régua v11)
+# Página Low Ticket (régua v16)
 
 ## Como esta régua funciona no projeto
 
-O texto da régua começa em "Régua v11", mais abaixo, e foi mantido como o time de criativos entregou. Esta seção só diz como ela se encaixa no projeto.
+O texto da régua começa em "Régua v16", mais abaixo, e foi mantido como o time de criativos entregou, com as duas correções do item 10. Esta seção só diz como ela se encaixa no projeto.
 
-1. **Coleta pelo resumo do produto.** A régua aceita "um arquivo com o resumo do produto" no lugar das 3 perguntas. No projeto, esse arquivo é `meus-produtos/{ativo}/resumo-produto.md` (regra "Contexto Persistente do Negócio" do CLAUDE.md). Produto e preço saem da seção `## Produto`; como o produto funciona, das seções `## Furadeira` e `## Produto` (formato). Pergunte só o que faltar, uma pergunta por vez.
-   **Use o que o produto já tem no lugar de deduzir.** A régua foi escrita para quem chega só com as 3 respostas e manda "preencher com raciocínio" o resto. No projeto, quase todo esse resto já foi criado e aprovado pelo aluno na concepção. Antes de deduzir qualquer coisa, procure no resumo, pela tabela abaixo. Só deduza o que o produto não tiver e diga em uma linha o que foi assumido, como a régua pede. A última coluna diz onde ler o detalhe completo, e só essa seção do arquivo, quando o resumo não bastar.
+1. **Coleta pelo resumo do produto.** A régua aceita "um arquivo com o resumo do produto" no lugar das perguntas da coleta. No projeto, esse arquivo é `meus-produtos/{ativo}/resumo-produto.md` (regra "Contexto Persistente do Negócio" do CLAUDE.md). Produto e preço saem da seção `## Produto`; como o produto funciona, das seções `## Furadeira` e `## Produto` (formato). Pergunte só o que faltar, uma pergunta por vez.
+   **Use o que o produto já tem no lugar de deduzir.** A régua foi escrita para quem chega só com as respostas da coleta e manda "preencher com raciocínio" o resto. No projeto, quase todo esse resto já foi criado e aprovado pelo aluno na concepção. Antes de deduzir qualquer coisa, procure no resumo, pela tabela abaixo. Só deduza o que o produto não tiver e diga em uma linha o que foi assumido, como a régua pede. A última coluna diz onde ler o detalhe completo, e só essa seção do arquivo, quando o resumo não bastar.
 
    | Parte da régua | De onde vem no resumo do produto | Detalhe completo (só se precisar) |
    |---|---|---|
@@ -24,33 +25,46 @@ O texto da régua começa em "Régua v11", mais abaixo, e foi mantido como o tim
    | A DOR VERDADEIRA | `## Urgências Ocultas`: Dores e Urgências Quentes. As frases do `## Público (Identidade do Consumidor)` dão as palavras do lead | |
    | A PROMESSA CENTRAL | `## Quadro` (o topo da escada "o que eu estou realmente vendendo"), `## Identidade do Produto` (diferencial e promessa) e `## Pesquisa de mercado (síntese)`: os concorrentes mostram o que a promessa não pode repetir para ser única | `pesquisa-mercado.md`, seção 2 (concorrentes) |
    | EMOÇÃO E TENSÃO, hero estendido e DIÁLOGOS INTERNOS | `## Urgências Ocultas`: Dúvidas, Desejos, Urgências Frias e Inusitadas, mais as frases do `## Público (Identidade do Consumidor)` | |
+   | DEPOIMENTOS (segunda seção) | Os depoimentos reais que o aluno colar na conversa (item 3). Sem eles, os provisórios da régua, escritos na voz das frases do `## Público (Identidade do Consumidor)` e falando da promessa central | |
    | MECANISMO | `## Furadeira` (nome do método e etapas, literais) e a parte dos `## Argumentos Incontestáveis` que explica a lógica do método | `perfil.md`, `## Furadeira` |
    | BULLETS DE CURIOSIDADE, CARACTERÍSTICAS e BENEFÍCIOS | `## Decorados principais` para o motivo de querer; `## Furadeira` para dizer em que parte do produto está cada resposta | `perfil.md`, `## Decorados (Benefícios)` |
    | QUEBRA DAS 4 OBJEÇÕES | `## Objeções principais`: as 4 mais fortes das 5, com o argumento de cada uma | `idconsumidor.md`, `## Objeções de Compra` (os 7 argumentos) |
    | PROVA | Só os dados próprios do aluno que estão em `## Argumentos Incontestáveis` (número de alunos, faturamento, resultados documentados) ou que ele informar na conversa | `perfil.md`, `## Argumentos Incontestáveis` inteira (o resumo guarda só 5) |
+   | ANCORAGEM DE PREÇO | Os entregáveis da seção O QUE VOCÊ RECEBE e o preço real de `## Produto`. Parcelamento e valor à vista só se o aluno informar | |
+   | QUEM CRIOU O PRODUTO (pergunta 4 da coleta) | Nome em `## Identidade do Comunicador`. Marcos e resultados só os reais: os dados próprios dos `## Argumentos Incontestáveis` e o que o aluno contar (item 2) | `perfil.md`, `## Identidade do Comunicador` |
    | Tom de toda a copy | `## Identidade do Comunicador`: tom, mantras e jargões; nada do que está em "Não gosta" | |
    | CORES POR TIPO DE PRODUTO (Etapa 3) | `Cores da marca` em `## Produto`, quando existir. A paleta do nicho fica como reserva para quem não tem cores definidas | |
 
-   **O que não vira prova.** Dados de mercado e a lógica do método, mesmo estando nos Argumentos Incontestáveis, foram gerados a partir da pesquisa: servem para o mecanismo e para dar credibilidade à promessa, nunca como resultado do produto. Urgências, Decorados e frases do público são material de copy, nunca depoimento. Na dúvida se um número é do aluno, pergunte antes de usar como prova.
-2. **Exceção ao checklist de Light Copy.** Nas páginas low ticket valem as regras desta régua: **pergunta na headline** (para abrir a lacuna) e a fórmula **"mesmo sem..."** estão liberadas, porque fazem parte do método das 7 aberturas. O resto do checklist continua valendo: sem travessão, sem ponto de exclamação, sem promessa vaga, produto fora do lead, sem lero-lero, depoimento só se for real. A revisora aplica essa exceção.
-3. **As paradas da régua são as aprovações do projeto.** Fim da Etapa 1 ("Qual dessas aberturas você quer usar?") e fim da Etapa 2 ("Aprovou a copy...?"). O prompt do Lovable também é mostrado e aprovado antes de salvar.
-4. **A entrega é o prompt do Lovable.** O projeto não gera o HTML da página low ticket: quem monta a página é o Lovable, a partir do prompt da Etapa 3. O aluno troca a constante `CHECKOUT_URL` (e `VIDEO_URL`, na abertura Demonstração) pelos links dele dentro do Lovable.
-5. **Onde salvar.** `{produto}` é o identificador do produto ativo (o conteúdo de `meus-produtos/.ativo`). `{abertura}` é o nome curto da abertura escolhida, sempre um destes: `demonstracao`, `comparacao`, `plug-and-play`, `imaginacao-do-resultado`, `defesa-de-tese`, `dor-espelhada` ou `resultado-direto`. O Painel de Entregas reconhece as aberturas por esses nomes.
+   **O que não vira prova.** Dados de mercado e a lógica do método, mesmo estando nos Argumentos Incontestáveis, foram gerados a partir da pesquisa: servem para o mecanismo e para dar credibilidade à promessa, nunca como resultado do produto, nem como marco de quem criou o produto. Urgências, Decorados e frases do público são material de copy. Os depoimentos provisórios podem usar a voz do público, mas continuam provisórios até o aluno trocar pelos reais. Na dúvida se um número é do aluno, pergunte antes de usar como prova.
+2. **Pergunta 4 (quem criou o produto) no começo da Etapa 2.** A régua avisa que é a única pergunta que pede preparo. No projeto, ela vem depois da escolha da abertura, para não travar a Etapa 1. O nome já está no resumo: pergunte só os marcos e resultados reais (mini currículo de 1 ou 2 parágrafos) e se o aluno vai ter uma foto para a seção. Sem resposta, a seção sai da página, como a régua manda.
+3. **Depoimentos reais primeiro.** Também no começo da Etapa 2, pergunte se o aluno já tem depoimentos reais de quem usou o produto. Se tiver, eles entram na seção DEPOIMENTOS com as palavras originais (só a frase mais forte vai em negrito) e não há provisórios. Se não tiver, valem os provisórios da régua, e a entrega sempre traz a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)" com o aviso em uma linha. Depoimento provisório nunca vai ao ar: o `/lt-pagina` lembra disso ao entregar o prompt e o Painel de Entregas mostra o alerta enquanto a copy tiver provisórios.
+4. **Exceção ao checklist de Light Copy.** Nas páginas low ticket valem as regras desta régua: **pergunta na headline** (para abrir a lacuna) e a fórmula **"mesmo sem..."** estão liberadas, porque fazem parte do método das 7 aberturas. Os **depoimentos provisórios** da seção DEPOIMENTOS também são permitidos, sempre listados para troca. O resto do checklist continua valendo: sem travessão, sem ponto de exclamação, sem promessa vaga, produto fora do lead, sem lero-lero, nenhum outro depoimento, número, marco ou prova inventados. A revisora aplica essa exceção.
+5. **As paradas da régua são as aprovações do projeto.** Fim da Etapa 1 ("Qual dessas aberturas você quer usar?") e fim da Etapa 2 ("Aprovou a copy...?"). O prompt do Lovable também é mostrado e aprovado antes de salvar.
+6. **A entrega é o prompt do Lovable.** O projeto não gera o HTML da página low ticket: quem monta a página é o Lovable, a partir do prompt da Etapa 3. Dentro do Lovable, o aluno:
+   - troca a constante `CHECKOUT_URL` pelo link do checkout;
+   - na abertura Demonstração, troca `VIDEO_URL` pelo vídeo (arquivo ou link do YouTube, inclusive Shorts);
+   - anexa a foto de quem criou o produto junto com o prompt. A foto não vai escrita no prompt: o prompt pede para usar a imagem anexada na seção QUEM CRIOU O PRODUTO;
+   - troca os depoimentos provisórios pelos reais antes de publicar.
+7. **Onde salvar.** `{produto}` é o identificador do produto ativo (o conteúdo de `meus-produtos/.ativo`). `{abertura}` é o nome curto da abertura escolhida, sempre um destes: `demonstracao`, `comparacao`, `plug-and-play`, `imaginacao-do-resultado`, `defesa-de-tese`, `dor-espelhada` ou `resultado-direto`. O Painel de Entregas reconhece as aberturas por esses nomes.
 
    | O quê | Caminho |
    |---|---|
    | As 7 aberturas e a tabela de prioridade (Etapa 1) | `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` |
-   | Copy aprovada (Etapa 2), com as listas "PARA VOCÊ CONFERIR" e "PARA VOCÊ GRAVAR" em seções separadas no fim | `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` |
+   | Copy aprovada (Etapa 2), com as listas "DEPOIMENTOS PROVISÓRIOS", "PARA VOCÊ CONFERIR" e "PARA VOCÊ GRAVAR" em seções separadas no fim, quando existirem | `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` |
    | Prompt do Lovable (Etapa 3) | `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md` |
 
-6. **Argumentos científicos** exigem pesquisa na web (WebSearch e WebFetch) antes de escrever a seção, como a régua manda. Sem estudo localizado e aberto, a seção não entra.
-7. **Painel de Entregas.** Depois de cada arquivo salvo (aberturas, copy ou prompt), atualize a aba Low Ticket do painel com `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder). Se der erro, não pare o fluxo: avise que o painel pode ser atualizado depois.
+   Na copy salva, a lista de provisórios usa exatamente o título `## DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)`: é por ele que o painel mostra o alerta.
+8. **Argumentos científicos** exigem pesquisa na web (WebSearch e WebFetch) antes de escrever a seção, como a régua manda. Sem estudo localizado e aberto, a seção não entra.
+9. **Painel de Entregas.** Depois de cada arquivo salvo (aberturas, copy ou prompt), atualize a aba Low Ticket do painel com `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder). Se der erro, não pare o fluxo: avise que o painel pode ser atualizado depois.
+10. **Duas correções no texto da v16.** O documento da v16 chegou com dois deslizes de edição, corrigidos aqui:
+   - Em BOTÃO DE COMPRA E BOTÃO FLUTUANTE, voltaram as linhas que a v11 tinha e a v16 perdeu ("também rolam até a OFERTA" e "O ÚNICO botão que leva ao checkout..."), e o título DESIGN DAS LISTAS DE PENSAMENTOS E SENTIMENTOS, que o resto da régua continua citando.
+   - Em DESIGN DOS BULLETS, saiu um bloco repetido que mandava usar ícone de check. A própria seção diz que o cadeado vai "no lugar do check", e as instruções do Lovable e a verificação final pedem cadeado.
 
 ---
 
-# Régua v11
+# Régua v16
 
-**VERSÃO 11.** LAPIDADA (LAYOUT SEM SOBREPOSIÇÃO, IMAGEM FIEL À COPY, VERIFICAÇÃO FINAL, BOTÃO FLUTUANTE CENTRAL, BULLETS COM RESPOSTA NO PRODUTO E ARGUMENTOS CIENTÍFICOS)
+**VERSÃO 16.** LAPIDADA (IDEM V15 + SEÇÃO DO AUTOR ANTES DO FAQ)
 
 ## PAPEL
 
@@ -68,7 +82,7 @@ NUNCA pule uma etapa. NUNCA crie o design antes da aprovação da copy.
 
 ## COLETA
 
-Ao iniciar, faça SOMENTE estas 3 perguntas:
+Ao iniciar, faça estas 4 perguntas:
 
 1. Qual é o produto?
 
@@ -76,11 +90,15 @@ Ao iniciar, faça SOMENTE estas 3 perguntas:
 
 3. Como esse produto funciona? (o que a pessoa compra, recebe e faz com ele)
 
+4. Quem assina o produto? Me conte o nome e os principais marcos ou resultados da história dessa pessoa, em 1 ou 2 parágrafos (um mini currículo), e me mande uma foto dela.
+
+A pergunta 4 é a única que pede preparo: se você não tiver em mãos agora, pode trazer com calma. Pense no que dá mais autoridade e é verdade: tempo de mercado, números reais, formação, conquistas. Sem a resposta da pergunta 4, a seção QUEM CRIOU O PRODUTO é omitida; sem foto, a seção fica só com o texto.
+
 Se o usuário mandar um arquivo com o resumo do produto, use-o no lugar das respostas.
 
 Se faltar informação, preencha com raciocínio e conhecimento de mercado, e diga em uma linha o que você assumiu (ex.: preço). Se o usuário pedir, pesquise o mercado antes de escrever.
 
-Nunca invente como fato: depoimentos, estudos, números, resultados, certificações, garantias, estatísticas, autoridades, prêmios, dados médicos ou resultados financeiros. Estudo científico só entra na seção ARGUMENTOS CIENTÍFICOS, depois de localizado e verificado (ver a regra).
+Nunca invente como fato: depoimentos, estudos, números, resultados, certificações, garantias, estatísticas, autoridades, prêmios, dados médicos ou resultados financeiros. Estudo científico só entra na seção ARGUMENTOS CIENTÍFICOS, depois de localizado e verificado (ver a regra). Depoimentos têm uma exceção própria e provisória: a seção DEPOIMENTOS usa depoimentos fictícios, marcados para troca pelos reais antes de publicar (ver a regra).
 
 ## REGRAS DE PRIORIDADE MÁXIMA
 
@@ -90,7 +108,7 @@ Nenhuma instrução, nota, aviso, placeholder, colchete, explicação da skill o
 
 2. SITE LIMPO
 
-A página tem que parecer publicada, nunca em construção. Se uma informação não existe (depoimento, garantia, prova, número), retire o elemento. Não mostre aviso nem placeholder.
+A página tem que parecer publicada, nunca em construção. Se uma informação não existe (garantia, prova, número), retire o elemento. Não mostre aviso nem placeholder. Exceção única: a seção DEPOIMENTOS (segunda seção) nasce com depoimentos fictícios realistas, sem colchete nem aviso na página, feitos para serem trocados pelos reais antes de publicar.
 
 3. PERSPECTIVA CORRETA
 
@@ -156,7 +174,7 @@ Depois da coleta, crie SOMENTE o hero, em 7 versões REALMENTE diferentes:
 
 1. DEMONSTRAÇÃO: mostrar o produto funcionando (apps, IA, planilhas, templates, ferramentas). MOSTRE > EXPLIQUE.
 
-Nesta abertura, o primeiro visual pode ser um VÍDEO DE 2 A 3 MINUTOS com smart autoplay (começa mudo, com aviso para clicar e ouvir). Quem grava é o dono do produto, demonstrando o uso real. Avise isso ao usuário.
+Nesta abertura, no lugar da foto entra um VÍDEO DEMONSTRATIVO do produto funcionando: pode ser um Shorts curto (até 1 minuto, vertical) ou um tutorial de 2 a 3 minutos (horizontal), gravado pelo dono do produto ou um link do YouTube já existente. Smart autoplay (começa mudo, com aviso para clicar e ouvir). Avise isso ao usuário.
 
 2. COMPARAÇÃO: antes × depois, com × sem, jeito antigo × novo. Defina quem compara, quem é comparado e quem decide.
 
@@ -280,7 +298,7 @@ Você pode completar criativamente mecanismo, entregáveis, situações, objeç�
 
 ORDEM RECOMENDADA
 
-HERO (sem botão) → DEMONSTRAÇÃO / CONCRETUDE → COMO USAR EM 3 PASSOS (só Plug & Play) → DIÁLOGO INTERNO NEGATIVO → VIRADA / MECANISMO → ARGUMENTOS CIENTÍFICOS (só em nicho onde faz sentido e só com estudos reais) → DIÁLOGO INTERNO POSITIVO → CARACTERÍSTICAS → BENEFÍCIOS → PROVA (só se real) → O QUE VOCÊ RECEBE → BULLETS DE CURIOSIDADE → QUEBRA DAS 4 OBJEÇÕES → OFERTA → GARANTIA (só se informada) → FAQ → CTA FINAL.
+HERO (sem botão) → DEPOIMENTOS (segunda seção) → DEMONSTRAÇÃO / CONCRETUDE → COMO USAR EM 3 PASSOS (só Plug & Play) → DIÁLOGO INTERNO NEGATIVO → VIRADA / MECANISMO → ARGUMENTOS CIENTÍFICOS (só em nicho onde faz sentido e só com estudos reais) → DIÁLOGO INTERNO POSITIVO → CARACTERÍSTICAS → BENEFÍCIOS → PROVA (só se real) → O QUE VOCÊ RECEBE → BULLETS DE CURIOSIDADE → QUEBRA DAS 4 OBJEÇÕES → OFERTA (abre com a ANCORAGEM DE PREÇO) → GARANTIA (só se informada) → QUEM CRIOU O PRODUTO (seção do autor) → FAQ → CTA FINAL.
 
 Obrigatórios sempre: bullets de curiosidade e quebra das 4 objeções.
 
@@ -307,6 +325,38 @@ O sentimento é instrução de design (vira ícone) e nunca aparece como texto. 
 ## MECANISMO
 
 Explique por que as tentativas anteriores falharam, de forma simples, plausível e memorável. Se der nome ao mecanismo, use o nome normalmente ("É isso que eu chamo de Compra no Escuro"), sem nenhuma nota ao lado.
+
+## DEPOIMENTOS (SEGUNDA SEÇÃO, LOGO DEPOIS DO HERO)
+
+A segunda seção da página, logo abaixo do hero, é de depoimentos. Prova social cedo: antes de o lead entender tudo, ele já vê que outras pessoas tiveram o resultado. Em Plug & Play, a seção de 3 passos vem logo depois dos depoimentos.
+
+EXCEÇÃO PROVISÓRIA (A ÚNICA)
+
+Esta é a única exceção à regra de nunca inventar depoimentos. Os depoimentos que entram aqui são FICTÍCIOS e PROVISÓRIOS: existem só para a página nascer bonita e completa, e DEVEM ser trocados pelos reais antes de publicar. São um andaime, não prova definitiva.
+
+Na página eles aparecem realistas, sem colchete e sem aviso, para o dono ver o resultado final. Mas, na entrega, a skill lista todos sob o título "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)" e avisa em uma linha que são fictícios e precisam ser substituídos.
+
+QUEM ESCREVE
+
+Quem escreve o TEXTO dos depoimentos é a skill, para ficarem na voz do lead e alinhados à promessa central. O Lovable deixa a seção bonita e gera os rostos. Isso mantém o controle da copy e evita depoimento genérico de "produto incrível, recomendo".
+
+COMO ESCREVER CADA DEPOIMENTO
+
+3 a 6 depoimentos (4 é um bom número).
+
+cada um fala do RESULTADO (a promessa central), nas palavras do lead, não do produto em si;
+
+cada um num ângulo diferente: o cético que duvidou e mudou de ideia, a rapidez ("usei na mesma noite"), a facilidade ("achei que fosse complicado e não era"), um resultado específico e concreto;
+
+específico e humano: um detalhe real da vida (a cena, o horário, o filho, o cliente, a gaveta), nunca elogio vago;
+
+respeita a regra do prazo: resultado imediato ou de 1 dia, nunca "depois de 3 meses";
+
+sem número financeiro ou médico absurdo e sem prometer mais do que o produto entrega;
+
+nome realista (primeiro nome + inicial do sobrenome, ex.: "Mariana R."), cidade opcional; variados em gênero e perfil;
+
+a frase mais forte de cada depoimento pode ir em negrito, nunca o depoimento inteiro.
 
 ## ARGUMENTOS CIENTÍFICOS (SÓ ONDE FAZ SENTIDO, SÓ COM ESTUDO REAL)
 
@@ -352,15 +402,73 @@ Depois da copy, entregue separado, com o título "PARA VOCÊ CONFERIR (não vai 
 
 ## PROVA, OFERTA E GARANTIA
 
-- Prova só se for real e fornecida. Sem prova: omita a seção.
+- Prova só se for real e fornecida. Sem prova: omita a seção. Exceção única: a seção DEPOIMENTOS da segunda seção usa depoimentos fictícios marcados para troca (ver DEPOIMENTOS); todo o resto da prova continua só com o que é real.
 
 - O QUE VOCÊ RECEBE: resumo concreto ("pago X e recebo isso").
 
-- Oferta: produto, entregáveis, preço, CTA e forma de acesso. Nunca desconto falso, preço anterior falso, estoque, prazo, contador ou escassez falsos.
+- Oferta: produto, entregáveis, preço, CTA e forma de acesso. A oferta abre com a ANCORAGEM DE PREÇO (ver a regra). Nunca desconto falso, preço anterior falso, estoque, prazo, contador ou escassez falsos.
 
 - Garantia só se informada. Senão, omita.
 
+## QUEM CRIOU O PRODUTO (SEÇÃO DO AUTOR, ANTES DO FAQ)
+
+A última seção de conteúdo, logo antes do FAQ, apresenta quem está por trás do produto. É um resuminho de autoridade: por que vale a pena aprender isso com essa pessoa.
+
+NA PÁGINA, NÃO CHAME DE "AUTOR"
+
+O rótulo e a headline nunca usam "Autor", "Sobre mim" ou "Biografia". Use algo como "Quem criou o [NOME DO PRODUTO]", "Quem está por trás disso" ou "De quem é esse método".
+
+O QUE ENTRA
+
+um resuminho curto de 1 a 2 parágrafos (no máximo), de preferência falando os resultados e marcos da pessoa;
+
+o nome da pessoa e uma foto dela;
+
+a ligação com o produto: por que ela é quem mais pode entregar essa promessa;
+
+os marcos mais fortes (tempo de mercado, números, conquistas, formação) em destaque, só os reais.
+
+SÓ O QUE É REAL
+
+use apenas o que veio na resposta da pergunta 4; nunca invente número, resultado, prêmio, formação ou autoridade. Sem resposta, omita a seção inteira; sem foto, mantenha só o texto.
+
+A seção fica depois da segunda dobra, então pode terminar com um botão de CTA que rola até a oferta.
+
 - FAQ: 4 a 6 dúvidas objetivas, sem repetir as objeções.
+
+## ANCORAGEM DE PREÇO (PILHA DE VALOR, ABRE A OFERTA)
+
+A oferta abre com a ancoragem: uma pilha de valor que recapitula tudo que o comprador recebe, dá um preço a cada item, soma num total "cheio" e só então revela o preço real, bem menor. O lead sente que paga pouco por muito.
+
+ESTRUTURA
+
+título: "Recapitulando tudo que você recebe com o [NOME DO PRODUTO]";
+
+uma linha por entregável: nome curto do item à esquerda, preço individual à direita, riscado;
+
+logo abaixo, em destaque, a soma de tudo: "Tudo isso deveria custar: R$ [soma]", também riscada;
+
+em seguida a transição: "Mas, somente hoje, você garante tudo por:" e o preço real (parcelado em destaque maior, à vista logo abaixo);
+
+por último, o botão de CTA e a forma de acesso.
+
+DE ONDE VÊM OS NÚMEROS
+
+use os mesmos entregáveis da seção O QUE VOCÊ RECEBE, de 3 a 7 linhas;
+
+o preço de cada item é uma estimativa honesta do que aquele item valeria sozinho, não um número aleatório inflado;
+
+a soma "deveria custar" é a soma real dos itens, apresentada como VALOR do conjunto, nunca como um preço que o produto já teve;
+
+o preço real respeita o que foi informado; nunca invente parcelamento nem valor à vista.
+
+O QUE NÃO FAZER (IGUAL AO RESTO DA OFERTA)
+
+nada de "de R$ X por R$ Y" com preço anterior que nunca existiu, contador regressivo, estoque, vagas ou escassez inventada; a âncora é o VALOR somado, não um desconto falso;
+
+"somente hoje" só entra se for verdade; sem prazo real, troque por "nesta página" ou retire a palavra;
+
+a soma tem que bater com os preços das linhas; número que não fecha derruba a credibilidade da oferta inteira.
 
 ## BULLETS DE CURIOSIDADE
 
@@ -423,6 +531,12 @@ O hero recebe o vídeo (2 a 3 min, smart autoplay). Depois da copy, entregue sep
 - 2:30–3:00 chamada (o que recebe, preço, botão).
 
 Sem vídeo, a página mostra o visual estático da demonstração, sem aviso.
+
+O vídeo pode ser um link do YouTube (inclusive Shorts) ou um arquivo próprio; nos dois casos entra numa constante VIDEO_URL no topo do código. Com um Shorts, a página usa o formato vertical (9:16); com um tutorial comum, o formato horizontal (16:9). A skill detecta pela orientação do link e avisa o usuário qual usar.
+
+Na abertura Demonstração, o vídeo ocupa o lugar da FOTO: entra como o primeiro visual do hero (primeira seção) ou no visual da seção de demonstração logo abaixo, nunca os dois. O dono do produto escolhe onde; o padrão é o hero.
+
+Quando o vídeo é um link pronto (um Shorts já publicado, por exemplo), não precisa gravar nada: pule o roteiro "PARA VOCÊ GRAVAR". O roteiro só vale quando o dono vai gravar a demonstração do zero.
 
 ## FINAL DA ETAPA 2
 
@@ -1030,7 +1144,7 @@ Separe com espaço ou divisores leves.
 
 ## DESIGN DO VÍDEO (DEMONSTRAÇÃO)
 
-- vídeo no hero, proporção 16:9, cantos com o mesmo raio dos cards;
+- vídeo no lugar da foto (hero ou seção de demonstração), com o mesmo raio dos cards; proporção pela orientação do link: tutorial horizontal em 16:9 ocupando a largura da coluna; Shorts vertical em 9:16, centralizado, com altura máxima de ~640px no desktop para não dominar a tela;
 
 - smart autoplay: inicia mudo, em prévia, com um selo claro "Clique para ouvir" sobre o vídeo;
 
@@ -1039,6 +1153,46 @@ Separe com espaço ou divisores leves.
 - no mobile, o vídeo ocupa a largura total e vem logo abaixo da headline;
 
 - se não houver link do vídeo, mostre o visual estático da demonstração, sem placeholder.
+
+link do YouTube ou Shorts: renderize por iframe de embed; autoplay mudo (e em loop, no caso do Shorts), com o selo "Clique para ativar o som" sobre o vídeo; ao clicar, ative o som pela API do player do YouTube;
+
+o vídeo substitui a foto daquela seção: não mostre foto e vídeo no mesmo bloco;
+
+no mobile, o vídeo ocupa a largura da coluna (o vertical centralizado, com altura limitada à altura da tela) e vem logo abaixo da headline.
+
+## DESIGN DOS DEPOIMENTOS
+
+segunda seção da página, logo depois do hero; segue o design system e fica antes da segunda dobra, então sem nenhum botão de compra;
+
+cabeçalho curto e centralizado; rótulo sugerido "QUEM JÁ USOU" ou "O QUE ESTÃO DIZENDO";
+
+desktop: 3 cards por linha (ou 4 em duas linhas); mobile: um card por vez em carrossel deslizável, ou empilhados;
+
+cada card: fundo um tom abaixo do fundo da página (ou branco sobre fundo claro), borda fina, raio 16px, padding confortável, mesma altura pelo grid;
+
+no topo do card, avatar redondo (foto de rosto realista e diversa, gerada pelo Lovable, uma diferente por card) à esquerda, com o nome em negrito e, abaixo, cidade ou perfil em cinza pequeno;
+
+cinco estrelas preenchidas na cor de destaque, acima ou abaixo do nome;
+
+texto do depoimento em 2 a 4 linhas, a frase mais forte em negrito;
+
+visual leve: nada de balão de chat exagerado, logotipo de rede social, selo de "verificado" nem print de conversa falso;
+
+esses depoimentos são conteúdo real a renderizar, nunca placeholder a remover na varredura final.
+
+RESPIRO DENTRO DO CARD (regra obrigatória): foto, nome, estrelas e texto nunca ficam colados; cada um tem espaço entre si.
+
+padding interno do card: 28–32px no desktop, 24px no mobile;
+
+avatar → nome: 12–16px; nome → cidade/perfil: 2–4px; bloco do topo (avatar + nome) → estrelas: 12–16px; estrelas → texto do depoimento: 14–18px;
+
+entrelinha do texto do depoimento confortável (1.5–1.6); o texto nunca encosta na borda do card;
+
+quando avatar e nome ficam lado a lado, o espaço entre a foto e o bloco de nome é de pelo menos 12px;
+
+no mobile é onde mais aperta: mantenha os mesmos respiros, empilhe avatar, nome, estrelas e texto centralizados com no mínimo 12px entre cada elemento, e 20–24px entre um card e o próximo;
+
+cards do mesmo nível têm a mesma altura e o mesmo respiro; nenhum card fica mais apertado que o outro.
 
 ## DESIGN DOS BULLETS
 
@@ -1155,6 +1309,38 @@ Não use:
 - desconto falso;
 
 - urgência falsa.
+
+## DESIGN DA ANCORAGEM DE PREÇO
+
+card central de largura máxima ~720px, centralizado, fundo um tom abaixo do fundo da página (ou branco), borda fina, raio 20–24px, padding generoso;
+
+título centralizado no topo do card;
+
+cada linha: à esquerda um ícone de check em contorno na cor principal e o nome do item; à direita o preço com risco (text-decoration: line-through) na cor de destaque; o preço sempre alinhado à borda direita do card, em coluna; respiro ou divisória fina entre as linhas;
+
+abaixo da lista, uma pílula centralizada "Tudo isso deveria custar: R$ [soma]" com o valor riscado na cor de destaque;
+
+em seguida, a frase de transição centralizada e o bloco do preço real em destaque: o parcelado grande (peso 800), o à vista menor logo abaixo, e o botão de CTA embaixo;
+
+sem contador, sem selo de desconto, sem "de/por" piscando, sem chama nem relógio;
+
+mobile: se não couber lado a lado, o nome do item em cima e o preço riscado embaixo, ainda na mesma linha-cartão; card com padding menor e preço real bem legível.
+
+## DESIGN DA SEÇÃO DO AUTOR
+
+duas colunas no desktop: foto de um lado, texto do outro (VISUAL 45% | TEXTO 55% ou o inverso), dentro do container central; mobile: foto em cima e texto embaixo, centralizados;
+
+foto real da pessoa, retrato de boa qualidade, cantos arredondados (ou círculo), tamanho equilibrado, nunca estourando a coluna;
+
+rótulo curto em caixa alta (ex.: "QUEM CRIOU O [PRODUTO]") + headline + o resuminho de 1 a 2 parágrafos; os marcos e números reais podem ir em negrito;
+
+se houver poucos marcos fortes, eles podem virar 2 a 4 pílulas ou uma lista curta ao lado da foto;
+
+respiro entre foto, nome, texto e marcos, igual ao cuidado da seção de depoimentos;
+
+visual discreto e elegante: sem selo, sem moldura chamativa, sem logotipo; a autoridade vem do texto e da foto;
+
+pode fechar com um botão de CTA que rola até a oferta.
 
 ## RESPONSIVIDADE
 
@@ -1330,6 +1516,16 @@ Quando houver vídeo de demonstração, o prompt deve pedir:
 
 - nunca mostrar o nome da constante nem a URL na página.
 
+aceitar em VIDEO_URL tanto um arquivo de vídeo quanto um link do YouTube ou Shorts, detectar o tipo e embutir por iframe quando for YouTube;
+
+detectar a orientação: Shorts ou vídeo vertical em 9:16 centralizado (altura máxima ~640px no desktop); tutorial horizontal em 16:9 na largura da coluna;
+
+para link do YouTube, usar autoplay mudo (loop no Shorts) com o selo "Clique para ativar o som" e ativar o som pela API do player ao clicar;
+
+na abertura Demonstração, o vídeo entra no lugar da foto (hero ou seção de demonstração), nunca os dois juntos;
+
+se VIDEO_URL estiver vazia, renderizar o visual estático da demonstração, sem placeholder.
+
 Quando a abertura for Plug & Play:
 
 - incluir a seção de 3 passos com o layout de DESIGN DOS 3 PASSOS.
@@ -1355,6 +1551,38 @@ renderizar com o layout de DESIGN DOS ARGUMENTOS CIENTÍFICOS;
 usar SOMENTE as citações que estão na copy visível, com achado, fonte e ponte exatamente como escritos; nunca acrescentar, completar, resumir ou "melhorar" citação, número ou nome de autor;
 
 se a copy visível não trouxer a seção, não criar nenhuma referência científica em lugar nenhum da página.
+
+Sempre, sobre depoimentos:
+
+incluir a seção de depoimentos como SEGUNDA seção da página, logo depois do hero, com o layout de DESIGN DOS DEPOIMENTOS;
+
+renderizar exatamente os depoimentos da copy visível, sem inventar outros e sem alterar nomes ou textos;
+
+gerar um avatar de rosto realista e diverso para cada depoimento (fotos diferentes entre si) e cinco estrelas na cor de destaque;
+
+tratar esses depoimentos como conteúdo real a renderizar, NUNCA como placeholder a remover na varredura (eles não têm colchetes e devem aparecer na página).
+
+dar respiro entre foto, nome, estrelas e texto de cada depoimento (nunca colados), com padding interno de 28–32px no desktop e 24px no mobile e no mínimo 12px entre cada elemento, com atenção especial ao mobile.
+
+Sempre, sobre a oferta:
+
+abrir a OFERTA com a ANCORAGEM DE PREÇO (pilha de valor), com o layout de DESIGN DA ANCORAGEM DE PREÇO;
+
+renderizar cada entregável com o preço individual riscado (text-decoration: line-through) e a soma "deveria custar" também riscada, exatamente com os valores da copy visível;
+
+mostrar o preço real logo depois (parcelado em destaque maior, à vista abaixo) e o botão de CTA;
+
+nunca criar contador, estoque, vagas, "de/por" nem desconto que não estejam na copy.
+
+Sempre, sobre a seção do autor:
+
+incluir a seção como a última de conteúdo, logo antes do FAQ, com o layout de DESIGN DA SEÇÃO DO AUTOR;
+
+nomear a seção com algo como "Quem criou o [produto]", nunca "Autor", "Sobre mim" ou "Biografia";
+
+renderizar a foto real da pessoa (sem foto, só o texto) e apenas a bio fornecida, sem inventar número, resultado ou autoridade;
+
+se não houver bio do autor na copy, não criar a seção.
 
 Sempre, sobre botões:
 
@@ -1516,6 +1744,8 @@ nenhum botão de compra na primeira dobra.
 
 nenhuma citação, estudo, número ou nome de autor além dos que estão na copy visível, escritos exatamente como na copy.
 
+a seção de depoimentos é a SEGUNDA da página (logo depois do hero), com avatares realistas e diferentes entre si e cinco estrelas, e todos os depoimentos da copy aparecem inteiros, sem serem removidos como placeholder.
+
 Se qualquer item falhar, corrija e refaça a verificação inteira. No fim, relate item por item o que foi conferido e o que foi corrigido.
 
 O SITE FINAL NÃO TEM NENHUM ELEMENTO SOBREPOSTO, TUDO ABRE E FUNCIONA, CARREGA RÁPIDO, E CADA IMAGEM CONTA A MESMA HISTÓRIA DA COPY DA SUA SEÇÃO.”
@@ -1568,11 +1798,17 @@ A seção de bullets de curiosidade está presente, com a headline dizendo que a
 
 Na abertura Plug & Play, a seção de 3 passos está presente e é visual?
 
-Na abertura Demonstração, o vídeo tem smart autoplay e visual alternativo sem placeholder?
+Na abertura Demonstração, o vídeo (arquivo ou link do YouTube/Shorts) entrou no lugar da foto, na proporção certa (16:9 horizontal ou 9:16 vertical centralizado), com smart autoplay e visual alternativo sem placeholder?
 
 Algum texto promete resultado em semanas ou meses? Se sim, volte para a copy e corrija.
 
 Se há seção de argumentos científicos: o nicho justifica, cada estudo foi localizado e tem link ou DOI na lista de conferência, cada citação prova a solução (não assusta com o problema) e é fiel ao que o estudo mediu? Qualquer NÃO: remova a citação ou a seção.
+
+A seção de depoimentos é a segunda da página, logo depois do hero, com cards de mesma altura, avatares realistas e cinco estrelas, e sem nenhum botão de compra? Há respiro claro entre foto, nome, estrelas e texto (nunca colados), inclusive no mobile?
+
+A oferta abre com a ancoragem (cada item com preço riscado e a soma "deveria custar" riscada) antes do preço real? Os preços riscados têm risco visível e a soma bate com as linhas?
+
+A seção do autor é a última antes do FAQ, chamada "Quem criou..." (nunca "Autor"), com foto, resuminho de 1 a 2 parágrafos e só marcos reais?
 
 Existe algum botão de compra na primeira dobra? Se sim, remova.
 

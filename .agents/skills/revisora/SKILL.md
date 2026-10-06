@@ -119,6 +119,8 @@ Se o texto citar uma sigla, acrônimo ou nome de técnica sem explicar o que é 
 
 Se houver depoimentos que apenas elogiam ("material lindo", "professor incrível", "mudou minha vida", "recomendo muito") sem mencionar resultado específico, número, prazo ou mudança tangível, sinalize: `[REVISORA: depoimento fraco. Exigido: antes + resultado específico com número + prazo + palavras-chave em negrito. Ver Manual Parte 2, princípio 14.]`
 
+**Exceção: páginas low ticket** (mesma régua do item 1.3). Quando o aluno ainda não tem depoimentos reais, a seção DEPOIMENTOS nasce com depoimentos provisórios (fictícios). Não os sinalize por serem inventados; confira só se seguem a régua (resultado imediato, um ângulo por depoimento, detalhe concreto da vida) e se a entrega traz a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)". Se a lista faltar, sinalize: `[REVISORA: depoimentos provisórios sem a lista de troca. Incluir a lista antes de entregar.]`
+
 ### 4.6 Autoridade genérica (flag)
 
 Se a seção do criador disser "sou apaixonada pelo que faço", "passei por percalços", "tenho experiência no mercado" sem números, faturamento, maior cliente, maior projeto, prêmios ou quantidade de alunos com resultado, sinalize: `[REVISORA: autoridade genérica. Trocar por conquista concreta (faturamento, maior projeto, prêmios, alunos formados). Ver Manual Parte 2, princípio 15.]`

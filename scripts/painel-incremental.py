@@ -1203,7 +1203,7 @@ def parse_comercial_playbook(slug: str, produto_dir: Path) -> dict:
     }
 
 
-# Nomes curtos das 7 aberturas da régua v11 (usados nos nomes de arquivo).
+# Nomes curtos das 7 aberturas da régua low ticket (usados nos nomes de arquivo).
 ABERTURAS_LT = {
     "demonstracao": "Demonstração",
     "comparacao": "Comparação",
@@ -1305,10 +1305,13 @@ def parse_low_ticket(slug: str, produto_dir: Path) -> dict:
     lista = []
     for chave, arquivos in testes.items():
         mtime = max(p.stat().st_mtime for p in arquivos.values())
+        # A régua v16 lista os depoimentos fictícios sob este título até o aluno trocar pelos reais.
+        provisorios = "copy" in arquivos and "DEPOIMENTOS PROVISÓRIOS" in ler_arquivo(arquivos["copy"]).upper()
         lista.append({
             "abertura": _rotulo_abertura(chave),
             "copy": rel(arquivos["copy"]) if "copy" in arquivos else "",
             "prompt": rel(arquivos["prompt"]) if "prompt" in arquivos else "",
+            "provisorios": provisorios,
             "atualizado_em": _data_arquivo(mtime),
             "_mtime": mtime,
             "_copy_path": arquivos.get("copy"),

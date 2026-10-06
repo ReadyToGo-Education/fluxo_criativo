@@ -1,9 +1,9 @@
 ---
 name: workshop-marketing:lt-pagina
-description: Criar a página de vendas low ticket pela régua v11 do time de criativos. Promessa central, 7 aberturas (Demonstração, Comparação, Plug & Play, Imaginação do Resultado, Defesa de Tese, Dor Espelhada, Resultado Direto) com tabela de prioridade de testes, copy completa e um prompt único para o Lovable montar a página.
+description: Criar a página de vendas low ticket pela régua v16 do time de criativos. Promessa central, 7 aberturas (Demonstração, Comparação, Plug & Play, Imaginação do Resultado, Defesa de Tese, Dor Espelhada, Resultado Direto) com tabela de prioridade de testes, copy completa (depoimentos na segunda seção, ancoragem de preço e seção de quem criou o produto) e um prompt único para o Lovable montar a página.
 ---
 
-# Página Low Ticket. Régua v11
+# Página Low Ticket. Régua v16
 
 Cria a página de vendas do produto low ticket em 3 etapas, com aprovação entre elas: promessa e 7 aberturas, copy completa e o prompt que o Lovable usa para montar a página.
 
@@ -108,23 +108,69 @@ Qual dessas aberturas você quer usar? Pode responder pelo número ou pelo nome.
 
 E pare.
 
-Quando o aluno escolher, salve as 7 aberturas e a tabela em `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` (servem para os próximos testes A/B), atualize o painel (item 7 da seção "Como esta régua funciona no projeto") e informe o caminho absoluto em uma linha.
+Quando o aluno escolher, salve as 7 aberturas e a tabela em `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` (servem para os próximos testes A/B), atualize o painel (item 9 da seção "Como esta régua funciona no projeto") e informe o caminho absoluto em uma linha.
 
 ---
 
 ## Passo 3. Etapa 2. Copy completa
 
+Antes de escrever, até três perguntas, uma por vez (itens 2 e 3 da seção "Como esta régua funciona no projeto").
+
+**3.1 Quem criou o produto.** O nome já está no resumo (`## Identidade do Comunicador`). Pergunte só os marcos:
+
+```
+Antes da copy, me conte quem está por trás do {nome do produto}.
+Em 1 ou 2 parágrafos: os principais marcos e resultados reais da
+sua história (tempo de mercado, números, formação, conquistas).
+Se tiver uma foto sua, você vai anexá-la no Lovable junto com o prompt.
+(ex: "Sou nutricionista há 12 anos, atendi mais de 3 mil pacientes e
+criei o método no consultório")
+
+Se preferir pular, responda "pular": a seção fica de fora da página.
+```
+
+Pule a pergunta quando os marcos reais já estiverem nos dados próprios dos `## Argumentos Incontestáveis`; nesse caso, só confirme se haverá foto.
+
+**3.2 Depoimentos reais.**
+
+```
+Você já tem depoimentos reais de quem usou o produto?
+
+1. Sim, vou colar aqui
+2. Ainda não (a página nasce com depoimentos provisórios, que você
+   troca pelos reais antes de publicar)
+
+Digite o número:
+```
+
+- **1:** peça para colar os depoimentos e use as palavras originais.
+- **2:** siga com os provisórios da régua.
+
+**3.3 Vídeo (só na abertura Demonstração).**
+
+```
+O vídeo de demonstração já existe ou você vai gravar?
+
+1. Já tenho o link (YouTube ou Shorts)
+2. Vou gravar (te entrego o roteiro)
+
+Digite o número:
+```
+
+Com link pronto, não entregue o roteiro "PARA VOCÊ GRAVAR" e diga qual formato a página vai usar: vertical para Shorts, horizontal para tutorial.
+
 ```
 🔍 Próximo passo: escrever a copy completa da página com a abertura escolhida. Tempo estimado: 3 a 5 minutos.
 ```
 
-Congele a estratégia e a perspectiva e siga a régua em "ETAPA 2. COPY COMPLETA" e nas seções seguintes até "FINAL DA ETAPA 2" (headlines de seção únicas, diálogos internos em lista, mecanismo, argumentos científicos, prova, oferta e garantia, bullets de curiosidade com a resposta no produto, quebra das 4 objeções, 3 passos na abertura Plug & Play e vídeo na abertura Demonstração).
+Congele a estratégia e a perspectiva e siga a régua em "ETAPA 2. COPY COMPLETA" e nas seções seguintes até "FINAL DA ETAPA 2" (headlines de seção únicas, diálogos internos em lista, mecanismo, depoimentos na segunda seção, argumentos científicos, prova, oferta e garantia, quem criou o produto antes do FAQ, ancoragem de preço abrindo a oferta, bullets de curiosidade com a resposta no produto, quebra das 4 objeções, 3 passos na abertura Plug & Play e vídeo na abertura Demonstração).
 
 - **Argumentos científicos:** decida pelo filtro de nicho da régua e diga em uma linha se entra ou não, e por quê. Se entrar, pesquise na web antes de escrever (`⏳ Passo: localizar e conferir os estudos.`). Sem pelo menos 2 estudos localizados e abertos, a seção não entra.
-- **Nada inventado como fato:** depoimento, número, garantia, prova e estudo só se forem reais. Sem a informação, o elemento sai da página.
+- **Nada inventado como fato:** número, garantia, prova, marco de quem criou o produto e estudo só se forem reais. Sem a informação, o elemento sai da página. A única exceção são os depoimentos provisórios da seção DEPOIMENTOS, quando o aluno ainda não tem os reais.
+- **Ancoragem de preço:** o valor de cada item é uma estimativa honesta e a soma tem que bater. Parcelamento, valor à vista e "somente hoje" só entram se forem verdade.
 - Aplique a rotina de auto-revisão de copy do CLAUDE.md, com a exceção da régua.
 
-Mostre a copy seção por seção e, separadas no fim, as listas "PARA VOCÊ CONFERIR (não vai na página)" (estudos) e "PARA VOCÊ GRAVAR (não vai na página)" (roteiro do vídeo), quando existirem. Termine **só** com:
+Mostre a copy seção por seção e, separadas no fim, as listas "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)" (com o aviso em uma linha de que são fictícios), "PARA VOCÊ CONFERIR (não vai na página)" (estudos) e "PARA VOCÊ GRAVAR (não vai na página)" (roteiro do vídeo), quando existirem. Termine **só** com:
 
 ```
 Aprovou a copy ou quer mudar alguma coisa antes de criarmos o design?
@@ -132,7 +178,7 @@ Aprovou a copy ou quer mudar alguma coisa antes de criarmos o design?
 
 E pare. Ajuste só o que o aluno pedir e pergunte de novo.
 
-Com a aprovação, salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` (a copy e, no fim, as listas para conferir e gravar), atualize o painel e informe o caminho absoluto.
+Com a aprovação, salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` (a copy e, no fim, as listas de depoimentos provisórios, para conferir e para gravar), atualize o painel e informe o caminho absoluto.
 
 ---
 
@@ -160,11 +206,14 @@ Com a aprovação, salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lo
 
 Para montar a página:
 1. Abra o Lovable (lovable.dev) e crie um projeto novo.
-2. Cole o prompt inteiro e envie.
+2. Cole o prompt inteiro e anexe a sua foto (para a seção de quem
+   criou o produto) antes de enviar.
 3. Quando a página ficar pronta, troque CHECKOUT_URL pelo link do seu
-   checkout (e VIDEO_URL pelo link do vídeo, se a abertura for
-   Demonstração).
-4. Confira a página no celular antes de publicar.
+   checkout (e VIDEO_URL pelo vídeo ou link do YouTube, se a abertura
+   for Demonstração).
+4. Troque os depoimentos provisórios pelos reais. Página com
+   depoimento inventado não vai ao ar.
+5. Confira a página no celular antes de publicar.
 ```
 
 ---
@@ -180,7 +229,7 @@ Com a página no ar, crie os criativos para levar tráfego até ela.
 
 Lembre também:
 - **Teste A/B:** para testar a próxima abertura da tabela, rode `/lt-pagina` de novo e escolha outra. A copy e o prompt ganham arquivos próprios.
-- **Painel de Entregas:** a aba Low Ticket mostra a promessa, a ordem de testes, as aberturas já criadas e a copy mais recente.
+- **Painel de Entregas:** a aba Low Ticket mostra a promessa, a ordem de testes, as aberturas já criadas, a copy mais recente e o alerta enquanto houver depoimentos provisórios.
 - **Revisão da página publicada:** `/feedback-low-ticket` audita a página pela mesma régua.
 
 ---
@@ -189,6 +238,6 @@ Lembre também:
 
 1. Nunca pular uma etapa. Nunca criar o design antes da aprovação da copy.
 2. Uma pergunta por vez, sempre com opções numeradas quando houver escolha.
-3. Nada inventado como fato: depoimento, estudo, número, garantia ou resultado.
-4. Nas páginas low ticket vale a exceção da régua: pergunta na headline e "mesmo sem" liberados. O resto do checklist de Light Copy continua valendo (sem travessão, sem ponto de exclamação, produto fora do lead, sem promessa vaga).
+3. Nada inventado como fato: estudo, número, garantia, resultado ou marco de quem criou o produto. Depoimento só real, com a única exceção dos provisórios da seção DEPOIMENTOS, sempre listados para troca e nunca publicados.
+4. Nas páginas low ticket vale a exceção da régua: pergunta na headline, "mesmo sem" e depoimentos provisórios liberados. O resto do checklist de Light Copy continua valendo (sem travessão, sem ponto de exclamação, produto fora do lead, sem promessa vaga).
 5. O projeto não gera o HTML da página low ticket: a entrega é o prompt do Lovable.
