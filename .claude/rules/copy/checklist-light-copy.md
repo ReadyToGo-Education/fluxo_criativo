@@ -46,3 +46,14 @@ O produto não aparece no lead. Nada de "curso", "treinamento", "compre", nome d
 - Toda página de vendas precisa de facilitação visual do método: diagrama, esquema, comparativo antes/depois ou representação gráfica. Um desenho simples vale mais que três parágrafos de explicação.
 - A seção de autoridade precisa da jornada de origem com fragilidade: o que o criador enfrentou antes de ter o método, qual foi a virada, por que isso existe.
 - Furadeira de low ticket (até R$97) deve ser simples e imediata: resultado de hoje para amanhã, sem método de 8 passos elaborados.
+
+---
+
+## Exceção: páginas low ticket (régua v11)
+
+Nas páginas low ticket (`/lt-pagina` e `/feedback-low-ticket`) vale a régua do time de criativos em `.claude/skills/pagina-low-ticket/SKILL.md`. Ela libera dois itens deste checklist:
+
+- **Item 3:** a pergunta na headline é permitida, porque abre a lacuna das 7 aberturas.
+- **Item 6:** as fórmulas da régua "mesmo sem [obstáculo]" (promessa central) e "Como [resultado] mesmo com [obstáculo]" (bullets) são permitidas.
+
+Todos os outros itens continuam valendo nessas páginas.

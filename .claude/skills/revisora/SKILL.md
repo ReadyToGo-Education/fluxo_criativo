@@ -51,11 +51,15 @@ Copy Light Copy não grita. Troque todo "!" por ".".
 ### 1.3 Pergunta no gancho proibida
 Leads e primeiras linhas nunca começam com pergunta. Reescreva como afirmação.
 
+**Exceção: páginas low ticket** (`/lt-pagina` e `/feedback-low-ticket`, régua `.claude/skills/pagina-low-ticket/SKILL.md`). Ali a pergunta na headline é permitida, porque abre a lacuna das 7 aberturas. Não reescreva.
+
 ### 1.4 Estrutura "Não é X. É Y." proibida
 Substitua por afirmação direta de Y.
 
 ### 1.5 "Mesmo que" e "sem precisar" proibidos como muleta
 Use curiosidade, especificidade ou inadequação no lugar.
+
+**Exceção: páginas low ticket** (mesma régua do item 1.3). As fórmulas da régua "mesmo sem [obstáculo]" (promessa central) e "Como [resultado] mesmo com [obstáculo]" (bullets) são permitidas.
 
 ### 1.6 Produto fora do lead
 Nome do produto, "curso", "treinamento", "compre", nome do método ou sigla não podem aparecer nas primeiras linhas. O lead fala da dor, desejo ou transformação do leitor.
