@@ -311,6 +311,19 @@ def relativo(caminho: Path) -> str:
     return caminho.relative_to(RAIZ).as_posix()
 
 
+def escondidos_pelo_gitignore(caminhos: list[Path]) -> list[Path]:
+    """Arquivos gerados que o .gitignore deixaria fora do repositório."""
+    entrada = "\0".join(relativo(c) for c in caminhos).encode("utf-8")
+    try:
+        saida = subprocess.run(
+            ["git", "check-ignore", "--no-index", "-z", "--stdin"],
+            cwd=RAIZ, input=entrada, capture_output=True,
+        ).stdout
+    except OSError:
+        return []
+    return sorted({RAIZ / p for p in saida.decode("utf-8").split("\0") if p})
+
+
 def main() -> int:
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -332,12 +345,21 @@ def main() -> int:
         if p in existentes and normalizar(p.read_bytes()) != normalizar(esperado[p][0])
     )
     sobrando = sorted(existentes - set(esperado))
+    escondidos = escondidos_pelo_gitignore(sorted(esperado))
 
     for aviso in avisos:
         print(f"Aviso: {aviso}.")
+    if escondidos:
+        print(
+            f"Aviso: o .gitignore deixa {len(escondidos)} arquivo(s) gerado(s) fora do repositório "
+            f"(ex.: {relativo(escondidos[0])}). Libere .agents/ e .codex/ no .gitignore."
+        )
 
     if args.verificar:
-        pendencias = [("novo", p) for p in novos] + [("alterado", p) for p in alterados] + [("sobrando", p) for p in sobrando]
+        pendencias = (
+            [("novo", p) for p in novos] + [("alterado", p) for p in alterados]
+            + [("sobrando", p) for p in sobrando] + [("ignorado pelo git", p) for p in escondidos]
+        )
         if not pendencias:
             print("Tudo em dia: .agents/ e .codex/ batem com .claude/.")
             return 0
