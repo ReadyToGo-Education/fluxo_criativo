@@ -4,7 +4,7 @@ Documento de referência da **etapa obrigatória** que vem **depois** do `worksh
 
 ## Quando acionar
 
-Sempre que existir arquivo mergeado em `entregas/{ativo}/paginas/vendas-{slug}.html` (ou equivalente), o assistente deve considerar que o merge entrega um **esqueleto completo**, não a versão final de produção. A etapa de ajustes fecha o gap entre template genérico e página do produto real.
+Sempre que existir arquivo mergeado em `meus-produtos/{ativo}/entregas/paginas/vendas-{slug}.html` (ou equivalente), o assistente deve considerar que o merge entrega um **esqueleto completo**, não a versão final de produção. A etapa de ajustes fecha o gap entre template genérico e página do produto real.
 
 ## O que esta etapa é e o que não é
 
@@ -62,8 +62,8 @@ Sempre que existir arquivo mergeado em `entregas/{ativo}/paginas/vendas-{slug}.h
 
 | O quê | Caminho |
 | --- | --- |
-| Arquivos de imagem (upload ou gerados por script) | `entregas/{ativo}/paginas/assets/` |
-| Página HTML que usa essas imagens | `entregas/{ativo}/paginas/vendas-{slug}.html` (ou nome equivalente) |
+| Arquivos de imagem (upload ou gerados por script) | `meus-produtos/{ativo}/entregas/paginas/assets/` |
+| Página HTML que usa essas imagens | `meus-produtos/{ativo}/entregas/paginas/vendas-{slug}.html` (ou nome equivalente) |
 | Como o HTML referencia | Atributos `src="assets/nome.png"` (caminho relativo à pasta do HTML) |
 
 Sempre que o assistente mencionar imagens ao aluno, **verbalizar essa pasta** para não haver dúvida de onde abrir ou onde colar arquivos no explorador de pastas.
@@ -76,11 +76,11 @@ Se o aluno escolher **varredura completa** ou pedir explicitamente aplicar tudo,
 
 Para **imagens**, o fluxo guiado pelo comando `/pagina-ajuste` deve cobrir três caminhos:
 
-1. **Upload:** pasta `entregas/{ativo}/paginas/assets/`, nomes claros, atualizar `src` e `alt` no HTML; opcional `og:image` no `<head>`.
+1. **Upload:** pasta `meus-produtos/{ativo}/entregas/paginas/assets/`, nomes claros, atualizar `src` e `alt` no HTML; opcional `og:image` no `<head>`.
 2. **Ainda sem arquivo:** registrar slots recomendados no resumo; oferecer orientação de tamanho e nomenclatura.
 3. **Geração com IA (OpenRouter):** quando o aluno quiser gerar em vez de enviar, o assistente deve:
    - Apontar **referências de estilo e processo** em `references/playbook-evolucao-visual-html-landing.md` (prompts, estética corporativa, o que evitar).
-   - Apontar o **script** `scripts/generate-openrouter-nano-banana-images.py`, saída em `entregas/{slug}/paginas/assets/`, necessidade de `OPENROUTER_API_KEY` no `.env` na raiz (ver `.env.example`).
+   - Apontar o **script** `scripts/generate-openrouter-nano-banana-images.py`, saída em `meus-produtos/{slug}/entregas/paginas/assets/`, necessidade de `OPENROUTER_API_KEY` no `.env` na raiz (ver `.env.example`).
    - Depois de existirem os arquivos, tratar como upload: encaixar no HTML e OG se aplicável.
 
 A skill **`ferramentas`** documenta OpenRouter no contexto de anúncios; para **assets de página**, o playbook acima e o cabeçalho do script são a referência principal.

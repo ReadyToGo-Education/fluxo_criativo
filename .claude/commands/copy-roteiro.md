@@ -11,7 +11,7 @@ Cria roteiros nos 3 formatos principais do marketing VTSD, seguindo Light Copy.
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 Extraia internamente: Quadro, Furadeira, Urgências Ocultas, tom do público.
 

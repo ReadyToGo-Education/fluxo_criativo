@@ -55,7 +55,7 @@ Usar dados do produto ativo ({slug}) ou informar manualmente?
 2. Informar manualmente
 ```
 
-Se escolher 1, extraia do `perfil.md` (e dos demais arquivos do produto): produto, nicho, formato, preço, público. Avise em uma linha qual público assumiu se ele não estiver explícito.
+Se escolher 1, extraia de `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md): produto, nicho, formato, preço, público. Avise em uma linha qual público assumiu se ele não estiver explícito.
 
 Se escolher 2 (ou se não houver produto ativo), pergunte:
 

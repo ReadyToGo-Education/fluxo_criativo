@@ -17,7 +17,7 @@ Transforma copy comum em copy memorável usando os 26 Elementos Literários do L
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo` e depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existirem. Use o Quadro, Urgências Ocultas e tom da marca para calibrar as sugestões.
+Leia `meus-produtos/.ativo` e depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md). Use o Quadro, Urgências Ocultas e tom da marca para calibrar as sugestões.
 
 Leia também `.claude/skills/elementos-literarios/SKILL.md` para ter os 26 elementos completos na cabeça.
 

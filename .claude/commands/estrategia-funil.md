@@ -16,7 +16,7 @@ Mapeia funil perpétuo ou de lançamento com todos os touchpoints.
 ## O Que Fazer
 
 ### 1. Contexto
-Leia `meus-produtos/{ativo}/perfil.md`.
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 ### 2. Entrevista (UMA pergunta por vez, com progresso visual)
 

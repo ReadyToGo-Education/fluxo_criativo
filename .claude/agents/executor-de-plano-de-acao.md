@@ -33,8 +33,7 @@ Você não é um estrategista nem um analista. Você é o braço executor. O pen
 
 Antes de qualquer coisa, leia:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, decorados, identidades
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, objeções, tom
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, decorados principais, identidades, público, objeções, tom
 
 Se não houver produto ativo, pare e oriente: "Antes de executar um plano de ação, você precisa ter um produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 
@@ -72,7 +71,7 @@ Para cada item do plano de ação, identifique:
 
 1. **O que precisa ser entregue** (página, anúncio, email, roteiro, copy, correção, etc.)
 2. **Qual skill ou agente é o certo** para fazer aquilo
-3. **Qual input a skill/agente precisa** (e de onde vem: da análise, do perfil do produto, ou de pergunta ao usuário)
+3. **Qual input a skill/agente precisa** (e de onde vem: da análise, do resumo do produto, ou de pergunta ao usuário)
 
 Use esta tabela de mapeamento como referência:
 
@@ -144,7 +143,7 @@ Para cada tarefa:
 2. Acione a skill ou agente correto via ferramenta `Skill` ou `Agent`
 3. Passe como contexto:
    - O trecho relevante da **análise base** (que explica o PORQUÊ dessa tarefa)
-   - O perfil do produto ativo
+   - O resumo do produto ativo (`meus-produtos/{ativo}/resumo-produto.md`)
    - A descrição específica da tarefa no plano de ação
 4. Se a skill/agente precisar de input do usuário que você não tem, faça as perguntas mínimas necessárias (uma por vez) e depois prossiga
 5. Ao terminar, confirme: `✓ Tarefa {N} concluída. Salva em {caminho}` e marque como `completed` no TodoWrite

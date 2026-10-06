@@ -213,11 +213,12 @@ Antes de criar, editar ou salvar qualquer entrega de produto:
 
 1. Leia `meus-produtos/.ativo`.
 2. Use o slug encontrado como base: `meus-produtos/{ativo}/`.
-3. Leia `meus-produtos/{ativo}/perfil.md`, se existir.
+3. Leia `meus-produtos/{ativo}/resumo-produto.md`, sem conferir antes se ele existe. É o contexto padrão de toda entrega, no lugar de `perfil.md`, `idconsumidor.md` e `pesquisa-mercado.md` inteiros. Se não for encontrado e o `perfil.md` tiver o Quadro preenchido, gere o resumo com o agente `gerador-resumo-produto` (modelo em `.claude/skills/resumo-produto/SKILL.md`) e leia o que ele gravar. Se não puder acionar o agente, gere o resumo você mesmo seguindo a seção 3 desse modelo e grave no mesmo caminho. Para um detalhe que o resumo não tem, leia só a seção indicada na tabela "Onde está o detalhe completo", no fim do resumo.
 4. Leia `meus-produtos/{ativo}/tipo.md`, se existir.
 5. Leia `meus-produtos/{ativo}/preco.md`, se existir.
-6. Leia `meus-produtos/{ativo}/idconsumidor.md`, se existir.
-7. Leia arquivos específicos da entrega atual, se existirem.
+6. Leia arquivos específicos da entrega atual, se existirem.
+
+Quem escreve, revisa ou gera a concepção (`produto-concepcao`, `gerar-furadeira`, `furadeira-visual`, `produto-zerar`, revisores e geradores) continua lendo os arquivos originais. Ao gravar `perfil.md`, `idconsumidor.md` ou `pesquisa-mercado.md`, apague o `resumo-produto.md` do produto (o hook `resumo-invalidar.js` faz isso sozinho quando está ativo); ele é gerado de novo na próxima entrega.
 
 Se `meus-produtos/.ativo` não existir ou estiver vazio:
 
@@ -242,6 +243,7 @@ meus-produtos/{slug}/tipo.md
 meus-produtos/{slug}/preco.md
 meus-produtos/{slug}/idconsumidor.md
 meus-produtos/{slug}/pesquisa-mercado.md
+meus-produtos/{slug}/resumo-produto.md
 meus-produtos/{slug}/nome.txt
 meus-produtos/{slug}/painel-entregas.html
 ```
@@ -305,7 +307,7 @@ Nunca dependa do caractere `/` funcionar como atalho interno no Codex.
 
 Use esta sequência quando o command não disser algo diferente:
 
-1. **Contexto:** ler produto ativo, `perfil.md`, `tipo.md`, `preco.md` e `idconsumidor.md`.
+1. **Contexto:** ler produto ativo, `resumo-produto.md` (gerar se não existir), `tipo.md` e `preco.md`.
 2. **Entrevista:** fazer somente as perguntas faltantes, de preferência uma por vez.
 3. **Confirmação:** resumir o que será criado e pedir OK, salvo quando o usuário pediu modo direto.
 4. **Geração:** criar o material usando a metodologia do command.

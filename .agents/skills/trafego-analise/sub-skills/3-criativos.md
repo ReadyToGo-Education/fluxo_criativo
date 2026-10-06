@@ -98,7 +98,7 @@ Se dados de CTA não estiverem disponíveis (limite de requisições ou breakdow
 - Informar claramente e sugerir ação concreta: "Duplicar o winner atual trocando apenas o CTA duplicando entidade no Gerenciador (variando 1 dimensão)" com o CTA alternativo recomendado.
 - Nunca deixar o bloco vazio sem a sugestão de ação.
 
-Benchmark CPA: inferir do `perfil.md` conforme tabela de output [1] (low/mid/high ticket).
+Benchmark CPA: inferir do `resumo-produto.md` conforme tabela de output [1] (low/mid/high ticket).
 
 ### Bloco 4. Fadiga Map (Q4)
 

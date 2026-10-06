@@ -90,10 +90,9 @@ Se 403: "Sua conta nao tem acesso a API. Precisa do plano Creator ou superior."
 Leia, na ordem:
 
 1. `meus-produtos/.ativo` (identificador do produto ativo)
-2. `meus-produtos/{ativo}/perfil.md` (Quadro, Furadeira, Decorados, Urgencias Ocultas, cores da marca se houver)
-3. `meus-produtos/{ativo}/idconsumidor.md` (se existir)
+2. `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → Quadro, Furadeira, Decorados principais, Urgências Ocultas, identidades e público
 
-Se faltar produto ativo ou perfil, pare e oriente o usuario a rodar `/produto-novo` ou `/produto-editar` primeiro.
+Se faltar produto ativo ou perfil, pare e oriente o usuario a rodar `/produto-novo` ou `/produto-concepcao` primeiro.
 
 ---
 
@@ -162,7 +161,7 @@ Antes de escrever o roteiro, defina a direcao visual do video. O fluxo tem dois 
 
 **Se `dados-nicho*.md` existir:** leia o relatorio e extraia padroes visuais mencionados (tipos de conteudo, estilos, formatos que dominam no nicho).
 
-**Se nao tiver nenhum dado externo**, derive a direcao visual do que ja existe no `perfil.md`:
+**Se não tiver nenhum dado externo**, derive a direção visual do que já existe no `resumo-produto.md`:
 
 1. Leia as **Urgencias Ocultas** (dores, desejos, urgencias quentes).
 2. Leia as **3 Identidades** (comunicador, consumidor, produto).
@@ -170,7 +169,7 @@ Antes de escrever o roteiro, defina a direcao visual do video. O fluxo tem dois 
 
 Regras de derivacao:
 
-- **Paleta:** use as cores da marca do perfil.md. Se nao tiver, use a paleta base da tabela da Mandala para o tipo escolhido.
+- **Paleta:** use as cores da marca do resumo-produto.md. Se não tiver, use a paleta base da tabela da Mandala para o tipo escolhido.
 - **Ritmo:** se o publico e jovem ou o nicho e dinamico (fitness, marketing, tech), corte rapido. Se e reflexivo ou premium (terapia, coaching executivo, investimentos), corte lento.
 - **Cenario:** derive do contexto das dores. Se as dores mencionam "escritorio", "computador", "rotina", o cenario e interno profissional. Se mencionam "corpo", "espelho", "academia", o cenario e lifestyle.
 - **Retencao:** use a urgencia quente mais forte como base do gancho visual (rosto + frase de impacto derivada da urgencia).

@@ -37,8 +37,7 @@ Como orquestrador, você NÃO repete essas regras nem escreve copy manualmente. 
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, decorados, urgências ocultas, argumentos incontestáveis
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, paliativos, objeções, frases reais
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, decorados principais, urgências ocultas, argumentos incontestáveis, público, paliativos, objeções, frases reais
 
 Se não houver produto ativo, oriente: "Antes de criar copy, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 

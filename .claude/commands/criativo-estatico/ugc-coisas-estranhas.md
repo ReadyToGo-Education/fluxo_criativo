@@ -61,7 +61,7 @@ Usar dados do produto ativo ({slug}) ou informar manualmente?
 2. Informar manualmente
 ```
 
-Se o aluno escolher 1, extraia do `perfil.md` e `idconsumidor.md`:
+Se o aluno escolher 1, extraia de `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md):
 - Produto (nome)
 - Nicho
 - Público

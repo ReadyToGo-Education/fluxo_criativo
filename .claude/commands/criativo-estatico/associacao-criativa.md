@@ -53,7 +53,7 @@ Quer usar os dados do produto ativo ({nome}) ou prefere informar produto e públ
 2. Informar manualmente
 ```
 
-Se escolher 1, extraia produto, nicho e público do `perfil.md` (e `idconsumidor.md` se existir) e siga pra etapa 2.
+Se escolher 1, extraia produto, nicho e público de `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) e siga pra etapa 2.
 
 Se escolher 2, OU se não houver produto ativo, pergunte direto:
 

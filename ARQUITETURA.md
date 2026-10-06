@@ -90,6 +90,7 @@ workshop_inteligente/
 │       ├── perfil.md                      ← Gerado por /produto-concepcao
 │       ├── idconsumidor.md                ← Gerado automaticamente no fim do /produto-concepcao
 │       ├── pesquisa-mercado.md, tipo.md, nome.txt (opcional)
+│       ├── resumo-produto.md              ← Resumo da concepção (contexto padrão das entregas; refeito sozinho)
 │       ├── painel-entregas.html           ← Painel por produto
 │       └── entregas/                      ← Output do assistente
 │           ├── paginas/                   ← Arquivos .html
@@ -180,16 +181,14 @@ USUARIO
   │
   ├── digita /comando ──────────► COMMAND (.claude/commands/X.md)
   │                                  │
-  │                                  ├── le ► meus-produtos/{ativo}/perfil.md (contexto do produto)
-  │                                  ├── le ► meus-produtos/{ativo}/idconsumidor.md (contexto do publico)
+  │                                  ├── le ► meus-produtos/{ativo}/resumo-produto.md (contexto do produto e do público)
   │                                  ├── consulta ► SKILL (base de conhecimento)
   │                                  │
   │                                  └── salva ► meus-produtos/{ativo}/entregas/[tipo]/[arquivo]
   │
   └── (ou agente e acionado) ───► AGENT (.claude/agents/X.md)
                                      │
-                                     ├── le ► meus-produtos/{ativo}/perfil.md
-                                     ├── le ► meus-produtos/{ativo}/idconsumidor.md
+                                     ├── le ► meus-produtos/{ativo}/resumo-produto.md
                                      ├── consulta ► SKILL (base de conhecimento)
                                      ├── le ► .env (chaves opcionais)
                                      │
@@ -198,7 +197,7 @@ USUARIO
 
 **Ordem recomendada de uso:**
 1. `/produto-concepcao` → gera `meus-produtos/{ativo}/perfil.md`, `idconsumidor.md` e `painel-entregas.html` em fluxo unico
-2. Qualquer outro comando → le perfil.md e idconsumidor.md como contexto
+2. Qualquer outro comando → lê `resumo-produto.md` como contexto (gerado no fim da concepção, ou na primeira entrega de produtos antigos); só lê uma seção dos originais quando precisa de detalhe completo
 
 ---
 

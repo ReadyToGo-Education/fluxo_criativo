@@ -810,11 +810,19 @@ Este projeto suporta múltiplos produtos. Cada produto tem sua própria pasta co
 **ANTES de executar qualquer comando:**
 
 1. Leia `meus-produtos/.ativo` para saber o produto ativo. Se o arquivo não existir, oriente a usar `/produto-novo` primeiro.
-2. Leia `meus-produtos/{ativo}/perfil.md`. Se não existir, oriente a usar `/produto-concepcao` primeiro.
-3. Leia `meus-produtos/{ativo}/idconsumidor.md` se existir, para entender o público.
+2. Leia `meus-produtos/{ativo}/resumo-produto.md`. **Tente ler direto, sem conferir antes se ele existe.**
+   - **Se não for encontrado** e o `perfil.md` do produto tiver o Quadro preenchido: anuncie `⏳ Preparando o resumo do seu produto (só na primeira vez).`, acione o agente `gerador-resumo-produto` (síncrono) com o slug do produto e leia o resumo que ele gravar. Se você não puder acionar outro agente (ex.: é um sub-agente sem a ferramenta de agentes), gere o resumo você mesmo seguindo o modelo da seção 3 de `.claude/skills/resumo-produto/SKILL.md` e grave no mesmo caminho.
+   - **Se nem o `perfil.md` existir** (ou estiver sem Quadro): oriente a usar `/produto-concepcao` primeiro.
+3. **O resumo é o contexto padrão de toda entrega.** Não leia `perfil.md`, `idconsumidor.md` nem `pesquisa-mercado.md` inteiros. Quando a tarefa precisar de um detalhe que o resumo não tem (os 50 Decorados, as objeções com os 7 argumentos, os baldes "Para quem é", os concorrentes da pesquisa), leia **só a seção indicada** na tabela "Onde está o detalhe completo", no fim do próprio resumo.
 
-O perfil contém: Quadro, Furadeira, Decorados, 3 Identidades, Urgências Ocultas (7 categorias com 10 itens cada), Argumentos Incontestáveis, nicho, público-alvo, preço e diferenciais.
-O arquivo de identidade do consumidor contém: perfil do comprador detalhado, paliativos, objeções de compra, frases que o público diria e tom de comunicação. (Não chamar esse artefato de "persona"; "persona" nos prompts refere-se ao papel do assistente.)
+O resumo traz: produto, tipo e preço, Quadro e Furadeira (literais), identidades do produto e do comunicador, público, as 5 objeções com o argumento mais forte de cada, Argumentos Incontestáveis, as 70 Urgências Ocultas, os Decorados principais e a síntese da pesquisa de mercado. Modelo e regras completas: `.claude/skills/resumo-produto/SKILL.md`.
+
+O resumo nunca fica desatualizado: quando o `perfil.md`, o `idconsumidor.md` ou a `pesquisa-mercado.md` são gravados, o hook `resumo-invalidar.js` apaga o resumo do produto, e ele é gerado de novo na próxima entrega. Ninguém edita o resumo à mão.
+
+**Exceção:** quem escreve, revisa ou gera a concepção (`/produto-concepcao`, `/gerar-furadeira`, `/furadeira-visual`, `/produto-zerar`, revisores, geradores e pesquisa de mercado) e os scripts do painel continuam lendo os arquivos originais.
+
+O perfil (`perfil.md`) contém: Quadro, Furadeira, Decorados, 3 Identidades, Urgências Ocultas (7 categorias com 10 itens cada), Argumentos Incontestáveis, nicho, público-alvo, preço e diferenciais.
+O arquivo de identidade do consumidor (`idconsumidor.md`) contém: perfil do comprador detalhado, paliativos, objeções de compra, frases que o público diria e tom de comunicação. (Não chamar esse artefato de "persona"; "persona" nos prompts refere-se ao papel do assistente.)
 
 ## Onde Salvar Cada Entrega
 
@@ -882,7 +890,7 @@ Para só conferir se as pastas estão em dia, sem gravar nada, acrescente `--ver
 
 ## Fluxo Padrão de Todo Comando (6 Passos)
 
-1. **Contexto**. Ler `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md`.
+1. **Contexto**. Ler `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gerar; ver "Contexto Persistente do Negócio").
 2. **Entrevista**. 3 a 5 perguntas, UMA por vez.
 3. **Confirmação**. Resumir o que vai criar, pedir OK.
 4. **Geração**. Criar o entregável completo usando a metodologia VTSD.

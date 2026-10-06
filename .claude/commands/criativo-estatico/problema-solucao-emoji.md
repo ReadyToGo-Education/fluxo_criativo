@@ -11,17 +11,17 @@ O grid de 4 pares é entendido em 2 segundos: "são problemas comuns e dicas út
 
 ### 0. Contexto
 
-O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (perfil.md, idconsumidor.md, tipo.md, preco.md, pesquisa-mercado.md, e inferências a partir do slug do produto).
+O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (resumo-produto.md, tipo.md, preco.md, e inferências a partir do slug do produto).
 
 Se a sub-skill foi chamada direto, carregue esses arquivos agora seguindo o Passo 0 do orquestrador.
 
 Extraia (combinando dado real + inferência):
 
-- **Produto**: nome do produto (do `perfil.md` ou inferido do slug).
-- **Nicho**: do `perfil.md` (seção "Nicho") ou inferido do nome + tipo + preço. É o dado central deste formato.
-- **Público**: do `idconsumidor.md` ou seção "Para Quem É" do `perfil.md` ou inferido do nicho.
-- **Dores reais**: das Urgências Ocultas (categoria DORES) do `perfil.md` e das objeções/paliativos do `idconsumidor.md`, se houver. Essas dores alimentam os problemas das variações.
-- **Método / abordagem do produto**: o vocabulário do método da Furadeira do `perfil.md`, se houver. As soluções usam esse vocabulário quando existir.
+- **Produto**: nome do produto (do `resumo-produto.md` ou inferido do slug).
+- **Nicho**: do `resumo-produto.md` (seção "Produto") ou inferido do nome + tipo + preço. É o dado central deste formato.
+- **Público**: do `resumo-produto.md` (seção "Público") ou inferido do nicho.
+- **Dores reais**: das Urgências Ocultas (categoria DORES) e das objeções/paliativos do `resumo-produto.md`, se houver. Essas dores alimentam os problemas das variações.
+- **Método / abordagem do produto**: o vocabulário do método da Furadeira do `resumo-produto.md`, se houver. As soluções usam esse vocabulário quando existir.
 
 ### 1. Apresentar resumo do contexto e confirmar
 
@@ -35,7 +35,7 @@ Nicho: [nicho]
 Público: [resumo do público]
 Método / abordagem: [método do produto, se houver]
 
-(Marque "✓ do perfil" pros campos extraídos diretamente do perfil.md ou idconsumidor.md.
+(Marque "✓ do perfil" pros campos extraídos diretamente do resumo-produto.md.
 Marque "○ inferido" pros campos que foram um chute a partir do slug, tipo ou preço.)
 
 Está tudo certo?

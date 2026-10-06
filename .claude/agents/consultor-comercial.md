@@ -36,8 +36,7 @@ Você não reescreve o SPIN Selling, não enumera objeções, não monta scripts
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, argumentos incontestáveis
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → objeções de compra são essenciais para o playbook
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, argumentos incontestáveis e objeções de compra (essenciais para o playbook)
 
 Se não houver produto ativo, oriente: "Antes de montar o playbook comercial, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 

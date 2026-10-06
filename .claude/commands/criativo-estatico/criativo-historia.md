@@ -29,7 +29,7 @@ Siga os 5 passos abaixo em ordem. Cada passo depende da resposta do usuário. Nu
 
 ### PASSO 1 — Briefing
 
-Antes de perguntar, verifique se existe `meus-produtos/.ativo`. Se existir, leia `meus-produtos/{ativo}/perfil.md` (e `idconsumidor.md`, `tipo.md`, `preco.md` se existirem). Caso o orquestrador `/criativo-estatico` já tenha chamado esta sub-skill, o contexto já está carregado.
+Antes de perguntar, verifique se existe `meus-produtos/.ativo`. Se existir, leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) e `tipo.md`, `preco.md` se existirem. Caso o orquestrador `/criativo-estatico` já tenha chamado esta sub-skill, o contexto já está carregado.
 
 **Se houver produto ativo com dados úteis no perfil**, pergunte uma única vez:
 

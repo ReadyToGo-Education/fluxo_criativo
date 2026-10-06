@@ -21,14 +21,14 @@ Instala o Meta Pixel em uma página HTML existente. Não regenera nada da copy, 
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`.
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 Leia o `.env` da raiz do projeto e verifique `META_PIXEL_ID`. Se já estiver preenchido, use direto e confirme com o aluno antes de seguir. Se estiver vazio ou ausente, peça na pergunta 2.
 
 ### 2. Coletar dados (uma pergunta por vez)
 
 **Pergunta 1. Qual página vou modificar?**
-1. Última página salva em `entregas/{ativo}/paginas/`
+1. Última página salva em `meus-produtos/{ativo}/entregas/paginas/`
 2. Outra (informar caminho)
 
 **Pergunta 2. Qual o ID do Pixel da Meta?**
@@ -133,7 +133,7 @@ Edite o arquivo:
   2. Cancelar
   ```
 
-Antes de salvar, gere backup em `entregas/{ativo}/paginas/.backup-pixel-{timestamp}.html`.
+Antes de salvar, gere backup em `meus-produtos/{ativo}/entregas/paginas/.backup-pixel-{timestamp}.html`.
 
 ### 6. Conversions API (opcional)
 

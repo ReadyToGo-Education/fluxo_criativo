@@ -9,15 +9,15 @@ A maioria dos anúncios falha por excesso de copy. Promessa Simples inverte isso
 
 ### 0. Contexto
 
-O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (perfil.md, idconsumidor.md, tipo.md, preco.md, pesquisa-mercado.md, e inferências a partir do slug do produto).
+O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (resumo-produto.md, tipo.md, preco.md, e inferências a partir do slug do produto).
 
 Se a sub-skill foi chamada direto (sem orquestrador), carregue esses arquivos agora seguindo o Passo 0 do orquestrador.
 
 Extraia os 3 campos da Promessa Simples (combinando dado real + inferência):
 
-- **Produto**: nome do produto (do `perfil.md` ou inferido do slug capitalizando, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
-- **O que ensina/resolve**: Quadro do `perfil.md` ou inferido do nome + tipo + preço (ex: "Automações Inteligentes" + low ticket + R$ 47 sugere "Como automatizar tarefas do seu negócio com IA").
-- **Público**: do `idconsumidor.md` ou da seção "Para Quem É" do `perfil.md` ou inferido do nicho (ex: "Donos de pequenos negócios que querem economizar tempo com IA").
+- **Produto**: nome do produto (do `resumo-produto.md` ou inferido do slug capitalizando, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
+- **O que ensina/resolve**: Quadro do `resumo-produto.md` ou inferido do nome + tipo + preço (ex: "Automações Inteligentes" + low ticket + R$ 47 sugere "Como automatizar tarefas do seu negócio com IA").
+- **Público**: do `resumo-produto.md` (seção "Público") ou inferido do nicho (ex: "Donos de pequenos negócios que querem economizar tempo com IA").
 
 ### 1. Apresentar resumo do contexto e confirmar
 
@@ -30,7 +30,7 @@ Produto: [nome do produto]
 O que ensina/resolve: [Quadro real ou inferido]
 Público: [público real ou inferido]
 
-(Marque "✓ do perfil" pros campos extraídos diretamente do perfil.md ou idconsumidor.md.
+(Marque "✓ do perfil" pros campos extraídos diretamente do resumo-produto.md.
 Marque "○ inferido" pros campos que foram um chute a partir do slug, tipo ou preço.)
 
 Está tudo certo?

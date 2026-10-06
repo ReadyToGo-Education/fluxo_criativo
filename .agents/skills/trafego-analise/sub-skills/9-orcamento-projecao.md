@@ -91,14 +91,14 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
 
 ### Referência de produto (benchmarks)
 
-Ler do `perfil.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas.
+Ler do `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas.
 
 | Tipo de funil | Ticket | ROAS mínimo saudável | CPA máximo saudável | Candidato a escala |
 |---|---|---|---|---|
 | Venda direta — low ticket | ≤ R$ 97 | 2.5x | ticket × 0.40 | ROAS ≥ 3.0x + freq ≤ 3.5 |
 | Venda direta — ticket médio | R$ 98 a R$ 497 | 3.0x | ticket × 0.30 | ROAS ≥ 3.5x + freq ≤ 3.0 |
 | Venda direta — high ticket | > R$ 497 | 4.0x | ticket × 0.25 | ROAS ≥ 4.5x + freq ≤ 2.5 |
-| Captação de leads | qualquer | — | CPL-alvo do perfil (ou perguntar) | CPL ≤ 70% do benchmark + freq ≤ 3.5 |
+| Captação de leads | qualquer | — | CPL-alvo do resumo (ou perguntar) | CPL ≤ 70% do benchmark + freq ≤ 3.5 |
 
 ---
 

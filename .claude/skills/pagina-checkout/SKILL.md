@@ -22,16 +22,16 @@ Pega uma página HTML existente e conecta os botões de compra ao link real do c
 
 ### 1. Contexto
 
-Leia `entregas/.ativo` e `entregas/{ativo}/perfil.md`.
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-Verifique se já existe configuração de checkout salva em `entregas/{ativo}/.checkout`. Se houver, ofereça:
+Verifique se já existe configuração de checkout salva em `meus-produtos/{ativo}/entregas/.checkout`. Se houver, ofereça:
 1. Usar a configuração existente
 2. Atualizar para uma nova
 
 ### 2. Coletar dados (uma pergunta por vez)
 
 **Pergunta 1. Qual página vou modificar?**
-1. Última página salva em `entregas/{ativo}/paginas/`
+1. Última página salva em `meus-produtos/{ativo}/entregas/paginas/`
 2. Outra (informar caminho)
 
 **Pergunta 2. Qual plataforma de checkout?**
@@ -127,11 +127,11 @@ document.querySelectorAll('[data-cta-principal], a.cta, .btn-cta').forEach(funct
 Se Pergunta 6 = 3, não adicione nada e avise no resumo final que o usuário deve rodar `/pagina-pixel` depois.
 
 **3.5. Backup**
-Antes de salvar, copie o original pra `entregas/{ativo}/paginas/.backup-checkout-{timestamp}.html`.
+Antes de salvar, copie o original pra `meus-produtos/{ativo}/entregas/paginas/.backup-checkout-{timestamp}.html`.
 
 ### 4. Salvar configuração
 
-Salve em `entregas/{ativo}/.checkout`:
+Salve em `meus-produtos/{ativo}/entregas/.checkout`:
 ```
 plataforma={...}
 link={...}
@@ -147,13 +147,13 @@ order_bump_link={...}
 ```
 Pronto. Checkout conectado.
 
-Página:       entregas/{ativo}/paginas/{nome}.html
+Página:       meus-produtos/{ativo}/entregas/paginas/{nome}.html
 Plataforma:   {nome}
 Link:         {link com UTMs}
 CTAs alterados: {n}
 Order bump:   {nao / sim, R$ XX}
 Pixel event:  {sim / nao}
-Backup:       entregas/{ativo}/paginas/.backup-checkout-{timestamp}.html
+Backup:       meus-produtos/{ativo}/entregas/paginas/.backup-checkout-{timestamp}.html
 
 Próximos passos sugeridos:
 - /pagina-performance (auditar performance antes de subir)

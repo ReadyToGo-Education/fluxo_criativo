@@ -76,6 +76,17 @@
         ]
       },
       {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/resumo-invalidar.js\"",
+            "commandWindows": "node .claude/hooks/resumo-invalidar.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "Write|Edit|Bash|Agent|Task|WebFetch|WebSearch",
         "hooks": [
           {

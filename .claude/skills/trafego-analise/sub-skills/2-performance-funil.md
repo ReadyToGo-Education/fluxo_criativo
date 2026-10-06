@@ -97,7 +97,7 @@ Se a campanha tem 200+ entidades e o cálculo manual fica inviável, salvar os 2
 
 ### Referência de produto
 
-Ler `perfil.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
+Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
 - `OUTCOME_SALES` → funil de venda direta → métrica-norte = **ROAS**
 - `OUTCOME_LEADS` → funil de captação → métrica-norte = **CPL**
 

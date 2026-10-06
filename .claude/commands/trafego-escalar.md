@@ -23,7 +23,7 @@ A especificação técnica completa está em `.claude/skills/trafego-escalar/SKI
 ## Passo 0. Contexto e validação
 
 ### 0.1 Produto ativo
-Leia `meus-produtos/.ativo` e `perfil.md`.
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` no `.env`.

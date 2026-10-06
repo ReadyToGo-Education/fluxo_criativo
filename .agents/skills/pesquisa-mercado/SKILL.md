@@ -18,7 +18,7 @@ Essa skill é a fonte de inteligência externa do sistema. Quando um produto est
 SEMPRE que qualquer fluxo de concepção de produto estiver ativo:
 
 - `/produto-novo` → depois de definir Quadro e Furadeira, antes de Identidades
-- `/produto-editar` → no Bloco 3/6 (Identidades e Posicionamento)
+- `/produto-concepcao` → logo depois de salvar o Quadro, em segundo plano
 - `/lt-funil` e `/lt-criar-produto` → antes de sugerir preço e posicionamento low ticket
 - `/ht-big-idea` e `/ht-oferta` → antes de sugerir stack de valor e preço high ticket
 - Agentes `estrategista-de-produto`, `estrategista-low-ticket`, `estrategista-middle-ticket`, `estrategista-ht` → como passo obrigatório da fase de concepção

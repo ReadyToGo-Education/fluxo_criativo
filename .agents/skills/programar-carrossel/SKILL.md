@@ -52,8 +52,7 @@ PROIBIDO bulkar perguntas no mesmo turno.
 
 Leia em paralelo:
 - `meus-produtos/.ativo`
-- `meus-produtos/{ativo}/perfil.md` (se existir)
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir)
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md)
 
 Extraia como sugestão (não use ainda):
 - **Handle do Instagram.**
@@ -152,17 +151,17 @@ Siga agora para o Passo 2.
 **Ordem de tentativa de sugestão:**
 
 1. **`.env` na raiz do projeto** com chave `IG_USER=` (salvo por `dashboard-social`, `instagram-dashboard`, `dados-instagram` e outras skills). Esta é a fonte preferida.
-2. **`perfil.md`** do produto ativo (procure `@`, "Instagram", "perfil").
+2. **`resumo-produto.md`** do produto ativo (procure `@`, "Instagram", "perfil").
 3. **Nenhuma**: pergunte sem sugestão.
 
-Com sugestão (vinda do `.env` ou `perfil.md`):
+Com sugestão (vinda do `.env` ou `resumo-produto.md`):
 
 ```
 Pergunta 2. @ do Instagram
 
 Sugestão: @{ig_user_sugerido}
 {Se veio do .env} (achei no seu .env, salvo por outra skill do projeto)
-{Se veio do perfil.md} (achei no seu perfil.md)
+{Se veio do resumo-produto.md} (achei no seu perfil.md)
 
 1. Sim, é esse mesmo
 2. Outro @
@@ -192,9 +191,9 @@ Mostre micro-resumo.
 
 ### 2.2. Nicho e produto em uma frase
 
-**Antes de exibir a pergunta**, monte uma `sugestao_nicho_produto` lendo o `perfil.md`:
+**Antes de exibir a pergunta**, monte uma `sugestao_nicho_produto` lendo o `resumo-produto.md`:
 
-1. Procure o **Quadro** (transformação principal) e o **nicho/categoria** declarados no perfil.
+1. Procure o **Quadro** (transformação principal) e o **nicho/categoria** declarados no resumo.
 2. Combine no formato `{nicho}, {tipo de produto} {duração se houver} para {público}` em UMA frase. Ex: "leitura rápida, curso online de 4 semanas para profissionais ocupados".
 3. Se não conseguir montar uma frase clara (perfil incompleto), `sugestao_nicho_produto = null`.
 
@@ -231,11 +230,11 @@ AGUARDE. Salve como `nicho_produto`. Mostre micro-resumo.
 
 ### 2.3. Input extra (só se estilo pede)
 
-Os estilos Erros e Ninguém Conta precisam de um input extra (Desejo ou Objetivo do público). Esse input deriva direto do **Quadro** do produto ativo (a transformação principal). Não peça em branco: leia o Quadro do `perfil.md`, reformule num desejo/objetivo concreto e mensurável, e devolva como sugestão para o aluno confirmar, mesmo padrão das perguntas 2.1 e 2.2.
+Os estilos Erros e Ninguém Conta precisam de um input extra (Desejo ou Objetivo do público). Esse input deriva direto do **Quadro** do produto ativo (a transformação principal). Não peça em branco: leia o Quadro do `resumo-produto.md`, reformule num desejo/objetivo concreto e mensurável, e devolva como sugestão para o aluno confirmar, mesmo padrão das perguntas 2.1 e 2.2.
 
 **Antes de exibir a pergunta**, monte a sugestão:
 
-1. Leia o **Quadro** no `perfil.md`.
+1. Leia o **Quadro** no `resumo-produto.md`.
 2. O Quadro é redigido como transformação (verbo no infinitivo). Reformule num objetivo/desejo **concreto e mensurável**, com número, prazo ou marco quando o Quadro permitir. Ex: Quadro "Criar o hábito de leitura" vira objetivo "ler 3 livros por mês".
 3. Se o Quadro for abstrato demais para virar um objetivo concreto, ou o perfil não tiver Quadro, a sugestão é `null`.
 
@@ -303,7 +302,7 @@ Mostre micro-resumo se aplicável.
 
 #### 2.3.E.1. Público (só Editorial)
 
-**Antes de exibir**, monte uma `sugestao_publico` lendo o `idconsumidor.md` (se existir) ou o `perfil.md`:
+**Antes de exibir**, monte uma `sugestao_publico` lendo o `resumo-produto.md`:
 
 1. Procure a descrição de público-alvo do produto, incluindo dor principal, contexto e o que o produto resolve para ele.
 2. Combine numa frase clara. Ex: "atletas amadores e profissionais que precisam falar inglês em entrevistas, contratos e patrocínios internacionais".

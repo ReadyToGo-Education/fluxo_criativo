@@ -9,7 +9,7 @@ Edita uma imagem existente mantendo 100% do layout original. Troca personagem, t
 
 ## Passo 0. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 Extraia internamente: Urgências Ocultas, Quadro, nicho, handle e paleta de cores do produto.
 

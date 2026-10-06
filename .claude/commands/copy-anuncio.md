@@ -37,7 +37,7 @@ Digite o número:
 ```
 
 **Se escolher um produto cadastrado (opções 1, 2, 3...):**
-- Leia `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir
+- Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md)
 - Se não for o produto ativo, use o slug escolhido como base para todos os caminhos de arquivo desta sessão (sem alterar o `.ativo`)
 - Extraia internamente: Decorados, Urgências Ocultas, Quadro, público, preço, tom
 
@@ -64,13 +64,13 @@ Qual o preço do produto?
 (ex: "R$ 497", "gratuito", "R$ 97/mês")
 ```
 
-Após coletar essas informações, prosseguir o fluxo usando esses dados no lugar do perfil.md. Salvar os anúncios gerados em `meus-produtos/{ativo}/entregas/criativos/` (criar a pasta se não existir).
+Após coletar essas informações, prosseguir o fluxo usando esses dados no lugar do resumo-produto.md. Salvar os anúncios gerados em `meus-produtos/{ativo}/entregas/criativos/` (criar a pasta se não existir).
 
 ---
 
 **Extraia e liste internamente (não precisa mostrar ao usuário):**
-- Todos os **Decorados** do perfil. esses são os benefícios que podem virar tema central de anúncio
-- Todas as **Urgências Ocultas** do perfil, organizadas em 7 categorias com 10 itens cada (dores, dúvidas, desejos, assuntos relacionados, urgências quentes, frias e inusitadas). Cada item é um ângulo de entrada possível para um anúncio.
+- Todos os **Decorados**: além do resumo, leia só a seção `## Decorados (Benefícios)` de `meus-produtos/{ativo}/perfil.md` (os 50, para os temas não se esgotarem entre um pacote e outro). esses são os benefícios que podem virar tema central de anúncio
+- Todas as **Urgências Ocultas** do resumo, organizadas em 7 categorias com 10 itens cada (dores, dúvidas, desejos, assuntos relacionados, urgências quentes, frias e inusitadas). Cada item é um ângulo de entrada possível para um anúncio.
 
 **Verifique o histórico:** leia todos os arquivos em `meus-produtos/{ativo}/entregas/criativos/`. Identifique quais urgências ocultas e decorados já foram explorados nos anúncios anteriores.
 

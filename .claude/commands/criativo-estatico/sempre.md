@@ -44,7 +44,7 @@ Usar os dados do produto ativo ({slug}) ou informar manualmente?
 2. Informar manualmente
 ```
 
-Se o aluno escolher 1, extraia produto, nicho, público e promessa do `perfil.md` e `idconsumidor.md` e siga pro Passo 2. Se escolher 2, ou se não existir produto ativo, faça o briefing direto:
+Se o aluno escolher 1, extraia produto, nicho, público e promessa de `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) e siga pro Passo 2. Se escolher 2, ou se não existir produto ativo, faça o briefing direto:
 
 - Qual o produto/serviço?
 - Qual o público?

@@ -57,8 +57,8 @@ A copy nunca vende. Ela informa, avisa ou ensina. O produto não existe nos prim
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`. Se não existir, oriente a usar `/produto-editar` primeiro.
-Leia também `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
+Para os blocos de benefícios (Decorados), leia também só a seção `## Decorados (Benefícios)` de `meus-produtos/{ativo}/perfil.md`. Para o FAQ, leia também só a seção `## Objeções de Compra` de `meus-produtos/{ativo}/idconsumidor.md` (se existir).
 
 ### 1.4.5. Detecção de primeira página low ticket (Categoria Padrão automática)
 
@@ -512,7 +512,7 @@ Resumo do que vou criar:
 
 #### REGRA DE OURO #1: Toda a página converge para o Quadro
 
-O Quadro é o resultado final que a pessoa conquista usando o produto (lido em `meus-produtos/{ativo}/perfil.md`). Isso significa:
+O Quadro é o resultado final que a pessoa conquista usando o produto (lido em `meus-produtos/{ativo}/resumo-produto.md`). Isso significa:
 
 - **TODOS os botões de CTA** usam o Quadro como texto do botão (adaptado para "Quero + [Quadro]"). NUNCA usar "Comprar agora", "Saiba mais" ou "Quero descobrir".
 - **A conclusão da seção "Quem Sou"** termina reforçando o Quadro como motivo da criação do produto.
@@ -727,7 +727,7 @@ Antes de gerar qualquer seção, leia `.claude/skills/paginas/references/categor
 
 - **Híbrido (default).** Seções que vêm do perfil rodam automáticas. Seções que exigem dado real (Faça a Conta, Demonstração, Quem É, Depoimentos) entram em modo guiado.
 - **Guiado.** Faz uma seção por vez, pergunta o que precisa, gera, aprova, próxima.
-- **Automático.** Gera as 14 de uma vez usando só `perfil.md` e `idconsumidor.md`. Seções que dependem de input real entram com placeholder claro pra revisão posterior.
+- **Automático.** Gera as 14 de uma vez usando só o `resumo-produto.md` e as seções lidas no passo 1 (Contexto). Seções que dependem de input real entram com placeholder claro pra revisão posterior.
 
 #### Seções obrigatórias (14, conferir TODAS antes de salvar)
 

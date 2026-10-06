@@ -17,7 +17,7 @@ A especificação técnica completa está em `.claude/skills/trafego-insights/SK
 ## Passo 0. Contexto e validação
 
 ### 0.1 Produto ativo
-Leia `meus-produtos/.ativo`. Se existir, leia também `meus-produtos/{ativo}/perfil.md` para inferir `ticket_brl` e `tipo_funil` quando o aluno não declarar.
+Leia `meus-produtos/.ativo`. Se existir, leia também `meus-produtos/{ativo}/resumo-produto.md` (se o resumo não existir, gere conforme o CLAUDE.md) para inferir `ticket_brl` e `tipo_funil` quando o aluno não declarar.
 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` no `.env`.
@@ -117,7 +117,7 @@ Antes de chamar a skill, preencha os inputs:
 
 ### 3.1 `ticket_brl`
 1. Se o aluno declarou explicitamente, usar.
-2. Se não, tentar inferir do `perfil.md` do produto ativo.
+2. Se não, tentar inferir do `resumo-produto.md` do produto ativo.
 3. Se não conseguir inferir, perguntar:
    ```
    Qual o ticket do produto que essa campanha vende?

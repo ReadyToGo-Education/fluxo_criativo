@@ -16,7 +16,7 @@ Esta skill **narra**, não executa edição. Quando a análise sugere ação, fa
 ## Passo 0. Contexto e conexão Meta
 
 ### 0.1 Produto ativo
-Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`.
+Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md).
 
 ### 0.2 Conexão Meta (gate duro)
 Ler `META_AUTH_MODO` no `.env`.

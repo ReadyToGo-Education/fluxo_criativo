@@ -51,7 +51,7 @@ Usar os dados do produto ativo ou informar manualmente?
 2. Informar manualmente
 ```
 
-Se escolher 1, extraia produto, nicho e público do `perfil.md` e do `idconsumidor.md` e siga pro PASSO 2.
+Se escolher 1, extraia produto, nicho e público de `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) e siga pro PASSO 2.
 
 Se escolher 2 ou se não existir `perfil.md`, pergunte apenas:
 
