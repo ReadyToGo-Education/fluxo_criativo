@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Write(meus-produtos/**)",
+      "Edit(meus-produtos/**)",
       "Read(.claude/commands/**)",
       "Read(.claude/agents/**)",
       "Read(.claude/skills/**)",
