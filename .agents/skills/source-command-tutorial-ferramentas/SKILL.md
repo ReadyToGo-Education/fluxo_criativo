@@ -5,8 +5,10 @@ description: "Gera a Trilha de Ferramentas do workshop em HTML. Cria o arquivo e
 
 # source-command-tutorial-ferramentas
 
-Use this skill when the user asks to run the migrated source command `tutorial-ferramentas`.
+Use esta skill quando o usuário pedir o comando `/tutorial-ferramentas` do workshop (ou `tutorial-ferramentas`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/tutorial-ferramentas.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 Use a skill `tutorial-ferramentas` agora.

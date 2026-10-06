@@ -1,6 +1,6 @@
 ---
 name: carrossel
-description: Gera carrosséis virais para Instagram nos 9 estilos do workshop (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). Coleta o contexto do produto ativo + estilo escolhido, gera os slides de texto, os prompts visuais, a legenda revisada e oferece 3 caminhos para gerar as imagens (Manual, Codex in Chrome só no Desktop, API paralela). Opção "Gerar todos" cria os 9 carrosséis em sequência com aprovação em lotes.
+description: Gera carrosséis virais para Instagram nos 9 estilos do workshop (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). Coleta o contexto do produto ativo + estilo escolhido, gera os slides de texto, os prompts visuais, a legenda revisada e oferece 3 caminhos para gerar as imagens (Manual, Claude in Chrome só no Desktop, API paralela). Opção "Gerar todos" cria os 9 carrosséis em sequência com aprovação em lotes.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch, Skill
 model: sonnet
 ---
@@ -15,20 +15,20 @@ Gera carrossel viral em 1 dos 9 estilos do workshop, com texto + prompts visuais
 
 A skill funciona em 2 ambientes (CLI ou Desktop), mas com capacidades diferentes:
 
-| Ambiente | Manual | API paralela | Codex in Chrome |
+| Ambiente | Manual | API paralela | Claude in Chrome |
 |---|---|---|---|
-| **Codex no terminal (CLI)** | ✅ | ✅ se tiver `OPENROUTER_API_KEY` ou `OPENAI_API_KEY` no `.env` | ❌ Não disponível |
-| **Codex Desktop (Codex.ai pelo navegador)** | ✅ | ✅ se tiver a API key | ✅ se a extensão Codex in Chrome estiver conectada |
+| **Claude Code no terminal (CLI)** | ✅ | ✅ se tiver `OPENROUTER_API_KEY` ou `OPENAI_API_KEY` no `.env` | ❌ Não disponível |
+| **Claude Desktop (claude.ai pelo navegador)** | ✅ | ✅ se tiver a API key | ✅ se a extensão Claude in Chrome estiver conectada |
 
-**Por que o Codex in Chrome não funciona pelo terminal?**
+**Por que o Claude in Chrome não funciona pelo terminal?**
 
-A extensão Codex in Chrome é um produto **Desktop-only**. Ela vive como uma extensão do navegador Chrome e se comunica apenas com sessões da Codex.ai abertas no navegador. Quando o aluno está rodando esta skill pelo Codex no terminal/CLI, **mesmo tendo a extensão instalada no Chrome, ela NÃO se comunica com a sessão CLI** (são processos isolados).
+A extensão Claude in Chrome é um produto **Desktop-only**. Ela vive como uma extensão do navegador Chrome e se comunica apenas com sessões da claude.ai abertas no navegador. Quando o aluno está rodando esta skill pelo Claude Code no terminal/CLI, **mesmo tendo a extensão instalada no Chrome, ela NÃO se comunica com a sessão CLI** (são processos isolados).
 
 A skill detecta isso em runtime checando se as tools `mcp__Claude_in_Chrome__*` estão presentes:
 - Presentes → ambiente Desktop, oferece opção 2 (Chrome) no menu.
 - Ausentes → ambiente CLI ou Desktop sem extensão, **não oferece** opção 2 e explica o motivo ao aluno.
 
-Para usar a opção Chrome, o aluno precisa abrir o Codex Desktop, invocar `/carrossel` lá, e ter a extensão Codex in Chrome conectada.
+Para usar a opção Chrome, o aluno precisa abrir o Claude Desktop, invocar `/carrossel` lá, e ter a extensão Claude in Chrome conectada.
 
 Para usar a opção API paralela (recomendada no CLI), basta ter `OPENROUTER_API_KEY` no `.env`. A skill `/configurar-imagens` configura isso.
 
@@ -113,7 +113,7 @@ Digite o número.
 Antes do Passo 1, anuncie:
 
 ```
-🔍 Próximo passo: gerar o carrossel completo (texto + prompts visuais + legenda revisada). Tempo estimado: 7 a 12 minutos (mais se você escolher o caminho Codex in Chrome ou aguardar geração de imagens).
+🔍 Próximo passo: gerar o carrossel completo (texto + prompts visuais + legenda revisada). Tempo estimado: 7 a 12 minutos (mais se você escolher o caminho Claude in Chrome ou aguardar geração de imagens).
 ```
 
 Para a opção "Gerar todos", anuncie depois que o aluno escolher 10 no Passo 1:
@@ -158,8 +158,8 @@ Os 6 estilos clássicos (`nunca`, `sempre`, `odeio`, `erros`, `amo`, `ninguem-co
 1. **Verbatim Passo 2 do prompt**. Gera 6 slides com gate de aprovação interno (Manual da Copy + revisora silenciosamente antes do gate).
 2. **Verbatim Passo 3.1 do prompt**. Mostra os 6 prompts visuais em inglês no chat, slide por slide.
 3. **Verbatim Passo 3.2 do prompt**. Salva `prompts.txt` consolidado em `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-{estilo}/prompts.txt`.
-4. **Verbatim Passo 3.3 do prompt**. Exibe o comando pronto pra colar no Cowork (Codex in Chrome).
-5. **Interceptação da skill**. Aciona `references/passo-output-triplo.md` a partir da seção 3.3 (detecção de capacidades) e 3.4 (menu dinâmico). Passa `tem_prompts_txt = true` para que a seção 3.5 caminho API reaproveite o arquivo já salvo. O menu sempre mostra "Manual no ChatGPT", e mostra "Codex in Chrome (só imagens)" quando MCP do Chrome está presente, e mostra "API paralela (OpenRouter ou OpenAI)" sempre (com aviso quando indisponível).
+4. **Verbatim Passo 3.3 do prompt**. Exibe o comando pronto pra colar no Cowork (Claude in Chrome).
+5. **Interceptação da skill**. Aciona `references/passo-output-triplo.md` a partir da seção 3.3 (detecção de capacidades) e 3.4 (menu dinâmico). Passa `tem_prompts_txt = true` para que a seção 3.5 caminho API reaproveite o arquivo já salvo. O menu sempre mostra "Manual no ChatGPT", e mostra "Claude in Chrome (só imagens)" quando MCP do Chrome está presente, e mostra "API paralela (OpenRouter ou OpenAI)" sempre (com aviso quando indisponível).
 6. **Execução conforme escolha** (seção 3.5 do `passo-output-triplo.md`). Manual = nada extra; Chrome = abre via MCP e roda os 6 prompts; API = `scripts/gerar-imagens-api.py` em paralelo gerando 6 PNGs.
 7. **Verbatim Passo 4 do prompt**. Gera a legenda do Instagram localmente (Manual da Copy + revisora), salva `legenda.txt`, mostra com aprovação obrigatória (4 opções). Não há mais variável `legenda_origem` nem captura de legenda do ChatGPT — fluxo único, sempre local.
 
@@ -453,7 +453,7 @@ Vou gerar:
 - 6 slides de texto (estilos clássicos e Editorial) ou 7 a 9 slides (Notícia e Curiosidade)
 - prompts visuais (6 em inglês nos clássicos; 3 modos em português na Notícia e na Curiosidade; 1 prompt único em português no Editorial)
 - 1 legenda do Instagram revisada (estilos clássicos; na Notícia e na Curiosidade a legenda já está no slide CTA; no Editorial a legenda vem junto com os slides)
-- 1 prompt opcional para Codex in Chrome
+- 1 prompt opcional para Claude in Chrome
 
 1. Tudo certo, gerar
 2. Ajustar algo (diga qual campo)
@@ -490,7 +490,7 @@ Aplicando o que está no arquivo do estilo (`references/estilos/{estilo}.md`):
 2. Use o **tom escolhido** no Passo 2 para adaptar o estilo de escrita.
 3. Estruture os slides conforme o estilo (lead "Nunca…", "Sempre…", "Eu odeio quem…", "Erro #N:", "Eu amo quem…", "Ninguém te conta que…").
 4. CTA do slide 6 com verbo diferente do lead + motivo claro + relação com os 5 slides + geração de desejo.
-5. **Aplicar o Manual da Copy** (`.Codex/skills/revisora/references/manual-copy.md`) frase por frase antes de mostrar:
+5. **Aplicar o Manual da Copy** (`.claude/skills/revisora/references/manual-copy.md`) frase por frase antes de mostrar:
    - Zero travessões, zero exclamações, zero "Não é X. É Y.", zero perguntas no slide 1.
    - Toda afirmação com tese, dado, prazo ou cena concreta.
    - Especificidade, não generalização.
@@ -633,7 +633,7 @@ Quer agendar carrosséis recorrentes? Digite /programar-carrossel.
 
 > **Notícia, Curiosidade e Editorial.** Esses três estilos não geram `legenda.txt` separado. Notícia e Curiosidade têm a legenda dentro do slide CTA final; Editorial tem a legenda dentro do próprio `texto.md` (gerada junto com os slides no Passo 4 do prompt). Na entrega, omita as linhas de `legenda.txt`. Para a Curiosidade, informe o caminho do arquivo consolidado `carrossel-curiosidade-{slug}-{data}.txt`. Para o Editorial, informe o caminho de `prompt-chatgpt.txt` (o prompt único pra colar no ChatGPT) e instrua o aluno a colar esse prompt no ChatGPT e pedir "cria o 1", "cria o 2", até o 6. A árvore de arquivos acima é o caso geral; ajuste-a para o estilo entregue.
 
-Exiba os caminhos absolutos no formato copiável conforme regra do `AGENTS.md` (texto, não link).
+Exiba os caminhos absolutos no formato copiável conforme regra do `CLAUDE.md` (texto, não link).
 
 ---
 

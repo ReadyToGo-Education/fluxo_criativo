@@ -5,9 +5,11 @@ description: "Registrar uma pendência, ideia ou lembrete no projeto ativo sem i
 
 # source-command-toolkit-anotar
 
-Use this skill when the user asks to run the migrated source command `toolkit-anotar`.
+Use esta skill quando o usuário pedir o comando `/toolkit-anotar` do workshop (ou `toolkit-anotar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/toolkit-anotar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Toolkit. Anotar
 

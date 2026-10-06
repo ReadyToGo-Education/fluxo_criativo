@@ -11,8 +11,8 @@ Gera carrossel para Instagram com foto real por card. Dois modos de operação c
 ## Referências obrigatórias
 
 Antes de qualquer geração de prompt de imagem, carregar:
-- `.Codex/skills/carrossel-visual/references/hooks-imagem-disruptiva.md`
-- `.Codex/skills/carrossel-visual/references/skill-referencia-visual.md`
+- `.claude/skills/carrossel-visual/references/hooks-imagem-disruptiva.md`
+- `.claude/skills/carrossel-visual/references/skill-referencia-visual.md`
 
 ---
 
@@ -114,7 +114,7 @@ Qual formato narrativo?
 Consultar Urgências Ocultas do produto. Identificar a dor mais forte, o dado mais impactante e o gatilho mais relevante.
 
 ### Passo 2. Escolher estilo de hook visual
-Ler `.Codex/skills/carrossel-visual/references/hooks-imagem-disruptiva.md` e escolher o estilo mais adequado ao tema.
+Ler `.claude/skills/carrossel-visual/references/hooks-imagem-disruptiva.md` e escolher o estilo mais adequado ao tema.
 
 Estilos disponíveis: Esquisito, Exagero, Reflexão, Polêmica, Comparação, Famosos, Notícia, Curiosidade, Listas, Controvérsia.
 
@@ -213,7 +213,7 @@ Vai usar alguma imagem de referência para a capa ou algum card?
 2. Não
 ```
 
-Se Sim: consultar `.Codex/skills/carrossel-visual/references/skill-referencia-visual.md` e seguir o fluxo para cada card indicado.
+Se Sim: consultar `.claude/skills/carrossel-visual/references/skill-referencia-visual.md` e seguir o fluxo para cada card indicado.
 
 ---
 

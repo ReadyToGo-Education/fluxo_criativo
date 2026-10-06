@@ -1,13 +1,15 @@
 ---
 name: "source-command-trafego-conexao"
-description: "Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Pergunta se o aluno quer usar o conector oficial Codex + Meta (recomendado, MCP via OAuth) ou criar um App via Facebook Developers (token permanente no .env). Salva o modo escolhido em META_AUTH_MODO no .env, para que as skills de tráfego saibam qual caminho usar. Skill reutilizável, deve ser chamada por qualquer skill de Meta Ads quando a variável META_AUTH_MODO ainda não está configurada."
+description: "Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Pergunta se o aluno quer usar o conector oficial Claude + Meta (recomendado, MCP via OAuth) ou criar um App via Facebook Developers (token permanente no .env). Salva o modo escolhido em META_AUTH_MODO no .env, para que as skills de tráfego saibam qual caminho usar. Skill reutilizável, deve ser chamada por qualquer skill de Meta Ads quando a variável META_AUTH_MODO ainda não está configurada."
 ---
 
 # source-command-trafego-conexao
 
-Use this skill when the user asks to run the migrated source command `trafego-conexao`.
+Use esta skill quando o usuário pedir o comando `/trafego-conexao` do workshop (ou `trafego-conexao`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/trafego-conexao.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Tráfego Conexão. Estabelecer Conexão com o Meta Ads
 
@@ -15,7 +17,7 @@ Esta skill é o ponto único de entrada para conectar o projeto com o Meta Ads. 
 
 Os dois modos suportados são:
 
-- **`MCP_CONECTOR`** — Conector oficial Codex + Meta. Login via OAuth direto na conta Codex. Sem token permanente, sem App no Facebook Developers, sem instalar nada na máquina.
+- **`MCP_CONECTOR`** — Conector oficial Claude + Meta. Login via OAuth direto na conta Claude. Sem token permanente, sem App no Facebook Developers, sem instalar nada na máquina.
 - **`APP`** — App via Facebook Developers. Token permanente gerado pelo Usuário do Sistema, salvo no `.env`. Caminho técnico tradicional, portável entre máquinas e planos.
 
 ---
@@ -69,9 +71,9 @@ Pergunte exatamente neste formato:
 ```
 Como você quer conectar com o Meta Ads?
 
-1. MCP da Meta via Codex (recomendado)
+1. MCP da Meta via Claude (recomendado)
    Adiciona o servidor MCP oficial da Meta como conector personalizado
-   no seu Codex (ainda não está na lista oficial, mas leva 1 minuto
+   no seu Claude (ainda não está na lista oficial, mas leva 1 minuto
    para registrar) e autoriza via OAuth do Facebook. Sem instalar
    nada na máquina, sem token permanente, sem App no Facebook
    Developers. A conexão fica vinculada à sua conta Anthropic.
@@ -81,7 +83,7 @@ Como você quer conectar com o Meta Ads?
 2. App via Facebook Developers
    Cria um App no developers.facebook.com, gera um token permanente
    via Usuário do Sistema e salva no .env. Caminho técnico
-   tradicional. Funciona em qualquer plano do Codex. O token fica
+   tradicional. Funciona em qualquer plano do Claude. O token fica
    na sua máquina, então é portável e não depende da Anthropic.
 
 Digite o número:
@@ -94,15 +96,15 @@ Digite o número:
 
 ## Passo 2A. Adicionar o MCP da Meta como conector personalizado
 
-> **Atenção.** O MCP da Meta ainda não está na lista oficial de conectores do Codex, então precisa ser adicionado como **MCP personalizado**. É rápido, só leva 1 minuto.
+> **Atenção.** O MCP da Meta ainda não está na lista oficial de conectores do Claude, então precisa ser adicionado como **MCP personalizado**. É rápido, só leva 1 minuto.
 
 Instrua o aluno na seguinte ordem, esperando confirmação ao final:
 
 ```
-Para adicionar o MCP da Meta na sua conta Codex:
+Para adicionar o MCP da Meta na sua conta Claude:
 
-1. Abra o aplicativo do Codex Desktop (não vale o site
-   https://Codex.com/settings/connectors, esse caminho não
+1. Abra o aplicativo do Claude Desktop (não vale o site
+   https://claude.com/settings/connectors, esse caminho não
    tem mais a opção de adicionar MCP personalizado).
 
 2. Clique em "Customize" (Personalizar) e depois em
@@ -126,14 +128,14 @@ Para adicionar o MCP da Meta na sua conta Codex:
      quer autorizar
    - Confirme as permissões pedidas
 
-7. Quando voltar ao Codex e o status do MCP "Meta Ads" estiver
+7. Quando voltar ao Claude e o status do MCP "Meta Ads" estiver
    "Conectado", me avisa aqui ("conectei", "feito" ou similar) que
    continuo a validação.
 ```
 
 Aguardar a resposta do aluno.
 
-> **Atenção, conector é por conta Anthropic, não por máquina.** Se o aluno usar o Codex em outra máquina logada na mesma conta, o MCP Meta Ads segue ativo lá também. Não precisa adicionar de novo.
+> **Atenção, conector é por conta Anthropic, não por máquina.** Se o aluno usar o Claude em outra máquina logada na mesma conta, o MCP Meta Ads segue ativo lá também. Não precisa adicionar de novo.
 
 Quando o aluno confirmar, seguir para o Passo 3 (validação MCP).
 
@@ -178,11 +180,11 @@ Identifique a tool de listagem de contas de anúncio disponibilizada pelo MCP da
   ```
   Não consegui acessar nenhuma tool do MCP da Meta. Confirme:
 
-  - Você está logado no Codex com a mesma conta onde adicionou o
+  - Você está logado no Claude com a mesma conta onde adicionou o
     MCP personalizado?
-  - Em https://Codex.com/settings/connectors o MCP que você
+  - Em https://claude.com/settings/connectors o MCP que você
     adicionou (ex: "Meta Ads") aparece como "Conectado" (verde)?
-  - Você precisa reiniciar o Codex para o MCP recém-adicionado
+  - Você precisa reiniciar o Claude Code para o MCP recém-adicionado
     aparecer? (saia do CLI e abra de novo)
 
   Quando estiver tudo certo, me avisa que tento de novo.

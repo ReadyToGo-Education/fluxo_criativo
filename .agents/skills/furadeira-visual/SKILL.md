@@ -16,7 +16,7 @@ Sem entrevista. Sem perguntas opcionais. A imagem retornada será embutida no pa
 
 ## Decisão automática do layout
 
-A skill cruza **mecânica registrada** + **nicho** + **estilo do consumidor** e escolhe o layout visual que melhor representa o método. Ver `.Codex/skills/furadeira-visual/references/metodo-visual.md` para a descrição completa de cada layout.
+A skill cruza **mecânica registrada** + **nicho** + **estilo do consumidor** e escolhe o layout visual que melhor representa o método. Ver `.claude/skills/furadeira-visual/references/metodo-visual.md` para a descrição completa de cada layout.
 
 ### Tabela de mapeamento mecânica → layout
 

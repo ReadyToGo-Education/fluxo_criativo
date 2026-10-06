@@ -1,19 +1,13 @@
 ---
-name: "source-command-skill-vsl-skills-vsl-video-vendas-skill"
-description: "Cria copy estruturada para Vídeo de Vendas de Valor (VVV) seguindo a metodologia Light Copy e aplicando o Manual da Copy (15 princípios + 20 vícios proibidos). Use sempre que o usuário pedir roteiro de VSL, copy de vídeo de vendas, vídeo de vendas de valor, VVV, roteiro de lançamento, copy para produto digital, curso, mentoria ou infoproduto, ou mencionar termos da metodologia como \"quadro\", \"furadeira\", \"Light Copy\". Aplica também quando o usuário descreve um produto e pede um roteiro de vendas longo e estruturado em português, mesmo sem nomear a metodologia."
+name: vsl-video-vendas
+description: Cria copy estruturada para Vídeo de Vendas de Valor (VVV) seguindo a metodologia Light Copy e aplicando o Manual da Copy (15 princípios + 20 vícios proibidos). Use sempre que o usuário pedir roteiro de VSL, copy de vídeo de vendas, vídeo de vendas de valor, VVV, roteiro de lançamento, copy para produto digital, curso, mentoria ou infoproduto, ou mencionar termos da metodologia como "quadro", "furadeira", "Light Copy". Aplica também quando o usuário descreve um produto e pede um roteiro de vendas longo e estruturado em português, mesmo sem nomear a metodologia.
 ---
-
-# source-command-skill-vsl-skills-vsl-video-vendas-skill
-
-Use this skill when the user asks to run the migrated source command `Skill VSL-skills-vsl-video-vendas-SKILL`.
-
-## Command Template
 
 # Copy para Vídeo de Vendas de Valor (VVV)
 
 Este skill produz copy de Vídeo de Vendas de Valor seguindo a metodologia Light Copy. A copy resultante soa como conversa leve e despretensiosa, evita marketês agressivo e respeita a inteligência do espectador. O objetivo é construir argumentos que ressoem genuinamente, não bater na cabeça com gatilhos óbvios.
 
-> **Toda copy produzida por esta skill passa pelo Manual da Copy** (`.Codex/skills/revisora/references/manual-copy.md`). Leia o manual antes de entregar e aplique o checklist da Parte 4 sem exceção. Em caso de conflito entre esta skill e o manual, **o manual prevalece**.
+> **Toda copy produzida por esta skill passa pelo Manual da Copy** (`.claude/skills/revisora/references/manual-copy.md`). Leia o manual antes de entregar e aplique o checklist da Parte 4 sem exceção. Em caso de conflito entre esta skill e o manual, **o manual prevalece**.
 
 ## Princípios da Light Copy
 
@@ -175,7 +169,7 @@ A história e o conteúdo viram uma única camada, um "porquê funciona" curto. 
 
 ## Regras gerais de copy (Manual da Copy)
 
-Esta skill é uma **especialização** do Manual da Copy. Tudo abaixo se aplica a toda copy gerada aqui. Para o texto completo (15 princípios + 20 vícios), consulte `.Codex/skills/revisora/references/manual-copy.md`.
+Esta skill é uma **especialização** do Manual da Copy. Tudo abaixo se aplica a toda copy gerada aqui. Para o texto completo (15 princípios + 20 vícios), consulte `.claude/skills/revisora/references/manual-copy.md`.
 
 ### Princípios críticos para VVV
 
@@ -207,11 +201,11 @@ Antes de entregar, **varra a copy** procurando estes vícios. Se achar, reescrev
 12. **Bônus sem preço de mercado ancorado.**
 13. **Venda só do Quadro, sem Benefício** (consequência emocional e financeira).
 
-A lista completa (20 vícios + correções) está na Parte 3 de `.Codex/skills/revisora/references/manual-copy.md`.
+A lista completa (20 vícios + correções) está na Parte 3 de `.claude/skills/revisora/references/manual-copy.md`.
 
 ## Checklist de entrega. Rode antes de mostrar a copy
 
-Esta checagem é **obrigatória**. Não entregue copy ao usuário sem ter passado por todos os blocos. O checklist completo está em `.Codex/skills/revisora/references/manual-copy.md` Parte 4. Versão mínima pra VVV:
+Esta checagem é **obrigatória**. Não entregue copy ao usuário sem ter passado por todos os blocos. O checklist completo está em `.claude/skills/revisora/references/manual-copy.md` Parte 4. Versão mínima pra VVV:
 
 **Bloco A. Vícios absolutos:**
 - [ ] Zero travessões

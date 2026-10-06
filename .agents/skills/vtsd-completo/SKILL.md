@@ -477,7 +477,7 @@ Identifique e quebre as principais objeções do público.
 
 ### Comandos Rápidos
 
-Peça ao Codex:
+Peça ao Claude:
 - "Crie um quadro para [nicho/produto]"
 - "Monte a furadeira para [método]"
 - "Gere 50 decorados para [quadro]"

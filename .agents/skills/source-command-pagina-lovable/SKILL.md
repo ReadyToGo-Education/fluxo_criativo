@@ -5,9 +5,11 @@ description: "Publicar uma página HTML do projeto direto no Lovable via API e d
 
 # source-command-pagina-lovable
 
-Use this skill when the user asks to run the migrated source command `pagina-lovable`.
+Use esta skill quando o usuário pedir o comando `/pagina-lovable` do workshop (ou `pagina-lovable`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-lovable.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Lovable. Publicação via API
 

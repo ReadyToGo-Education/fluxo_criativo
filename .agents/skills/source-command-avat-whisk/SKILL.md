@@ -5,9 +5,11 @@ description: "Gerar briefings visuais prontos para o Whisk (Google Labs). Cria o
 
 # source-command-avat-whisk
 
-Use this skill when the user asks to run the migrated source command `avat-whisk`.
+Use esta skill quando o usuário pedir o comando `/avat-whisk` do workshop (ou `avat-whisk`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/avat-whisk.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Imagem com Whisk. Briefings Visuais para Personagem Consistente
 

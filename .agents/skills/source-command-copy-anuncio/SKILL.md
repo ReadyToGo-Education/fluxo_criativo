@@ -5,9 +5,11 @@ description: "Criar pacotes completos de anúncios para Meta Ads e Google Ads us
 
 # source-command-copy-anuncio
 
-Use this skill when the user asks to run the migrated source command `copy-anuncio`.
+Use esta skill quando o usuário pedir o comando `/copy-anuncio` do workshop (ou `copy-anuncio`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/copy-anuncio.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Anúncio. Mandala de 18 Tipos (VTSD)
 
@@ -206,7 +208,7 @@ Resumo do que vou criar:
 
 ### 3. Regras de Copy
 
-**Fonte única e obrigatória:** antes de escrever qualquer gancho, desenvolvimento ou CTA, leia `.Codex/skills/revisora/references/manual-copy.md`. É ali que vivem o princípio central, os **15 princípios fundamentais**, os **20 vícios proibidos** e o **checklist final (Blocos A/B/C/D)**. Toda variação passa pelo `revisora` antes de virar entregável.
+**Fonte única e obrigatória:** antes de escrever qualquer gancho, desenvolvimento ou CTA, leia `.claude/skills/revisora/references/manual-copy.md`. É ali que vivem o princípio central, os **15 princípios fundamentais**, os **20 vícios proibidos** e o **checklist final (Blocos A/B/C/D)**. Toda variação passa pelo `revisora` antes de virar entregável.
 
 **Reforços específicos de anúncio:**
 - **Gancho nos primeiros 3 segundos:** afirmação contra-intuitiva, paradoxo, revelação ou quebra-padrão. NUNCA pergunta, NUNCA frase óbvia.

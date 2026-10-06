@@ -5,9 +5,11 @@ description: "Configura as credenciais e preferências do relatório de Facebook
 
 # source-command-ads-relatorio
 
-Use this skill when the user asks to run the migrated source command `ads-relatorio`.
+Use esta skill quando o usuário pedir o comando `/ads-relatorio` do workshop (ou `ads-relatorio`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/ads-relatorio.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Configurar Relatorio de Ads
 
@@ -17,8 +19,8 @@ O mentoreado nunca abre arquivo, nunca instala nada manualmente. So cola as chav
 
 ## COMO FUNCIONA
 
-1. Codex configura o Meta Ads CLI (Python) e as credenciais
-2. Codex registra as preferencias de metricas e filtro de campanhas
+1. Claude configura o Meta Ads CLI (Python) e as credenciais
+2. Claude registra as preferencias de metricas e filtro de campanhas
 3. Ao final, voce pode enviar um relatorio imediatamente com `/enviar-relatorio-ads`
 
 ---
@@ -51,7 +53,7 @@ Vá direto para o **Passo 0-CANAL** (configuração do canal de envio Telegram o
 
 Siga para o **Passo 0** atual. Dentro do ramo APP, a variável `RELATORIO_AUTH_MODO` continua decidindo qual script de execução roda (Python CLI ou PowerShell).
 
-> **Nota sobre as duas variáveis.** `META_AUTH_MODO` decide o caminho de autenticação com o Meta (MCP via Codex ou Token via App no `.env`). `RELATORIO_AUTH_MODO` decide o executor do relatório dentro do ramo App (Python CLI cross-platform ou PowerShell Windows). Não são redundantes, atuam em camadas diferentes.
+> **Nota sobre as duas variáveis.** `META_AUTH_MODO` decide o caminho de autenticação com o Meta (MCP via Claude ou Token via App no `.env`). `RELATORIO_AUTH_MODO` decide o executor do relatório dentro do ramo App (Python CLI cross-platform ou PowerShell Windows). Não são redundantes, atuam em camadas diferentes.
 
 ---
 

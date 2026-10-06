@@ -25,8 +25,8 @@ user-invocable: false
 
 | Arquivo | Descricao |
 |---|---|
-| `.Codex/skills/instagram-dashboard/scripts/atualizar.py` | Script Python principal (Windows, macOS, Linux) — compartilhado entre todos os produtos |
-| `.Codex/skills/instagram-dashboard/scripts/atualizar_powershell.ps1` | Script PowerShell de backup (Windows) |
+| `.claude/skills/instagram-dashboard/scripts/atualizar.py` | Script Python principal (Windows, macOS, Linux) — compartilhado entre todos os produtos |
+| `.claude/skills/instagram-dashboard/scripts/atualizar_powershell.ps1` | Script PowerShell de backup (Windows) |
 | `meus-produtos/{ativo}/entregas/instagram-dashboard/dashboard.html` | Dashboard HTML completo, abre no navegador |
 | `meus-produtos/{ativo}/entregas/instagram-dashboard/imagens/` | Thumbnails e slides dos posts (gerados pelo script) |
 | `meus-produtos/{ativo}/entregas/instagram-dashboard/insights.json` | Dados estruturados sem base64 (usado por /copy-variacao-post) |
@@ -71,7 +71,7 @@ Uma chamada de perfil + loop de posts (ambas sync, mesmo ator):
 
 **Campo de imagem usado:** `displayUrl` (thumbnail JPEG do post). Para carrosseis, o campo `images` pode estar vazio — o script usa `displayUrl` como fallback. O cycling de carrossel funciona quando `images` tem multiplas entradas.
 
-**insights.json com caminhos de arquivo:** alem de embutir base64 no dashboard, o script salva os thumbnails e slides como `.jpg` em `entregas/instagram-dashboard/imagens/` e armazena os caminhos relativos no `insights.json` (`thumbnailPath`, `carouselPaths`). Isso permite que o `/copy-variacao-post` use o Read tool do Codex para analisar visualmente as imagens.
+**insights.json com caminhos de arquivo:** alem de embutir base64 no dashboard, o script salva os thumbnails e slides como `.jpg` em `entregas/instagram-dashboard/imagens/` e armazena os caminhos relativos no `insights.json` (`thumbnailPath`, `carouselPaths`). Isso permite que o `/copy-variacao-post` use o Read tool do Claude para analisar visualmente as imagens.
 
 **Transcricao de Reels:** para posts do tipo Video, o script chama `apify~whisper-speech-to-text` com a `videoUrl` do post e armazena a transcricao em `insights.json`. O `/copy-variacao-post` usa essa transcricao para entender o conteudo real do Reel sem precisar reproduzir o video.
 
@@ -198,14 +198,14 @@ macOS: `open ...` / Linux: `xdg-open ...`
 
 **Opcao 2 — Atualizar:**
 ```bash
-python .Codex/skills/instagram-dashboard/scripts/atualizar.py --abrir
+python .claude/skills/instagram-dashboard/scripts/atualizar.py --abrir
 ```
 Aguarde, leia o log em `meus-produtos/{ativo}/entregas/instagram-dashboard/log.txt`, informe o resultado.
 
 **Opcao 3 — Trocar perfil:**
 Pergunte o novo @. Normalize (sem @, lowercase). Atualize com Edit cirurgico no `.env`: linha `IG_USER=<novo_username>`. Execute para testar:
 ```bash
-python .Codex/skills/instagram-dashboard/scripts/atualizar.py --abrir
+python .claude/skills/instagram-dashboard/scripts/atualizar.py --abrir
 ```
 
 **Opcao 4 — Recriar do zero:**
@@ -250,7 +250,7 @@ Configuracao confirmada:
 
 - Perfil Instagram: @{username}
 - Token Apify: configurado
-- Script: .Codex/skills/instagram-dashboard/scripts/atualizar.py
+- Script: .claude/skills/instagram-dashboard/scripts/atualizar.py
 - Dashboard: meus-produtos/{ativo}/entregas/instagram-dashboard/dashboard.html
 
 Custo estimado no Apify: menos de US$ 0,20 por geracao no plano gratuito.
@@ -264,7 +264,7 @@ Custo estimado no Apify: menos de US$ 0,20 por geracao no plano gratuito.
 ### PASSO 2. Executar
 
 ```bash
-python .Codex/skills/instagram-dashboard/scripts/atualizar.py --abrir
+python .claude/skills/instagram-dashboard/scripts/atualizar.py --abrir
 ```
 
 macOS / Linux: `python3 ...`
@@ -314,7 +314,7 @@ Acesse pelo Painel de Entregas:
 meus-produtos/{ativo}/painel-entregas.html  (aba Dashboards)
 
 Para atualizar os dados quando quiser:
-python .Codex/skills/instagram-dashboard/scripts/atualizar.py
+python .claude/skills/instagram-dashboard/scripts/atualizar.py
 (depois rode: py -3 scripts/painel-incremental.py --secao dashboards)
 
 Perfil monitorado: @{username}
@@ -324,7 +324,7 @@ Perfil monitorado: @{username}
 
 Backup PowerShell (Windows):
 ```
-powershell -ExecutionPolicy Bypass -File .Codex\skills\instagram-dashboard\scripts\atualizar_powershell.ps1 -Abrir
+powershell -ExecutionPolicy Bypass -File .claude\skills\instagram-dashboard\scripts\atualizar_powershell.ps1 -Abrir
 ```
 
 ---

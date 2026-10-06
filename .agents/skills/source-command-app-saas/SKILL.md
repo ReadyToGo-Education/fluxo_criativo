@@ -5,9 +5,11 @@ description: "Lê o perfil do produto ativo, sugere 10 ideias de mini-SaaS relev
 
 # source-command-app-saas
 
-Use this skill when the user asks to run the migrated source command `app-saas`.
+Use esta skill quando o usuário pedir o comando `/app-saas` do workshop (ou `app-saas`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/app-saas.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # App SaaS. Gerador de Épicos para Alunos
 

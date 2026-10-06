@@ -5,9 +5,11 @@ description: "Conectar uma página de captura HTML ao ActiveCampaign via API. Ca
 
 # source-command-pagina-active
 
-Use this skill when the user asks to run the migrated source command `pagina-active`.
+Use esta skill quando o usuário pedir o comando `/pagina-active` do workshop (ou `pagina-active`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-active.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página ActiveCampaign. Integração via API
 

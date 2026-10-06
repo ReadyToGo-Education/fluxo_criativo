@@ -5,9 +5,11 @@ description: "Conectar uma página HTML pronta ao checkout (Hotmart, Kiwify, Edu
 
 # source-command-pagina-checkout
 
-Use this skill when the user asks to run the migrated source command `pagina-checkout`.
+Use esta skill quando o usuário pedir o comando `/pagina-checkout` do workshop (ou `pagina-checkout`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-checkout.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Checkout. Conexão com Plataforma de Pagamento
 

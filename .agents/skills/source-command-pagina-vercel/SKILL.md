@@ -5,9 +5,11 @@ description: "Publicar uma página HTML do projeto direto na Vercel via API e de
 
 # source-command-pagina-vercel
 
-Use this skill when the user asks to run the migrated source command `pagina-vercel`.
+Use esta skill quando o usuário pedir o comando `/pagina-vercel` do workshop (ou `pagina-vercel`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-vercel.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Vercel. Publicação via API
 

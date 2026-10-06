@@ -176,7 +176,7 @@ Quer ajuda para escrever um gancho na imagem?
 2 — Não, vou usar meu texto
 ```
 
-Se **1 (Sim)**: carregar `.Codex/skills/carrossel-visual/references/hooks-imagem-disruptiva.md` e propor 3 opções de gancho curto (máx 6 palavras). Aguardar escolha.
+Se **1 (Sim)**: carregar `.claude/skills/carrossel-visual/references/hooks-imagem-disruptiva.md` e propor 3 opções de gancho curto (máx 6 palavras). Aguardar escolha.
 
 **Prompt obrigatório (EN):**
 ```

@@ -5,9 +5,11 @@ description: "Atualizar o manifest meus-produtos/index.js que alimenta o painel 
 
 # source-command-painel-atualizar
 
-Use this skill when the user asks to run the migrated source command `painel-atualizar`.
+Use esta skill quando o usuário pedir o comando `/painel-atualizar` do workshop (ou `painel-atualizar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/painel-atualizar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Atualizar Manifest do Painel
 

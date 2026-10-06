@@ -5,9 +5,11 @@ description: "Guia para criar conta no Apify, gerar o Personal API Token e salva
 
 # source-command-configurar-apify
 
-Use this skill when the user asks to run the migrated source command `configurar-apify`.
+Use esta skill quando o usuário pedir o comando `/configurar-apify` do workshop (ou `configurar-apify`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/configurar-apify.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Configurar Apify
 

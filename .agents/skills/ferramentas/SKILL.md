@@ -21,7 +21,7 @@ O toolkit funciona 100% sem nenhuma ferramenta externa (nivel basico). As integr
 4. Copie o token e o Project ID para o arquivo `.env`
 
 **Como o toolkit usa:**
-Apos gerar o HTML, o Codex executa `vercel deploy` e retorna a URL publica da pagina.
+Apos gerar o HTML, o Claude Code executa `vercel deploy` e retorna a URL publica da pagina.
 
 **Sem a chave:** A pagina e salva localmente em `entregas/paginas/`. O aluno abre no navegador manualmente ou publica por conta propria.
 
@@ -39,7 +39,7 @@ Apos gerar o HTML, o Codex executa `vercel deploy` e retorna a URL publica da pa
 3. Copie a chave para o arquivo `.env`
 
 **Como o toolkit usa:**
-Apos gerar os prompts de imagem, o Codex envia cada prompt para a API do Freepik (Magnific) e salva as imagens geradas em `entregas/criativos/`.
+Apos gerar os prompts de imagem, o Claude Code envia cada prompt para a API do Freepik (Magnific) e salva as imagens geradas em `entregas/criativos/`.
 
 **Sem a chave:** Os prompts sao salvos em arquivo. O aluno copia e cola no site do Freepik (Magnific), Midjourney ou DALL-E manualmente.
 
@@ -62,7 +62,7 @@ Apos gerar os prompts de imagem, o Codex envia cada prompt para a API do Freepik
 3. Copie a chave para o arquivo `.env`
 
 **Como o toolkit usa:**
-Quando o aluno escolhe o formato "Avatar" no `/video-heygen`, o Codex envia o script para a API do HeyGen. O video e gerado em segundo plano e o link e informado quando pronto.
+Quando o aluno escolhe o formato "Avatar" no `/video-heygen`, o Claude Code envia o script para a API do HeyGen. O video e gerado em segundo plano e o link e informado quando pronto.
 
 **Sem a chave:** O roteiro e salvo em arquivo. O aluno copia o script e cola no app.heygen.com para gravar manualmente.
 
@@ -107,7 +107,7 @@ OPCIONAL e AVANCADO. O toolkit gera a copy e a estrutura de campanha em arquivo.
 4. Cole no arquivo `.env`
 
 **Como o toolkit usa:**
-Ao gerar qualquer pagina HTML, o Codex insere automaticamente o snippet do Pixel no `<head>` com os eventos adequados:
+Ao gerar qualquer pagina HTML, o Claude Code insere automaticamente o snippet do Pixel no `<head>` com os eventos adequados:
 - Pagina de captura: evento `Lead`
 - Pagina de vendas: evento `ViewContent`
 - Pagina de obrigado: evento `Purchase` ou `CompleteRegistration`
@@ -144,7 +144,7 @@ Ao gerar qualquer pagina HTML, o Codex insere automaticamente o snippet do Pixel
 4. Copie o token e o ID do produto para o arquivo `.env`
 
 **Como o toolkit usa:**
-Ao gerar paginas de vendas, o Codex pode inserir automaticamente o link correto de checkout nos botoes de compra.
+Ao gerar paginas de vendas, o Claude Code pode inserir automaticamente o link correto de checkout nos botoes de compra.
 
 **Sem as chaves:** Os botoes de compra na pagina ficam com placeholder `[INSERIR LINK DE CHECKOUT]`. O aluno substitui manualmente.
 
@@ -180,7 +180,7 @@ Ao gerar paginas de vendas, o Codex pode inserir automaticamente o link correto 
 4. Opcionalmente, defina o modelo preferido em `OPENROUTER_IMAGE_MODEL`
 
 **Como o toolkit usa:**
-Quando o aluno usa `/criativo-estatico` em modo "api" e aprova o prompt gerado, o Codex envia o prompt para a API do OpenRouter e salva a imagem em `entregas/criativos/`. A imagem fica pronta para usar diretamente no Meta Ads ou Google Ads.
+Quando o aluno usa `/criativo-estatico` em modo "api" e aprova o prompt gerado, o Claude Code envia o prompt para a API do OpenRouter e salva a imagem em `entregas/criativos/`. A imagem fica pronta para usar diretamente no Meta Ads ou Google Ads.
 
 **Fluxo de chamada (curl):**
 ```

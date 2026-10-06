@@ -5,9 +5,11 @@ description: "Guia para criar conta na Z-API, configurar uma instância e conect
 
 # source-command-configurar-zapi
 
-Use this skill when the user asks to run the migrated source command `configurar-zapi`.
+Use esta skill quando o usuário pedir o comando `/configurar-zapi` do workshop (ou `configurar-zapi`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/configurar-zapi.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Configurar Z-API
 

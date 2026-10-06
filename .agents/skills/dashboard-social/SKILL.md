@@ -281,10 +281,10 @@ Execute os scripts como chamadas Bash em paralelo (numa mesma mensagem de tool c
 
 | Plataforma | Script |
 |---|---|
-| Instagram | `{python} .Codex/skills/instagram-dashboard/scripts/atualizar.py 2>&1` |
-| TikTok | `{python} .Codex/skills/tiktok-dashboard/scripts/atualizar.py 2>&1` |
-| YouTube | `{python} .Codex/skills/youtube-dashboard/scripts/atualizar.py 2>&1` |
-| LinkedIn | `{python} .Codex/skills/linkedin-dashboard/scripts/atualizar.py 2>&1` |
+| Instagram | `{python} .claude/skills/instagram-dashboard/scripts/atualizar.py 2>&1` |
+| TikTok | `{python} .claude/skills/tiktok-dashboard/scripts/atualizar.py 2>&1` |
+| YouTube | `{python} .claude/skills/youtube-dashboard/scripts/atualizar.py 2>&1` |
+| LinkedIn | `{python} .claude/skills/linkedin-dashboard/scripts/atualizar.py 2>&1` |
 
 Apos todos concluirem, leia a saida de cada um e informe:
 
@@ -313,7 +313,7 @@ Isso costuma levar entre 5 e 10 minutos. Aviso quando terminar.
 
 Execute o script correspondente em primeiro plano, sem `| tail` e sem background:
 ```bash
-{python} .Codex/skills/instagram-dashboard/scripts/atualizar.py 2>&1
+{python} .claude/skills/instagram-dashboard/scripts/atualizar.py 2>&1
 ```
 
 Aguarde a conclusao. Leia a saida completa para confirmar sucesso ou erro. Informe o resultado em linguagem simples antes de seguir para a proxima plataforma.
@@ -609,10 +609,10 @@ Mapeamento dos flags:
 
 | Plataforma | Comando |
 |---|---|
-| Instagram | `{python} .Codex/skills/instagram-dashboard/scripts/atualizar.py --usuario {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
-| TikTok | `{python} .Codex/skills/tiktok-dashboard/scripts/atualizar.py --usuario {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
-| YouTube | `{python} .Codex/skills/youtube-dashboard/scripts/atualizar.py --canal {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
-| LinkedIn | `{python} .Codex/skills/linkedin-dashboard/scripts/atualizar.py --perfil {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| Instagram | `{python} .claude/skills/instagram-dashboard/scripts/atualizar.py --usuario {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| TikTok | `{python} .claude/skills/tiktok-dashboard/scripts/atualizar.py --usuario {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| YouTube | `{python} .claude/skills/youtube-dashboard/scripts/atualizar.py --canal {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
+| LinkedIn | `{python} .claude/skills/linkedin-dashboard/scripts/atualizar.py --perfil {handle} --concorrente {slug} --nome-bonito "{nome}" 2>&1` |
 
 Pode rodar em paralelo (uma chamada Bash por plataforma na mesma mensagem) ou sequencial. Pergunte ao aluno se ele preferir.
 

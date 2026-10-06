@@ -5,9 +5,11 @@ description: "Instalar Meta Pixel (Facebook Pixel) numa página HTML pronta. Con
 
 # source-command-pagina-pixel
 
-Use this skill when the user asks to run the migrated source command `pagina-pixel`.
+Use esta skill quando o usuário pedir o comando `/pagina-pixel` do workshop (ou `pagina-pixel`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-pixel.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Pixel. Instalação de Meta Pixel
 

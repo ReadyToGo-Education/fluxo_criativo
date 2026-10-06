@@ -1,6 +1,6 @@
 ---
 name: biblioteca-anuncios
-description: Investiga criativos escalados na Biblioteca de Anúncios da Meta. Busca concorrentes do nicho do aluno em 1 a 6 mercados (BR, US, MX, AR, CO, ES), identifica criativos com escala (3 ou mais ads usando a mesma peça) via campo collationCount, marca concorrentes que pivotaram de nicho e entrega um HTML self-contained com filtros por mercado, cards por concorrente, resumo estratégico e padrões. Dois métodos de execução. Apify (rápido, requer APIFY_API_TOKEN, custo baixo) ou Codex in Chrome (gratuito, exige aprovação manual dos pop-ups).
+description: Investiga criativos escalados na Biblioteca de Anúncios da Meta. Busca concorrentes do nicho do aluno em 1 a 6 mercados (BR, US, MX, AR, CO, ES), identifica criativos com escala (3 ou mais ads usando a mesma peça) via campo collationCount, marca concorrentes que pivotaram de nicho e entrega um HTML self-contained com filtros por mercado, cards por concorrente, resumo estratégico e padrões. Dois métodos de execução. Apify (rápido, requer APIFY_API_TOKEN, custo baixo) ou Claude in Chrome (gratuito, exige aprovação manual dos pop-ups).
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
@@ -11,7 +11,7 @@ Investiga a Biblioteca de Anúncios da Meta e identifica quais criativos os conc
 
 Dois métodos de execução disponíveis:
 - **Apify** (recomendado). Roda em background via API, 2 a 5 minutos, zero cliques de permissão, custa $0.10 a $3.00 conforme o modo.
-- **Codex in Chrome** (fallback gratuito). Roda no navegador, 5 a 25 minutos, exige aprovar pop-ups manualmente.
+- **Claude in Chrome** (fallback gratuito). Roda no navegador, 5 a 25 minutos, exige aprovar pop-ups manualmente.
 
 ---
 
@@ -19,18 +19,18 @@ Dois métodos de execução disponíveis:
 
 A skill funciona em 2 ambientes (CLI ou Desktop), mas com capacidades diferentes:
 
-| Ambiente | Apify | Codex in Chrome |
+| Ambiente | Apify | Claude in Chrome |
 |---|---|---|
-| **Codex no terminal (CLI)** | ✅ se tiver `APIFY_API_TOKEN` no `.env` | ❌ Não disponível |
-| **Codex Desktop (Codex.ai pelo navegador)** | ✅ se tiver `APIFY_API_TOKEN` no `.env` | ✅ se a extensão Codex in Chrome estiver conectada |
+| **Claude Code no terminal (CLI)** | ✅ se tiver `APIFY_API_TOKEN` no `.env` | ❌ Não disponível |
+| **Claude Desktop (claude.ai pelo navegador)** | ✅ se tiver `APIFY_API_TOKEN` no `.env` | ✅ se a extensão Claude in Chrome estiver conectada |
 
-**Por que o Codex in Chrome não funciona pelo terminal?**
+**Por que o Claude in Chrome não funciona pelo terminal?**
 
-A extensão Codex in Chrome é um produto **Desktop-only**. Ela vive como uma extensão do navegador Chrome e se comunica apenas com sessões da Codex.ai abertas no navegador. Quando o aluno está rodando esta skill pelo Codex no terminal/CLI, **mesmo tendo a extensão instalada no Chrome, ela NÃO se comunica com a sessão CLI** (são processos isolados).
+A extensão Claude in Chrome é um produto **Desktop-only**. Ela vive como uma extensão do navegador Chrome e se comunica apenas com sessões da claude.ai abertas no navegador. Quando o aluno está rodando esta skill pelo Claude Code no terminal/CLI, **mesmo tendo a extensão instalada no Chrome, ela NÃO se comunica com a sessão CLI** (são processos isolados).
 
 A skill detecta isso em runtime checando se as tools `mcp__Claude_in_Chrome__*` estão presentes (ver Passo 0.4):
-- Presentes → ambiente Desktop, oferece a opção Codex in Chrome no menu do Passo 1.5.
-- Ausentes → ambiente CLI ou Desktop sem extensão, **não oferece** a opção Chrome e explica o motivo ao aluno. Se o aluno só tinha o Chrome em mente e não quer configurar Apify, encerra orientando a abrir o Codex Desktop.
+- Presentes → ambiente Desktop, oferece a opção Claude in Chrome no menu do Passo 1.5.
+- Ausentes → ambiente CLI ou Desktop sem extensão, **não oferece** a opção Chrome e explica o motivo ao aluno. Se o aluno só tinha o Chrome em mente e não quer configurar Apify, encerra orientando a abrir o Claude Desktop.
 
 Para usar a opção Apify (recomendada e disponível em qualquer ambiente), basta ter `APIFY_API_TOKEN` no `.env`. A skill `/configurar-apify` configura isso.
 
@@ -88,7 +88,7 @@ Digite o número.
 A configuração do Apify ainda não foi concluída. Quero:
 
 1. Voltar pra /configurar-apify e completar
-2. Trocar pra Codex in Chrome (sem precisar do token)
+2. Trocar pra Claude in Chrome (sem precisar do token)
 3. Cancelar
 
 Digite o número.
@@ -129,12 +129,12 @@ Leia o `.env` da raiz do projeto. Procure por `APIFY_API_TOKEN=...`.
 
 Isso será usado no Passo 1.5 para sugerir o método correto.
 
-### 0.4. Detecção do Codex in Chrome (Desktop-only)
+### 0.4. Detecção do Claude in Chrome (Desktop-only)
 
 Verifique se as tools `mcp__Claude_in_Chrome__navigate` e `mcp__Claude_in_Chrome__get_page_text` estão disponíveis na sessão atual.
 
-- **Se presentes**: salve `tem_chrome_mcp = true`. Ambiente é Codex Desktop com a extensão conectada. O método Codex in Chrome pode ser oferecido no Passo 1.5.
-- **Se ausentes**: salve `tem_chrome_mcp = false`. Ambiente é Codex no terminal (CLI) OU Codex Desktop sem a extensão. O método Codex in Chrome **NÃO** pode ser oferecido no Passo 1.5, e a skill explica o motivo ao aluno.
+- **Se presentes**: salve `tem_chrome_mcp = true`. Ambiente é Claude Desktop com a extensão conectada. O método Claude in Chrome pode ser oferecido no Passo 1.5.
+- **Se ausentes**: salve `tem_chrome_mcp = false`. Ambiente é Claude Code no terminal (CLI) OU Claude Desktop sem a extensão. O método Claude in Chrome **NÃO** pode ser oferecido no Passo 1.5, e a skill explica o motivo ao aluno.
 
 A combinação `tem_token_apify` + `tem_chrome_mcp` controla o menu do Passo 1.5. Se ambos forem `false`, o Passo 1.5 redireciona pra `/configurar-apify` antes de prosseguir, porque sem nenhum dos dois caminhos a investigação não pode rodar.
 
@@ -186,15 +186,15 @@ Tempos e custos por modo:
 
 Para **Rápido** (3 buscas, ~50-100 ads cada):
 - Apify: ~2 minutos. Custo aproximado: $0.05 a $0.15.
-- Codex in Chrome: ~5 minutos. ~6 cliques de permissão.
+- Claude in Chrome: ~5 minutos. ~6 cliques de permissão.
 
 Para **Padrão** (8 a 16 buscas):
 - Apify: ~5 minutos. Custo aproximado: $0.25 a $0.80.
-- Codex in Chrome: ~12 minutos. ~16 cliques.
+- Claude in Chrome: ~12 minutos. ~16 cliques.
 
 Para **Completo** (até 84 buscas):
 - Apify: ~12 minutos. Custo aproximado: $1.50 a $4.00.
-- Codex in Chrome: ~25 minutos. ~28 cliques.
+- Claude in Chrome: ~25 minutos. ~28 cliques.
 
 ### Matriz de menus
 
@@ -215,7 +215,7 @@ Pergunta 2 de 6. Método de execução
 Como você quer rodar a investigação?
 
 1. Apify (token já configurado no seu .env). {tempo_apify}. Custo aproximado: {custo_apify}. Zero cliques de permissão.
-2. Codex in Chrome (extensão conectada). {tempo_chrome}. Gratuito. Exige aprovar ~{cliques} pop-ups durante a execução.
+2. Claude in Chrome (extensão conectada). {tempo_chrome}. Gratuito. Exige aprovar ~{cliques} pop-ups durante a execução.
 3. Cancelar.
 
 Digite o número.
@@ -233,7 +233,7 @@ Como você quer rodar a investigação?
 
 Digite o número.
 
-Nota: Codex in Chrome não está disponível porque você está rodando esta skill pelo Codex no terminal (CLI). A extensão Codex in Chrome é Desktop-only e se comunica apenas com sessões da Codex.ai abertas no navegador. Se quiser usar a opção Chrome, abra o Codex Desktop, invoque /biblioteca-anuncios lá, e tenha a extensão conectada. Para esta sessão atual, Apify é o caminho disponível.
+Nota: Claude in Chrome não está disponível porque você está rodando esta skill pelo Claude Code no terminal (CLI). A extensão Claude in Chrome é Desktop-only e se comunica apenas com sessões da claude.ai abertas no navegador. Se quiser usar a opção Chrome, abra o Claude Desktop, invoque /biblioteca-anuncios lá, e tenha a extensão conectada. Para esta sessão atual, Apify é o caminho disponível.
 ```
 
 ### Menu C. `tem_token_apify = false`, `tem_chrome_mcp = true`
@@ -244,7 +244,7 @@ Pergunta 2 de 6. Método de execução
 Como você quer rodar a investigação?
 
 1. Apify (requer configurar APIFY_API_TOKEN. Leva ~2 minutos. Eu te direciono pra /configurar-apify e depois retomamos esta investigação automaticamente). {tempo_apify} de execução. Custo: {custo_apify}.
-2. Codex in Chrome (extensão conectada, pronto pra rodar agora sem configuração). {tempo_chrome}. Gratuito. Exige aprovar ~{cliques} pop-ups.
+2. Claude in Chrome (extensão conectada, pronto pra rodar agora sem configuração). {tempo_chrome}. Gratuito. Exige aprovar ~{cliques} pop-ups.
 3. Cancelar.
 
 Digite o número.
@@ -260,12 +260,12 @@ Pergunta 2 de 6. Método de execução
 Você não tem nenhum dos 2 métodos prontos para rodar agora:
 
 - Apify: APIFY_API_TOKEN não configurado no .env.
-- Codex in Chrome: indisponível porque você está no terminal (CLI). A extensão é Desktop-only.
+- Claude in Chrome: indisponível porque você está no terminal (CLI). A extensão é Desktop-only.
 
 Como você quer prosseguir?
 
 1. Configurar Apify agora (~2 minutos). Eu te direciono pra /configurar-apify e retomamos esta investigação automaticamente. Funciona em qualquer ambiente.
-2. Abrir o Codex Desktop em outro momento, conectar a extensão Codex in Chrome lá, e invocar /biblioteca-anuncios. (Encerra esta execução agora.)
+2. Abrir o Claude Desktop em outro momento, conectar a extensão Claude in Chrome lá, e invocar /biblioteca-anuncios. (Encerra esta execução agora.)
 3. Cancelar.
 
 Digite o número.
@@ -286,7 +286,7 @@ AGUARDE A RESPOSTA.
 - `1` → salve `metodo = APIFY`. Siga normalmente.
 - `2` → encerre.
 
-Se o aluno digitar `3` ou tentar escolher Chrome neste menu, reforce: "A opção Codex in Chrome não está disponível nesta sessão (você está no terminal/CLI). Use Apify (1) ou cancele (2)."
+Se o aluno digitar `3` ou tentar escolher Chrome neste menu, reforce: "A opção Claude in Chrome não está disponível nesta sessão (você está no terminal/CLI). Use Apify (1) ou cancele (2)."
 
 **Menu C (`tem_token_apify=false`, `tem_chrome_mcp=true`):**
 - `1` → fluxo de configuração do Apify (veja "Fluxo de configuração do Apify" abaixo).
@@ -587,7 +587,7 @@ Anuncie:
 Execute via `Bash`:
 
 ```bash
-{python} .Codex/skills/biblioteca-anuncios/scripts/buscar-apify.py \
+{python} .claude/skills/biblioteca-anuncios/scripts/buscar-apify.py \
   --concorrente "{nome}" \
   --pais {mercado} \
   --criterio-escala {criterio_escala} \
@@ -631,14 +631,14 @@ Processe:
 
 Atualize o JSON da fila movendo o concorrente de `pendente` para `concluido` após cada execução.
 
-### 7.3. Fluxo Codex in Chrome (se `metodo == CHROME`)
+### 7.3. Fluxo Claude in Chrome (se `metodo == CHROME`)
 
 Antes de começar, exiba o aviso:
 
 ```
-⚠ Aviso importante sobre Codex in Chrome
+⚠ Aviso importante sobre Claude in Chrome
 
-Vou abrir o Codex in Chrome e navegar pela Biblioteca de Anúncios da Meta. A cada concorrente, o Chrome pede permissão DUAS vezes (navigate + get_page_text). Hoje o pop-up NÃO tem opção "Permitir sempre".
+Vou abrir o Claude in Chrome e navegar pela Biblioteca de Anúncios da Meta. A cada concorrente, o Chrome pede permissão DUAS vezes (navigate + get_page_text). Hoje o pop-up NÃO tem opção "Permitir sempre".
 
 Você vai aprovar ~{cliques} pop-ups. Pode aprovar tudo de uma rajada quando começar.
 
@@ -655,7 +655,7 @@ Para cada concorrente:
 Anuncie:
 
 ```
-⏳ Concorrente {N}/{total}: investigando {nome} no mercado {mercado} via Codex in Chrome...
+⏳ Concorrente {N}/{total}: investigando {nome} no mercado {mercado} via Claude in Chrome...
 ```
 
 Execute:
@@ -724,7 +724,7 @@ Monte um arquivo de configuração em `meus-produtos/{ativo}/entregas/biblioteca
     }
   ],
   "analises": {
-    "padroes_comuns": ["bullet 1 escrito pelo Codex com nuance do nicho", "bullet 2", "..."],
+    "padroes_comuns": ["bullet 1 escrito pelo Claude com nuance do nicho", "bullet 2", "..."],
     "diferencas_mercados": ["BR vs US: {bullet}", "EN vs ES: {bullet}", "..."],
     "padroes_por_concorrente": {
       "alex-hormozi": "Texto custom do bloco 'Padrao Identificado' deste concorrente.",
@@ -745,7 +745,7 @@ Monte um arquivo de configuração em `meus-produtos/{ativo}/entregas/biblioteca
 ### 8.2. Executar o script
 
 ```bash
-{python} .Codex/skills/biblioteca-anuncios/scripts/montar-html.py --config meus-produtos/{ativo}/entregas/biblioteca-anuncios/tmp/relatorio-config.json
+{python} .claude/skills/biblioteca-anuncios/scripts/montar-html.py --config meus-produtos/{ativo}/entregas/biblioteca-anuncios/tmp/relatorio-config.json
 ```
 
 O script imprime um JSON único linha com `{"ok": true, "saida_html": "...", "tamanho_bytes": N}`. Leia esse JSON para confirmar sucesso.
@@ -793,13 +793,13 @@ Exiba o caminho absoluto em formato copiável.
 ## Regras
 
 - **Aprovação obrigatória** no Passo 6 (confirmação consolidada) antes de executar.
-- **Aviso de Codex in Chrome** obrigatório no Passo 7.3 (se método CHROME).
+- **Aviso de Claude in Chrome** obrigatório no Passo 7.3 (se método CHROME).
 - **Cache de retomada** via `.biblioteca-queue.json` em ambos os métodos.
 - **Anúncios Nível 2** em cada concorrente.
 - **"Cancelar" disponível** em toda aprovação.
 - **Sem travessão, sem exclamação** em todo texto gerado.
 - **Português brasileiro com acentuação correta** em todo texto exibido ao aluno.
-- **Token Apify nunca exibido no chat**, conforme regra global do AGENTS.md.
+- **Token Apify nunca exibido no chat**, conforme regra global do CLAUDE.md.
 - **Detectar python3 vs py -3** antes de chamar scripts.
 
 ---
@@ -808,7 +808,7 @@ Exiba o caminho absoluto em formato copiável.
 
 - O aluno quer **criar anúncios** próprios. Use `/copy-anuncio`.
 - O aluno quer **analisar campanhas próprias**. Use `/trafego-analise`.
-- O aluno não tem nem APIFY_API_TOKEN nem Codex in Chrome.
+- O aluno não tem nem APIFY_API_TOKEN nem Claude in Chrome.
 - O aluno ainda não cadastrou produto. Use `/produto-novo`.
 
 ---
@@ -828,7 +828,7 @@ A skill pode ser rodada várias vezes; cada execução gera um HTML novo com a d
 ## Arquivos internos da skill
 
 ```
-.Codex/skills/biblioteca-anuncios/
+.claude/skills/biblioteca-anuncios/
 ├── SKILL.md
 ├── references/
 │   ├── apify-actor.md (detalhes técnicos do actor Apify)

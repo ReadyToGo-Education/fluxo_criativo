@@ -29,7 +29,7 @@ uname -s 2>/dev/null || echo "Windows"
 | `Linux` | Linux |
 | `Windows` ou erro | Windows (shell nao tem `uname`) |
 
-No Codex no Windows, `uname` pode falhar ou nao existir. Nesse
+No Claude Code no Windows, `uname` pode falhar ou nao existir. Nesse
 caso, assuma Windows e oferta PowerShell como padrao.
 
 ---

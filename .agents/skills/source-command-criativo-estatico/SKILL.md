@@ -5,9 +5,11 @@ description: "Gera criativo estático de anúncio (imagem) para Instagram. Orque
 
 # source-command-criativo-estatico
 
-Use this skill when the user asks to run the migrated source command `criativo-estatico`.
+Use esta skill quando o usuário pedir o comando `/criativo-estatico` do workshop (ou `criativo-estatico`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/criativo-estatico.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Criativo Estático. Orquestrador de Formatos de Anúncio
 
@@ -51,34 +53,34 @@ Se a mensagem inicial do aluno mencionar EXPLICITAMENTE o nome do formato, pular
 
 | Mensagem do aluno contém | Sub-skill | Arquivo a ler |
 |---|---|---|
-| "promessa simples", "criativo simples", "anúncio simples", "formato simples" | Promessa Simples | `.Codex/commands/criativo-estatico/promessa-simples.md` |
-| "caixinha de perguntas", "caixinha", "pergunta e resposta", "anúncio nativo" | Caixinha de Perguntas | `.Codex/commands/criativo-estatico/caixinha-de-perguntas.md` |
-| "criativo surreal", "anúncio surreal", "surreal", "fora do mundo normal", "metáfora visual", "impacto visual", "editorial", "Cannes Lions" | Criativo Surreal | `.Codex/commands/criativo-estatico/criativo-surreal.md` |
-| "AIDA", "fluxo completo", "criativo avançado" | AIDA Completo | `.Codex/commands/criativo-estatico/aida.md` |
-| "UGC", "rotina real", "estilo TikTok", "anúncio orgânico", "creator amador" | UGC Rotina Real | `.Codex/commands/criativo-estatico/ugc-rotina-real.md` |
-| "POV", "ponto de vista", "situação reconhecível", "vivência" | POV | `.Codex/commands/criativo-estatico/pov.md` |
-| "problema solução", "problema e solução", "antes e depois", "UGC brasileiro" | Problema-Solução | `.Codex/commands/criativo-estatico/problema-solucao.md` |
-| "jeito certo", "jeito errado", "erro vs acerto", "o que não fazer", "comparação UGC" | Jeito Certo × Jeito Errado | `.Codex/commands/criativo-estatico/jeito-certo-jeito-errado.md` |
-| "checklist", "passo a passo", "5 passos", "protocolo", "lista de ações" | Checklist | `.Codex/commands/criativo-estatico/checklist.md` |
-| "ASMR", "sensação", "super zoom", "macro", "textura sensorial" | ASMR / Sensação | `.Codex/commands/criativo-estatico/asmr-sensacao.md` |
-| "meme", "criativo engraçado", "humor", "viral", "anúncio engraçado" | Meme | `.Codex/commands/criativo-estatico/meme.md` |
-| "jogo dos 7 erros", "jogo dos erros", "encontre os erros", "7 erros", "gamificado" | Jogo dos 7 Erros | `.Codex/commands/criativo-estatico/jogo-7-erros.md` |
-| "notícia", "manchete", "estilo portal", "matéria de jornal", "estilo Metrópoles" | Criativo Notícia | `.Codex/commands/criativo-estatico/criativo-noticia.md` |
-| "associação criativa", "associação", "objeto + pergunta", "ponte criativa", "metáfora com objeto" | Associação Criativa | `.Codex/commands/criativo-estatico/associacao-criativa.md` |
-| "criativo história", "história com quebra", "quebra de objeção", "diálogo 4 quadros", "criativo em diálogo" | Criativo História + Quebra de Objeção | `.Codex/commands/criativo-estatico/criativo-historia.md` |
-| "desespero de quem", "desespero", "dor visceral", "olhar de desespero" | O Desespero de Quem | `.Codex/commands/criativo-estatico/desespero-de-quem.md` |
-| "fofinho", "criativo fofo", "tom amoroso", "cena fofa", "anúncio fofo" | Fofinho | `.Codex/commands/criativo-estatico/fofinho.md` |
-| "nunca", "criativo nunca", "erro a não cometer", "o que não fazer no nicho" | Nunca | `.Codex/commands/criativo-estatico/nunca.md` |
-| "sempre", "criativo sempre", "hack a sempre fazer", "o que sempre fazer no nicho" | Sempre | `.Codex/commands/criativo-estatico/sempre.md` |
-| "timelapse", "ângulo aéreo", "comece hoje", "primeiros passos", "evolução em time-lapse" | Timelapse | `.Codex/commands/criativo-estatico/timelapse.md` |
-| "ugc coisas estranhas", "coisas estranhas", "absurdo viral", "humor com objeto", "ugc bizarro" | UGC Coisas Estranhas | `.Codex/commands/criativo-estatico/ugc-coisas-estranhas.md` |
-| "você merece", "voce merece", "aspiracional", "resultado visível", "3 desejos" | Você Merece | `.Codex/commands/criativo-estatico/voce-merece.md` |
-| "objetos estranhos", "objeto perto da câmera", "objeto curioso", "objeto metáfora", "frame de TikTok com objeto" | Objetos Estranhos | `.Codex/commands/criativo-estatico/objetos-estranhos.md` |
-| "reflexão editorial", "reflexao editorial", "criativo editorial", "post jornalístico", "estilo tweet expandido", "criativo com dados", "conta maluca", "polêmica do nicho" | Reflexão Editorial | `.Codex/commands/criativo-estatico/reflexao-editorial.md` |
-| "copa", "criativo copa", "anúncio copa", "campanha copa", "copa do mundo", "criativo futebol", "anúncio futebol", "campanha futebol", "temático futebol", "estilo copa", "ads copa", "creative copa", "criativo esportivo" | Copa / Futebol | `.Codex/commands/criativo-estatico/copa.md` |
-| "eleições", "eleicoes", "criativo eleições", "anúncio eleições", "campanha eleições", "criativo político", "criativo politico", "criativo eleitoral", "ads eleições", "criativo votação", "criativo voto", "tema eleição", "anúncio eleitoral" | Eleições | `.Codex/commands/criativo-estatico/eleicoes.md` |
-| "centro das atenções", "centro de atenção", "criativo centro", "criativo radial", "criativo com objeto central", "infográfico radial", "infografico radial", "dicas ao redor", "objeto central com dicas", "infográfico com setas" | Centro das Atenções | `.Codex/commands/criativo-estatico/centro-das-atencoes.md` |
-| "problema solução emoji", "problema solucao emoji", "problema solução com emoji", "criativo com emoji", "criativo problema solução emoji", "criativo comparativo com emoji", "criativo de valor com emoji", "grid problema solução", "dor e solução com emoji" | Problema × Solução Emoji | `.Codex/commands/criativo-estatico/problema-solucao-emoji.md` |
+| "promessa simples", "criativo simples", "anúncio simples", "formato simples" | Promessa Simples | `.claude/commands/criativo-estatico/promessa-simples.md` |
+| "caixinha de perguntas", "caixinha", "pergunta e resposta", "anúncio nativo" | Caixinha de Perguntas | `.claude/commands/criativo-estatico/caixinha-de-perguntas.md` |
+| "criativo surreal", "anúncio surreal", "surreal", "fora do mundo normal", "metáfora visual", "impacto visual", "editorial", "Cannes Lions" | Criativo Surreal | `.claude/commands/criativo-estatico/criativo-surreal.md` |
+| "AIDA", "fluxo completo", "criativo avançado" | AIDA Completo | `.claude/commands/criativo-estatico/aida.md` |
+| "UGC", "rotina real", "estilo TikTok", "anúncio orgânico", "creator amador" | UGC Rotina Real | `.claude/commands/criativo-estatico/ugc-rotina-real.md` |
+| "POV", "ponto de vista", "situação reconhecível", "vivência" | POV | `.claude/commands/criativo-estatico/pov.md` |
+| "problema solução", "problema e solução", "antes e depois", "UGC brasileiro" | Problema-Solução | `.claude/commands/criativo-estatico/problema-solucao.md` |
+| "jeito certo", "jeito errado", "erro vs acerto", "o que não fazer", "comparação UGC" | Jeito Certo × Jeito Errado | `.claude/commands/criativo-estatico/jeito-certo-jeito-errado.md` |
+| "checklist", "passo a passo", "5 passos", "protocolo", "lista de ações" | Checklist | `.claude/commands/criativo-estatico/checklist.md` |
+| "ASMR", "sensação", "super zoom", "macro", "textura sensorial" | ASMR / Sensação | `.claude/commands/criativo-estatico/asmr-sensacao.md` |
+| "meme", "criativo engraçado", "humor", "viral", "anúncio engraçado" | Meme | `.claude/commands/criativo-estatico/meme.md` |
+| "jogo dos 7 erros", "jogo dos erros", "encontre os erros", "7 erros", "gamificado" | Jogo dos 7 Erros | `.claude/commands/criativo-estatico/jogo-7-erros.md` |
+| "notícia", "manchete", "estilo portal", "matéria de jornal", "estilo Metrópoles" | Criativo Notícia | `.claude/commands/criativo-estatico/criativo-noticia.md` |
+| "associação criativa", "associação", "objeto + pergunta", "ponte criativa", "metáfora com objeto" | Associação Criativa | `.claude/commands/criativo-estatico/associacao-criativa.md` |
+| "criativo história", "história com quebra", "quebra de objeção", "diálogo 4 quadros", "criativo em diálogo" | Criativo História + Quebra de Objeção | `.claude/commands/criativo-estatico/criativo-historia.md` |
+| "desespero de quem", "desespero", "dor visceral", "olhar de desespero" | O Desespero de Quem | `.claude/commands/criativo-estatico/desespero-de-quem.md` |
+| "fofinho", "criativo fofo", "tom amoroso", "cena fofa", "anúncio fofo" | Fofinho | `.claude/commands/criativo-estatico/fofinho.md` |
+| "nunca", "criativo nunca", "erro a não cometer", "o que não fazer no nicho" | Nunca | `.claude/commands/criativo-estatico/nunca.md` |
+| "sempre", "criativo sempre", "hack a sempre fazer", "o que sempre fazer no nicho" | Sempre | `.claude/commands/criativo-estatico/sempre.md` |
+| "timelapse", "ângulo aéreo", "comece hoje", "primeiros passos", "evolução em time-lapse" | Timelapse | `.claude/commands/criativo-estatico/timelapse.md` |
+| "ugc coisas estranhas", "coisas estranhas", "absurdo viral", "humor com objeto", "ugc bizarro" | UGC Coisas Estranhas | `.claude/commands/criativo-estatico/ugc-coisas-estranhas.md` |
+| "você merece", "voce merece", "aspiracional", "resultado visível", "3 desejos" | Você Merece | `.claude/commands/criativo-estatico/voce-merece.md` |
+| "objetos estranhos", "objeto perto da câmera", "objeto curioso", "objeto metáfora", "frame de TikTok com objeto" | Objetos Estranhos | `.claude/commands/criativo-estatico/objetos-estranhos.md` |
+| "reflexão editorial", "reflexao editorial", "criativo editorial", "post jornalístico", "estilo tweet expandido", "criativo com dados", "conta maluca", "polêmica do nicho" | Reflexão Editorial | `.claude/commands/criativo-estatico/reflexao-editorial.md` |
+| "copa", "criativo copa", "anúncio copa", "campanha copa", "copa do mundo", "criativo futebol", "anúncio futebol", "campanha futebol", "temático futebol", "estilo copa", "ads copa", "creative copa", "criativo esportivo" | Copa / Futebol | `.claude/commands/criativo-estatico/copa.md` |
+| "eleições", "eleicoes", "criativo eleições", "anúncio eleições", "campanha eleições", "criativo político", "criativo politico", "criativo eleitoral", "ads eleições", "criativo votação", "criativo voto", "tema eleição", "anúncio eleitoral" | Eleições | `.claude/commands/criativo-estatico/eleicoes.md` |
+| "centro das atenções", "centro de atenção", "criativo centro", "criativo radial", "criativo com objeto central", "infográfico radial", "infografico radial", "dicas ao redor", "objeto central com dicas", "infográfico com setas" | Centro das Atenções | `.claude/commands/criativo-estatico/centro-das-atencoes.md` |
+| "problema solução emoji", "problema solucao emoji", "problema solução com emoji", "criativo com emoji", "criativo problema solução emoji", "criativo comparativo com emoji", "criativo de valor com emoji", "grid problema solução", "dor e solução com emoji" | Problema × Solução Emoji | `.claude/commands/criativo-estatico/problema-solucao-emoji.md` |
 
 **Desambiguação Problema-Solução:** "problema solução", "problema e solução", "antes e depois" puros (sem citar emoji, grid ou "com emoji") vão pro formato 7 (Problema-Solução, arte dividida UGC). Só roteie pro formato 28 (Problema × Solução Emoji) quando a mensagem mencionar explicitamente "emoji", "grid" ou "comparativo com emoji".
 
@@ -217,41 +219,41 @@ Digite o número:
 
 Conforme a resposta:
 
-- **1** ou termos relacionados a Promessa Simples: leia `.Codex/commands/criativo-estatico/promessa-simples.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **2** ou termos relacionados a Caixinha de Perguntas: leia `.Codex/commands/criativo-estatico/caixinha-de-perguntas.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **3** ou termos relacionados a Criativo Surreal: leia `.Codex/commands/criativo-estatico/criativo-surreal.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **4** ou termos relacionados a AIDA: leia `.Codex/commands/criativo-estatico/aida.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **5** ou termos relacionados a UGC Rotina Real: leia `.Codex/commands/criativo-estatico/ugc-rotina-real.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **6** ou termos relacionados a POV: leia `.Codex/commands/criativo-estatico/pov.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **7** ou termos relacionados a Problema-Solução: leia `.Codex/commands/criativo-estatico/problema-solucao.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **8** ou termos relacionados a Jeito Certo × Jeito Errado: leia `.Codex/commands/criativo-estatico/jeito-certo-jeito-errado.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **9** ou termos relacionados a Checklist: leia `.Codex/commands/criativo-estatico/checklist.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **10** ou termos relacionados a ASMR / Sensação: leia `.Codex/commands/criativo-estatico/asmr-sensacao.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **11** ou termos relacionados a Meme: leia `.Codex/commands/criativo-estatico/meme.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **12** ou termos relacionados a Jogo dos 7 Erros: leia `.Codex/commands/criativo-estatico/jogo-7-erros.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **13** ou termos relacionados a Criativo Notícia: leia `.Codex/commands/criativo-estatico/criativo-noticia.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **14** ou termos relacionados a Associação Criativa: leia `.Codex/commands/criativo-estatico/associacao-criativa.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **15** ou termos relacionados a Criativo História + Quebra de Objeção: leia `.Codex/commands/criativo-estatico/criativo-historia.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **16** ou termos relacionados a O Desespero de Quem: leia `.Codex/commands/criativo-estatico/desespero-de-quem.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **17** ou termos relacionados a Fofinho: leia `.Codex/commands/criativo-estatico/fofinho.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **18** ou termos relacionados a Nunca: leia `.Codex/commands/criativo-estatico/nunca.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **19** ou termos relacionados a Sempre: leia `.Codex/commands/criativo-estatico/sempre.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **20** ou termos relacionados a Timelapse: leia `.Codex/commands/criativo-estatico/timelapse.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **21** ou termos relacionados a UGC Coisas Estranhas: leia `.Codex/commands/criativo-estatico/ugc-coisas-estranhas.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **22** ou termos relacionados a Você Merece: leia `.Codex/commands/criativo-estatico/voce-merece.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **23** ou termos relacionados a Objetos Estranhos: leia `.Codex/commands/criativo-estatico/objetos-estranhos.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **24** ou termos relacionados a Reflexão Editorial: leia `.Codex/commands/criativo-estatico/reflexao-editorial.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **25** ou termos relacionados a Copa / Futebol: leia `.Codex/commands/criativo-estatico/copa.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **26** ou termos relacionados a Eleições: leia `.Codex/commands/criativo-estatico/eleicoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **27** ou termos relacionados a Centro das Atenções: leia `.Codex/commands/criativo-estatico/centro-das-atencoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
-- **28** ou termos relacionados a Problema × Solução Emoji: leia `.Codex/commands/criativo-estatico/problema-solucao-emoji.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **1** ou termos relacionados a Promessa Simples: leia `.claude/commands/criativo-estatico/promessa-simples.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **2** ou termos relacionados a Caixinha de Perguntas: leia `.claude/commands/criativo-estatico/caixinha-de-perguntas.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **3** ou termos relacionados a Criativo Surreal: leia `.claude/commands/criativo-estatico/criativo-surreal.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **4** ou termos relacionados a AIDA: leia `.claude/commands/criativo-estatico/aida.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **5** ou termos relacionados a UGC Rotina Real: leia `.claude/commands/criativo-estatico/ugc-rotina-real.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **6** ou termos relacionados a POV: leia `.claude/commands/criativo-estatico/pov.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **7** ou termos relacionados a Problema-Solução: leia `.claude/commands/criativo-estatico/problema-solucao.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **8** ou termos relacionados a Jeito Certo × Jeito Errado: leia `.claude/commands/criativo-estatico/jeito-certo-jeito-errado.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **9** ou termos relacionados a Checklist: leia `.claude/commands/criativo-estatico/checklist.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **10** ou termos relacionados a ASMR / Sensação: leia `.claude/commands/criativo-estatico/asmr-sensacao.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **11** ou termos relacionados a Meme: leia `.claude/commands/criativo-estatico/meme.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **12** ou termos relacionados a Jogo dos 7 Erros: leia `.claude/commands/criativo-estatico/jogo-7-erros.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **13** ou termos relacionados a Criativo Notícia: leia `.claude/commands/criativo-estatico/criativo-noticia.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **14** ou termos relacionados a Associação Criativa: leia `.claude/commands/criativo-estatico/associacao-criativa.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **15** ou termos relacionados a Criativo História + Quebra de Objeção: leia `.claude/commands/criativo-estatico/criativo-historia.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **16** ou termos relacionados a O Desespero de Quem: leia `.claude/commands/criativo-estatico/desespero-de-quem.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **17** ou termos relacionados a Fofinho: leia `.claude/commands/criativo-estatico/fofinho.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **18** ou termos relacionados a Nunca: leia `.claude/commands/criativo-estatico/nunca.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **19** ou termos relacionados a Sempre: leia `.claude/commands/criativo-estatico/sempre.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **20** ou termos relacionados a Timelapse: leia `.claude/commands/criativo-estatico/timelapse.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **21** ou termos relacionados a UGC Coisas Estranhas: leia `.claude/commands/criativo-estatico/ugc-coisas-estranhas.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **22** ou termos relacionados a Você Merece: leia `.claude/commands/criativo-estatico/voce-merece.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **23** ou termos relacionados a Objetos Estranhos: leia `.claude/commands/criativo-estatico/objetos-estranhos.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **24** ou termos relacionados a Reflexão Editorial: leia `.claude/commands/criativo-estatico/reflexao-editorial.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **25** ou termos relacionados a Copa / Futebol: leia `.claude/commands/criativo-estatico/copa.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **26** ou termos relacionados a Eleições: leia `.claude/commands/criativo-estatico/eleicoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **27** ou termos relacionados a Centro das Atenções: leia `.claude/commands/criativo-estatico/centro-das-atencoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **28** ou termos relacionados a Problema × Solução Emoji: leia `.claude/commands/criativo-estatico/problema-solucao-emoji.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 
 O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO precisam ler `perfil.md` e `idconsumidor.md` de novo, podem usar o que já foi extraído.
 
 ## Regras
 
 - Nunca pular a pergunta de roteamento, exceto quando o aluno mencionou explicitamente o nome do formato na primeira mensagem (atalho do Passo 1).
-- As sub-skills herdam todas as regras globais do AGENTS.md. Light Copy, auto-revisão obrigatória de copy, anúncio de próximo passo, aprovação antes de salvar, acentuação correta em pt_BR.
+- As sub-skills herdam todas as regras globais do CLAUDE.md. Light Copy, auto-revisão obrigatória de copy, anúncio de próximo passo, aprovação antes de salvar, acentuação correta em pt_BR.
 - O orquestrador NÃO gera copy nem texto de anúncio. Apenas roteia.
 - Cada sub-skill tem fluxo próprio. O orquestrador não define perguntas, opções de saída ou regras de geração. Quem define isso é o arquivo da sub-skill.
 - Se o aluno escolher um número inválido (fora de 1 a 28), repetir o menu de forma curta sem mostrar a descrição das opções de novo.

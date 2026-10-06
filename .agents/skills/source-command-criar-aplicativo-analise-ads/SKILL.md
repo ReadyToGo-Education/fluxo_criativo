@@ -5,9 +5,11 @@ description: "Guia passo a passo para criar um App no Facebook Developers com ac
 
 # source-command-criar-aplicativo-analise-ads
 
-Use this skill when the user asks to run the migrated source command `criar-aplicativo-analise-ads`.
+Use esta skill quando o usuário pedir o comando `/criar-aplicativo-analise-ads` do workshop (ou `criar-aplicativo-analise-ads`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/criar-aplicativo-analise-ads.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Criar Aplicativo de Análise de Ads no Facebook
 

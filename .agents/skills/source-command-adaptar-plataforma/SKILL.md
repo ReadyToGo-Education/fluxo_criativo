@@ -5,9 +5,11 @@ description: "Converte scripts e instrucoes Windows/PowerShell para Mac ou Linux
 
 # source-command-adaptar-plataforma
 
-Use this skill when the user asks to run the migrated source command `adaptar-plataforma`.
+Use esta skill quando o usuário pedir o comando `/adaptar-plataforma` do workshop (ou `adaptar-plataforma`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/adaptar-plataforma.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Adaptar Plataforma. Mac e Linux
 
@@ -92,7 +94,7 @@ crontab -e
 
 ### Opcao 2. ads-relatorio
 
-O `ads-relatorio` usa agendamento na nuvem do Codex (CronCreate), que e independente de SO. Nao precisa de adaptacao de agendamento.
+O `ads-relatorio` usa agendamento na nuvem do Claude (CronCreate), que e independente de SO. Nao precisa de adaptacao de agendamento.
 
 Se o aluno estiver com duvida sobre credenciais ou configuracao, redirecione para `/ads-relatorio`.
 

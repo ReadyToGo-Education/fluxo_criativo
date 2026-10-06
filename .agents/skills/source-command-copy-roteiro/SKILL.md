@@ -5,9 +5,11 @@ description: "Criar roteiros de vídeo para os 3 formatos principais. Avatar IA 
 
 # source-command-copy-roteiro
 
-Use this skill when the user asks to run the migrated source command `copy-roteiro`.
+Use esta skill quando o usuário pedir o comando `/copy-roteiro` do workshop (ou `copy-roteiro`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/copy-roteiro.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Roteiro de Vídeo
 
@@ -108,7 +110,7 @@ Resumo do que vou criar:
 
 ### 4. Regras de Estilo
 
-Antes de escrever, leia `.Codex/skills/revisora/references/manual-copy.md` e aplique.
+Antes de escrever, leia `.claude/skills/revisora/references/manual-copy.md` e aplique.
 
 - Gancho nos primeiros 3 segundos: afirmação, paradoxo ou revelação. NUNCA pergunta.
 - Entregar valor real dentro do vídeo: quem assiste aprende ou se reconhece.

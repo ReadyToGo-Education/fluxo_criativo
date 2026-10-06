@@ -84,9 +84,9 @@ O script aceita qualquer formato para `LINKEDIN_PROFILE`:
 ## Como Executar
 
 ```bash
-python .Codex/skills/linkedin-dashboard/scripts/atualizar.py
-python .Codex/skills/linkedin-dashboard/scripts/atualizar.py --abrir
-python .Codex/skills/linkedin-dashboard/scripts/atualizar.py --perfil leandroladeira
+python .claude/skills/linkedin-dashboard/scripts/atualizar.py
+python .claude/skills/linkedin-dashboard/scripts/atualizar.py --abrir
+python .claude/skills/linkedin-dashboard/scripts/atualizar.py --perfil leandroladeira
 ```
 
 ---

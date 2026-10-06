@@ -5,9 +5,11 @@ description: "Criar variacoes de posts que ja tiveram alto engajamento, a partir
 
 # source-command-copy-variacao-post
 
-Use this skill when the user asks to run the migrated source command `copy-variacao-post`.
+Use esta skill quando o usuário pedir o comando `/copy-variacao-post` do workshop (ou `copy-variacao-post`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/copy-variacao-post.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Variacao de Posts Validados
 

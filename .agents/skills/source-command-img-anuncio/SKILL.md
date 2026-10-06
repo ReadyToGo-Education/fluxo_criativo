@@ -5,9 +5,11 @@ description: "Edita uma imagem de referência que o usuário já tem. Troca pers
 
 # source-command-img-anuncio
 
-Use this skill when the user asks to run the migrated source command `img-anuncio`.
+Use esta skill quando o usuário pedir o comando `/img-anuncio` do workshop (ou `img-anuncio`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/img-anuncio.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Imagem para Anúncio. Referência Visual
 

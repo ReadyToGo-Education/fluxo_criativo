@@ -25,7 +25,7 @@ user-invocable: false
 
 | Arquivo | Descricao |
 |---|---|
-| `.Codex/skills/tiktok-dashboard/scripts/atualizar.py` | Script Python principal (Windows, macOS, Linux) — compartilhado entre todos os produtos |
+| `.claude/skills/tiktok-dashboard/scripts/atualizar.py` | Script Python principal (Windows, macOS, Linux) — compartilhado entre todos os produtos |
 | `meus-produtos/{ativo}/entregas/tiktok-dashboard/dashboard.html` | Dashboard HTML completo, abre no navegador |
 | `meus-produtos/{ativo}/entregas/tiktok-dashboard/imagens/` | Thumbnails dos videos (gerados pelo script) |
 | `meus-produtos/{ativo}/entregas/tiktok-dashboard/insights.json` | Dados estruturados sem base64 |
@@ -76,9 +76,9 @@ pip install requests
 
 | OS | Como rodar |
 |---|---|
-| Windows | `python .Codex/skills/tiktok-dashboard/scripts/atualizar.py --abrir` |
-| macOS | `python3 .Codex/skills/tiktok-dashboard/scripts/atualizar.py --abrir` |
-| Linux | `python3 .Codex/skills/tiktok-dashboard/scripts/atualizar.py --abrir` |
+| Windows | `python .claude/skills/tiktok-dashboard/scripts/atualizar.py --abrir` |
+| macOS | `python3 .claude/skills/tiktok-dashboard/scripts/atualizar.py --abrir` |
+| Linux | `python3 .claude/skills/tiktok-dashboard/scripts/atualizar.py --abrir` |
 
 ## Configuracao Necessaria
 
@@ -231,7 +231,7 @@ Configuracao confirmada:
 
 - Perfil TikTok: @{username}
 - Token Apify: configurado
-- Script: .Codex/skills/tiktok-dashboard/scripts/atualizar.py
+- Script: .claude/skills/tiktok-dashboard/scripts/atualizar.py
 - Dashboard: meus-produtos/{ativo}/entregas/tiktok-dashboard/dashboard.html
 
 1. Tudo certo, gerar agora
@@ -243,7 +243,7 @@ Configuracao confirmada:
 ### PASSO 2. Executar
 
 ```bash
-python .Codex/skills/tiktok-dashboard/scripts/atualizar.py --abrir
+python .claude/skills/tiktok-dashboard/scripts/atualizar.py --abrir
 ```
 
 macOS / Linux: `python3 ...`
@@ -289,7 +289,7 @@ Acesse pelo Painel de Entregas:
 meus-produtos/{ativo}/painel-entregas.html  (aba Dashboards)
 
 Para atualizar os dados quando quiser:
-python .Codex/skills/tiktok-dashboard/scripts/atualizar.py
+python .claude/skills/tiktok-dashboard/scripts/atualizar.py
 (depois rode: py -3 scripts/painel-incremental.py --secao dashboards)
 
 Perfil monitorado: @{username}

@@ -96,7 +96,7 @@ Usar 1 a 3 elementos por peça. Gerar 3 variações.
 
 ## Referência de Exemplos Validados
 
-Consulte `.Codex/skills/conteudo/references/exemplos-leads-4-categorias.md` para 12 exemplos reais das 4 categorias de copy (Inadequação, Identificação com o Problema, Plug & Play, Promessa Boa Demais) aplicadas a 3 nichos diferentes (skincare, saúde/imunidade, psicologia B2B).
+Consulte `.claude/skills/conteudo/references/exemplos-leads-4-categorias.md` para 12 exemplos reais das 4 categorias de copy (Inadequação, Identificação com o Problema, Plug & Play, Promessa Boa Demais) aplicadas a 3 nichos diferentes (skincare, saúde/imunidade, psicologia B2B).
 
 **O que usar como referência nos exemplos:**
 - Nível de especificidade (números concretos, situações reais)

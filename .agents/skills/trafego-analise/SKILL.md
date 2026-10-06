@@ -37,7 +37,7 @@ Ler `FB_AD_ACCOUNT_IDS` no `.env` (campo com múltiplas contas separadas por ví
 
 **Se houver apenas uma conta configurada** (`FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS` idênticos ou `FB_AD_ACCOUNT_IDS` vazio): usar automaticamente essa conta e pular a pergunta.
 
-**Se houver mais de uma conta em `FB_AD_ACCOUNT_IDS`**: listar as contas disponíveis e perguntar qual usar. Para obter o nome de todas as contas **em uma única chamada batch**, fazer **uma chamada `Bash(curl ...)` direta** (sem heredoc Python — ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no AGENTS.md):
+**Se houver mais de uma conta em `FB_AD_ACCOUNT_IDS`**: listar as contas disponíveis e perguntar qual usar. Para obter o nome de todas as contas **em uma única chamada batch**, fazer **uma chamada `Bash(curl ...)` direta** (sem heredoc Python — ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no CLAUDE.md):
 
 Construir a string `act_<id1>,act_<id2>,...` a partir de `FB_AD_ACCOUNT_IDS` e disparar:
 
@@ -54,7 +54,7 @@ A resposta vem em JSON único:
 }
 ```
 
-O Codex lê o JSON retornado como texto e monta o menu numerado. **Nunca fazer N chamadas separadas** — uma única chamada batch é o suficiente e conta como 1 contra o rate limit.
+O Claude lê o JSON retornado como texto e monta o menu numerado. **Nunca fazer N chamadas separadas** — uma única chamada batch é o suficiente e conta como 1 contra o rate limit.
 
 **Tratamento de erro:** se a chamada batch falhar, exibir só os IDs sem nome e continuar.
 
@@ -267,7 +267,7 @@ Qual período da análise?
 **Script 1 — fetch (busca e cache):**
 
 ```bash
-python3 .Codex/skills/trafego-analise/scripts/trafego_fetch.py \
+python3 .claude/skills/trafego-analise/scripts/trafego_fetch.py \
   --account {CONTA_ATIVA_ID} \
   --filtro "{ESCOPO_FILTRO_TEXTO}" \
   --periodo {PERIODO} \
@@ -293,7 +293,7 @@ Faz 5 chamadas em sequência: (0) lista IDs de campanhas com `effective_status` 
 **Script 2 — processar (KPIs e sinais):**
 
 ```bash
-python3 .Codex/skills/trafego-analise/scripts/trafego_processar.py \
+python3 .claude/skills/trafego-analise/scripts/trafego_processar.py \
   --account {CONTA_ATIVA_ID} \
   --filtro "{ESCOPO_FILTRO_TEXTO}" \
   --periodo {PERIODO} \

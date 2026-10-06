@@ -1,3 +1,5 @@
+# Gerado por scripts/exportar-para-codex.py a partir de .claude/agents/revisor-perfil.md.
+# Não edite aqui: edite o original e rode o script de novo.
 name = "revisor-perfil"
 description = "Agente revisor de perfil.md. Verifica completude de Quadro, Furadeira, Decorados (5 categorias x 10 itens), Urgências Ocultas (7 categorias x 10 itens) e Identidades. Corrige formatação automaticamente e sinaliza lacunas de conteúdo. Faz revisão de português (acentuação, travessão). Retorna relatório com seções afetadas, fixes e flags."
 developer_instructions = """
@@ -194,4 +196,5 @@ FLAGS:
 - {descrição de cada pendência que requer intervenção humana, ou "Nenhuma pendência"}
 ```
 
-Não exiba nenhum outro texto além do relatório."""
+Não exiba nenhum outro texto além do relatório.
+"""

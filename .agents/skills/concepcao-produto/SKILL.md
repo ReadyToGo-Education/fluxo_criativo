@@ -8,7 +8,7 @@ description: >
 
 # Concepção de Produto. Base de Conhecimento VTSD
 
-> **Regra obrigatória de comunicação:** siga o padrão "Pensar em Voz Alta" do AGENTS.md. Esta skill envolve várias operações longas (pesquisa de mercado, geração de 50 Decorados, geração de 70 Urgências Ocultas, escrita do perfil.md, montagem das 3 Identidades). Antes de cada uma, anuncie em UMA linha com `🔍 Próximo passo: {ação}. Tempo estimado: cerca de X segundos.` Ao concluir, confirme com `✅ Concluído: {entrega}. Caminho: {caminho}.`
+> **Regra obrigatória de comunicação:** siga o padrão "Pensar em Voz Alta" do CLAUDE.md. Esta skill envolve várias operações longas (pesquisa de mercado, geração de 50 Decorados, geração de 70 Urgências Ocultas, escrita do perfil.md, montagem das 3 Identidades). Antes de cada uma, anuncie em UMA linha com `🔍 Próximo passo: {ação}. Tempo estimado: cerca de X segundos.` Ao concluir, confirme com `✅ Concluído: {entrega}. Caminho: {caminho}.`
 >
 > Exemplos desta skill:
 > - `🔍 Próximo passo: gerar 50 Decorados a partir do Quadro do produto. Tempo estimado: cerca de 30 segundos.`
@@ -59,7 +59,7 @@ A mecânica certa para cada produto varia conforme nicho, Quadro e perfil do con
 - Lógica Condicional: "Régua RCC: criança reativa segue protocolo de regulação; criança passiva segue protocolo de estímulo"
 - Listas: "Os 4 C's da Lapidação: Compreensão, Convicção, Compromisso, Conversão"
 
-**Detalhamento completo das 6 mecânicas, 14 formas de eficiência e 7 técnicas de nome de método:** `.Codex/skills/furadeira-visual/references/6-mecanicas.md`.
+**Detalhamento completo das 6 mecânicas, 14 formas de eficiência e 7 técnicas de nome de método:** `.claude/skills/furadeira-visual/references/6-mecanicas.md`.
 
 **Visualização da Furadeira (depois de gerada):** acione `/furadeira-visual` para gerar a imagem PNG do método. A skill decide automaticamente o layout visual conforme a mecânica registrada (roadmap, fluxograma, mandala, hub, etc.) e o nicho do produto, monta um prompt em inglês para o aluno colar no ChatGPT e salva a imagem em `entregas/furadeira/furadeira.png`. Útil para a seção Método da página de vendas (8D), carrosséis, slides de pitch e stories.
 

@@ -5,9 +5,11 @@ description: "Busca as métricas do Facebook Ads e envia o relatório pelo Teleg
 
 # source-command-enviar-relatorio-ads
 
-Use this skill when the user asks to run the migrated source command `enviar-relatorio-ads`.
+Use esta skill quando o usuário pedir o comando `/enviar-relatorio-ads` do workshop (ou `enviar-relatorio-ads`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/enviar-relatorio-ads.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Enviar Relatorio de Ads
 
@@ -25,7 +27,7 @@ Antes de qualquer coisa, leia `META_AUTH_MODO` no `.env` para decidir o caminho.
 - **`META_AUTH_MODO=MCP_CONECTOR`:** o Passo 1.1 (credenciais Facebook) é pulado por completo. A conexão Meta foi validada via conector personalizado em `/trafego-conexao` e não usa token no `.env`. Vá direto para o Passo 1.2 (canal de envio).
 - **`META_AUTH_MODO=APP`:** executar normalmente o Passo 1.1 e o Passo 1.2.
 
-> **Nota sobre as duas variáveis.** `META_AUTH_MODO` decide o caminho de autenticação com o Meta (MCP via Codex ou Token via App no `.env`). `RELATORIO_AUTH_MODO` decide o executor do relatório dentro do ramo App (Python CLI cross-platform ou PowerShell Windows). Não são redundantes, atuam em camadas diferentes.
+> **Nota sobre as duas variáveis.** `META_AUTH_MODO` decide o caminho de autenticação com o Meta (MCP via Claude ou Token via App no `.env`). `RELATORIO_AUTH_MODO` decide o executor do relatório dentro do ramo App (Python CLI cross-platform ou PowerShell Windows). Não são redundantes, atuam em camadas diferentes.
 
 ---
 

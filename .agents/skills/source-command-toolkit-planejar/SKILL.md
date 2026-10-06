@@ -5,9 +5,11 @@ description: "Gerar o plano em etapas do projeto ativo a partir do roteiro. Queb
 
 # source-command-toolkit-planejar
 
-Use this skill when the user asks to run the migrated source command `toolkit-planejar`.
+Use esta skill quando o usuário pedir o comando `/toolkit-planejar` do workshop (ou `toolkit-planejar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/toolkit-planejar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Toolkit. Gerar Plano
 

@@ -138,7 +138,7 @@ Vou buscar o audio agora para melhorar a analise. Isso leva ~1 min por Reel.
 
 Execute para cada shortcode de Reel sem transcricao:
 ```bash
-python .Codex/skills/copy-variacao-post/scripts/transcrever.py {shortcode1} {shortcode2} ...
+python .claude/skills/copy-variacao-post/scripts/transcrever.py {shortcode1} {shortcode2} ...
 ```
 
 Aguarde a conclusao e releia o `insights.json` atualizado antes de prosseguir.
@@ -202,7 +202,7 @@ Caption:
 
 **Regras de geracao (Light Copy):**
 
-**Fonte unica e obrigatoria:** antes de escrever qualquer variacao, leia `.Codex/skills/revisora/references/manual-copy.md`. Principio central, **15 principios**, **20 vicios proibidos** e **checklist Blocos A/B/C/D** vivem la. Toda variacao passa pelo `revisora` antes de ir ao usuario.
+**Fonte unica e obrigatoria:** antes de escrever qualquer variacao, leia `.claude/skills/revisora/references/manual-copy.md`. Principio central, **15 principios**, **20 vicios proibidos** e **checklist Blocos A/B/C/D** vivem la. Toda variacao passa pelo `revisora` antes de ir ao usuario.
 
 **Reforcos especificos de variacao de post:**
 - **Preservar o angulo central do post original.** O que muda e a estrutura, o tom e o elemento literario. Se o angulo mudar, nao e variacao, e post novo.
@@ -239,7 +239,7 @@ Caption (post estatico):
 - CTA no final
 - Hashtags
 
-**Checklist antes de entregar cada variacao:** rodar pela `revisora` (Blocos A/B/C/D do `manual-copy.md`). Em caso de duvida, consultar diretamente `.Codex/skills/revisora/references/manual-copy.md`.
+**Checklist antes de entregar cada variacao:** rodar pela `revisora` (Blocos A/B/C/D do `manual-copy.md`). Em caso de duvida, consultar diretamente `.claude/skills/revisora/references/manual-copy.md`.
 
 ### PASSO 6. Aprovacao e Salvamento
 

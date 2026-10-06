@@ -5,9 +5,11 @@ description: "Guia para gerar token permanente de acesso ao Facebook Ads via Usu
 
 # source-command-gerar-token-permanente-facebook-ads
 
-Use this skill when the user asks to run the migrated source command `gerar-token-permanente-facebook-ads`.
+Use esta skill quando o usuário pedir o comando `/gerar-token-permanente-facebook-ads` do workshop (ou `gerar-token-permanente-facebook-ads`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/gerar-token-permanente-facebook-ads.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Gerar Token Permanente do Facebook Ads
 
@@ -117,7 +119,7 @@ Execute os três testes abaixo, **um por vez, em chamadas Bash separadas**. Os t
 
 > ### ⚙️ Como executar (regra dura para a skill)
 >
-> **Cada teste é uma chamada `Bash` independente.** Substituir `TOKEN` pelo valor literal **inline na URL** do `curl`. NÃO empacotar os 3 testes num script multi-linha com `TOKEN="..."` no início + `echo` + múltiplos `curl`. Esse formato (script bash com variável shell) **não casa** com os padrões `Bash(curl -s "https://graph.facebook.com/*)` autorizados no `.Codex/settings.local.json` e dispara o pop-up nativo de permissão — que exibe o token completo na tela.
+> **Cada teste é uma chamada `Bash` independente.** Substituir `TOKEN` pelo valor literal **inline na URL** do `curl`. NÃO empacotar os 3 testes num script multi-linha com `TOKEN="..."` no início + `echo` + múltiplos `curl`. Esse formato (script bash com variável shell) **não casa** com os padrões `Bash(curl -s "https://graph.facebook.com/*)` autorizados no `.claude/settings.local.json` e dispara o pop-up nativo de permissão — que exibe o token completo na tela.
 >
 > Formato CORRETO (3 chamadas Bash independentes, cada uma um único `curl` com token inline):
 >
@@ -144,7 +146,7 @@ Execute os três testes abaixo, **um por vez, em chamadas Bash separadas**. Os t
 >
 > A diferença pro aluno: o formato CORRETO roda direto sem balão de permissão. O formato ERRADO exibe o token na tela e exige clique manual.
 >
-> Após cada chamada, mostrar a resposta resumida ao aluno (sucesso/erro), seguindo a regra de mascaramento de tokens do AGENTS.md (não ecoar a URL completa com o token na resposta — descrever em linguagem natural: "Teste 1 passou: token responde como `relatorio-ads` em /me").
+> Após cada chamada, mostrar a resposta resumida ao aluno (sucesso/erro), seguindo a regra de mascaramento de tokens do CLAUDE.md (não ecoar a URL completa com o token na resposta — descrever em linguagem natural: "Teste 1 passou: token responde como `relatorio-ads` em /me").
 
 Substitua `TOKEN` pelo token copiado e `SEU_AD_ACCOUNT_ID` pelo número da conta de anúncios (só os números, sem o prefixo `act_`).
 

@@ -1,3 +1,5 @@
+# Gerado por scripts/exportar-para-codex.py a partir de .claude/agents/revisor-pesquisa.md.
+# Não edite aqui: edite o original e rode o script de novo.
 name = "revisor-pesquisa"
 description = "Agente revisor de pesquisa-mercado.md. Aplica checklist de completude estrutural (KPIs, concorrentes, assuntos, YouTube, biblioteca, oportunidades, cuidados) e revisão de português (acentuação, travessão, exclamação). Corrige o que pode automaticamente e sinaliza o que precisa de intervenção humana. Retorna relatório estruturado com seções afetadas e lista de fixes e flags."
 developer_instructions = """
@@ -199,4 +201,5 @@ FLAGS:
 
 Seções do painel afetadas pela pesquisa-mercado.md: apenas `pesquisa`.
 
-Não exiba nenhum outro texto além do relatório."""
+Não exiba nenhum outro texto além do relatório.
+"""

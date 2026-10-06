@@ -5,9 +5,11 @@ description: "Liga a Sala dos Agentes (live-office). Registra o hook agent-statu
 
 # source-command-workshop-office
 
-Use this skill when the user asks to run the migrated source command `workshop-office`.
+Use esta skill quando o usuário pedir o comando `/workshop-office` do workshop (ou `workshop-office`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/workshop-office.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Sala dos Agentes (Workshop Live Office)
 
@@ -21,9 +23,9 @@ Ativa a visualização em tempo real dos agentes do Workshop. Registra o hook qu
 
 ## O Que Fazer
 
-### 1. Registrar o hook em `.Codex/settings.json`
+### 1. Registrar o hook em `.claude/settings.json`
 
-Leia `.Codex/settings.json`. Localize a chave `hooks.PostToolUse`. Verifique se já existe um bloco com `command` igual a `node .Codex/hooks/agent-status-writer.js`. Se já existir, não duplique. Apenas confirme: "Hook agent-status-writer já registrado.".
+Leia `.claude/settings.json`. Localize a chave `hooks.PostToolUse`. Verifique se já existe um bloco com `command` igual a `node .claude/hooks/agent-status-writer.js`. Se já existir, não duplique. Apenas confirme: "Hook agent-status-writer já registrado.".
 
 Se não existir, adicione ao final do array `hooks.PostToolUse` o seguinte bloco:
 
@@ -33,7 +35,7 @@ Se não existir, adicione ao final do array `hooks.PostToolUse` o seguinte bloco
   "hooks": [
     {
       "type": "command",
-      "command": "node .Codex/hooks/agent-status-writer.js",
+      "command": "node .claude/hooks/agent-status-writer.js",
       "timeout": 5
     }
   ]
@@ -44,10 +46,10 @@ Use a tool Edit para inserir o bloco preservando a formatação JSON existente. 
 
 ### 2. Disparar uma primeira escrita do status
 
-Pra garantir que `.Codex/agents-memory/agents-status.js` exista antes de abrir o painel, rode qualquer tool simples (`bash echo` etc.) — o hook PostToolUse vai gerar o arquivo. Se já existir, pule.
+Pra garantir que `.claude/agents-memory/agents-status.js` exista antes de abrir o painel, rode qualquer tool simples (`bash echo` etc.) — o hook PostToolUse vai gerar o arquivo. Se já existir, pule.
 
 ```
-ls .Codex/agents-memory/agents-status.js 2>/dev/null || echo "vai ser criado no próximo tool"
+ls .claude/agents-memory/agents-status.js 2>/dev/null || echo "vai ser criado no próximo tool"
 ```
 
 ### 3. Abrir o painel no navegador
@@ -62,7 +64,7 @@ Em outras plataformas, oriente o usuário a abrir manualmente: `painel/index.htm
 
 O painel tem duas abas no topo:
 - **Painel do produto** — entregas do produto ativo (comportamento original).
-- **Sala dos agentes** — bonecos mexendo em tempo real, lendo `.Codex/agents-memory/agents-status.js`.
+- **Sala dos agentes** — bonecos mexendo em tempo real, lendo `.claude/agents-memory/agents-status.js`.
 
 ### 4. Confirmar e orientar
 
@@ -72,7 +74,7 @@ Após abrir, mostre uma mensagem curta:
 Sala dos Agentes no ar.
 
 - Painel: file://<path>/painel/index.html
-- Status: .Codex/agents-memory/agents-status.js (atualizado pelo hook a cada tool)
+- Status: .claude/agents-memory/agents-status.js (atualizado pelo hook a cada tool)
 - Hook registrado: PostToolUse → agent-status-writer.js (timeout 5)
 
 A cada tool que rodar (Write, Edit, Bash, Agent, Task, WebFetch, WebSearch), os bonecos mexem em até 2 segundos. Pra parar, basta fechar a aba.
@@ -88,7 +90,7 @@ USE quando:
 
 NÃO USE quando:
 
-- O projeto não tem `.Codex/hooks/agent-status-writer.js` (verifique antes de rodar)
+- O projeto não tem `.claude/hooks/agent-status-writer.js` (verifique antes de rodar)
 
 ## Observações
 

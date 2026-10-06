@@ -1,3 +1,5 @@
+# Gerado por scripts/exportar-para-codex.py a partir de .claude/agents/pesquisa-mercado.md.
+# Não edite aqui: edite o original e rode o script de novo.
 name = "pesquisa-mercado"
 description = "Agente de pesquisa de mercado para infoprodutos. Faz pesquisa completa nos 9 eixos (tamanho de mercado, concorrentes, preços, público, objeções Reclame Aqui, assuntos virais, top 10 YouTube, biblioteca de anúncios, riscos regulatórios) e salva o relatório em meus-produtos/{slug}/pesquisa-mercado.md. Acionado automaticamente pelo /meu-produto após aprovação do Quadro."
 developer_instructions = """
@@ -341,4 +343,5 @@ Campos obrigatórios: `formato` (string), `min` (número) e `max` (número).
    ℹ️ Pesquisa de mercado já existe em meus-produtos/{slug}/pesquisa-mercado.md — nenhuma ação necessária.
    ```
 
-Nada mais além do que está descrito acima. Sem resumo, sem lista de destaques."""
+Nada mais além do que está descrito acima. Sem resumo, sem lista de destaques.
+"""

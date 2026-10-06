@@ -5,9 +5,11 @@ description: "Escala campanhas Meta Ads já validadas e performando, sem destrui
 
 # source-command-trafego-escalar
 
-Use this skill when the user asks to run the migrated source command `trafego-escalar`.
+Use esta skill quando o usuário pedir o comando `/trafego-escalar` do workshop (ou `trafego-escalar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/trafego-escalar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Trafego Escalar. Crescimento Controlado de Campanhas Meta Ads
 
@@ -20,7 +22,7 @@ Use this skill when the user asks to run the migrated source command `trafego-es
 
 Escala campanhas Meta Ads já validadas, com incrementos graduais e revalidação contínua. Aplica freios escalonados quando a performance degrada, devolve handoff para `/trafego-otimizar` quando freio total aciona. Não escala campanha sem sinal de prontidão.
 
-A especificação técnica completa está em `.Codex/skills/trafego-escalar/SKILL.md`. Este command é o orquestrador.
+A especificação técnica completa está em `.claude/skills/trafego-escalar/SKILL.md`. Este command é o orquestrador.
 
 ---
 
@@ -33,7 +35,7 @@ Leia `meus-produtos/.ativo` e `perfil.md`.
 Leia `META_AUTH_MODO` no `.env`.
 
 - **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, pedir ao aluno para reabrir o Codex (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar.
+- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar.
 - **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`. Se faltar algum, acionar `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
@@ -67,8 +69,8 @@ Apos a validacao da conexao, decidir qual conta tocar para escalar:
 
 ### 0.4 Ler especificações
 Leia:
-- `.Codex/skills/trafego-escalar/SKILL.md`. Modos, velocidades, critérios de gatilho, freios e tetos.
-- `.Codex/skills/trafego-otimizar/SKILL.md` (seção 12). Critérios de prontidão.
+- `.claude/skills/trafego-escalar/SKILL.md`. Modos, velocidades, critérios de gatilho, freios e tetos.
+- `.claude/skills/trafego-otimizar/SKILL.md` (seção 12). Critérios de prontidão.
 
 ---
 

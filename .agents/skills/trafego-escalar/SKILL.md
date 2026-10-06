@@ -14,14 +14,14 @@ description: >
 
 ## 🛡️ Gate obrigatório antes de qualquer escrita na Graph API
 
-Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes de chamar qualquer endpoint POST/PUT/DELETE da Graph API, **siga a regra global definida em [AGENTS.md](../../../AGENTS.md)** na seção "GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESCRITA NA META GRAPH API":
+Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes de chamar qualquer endpoint POST/PUT/DELETE da Graph API, **siga a regra global definida em [CLAUDE.md](../../../CLAUDE.md)** na seção "GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESCRITA NA META GRAPH API":
 
 1. Apresentar o bloco `🛡️ Confirmação necessária antes de tocar na conta Meta` com operação, endpoint humano-legível, o que vai mudar, impacto no aprendizado e reversibilidade.
 2. **Nunca exibir o `curl` completo no chat** — carrega o token.
 3. Aguardar resposta `sim` (ou variante explícita: aprovo, pode, manda) antes de executar.
 4. Em modo lote, mostrar o plano completo antes e pedir confirmação única.
 5. Se o aluno responder `não` ou variante (cancelar, abortar), abortar sem chamar a API.
-6. **NUNCA usar `python3 << 'EOF'` (heredoc) nem `curl | python3 -c`** com o token. Esses formatos quebram o pattern matching do Codex e expõem o token no pop-up nativo. Ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no AGENTS.md.
+6. **NUNCA usar `python3 << 'EOF'` (heredoc) nem `curl | python3 -c`** com o token. Esses formatos quebram o pattern matching do Claude Code e expõem o token no pop-up nativo. Ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no CLAUDE.md.
 
 **Operações desta skill que passam pelo gate:**
 
@@ -796,7 +796,7 @@ Se o aluno disser explicitamente "me dá só o YAML" ou "modo direto" na sessão
 
 ### 12.1. Tabelas em português
 
-TODA tabela markdown impressa para o usuário (Análise + Recomendação do Passo 0.75, status pós-execução, lista de candidatas em modo "Auditar toda a conta") deve usar cabeçalhos em português brasileiro. Aplicar o mesmo mapa de tradução documentado em **`.Codex/skills/trafego-otimizar/SKILL.md` seção 13.1** (Investimento, Impressões, Frequência, CTR único no link, CPA, ROAS, Carrinho → Compra etc.). Os identificadores de campo dentro do YAML técnico continuam em snake_case (vão para tool_calls).
+TODA tabela markdown impressa para o usuário (Análise + Recomendação do Passo 0.75, status pós-execução, lista de candidatas em modo "Auditar toda a conta") deve usar cabeçalhos em português brasileiro. Aplicar o mesmo mapa de tradução documentado em **`.claude/skills/trafego-otimizar/SKILL.md` seção 13.1** (Investimento, Impressões, Frequência, CTR único no link, CPA, ROAS, Carrinho → Compra etc.). Os identificadores de campo dentro do YAML técnico continuam em snake_case (vão para tool_calls).
 
 ---
 

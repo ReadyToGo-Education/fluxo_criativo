@@ -26,7 +26,7 @@ description: >
 
 | Arquivo | Descricao |
 |---|---|
-| `.Codex/skills/pesquisa-mercado-instagram/scripts/pesquisar.py` | Script Python principal (Windows, macOS, Linux) |
+| `.claude/skills/pesquisa-mercado-instagram/scripts/pesquisar.py` | Script Python principal (Windows, macOS, Linux) |
 | `meus-produtos/{ativo}/entregas/pesquisa-nicho/config.json` | Configuracao de hashtags e parametros |
 | `meus-produtos/{ativo}/entregas/pesquisa-nicho/{slug}/dashboard.html` | Dashboard HTML completo |
 | `meus-produtos/{ativo}/entregas/pesquisa-nicho/{slug}/insights.json` | Dados estruturados dos perfis e analise |
@@ -183,7 +183,7 @@ Tempo estimado: 10-20 minutos.
 ### PASSO 2. Executar
 
 ```bash
-python .Codex/skills/pesquisa-mercado-instagram/scripts/pesquisar.py --abrir
+python .claude/skills/pesquisa-mercado-instagram/scripts/pesquisar.py --abrir
 ```
 
 macOS / Linux: `python3 ...`
@@ -203,7 +203,7 @@ Arquivos:
 - Log:       meus-produtos/{ativo}/entregas/pesquisa-nicho/{slug}/log.txt
 
 Para atualizar:
-python .Codex/skills/pesquisa-mercado-instagram/scripts/pesquisar.py --abrir
+python .claude/skills/pesquisa-mercado-instagram/scripts/pesquisar.py --abrir
 ```
 
 ## Regras

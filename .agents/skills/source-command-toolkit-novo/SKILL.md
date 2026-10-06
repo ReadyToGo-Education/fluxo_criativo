@@ -5,9 +5,11 @@ description: "Iniciar um novo projeto de marketing estruturado (lançamento, fun
 
 # source-command-toolkit-novo
 
-Use this skill when the user asks to run the migrated source command `toolkit-novo`.
+Use esta skill quando o usuário pedir o comando `/toolkit-novo` do workshop (ou `toolkit-novo`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/toolkit-novo.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Toolkit. Novo Projeto
 

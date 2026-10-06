@@ -1,3 +1,5 @@
+# Gerado por scripts/exportar-para-codex.py a partir de .claude/agents/gerador-decorados.md.
+# Não edite aqui: edite o original e rode o script de novo.
 name = "gerador-decorados"
 description = "Agente gerador dos 50 Decorados (benefícios derivados do Quadro). Recebe o contexto do produto (Quadro, Furadeira, Identidades, pesquisa-mercado.md) e retorna a lista completa de 50 Decorados em 5 categorias com 10 itens cada. Acionado em paralelo pelo /produto-concepcao junto com gerador-urgencias-ocultas."
 developer_instructions = """
@@ -126,4 +128,5 @@ Retorne APENAS o bloco markdown abaixo, sem introdução, sem explicação, sem 
 - [benefício concreto]
 ```
 
-Nada além desse bloco. Sem "Aqui estão os Decorados:", sem linha de confirmação, sem comentário final."""
+Nada além desse bloco. Sem "Aqui estão os Decorados:", sem linha de confirmação, sem comentário final.
+"""

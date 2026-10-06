@@ -25,7 +25,7 @@ user-invocable: false
 
 | Arquivo | Descricao |
 |---|---|
-| `.Codex/skills/youtube-dashboard/scripts/atualizar.py` | Script Python principal (Windows, macOS, Linux) — compartilhado entre todos os produtos |
+| `.claude/skills/youtube-dashboard/scripts/atualizar.py` | Script Python principal (Windows, macOS, Linux) — compartilhado entre todos os produtos |
 | `meus-produtos/{ativo}/entregas/youtube-dashboard/dashboard.html` | Dashboard HTML completo, abre no navegador |
 | `meus-produtos/{ativo}/entregas/youtube-dashboard/imagens/` | Thumbnails dos videos (gerados pelo script) |
 | `meus-produtos/{ativo}/entregas/youtube-dashboard/insights.json` | Dados estruturados sem base64 |
@@ -77,9 +77,9 @@ pip install requests
 
 | OS | Como rodar |
 |---|---|
-| Windows | `python .Codex/skills/youtube-dashboard/scripts/atualizar.py --abrir` |
-| macOS | `python3 .Codex/skills/youtube-dashboard/scripts/atualizar.py --abrir` |
-| Linux | `python3 .Codex/skills/youtube-dashboard/scripts/atualizar.py --abrir` |
+| Windows | `python .claude/skills/youtube-dashboard/scripts/atualizar.py --abrir` |
+| macOS | `python3 .claude/skills/youtube-dashboard/scripts/atualizar.py --abrir` |
+| Linux | `python3 .claude/skills/youtube-dashboard/scripts/atualizar.py --abrir` |
 
 ## Configuracao Necessaria
 
@@ -222,7 +222,7 @@ Configuracao confirmada:
 
 - Canal YouTube: {YOUTUBE_CHANNEL}
 - Token Apify: configurado
-- Script: .Codex/skills/youtube-dashboard/scripts/atualizar.py
+- Script: .claude/skills/youtube-dashboard/scripts/atualizar.py
 - Dashboard: meus-produtos/{ativo}/entregas/youtube-dashboard/dashboard.html
 
 1. Tudo certo, gerar agora
@@ -234,7 +234,7 @@ Configuracao confirmada:
 ### PASSO 2. Executar
 
 ```bash
-python .Codex/skills/youtube-dashboard/scripts/atualizar.py --abrir
+python .claude/skills/youtube-dashboard/scripts/atualizar.py --abrir
 ```
 
 macOS / Linux: `python3 ...`
@@ -280,7 +280,7 @@ Acesse pelo Painel de Entregas:
 meus-produtos/{ativo}/painel-entregas.html  (aba Dashboards)
 
 Para atualizar os dados quando quiser:
-python .Codex/skills/youtube-dashboard/scripts/atualizar.py
+python .claude/skills/youtube-dashboard/scripts/atualizar.py
 (depois rode: py -3 scripts/painel-incremental.py --secao dashboards)
 
 Canal monitorado: {YOUTUBE_CHANNEL}

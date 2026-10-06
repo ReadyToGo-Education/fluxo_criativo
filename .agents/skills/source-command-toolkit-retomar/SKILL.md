@@ -5,9 +5,11 @@ description: "Retomar um projeto pausado do produto ativo. Lê o handoff anterio
 
 # source-command-toolkit-retomar
 
-Use this skill when the user asks to run the migrated source command `toolkit-retomar`.
+Use esta skill quando o usuário pedir o comando `/toolkit-retomar` do workshop (ou `toolkit-retomar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/toolkit-retomar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Toolkit. Retomar Projeto
 

@@ -5,9 +5,11 @@ description: "Pausar o projeto ativo. Salva um resumo do estado e libera o produ
 
 # source-command-toolkit-pausar
 
-Use this skill when the user asks to run the migrated source command `toolkit-pausar`.
+Use esta skill quando o usuário pedir o comando `/toolkit-pausar` do workshop (ou `toolkit-pausar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/toolkit-pausar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Toolkit. Pausar Projeto
 

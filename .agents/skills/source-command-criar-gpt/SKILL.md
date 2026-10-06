@@ -5,9 +5,11 @@ description: "Criar agente GPT personalizado para infoprodutores. gera 10 ideias
 
 # source-command-criar-gpt
 
-Use this skill when the user asks to run the migrated source command `criar-gpt`.
+Use esta skill quando o usuário pedir o comando `/criar-gpt` do workshop (ou `criar-gpt`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/criar-gpt.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Criar Agente GPT
 
@@ -29,7 +31,7 @@ Tente ler:
 
 ### 2. Gerar ideias
 
-Leia `.Codex/skills/agente-gpt/SKILL.md` e siga o fluxo completo:
+Leia `.claude/skills/agente-gpt/SKILL.md` e siga o fluxo completo:
 
 - **Passo 0:** Coletar dados (do produto ativo ou texto do usuario)
 - **Passo 1:** Gerar 10 ideias de agentes em tabela. Usuario escolhe 1.

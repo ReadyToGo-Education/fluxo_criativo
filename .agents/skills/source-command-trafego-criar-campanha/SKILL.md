@@ -5,15 +5,17 @@ description: "Subir campanha nova no Meta Ads (Facebook + Instagram) via Marketi
 
 # source-command-trafego-criar-campanha
 
-Use this skill when the user asks to run the migrated source command `trafego-criar-campanha`.
+Use esta skill quando o usuário pedir o comando `/trafego-criar-campanha` do workshop (ou `trafego-criar-campanha`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/trafego-criar-campanha.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Trafego Criar Campanha. Subir Campanha Meta Ads
 
 Sobe campanha nova no Meta Ads diretamente via Marketing API, com preview YAML obrigatório e status PAUSED por padrão. Foca em infoprodutos: venda direta (`OUTCOME_SALES`) ou captação de leads (`OUTCOME_LEADS`). Não toca em outros objetivos.
 
-A especificação técnica completa está em `.Codex/skills/trafego-criar-campanha/SKILL.md`. Este command é o orquestrador.
+A especificação técnica completa está em `.claude/skills/trafego-criar-campanha/SKILL.md`. Este command é o orquestrador.
 
 ---
 
@@ -26,7 +28,7 @@ Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/perfil.md` para inferir
 Leia `META_AUTH_MODO` no `.env`.
 
 - **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, pedir ao aluno para reabrir o Codex (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar.
+- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar.
 - **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE`, `FB_AD_ACCOUNT_ID` e `FB_PAGE_ID` existem no `.env` (e opcionalmente `FB_INSTAGRAM_USER_ID`, necessário se for usar Reels/Stories no Instagram). Se faltar algum, acionar `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
@@ -61,7 +63,7 @@ Apos a validacao da conexao, decidir qual conta usar para subir a campanha:
 > **Atencao especifica deste command:** se a conta escolhida for diferente da padrao, validar que `FB_PAGE_ID` selecionado tem acesso na conta escolhida. Se a conta tem outra Pagina associada, perguntar qual usar. Sem `FB_PAGE_ID` valido para a conta escolhida, a Marketing API rejeita a criacao com erro 200.
 
 ### 0.4 Ler especificação da skill
-Leia `.Codex/skills/trafego-criar-campanha/SKILL.md` para carregar fluxo de coleta, validações de pixel, formato do preview YAML e ordem de criação.
+Leia `.claude/skills/trafego-criar-campanha/SKILL.md` para carregar fluxo de coleta, validações de pixel, formato do preview YAML e ordem de criação.
 
 ---
 

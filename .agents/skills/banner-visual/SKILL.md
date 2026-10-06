@@ -11,8 +11,8 @@ Gera banner profissional para Instagram (portrait 4:5, 1080x1350px) com foto ger
 ## Referências obrigatórias
 
 Antes de qualquer geração de prompt, carregar:
-- `.Codex/skills/carrossel-visual/references/hooks-imagem-disruptiva.md`
-- `.Codex/skills/carrossel-visual/references/skill-referencia-visual.md`
+- `.claude/skills/carrossel-visual/references/hooks-imagem-disruptiva.md`
+- `.claude/skills/carrossel-visual/references/skill-referencia-visual.md`
 
 ---
 
@@ -49,7 +49,7 @@ Qual urgência vai inspirar o banner?
 
 ## Etapa 02. Hook disruptivo
 
-Ler `.Codex/skills/carrossel-visual/references/hooks-imagem-disruptiva.md` e escolher o estilo mais adequado ao tema.
+Ler `.claude/skills/carrossel-visual/references/hooks-imagem-disruptiva.md` e escolher o estilo mais adequado ao tema.
 
 Propor 3 opções de headline, cada uma com:
 - **Headline** (ALL CAPS, máx 6 palavras)
@@ -140,7 +140,7 @@ Vai usar alguma imagem de referência para o banner?
 2. Não
 ```
 
-Se Sim: consultar `.Codex/skills/carrossel-visual/references/skill-referencia-visual.md` e seguir o fluxo de referência.
+Se Sim: consultar `.claude/skills/carrossel-visual/references/skill-referencia-visual.md` e seguir o fluxo de referência.
 
 Referência com troca de personagem: usar OpenRouter obrigatoriamente (único provider com visão).
 

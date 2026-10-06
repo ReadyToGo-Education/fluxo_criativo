@@ -1,13 +1,13 @@
 ---
 name: programar-carrossel-noticia
-description: Programa uma tarefa recorrente que gera carrossel de notícia para Instagram automaticamente, usando o /schedule do Codex. Configura escopo (só busca de notícia ou carrossel inteiro), modo (aleatório ou fixo), dimensões travadas (tom, categoria de notícia), frequência e horário. Coleta @, nicho e produto uma única vez.
+description: Programa uma tarefa recorrente que gera carrossel de notícia para Instagram automaticamente, usando o /schedule do Claude Code. Configura escopo (só busca de notícia ou carrossel inteiro), modo (aleatório ou fixo), dimensões travadas (tom, categoria de notícia), frequência e horário. Coleta @, nicho e produto uma única vez.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
 
 # Programar Carrossel de Notícia
 
-Configura uma tarefa recorrente que gera carrossel de notícia para o Instagram do criador, na frequência escolhida. A tarefa programada roda na nuvem do Codex (via `/schedule`) e entrega o resultado no painel de Routines, sem depender do computador do aluno estar ligado.
+Configura uma tarefa recorrente que gera carrossel de notícia para o Instagram do criador, na frequência escolhida. A tarefa programada roda na nuvem do Claude (via `/schedule`) e entrega o resultado no painel de Routines, sem depender do computador do aluno estar ligado.
 
 A skill é a etapa de configuração. O agendamento é criado uma vez e fica rodando até o aluno pausar ou deletar.
 
@@ -37,7 +37,7 @@ Antes da entrevista, anuncie:
 
 Esta skill grava arquivo de config em `meus-produtos/{ativo}/agendamentos/` (dado do aluno, não código do projeto). **NUNCA chame `EnterWorktree` durante esta skill.** Grave direto no checkout do aluno via `Write`.
 
-Se o harness bloquear o `Write` pedindo worktree (situação rara, só ocorre em background sessions internas), aborte a skill e avise o aluno pra rodar `/programar-carrossel-noticia` em sessão foreground normal do Codex. Não tente contornar criando worktree, isso confunde o aluno.
+Se o harness bloquear o `Write` pedindo worktree (situação rara, só ocorre em background sessions internas), aborte a skill e avise o aluno pra rodar `/programar-carrossel-noticia` em sessão foreground normal do Claude Code. Não tente contornar criando worktree, isso confunde o aluno.
 
 ---
 
@@ -178,7 +178,7 @@ Quando o aluno responder o Passo 2 com `2`, exiba SOMENTE este bloco e pare:
 ```
 Como você quer que a tarefa decida a notícia e o tom em cada execução?
 
-1. Aleatório — o Codex escolhe a notícia mais quente entre as 6 e o tom mais adequado a ela
+1. Aleatório — o Claude escolhe a notícia mais quente entre as 6 e o tom mais adequado a ela
 2. Fixo — você decide agora o que fica travado em todas as execuções
 
 Digite o número:
@@ -319,7 +319,7 @@ AGUARDE A RESPOSTA.
 
 ### 5.5. Montar cron final em UTC (atenção, regra dura)
 
-**A API de Routines do Codex aceita cron apenas em UTC.** O argumento `timezone` que aparece em alguns docs é silenciosamente descartado. Por isso, esta skill é responsável por converter o horário escolhido pelo aluno (Brasília, UTC-3, sem horário de verão desde 2019) para UTC ANTES de enviar pro `/schedule`.
+**A API de Routines do Claude Code aceita cron apenas em UTC.** O argumento `timezone` que aparece em alguns docs é silenciosamente descartado. Por isso, esta skill é responsável por converter o horário escolhido pelo aluno (Brasília, UTC-3, sem horário de verão desde 2019) para UTC ANTES de enviar pro `/schedule`.
 
 Regra de conversão: `hora_utc = (hora_brasilia + 3) mod 24`. Se a soma passar de 24, o dia da semana também avança em 1.
 
@@ -370,12 +370,12 @@ Vou criar uma tarefa que roda **{{frequencia_humana}}** no horário de Brasília
 Cada vez que rodar, a tarefa vai {{descricao_do_escopo_em_uma_frase}} para o nicho de **{{nicho}}**, no perfil **{{handle}}**.
 
 {{se escopo = CARROSSEL_INTEIRO, parágrafo extra}}
-{{se modo = ALEATORIO}} O Codex vai escolher sozinho a notícia mais quente da semana e o tom mais adequado a ela em cada execução. {{fim}}
+{{se modo = ALEATORIO}} O Claude vai escolher sozinho a notícia mais quente da semana e o tom mais adequado a ela em cada execução. {{fim}}
 {{se modo = FIXO e tom_fixo != LIVRE}} O tom fica travado em **{{tom_fixo}}** em todas as execuções. {{fim}}
 {{se modo = FIXO e categoria_fixa != LIVRE}} A categoria de notícia fica travada em **{{categoria_humana}}** ({{descricao_categoria}}). {{fim}}
 {{fim}}
 
-O resultado aparece no painel de Routines do Codex (na nuvem). Você abre lá, lê {{o que ele recebe: "as 6 ideias de notícia" ou "o texto + os prompts visuais + o arquivo consolidado"}}, copia e monta o carrossel no Instagram.
+O resultado aparece no painel de Routines do Claude (na nuvem). Você abre lá, lê {{o que ele recebe: "as 6 ideias de notícia" ou "o texto + os prompts visuais + o arquivo consolidado"}}, copia e monta o carrossel no Instagram.
 
 Pra confirmar, responde **SIM**. Se quiser ajustar alguma coisa, diz o que mudar.
 ```
@@ -411,7 +411,7 @@ Se o aluno responder qualquer coisa diferente de SIM (ex: "muda o horário pra 8
 
 ### 7.1. Compor o prompt da tarefa
 
-Leia `.Codex/skills/programar-carrossel-noticia/references/prompt-carrossel-noticia.md`. Monte o prompt final concatenando:
+Leia `.claude/skills/programar-carrossel-noticia/references/prompt-carrossel-noticia.md`. Monte o prompt final concatenando:
 
 - Sempre: **Bloco A** + **Bloco B**
 - Se `escopo == BUSCA`: + **Bloco C-BUSCA**
@@ -472,7 +472,7 @@ prompt_final: |
 
 ### 7.3. Acionar /schedule create
 
-Use a tool `Skill` para invocar a skill `schedule` do Codex (não confundir com qualquer skill do projeto). Passe como argumento:
+Use a tool `Skill` para invocar a skill `schedule` do Claude Code (não confundir com qualquer skill do projeto). Passe como argumento:
 
 - `action`: `create`
 - `name`: o nome do agendamento (ex: `[FC] Carrossel-surf-segunda-9h-<produto-slug>`)
@@ -483,29 +483,29 @@ Não passe `timezone`. A API de Routines não usa esse campo (ver limitação 1 
 
 **REGRA DURA. Criar a routine SEM repositório Git anexado.** Ao montar o corpo da criação (`job_config.ccr.session_context`), NÃO inclua o campo `sources` com `git_repository`. A tarefa de carrossel de notícia é autossuficiente: todo o contexto necessário já está no prompt do 7.1. Anexar o repositório faz a execução do remote agent FALHAR. O `session_context` deve conter apenas `model` e `allowed_tools`, sem `sources`. Se a skill `schedule` montar o corpo com `sources` por padrão, remova o campo antes de criar.
 
-A skill `schedule` cuida da criação no backend do Codex. Quando ela retornar o `schedule_id`, volte para esta skill e atualize o registro local salvando esse ID no arquivo do Passo 7.2.
+A skill `schedule` cuida da criação no backend do Claude Code. Quando ela retornar o `schedule_id`, volte para esta skill e atualize o registro local salvando esse ID no arquivo do Passo 7.2.
 
-#### Limitações conhecidas da skill /schedule do Codex
+#### Limitações conhecidas da skill /schedule do Claude Code
 
 1. **Cron sempre em UTC.** O argumento `timezone` é aceito mas silenciosamente descartado pela API de Routines. O Passo 5.5 já resolve isso convertendo o horário pra UTC.
 
-2. **MCP connectors anexados automaticamente.** A skill `/schedule` anexa TODOS os MCP connectors conectados na conta `Codex.ai` do aluno (higgsfield, Vercel, Slack, Adobe, Meta-Ads, Google Drive, etc.), mesmo que a tarefa não precise de nenhum. Como esta tarefa só faz busca web + texto, os MCPs não atrapalham mas inflam a sessão remota. Não há como evitar dentro desta skill (decisão da skill `/schedule`). Se atrapalhar no futuro, abrir issue na skill do Codex.
+2. **MCP connectors anexados automaticamente.** A skill `/schedule` anexa TODOS os MCP connectors conectados na conta `claude.ai` do aluno (higgsfield, Vercel, Slack, Adobe, Meta-Ads, Google Drive, etc.), mesmo que a tarefa não precise de nenhum. Como esta tarefa só faz busca web + texto, os MCPs não atrapalham mas inflam a sessão remota. Não há como evitar dentro desta skill (decisão da skill `/schedule`). Se atrapalhar no futuro, abrir issue na skill do Claude Code.
 
 3. **Não anexar repositório Git ao `sources`.** A skill `/schedule` tende a colocar o repo do GitHub do projeto no `sources` do remote agent por padrão. Isso faz a execução FALHAR (erro de clone quando o GitHub não está conectado, e o agent não chega a rodar a tarefa). Como o prompt é autossuficiente, a routine deve ser criada SEM `sources` (ver regra dura no 7.3). O `session_context` fica só com `model` e `allowed_tools`.
 
 4. **Allowed tools default amplo.** O remote agent recebe permissão pra Bash, Read, Write, Edit, Glob, Grep, WebSearch, WebFetch. Pra esta tarefa só precisa WebSearch + WebFetch, mas o resto não atrapalha.
 
-5. **API não suporta delete.** A skill `/schedule` da CLI suporta apenas list, get, create, update, run. Pra deletar um agendamento, o aluno precisa acessar https://Codex.ai/code/routines e remover pela interface web. Na entrega do Passo 8, oriente o aluno por esse caminho em vez de sugerir `/schedule delete`.
+5. **API não suporta delete.** A skill `/schedule` da CLI suporta apenas list, get, create, update, run. Pra deletar um agendamento, o aluno precisa acessar https://claude.ai/code/routines e remover pela interface web. Na entrega do Passo 8, oriente o aluno por esse caminho em vez de sugerir `/schedule delete`.
 
 Se a skill `schedule` não estiver disponível na sessão atual, exiba este aviso e pare:
 
 ```
-A skill /schedule do Codex não está disponível nesta sessão. Pode acontecer em ambientes onde o agendamento na nuvem está desabilitado.
+A skill /schedule do Claude Code não está disponível nesta sessão. Pode acontecer em ambientes onde o agendamento na nuvem está desabilitado.
 
 Eu salvei a configuração completa do agendamento em:
 meus-produtos/{ativo}/agendamentos/carrossel-noticia/{schedule_slug}.md
 
-Para programar manualmente, abra o Codex numa sessão com /schedule habilitado, rode /schedule create e cole o cron e o prompt que estão lá dentro.
+Para programar manualmente, abra o Claude Code numa sessão com /schedule habilitado, rode /schedule create e cole o cron e o prompt que estão lá dentro.
 ```
 
 ---
@@ -519,7 +519,7 @@ Após o `/schedule create` retornar com sucesso:
 
 Nome: {{nome_do_agendamento}}
 Schedule ID: {{schedule_id}}
-Link direto: https://Codex.ai/code/routines/{{schedule_id}}
+Link direto: https://claude.ai/code/routines/{{schedule_id}}
 Próxima execução: {{data_proxima_calculada_no_passo_6}}
 Horário recorrente: {{frequencia_humana}} (cron interno em UTC: {{cron}})
 
@@ -527,7 +527,7 @@ O que a tarefa faz:
 - {{texto_resumindo_o_escopo_e_modo}}
 
 Onde ver o resultado:
-- Painel de Routines do Codex (a saída de cada execução fica salva lá, você abre, copia o que precisa e monta o carrossel no Instagram)
+- Painel de Routines do Claude (a saída de cada execução fica salva lá, você abre, copia o que precisa e monta o carrossel no Instagram)
 
 Configuração local salva em:
 {caminho_absoluto_para_o_arquivo_do_passo_7.2}
@@ -536,19 +536,19 @@ Para pausar:
    Abra o link acima e desabilite, ou rode /schedule update {{schedule_id}} com enabled=false
 
 Para deletar:
-   Acesse https://Codex.ai/code/routines pela web (a API atual não suporta delete via CLI)
+   Acesse https://claude.ai/code/routines pela web (a API atual não suporta delete via CLI)
 
 Para criar outro agendamento (ex: para outro nicho ou outra frequência):
    /programar-carrossel-noticia
 ```
 
-Se o GitHub do projeto não estiver conectado à conta Codex do aluno (avisado pela skill `/schedule` no momento da criação), adicione ao final da entrega:
+Se o GitHub do projeto não estiver conectado à conta Claude do aluno (avisado pela skill `/schedule` no momento da criação), adicione ao final da entrega:
 
 ```
-⚠ Observação técnica: o GitHub do projeto não está conectado à sua conta Codex. Como esta tarefa só faz busca na web e gera texto (não precisa ler arquivos do repositório), ela vai rodar normalmente. Se quiser criar agendamentos futuros que dependam de arquivos do projeto, conecte o GitHub rodando /web-setup ou instalando o Codex GitHub App em https://Codex.ai/code/onboarding?magic=github-app-setup.
+⚠ Observação técnica: o GitHub do projeto não está conectado à sua conta Claude. Como esta tarefa só faz busca na web e gera texto (não precisa ler arquivos do repositório), ela vai rodar normalmente. Se quiser criar agendamentos futuros que dependam de arquivos do projeto, conecte o GitHub rodando /web-setup ou instalando o Claude GitHub App em https://claude.ai/code/onboarding?magic=github-app-setup.
 ```
 
-Exiba o caminho do arquivo de configuração no formato copiável (texto, não link), conforme regra global do AGENTS.md.
+Exiba o caminho do arquivo de configuração no formato copiável (texto, não link), conforme regra global do CLAUDE.md.
 
 ---
 
@@ -578,7 +578,7 @@ Após o Passo 8, sugira no chat:
 ```
 Próximos passos quando a primeira execução rodar:
 
-1. Abra o painel de Routines do Codex e leia a saída
+1. Abra o painel de Routines do Claude e leia a saída
 2. Copie o texto e os prompts visuais
 3. Gere as imagens (Code Interpreter ou DALL-E) e poste no Instagram
 

@@ -5,9 +5,11 @@ description: "Auditar performance de uma página HTML pronta (peso, imagens, fon
 
 # source-command-pagina-performance
 
-Use this skill when the user asks to run the migrated source command `pagina-performance`.
+Use esta skill quando o usuário pedir o comando `/pagina-performance` do workshop (ou `pagina-performance`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-performance.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Performance. Auditoria e Correção Automática
 

@@ -5,9 +5,11 @@ description: "Excluir um produto cadastrado e todas as suas entregas e pastas. U
 
 # source-command-produto-excluir
 
-Use this skill when the user asks to run the migrated source command `produto-excluir`.
+Use esta skill quando o usuário pedir o comando `/produto-excluir` do workshop (ou `produto-excluir`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/produto-excluir.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Excluir Produto. Remover Produto e Todas as Entregas
 

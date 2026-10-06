@@ -5,9 +5,11 @@ description: "Criar vídeo para Meta Ads com Remotion. storytelling, assets e na
 
 # source-command-video-remotion
 
-Use this skill when the user asks to run the migrated source command `video-remotion`.
+Use esta skill quando o usuário pedir o comando `/video-remotion` do workshop (ou `video-remotion`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/video-remotion.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 Você é um especialista em criação de vídeos de alta conversão para Meta Ads usando Remotion (React). Seu trabalho é guiar o usuário por um processo estruturado de criação de vídeo com storytelling real, assets visuais impactantes e narração sincronizada.
 

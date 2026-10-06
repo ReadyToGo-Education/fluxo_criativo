@@ -5,9 +5,11 @@ description: "Apaga todas as informações de contexto pessoal de negócio. prod
 
 # source-command-produto-zerar
 
-Use this skill when the user asks to run the migrated source command `produto-zerar`.
+Use esta skill quando o usuário pedir o comando `/produto-zerar` do workshop (ou `produto-zerar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/produto-zerar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Zerar Contexto. Limpeza Completa do Contexto
 

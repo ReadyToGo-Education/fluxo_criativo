@@ -91,7 +91,7 @@ description: >
 - ❌ Sem perguntas no gancho
 - ❌ Gancho óbvio para quem já está no nicho
 
-**Referência de exemplos validados:** consulte `.Codex/skills/conteudo/references/exemplos-leads-4-categorias.md` para 12 exemplos reais das 4 categorias de lead (Inadequação, Identificação, Plug & Play, Promessa Boa Demais) em 3 nichos. Usar como referência de nível de especificidade, profundidade e inimigo concreto.
+**Referência de exemplos validados:** consulte `.claude/skills/conteudo/references/exemplos-leads-4-categorias.md` para 12 exemplos reais das 4 categorias de lead (Inadequação, Identificação, Plug & Play, Promessa Boa Demais) em 3 nichos. Usar como referência de nível de especificidade, profundidade e inimigo concreto.
 
 **Princípio central de copy:**
 A copy não vende. Ela informa, avisa ou ensina. O produto não existe nos primeiros parágrafos.

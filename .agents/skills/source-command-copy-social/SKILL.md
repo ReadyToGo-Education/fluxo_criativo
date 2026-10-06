@@ -5,9 +5,11 @@ description: "Criar conteúdo para redes sociais. Carrossel, roteiro de Reels e 
 
 # source-command-copy-social
 
-Use this skill when the user asks to run the migrated source command `copy-social`.
+Use esta skill quando o usuário pedir o comando `/copy-social` do workshop (ou `copy-social`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/copy-social.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Conteúdo Social
 
@@ -94,7 +96,7 @@ Resumo:
 
 **Regras de estilo (aplicar em todo conteúdo):**
 
-Antes de escrever, leia `.Codex/skills/revisora/references/manual-copy.md` e aplique. Toda peça passa pela skill `revisora` antes de ir ao usuário.
+Antes de escrever, leia `.claude/skills/revisora/references/manual-copy.md` e aplique. Toda peça passa pela skill `revisora` antes de ir ao usuário.
 
 - Gancho: afirmação contra-intuitiva, paradoxo ou revelação. NUNCA pergunta.
 - Entregar valor real dentro do post: quem lê aprende ou se reconhece.

@@ -5,9 +5,11 @@ description: "Criar uma página de pre-checkout leve que captura nome, email e W
 
 # source-command-pagina-precheckout
 
-Use this skill when the user asks to run the migrated source command `pagina-precheckout`.
+Use esta skill quando o usuário pedir o comando `/pagina-precheckout` do workshop (ou `pagina-precheckout`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-precheckout.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Pre-checkout com CRM Simples
 

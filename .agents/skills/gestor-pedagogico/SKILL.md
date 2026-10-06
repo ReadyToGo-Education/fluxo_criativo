@@ -24,7 +24,7 @@ O mentorado joga um material de ensino (texto colado ou link do YouTube) e a ski
 Os entregaveis aqui sao **material didatico de estudo**, nao copy de venda. Por isso:
 
 - **NAO** acionar a skill `revisora`, nem aplicar o checklist de Light Copy (sem exclamacao, produto fora do lead, etc.). Isso travaria texto didatico a toa.
-- **SIM** continuam valendo: portugues brasileiro com acentuacao correta (regra global do AGENTS.md) e o estilo sem travessao (use virgula, ponto, dois pontos ou parenteses).
+- **SIM** continuam valendo: portugues brasileiro com acentuacao correta (regra global do CLAUDE.md) e o estilo sem travessao (use virgula, ponto, dois pontos ou parenteses).
 
 ## Os 8 entregaveis
 
@@ -163,7 +163,7 @@ Defina qual arquivo os entregaveis derivados (2 a 8) vao ler, chamado aqui de `{
 
 ### Passo 5. Gerar (paralelo, com fallback sequencial)
 
-Anuncie (consulte `.Codex/rules/tempo-estimado.md`):
+Anuncie (consulte `.claude/rules/tempo-estimado.md`):
 ```
 🔍 Proximo passo: gerar {N} entregaveis a partir de "{nome do material}". Tempo estimado: {faixa conforme a regra}.
 ```
@@ -203,7 +203,7 @@ Arquivos:
 Use o que fizer sentido para voce. Quer gerar mais algum entregavel desse mesmo material? E so dizer o numero.
 ```
 
-Mostre apenas as linhas dos arquivos realmente gerados. Exiba o caminho como texto copiavel (regra 4a do AGENTS.md). Os arquivos auxiliares (`_fonte.txt`, `_bloco-*.txt`, `_resumo-bloco-*.md`, `_digest.md`) sao internos, nao precisa lista-los.
+Mostre apenas as linhas dos arquivos realmente gerados. Exiba o caminho como texto copiavel (regra 4a do CLAUDE.md). Os arquivos auxiliares (`_fonte.txt`, `_bloco-*.txt`, `_resumo-bloco-*.md`, `_digest.md`) sao internos, nao precisa lista-los.
 
 Se o mentorado pedir outro entregavel do mesmo material depois, reaproveite os arquivos ja em maos (`_fonte.txt` e, se existir, `_digest.md`) e gere so o novo, sem refazer coleta nem digestao.
 
@@ -383,5 +383,5 @@ NAO escreva introducao do tipo "neste bloco". Va direto ao conteudo.
 - Portugues brasileiro com acentuacao correta em todo conteudo gerado, inclusive dentro do bloco mermaid. Nunca usar travessao.
 - Material didatico, nao copy de venda: nao acionar `revisora` nem o checklist de Light Copy.
 - Nao inventar conteudo fora do material-fonte. Fidelidade ao que o mentorado mandou. Em material longo, os entregaveis derivados saem do digest, entao avise o mentorado se ele quiser maxima fidelidade verbatim (a transcricao continua sendo o texto integral).
-- Anunciar "proximo passo" antes de operacoes longas (regra global do AGENTS.md), sem expor que usa sub-agentes (dizer "gerar os entregaveis", "organizar o material em blocos", nao "disparar sub-agentes em paralelo").
+- Anunciar "proximo passo" antes de operacoes longas (regra global do CLAUDE.md), sem expor que usa sub-agentes (dizer "gerar os entregaveis", "organizar o material em blocos", nao "disparar sub-agentes em paralelo").
 - Reaproveitar `_fonte.txt` e `_digest.md` se o mentorado pedir mais entregaveis do mesmo material na mesma sessao.

@@ -5,13 +5,15 @@ description: "Comando descontinuado. Redireciona para /copy-pagina, que é o flu
 
 # source-command-pagina-de-vendas
 
-Use this skill when the user asks to run the migrated source command `pagina-de-vendas`.
+Use esta skill quando o usuário pedir o comando `/pagina-de-vendas` do workshop (ou `pagina-de-vendas`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-de-vendas.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página de Vendas. Redirecionamento
 
-Este comando foi descontinuado. Ele gerava HTML do zero a cada execução, o que é proibido pelo AGENTS.md (seção "Custo-benefício na página de vendas"):
+Este comando foi descontinuado. Ele gerava HTML do zero a cada execução, o que é proibido pelo CLAUDE.md (seção "Custo-benefício na página de vendas"):
 
 > Proibido reescrever estrutura (HTML, CSS do bloco, classes, grids), trocar fontes ou paleta do tema, ou gerar uma página "nova" no lugar do template.
 
@@ -30,7 +32,7 @@ Use `/copy-pagina`. Esse command já faz tudo:
 Quando o usuário acionar `/pagina-de-vendas`, responda:
 
 ```
-Esse comando foi descontinuado. O fluxo oficial de página de vendas agora é /copy-pagina, que preserva o layout do tema em vez de gerar HTML do zero (regra do AGENTS.md).
+Esse comando foi descontinuado. O fluxo oficial de página de vendas agora é /copy-pagina, que preserva o layout do tema em vez de gerar HTML do zero (regra do CLAUDE.md).
 
 Vou acionar /copy-pagina com o produto ativo. Ele vai checar se já existe copy aprovada, perguntar o tema visual e entregar a página pronta.
 ```

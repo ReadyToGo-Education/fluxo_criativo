@@ -19,7 +19,7 @@ Siga exatamente este passo a passo, sem pular nenhuma etapa e sem pedir confirma
    - Se os dois caminhos forem IGUAIS: prossiga para o passo 3.
    - Se forem DIFERENTES: pare imediatamente e responda ao usuário com a mensagem abaixo, SEM executar mais nenhum comando:
      "Notei que essa conversa está rodando numa cópia paralela do projeto (worktree). Pra atualizar do jeito certo, faça o seguinte:
-     1. Abra o menu de configurações do Codex aqui da conversa.
+     1. Abra o menu de configurações do Claude Code aqui da conversa.
      2. Procure a opção de 'worktree' (pode aparecer como 'isolation: worktree' ou 'rodar em worktree separado').
      3. Desmarque ou desligue essa opção.
      4. Feche essa conversa e abra uma nova.
@@ -30,7 +30,7 @@ Siga exatamente este passo a passo, sem pular nenhuma etapa e sem pedir confirma
    `git remote get-url origin`
    - Se o endereço retornado CONTIVER o texto "fluxo_criativo": prossiga para o passo 4.
    - Se NÃO contiver, ou se o comando der erro: pare imediatamente e responda, SEM executar mais nenhum comando:
-     "Essa conversa parece estar aberta num projeto diferente do Fluxo Criativo. Pra atualizar do jeito certo, abra a pasta do Fluxo Criativo no Codex e cole esse mesmo comando lá dentro. Se não souber qual pasta é, me chama que eu te ajudo a achar."
+     "Essa conversa parece estar aberta num projeto diferente do Fluxo Criativo. Pra atualizar do jeito certo, abra a pasta do Fluxo Criativo no Claude Code e cole esse mesmo comando lá dentro. Se não souber qual pasta é, me chama que eu te ajudo a achar."
 
 4. Descubra o nome da branch atual e guarde esse nome para usar nos próximos passos:
    `git rev-parse --abbrev-ref HEAD`

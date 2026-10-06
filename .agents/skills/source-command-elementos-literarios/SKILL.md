@@ -5,9 +5,11 @@ description: "Aplicar os 26 Elementos Literários (Ladeirísticos) do Light Copy
 
 # source-command-elementos-literarios
 
-Use this skill when the user asks to run the migrated source command `elementos-literarios`.
+Use esta skill quando o usuário pedir o comando `/elementos-literarios` do workshop (ou `elementos-literarios`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/elementos-literarios.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Elementos Literários. Aplicador de Ladeirísticos
 
@@ -25,7 +27,7 @@ Transforma copy comum em copy memorável usando os 26 Elementos Literários do L
 
 Leia `meus-produtos/.ativo` e depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existirem. Use o Quadro, Urgências Ocultas e tom da marca para calibrar as sugestões.
 
-Leia também `.Codex/skills/elementos-literarios/SKILL.md` para ter os 26 elementos completos na cabeça.
+Leia também `.claude/skills/elementos-literarios/SKILL.md` para ter os 26 elementos completos na cabeça.
 
 ### 2. Entrevista (UMA pergunta por vez)
 

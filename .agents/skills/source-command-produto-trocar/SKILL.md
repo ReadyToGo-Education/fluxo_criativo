@@ -5,9 +5,11 @@ description: "Listar os produtos cadastrados e trocar o produto ativo."
 
 # source-command-produto-trocar
 
-Use this skill when the user asks to run the migrated source command `produto-trocar`.
+Use esta skill quando o usuário pedir o comando `/produto-trocar` do workshop (ou `produto-trocar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/produto-trocar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Trocar Produto. Selecionar Produto Ativo
 

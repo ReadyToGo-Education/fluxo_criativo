@@ -5,9 +5,11 @@ description: "Gerar a Furadeira (metodo) do produto ativo no perfil.md. Decide a
 
 # source-command-gerar-furadeira
 
-Use this skill when the user asks to run the migrated source command `gerar-furadeira`.
+Use esta skill quando o usuário pedir o comando `/gerar-furadeira` do workshop (ou `gerar-furadeira`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/gerar-furadeira.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Gerar Furadeira (Método Escrito no perfil.md)
 
@@ -45,7 +47,7 @@ O perfil ainda não tem o Quadro definido. Use /produto-concepcao antes para pre
 
 ### 2. Carregar a base de conhecimento
 
-Leia `.Codex/skills/furadeira-visual/references/6-mecanicas.md`. Esse arquivo contém as 6 mecânicas detalhadas, as 14 formas de eficiência, as 7 técnicas de nome de método e a tabela de combinação.
+Leia `.claude/skills/furadeira-visual/references/6-mecanicas.md`. Esse arquivo contém as 6 mecânicas detalhadas, as 14 formas de eficiência, as 7 técnicas de nome de método e a tabela de combinação.
 
 ### 3. Anunciar próximo passo
 
@@ -55,7 +57,7 @@ Leia `.Codex/skills/furadeira-visual/references/6-mecanicas.md`. Esse arquivo co
 
 ### 4. Decidir a mecânica automaticamente
 
-Aplique a tabela de decisão da skill `gerar-furadeira` (em `.Codex/skills/gerar-furadeira/SKILL.md`). Cruze sinais do perfil + idconsumidor + pesquisa-mercado:
+Aplique a tabela de decisão da skill `gerar-furadeira` (em `.claude/skills/gerar-furadeira/SKILL.md`). Cruze sinais do perfil + idconsumidor + pesquisa-mercado:
 
 | Sinal detectado | Mecânica principal |
 |---|---|
@@ -285,5 +287,5 @@ Próximo:
 - Não gerar imagem aqui. Imagem é responsabilidade do `/furadeira-visual`.
 - Se o contexto for insuficiente (sem Quadro ou sem Decorados), redirecionar para `/produto-concepcao` em vez de adivinhar.
 - Erros sempre em português claro, sem stack trace.
-- Anunciar "próximo passo" antes de operações longas (regra global do AGENTS.md).
-- Português brasileiro com acentuação correta. Aplicar as palavras críticas listadas no AGENTS.md.
+- Anunciar "próximo passo" antes de operações longas (regra global do CLAUDE.md).
+- Português brasileiro com acentuação correta. Aplicar as palavras críticas listadas no CLAUDE.md.

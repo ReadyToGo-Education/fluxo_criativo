@@ -5,9 +5,11 @@ description: "Conferir se o projeto entregou o que foi prometido no roteiro. Che
 
 # source-command-toolkit-verificar
 
-Use this skill when the user asks to run the migrated source command `toolkit-verificar`.
+Use esta skill quando o usuário pedir o comando `/toolkit-verificar` do workshop (ou `toolkit-verificar`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/toolkit-verificar.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Toolkit. Verificar Entrega
 
@@ -65,7 +67,7 @@ Releia `pendencias.md`. Se tiver itens, liste todos e classifique em 3 grupos:
 
 ### 3. Aplicar padrão de qualidade
 
-Para cada entregável de copy, abra o arquivo e rode o Checklist 1 do AGENTS.md (Light Copy) nos primeiros parágrafos. Se encontrar violação (travessão, exclamação, pergunta no gancho, "não é X é Y", "mesmo que", "sem precisar", produto no lead), sinalize.
+Para cada entregável de copy, abra o arquivo e rode o Checklist 1 do CLAUDE.md (Light Copy) nos primeiros parágrafos. Se encontrar violação (travessão, exclamação, pergunta no gancho, "não é X é Y", "mesmo que", "sem precisar", produto no lead), sinalize.
 
 Para cada página HTML, verifique só: arquivo existe, tem `<!DOCTYPE html>`, abre sem erro óbvio. Auditoria completa de design é trabalho do `/feedback-pagina`, não aqui.
 

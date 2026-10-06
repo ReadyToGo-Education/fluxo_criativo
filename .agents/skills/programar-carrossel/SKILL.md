@@ -1,13 +1,13 @@
 ---
 name: programar-carrossel
-description: Programa uma tarefa recorrente que gera carrossel para Instagram automaticamente, em 1 dos 9 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). A tarefa roda na nuvem do Codex via /schedule, na frequência escolhida (diária, semanal, quinzenal, customizada). O resultado aparece no painel de Routines.
+description: Programa uma tarefa recorrente que gera carrossel para Instagram automaticamente, em 1 dos 9 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). A tarefa roda na nuvem do Claude via /schedule, na frequência escolhida (diária, semanal, quinzenal, customizada). O resultado aparece no painel de Routines.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
 
 # Programar Carrossel Recorrente
 
-Configura uma tarefa que gera carrossel de Instagram automaticamente, no estilo e frequência escolhidos. A tarefa programada roda na nuvem do Codex (via `/schedule`) e entrega o resultado no painel de Routines, sem depender do computador do aluno estar ligado.
+Configura uma tarefa que gera carrossel de Instagram automaticamente, no estilo e frequência escolhidos. A tarefa programada roda na nuvem do Claude (via `/schedule`) e entrega o resultado no painel de Routines, sem depender do computador do aluno estar ligado.
 
 ---
 
@@ -362,7 +362,7 @@ Pergunta {N}. Tom da copy
 
 Qual tom você quer no texto dos carrosséis?
 
-1. Variar a cada execução (Codex escolhe o melhor para o tema do dia)
+1. Variar a cada execução (Claude escolhe o melhor para o tema do dia)
 2. Clássica e direta
 3. Bem-humorada (trocadilhos, ironia)
 4. Técnica (dados, mecanismos)
@@ -384,7 +384,7 @@ Pergunta {N}. Tom da copy
 
 Qual tom você quer no carrossel de Curiosidade?
 
-1. Variar a cada execução (o Codex escolhe o melhor para o tema do dia)
+1. Variar a cada execução (o Claude escolhe o melhor para o tema do dia)
 2. Enérgico (motivação, ritmo rápido, frases curtas)
 3. Polêmico (provocador, defende uma tese forte)
 4. Engraçado (irônico, leve, observa o absurdo)
@@ -419,7 +419,7 @@ Pergunta {N}. Tema dos slides
 
 Como você quer que a tarefa decida o tema de cada execução?
 
-1. Aleatório. A cada execução, o Codex escolhe um ângulo novo dentro do estilo "{nome do estilo}", baseado nas Urgências Ocultas e Decorados do seu produto.
+1. Aleatório. A cada execução, o Claude escolhe um ângulo novo dentro do estilo "{nome do estilo}", baseado nas Urgências Ocultas e Decorados do seu produto.
 2. Fixo. Você define agora os 5 temas exatos (título de cada slide). A tarefa gera os mesmos 6 slides em toda execução, mudando só a legenda e os prompts visuais.
 
 Para a maioria, recomendo "Aleatório".
@@ -601,14 +601,14 @@ Vou criar uma tarefa que roda **{frequencia_humana}** no horário de Brasília. 
 
 Cada vez que rodar, a tarefa vai gerar um carrossel de Instagram no estilo **{Estilo}** para o nicho **{nicho_produto}**, no perfil **{handle}**.
 
-{se modo == ALEATORIO} O Codex vai criar um ângulo novo a cada execução, baseado nas Urgências Ocultas e Decorados do seu produto. {fim}
+{se modo == ALEATORIO} O Claude vai criar um ângulo novo a cada execução, baseado nas Urgências Ocultas e Decorados do seu produto. {fim}
 {se modo == FIXO} Os 5 temas dos slides ficam travados nos títulos que você definiu. Só a legenda e os prompts visuais mudam a cada execução. {fim}
 {se Curiosidade} A cada execução, a tarefa busca curiosidades atemporais do seu nicho na web, escolhe sozinha a mais forte e monta um carrossel de 7 a 9 slides no formato editorial (capa com o fato, narrativa de revista, CTA fixo de seguir o perfil). {fim}
 {se Editorial} A cada execução, a tarefa gera 10 ideias editoriais (notícia real, polêmica, conta maluca, pesquisa, comparação) para o público "{editorial_publico}", escolhe sozinha a mais forte e entrega o texto dos 6 slides + legenda + o prompt único pra colar no ChatGPT. CTA do slide 6: {editorial_cta_tipo}. {fim}
 {se tom_fixo == LIVRE} O tom vai variar conforme o tema escolhido em cada execução. {fim}
 {se tom_fixo != LIVRE} O tom fica travado em **{tom_fixo}** em todas as execuções. {fim}
 
-O resultado aparece no painel de Routines do Codex (na nuvem). Você abre lá, lê os 6 slides + a legenda + os 6 prompts visuais, copia e monta o carrossel no Instagram.
+O resultado aparece no painel de Routines do Claude (na nuvem). Você abre lá, lê os 6 slides + a legenda + os 6 prompts visuais, copia e monta o carrossel no Instagram.
 
 1. Confirmar e criar o agendamento
 2. Ajustar algo (diga qual campo)
@@ -706,7 +706,7 @@ prompt_final: |
 
 ## Passo 8. Acionar /schedule create
 
-Use a tool `Skill` para invocar a skill `schedule` do Codex:
+Use a tool `Skill` para invocar a skill `schedule` do Claude Code:
 - `action`: `create`
 - `name`: nome do agendamento
 - `cron`: cron em UTC (Passo 4.6)
@@ -720,7 +720,7 @@ Quando retornar o `schedule_id`, atualize o arquivo do Passo 7 com o ID.
 
 ### Limitação conhecida do /schedule
 
-A skill nativa `schedule` do Codex suporta apenas `create`, `update`, `list` e `run`. **Não tem `delete` via CLI.** Para deletar um agendamento, o aluno precisa acessar https://Codex.ai/code/routines pela web e remover lá.
+A skill nativa `schedule` do Claude Code suporta apenas `create`, `update`, `list` e `run`. **Não tem `delete` via CLI.** Para deletar um agendamento, o aluno precisa acessar https://claude.ai/code/routines pela web e remover lá.
 
 Para PAUSAR um agendamento (sem deletar), use `/schedule update {schedule_id}` com `enabled=false`.
 
@@ -735,7 +735,7 @@ Exiba:
 
 Nome: {nome}
 Schedule ID: {schedule_id}
-Link direto: https://Codex.ai/code/routines/{schedule_id}
+Link direto: https://claude.ai/code/routines/{schedule_id}
 Próxima execução: {data_proxima_calculada}
 Horário recorrente: {frequencia_humana}
 
@@ -743,17 +743,17 @@ O que a tarefa faz:
 A cada execução, gera 1 carrossel de Instagram no estilo "{Estilo}" para o nicho {nicho}, com {modo_descrito}.
 
 Onde ver o resultado:
-Painel de Routines do Codex. Você abre, lê os slides + legenda + prompts visuais, copia e monta o carrossel no Instagram.
+Painel de Routines do Claude. Você abre, lê os slides + legenda + prompts visuais, copia e monta o carrossel no Instagram.
 
 Configuração local salva em:
 {caminho_absoluto}
 
 Para pausar: abra o link acima e desabilite, ou rode /schedule update {schedule_id} com enabled=false.
-Para deletar: acesse https://Codex.ai/code/routines pela web (a CLI não suporta delete).
+Para deletar: acesse https://claude.ai/code/routines pela web (a CLI não suporta delete).
 Para criar outro agendamento: /programar-carrossel.
 ```
 
-Exiba o caminho absoluto em formato copiável conforme regra do `AGENTS.md`.
+Exiba o caminho absoluto em formato copiável conforme regra do `CLAUDE.md`.
 
 ---
 

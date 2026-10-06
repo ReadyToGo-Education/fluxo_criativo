@@ -5,9 +5,11 @@ description: "Guia para conectar uma conta do HeyGen ao projeto (videos com avat
 
 # source-command-configurar-heygen
 
-Use this skill when the user asks to run the migrated source command `configurar-heygen`.
+Use esta skill quando o usuário pedir o comando `/configurar-heygen` do workshop (ou `configurar-heygen`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/configurar-heygen.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Configurar HeyGen para Videos com Avatar IA
 

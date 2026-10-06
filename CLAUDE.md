@@ -864,6 +864,16 @@ python3 --version 2>&1 || py -3 --version 2>&1
 
 Use o resultado em todos os comandos Python seguintes da mesma sessão. Nunca assuma `py -3` nem `python3` sem verificar primeiro.
 
+## Pastas Geradas para o Codex (.agents e .codex)
+
+As pastas `.agents/` e `.codex/` existem para o projeto funcionar também no Codex. Elas são geradas a partir de `.claude/` pelo script `scripts/exportar-para-codex.py` e nunca devem ser editadas à mão. Ao criar ou alterar uma skill, um command, um agente ou um hook em `.claude/`, rode o script antes de salvar a mudança no git:
+
+```bash
+python3 scripts/exportar-para-codex.py
+```
+
+Para só conferir se as pastas estão em dia, sem gravar nada, acrescente `--verificar` ao comando.
+
 ---
 
 ## Fluxo Padrão de Todo Comando (6 Passos)

@@ -30,7 +30,7 @@ Arquivo salvo em: entregas/trilha-ferramentas.html
 Para abrir:
 - No VS Code: clique com o botao direito no arquivo > Open with Live Server
 - Pelo explorador de arquivos: duble-clique no arquivo
-- Pelo Codex: diga "abre o arquivo entregas/trilha-ferramentas.html no navegador"
+- Pelo Claude Code: diga "abre o arquivo entregas/trilha-ferramentas.html no navegador"
 
 A pagina tem checklist interativo. Seu progresso fica salvo no navegador automaticamente.
 ```
@@ -311,7 +311,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
 
   <div class="nav-title">Essenciais</div>
   <ul class="nav-list">
-    <li class="nav-item" data-target="Codex"><span class="nav-dot"></span>Codex</li>
+    <li class="nav-item" data-target="claude"><span class="nav-dot"></span>Claude Code</li>
     <li class="nav-item" data-target="node"><span class="nav-dot"></span>Node.js</li>
   </ul>
 
@@ -321,9 +321,9 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <li class="nav-item" data-target="lovable"><span class="nav-dot"></span>Lovable</li>
   </ul>
 
-  <div class="nav-title">Conectores do Codex</div>
+  <div class="nav-title">Conectores do Claude</div>
   <ul class="nav-list">
-    <li class="nav-item" data-target="Codex-chrome"><span class="nav-dot"></span>Codex in Chrome</li>
+    <li class="nav-item" data-target="claude-chrome"><span class="nav-dot"></span>Claude in Chrome</li>
     <li class="nav-item" data-target="vercel-connector"><span class="nav-dot"></span>Conector Vercel</li>
   </ul>
 
@@ -367,7 +367,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
 
 <div class="callout">
   <i class="ph ph-lightbulb"></i>
-  <div><b>Como usar esta trilha.</b> Siga a ordem do menu lateral. Cada ferramenta tem um botão "marcar como feito" no topo. O sistema funciona 100% só com o Codex instalado. Os conectores e as demais ferramentas liberam automações específicas de cada comando do workshop.</div>
+  <div><b>Como usar esta trilha.</b> Siga a ordem do menu lateral. Cada ferramenta tem um botão "marcar como feito" no topo. O sistema funciona 100% só com o Claude Code instalado. Os conectores e as demais ferramentas liberam automações específicas de cada comando do workshop.</div>
 </div>
 
 <div class="callout ok">
@@ -380,28 +380,28 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="section-num">1</div>
     <div>
       <h2>Essenciais</h2>
-      <p>O Codex é obrigatório. O Node entra só quando você for rodar geração de vídeo.</p>
+      <p>O Claude Code é obrigatório. O Node entra só quando você for rodar geração de vídeo.</p>
     </div>
   </div>
 
-  <div class="tool" id="Codex">
+  <div class="tool" id="claude">
     <div class="tool-head">
       <div class="tool-icon blue">C</div>
       <div class="tool-title">
-        <h3>Codex</h3>
+        <h3>Claude Code</h3>
         <div class="sub">O cérebro do workshop. É o app da Anthropic para Mac e Windows que executa todos os comandos (barra), skills e agentes deste projeto, sem você precisar mexer em terminal.</div>
       </div>
-      <label class="checkbox-big" data-item="Codex"><input type="checkbox"><span class="check-box"></span>Feito</label>
+      <label class="checkbox-big" data-item="claude"><input type="checkbox"><span class="check-box"></span>Feito</label>
     </div>
     <div class="tool-meta">
       <div class="meta"><div class="meta-label">Status</div><div class="meta-value"><span class="tag tag-essential">Obrigatória</span></div></div>
-      <div class="meta"><div class="meta-label">Plano</div><div class="meta-value warn">Pago (Codex Max)</div></div>
+      <div class="meta"><div class="meta-label">Plano</div><div class="meta-value warn">Pago (Claude Max)</div></div>
       <div class="meta"><div class="meta-label">Usada por</div><div class="meta-value">Tudo</div></div>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-user-plus"></i>Criar conta na Anthropic</h4>
       <ol>
-        <li>Acesse <a href="https://Codex.ai" target="_blank">Codex.ai</a></li>
+        <li>Acesse <a href="https://claude.ai" target="_blank">claude.ai</a></li>
         <li>Clique em <b>Sign up</b> no canto superior direito</li>
         <li>Crie a conta com email ou Google</li>
         <li>Confirme o email</li>
@@ -413,7 +413,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <div class="plan plan-free">
           <div class="plan-head"><div class="plan-name">Free</div><div class="plan-price">R$ 0</div></div>
           <ul>
-            <li>Não serve para o Codex</li>
+            <li>Não serve para o Claude Code</li>
             <li>Apenas para testar o chat no site</li>
             <li>Bloqueia no primeiro comando pesado</li>
           </ul>
@@ -433,20 +433,20 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-section">
       <h4><i class="ph ph-download-simple"></i>Baixar o app desktop</h4>
       <ol>
-        <li>Acesse <a href="https://Codex.com/download" target="_blank">Codex.com/download</a></li>
+        <li>Acesse <a href="https://claude.com/download" target="_blank">claude.com/download</a></li>
         <li>Escolha a versão certa para o seu sistema (<b>macOS</b> ou <b>Windows</b>)</li>
         <li>Clique em <b>Download</b> e espere o instalador baixar</li>
         <li>Abra o arquivo baixado e siga o instalador como em qualquer programa (no Mac, arraste o ícone para a pasta Applications; no Windows, clique em "Próximo" até terminar)</li>
-        <li>Quando terminar, abra o <b>Codex</b> pelo menu iniciar (Windows) ou pelo Launchpad (Mac)</li>
+        <li>Quando terminar, abra o <b>Claude</b> pelo menu iniciar (Windows) ou pelo Launchpad (Mac)</li>
       </ol>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-sign-in"></i>Entrar na sua conta</h4>
       <ol>
         <li>Na primeira abertura, o app mostra uma tela de boas-vindas</li>
-        <li>Clique em <b>Entrar</b> e use a mesma conta Anthropic onde você assinou o Codex Max</li>
+        <li>Clique em <b>Entrar</b> e use a mesma conta Anthropic onde você assinou o Claude Max</li>
         <li>O app abre o navegador, você confirma o login e volta automaticamente</li>
-        <li>Pronto. Você está dentro do Codex, com o chat principal já aberto</li>
+        <li>Pronto. Você está dentro do Claude Code, com o chat principal já aberto</li>
       </ol>
     </div>
     <div class="tool-section">
@@ -455,12 +455,12 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <li>Dentro do app, clique em <b>Open folder</b> (ou use o menu <b>File &gt; Open Folder</b>)</li>
         <li>Navegue até a pasta <span class="inline">workshop_inteligente</span> que você baixou</li>
         <li>Selecione a pasta e confirme</li>
-        <li>O Codex carrega todos os comandos, skills e agentes do workshop. Agora é só digitar <span class="inline">/</span> no chat para ver a lista de comandos</li>
+        <li>O Claude Code carrega todos os comandos, skills e agentes do workshop. Agora é só digitar <span class="inline">/</span> no chat para ver a lista de comandos</li>
       </ol>
     </div>
     <div class="callout">
       <i class="ph ph-lightbulb-filament"></i>
-      <div><b>Atalho.</b> Uma vez aberta a pasta, o app lembra dela. Das próximas vezes, basta abrir o Codex que ele reabre o último projeto sozinho.</div>
+      <div><b>Atalho.</b> Uma vez aberta a pasta, o app lembra dela. Das próximas vezes, basta abrir o Claude Code que ele reabre o último projeto sozinho.</div>
     </div>
   </div>
 
@@ -469,7 +469,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
       <div class="tool-icon green">N</div>
       <div class="tool-title">
         <h3>Node.js</h3>
-        <div class="sub">Ambiente técnico que permite rodar scripts de vídeo, automações e algumas integrações do workshop. O Codex desktop já vem com tudo que precisa, mas o Node libera funcionalidades extras como geração de vídeo com Remotion.</div>
+        <div class="sub">Ambiente técnico que permite rodar scripts de vídeo, automações e algumas integrações do workshop. O Claude Code desktop já vem com tudo que precisa, mas o Node libera funcionalidades extras como geração de vídeo com Remotion.</div>
       </div>
       <label class="checkbox-big" data-item="node"><input type="checkbox"><span class="check-box"></span>Feito</label>
     </div>
@@ -484,7 +484,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <li>Acesse <a href="https://nodejs.org" target="_blank">nodejs.org</a></li>
         <li>Baixe a versão <b>LTS</b> (a que aparece à esquerda, marcada como recomendada)</li>
         <li>Instale clicando em "Próximo" em todas as telas, sem mudar nada</li>
-        <li>Pronto. O Codex já reconhece o Node automaticamente quando ele existe no sistema</li>
+        <li>Pronto. O Claude Code já reconhece o Node automaticamente quando ele existe no sistema</li>
       </ol>
     </div>
     <div class="callout">
@@ -543,18 +543,18 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
       <p style="font-size:14px;color:var(--ink-3);margin-top:10px">Existem planos pagos (Pro, Enterprise), mas nenhum cenário do workshop exige. Se um dia sua página bater 100 GB de tráfego por mês, aí você pensa em migrar. Até lá, fica no gratuito.</p>
     </div>
     <div class="tool-section">
-      <h4><i class="ph ph-plug"></i>Como conectar no Codex (forma recomendada)</h4>
-      <p style="font-size:15px;color:var(--ink-2)">Em vez de mexer com token no arquivo .env, use o conector nativo do Codex:</p>
+      <h4><i class="ph ph-plug"></i>Como conectar no Claude (forma recomendada)</h4>
+      <p style="font-size:15px;color:var(--ink-2)">Em vez de mexer com token no arquivo .env, use o conector nativo do Claude:</p>
       <ol>
-        <li>Dentro do Codex, digite:</li>
+        <li>Dentro do Claude Code, digite:</li>
       </ol>
       <code class="code">/mcp</code>
       <ol start="2">
         <li>Escolha <b>Vercel</b> na lista</li>
         <li>O navegador abre pedindo autorização. Entre com sua conta Vercel e aceite</li>
-        <li>Pronto. O Codex agora publica suas páginas direto, sem você precisar rodar nada no terminal</li>
+        <li>Pronto. O Claude agora publica suas páginas direto, sem você precisar rodar nada no terminal</li>
       </ol>
-      <p style="font-size:14px;color:var(--ink-3)">Detalhes do conector estão no bloco <b>Conector do Vercel no Codex</b>, na seção seguinte.</p>
+      <p style="font-size:14px;color:var(--ink-3)">Detalhes do conector estão no bloco <b>Conector do Vercel no Claude</b>, na seção seguinte.</p>
     </div>
     <div class="callout">
       <i class="ph ph-lightbulb-filament"></i>
@@ -611,7 +611,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-section">
       <h4><i class="ph ph-rocket-launch"></i>Como usar no workshop</h4>
       <ol>
-        <li>Rode <span class="inline">/lt-quiz</span> ou <span class="inline">/app-saas</span> no Codex</li>
+        <li>Rode <span class="inline">/lt-quiz</span> ou <span class="inline">/app-saas</span> no Claude Code</li>
         <li>O workshop gera um prompt técnico pronto para o Lovable</li>
         <li>Você cola esse prompt no Lovable, clica em <b>New Project</b> e gera</li>
         <li>Publica com um clique no botão <b>Publish</b> do Lovable</li>
@@ -625,23 +625,23 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
   <div class="section-head">
     <div class="section-num">3</div>
     <div>
-      <h2>Conectores do Codex</h2>
-      <p>Integrações oficiais que dão mais poder para o Codex. Ele passa a ler páginas no seu navegador e publicar no Vercel direto, sem você sair do chat.</p>
+      <h2>Conectores do Claude</h2>
+      <p>Integrações oficiais que dão mais poder para o Claude Code. Ele passa a ler páginas no seu navegador e publicar no Vercel direto, sem você sair do chat.</p>
     </div>
   </div>
   <div class="callout">
     <i class="ph ph-share-network"></i>
-    <div><b>O que é um conector.</b> É uma ponte que liga o Codex a outra ferramenta. Depois de conectar, você pode pedir "Codex, abre essa página e me diz o que achou" ou "publica essa pasta no Vercel" e ele faz sozinho.</div>
+    <div><b>O que é um conector.</b> É uma ponte que liga o Claude a outra ferramenta. Depois de conectar, você pode pedir "Claude, abre essa página e me diz o que achou" ou "publica essa pasta no Vercel" e ele faz sozinho.</div>
   </div>
 
-  <div class="tool" id="Codex-chrome">
+  <div class="tool" id="claude-chrome">
     <div class="tool-head">
       <div class="tool-icon red">C</div>
       <div class="tool-title">
-        <h3>Codex in Chrome (MCP)</h3>
-        <div class="sub">Extensão oficial da Anthropic para o Chrome. Permite que o Codex leia o conteúdo de páginas abertas no seu navegador, tire screenshots, clique em botões e navegue. Essencial para análise de concorrentes, feedback de páginas ao vivo e teste de funis.</div>
+        <h3>Claude in Chrome (MCP)</h3>
+        <div class="sub">Extensão oficial da Anthropic para o Chrome. Permite que o Claude Code leia o conteúdo de páginas abertas no seu navegador, tire screenshots, clique em botões e navegue. Essencial para análise de concorrentes, feedback de páginas ao vivo e teste de funis.</div>
       </div>
-      <label class="checkbox-big" data-item="Codex-chrome"><input type="checkbox"><span class="check-box"></span>Feito</label>
+      <label class="checkbox-big" data-item="claude-chrome"><input type="checkbox"><span class="check-box"></span>Feito</label>
     </div>
     <div class="tool-meta">
       <div class="meta"><div class="meta-label">Status</div><div class="meta-value"><span class="tag tag-freemium">Altamente recomendada</span></div></div>
@@ -652,29 +652,29 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
       <h4><i class="ph ph-download-simple"></i>Instalar a extensão</h4>
       <ol>
         <li>Abra o Google Chrome (se não tem, baixe em <a href="https://google.com/chrome" target="_blank">google.com/chrome</a>)</li>
-        <li>Acesse a Chrome Web Store e busque por <b>Codex for Chrome</b> (ou use o link oficial da Anthropic em <a href="https://Codex.ai/chrome" target="_blank">Codex.ai/chrome</a>)</li>
+        <li>Acesse a Chrome Web Store e busque por <b>Claude for Chrome</b> (ou use o link oficial da Anthropic em <a href="https://claude.ai/chrome" target="_blank">claude.ai/chrome</a>)</li>
         <li>Clique em <b>Adicionar ao Chrome</b> e confirme</li>
-        <li>Vai aparecer um ícone do Codex na barra de extensões do Chrome</li>
-        <li>Clique no ícone e faça login com a mesma conta Anthropic que você usa no Codex</li>
+        <li>Vai aparecer um ícone do Claude na barra de extensões do Chrome</li>
+        <li>Clique no ícone e faça login com a mesma conta Anthropic que você usa no Claude Code</li>
       </ol>
     </div>
     <div class="tool-section">
-      <h4><i class="ph ph-plug"></i>Conectar ao Codex</h4>
+      <h4><i class="ph ph-plug"></i>Conectar ao Claude Code</h4>
       <ol>
-        <li>Dentro do Codex (app desktop), digite:</li>
+        <li>Dentro do Claude Code (app desktop), digite:</li>
       </ol>
       <code class="code">/mcp</code>
       <ol start="2">
         <li>Você vai ver a lista de conectores disponíveis</li>
-        <li>Procure por <b>Codex in Chrome</b> e ative</li>
+        <li>Procure por <b>Claude in Chrome</b> e ative</li>
         <li>Autorize a conexão no navegador quando ele abrir</li>
-        <li>Pronto. Agora o Codex enxerga o que está na aba ativa do seu Chrome</li>
+        <li>Pronto. Agora o Claude enxerga o que está na aba ativa do seu Chrome</li>
       </ol>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-play-circle"></i>Como usar no dia a dia</h4>
       <ul>
-        <li><b>Análise de concorrente.</b> Abra a página do concorrente no Chrome, depois peça no Codex: "lê essa página aberta no meu Chrome e me diz qual é a oferta"</li>
+        <li><b>Análise de concorrente.</b> Abra a página do concorrente no Chrome, depois peça no Claude: "lê essa página aberta no meu Chrome e me diz qual é a oferta"</li>
         <li><b>Feedback ao vivo.</b> Depois de publicar sua página no Vercel, abra no Chrome e peça "lê essa página aberta e roda /feedback-pagina"</li>
         <li><b>Pesquisa de mercado.</b> Abra Instagram, YouTube ou Google com uma busca, peça o resumo dos resultados</li>
       </ul>
@@ -689,8 +689,8 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-head">
       <div class="tool-icon slate">V</div>
       <div class="tool-title">
-        <h3>Conector do Vercel no Codex</h3>
-        <div class="sub">Liga sua conta Vercel ao Codex via conectores nativos. Depois de ativo, você pede para o Codex publicar uma página e ele faz o deploy direto, sem você precisar copiar token para o arquivo .env.</div>
+        <h3>Conector do Vercel no Claude</h3>
+        <div class="sub">Liga sua conta Vercel ao Claude via conectores nativos. Depois de ativo, você pede para o Claude publicar uma página e ele faz o deploy direto, sem você precisar copiar token para o arquivo .env.</div>
       </div>
       <label class="checkbox-big" data-item="vercel-connector"><input type="checkbox"><span class="check-box"></span>Feito</label>
     </div>
@@ -704,22 +704,22 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
       <div><b>Pré-requisito.</b> Antes de ativar o conector, crie a conta Vercel (plano gratuito). Veja o bloco do Vercel logo acima.</div>
     </div>
     <div class="tool-section">
-      <h4><i class="ph ph-power"></i>Ativar o conector no Codex</h4>
+      <h4><i class="ph ph-power"></i>Ativar o conector no Claude Code</h4>
       <ol>
-        <li>Dentro do Codex, digite:</li>
+        <li>Dentro do Claude Code, digite:</li>
       </ol>
       <code class="code">/mcp</code>
       <ol start="2">
         <li>Na lista que aparece, escolha <b>Vercel</b></li>
         <li>O navegador vai abrir pedindo autorização. Entre com sua conta Vercel e aceite as permissões</li>
-        <li>Volte para o Codex. O conector já está ativo</li>
+        <li>Volte para o Claude Code. O conector já está ativo</li>
       </ol>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-cloud-arrow-up"></i>Como usar</h4>
       <p style="font-size:15px;color:var(--ink-2)">Depois de gerar uma página pelo workshop, basta pedir:</p>
       <code class="code">publica a pasta entregas/paginas/ no Vercel</code>
-      <p style="font-size:14px;color:var(--ink-3)">O Codex cria o projeto, faz o deploy e devolve a URL pública. Sem terminal, sem token no .env, sem configuração extra.</p>
+      <p style="font-size:14px;color:var(--ink-3)">O Claude cria o projeto, faz o deploy e devolve a URL pública. Sem terminal, sem token no .env, sem configuração extra.</p>
     </div>
     <div class="callout ok">
       <i class="ph ph-check-circle"></i>
@@ -785,7 +785,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
       <p style="font-size:14px;color:var(--ink-3);margin-top:10px">Para uso intenso (VSL, lançamento), o plano <b>Business</b> a partir de US$ 89/mês libera clonagem de voz e mais minutos. Comece no Creator.</p>
     </div>
     <div class="tool-section">
-      <h4><i class="ph ph-key"></i>Pegar a chave de API (para automatizar pelo Codex)</h4>
+      <h4><i class="ph ph-key"></i>Pegar a chave de API (para automatizar pelo Claude Code)</h4>
       <ol>
         <li>Logado, clique no avatar do canto superior direito</li>
         <li>Vá em <b>Settings</b> (ou Configurações)</li>
@@ -795,7 +795,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <li>Abra o <span class="inline">.env</span> na raiz do workshop e adicione:</li>
       </ol>
       <code class="code">HEYGEN_API_KEY=cole_sua_chave_aqui</code>
-      <p style="font-size:14px;color:var(--ink-3)">Ou rode o comando <span class="inline">/configurar-heygen</span> dentro do Codex, ele faz esse processo guiado.</p>
+      <p style="font-size:14px;color:var(--ink-3)">Ou rode o comando <span class="inline">/configurar-heygen</span> dentro do Claude Code, ele faz esse processo guiado.</p>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-user-circle"></i>Criar seu avatar</h4>
@@ -959,7 +959,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-section">
       <h4><i class="ph ph-rocket-launch"></i>Como usar no workshop</h4>
       <ol>
-        <li>Rode <span class="inline">/avat-whisk</span> no Codex</li>
+        <li>Rode <span class="inline">/avat-whisk</span> no Claude Code</li>
         <li>O workshop gera um briefing visual estruturado (Subject, Scene, Style)</li>
         <li>Cole cada bloco nos campos correspondentes do Whisk</li>
         <li>Gere as imagens e baixe</li>
@@ -1015,7 +1015,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-section">
       <h4><i class="ph ph-rocket-launch"></i>Como usar no workshop</h4>
       <ol>
-        <li>Rode a skill <span class="inline">canvas-design</span> no Codex</li>
+        <li>Rode a skill <span class="inline">canvas-design</span> no Claude Code</li>
         <li>O workshop gera um briefing de design (textos, cores, layout)</li>
         <li>Abra o Canva, escolha o template correspondente</li>
         <li>Cole os textos e ajuste conforme o briefing</li>
@@ -1086,7 +1086,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <li>No <span class="inline">.env</span> do workshop, adicione:</li>
       </ol>
       <code class="code">APIFY_API_TOKEN=cole_seu_token_aqui</code>
-      <p style="font-size:14px;color:var(--ink-3)">O comando <span class="inline">/configurar-apify</span> dentro do Codex faz esse processo guiado e já testa a conexão.</p>
+      <p style="font-size:14px;color:var(--ink-3)">O comando <span class="inline">/configurar-apify</span> dentro do Claude Code faz esse processo guiado e já testa a conexão.</p>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-clock"></i>Agendamento automático</h4>
@@ -1113,7 +1113,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <tr><th>Ferramenta</th><th>Chave no .env</th><th>Obrigatória</th></tr>
       </thead>
       <tbody>
-        <tr><td>Codex</td><td class="mono">ANTHROPIC_API_KEY</td><td>Login via <span class="inline">Codex</span></td></tr>
+        <tr><td>Claude Code</td><td class="mono">ANTHROPIC_API_KEY</td><td>Login via <span class="inline">claude</span></td></tr>
         <tr><td>Vercel</td><td class="mono">VERCEL_TOKEN</td><td>Opcional (use o conector)</td></tr>
         <tr><td>Vercel</td><td class="mono">VERCEL_PROJECT_ID</td><td>Opcional (use o conector)</td></tr>
         <tr><td>HeyGen</td><td class="mono">HEYGEN_API_KEY</td><td>Para <span class="inline">/video-heygen</span></td></tr>
@@ -1125,7 +1125,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     </table>
     <div class="callout ok">
       <i class="ph ph-link-simple"></i>
-      <div><b>Vercel via conector dispensa o .env.</b> Se você ativou o conector do Vercel no Codex (veja a seção <b>Conectores do Codex</b>), pode ignorar as duas linhas do Vercel na tabela acima.</div>
+      <div><b>Vercel via conector dispensa o .env.</b> Se você ativou o conector do Vercel no Claude (veja a seção <b>Conectores do Claude</b>), pode ignorar as duas linhas do Vercel na tabela acima.</div>
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-file-text"></i>Exemplo de .env completo</h4>
@@ -1146,19 +1146,19 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     <div class="tool-section">
       <h4><i class="ph ph-piggy-bank"></i>Investimento base para a imersão</h4>
       <ul>
-        <li>Codex Max: R$ 550/mês (plano oficial do workshop, obrigatório)</li>
+        <li>Claude Max: R$ 550/mês (plano oficial do workshop, obrigatório)</li>
         <li>Lovable Starter: US$ 5/mês (cerca de R$ 28, obrigatório para rodar quiz e SaaS do funil low ticket)</li>
-        <li>Node.js, Codex in Chrome, Conector Vercel, Vercel, Whisk, Canva: gratuito</li>
+        <li>Node.js, Claude in Chrome, Conector Vercel, Vercel, Whisk, Canva: gratuito</li>
         <li>HeyGen, Freepik (Magnific), Apify: começam nos planos gratuitos</li>
         <li>OpenRouter (API): <b>variável</b>, pague conforme usa. US$ 10 de crédito costumam durar 2 a 3 meses para quem roda /dados-instagram, /criar-gpt e automações esporádicas</li>
         <li><b>Total fixo: cerca de R$ 578/mês + variável da API</b></li>
       </ul>
-      <p style="font-size:14px;color:var(--ink-3);margin-top:10px">Os dois pagos fixos são Codex Max e Lovable Starter. O OpenRouter é crédito pré-pago que você só coloca quando for usar comandos que consomem API externa (geralmente centavos por chamada). Tudo o mais que a trilha lista tem plano gratuito suficiente para você rodar a imersão inteira e entregar seu primeiro funil.</p>
+      <p style="font-size:14px;color:var(--ink-3);margin-top:10px">Os dois pagos fixos são Claude Max e Lovable Starter. O OpenRouter é crédito pré-pago que você só coloca quando for usar comandos que consomem API externa (geralmente centavos por chamada). Tudo o mais que a trilha lista tem plano gratuito suficiente para você rodar a imersão inteira e entregar seu primeiro funil.</p>
     </div>
   </div>
   <div class="callout ok">
     <i class="ph ph-list-checks"></i>
-    <div><b>Regra simples.</b> Assine Codex Max e Lovable Starter, e deixe todas as outras ferramentas no gratuito. Quando uma ferramenta específica começar a te atrapalhar (marca d'água, limite de cota, etc.), aí sim você avalia upgrade só dela. Nada mais precisa ser pago antes.</div>
+    <div><b>Regra simples.</b> Assine Claude Max e Lovable Starter, e deixe todas as outras ferramentas no gratuito. Quando uma ferramenta específica começar a te atrapalhar (marca d'água, limite de cota, etc.), aí sim você avalia upgrade só dela. Nada mais precisa ser pago antes.</div>
   </div>
 </section>
 
@@ -1171,7 +1171,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
 </div>
 
 <script>
-const items = ["Codex","node","Codex-chrome","vercel-connector","vercel","lovable","heygen","freepik","openrouter","whisk","canva","apify"];
+const items = ["claude","node","claude-chrome","vercel-connector","vercel","lovable","heygen","freepik","openrouter","whisk","canva","apify"];
 const KEY = "trilha-ferramentas-v1";
 
 function loadState(){

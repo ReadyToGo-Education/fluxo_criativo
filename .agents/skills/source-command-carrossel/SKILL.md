@@ -5,9 +5,11 @@ description: "Gera carrossel para Instagram com foto real por card via IA (OpenR
 
 # source-command-carrossel
 
-Use this skill when the user asks to run the migrated source command `carrossel`.
+Use esta skill quando o usuário pedir o comando `/carrossel` do workshop (ou `carrossel`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/carrossel.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Carrossel para Instagram
 

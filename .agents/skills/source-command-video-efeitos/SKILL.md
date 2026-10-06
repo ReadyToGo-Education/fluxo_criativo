@@ -5,9 +5,11 @@ description: "Aplicar motion graphics animados em videos existentes usando GSAP 
 
 # source-command-video-efeitos
 
-Use this skill when the user asks to run the migrated source command `video-efeitos`.
+Use esta skill quando o usuário pedir o comando `/video-efeitos` do workshop (ou `video-efeitos`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/video-efeitos.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Efeitos Visuais Animados. GSAP + Puppeteer + FFmpeg
 
@@ -44,14 +46,14 @@ Se nao tiver Node.js: `winget install OpenJS.NodeJS.LTS` (Windows) ou `brew inst
 Verifique se o Puppeteer ja esta instalado no projeto:
 
 ```bash
-node -e "require('.Codex/tools/video-efeitos/node_modules/puppeteer')" 2>&1
+node -e "require('.claude/tools/video-efeitos/node_modules/puppeteer')" 2>&1
 ```
 
 Se falhar, instale (primeira vez, ~200MB, demora 2 a 3 minutos):
 
 ```bash
-mkdir -p .Codex/tools/video-efeitos
-cd .Codex/tools/video-efeitos && npm init -y && npm install puppeteer
+mkdir -p .claude/tools/video-efeitos
+cd .claude/tools/video-efeitos && npm init -y && npm install puppeteer
 cd ../../..
 ```
 
@@ -59,7 +61,7 @@ Avise o aluno antes de instalar: "Vou instalar o Puppeteer pela primeira vez. Sa
 
 ### Script de captura
 
-Verifique se existe `.Codex/tools/video-efeitos/capture.js`. Se nao existir, crie com o conteudo da secao SCRIPT DE CAPTURA ao final deste arquivo.
+Verifique se existe `.claude/tools/video-efeitos/capture.js`. Se nao existir, crie com o conteudo da secao SCRIPT DE CAPTURA ao final deste arquivo.
 
 ---
 
@@ -371,7 +373,7 @@ Substitua QUANTIDADE por: 80 (suave), 150 (media), 250 (intensa).
 Verifique se o script existe. Se nao, crie conforme a secao SCRIPT DE CAPTURA abaixo.
 
 ```bash
-node .Codex/tools/video-efeitos/capture.js \
+node .claude/tools/video-efeitos/capture.js \
   --html "meus-produtos/{ativo}/entregas/videos/temp_efeitos/overlay.html" \
   --output "meus-produtos/{ativo}/entregas/videos/temp_efeitos/frames" \
   --duration DURACAO \
@@ -441,7 +443,7 @@ Proximo passo sugerido:
 
 ## SCRIPT DE CAPTURA
 
-Crie `.Codex/tools/video-efeitos/capture.js` se nao existir:
+Crie `.claude/tools/video-efeitos/capture.js` se nao existir:
 
 ```javascript
 const puppeteer = require('./node_modules/puppeteer');

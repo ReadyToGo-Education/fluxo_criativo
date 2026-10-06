@@ -5,9 +5,11 @@ description: "Criar página de vendas a partir de prints de referência do aluno
 
 # source-command-pagina-visual
 
-Use this skill when the user asks to run the migrated source command `pagina-visual`.
+Use esta skill quando o usuário pedir o comando `/pagina-visual` do workshop (ou `pagina-visual`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/pagina-visual.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Página Visual. Clone de prints + copy aprovada
 

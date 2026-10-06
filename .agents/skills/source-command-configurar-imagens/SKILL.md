@@ -5,9 +5,11 @@ description: "Guia para conectar uma API de geração de imagens (OpenRouter) ao
 
 # source-command-configurar-imagens
 
-Use this skill when the user asks to run the migrated source command `configurar-imagens`.
+Use esta skill quando o usuário pedir o comando `/configurar-imagens` do workshop (ou `configurar-imagens`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/configurar-imagens.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Configurar Geracao de Imagens com IA
 

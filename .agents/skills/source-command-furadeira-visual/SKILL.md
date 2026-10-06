@@ -5,9 +5,11 @@ description: "Gerar a imagem PNG da Furadeira do produto ativo. Le a Furadeira j
 
 # source-command-furadeira-visual
 
-Use this skill when the user asks to run the migrated source command `furadeira-visual`.
+Use esta skill quando o usuário pedir o comando `/furadeira-visual` do workshop (ou `furadeira-visual`, sem a barra).
 
-## Command Template
+<!-- Gerado por scripts/exportar-para-codex.py a partir de .claude/commands/furadeira-visual.md. Não edite aqui: edite o original e rode o script de novo. -->
+
+## Roteiro do comando
 
 # Furadeira Visual (Imagem PNG via ChatGPT)
 
@@ -51,9 +53,9 @@ Extraia também do perfil.md:
 ### 2. Carregar bases de conhecimento
 
 Leia:
-- `.Codex/skills/furadeira-visual/SKILL.md` (regras de mapeamento mecânica → layout, paleta por nicho, estrutura do prompt)
-- `.Codex/skills/furadeira-visual/references/6-mecanicas.md` (definição das 6 mecânicas)
-- `.Codex/skills/furadeira-visual/references/metodo-visual.md` (descrição estrutural de cada layout)
+- `.claude/skills/furadeira-visual/SKILL.md` (regras de mapeamento mecânica → layout, paleta por nicho, estrutura do prompt)
+- `.claude/skills/furadeira-visual/references/6-mecanicas.md` (definição das 6 mecânicas)
+- `.claude/skills/furadeira-visual/references/metodo-visual.md` (descrição estrutural de cada layout)
 
 ### 3. Decidir o layout automaticamente
 
@@ -124,7 +126,7 @@ HARD CONSTRAINTS:
 - Output: clean professional infographic ready for presentation slide or sales page.
 ```
 
-Use a estrutura completa do prompt detalhada em `.Codex/skills/furadeira-visual/SKILL.md`.
+Use a estrutura completa do prompt detalhada em `.claude/skills/furadeira-visual/SKILL.md`.
 
 ### 7. Salvar prompt em arquivo
 
@@ -269,6 +271,6 @@ Próximo:
 - Não chamar a skill `revisora` (prompt técnico em inglês não é copy de venda).
 - Prompts sempre em inglês para o ChatGPT, mas conteúdo do método (nomes de fases, categorias, etc.) sempre em português brasileiro.
 - Caminho fixo do PNG: `meus-produtos/{ativo}/entregas/furadeira/furadeira.png`. Sobrescrever se já existir.
-- Anunciar "próximo passo" antes de operações longas (regra global do AGENTS.md).
+- Anunciar "próximo passo" antes de operações longas (regra global do CLAUDE.md).
 - Não gerar HTML. Não usar templates HTML antigos. Não chamar API de imagem (Gemini, OpenRouter etc.). A imagem é gerada pelo ChatGPT do aluno e devolvida pra cá.
 - Se o aluno regenerar a Furadeira via `/gerar-furadeira` depois, ele precisa rodar `/furadeira-visual` de novo. A imagem antiga continua válida até ser sobrescrita.

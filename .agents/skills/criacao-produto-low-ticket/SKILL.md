@@ -314,7 +314,7 @@ Mostre o prompt completo e pergunte:
 
 Inclua no arquivo salvo um bloco de instruções com:
 - Como configurar no ChatGPT (GPTs customizados): passo a passo numerado
-- Como configurar no Codex (Projects): passo a passo numerado
+- Como configurar no Claude (Projects): passo a passo numerado
 - Sugestão de ícone com prompt de geração pronto
 - 4 iniciadores de conversa sugeridos (use frases do idconsumidor.md como base)
 

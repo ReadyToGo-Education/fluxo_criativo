@@ -21,7 +21,7 @@ Se faltar um desses, parar e redirecionar para `/produto-concepcao`. Não tentar
 
 ## As 6 Mecânicas (decisão automática)
 
-A skill cruza sinais do contexto e escolhe 1 mecânica principal (e às vezes 1 complementar). Detalhamento completo das mecânicas em `.Codex/skills/furadeira-visual/references/6-mecanicas.md`.
+A skill cruza sinais do contexto e escolhe 1 mecânica principal (e às vezes 1 complementar). Detalhamento completo das mecânicas em `.claude/skills/furadeira-visual/references/6-mecanicas.md`.
 
 ### Tabela de decisão
 
