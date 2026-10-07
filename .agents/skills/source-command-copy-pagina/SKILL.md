@@ -29,7 +29,7 @@ Cria a copy completa da página de vendas e/ou a página HTML profissional com e
 
 Leia `meus-produtos/.ativo` para obter o slug do produto ativo. Depois leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-Para os bullets e os blocos de benefícios, leia também só a seção `## Decorados (Benefícios)` de `meus-produtos/{ativo}/perfil.md`. Para o Bloco 07 (Para quem é / não é), leia também só a seção `## Baldes de Para Quem É` de `meus-produtos/{ativo}/idconsumidor.md` (se existir). Para o FAQ e a quebra de objeções, leia também só a seção `## Objeções de Compra` de `meus-produtos/{ativo}/idconsumidor.md` (se existir).
+Para os bullets e os blocos de benefícios, leia também só a seção `## Decorados (Benefícios)` de `meus-produtos/{ativo}/perfil.md`. Se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (gerado pelo `/copy-bullets`), use os bullets salvos como matéria-prima dos bullets das etapas do método (Bloco 06) e das descrições dos entregáveis (Bloco 08). Os 3 bullets do hero continuam no padrão Urgência Oculta + Decorado. Para o Bloco 07 (Para quem é / não é), leia também só a seção `## Baldes de Para Quem É` de `meus-produtos/{ativo}/idconsumidor.md` (se existir). Para o FAQ e a quebra de objeções, leia também só a seção `## Objeções de Compra` de `meus-produtos/{ativo}/idconsumidor.md` (se existir).
 
 **Verificação de copy existente (obrigatória antes da Pergunta):**
 

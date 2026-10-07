@@ -546,6 +546,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 **Copy:**
 - `/copy-pagina`. Criar copy e/ou página HTML profissional (vendas, captura ou obrigado)
 - `/copy-anuncio`. Criar anúncios para Meta Ads (Mandala da Criatividade, 18 tipos)
+- `/copy-bullets`. Gerar 110 bullets do produto nas 11 técnicas (Halbert, Carlton, Bencivenga) e os 10 mais fortes; ficam salvos para as páginas reaproveitarem
 - `/elementos-literarios`. Aplicar 1 a 3 dos 26 elementos literários do Light Copy
 - `/criativo-estatico`. Gerar criativos estáticos para anúncios (prompt para colar em ferramenta externa OU geração automática via API)
 - `/gerar-furadeira`. Gerar a Furadeira (método do produto) no `perfil.md` aplicando uma das 6 mecânicas (Fases, Condicional, Enquadramento, Listas, Empecilhos, Dinâmica de Entrega) escolhida automaticamente conforme o nicho
