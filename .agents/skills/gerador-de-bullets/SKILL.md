@@ -41,14 +41,14 @@ O texto abaixo deste cabeçalho é o da skill original, com os ajustes listados 
    | Parte da skill | De onde vem no resumo do produto | Detalhe completo (só se precisar) |
    |---|---|---|
    | Nicho e público (pergunta 1) | `## Produto` (nicho) e `## Público (Identidade do Consumidor)` (perfil e frases que diria, para as palavras do público) | `idconsumidor.md`, `## Identidade do Consumidor` |
-   | O que ensina ou entrega (pergunta 2) e o inventário do Passo 1 | `## Furadeira` (etapas do método, literais) e `Formato` em `## Produto`. Cada etapa e cada microetapa rende entrega | `perfil.md`, `## Furadeira` |
+   | O que ensina ou entrega (pergunta 2) e o inventário do Passo 1 | `## Furadeira` (etapas do método, literais) e `Formato` em `## Produto`. Cada etapa e cada microetapa rende entrega | `perfil.md`, `## Furadeira (Método)` |
    | A dor real (Passo 1, item 3, e a cota de 10 bullets de dor real) | `## Urgências Ocultas`: Dores e Urgências Quentes | |
    | O Decorado (Passo 1, item 4, e a cota de 10 bullets de Decorado) | `## Decorados principais` | `perfil.md`, `## Decorados (Benefícios)` |
-   | Crenças, contradição e diagnóstico (técnicas 3, 6 e 7) | `## Urgências Ocultas`: Dúvidas e Assuntos Relacionados; `## Objeções principais` | `idconsumidor.md`, `## Objeções de Compra` |
-   | O inimigo (técnica 9) e a inadequação datada (técnica 11) | `## Pesquisa de mercado (síntese)`: concorrentes, objeções reais do público e assuntos quentes | `pesquisa-mercado.md`, seções 2 e 7 |
-   | Mecanismo com nome próprio (técnica 8) | O nome do método e das etapas em `## Furadeira`. Nunca invente nome de técnica que o produto não tem | |
+   | Crenças, contradição e diagnóstico (técnicas 3, 6 e 7) | `## Urgências Ocultas`: Dúvidas e Assuntos Relacionados; `## Objeções principais` | `idconsumidor.md`, `## Objeções de Compra (Framework dos 7 Argumentos)` |
+   | O inimigo (técnica 9) e a inadequação datada (técnica 11) | `## Pesquisa de mercado (síntese)`: concorrentes, objeções reais do público e assuntos quentes | `pesquisa-mercado.md`, seções 2 (concorrentes), 5 (objeções reais) e 6 (assuntos quentes) |
+   | Mecanismo com nome próprio (técnica 8) | Os nomes das etapas e dos mecanismos em `## Furadeira`. Dá para criar um nome novo para algo que o produto realmente faz (Apêndice A, técnica 8), nunca para algo que ele não entrega. O nome do método e as siglas ficam fora dos 10 quentes, que viram headline (produto fora do lead) | |
    | Condição e prova (técnica 10) | Só os dados próprios do aluno em `## Argumentos Incontestáveis` (alunos, faturamento, resultados). Dado de mercado não vira prova do produto | `perfil.md`, `## Argumentos Incontestáveis` |
-   | Tom | `## Identidade do Comunicador`: tom, mantras e jargões; nada do que está em "Não gosta" | |
+   | Tom | `## Identidade do Comunicador`: tom, mantras e jargões; nada do que está em "Não gosta" (no perfil, "Evitar na comunicação") | |
 
 3. **Aprovação e salvamento.** No Passo 5, as opções seguem o padrão do projeto ("1. Aprovar e salvar" e "2. Quero ajustar algo"). Aprovado, salve em `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (`{produto}` é o conteúdo de `meus-produtos/.ativo`), no formato do Passo 2 e do Passo 3, com uma linha de data no topo. Informe o caminho absoluto.
 4. **Quem reaproveita os bullets salvos.** O arquivo é matéria-prima, nunca copiado sem filtro:
@@ -57,8 +57,8 @@ O texto abaixo deste cabeçalho é o da skill original, com os ajustes listados 
    - `/feedback-pagina` e `/pagina-ajuste`: ao reescrever bullets fracos de uma página existente;
    - `/elementos-literarios`: quando a peça escolhida for bullets;
    - `pagina-precheckout`: os 3 bullets curtos de benefício podem sair dos 10 quentes.
-5. **Tempo do anúncio.** O anúncio do Passo 1 usa a faixa de `.claude/rules/tempo-estimado.md` ("Gerar 110 bullets").
-6. **Ajustes feitos no texto original:** frontmatter com o nome da pasta e as skills do projeto; Passo 0 começa pelo resumo; caminho do Manual da Copy (`.claude/skills/revisora/references/manual-copy.md`); "as 11 técnicas de `tecnicas-de-bullet.md`" virou "do Apêndice A"; aprovação, encerramento e "Estrutura de pastas" passaram a salvar o arquivo do item 3; as skills irmãs viraram os commands do projeto (`pagina-low-ticket` → `/lt-pagina`; `roteiro-vsl` → `/copy-roteiro`, formato VVV; `ideias-low-ticket-urgencia` → ideias de produto do `/produto-novo`).
+5. **Tempo do anúncio.** O anúncio do Passo 1 segue o formato do projeto e a faixa de `.claude/rules/tempo-estimado.md` ("Gerar 110 bullets").
+6. **Ajustes feitos no texto original:** frontmatter com o nome da pasta e as skills do projeto; Passo 0 começa pelo resumo; caminho do Manual da Copy (`.claude/skills/revisora/references/manual-copy.md`); "as 11 técnicas de `tecnicas-de-bullet.md`" virou "do Apêndice A"; aprovação, encerramento e "Estrutura de pastas" passaram a salvar o arquivo do item 3; as skills irmãs viraram os commands do projeto (`pagina-low-ticket` → `/lt-pagina`; `roteiro-vsl` → `/copy-roteiro`, formato VVV; `ideias-low-ticket-urgencia` → ideias de produto do `/produto-novo`). Também foram corrigidos três deslizes do texto original: "mais 20" continua do 111, e não do 101 (sobra da versão de 100 bullets); o mapa de entrega fala em 11 técnicas, e não em 10; e a cota de pelo menos 5 bullets de inadequação datada, que só aparecia no checklist (f), entrou também nas cotas do Passo 2 e na seção 14 do Apêndice A. O anúncio do Passo 1 ganhou o número de passos e o tempo da tabela do projeto.
 
 ---
 
@@ -118,7 +118,7 @@ Se a pesquisa real na web ajudar a achar as palavras que o público usa e as cre
 Antes de gerar, anunciar em uma linha:
 
 ```
-🔍 Próximo passo: montar os 110 bullets nas 11 técnicas. Tempo estimado: 1 a 3 minutos.
+🔍 Próximo passo: montar os 110 bullets do seu produto nas 11 técnicas e separar os 10 mais fortes (4 passos). Tempo estimado: 3 a 5 minutos.
 ```
 
 ## Passo 2. Os 110 bullets (entrega principal)
@@ -153,6 +153,7 @@ Cotas que valem no conjunto dos 110:
 - Pelo menos 10 falando do Decorado (a consequência), não só da técnica.
 - Pelo menos 10 nascidos da dor real (o que constrange na frente dos outros).
 - Pelo menos um inimigo concreto na técnica 9 (o que ensinam na faculdade, o professor do YouTube, a vendedora, o jeito antigo).
+- Pelo menos 5 de inadequação datada na técnica 11 (com ano, fonte ou ferramenta).
 - Nenhum bullet inventa número, passo ou prova que o produto não tem.
 
 Formato da entrega:
@@ -219,7 +220,7 @@ Quer ajustar alguma coisa? Dá pra pedir mais de uma técnica ("mais erro e cons
 2. Quero ajustar algo
 ```
 
-Com 2, perguntar o que ajustar, regerar só a parte pedida (um bloco, um recorte de entrega, os quentes) na mesma numeração, e repetir o convite. Pedido de "mais 20" gera numeração contínua (101 em diante) na técnica pedida.
+Com 2, perguntar o que ajustar, regerar só a parte pedida (um bloco, um recorte de entrega, os quentes) na mesma numeração, e repetir o convite. Pedido de "mais 20" gera numeração contínua (111 em diante) na técnica pedida.
 
 ## Passo 6. Encerramento
 
@@ -553,6 +554,7 @@ Regras: no máximo 20 palavras; até 28 dos 110 bullets levam parêntese; nunca 
 - Até 28 com amplificador entre parênteses.
 - Pelo menos 10 falando do Decorado (a consequência: dinheiro, reconhecimento, tempo livre, fila de espera, o que os outros dizem), não só do Quadro (a técnica).
 - Pelo menos 10 nascidos da dor real (o que constrange a pessoa na frente dos outros), não da dor superficial que ela diz primeiro.
+- Pelo menos 5 de inadequação datada na técnica 11 (com ano, fonte ou ferramenta).
 - Ao final dos 110, os 10 bullets quentes: os mais fortes, de técnicas diferentes, com o número de origem, prontos pra virar headline, assunto de e-mail ou abertura de anúncio.
 
 ---
@@ -706,7 +708,7 @@ Exemplos de cada técnica (do guia, nicho de produtos digitais):
 
 ## 4. Mapa de entrega para técnica
 
-Dada uma entrega do inventário, qual técnica rende melhor. Serve pra distribuir as entregas pelas 10 técnicas sem forçar.
+Dada uma entrega do inventário, qual técnica rende melhor. Serve pra distribuir as entregas pelas 11 técnicas sem forçar.
 
 | A entrega é... | Técnica mais natural |
 |---|---|

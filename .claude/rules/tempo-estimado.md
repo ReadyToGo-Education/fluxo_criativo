@@ -47,7 +47,7 @@
 | Gerar copy de anúncio (18 tipos, Mandala) | 2 a 3 minutos | minutos |
 | Gerar sequência de emails (5 a 7 emails) | 2 a 3 minutos | minutos |
 | Gerar carrossel (10 slides) | cerca de 60 segundos | segundos |
-| Gerar 110 bullets (11 técnicas, com os 10 quentes) | 1 a 3 minutos | minutos |
+| Gerar 110 bullets (11 técnicas, com os 10 quentes) | 3 a 5 minutos | minutos |
 
 ---
 

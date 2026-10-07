@@ -26,7 +26,9 @@ Gera 110 bullets do produto ativo, 10 por técnica, e separa os 10 mais fortes. 
 Vi que o {nome do produto} é para {público} e entrega {o que o produto entrega, pela Furadeira}. Vou usar isso. Se quiser ajustar, me avisa.
 ```
 
-3. Sem produto ativo, ou com o perfil ainda sem Quadro, siga o Passo 0 da skill: as duas perguntas, uma por vez. No fim, sem produto ativo, os bullets não são salvos (só ficam no chat); avise isso antes de gerar.
+3. Sem produto ativo, ou com o perfil ainda sem Quadro, siga o Passo 0 da skill: as duas perguntas, uma por vez.
+   - **Sem produto ativo:** os bullets não são salvos, só ficam no chat. Avise isso antes de gerar.
+   - **Produto ativo com o perfil sem Quadro:** salve normalmente na pasta do produto e, no fim, recomende `/produto-concepcao`, porque com a concepção completa os bullets saem mais fortes.
 4. Se `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` já existir, pergunte antes de gerar:
 
 ```
@@ -48,7 +50,7 @@ Digite o número:
 ## Passo 1. Gerar os bullets
 
 ```
-🔍 Próximo passo: montar os 110 bullets nas 11 técnicas, com os 10 mais fortes separados. Tempo estimado: 1 a 3 minutos.
+🔍 Próximo passo: montar os 110 bullets do seu produto nas 11 técnicas e separar os 10 mais fortes (4 passos). Tempo estimado: 3 a 5 minutos.
 ```
 
 Siga os Passos 1 a 4 da skill: inventário de entregas a partir do resumo (tabela do item 2 da seção "Como esta skill funciona no projeto"), os 110 bullets, os 10 quentes e a revisão interna com o Manual da Copy e a revisora. Nada aparece para o aluno antes da revisão.
@@ -115,7 +117,7 @@ de assunto de e-mail e de primeira linha de anúncio (/copy-anuncio).
 ## Regras
 
 1. Uma pergunta por vez, sempre com opções numeradas quando houver escolha.
-2. Nenhum bullet com número, passo, prova ou nome de técnica que o produto não tem. Dado de mercado não vira prova do produto.
+2. Nenhum bullet com número, passo ou prova que o produto não tem. Nome novo de mecanismo só para algo que o produto realmente faz. Dado de mercado não vira prova do produto.
 3. Bullet é afirmação: sem pergunta, sem nome do produto, sem "neste curso" ou "no módulo 2" dentro do bullet.
 4. Todo bullet passa pelo Manual da Copy e pela revisora antes de o aluno ver, sem avisar.
 5. Só salva depois da aprovação.
