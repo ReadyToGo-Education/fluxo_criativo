@@ -87,6 +87,8 @@
 | Dashboard Instagram (download + HTML) | 3 a 5 minutos | minutos |
 | Dashboard TikTok (download + HTML) | 3 a 5 minutos | minutos |
 | Dashboard YouTube (download + HTML) | 3 a 5 minutos | minutos |
+| Dashboard de tráfego ao vivo (montar e publicar o artefato com o MCP da Meta) | 3 a 5 minutos | minutos |
+| Ajustar o dashboard de tráfego ao vivo (editar e publicar de novo) | cerca de 90 segundos | segundos |
 
 ---
 
