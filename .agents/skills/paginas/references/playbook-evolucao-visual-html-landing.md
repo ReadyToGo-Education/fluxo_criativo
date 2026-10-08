@@ -1,8 +1,8 @@
 # Playbook: evolução visual e imagens em landing HTML (qualquer produto)
 
-Referência para **agentes e skills** ao melhorar páginas já existentes em `entregas/{slug}/paginas/*.html`, com ou sem merge prévio. Vale para **qualquer infoproduto ou projeto** que use o mesmo padrão de entrega (HTML único, Tailwind via CDN, marca verde `#0f7937` quando aplicável).
+Referência para **agentes e skills** ao melhorar páginas já existentes em `meus-produtos/{slug}/entregas/paginas/*.html`, com ou sem merge prévio. Vale para **qualquer infoproduto ou projeto** que use o mesmo padrão de entrega (HTML único, Tailwind via CDN, marca verde `#0f7937` quando aplicável).
 
-**Criação da página (ordem correta):** antes de qualquer evolução visual aqui, o fluxo padrão é **copiar** o tema para `entregas/{slug}/paginas/templates-{estilo}/` com `scripts/workshop-copy-template-tema.py`, **colocar a copy** nos `code.html` dessa cópia e rodar `scripts/workshop-merge-pagina.py` com `--templates-root`. Este playbook entra **depois**, na página já mergeada (`vendas-{slug}.html`).
+**Criação da página (ordem correta):** antes de qualquer evolução visual aqui, o fluxo padrão é **copiar** o tema para `meus-produtos/{slug}/entregas/paginas/templates-{estilo}/` com `scripts/workshop-copy-template-tema.py`, **colocar a copy** nos `code.html` dessa cópia e rodar `scripts/workshop-merge-pagina.py` com `--templates-root`. Este playbook entra **depois**, na página já mergeada (`vendas-{slug}.html`).
 
 Este documento consolida **processos** testados na prática: troca de estética “cartoon”, geração ou substituição de imagens, tipografia, contraste de texto, interação por abas e revisão de overlays.
 
@@ -19,7 +19,7 @@ Entregar uma sequência **repetível** para o assistente:
 | Processo | Quando usar | Saída típica |
 | --- | --- | --- |
 | A. **Direção visual** | Ilustrações “Pixar”, mascotes, cenário infantil | Cena abstrata (CSS), ícones Material, ou novo PNG via gerador |
-| B. **Imagens raster** | Precisa de foto ou render 3D “de verdade” | Arquivos em `entregas/{slug}/paginas/assets/` + prompts no script |
+| B. **Imagens raster** | Precisa de foto ou render 3D “de verdade” | Arquivos em `meus-produtos/{slug}/entregas/paginas/assets/` + prompts no script |
 | C. **Tipografia e quebra de linha** | Título com palavra órfã, subtítulo quebrando feio | `text-wrap: balance`, `max-w-*` maior, `text-pretty` onde fizer sentido |
 | D. **Cor do texto** | Texto parece branco ou some no fundo claro | Cor explícita `#18181b` (CSS ou `style`), revisar `selection:` no `body` |
 | E. **Interação por abas** | Menu lateral “Membros / Arquivos / Suporte” ou equivalente | `role="tablist"`, `data-*`, JS que atualiza **todos** os blocos de cópia ligados |
@@ -51,14 +51,14 @@ Entregar uma sequência **repetível** para o assistente:
 
 ## B. Pipeline de imagens (raster)
 
-**Onde os arquivos entram no projeto:** todos os PNG (upload manual ou saída do script) ficam em **`entregas/{slug}/paginas/assets/`**. O HTML da landing em **`entregas/{slug}/paginas/vendas-*.html`** usa `src="assets/nome-do-arquivo.png"` (relativo ao arquivo HTML). Ao orientar o aluno, repetir esse caminho de pasta.
+**Onde os arquivos entram no projeto:** todos os PNG (upload manual ou saída do script) ficam em **`meus-produtos/{slug}/entregas/paginas/assets/`**. O HTML da landing em **`meus-produtos/{slug}/entregas/paginas/vendas-*.html`** usa `src="assets/nome-do-arquivo.png"` (relativo ao arquivo HTML). Ao orientar o aluno, repetir esse caminho de pasta.
 
 **Script:** `scripts/generate-openrouter-nano-banana-images.py`  
 **Pré-requisito:** `.env` na raiz com `OPENROUTER_API_KEY` (ver `.env.example`).
 
 **Fluxo sugerido:**
 
-1. Definir nomes finais dos arquivos (ex.: `hero-depois-compra-membros.png`) e pasta `entregas/{slug}/paginas/assets/`.
+1. Definir nomes finais dos arquivos (ex.: `hero-depois-compra-membros.png`) e pasta `meus-produtos/{slug}/entregas/paginas/assets/`.
 2. Acrescentar entradas em `JOBS` ou usar modo `--output` + `--prompt` para teste único.
 3. Rodar na raiz do repositório, exemplo:  
    `py -3 scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
@@ -115,7 +115,7 @@ Se houver caixas escuras com texto branco e o aluno quiser **sem texto na arte**
 ## Checklist para o agente (copiar mentalmente)
 
 - [ ] Crítica do aluno traduzida em decisão: só CSS, só imagem, ou ambos?
-- [ ] Texto longo da página continua alinhado à copy em `entregas/{slug}/copy-pagina/` quando existir?
+- [ ] Texto longo da página continua alinhado à copy em `meus-produtos/{slug}/entregas/copy-pagina/` quando existir?
 - [ ] Títulos: `balance` + largura de container suficiente?
 - [ ] Parágrafos críticos com cor **#18181b** ou equivalente explícito se o tema custom falhar?
 - [ ] Abas: subtítulo + descrição + painel mudam juntos?

@@ -19,7 +19,7 @@ Nunca chamar os dois de "referência". Sempre LAYOUT REFERÊNCIA ou PERSONAGEM.
 
 ## PASSO 0 — Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md`.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 Extraia: handle, slug, cor de destaque do produto ativo.
 
 ---

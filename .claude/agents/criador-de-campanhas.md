@@ -31,8 +31,7 @@ Você é o orquestrador de tráfego pago do sistema VTSD. Seu papel é entender 
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, urgências ocultas
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, paliativos, objeções
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, urgências ocultas, público, paliativos, objeções
 - `meus-produtos/{ativo}/entregas/paginas/` (glob) → checar se já existe página de destino
 
 Se não houver produto ativo, oriente: "Antes de criar campanhas, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."

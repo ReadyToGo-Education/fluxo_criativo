@@ -51,7 +51,7 @@ O quiz é a ponte entre o anúncio e a venda do produto de entrada (Low Ticket).
 
 ## FASE 0 — VERIFICAÇÃO: QUIZ É O FORMATO CERTO?
 
-Antes de começar, aplique o framework de decisão com base no perfil do produto. Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`.
+Antes de começar, aplique o framework de decisão com base no perfil do produto. Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 | Critério | Aponta para QUIZ | Aponta para PÁGINA |
 |---|---|---|
@@ -71,11 +71,11 @@ Se o quiz for confirmado como formato correto (ou o usuário insistir), continue
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md`.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-Se `perfil.md` não existir, oriente a usar `/produto-editar` primeiro.
+Se `perfil.md` não existir, oriente a usar `/produto-concepcao` primeiro.
 
-Use o Quadro, Furadeira, Urgências Ocultas, Decorados e público do perfil para gerar as perguntas.
+Use o Quadro, Furadeira, Urgências Ocultas, Decorados e público do resumo para gerar as perguntas.
 
 ### 2. Entrevista (máximo 2 perguntas)
 

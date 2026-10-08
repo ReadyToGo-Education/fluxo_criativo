@@ -11,16 +11,16 @@ Este fluxo inverte: primeiro a imagem que para o scroll, depois onde cada coisa 
 
 ### 0. Contexto
 
-O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (perfil.md, idconsumidor.md, tipo.md, preco.md, pesquisa-mercado.md, e inferências a partir do slug do produto).
+O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (resumo-produto.md, tipo.md, preco.md, e inferências a partir do slug do produto).
 
 Se a sub-skill foi chamada direto (sem passar pelo orquestrador), carregar esses arquivos agora seguindo o Passo 0 do orquestrador.
 
 Extraia (combinando dado real + inferência quando o perfil for incompleto):
 
-- **Quadro** (transformação principal): do `perfil.md` se existir, ou inferido do nome + tipo + preço.
-- **Nicho e público**: do `perfil.md` e `idconsumidor.md` se existirem, ou inferidos do slug + tipo.
-- **Top 5 Urgências Ocultas mais fortes** (priorizando Dores, Desejos e Urgências Quentes): da seção "Urgências Ocultas" do `perfil.md` se existir. Se NÃO existir, **inferir 5 urgências plausíveis** a partir do nicho e do público. Marcar como "○ inferido" quando apresentar na Pergunta 2/2.
-- **Identidade do Consumidor** (estética, tom, cultura visual se disponível): do `idconsumidor.md` se existir.
+- **Quadro** (transformação principal): do `resumo-produto.md` se existir, ou inferido do nome + tipo + preço.
+- **Nicho e público**: do `resumo-produto.md` se existir, ou inferidos do slug + tipo.
+- **Top 5 Urgências Ocultas mais fortes** (priorizando Dores, Desejos e Urgências Quentes): da seção "Urgências Ocultas" do `resumo-produto.md` se existir. Se NÃO existir, **inferir 5 urgências plausíveis** a partir do nicho e do público. Marcar como "○ inferido" quando apresentar na Pergunta 2/2.
+- **Identidade do Consumidor** (estética, tom, cultura visual se disponível): da seção "Público" do `resumo-produto.md` se existir.
 
 **Resumo de contexto antes da entrevista (sempre mostrar):**
 
@@ -33,7 +33,7 @@ Quadro: [Quadro real ou inferido]
 Nicho: [nicho]
 Público: [público]
 
-(Marque "✓ do perfil" pros campos do perfil.md / idconsumidor.md, e "○ inferido" pros campos derivados do slug, tipo ou preço.)
+(Marque "✓ do perfil" pros campos do resumo-produto.md, e "○ inferido" pros campos derivados do slug, tipo ou preço.)
 
 Está tudo certo?
 
@@ -98,13 +98,13 @@ Se o número for inválido, peça de novo de forma curta, sem repetir a lista in
 
 **Pergunta 2/2. Urgência base:**
 
-Use as 5 urgências extraídas no Passo 0 (reais do `perfil.md` ou inferidas a partir do nicho/público quando o perfil não existir). Priorize Dores, Urgências Quentes e Desejos.
+Use as 5 urgências extraídas no Passo 0 (reais do `resumo-produto.md` ou inferidas a partir do nicho/público quando o perfil não existir). Priorize Dores, Urgências Quentes e Desejos.
 
 ```
 Qual situação vai inspirar o criativo?
 (escolha a que mais ressoa com o momento de compra)
 
-1. [Urgência 1] [marcar ✓ se veio do perfil.md, ○ se foi inferida]
+1. [Urgência 1] [marcar ✓ se veio do resumo-produto.md, ○ se foi inferida]
 2. [Urgência 2] [marcar ✓ ou ○]
 3. [Urgência 3] [marcar ✓ ou ○]
 4. [Urgência 4] [marcar ✓ ou ○]

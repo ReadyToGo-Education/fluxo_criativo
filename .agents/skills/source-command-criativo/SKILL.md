@@ -17,7 +17,7 @@ Use esta skill quando o usuário pedir o comando `/criativo` do workshop (ou `cr
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 ### 2. Escolha do Tipo
 

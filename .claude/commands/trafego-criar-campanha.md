@@ -16,7 +16,7 @@ A especificação técnica completa está em `.claude/skills/trafego-criar-campa
 ## Passo 0. Contexto e validação
 
 ### 0.1 Produto ativo
-Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/perfil.md` para inferir ticket, Quadro, Furadeira e Identidades quando o aluno não declarar.
+Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) para inferir ticket, Quadro, Furadeira e Identidades quando o aluno não declarar.
 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` no `.env`.
@@ -74,7 +74,7 @@ Caso contrário, **modo guia**: começar pela Fase 1 da skill.
 Aplicar as Fases 1 a 9 da skill, uma pergunta por mensagem:
 
 1. **Objetivo**. Sales ou Leads.
-2. **Produto e ticket**. Infere de `perfil.md` se possível, senão pergunta.
+2. **Produto e ticket**. Infere do `resumo-produto.md` se possível, senão pergunta.
 3. **Estrutura**. 1-X-1, 1-1-X ou X-1-1.
 4. **Orçamento**. ABO ou CBO + valor diário.
 5. **Tracking** (gate duro). Validar pixel ativo + evento recebendo dados.

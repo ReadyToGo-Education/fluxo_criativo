@@ -110,7 +110,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
 
 ### Referência de produto
 
-Ler `perfil.md` (já carregado no Passo 0): campo `preco` — para classificar CPA/CPL como saudável ou problemático nos comparativos de timing. Inferir tipo de funil pelo objetivo predominante das campanhas: `OUTCOME_SALES` → métrica-norte ROAS + CPA; `OUTCOME_LEADS` → métrica-norte CPL.
+Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco` — para classificar CPA/CPL como saudável ou problemático nos comparativos de timing. Inferir tipo de funil pelo objetivo predominante das campanhas: `OUTCOME_SALES` → métrica-norte ROAS + CPA; `OUTCOME_LEADS` → métrica-norte CPL.
 
 ---
 

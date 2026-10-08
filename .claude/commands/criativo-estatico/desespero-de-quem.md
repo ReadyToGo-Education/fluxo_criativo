@@ -44,7 +44,7 @@ Posso usar os dados do produto ativo ({nome do produto}) ou você prefere inform
 2. Informar manualmente
 ```
 
-Se o aluno escolher 1, extraia produto, nicho e público dos arquivos (perfil.md, idconsumidor.md, tipo.md, preco.md) e siga direto pro Passo 2.
+Se o aluno escolher 1, extraia produto, nicho e público dos arquivos (resumo-produto.md, tipo.md, preco.md; se o resumo não existir, gere conforme o CLAUDE.md) e siga direto pro Passo 2.
 
 Se o aluno escolher 2, ou se não houver produto ativo, pergunte:
 

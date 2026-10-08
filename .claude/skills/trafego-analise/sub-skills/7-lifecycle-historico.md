@@ -125,7 +125,7 @@ Não é necessária uma chamada extra: usar os campos `start_time` e `effective_
 
 ### Referência de produto
 
-Ler `perfil.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
+Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
 - `OUTCOME_SALES` → funil de venda direta → métrica-norte = **ROAS** e **CPA**
 - `OUTCOME_LEADS` → funil de captação → métrica-norte = **CPL** e **total de leads**
 
@@ -385,7 +385,7 @@ Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivad
 
 Se nenhuma campanha pausada ou arquivada tiver gasto nos últimos 6 meses, exibir: "Nenhuma campanha pausada com histórico de gasto identificada no período. Conta sem oportunidades óbvias de reativação."
 
-> **Nota de cálculo:** para funil de venda direta, usar `meta de ROAS = receita_total / spend_total` do período ativo (Chamada 7a) como referência quando o perfil.md não informar meta explícita. Para funil de captação, usar CPL médio do período ativo como meta de referência.
+> **Nota de cálculo:** para funil de venda direta, usar `meta de ROAS = receita_total / spend_total` do período ativo (Chamada 7a) como referência quando o resumo-produto.md não informar meta explícita. Para funil de captação, usar CPL médio do período ativo como meta de referência.
 
 ---
 

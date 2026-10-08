@@ -62,7 +62,7 @@ Usar dados do produto ativo ou informar manualmente?
 2. Informar manualmente
 ```
 
-Se o aluno escolher 1, leia `meus-produtos/{ativo}/perfil.md` e (se existir) `meus-produtos/{ativo}/idconsumidor.md`, extraia produto, nicho e público, e siga pro Passo 2.
+Se o aluno escolher 1, leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md), extraia produto, nicho e público, e siga pro Passo 2.
 
 Se o aluno escolher 2, ou se não existir produto ativo, pergunte direto:
 

@@ -64,15 +64,14 @@ Esta regra anula qualquer outra orientação geral de "reduzir confirmações" o
 
 Leia em paralelo:
 - `meus-produtos/.ativo` para descobrir o produto ativo.
-- `meus-produtos/{ativo}/perfil.md` se existir.
-- `meus-produtos/{ativo}/idconsumidor.md` se existir.
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md).
 
 Se não houver produto ativo, instrua o aluno a rodar `/produto-novo` primeiro e encerre.
 
-Do perfil, tente extrair como sugestão (não use ainda):
-- **Handle do Instagram**. Procure por `@`, "Instagram", "perfil" no perfil.
+Do resumo, tente extrair como sugestão (não use ainda):
+- **Handle do Instagram**. Procure por `@`, "Instagram", "perfil" no resumo.
 - **Nicho**. Procure por "Nicho:", "Mercado:", ou pela seção de identidade.
-- **Produto**. Combine nome do produto, formato e público-alvo do perfil.
+- **Produto**. Combine nome do produto, formato e público-alvo do resumo.
 
 Esses valores entram como _default_ nas perguntas do Passo 1, mas o aluno pode confirmar ou ajustar.
 

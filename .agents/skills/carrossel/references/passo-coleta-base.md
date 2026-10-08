@@ -47,12 +47,11 @@ Internamente (em código, variáveis, comentários de implementação na SKILL.m
 
 Leia em paralelo:
 - `meus-produtos/.ativo` para descobrir o produto ativo.
-- `meus-produtos/{ativo}/perfil.md` se existir.
-- `meus-produtos/{ativo}/idconsumidor.md` se existir.
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md).
 - **`.env` na raiz do projeto** para procurar `IG_USER=` (handle do Instagram salvo por outras skills como `dashboard-social`, `instagram-dashboard`, `dados-instagram`).
 
-Do perfil, tente extrair como sugestão (não use ainda):
-- **Handle do Instagram**. **Ordem de prioridade:** primeiro `IG_USER` do `.env`, depois `@`/"Instagram"/"perfil" do `perfil.md`. Quando vier do `.env`, lembre que está sem `@` (ex: `leandroladeiran`) e adicione o `@` na exibição.
+Do resumo, tente extrair como sugestão (não use ainda):
+- **Handle do Instagram**. **Ordem de prioridade:** primeiro `IG_USER` do `.env`, depois `@`/"Instagram"/"perfil" do `resumo-produto.md`. Quando vier do `.env`, lembre que está sem `@` (ex: `leandroladeiran`) e adicione o `@` na exibição.
 - **Nicho**. Procure por "Nicho:", "Mercado:" ou identidade do produto.
 - **Produto**. Combine nome + formato + público-alvo.
 
@@ -78,7 +77,7 @@ Use a tabela para preencher o cabeçalho "Pergunta X de Y" em cada pergunta exib
 ### Ordem de tentativa de sugestão
 
 1. **`.env` na raiz do projeto** com a chave `IG_USER=`. Esta é a fonte preferida (salva por `dashboard-social`, `instagram-dashboard`, `dados-instagram` e outras skills). Normalize lendo sem `@` e prefixe na exibição.
-2. **`perfil.md`** do produto ativo (procure `@`, "Instagram", "perfil").
+2. **`resumo-produto.md`** do produto ativo (procure `@`, "Instagram", "perfil").
 3. **Nenhuma**: pergunte sem sugestão.
 
 ### Com sugestão (vinda do .env ou perfil)
@@ -88,7 +87,7 @@ Pergunta 1 de {total}. @ do Instagram
 
 Sugestão: @{ig_user_sugerido}
 {Se veio do .env} (achei no seu .env, salvo por outra skill do projeto)
-{Se veio do perfil.md} (achei no seu perfil.md)
+{Se veio do resumo-produto.md} (achei no seu perfil.md)
 
 1. Sim, é esse mesmo
 2. Outro @
@@ -122,7 +121,7 @@ Mostre o micro-resumo (formato abaixo) e prossiga para a 1.2.
 
 ### Regra de exemplo personalizado
 
-**O exemplo entre parênteses NÃO deve ser hardcoded.** Antes de exibir a pergunta, gere um exemplo coerente com o produto ativo, lendo `perfil.md` (Quadro, nicho, formato) e `idconsumidor.md` (público-alvo). Estrutura do exemplo:
+**O exemplo entre parênteses NÃO deve ser hardcoded.** Antes de exibir a pergunta, gere um exemplo coerente com o produto ativo, lendo `resumo-produto.md` (Quadro, nicho, formato, público-alvo). Estrutura do exemplo:
 
 ```
 {nicho do produto}, {formato do produto} de {duração} para {recorte do público-alvo}
@@ -276,4 +275,4 @@ Esse bloco serve para o aluno entender em qual ponto do fluxo está e revisar o 
 
 ## Atalhos quando o produto ativo já tem todos os dados
 
-Se TODAS as 5 variáveis acima podem ser preenchidas a partir do `perfil.md` (handle, nicho/produto, paleta, tom default coerente, estilo de design fixo da marca), a skill ainda assim DEVE exibir cada pergunta, mas pode pré-preencher com sugestão e oferecer "1. Sim ({valor sugerido})" como atalho. Aluno tem direito de revisar.
+Se TODAS as 5 variáveis acima podem ser preenchidas a partir do `resumo-produto.md` (handle, nicho/produto, paleta, tom default coerente, estilo de design fixo da marca), a skill ainda assim DEVE exibir cada pergunta, mas pode pré-preencher com sugestão e oferecer "1. Sim ({valor sugerido})" como atalho. Aluno tem direito de revisar.

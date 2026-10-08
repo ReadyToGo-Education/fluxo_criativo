@@ -30,6 +30,7 @@
 | Gerar Argumentos Incontestáveis | cerca de 45 segundos | segundos |
 | Gerar Identidade do Comunicador | cerca de 45 segundos | segundos |
 | Gerar 50 ideias de produto | cerca de 60 segundos | segundos |
+| Gerar o resumo do produto (resumo-produto.md) | cerca de 60 segundos | segundos |
 
 ---
 

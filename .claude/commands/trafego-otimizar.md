@@ -20,7 +20,7 @@ A especificação técnica completa está em `.claude/skills/trafego-otimizar/SK
 ## Passo 0. Contexto e validação
 
 ### 0.1 Produto ativo
-Leia `meus-produtos/.ativo`. Leia `perfil.md` para inferir `ticket_brl` e `tipo_funil`.
+Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) para inferir `ticket_brl` e `tipo_funil`.
 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` no `.env`.
@@ -96,7 +96,7 @@ Digite o número:
 ```
 
 ### 1.4 Ticket
-Inferir do `perfil.md`. Se não der:
+Inferir do `resumo-produto.md`. Se não der:
 ```
 Qual o ticket do produto que essa campanha vende?
 (ex: R$47, R$497, R$1.997)

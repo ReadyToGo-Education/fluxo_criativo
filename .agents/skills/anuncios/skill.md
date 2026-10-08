@@ -322,7 +322,7 @@ Regras:
 ## Fluxo completo do comando `/copy-anuncio` (8 passos)
 
 ```
-1. Contexto             → ler entregas/.ativo, entregas/{ativo}/perfil.md e entregas/{ativo}/idconsumidor.md
+1. Contexto             → ler meus-produtos/.ativo e meus-produtos/{ativo}/resumo-produto.md (se não existir, gerar conforme o CLAUDE.md)
 2. Entrevista           → uma pergunta por vez, sem agrupar, com progresso visual
 3. Pesquisa             → 2 buscas na web (formato + objetivo). a cada geração, não reutilizar
 4. Elementos literários → INTERNO e silencioso: consultar skill elementos-literarios e escolher 1 a 3 elementos que combinem com o tipo da Mandala selecionado. Não mostrar ao usuário.

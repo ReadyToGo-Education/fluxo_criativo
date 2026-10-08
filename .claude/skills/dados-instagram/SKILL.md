@@ -21,7 +21,7 @@ Pega um perfil do Instagram público e entrega duas coisas: um dashboard HTML in
 
 ### 0. Contexto
 
-Leia `meus-produtos/.ativo`, `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` (se existir).
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 ### 1. Entrevista (uma pergunta por vez)
 
@@ -99,7 +99,7 @@ Tudo em CSS inline e JS vanilla. Design system Fluxo Criativo: fundo `#000000`, 
 
 ### 5. Gerar o relatório escrito
 
-Arquivo: `entregas/{ativo}/dados/instagram-{perfil}.md`
+Arquivo: `meus-produtos/{ativo}/entregas/dados/instagram-{perfil}.md`
 
 Estrutura:
 ```markdown
@@ -151,8 +151,8 @@ Após aprovação, salve os três arquivos e mostre:
 ```
 Pronto. Análise do @{perfil} salva.
 
-Dashboard:   entregas/{ativo}/dados/instagram-{perfil}.html
-Relatório:   entregas/{ativo}/dados/instagram-{perfil}.md
+Dashboard:   meus-produtos/{ativo}/entregas/dados/instagram-{perfil}.html
+Relatório:   meus-produtos/{ativo}/entregas/dados/instagram-{perfil}.md
 Dados brutos: entregas/dados/instagram-{perfil}.json
 
 Abra o dashboard no navegador pra ver os gráficos e filtros.

@@ -9,17 +9,17 @@ A estética é de um post real de creator brasileiro, não de banner publicitár
 
 ### 0. Contexto
 
-O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (perfil.md, idconsumidor.md, tipo.md, preco.md, pesquisa-mercado.md, e inferências a partir do slug do produto).
+O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (resumo-produto.md, tipo.md, preco.md, e inferências a partir do slug do produto).
 
 Se a sub-skill foi chamada direto, carregue esses arquivos agora seguindo o Passo 0 do orquestrador.
 
 Extraia (combinando dado real + inferência):
 
-- **Produto**: nome do produto (do `perfil.md` ou inferido do slug, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
-- **Nicho**: do `perfil.md` (seção "Nicho") ou inferido do nome + tipo + preço.
-- **Público**: do `idconsumidor.md` ou seção "Para Quem É" do `perfil.md` ou inferido do nicho.
-- **Quadro / promessa**: a transformação principal do `perfil.md`, pra alimentar o CTA (o CTA sempre carrega o benefício específico do produto).
-- **Método / abordagem do produto**: o nome e o vocabulário do método da Furadeira do `perfil.md`, se houver (estoicismo, neurociência, BLW, IA, Feng Shui, etc.). Esse dado é crítico, porque as soluções das 10 ideias DEVEM usar o vocabulário e os frameworks do método do produto. Se o produto tem abordagem específica, as soluções precisam invocá-la.
+- **Produto**: nome do produto (do `resumo-produto.md` ou inferido do slug, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
+- **Nicho**: do `resumo-produto.md` (seção "Produto") ou inferido do nome + tipo + preço.
+- **Público**: do `resumo-produto.md` (seção "Público") ou inferido do nicho.
+- **Quadro / promessa**: a transformação principal do `resumo-produto.md`, pra alimentar o CTA (o CTA sempre carrega o benefício específico do produto).
+- **Método / abordagem do produto**: o nome e o vocabulário do método da Furadeira do `resumo-produto.md`, se houver (estoicismo, neurociência, BLW, IA, Feng Shui, etc.). Esse dado é crítico, porque as soluções das 10 ideias DEVEM usar o vocabulário e os frameworks do método do produto. Se o produto tem abordagem específica, as soluções precisam invocá-la.
 
 ### 1. Apresentar resumo do contexto e confirmar
 
@@ -33,7 +33,7 @@ Nicho: [nicho]
 Público: [resumo do público]
 Método / abordagem: [método do produto, se houver]
 
-(Marque "✓ do perfil" pros campos extraídos diretamente do perfil.md ou idconsumidor.md.
+(Marque "✓ do perfil" pros campos extraídos diretamente do resumo-produto.md.
 Marque "○ inferido" pros campos que foram um chute a partir do slug, tipo ou preço.)
 
 Está tudo certo?

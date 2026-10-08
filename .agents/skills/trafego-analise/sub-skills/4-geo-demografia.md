@@ -87,7 +87,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights\
 
 ### Referência de produto
 
-Ler `perfil.md` e `idconsumidor.md` (já carregados no Passo 0):
+Ler `resumo-produto.md` (já carregado no Passo 0):
 - Campo `preco` → benchmark de CPA/CPL conforme tabela do output [1]
 - Campo de público-alvo declarado (sexo, faixa etária, região) → comparar com o que a API retornar
 - Inferir tipo de funil pelo objetivo predominante das campanhas: `OUTCOME_SALES` = venda direta (métrica-norte: CPA + ROAS); `OUTCOME_LEADS` = captação (métrica-norte: CPL)
@@ -250,11 +250,11 @@ Após a tabela, consolidar por gênero (agregar todas as faixas etárias de cada
   Gênero vencedor: {F | M} — CPA {X%} mais barato
 ```
 
-**Comparação com perfil declarado:** após o resumo por gênero, cruzar com o público-alvo em `perfil.md` e `idconsumidor.md`. Se o vencedor real divergir do perfil declarado, sinalizar explicitamente:
+**Comparação com perfil declarado:** após o resumo por gênero, cruzar com o público-alvo em `resumo-produto.md`. Se o vencedor real divergir do perfil declarado, sinalizar explicitamente:
 
 ```
 ⚠️  DIVERGÊNCIA DE PÚBLICO
-    Perfil declarado:  {sexo + faixa etária declarados no perfil.md/idconsumidor.md}
+    Perfil declarado:  {sexo + faixa etária declarados no resumo-produto.md}
     Quem está {comprando | convertendo} de fato: {sexo + faixa etária vencedores}
     Leitura: ou a Identidade do Consumidor precisa ser atualizada, ou há um segmento
     novo que o produto alcançou sem intenção. Nos dois casos, vale investigar.

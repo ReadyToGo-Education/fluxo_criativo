@@ -95,7 +95,7 @@ curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_B_ID}/insights
 
 ### Referência de produto
 
-Ler `perfil.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo das campanhas informadas:
+Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo das campanhas informadas:
 
 - `OUTCOME_SALES` → funil de venda direta → métrica-norte = **CPA** (e ROAS se pixel de compra ativo)
 - `OUTCOME_LEADS` → funil de captação → métrica-norte = **CPL**
@@ -107,7 +107,7 @@ Se as duas campanhas tiverem objetivos diferentes, alertar que comparação dire
 | Venda direta — low ticket | até R$ 97 | ticket x 0,40 | 2,5x |
 | Venda direta — ticket médio | R$ 98 a R$ 497 | ticket x 0,30 | 3,0x |
 | Venda direta — high ticket | acima de R$ 497 | ticket x 0,25 | 4,0x |
-| Captação de leads | qualquer | CPL-alvo: ler do perfil ou perguntar | — |
+| Captação de leads | qualquer | CPL-alvo: ler do resumo ou perguntar | — |
 
 ---
 

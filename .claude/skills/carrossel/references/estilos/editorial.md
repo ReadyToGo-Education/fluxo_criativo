@@ -13,12 +13,12 @@ O fluxo de coleta do Editorial **ignora** o `passo-coleta-base.md` padrão. A co
 ### 1.1. Produto/serviço
 "Qual o produto/serviço?"
 
-Se `perfil.md` tiver Quadro/produto, pré-preencha como sugestão: "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+Se `resumo-produto.md` tiver Quadro/produto, pré-preencha como sugestão: "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
 
 ### 1.2. Público
 "Qual o público?"
 
-Se `idconsumidor.md` ou `perfil.md` tiver descrição clara do público, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver descrição clara do público, pré-preencha como sugestão.
 
 ### 1.3. Tipo de CTA do slide 6
 "Qual CTA você quer no slide 6?"
@@ -37,7 +37,7 @@ Se `idconsumidor.md` ou `perfil.md` tiver descrição clara do público, pré-pr
 A skill `/carrossel` no estilo Editorial faz o seguinte:
 
 1. **Carrega** `references/prompt-editorial.md` inteiro.
-2. **Executa o Passo 1 do prompt** (Briefing), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`.
+2. **Executa o Passo 1 do prompt** (Briefing), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `resumo-produto.md`.
 3. **Executa o Passo 2 do prompt** (Tipo de CTA), exibe as 4 opções e aguarda escolha.
 4. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
 5. **Executa o prompt da etapa Passo 3 à Passo 5 exatamente como está**, na sessão atual:

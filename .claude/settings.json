@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Write(meus-produtos/**)",
+      "Edit(meus-produtos/**)",
       "Read(.claude/commands/**)",
       "Read(.claude/agents/**)",
       "Read(.claude/skills/**)",
@@ -91,6 +91,16 @@
           {
             "type": "command",
             "command": "node .claude/hooks/painel-validar.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/resumo-invalidar.js",
             "timeout": 5
           }
         ]

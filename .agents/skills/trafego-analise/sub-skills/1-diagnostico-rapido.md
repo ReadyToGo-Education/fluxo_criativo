@@ -84,14 +84,14 @@ Usa `date_preset` expandido com `time_increment` automático conforme o período
 
 ### Referência de produto (benchmarks)
 
-Ler do `perfil.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas (`OUTCOME_LEADS` = captação; `OUTCOME_SALES` = venda direta).
+Ler do `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas (`OUTCOME_LEADS` = captação; `OUTCOME_SALES` = venda direta).
 
 | Tipo de funil | Ticket | ROAS mínimo saudável | CPA máximo saudável |
 |---|---|---|---|
 | Venda direta — low ticket | ≤ R$ 97 | 2.5x | ticket × 0.40 |
 | Venda direta — ticket médio | R$ 98 a R$ 497 | 3.0x | ticket × 0.30 |
 | Venda direta — high ticket | > R$ 497 | 4.0x | ticket × 0.25 |
-| Captação de leads | qualquer | — | CPL-alvo: perguntar ao aluno se não estiver no perfil |
+| Captação de leads | qualquer | — | CPL-alvo: perguntar ao aluno se não estiver no resumo |
 
 ---
 

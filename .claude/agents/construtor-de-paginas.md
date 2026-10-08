@@ -31,8 +31,7 @@ Você é o orquestrador de páginas do sistema VTSD. Seu trabalho é entender o 
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, decorados, urgências ocultas
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, objeções, paliativos
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, decorados, urgências ocultas, público, objeções, paliativos
 
 Se não houver produto ativo, oriente: "Antes de criar uma página, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 

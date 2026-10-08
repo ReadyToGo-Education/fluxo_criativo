@@ -11,9 +11,9 @@ Cria conteúdo usando Urgências Ocultas como fonte de temas e Light Copy como e
 
 ### 1. Contexto
 
-Leia `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-Extraia internamente: Decorados, Urgências Ocultas (7 categorias, 10 itens cada), Baldes de Conteúdo do idconsumidor.
+Extraia internamente: Decorados, Urgências Ocultas (7 categorias, 10 itens cada). Para a linha editorial, leia também só a seção `## Baldes de Para Quem É` de `meus-produtos/{ativo}/idconsumidor.md` (os Baldes de Conteúdo), se existir.
 
 Verifique conteúdos existentes em `meus-produtos/{ativo}/entregas/criativos/` para evitar repetir urgências já usadas.
 
@@ -136,7 +136,7 @@ Responder uma pergunta prática e recorrente do público. Comparar opções reai
 **Roteiro 3 — DESEJO:**
 Mostrar um cenário possível e realista. Inspirar através de clareza, controle e previsibilidade. Conectar o desejo a método e conhecimento — nunca prometer resultado milagroso.
 
-Usar como fonte as Urgências Ocultas do `perfil.md`: Dores para o roteiro 1, Dúvidas para o roteiro 2, Desejos para o roteiro 3. Verificar em `meus-produtos/{ativo}/entregas/criativos/` quais urgências já foram usadas e priorizar as inéditas.
+Usar como fonte as Urgências Ocultas do `resumo-produto.md`: Dores para o roteiro 1, Dúvidas para o roteiro 2, Desejos para o roteiro 3. Verificar em `meus-produtos/{ativo}/entregas/criativos/` quais urgências já foram usadas e priorizar as inéditas.
 
 Entregável: 3 roteiros prontos para gravar, com texto na tela e fala diferenciados quando necessário.
 
@@ -150,7 +150,7 @@ Estrutura fixa:
 2. **5 pares Problema → Solução:** cada solução deve ser técnica, específica ou pouco conhecida — valorizada por quem entende do assunto. Evitar soluções óbvias ou genéricas.
 3. **CTA:** coerente com o objetivo escolhido (seguir perfil ou próximo passo de venda).
 
-Usar as Urgências Ocultas e Decorados do `perfil.md` para selecionar os 5 problemas mais relevantes para o público. Verificar quais já foram usados em criativos anteriores e priorizar os inéditos.
+Usar as Urgências Ocultas e Decorados do `resumo-produto.md` para selecionar os 5 problemas mais relevantes para o público. Verificar quais já foram usados em criativos anteriores e priorizar os inéditos.
 
 Entregável: 1 roteiro completo pronto para gravar ou editar como lista animada.
 
@@ -158,7 +158,7 @@ Entregável: 1 roteiro completo pronto para gravar ou editar como lista animada.
 
 **Roteiro de Reels — Formato 4: Pergunta-Resposta-Objeção:**
 
-Gerar 7 roteiros, um por categoria de urgência oculta do `perfil.md`:
+Gerar 7 roteiros, um por categoria de urgência oculta do `resumo-produto.md`:
 1. Dores
 2. Dúvidas
 3. Desejos

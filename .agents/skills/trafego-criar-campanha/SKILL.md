@@ -206,11 +206,11 @@ Seguir direto para 6.4 (Special Ad Categories).
 
 Passo a passo obrigatório:
 
-**6.2.a. Ler o perfil do produto.** Abrir `meus-produtos/{ativo}/perfil.md` e extrair:
-- Nicho (campo "Nicho" ou similar no Quadro)
+**6.2.a. Ler o resumo do produto.** Abrir `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gerar conforme o CLAUDE.md) e extrair:
+- Nicho (campo "Nicho" na seção Produto)
 - Palavras-chave do Quadro (verbo + objeto principal)
 - 5 a 10 termos relevantes dos Decorados e das Urgências Ocultas (categorias DESEJOS e ASSUNTOS RELACIONADOS são as mais úteis)
-- Identidade do Consumidor (`idconsumidor.md`) se existir, para extrair canais e referências do público
+- Público (seção `## Público` do resumo), para extrair canais e referências do público
 
 **6.2.b. Montar a lista de termos de busca.** De 5 a 8 termos curtos em português, depois traduzir cada um para inglês (a base de interesses do Meta é multilíngue mas indexada melhor em inglês). Exemplo para o produto `leitura-10x`:
 - `leitura`, `livros`, `autodesenvolvimento`, `produtividade`, `hábitos`, `reading`, `books`, `personal development`

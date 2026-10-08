@@ -21,7 +21,7 @@ Pega uma página HTML local e publica diretamente no Lovable, devolvendo o link 
 
 ### 0. Contexto e verificação de API
 
-Leia `entregas/.ativo`. Se não houver produto, oriente a rodar `/produto-novo` antes.
+Leia `meus-produtos/.ativo`. Se não houver produto, oriente a rodar `/produto-novo` antes.
 
 **Verificar chave da API do Lovable:**
 
@@ -55,7 +55,7 @@ Quando o usuário colar a chave:
 ### 1. Coletar dados (uma pergunta por vez)
 
 **Pergunta 1. Qual página vou publicar?**
-1. Última página salva em `entregas/{ativo}/paginas/`
+1. Última página salva em `meus-produtos/{ativo}/entregas/paginas/`
 2. Outra (informar caminho)
 
 **Pergunta 2. Qual nome vai aparecer no Lovable?**
@@ -73,7 +73,7 @@ Se 2, peça o subdomínio. Avise que pode estar ocupado, e nesse caso o Lovable 
 1. Publicar como nova página (cria do zero no Lovable)
 2. Atualizar uma página que já existe lá (preciso do project_id)
 
-Se já existe registro em `entregas/{ativo}/.lovable` com `project_id` da página, ofereça direto "Atualizar `nome` (publicada em {data})".
+Se já existe registro em `meus-produtos/{ativo}/entregas/.lovable` com `project_id` da página, ofereça direto "Atualizar `nome` (publicada em {data})".
 
 ### 2. Confirmação antes de subir
 
@@ -81,7 +81,7 @@ Mostre o resumo:
 ```
 Vou publicar agora:
 
-Arquivo:     entregas/{ativo}/paginas/{nome}.html
+Arquivo:     meus-produtos/{ativo}/entregas/paginas/{nome}.html
 Tamanho:     {KB}
 Nome:        {nome}
 Subdomínio:  {auto / escolhido}
@@ -117,7 +117,7 @@ curl -X PATCH "https://api.lovable.dev/v1/projects/{project_id}" \
   }'
 ```
 
-Por causa do tamanho do HTML, em vez de embutir o conteúdo direto na linha de comando, salve o body num arquivo temporário JSON em `entregas/{ativo}/paginas/.lovable-payload.json` e use `--data @arquivo`. Apague depois.
+Por causa do tamanho do HTML, em vez de embutir o conteúdo direto na linha de comando, salve o body num arquivo temporário JSON em `meus-produtos/{ativo}/entregas/paginas/.lovable-payload.json` e use `--data @arquivo`. Apague depois.
 
 **Importante.** A documentação oficial do Lovable é a fonte de verdade. Se a chamada falhar com 404 ou 400, leia a mensagem de erro do response e adapte (ex: endpoint pode ser `/v1/sites`, header pode ser `X-API-Key`, payload pode usar `content` em vez de `html`). Não tente "adivinhar" mais de 3 vezes. Se passar de 3 tentativas, mostre o erro completo pro usuário e pergunte:
 ```
@@ -131,12 +131,12 @@ Erro: {mensagem}
 
 ### 4. Salvar histórico
 
-Em sucesso, salve em `entregas/{ativo}/.lovable` (modo append):
+Em sucesso, salve em `meus-produtos/{ativo}/entregas/.lovable` (modo append):
 ```
 {timestamp}|{nome}|{project_id}|{url_publica}|{arquivo}
 ```
 
-E também atualize/crie `entregas/{ativo}/paginas/.lovable-link.md`:
+E também atualize/crie `meus-produtos/{ativo}/entregas/paginas/.lovable-link.md`:
 ```
 # Páginas publicadas no Lovable
 
@@ -155,7 +155,7 @@ Pronto. Página publicada.
 URL pública:  {url}
 Project ID:   {id}
 Arquivo:      {caminho local}
-Histórico:    entregas/{ativo}/.lovable
+Histórico:    meus-produtos/{ativo}/entregas/.lovable
 
 Próximos passos sugeridos:
 - Cole o link na bio do Instagram

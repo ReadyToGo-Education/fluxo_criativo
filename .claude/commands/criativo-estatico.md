@@ -21,18 +21,16 @@ Gera criativo estático de anúncio. Antes de tudo, pergunta o formato e direcio
 Leia o máximo de contexto disponível sobre o produto ativo. Em ordem:
 
 1. **`meus-produtos/.ativo`** (obrigatório). O slug do produto ativo (ex: `automacoes-inteligentes`).
-2. **`meus-produtos/{ativo}/perfil.md`** (se existir). Quadro, Furadeira, Decorados, Identidades, Urgências Ocultas, nicho, público.
-3. **`meus-produtos/{ativo}/idconsumidor.md`** (se existir). Identidade do Consumidor com objeções, paliativos, baldes.
-4. **`meus-produtos/{ativo}/tipo.md`** (se existir). Tipo do produto (low ticket, mid ticket, high ticket).
-5. **`meus-produtos/{ativo}/preco.md`** (se existir). Preço do produto.
-6. **`meus-produtos/{ativo}/pesquisa-mercado.md`** (se existir). Pesquisa de mercado do nicho.
+2. **`meus-produtos/{ativo}/resumo-produto.md`** (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md). Quadro, Furadeira, Identidades, público, objeções, Urgências Ocultas, Decorados principais, nicho e síntese da pesquisa de mercado. Se o produto ainda não tem `perfil.md` com Quadro, não há resumo: siga com as inferências abaixo.
+3. **`meus-produtos/{ativo}/tipo.md`** (se existir). Tipo do produto (low ticket, mid ticket, high ticket).
+4. **`meus-produtos/{ativo}/preco.md`** (se existir). Preço do produto.
 
 Da combinação desses arquivos, extrair pra passar pras sub-skills:
 
-- **Nome do produto**: do `perfil.md` (cabeçalho ou seção "Nome do produto"); se não existir, **inferir do slug** capitalizando e expandindo (ex: `automacoes-inteligentes` vira "Automações Inteligentes", `curso-tarot` vira "Curso de Tarot").
-- **Nicho**: do `perfil.md` (seção "Nicho"); se não existir, **inferir do nome inferido + tipo.md + preco.md** (ex: "Automações Inteligentes" + "low ticket" + "R$ 47" sugere nicho "automação com IA pra pequenos negócios").
-- **O que o produto ensina ou resolve (Quadro)**: do `perfil.md` (seção "Quadro"); se não existir, **inferir do nome + tipo**.
-- **Público**: do `idconsumidor.md` (resumo); se não existir, do `perfil.md` (seção "Para Quem É"); se não existir nenhum dos dois, **inferir do nicho** (ex: nicho "automação com IA pra pequenos negócios" sugere público "donos de pequenos negócios que querem economizar tempo com IA").
+- **Nome do produto**: do `resumo-produto.md` (seção "Produto"); se não existir, **inferir do slug** capitalizando e expandindo (ex: `automacoes-inteligentes` vira "Automações Inteligentes", `curso-tarot` vira "Curso de Tarot").
+- **Nicho**: do `resumo-produto.md` (seção "Produto"); se não existir, **inferir do nome inferido + tipo.md + preco.md** (ex: "Automações Inteligentes" + "low ticket" + "R$ 47" sugere nicho "automação com IA pra pequenos negócios").
+- **O que o produto ensina ou resolve (Quadro)**: do `resumo-produto.md` (seção "Quadro"); se não existir, **inferir do nome + tipo**.
+- **Público**: do `resumo-produto.md` (seção "Público"); se não existir, **inferir do nicho** (ex: nicho "automação com IA pra pequenos negócios" sugere público "donos de pequenos negócios que querem economizar tempo com IA").
 - **Tipo**: do `tipo.md` se existir.
 - **Preço**: do `preco.md` se existir.
 
@@ -241,7 +239,7 @@ Conforme a resposta:
 - **27** ou termos relacionados a Centro das Atenções: leia `.claude/commands/criativo-estatico/centro-das-atencoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 - **28** ou termos relacionados a Problema × Solução Emoji: leia `.claude/commands/criativo-estatico/problema-solucao-emoji.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 
-O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO precisam ler `perfil.md` e `idconsumidor.md` de novo, podem usar o que já foi extraído.
+O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO precisam ler o `resumo-produto.md` de novo, podem usar o que já foi extraído.
 
 ## Regras
 

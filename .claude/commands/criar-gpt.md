@@ -18,7 +18,7 @@ Cria um agente GPT personalizado para melhorar a entrega do produto do infoprodu
 ### 1. Contexto
 
 Tente ler:
-- `meus-produtos/.ativo` → se existir, leia `meus-produtos/{ativo}/perfil.md` como base
+- `meus-produtos/.ativo` → se existir, leia `meus-produtos/{ativo}/resumo-produto.md` como base (se não existir, gere conforme o CLAUDE.md)
 - Se nao existir produto ativo, peca ao usuario um texto sobre o produto/servico
 
 ### 2. Gerar ideias

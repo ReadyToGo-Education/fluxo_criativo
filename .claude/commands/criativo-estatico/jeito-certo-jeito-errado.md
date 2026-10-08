@@ -9,15 +9,15 @@ A comparação lado a lado é um padrão visual que o olho do usuário entende e
 
 ### 0. Contexto
 
-O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (perfil.md, idconsumidor.md, tipo.md, preco.md, pesquisa-mercado.md, e inferências a partir do slug do produto).
+O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (resumo-produto.md, tipo.md, preco.md, e inferências a partir do slug do produto).
 
 Se a sub-skill foi chamada direto, carregue esses arquivos agora seguindo o Passo 0 do orquestrador.
 
 Extraia (combinando dado real + inferência):
 
-- **Produto**: nome do produto (do `perfil.md` ou inferido do slug, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
-- **Nicho**: do `perfil.md` (seção "Nicho") ou inferido do nome + tipo + preço (ex: "automação com IA pra pequenos negócios").
-- **Público**: do `idconsumidor.md` ou seção "Para Quem É" do `perfil.md` ou inferido do nicho.
+- **Produto**: nome do produto (do `resumo-produto.md` ou inferido do slug, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
+- **Nicho**: do `resumo-produto.md` (seção "Produto") ou inferido do nome + tipo + preço (ex: "automação com IA pra pequenos negócios").
+- **Público**: do `resumo-produto.md` (seção "Público") ou inferido do nicho.
 
 ### 1. Apresentar resumo do contexto e confirmar
 
@@ -30,7 +30,7 @@ Produto: [nome do produto]
 Nicho: [nicho]
 Público: [resumo do público]
 
-(Marque "✓ do perfil" pros campos extraídos diretamente do perfil.md ou idconsumidor.md.
+(Marque "✓ do perfil" pros campos extraídos diretamente do resumo-produto.md.
 Marque "○ inferido" pros campos que foram um chute a partir do slug, tipo ou preço.)
 
 Está tudo certo?
@@ -56,7 +56,7 @@ Qual é o seu produto e nicho?
 - Se for de videomaker: "Mentoria de Videomaker pra quem cobra barato", "Curso de Edição de Vídeo pra freelancers", "Treinamento de Captação pra produtoras"
 - Se for de tráfego: "Mentoria de Tráfego Pago pra criadores", "Curso de Anúncios no Meta pra agências", "Consultoria de Performance pra ecommerce"
 - Se for de cafeteria: "Consultoria de Cardápio pra donos de cafeteria", "Treinamento de Barista pra equipes", "Curso de Como Abrir uma Cafeteria"
-- Último recurso (se realmente não der pra inferir nicho a partir do slug, perfil.md ou idconsumidor.md): construa 3 exemplos fictícios do universo mais próximo que for possível inferir. Os exemplos dos nichos listados acima são apenas referência interna de formato para o assistente, nunca devem ser exibidos ao aluno quando há um nicho identificável. Exibir exemplos de nicho errado (ex: tráfego pago quando o produto é de culinária) quebra a credibilidade do fluxo. Em caso de dúvida genuína, pergunte antes: "Qual é o nicho do seu produto?" em vez de assumir um universo incorreto.
+- Último recurso (se realmente não der pra inferir nicho a partir do slug ou do resumo-produto.md): construa 3 exemplos fictícios do universo mais próximo que for possível inferir. Os exemplos dos nichos listados acima são apenas referência interna de formato para o assistente, nunca devem ser exibidos ao aluno quando há um nicho identificável. Exibir exemplos de nicho errado (ex: tráfego pago quando o produto é de culinária) quebra a credibilidade do fluxo. Em caso de dúvida genuína, pergunte antes: "Qual é o nicho do seu produto?" em vez de assumir um universo incorreto.
 
 Se o aluno não especificou público, assumir um plausível brasileiro com base no produto/nicho e avisar antes de gerar as ideias:
 

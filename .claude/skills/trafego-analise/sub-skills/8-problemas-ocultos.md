@@ -132,7 +132,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/adspixels
 
 ### Referência de produto
 
-Ler `perfil.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
+Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
 - `OUTCOME_SALES` → funil de venda direta → tipo canônico de conversão: `offsite_conversion.fb_pixel_purchase`
 - `OUTCOME_LEADS` → funil de captação → tipo canônico de conversão: `offsite_conversion.fb_pixel_lead`
 

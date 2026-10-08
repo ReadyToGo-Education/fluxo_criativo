@@ -25,9 +25,8 @@ A skill não gera código. Entrega especificação + prompt.
 ### Etapa 1. Leitura mínima de contexto
 
 - Ler `meus-produtos/.ativo` para pegar o slug do produto ativo.
-- Ler `meus-produtos/{slug}/perfil.md` completo (é a fonte principal de ideias).
-- Fazer `ls` em `meus-produtos/{slug}/` para ver que outros arquivos existem (idconsumidor.md, entregas etc.).
-- Se `meus-produtos/{slug}/idconsumidor.md` existir, lê-lo também.
+- Ler `meus-produtos/{slug}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md). É a fonte principal de ideias.
+- Fazer `ls` em `meus-produtos/{slug}/` para ver que outros arquivos existem (entregas etc.).
 
 ### Etapa 2. Geração de 10 ideias de mini-SaaS
 
@@ -80,7 +79,7 @@ Após a escolha, gerar o documento PRD com a seguinte estrutura:
 [Descrição do problema real, com referência ao público e ao nicho do produto]
 
 ## Público-alvo e contexto de uso
-[Puxado do perfil.md: quem são, que situação vivem, quando vão usar o app]
+[Puxado do resumo-produto.md: quem são, que situação vivem, quando vão usar o app]
 
 ## User stories
 
@@ -490,7 +489,7 @@ Próximos passos:
 - PROIBIDO sugerir fontes serifadas. Fontes bloqueadas: Playfair Display, Merriweather, Lora, EB Garamond, Georgia, Times, Cormorant, PT Serif, Source Serif, Libre Baskerville, Crimson, Tinos, Roboto Slab, e qualquer nome com "Serif" ou "Slab". Usar apenas fontes da lista aprovada na seção de tipografia do template.
 - Ao gerar o PRD, sempre entregar: paleta completa em hex (nunca "a definir"), fonte escolhida da lista aprovada, referência visual real (app ou site existente). Nunca deixar campo de design em aberto.
 - Executar a verificação anti-serifa (checklist inline no template) antes de passar para a Etapa 5. Se encontrar qualquer nome proibido, substituir antes de continuar.
-- Identidade visual sempre inferida do `perfil.md` (nicho, público, tom). Se o perfil não tiver paleta definida, propor paleta adequada ao nicho.
+- Identidade visual sempre inferida do `resumo-produto.md` (nicho, público, tom). Se o resumo não tiver paleta definida, propor paleta adequada ao nicho.
 - Se o problema puder ser resolvido com uma planilha ou com `/criar-gpt`, dizer ao aluno antes de gerar o PRD completo.
 - Não usar travessão em nenhum texto exibido.
 - Não usar ponto de exclamação.

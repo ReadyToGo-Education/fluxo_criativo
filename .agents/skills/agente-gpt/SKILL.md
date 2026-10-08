@@ -18,7 +18,7 @@ Ajudar infoprodutores a otimizar a entrega de seus produtos e facilitar a implem
 
 ### Se houver produto ativo
 
-Leia `entregas/.ativo` e depois `entregas/{ativo}/perfil.md`. Use o conteudo do perfil (Quadro, Furadeira, Decorados, Urgencias Ocultas, publico-alvo) como base para gerar as ideias de agentes.
+Leia `meus-produtos/.ativo` e depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md). Use o conteúdo do resumo (Quadro, Furadeira, Decorados principais, Urgências Ocultas, público-alvo) como base para gerar as ideias de agentes.
 
 Confirme com o usuario:
 
@@ -179,7 +179,7 @@ Quer fazer alguma alteracao?
 
 ## Onde Salvar
 
-- **Com produto ativo:** `entregas/{ativo}/produto/agente-gpt-[slug-do-agente].md`
+- **Com produto ativo:** `meus-produtos/{ativo}/entregas/produto/agente-gpt-[slug-do-agente].md`
 - **Sem produto ativo:** `entregas/agente-gpt-[slug-do-agente].md`
 
 O slug do agente eh o nome do agente escolhido em formato kebab-case (ex: "Autocuidado Feminino" → `autocuidado-feminino`).

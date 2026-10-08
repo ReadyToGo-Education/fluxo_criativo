@@ -21,7 +21,7 @@ Pega uma página de captura já pronta (HTML local) e faz a integração complet
 
 ### 0. Contexto e verificação de API
 
-Leia `entregas/.ativo`. Se não houver produto, oriente a rodar `/produto-novo` antes.
+Leia `meus-produtos/.ativo`. Se não houver produto, oriente a rodar `/produto-novo` antes.
 
 **Verificar credenciais do ActiveCampaign:**
 
@@ -49,7 +49,7 @@ Quando o usuário colar, valide que a URL começa com `https://` e termina com `
 ### 1. Coletar dados (uma pergunta por vez)
 
 **Pergunta 1. Qual página de captura vou conectar?**
-1. Última página de captura salva em `entregas/{ativo}/paginas/`
+1. Última página de captura salva em `meus-produtos/{ativo}/entregas/paginas/`
 2. Outra (informar caminho)
 
 **Pergunta 2. Qual lista do ActiveCampaign esse lead deve entrar?**
@@ -69,7 +69,7 @@ Qual a lista alvo?
 (ex: `captura-ebook-ingles`, `webinar-gratuito`)
 
 **Pergunta 4. Qual a URL da página de obrigado?**
-Se já existe uma em `entregas/{ativo}/paginas/`, oferecer usar ela (caminho relativo ou URL pública se já estiver publicada).
+Se já existe uma em `meus-produtos/{ativo}/entregas/paginas/`, oferecer usar ela (caminho relativo ou URL pública se já estiver publicada).
 
 ### 2. Decidir o modo de integração
 
@@ -79,7 +79,7 @@ A API do ActiveCampaign exige que a API Key vá no header, o que significa que *
 Pedir pro aluno criar um formulário dentro do ActiveCampaign (Site > Forms), associar à lista certa e aplicar a tag. Depois, pegar o código embed do formulário e inserir no lugar do `<form>` da página. Essa é a opção mais segura, sem vazamento de chave, e é o caminho oficial.
 
 **Opção B. Endpoint intermediário (Serverless Function).**
-Criar uma função serverless no Vercel (`entregas/{ativo}/paginas/api/active-sync.js`) que recebe `{email, first_name, list, tag}` do front, chama a API do ActiveCampaign pelo servidor (com a chave como variável de ambiente na Vercel, nunca no HTML) e devolve sucesso/erro. O `<form>` da página faz `fetch('/api/active-sync', {...})`.
+Criar uma função serverless no Vercel (`meus-produtos/{ativo}/entregas/paginas/api/active-sync.js`) que recebe `{email, first_name, list, tag}` do front, chama a API do ActiveCampaign pelo servidor (com a chave como variável de ambiente na Vercel, nunca no HTML) e devolve sucesso/erro. O `<form>` da página faz `fetch('/api/active-sync', {...})`.
 
 Pergunte qual modo preferir. Padrão: Opção A (mais simples e segura).
 
@@ -91,9 +91,9 @@ Pergunte qual modo preferir. Padrão: Opção A (mais simples e segura).
 3. Ajuste o redirect no painel do ActiveCampaign (Forms > Options > Thank You Page URL) pra URL informada.
 
 **Modo B (serverless):**
-1. Gere o arquivo `entregas/{ativo}/paginas/api/active-sync.js` com o código Node.js que usa `fetch` pra chamar `POST /api/3/contact/sync`, `POST /api/3/contactLists` e `POST /api/3/contactTags` do ActiveCampaign.
+1. Gere o arquivo `meus-produtos/{ativo}/entregas/paginas/api/active-sync.js` com o código Node.js que usa `fetch` pra chamar `POST /api/3/contact/sync`, `POST /api/3/contactLists` e `POST /api/3/contactTags` do ActiveCampaign.
 2. Injete no HTML da página um `<script>` que intercepta o submit do form, faz `fetch('/api/active-sync', { method: 'POST', body: JSON.stringify({...}) })`, e em sucesso redireciona pra página de obrigado.
-3. Salve a página modificada como `entregas/{ativo}/paginas/{nome-original}-active.html`.
+3. Salve a página modificada como `meus-produtos/{ativo}/entregas/paginas/{nome-original}-active.html`.
 4. Instrua o aluno a adicionar `ACTIVE_API_URL` e `ACTIVE_API_KEY` nas Environment Variables do projeto na Vercel (mostrar caminho exato no painel da Vercel).
 
 ### 4. Teste e entrega

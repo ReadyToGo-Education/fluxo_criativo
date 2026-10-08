@@ -21,9 +21,8 @@ Cria uma página intermediária entre o botão "Comprar" e o checkout da platafo
 
 ### 0. Contexto
 
-Leia `entregas/.ativo`. Se não houver produto, oriente a usar `/produto-novo`.
-Leia `entregas/{ativo}/perfil.md` pra pegar o nome do produto e pegar a cor principal se já existir em alguma página.
-Leia `entregas/{ativo}/idconsumidor.md` (se existir) para usar o tom e as frases do público na copy da página.
+Leia `meus-produtos/.ativo`. Se não houver produto, oriente a usar `/produto-novo`.
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) pra pegar o nome do produto e pegar a cor principal se já existir em alguma página. Use também o tom e as frases do público do resumo na copy da página.
 
 ### 1. Coletar dados (uma pergunta por vez)
 
@@ -47,8 +46,8 @@ Leia `entregas/{ativo}/idconsumidor.md` (se existir) para usar o tom e as frases
 ### 2. Gerar a página HTML
 
 Estrutura mínima:
-- `<header>`: logo ou nome do produto (pegar do perfil).
-- Seção principal: H1 com nome da oferta, subtítulo com preço, 3 bullets curtos de benefício (puxar do Decorado do perfil), formulário (Nome, Email, WhatsApp), botão "Ir para o pagamento seguro".
+- `<header>`: logo ou nome do produto (pegar do resumo).
+- Seção principal: H1 com nome da oferta, subtítulo com preço, 3 bullets curtos de benefício (puxar dos Decorados principais do resumo), formulário (Nome, Email, WhatsApp), botão "Ir para o pagamento seguro".
 - Rodapé: selo "Compra 100% segura" + link de contato.
 - CSS inline: mobile first, fonte do Google Fonts (Inter), paleta baseada na cor do produto ou azul escuro padrão.
 - JS inline:
@@ -67,7 +66,7 @@ localStorage.setItem('precheckout_leads', JSON.stringify(leads));
 Deixar claro pro aluno que isso só funciona pra teste. Cada visitante vê só o próprio localStorage.
 
 **Modo 2 (Serverless Function):**
-Gerar `entregas/{ativo}/paginas/api/lead.js` com handler Node.js que:
+Gerar `meus-produtos/{ativo}/entregas/paginas/api/lead.js` com handler Node.js que:
 - Recebe POST com `{nome, email, whatsapp, utms}`
 - Adiciona timestamp
 - Faz append num arquivo JSON hospedado no próprio projeto da Vercel via KV (Vercel KV ou Upstash) ou grava num Google Sheets via Sheets API, ou simplesmente envia um webhook pro ActiveCampaign/Brevo/etc.
@@ -79,16 +78,16 @@ Se o aluno não souber nenhuma dessas opções, use a opção "webhook do Google
 
 ### 4. Salvar arquivos
 
-- `entregas/{ativo}/paginas/precheckout-{nome-oferta}.html`
-- `entregas/{ativo}/paginas/api/lead.js` (se modo 2)
-- `entregas/{ativo}/crm/leads.json` (arquivo inicial vazio, só pra lembrar o caminho)
+- `meus-produtos/{ativo}/entregas/paginas/precheckout-{nome-oferta}.html`
+- `meus-produtos/{ativo}/entregas/paginas/api/lead.js` (se modo 2)
+- `meus-produtos/{ativo}/entregas/crm/leads.json` (arquivo inicial vazio, só pra lembrar o caminho)
 
 ### 5. Resumo final
 
 ```
 Pronto. Página de pre-checkout criada.
 
-Arquivo:     entregas/{ativo}/paginas/precheckout-{nome}.html
+Arquivo:     meus-produtos/{ativo}/entregas/paginas/precheckout-{nome}.html
 Modo CRM:    {localStorage / serverless}
 Oferta:      {nome} ({preço})
 Destino:     {url do checkout}

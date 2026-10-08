@@ -9,22 +9,22 @@ O surrealismo controlado para o scroll. A metáfora visual entrega a mensagem an
 
 ### 0. Contexto
 
-O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (perfil.md, idconsumidor.md, tipo.md, preco.md, pesquisa-mercado.md, e inferências a partir do slug do produto).
+O orquestrador `/criativo-estatico` já carregou o contexto enriquecido (resumo-produto.md, tipo.md, preco.md, e inferências a partir do slug do produto).
 
 Se a sub-skill foi chamada direto, carregue esses arquivos agora seguindo o Passo 0 do orquestrador.
 
 Extraia (combinando dado real + inferência):
 
-- **Produto**: nome do produto (do `perfil.md` ou inferido do slug, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
-- **Nicho**: do `perfil.md` (seção "Nicho") ou inferido do nome + tipo + preço.
-- **Público**: do `idconsumidor.md` ou seção "Para Quem É" do `perfil.md` ou inferido do nicho.
+- **Produto**: nome do produto (do `resumo-produto.md` ou inferido do slug, ex: `automacoes-inteligentes` vira "Automações Inteligentes").
+- **Nicho**: do `resumo-produto.md` (seção "Produto") ou inferido do nome + tipo + preço.
+- **Público**: do `resumo-produto.md` (seção "Público") ou inferido do nicho.
 - **Universo visual do nicho**: 6 a 10 elementos visuais concretos que pertencem ao nicho (essenciais pra ideias surreais coerentes). Use a tabela interna abaixo na seção "Referências de paleta e tipografia por tipo de nicho" como ponto de partida e amplie se necessário.
 
 ### 1. Apresentar resumo do contexto e confirmar
 
 SEMPRE mostre o resumo, mesmo se algum campo veio de inferência. Marque o que é real e o que foi inferido:
 
-(Nota para o modelo: marque "✓ do perfil" nos campos extraídos diretamente do perfil.md ou idconsumidor.md. Marque "○ inferido" nos campos que foram um chute a partir do slug, tipo ou preço. Essas marcações devem aparecer ao lado de cada campo no bloco exibido ao aluno.)
+(Nota para o modelo: marque "✓ do perfil" nos campos extraídos diretamente do resumo-produto.md. Marque "○ inferido" nos campos que foram um chute a partir do slug, tipo ou preço. Essas marcações devem aparecer ao lado de cada campo no bloco exibido ao aluno.)
 
 ```
 Vou usar estes dados do seu produto ativo ({slug}):
