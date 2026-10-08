@@ -233,24 +233,15 @@ Aguarde a resposta do aluno antes de acionar qualquer skill.
 
 **Se concordar com PÁGINA ou escolher PÁGINA. Página de vendas do produto:**
 
-**Skill que rege esta etapa:** skill `paginas-low-ticket` (command) + `.claude/skills/paginas/SKILL.md`
+**Skill que rege esta etapa:** `.claude/commands/lt-pagina.md` (roteiro) + `.claude/skills/pagina-low-ticket/SKILL.md` (régua v16)
 
-Leia ambas antes de iniciar. A skill de paginas contém as regras visuais, templates, fontes e paletas. A skill paginas-low-ticket contém as 4 copies (Inadequação, Identificação, Plug & Play, Promessa Boa Demais) e as 7 leis da copy.
+Leia os dois antes de iniciar e siga o roteiro do `/lt-pagina` a partir do Passo 2 (o framework Quiz vs. Página já foi aplicado acima):
 
-Siga o fluxo completo:
+1. **Etapa 1:** promessa central, as 7 aberturas na ordem de prioridade e a tabela de testes. Pare e pergunte qual abertura usar.
+2. **Etapa 2:** copy completa com a abertura escolhida. Pare e peça aprovação da copy.
+3. **Etapa 3:** prompt único para o Lovable montar a página. Mostre, peça aprovação e salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md`.
 
-1. Pergunte: público (profissional da área ou cliente final) e faixa de preço
-2. Gere as 4 copies completas conforme a skill paginas-low-ticket
-3. Mostre as 4 copies, indique qual é mais recomendada e pergunte:
-   ```
-   1. Aprovar e salvar todas
-   2. Quero ajustar alguma copy
-   3. Salvar só a copy [número]
-   ```
-4. Após aprovação, pergunte qual copy usar na página, preço, link de checkout e cor
-5. Gere a página HTML completa conforme as regras visuais da skill de paginas (templates, fontes, paletas, estrutura obrigatória)
-6. Salve em `meus-produtos/{ativo}/entregas/paginas/pagina-low-ticket-[produto].html`
-7. NUNCA mostre o código HTML ao aluno
+A página low ticket não é gerada em HTML no projeto: a entrega é o prompt do Lovable.
 
 ---
 
@@ -336,7 +327,7 @@ O que foi criado:
 [v] Produto definido: [nome]. [quadro]
 [v] Produto digital criado: meus-produtos/{ativo}/entregas/produto/[arquivo]
 [v] Identidade do consumidor: meus-produtos/{ativo}/idconsumidor.md
-[v] Página de vendas: meus-produtos/{ativo}/entregas/paginas/[arquivo].html
+[v] Página de vendas: meus-produtos/{ativo}/entregas/paginas/[arquivo].md (prompt do Lovable)
 [v] Anúncios: meus-produtos/{ativo}/entregas/criativos/[arquivo].md
 
 Próximo passo sugerido: use o Estrategista de Pico de Vendas quando quiser fazer um evento ou lançamento.

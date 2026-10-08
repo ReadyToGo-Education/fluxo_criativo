@@ -566,7 +566,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/lt-funil`. Criar produto de entrada low ticket (quiz, desafio, agente GPT)
 - `/lt-criar-produto`. Criar o conteúdo real do produto digital
 - `/lt-quiz`. Gerar perguntas do quiz
-- `/lt-pagina`. Gerar as 4 leads low ticket
+- `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 7 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página
 - `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
 
 **Tráfego Pago (Meta Ads via API ou MCP):**
@@ -610,7 +610,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 
 **Feedback:**
 - `/feedback-pagina`. Corrigir e otimizar página de vendas existente
-- `/feedback-low-ticket`. Corrigir página low ticket (copy, estrutura, design + gera HTML novo)
+- `/feedback-low-ticket`. Corrigir página low ticket pela régua v16 (copy, estrutura e design; entrega a copy corrigida e um prompt novo para o Lovable)
 
 **Toolkit (projetos estruturados):**
 - `/toolkit-novo`. Iniciar um projeto de marketing estruturado (lançamento, funil completo, reestruturação)

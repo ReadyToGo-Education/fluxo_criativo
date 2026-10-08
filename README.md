@@ -221,7 +221,7 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/lt-funil`. Cria produto de entrada low ticket (quiz, desafio, agente GPT).
 - `/lt-criar-produto`. Cria o conteúdo real do produto digital.
 - `/lt-quiz`. Gera perguntas do quiz.
-- `/lt-pagina`. Gera as 4 leads low ticket (incluindo Estrutura E — Categoria Padrão).
+- `/lt-pagina`. Cria a página de vendas low ticket pela régua v16 do time de criativos: promessa central, 7 aberturas com tabela de prioridade de testes, copy completa e um prompt único para o Lovable montar a página.
 - `/lt-otimizar`. Analisa planilha do Gerenciador e otimiza campanhas low ticket.
 
 ### Tráfego Pago (Meta Ads via API ou MCP oficial)
@@ -246,7 +246,7 @@ Skill interna acionada automaticamente: `trafego-escalar` (5 modos de escala, 3 
 `/pagina-visual` cria a página a partir de prints de referência do aluno: cada print vira uma cópia HTML com design 100% preservado, e a montagem final concatena via `scripts/montar-pagina-copias.py`.
 
 ### Feedback e auditoria
-`/feedback-pagina`, `/feedback-low-ticket`. Ambos fazem auditoria completa contra o Manual da Copy e podem editar o HTML de saída.
+`/feedback-pagina`, `/feedback-low-ticket`. O `/feedback-pagina` audita contra o Manual da Copy e pode editar o HTML de saída. O `/feedback-low-ticket` audita pela régua v16 e entrega a copy corrigida e um prompt novo para o Lovable.
 
 ### Toolkit (projetos estruturados)
 `/toolkit-novo`, `/toolkit-planejar`, `/toolkit-executar`, `/toolkit-verificar`, `/toolkit-progresso`, `/toolkit-anotar`, `/toolkit-pausar`, `/toolkit-retomar`

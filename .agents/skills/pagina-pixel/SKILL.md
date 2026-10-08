@@ -13,7 +13,7 @@ Instala o Meta Pixel em uma página HTML existente. Não regenera nada da copy, 
 
 ## Quando Usar
 
-- Depois de gerar a página com `/copy-pagina`, `/lt-pagina` ou `/ht-pagina-inscricao`.
+- Depois de gerar a página com `/copy-pagina` ou `/ht-pagina-inscricao`.
 - Quando o usuário disser "instala o pixel", "coloca o pixel da Meta", "preciso rastrear conversão", "preciso medir Lead".
 - Antes de subir tráfego pago. Sem pixel, sem otimização de campanha.
 
