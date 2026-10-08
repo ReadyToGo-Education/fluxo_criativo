@@ -313,7 +313,7 @@ def gradient_overlay(width: int, height: int) -> "Image.Image":
 
 def paste_rgba(canvas: "Image.Image", overlay: "Image.Image") -> "Image.Image":
     base = canvas.convert("RGBA")
-    Image.alpha_composite(base, overlay, dest=(0, 0))
+    base.alpha_composite(overlay)
     return base.convert("RGB")
 
 

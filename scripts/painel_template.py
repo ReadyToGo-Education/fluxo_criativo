@@ -1267,8 +1267,8 @@ def render_identidade_consumidor(dados: dict) -> str:
                 '<span style="color:var(--text-faint);font-size:11px">&#9662;</span>'
                 "</div>"
                 '<div class="objecao-body">'
-                f"{corpo_args or '<p class=\"card-body\">Sem argumentos registrados.</p>'}"
-                "</div>"
+                + (corpo_args or '<p class="card-body">Sem argumentos registrados.</p>')
+                + "</div>"
                 "</div>"
             )
         blocos.append(
