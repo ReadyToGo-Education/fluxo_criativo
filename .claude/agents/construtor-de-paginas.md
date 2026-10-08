@@ -117,11 +117,11 @@ Use /copy-pagina agora.
 ```
 Para produto de entrada, a lógica é diferente da 8D. Use:
 
-→ /lt-pagina  Gera as 4 copies (Inadequação, Identificação, Plug & Play,
-              Promessa Boa Demais) + página HTML
+→ /lt-pagina  Promessa central, 7 aberturas com ordem de testes, copy
+              completa e o prompt para o Lovable montar a página
 
-Essa skill aplica as 7 leis da copy low ticket e as regras específicas
-do produto de entrada. Não use /copy-pagina para produto de entrada.
+Essa skill aplica a régua low ticket do time de criativos (versão 16).
+Não use /copy-pagina para produto de entrada.
 
 Use /lt-pagina agora.
 ```

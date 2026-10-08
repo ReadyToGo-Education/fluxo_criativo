@@ -13,6 +13,11 @@ Secoes suportadas (id da secao = id do painel na sidebar):
     identidade-produto
     identidade-consumidor
     identidade-comunicador
+    copy-pagina
+    low-ticket
+    comercial-playbook
+    dashboards
+    analise-trafego
 
 Cada render_* recebe um dict com os dados ja extraidos dos arquivos do produto
 (perfil.md, idconsumidor.md, pesquisa-mercado.md) e devolve apenas o HTML do
@@ -66,6 +71,9 @@ SECOES: list[dict] = [
     {"id": "copy-pagina", "grupo": "ENTREGAS", "titulo": "Copy da Página",
      "subtitulo": "16 blocos da página de vendas 8D. Aprove um bloco por vez em /copy-pagina.",
      "proxima": "Será preenchida conforme você aprova os blocos em /copy-pagina."},
+    {"id": "low-ticket", "grupo": "ENTREGAS", "titulo": "Low Ticket",
+     "subtitulo": "Página de vendas e quiz do produto de entrada, criados em /lt-pagina e /lt-quiz.",
+     "proxima": "Será preenchida ao rodar /lt-pagina ou /lt-quiz."},
     {"id": "dashboards", "grupo": "DADOS", "titulo": "Redes Sociais", "ix": "11",
      "subtitulo": "Metricas das redes sociais. Instagram, TikTok, YouTube e LinkedIn em abas.",
      "proxima": "Sera preenchido ao rodar /dashboard-social."},
@@ -437,7 +445,7 @@ button{font-family:inherit;}
 .stage-title{font-family:var(--font-display);font-size:16px;font-weight:500;letter-spacing:-.01em;color:var(--text-hi);margin-bottom:var(--s-3);line-height:1.25;}
 .stage-hint{font-size:12px;color:var(--text-mid);font-weight:300;line-height:1.55;margin-bottom:var(--s-3);}
 .stage-nota{margin-top:var(--s-3);padding-top:var(--s-3);border-top:1px solid var(--line-1);font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:.04em;line-height:1.7;font-weight:300;}
-.stage-nota::before{content:"NOTA \00b7 ";color:var(--neon);letter-spacing:.18em;}
+.stage-nota::before{content:"NOTA \\00b7 ";color:var(--neon);letter-spacing:.18em;}
 .stage-col-label{font-family:var(--font-mono);font-size:9px;color:var(--text-faint);letter-spacing:.18em;text-transform:uppercase;margin-bottom:var(--s-3);display:flex;align-items:center;gap:6px;}
 .stage-col-label .dot{width:4px;height:4px;border-radius:50%;background:var(--neon);}
 .stage-col-label.direta .dot{background:var(--ochre);}
@@ -478,7 +486,7 @@ button{font-family:inherit;}
 .offer-price{font-family:var(--font-mono);font-size:14px;color:var(--neon);letter-spacing:.04em;margin-bottom:var(--s-4);}
 .offer-desc{font-size:12px;color:var(--text-mid);font-weight:300;line-height:1.6;margin-bottom:var(--s-4);}
 .offer-pitch{font-family:var(--font-display);font-size:13px;color:var(--text-hi);font-style:italic;line-height:1.55;font-weight:400;padding-top:var(--s-4);border-top:1px solid var(--line-1);}
-.offer-pitch::before{content:"PITCH \00b7 ";font-style:normal;font-family:var(--font-mono);font-size:9px;color:var(--text-faint);letter-spacing:.2em;display:block;margin-bottom:6px;}
+.offer-pitch::before{content:"PITCH \\00b7 ";font-style:normal;font-family:var(--font-mono);font-size:9px;color:var(--text-faint);letter-spacing:.2em;display:block;margin-bottom:6px;}
 
 /* Dictionary */
 .dict-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line-1);}
@@ -499,7 +507,7 @@ button{font-family:inherit;}
 
 /* Regra / callout destaque */
 .regra{margin-top:var(--s-5);padding:var(--s-4) var(--s-5);border:1px solid var(--neon-deep);background:rgba(196,255,94,0.04);font-family:var(--font-mono);font-size:11px;color:var(--text-hi);letter-spacing:.02em;line-height:1.7;font-weight:300;}
-.regra::before{content:"REGRA \00b7 ";color:var(--neon);letter-spacing:.2em;font-weight:500;}
+.regra::before{content:"REGRA \\00b7 ";color:var(--neon);letter-spacing:.2em;font-weight:500;}
 
 /* YouTube cards (pesquisa de mercado) */
 .yt-video-card{border-top:1px solid var(--line-1);overflow:hidden;}
@@ -2732,6 +2740,183 @@ window.addEventListener('DOMContentLoaded',cmpInit);
     )
 
 
+def _link_arquivo(caminho: str, rotulo: str) -> str:
+    """Link mono neon para abrir um arquivo da pasta do produto."""
+    return (
+        f'<a href="{_escape(caminho)}" target="_blank" rel="noopener" '
+        'style="font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;'
+        'text-transform:uppercase;color:var(--neon);border-bottom:1px solid var(--neon-deep);'
+        f'padding-bottom:2px;">{_escape(rotulo)} &#8594;</a>'
+    )
+
+
+def _tabela_html(cabecalho: list[str], linhas: list[list[str]]) -> str:
+    ths = "".join(f"<th>{_md_inline(c)}</th>" for c in cabecalho)
+    trs = "".join(
+        "<tr>" + "".join(f"<td>{_md_inline(c)}</td>" for c in linha) + "</tr>"
+        for linha in linhas
+    )
+    return (
+        '<div style="overflow-x:auto">'
+        f'<table class="table"><thead><tr>{ths}</tr></thead><tbody>{trs}</tbody></table>'
+        "</div>"
+    )
+
+
+def render_low_ticket(dados: dict) -> str:
+    """Entregas do produto de entrada: página de vendas (/lt-pagina, régua low ticket)
+    e quiz (/lt-quiz). Os dados vêm de parse_low_ticket, no painel-incremental.py."""
+    pagina = dados.get("pagina") or {}
+    quiz = dados.get("quiz") or {}
+    testes: list[dict] = pagina.get("testes") or []
+    aberturas = pagina.get("aberturas") or {}
+    tem_pagina = bool(aberturas or testes)
+
+    if not tem_pagina and not quiz:
+        miolo = _placeholder(
+            "Rode /lt-pagina para criar a página de vendas low ticket ou /lt-quiz para o quiz."
+        )
+        return f"<!-- SECTION:low-ticket -->\n{miolo}\n<!-- /SECTION:low-ticket -->"
+
+    partes: list[str] = []
+
+    if tem_pagina:
+        partes.append(
+            '<div class="section-h" style="margin-top:0">Página de vendas'
+            '<span class="mini">/lt-pagina</span></div>'
+        )
+        com_provisorios = [t["abertura"] for t in testes if t.get("provisorios")]
+        if com_provisorios:
+            partes.append(
+                '<div class="card" style="border-top:0;padding-top:0">'
+                '<span class="pill rust">Antes de publicar</span>'
+                '<p class="card-body" style="margin-top:var(--s-3)">'
+                f'A copy de {_escape(", ".join(com_provisorios))} tem depoimentos provisórios. '
+                "Troque pelos reais antes de publicar a página: a lista está no fim do arquivo da copy.</p>"
+                "</div>"
+            )
+        promessa = pagina.get("promessa") or ""
+        if promessa:
+            partes.append(
+                '<div class="card" style="border-top:0;padding-top:0">'
+                '<span class="card-label">Promessa central</span>'
+                f'<div class="callout">{_md_inline(promessa)}</div>'
+                "</div>"
+            )
+
+        tem_copy = any(t.get("copy") for t in testes)
+        tem_prompt = any(t.get("prompt") for t in testes)
+        etapas = [
+            ("Etapa 1", "Promessa e 7 aberturas", bool(aberturas)),
+            ("Etapa 2", "Copy aprovada", tem_copy),
+            ("Etapa 3", "Prompt do Lovable", tem_prompt),
+        ]
+        cards = "".join(
+            '<div class="card">'
+            f'<span class="card-label">{_escape(n)}</span>'
+            f'<div class="card-title">{_escape(t)}</div>'
+            f'<span class="pill{" neon" if ok else ""}">{"Pronta" if ok else "Pendente"}</span>'
+            "</div>"
+            for n, t, ok in etapas
+        )
+        partes.append(f'<div class="grid grid-3">{cards}</div>')
+
+        if testes:
+            linhas = []
+            for t in testes:
+                copy_html = _link_arquivo(t["copy"], "Abrir copy") if t.get("copy") else "Pendente"
+                prompt_html = _link_arquivo(t["prompt"], "Abrir prompt") if t.get("prompt") else "Pendente"
+                if not t.get("copy"):
+                    depo_html = "Pendente"
+                elif t.get("provisorios"):
+                    depo_html = '<span class="pill rust">Provisórios</span>'
+                else:
+                    depo_html = "Reais"
+                linhas.append(
+                    "<tr>"
+                    f'<td class="strong">{_escape(t.get("abertura", ""))}</td>'
+                    f"<td>{copy_html}</td>"
+                    f"<td>{depo_html}</td>"
+                    f"<td>{prompt_html}</td>"
+                    f'<td class="mono">{_escape(t.get("atualizado_em", ""))}</td>'
+                    "</tr>"
+                )
+            partes.append(
+                '<div class="section-h">Aberturas criadas<span class="mini">uma por teste A/B</span></div>'
+                '<div style="overflow-x:auto"><table class="table"><thead><tr>'
+                "<th>Abertura</th><th>Copy</th><th>Depoimentos</th><th>Prompt do Lovable</th><th>Atualizado em</th>"
+                f'</tr></thead><tbody>{"".join(linhas)}</tbody></table></div>'
+            )
+
+        tabela = pagina.get("tabela")
+        if aberturas:
+            partes.append(
+                '<div class="section-h">Ordem de testes<span class="mini">'
+                f'{_link_arquivo(aberturas.get("caminho", ""), "Ver as 7 aberturas")}</span></div>'
+            )
+            if tabela:
+                partes.append(_tabela_html(tabela["cabecalho"], tabela["linhas"]))
+            else:
+                partes.append(
+                    '<p class="card-body">A tabela de prioridade está no arquivo das 7 aberturas.</p>'
+                )
+
+        recente = pagina.get("copy_recente")
+        if recente:
+            partes.append(
+                '<div class="section-h">Copy aprovada<span class="mini">'
+                f'{_escape(recente.get("abertura", ""))}</span></div>'
+            )
+            partes.append(
+                _DOC_CSS
+                + '<article class="doc-page"><div class="doc-head">'
+                '<div class="doc-kicker">Copy da página low ticket</div>'
+                f'<h1 class="doc-title">Abertura {_escape(recente.get("abertura", ""))}</h1>'
+                '<div class="doc-meta">'
+                f'<span class="file">{_escape(recente.get("caminho", ""))}</span>'
+                "</div></div>"
+                f'<section class="doc-block">{_md_bloco_para_documento(recente.get("conteudo", ""))}</section>'
+                "</article>"
+            )
+
+        partes.append(
+            '<div class="regra">A página é montada no Lovable a partir do prompt. '
+            "Lá dentro, troque CHECKOUT_URL pelo link do seu checkout.</div>"
+        )
+
+    if quiz:
+        partes.append(
+            '<div class="section-h">Quiz<span class="mini">/lt-quiz</span></div>'
+        )
+        itens = []
+        if quiz.get("lovable_url"):
+            itens.append(
+                '<div class="card"><span class="card-label">Quiz publicado</span>'
+                f'<a href="{_escape(quiz["lovable_url"])}" target="_blank" rel="noopener" '
+                'style="color:var(--neon);word-break:break-all">'
+                f'{_escape(quiz["lovable_url"])}</a></div>'
+            )
+        else:
+            itens.append(
+                '<div class="card"><span class="card-label">Quiz publicado</span>'
+                '<p class="card-body">Link ainda não informado. Cole o link do Lovable no chat do /lt-quiz.</p></div>'
+            )
+        if quiz.get("prompt"):
+            itens.append(
+                '<div class="card"><span class="card-label">Prompt do quiz</span>'
+                f'{_link_arquivo(quiz["prompt"], "Abrir prompt")}'
+                + (
+                    f'<p class="card-body" style="margin-top:var(--s-3)">Gerado em {_escape(quiz["gerado_em"])}</p>'
+                    if quiz.get("gerado_em") else ""
+                )
+                + "</div>"
+            )
+        partes.append(f'<div class="grid grid-2">{"".join(itens)}</div>')
+
+    miolo = "".join(partes)
+    return f"<!-- SECTION:low-ticket -->\n{miolo}\n<!-- /SECTION:low-ticket -->"
+
+
 def render_analise_trafego(dados: dict) -> str:
     # O conteúdo real é injetado pelo script painel-trafego.py após cada export.
     # Aqui entregamos apenas o placeholder inicial com os marcadores de seção.
@@ -2752,6 +2937,7 @@ RENDERS = {
     "identidade-comunicador": render_identidade_comunicador,
     "pesquisa": render_pesquisa,
     "copy-pagina": render_copy_pagina,
+    "low-ticket": render_low_ticket,
     "comercial-playbook": render_comercial_playbook,
     "dashboards": render_dashboards,
     "analise-trafego": render_analise_trafego,

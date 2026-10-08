@@ -14,7 +14,7 @@ Pega uma página HTML existente e conecta os botões de compra ao link real do c
 
 ## Quando Usar
 
-- Depois de gerar a página com `/copy-pagina` ou `/lt-pagina`.
+- Depois de gerar a página com `/copy-pagina`.
 - Quando o usuário disser "conecta o checkout", "liga essa página na Hotmart", "preciso colocar o link de pagamento", "presscart", "instala o checkout".
 - Antes de subir a página pro ar.
 
