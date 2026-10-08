@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oferta Final. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-hover: #d4a87d;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.35);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 0 32px var(--accent-glow-strong), 0 8px 32px rgba(0, 0, 0, 0.4); }
+      50% { box-shadow: 0 0 56px var(--accent-glow-strong), 0 8px 48px rgba(0, 0, 0, 0.4); }
+    }
+
+    .oferta-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .oferta-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 720px;
+      height: 560px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .oferta-container {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .oferta-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .oferta-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .oferta-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .oferta-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      padding: 40px 32px;
+      animation: fadeUpIn 0.7s ease 0.2s both;
+    }
+
+    .stack-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .stack-list {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .stack-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+
+    .stack-item:last-child {
+      border-bottom: none;
+    }
+
+    .stack-item-name {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .stack-item-name .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--accent);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .stack-item-value {
+      font-size: 0.9rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .stack-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      margin-bottom: 8px;
+      border-top: 1px solid var(--border-hover);
+      border-bottom: 1px solid var(--border-hover);
+    }
+
+    .stack-total-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stack-total-value {
+      font-size: 1.15rem;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      text-decoration: line-through;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+    }
+
+    .price-block {
+      text-align: center;
+      padding: 28px 0 8px;
+    }
+
+    .price-intro {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .price-amount {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .price-currency {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 14px;
+    }
+
+    .price-value {
+      font-size: clamp(3rem, 7vw, 4rem);
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .price-footer {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      margin-bottom: 28px;
+    }
+
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: #1a0f06;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.35s ease, filter 0.35s ease;
+      animation: ctaPulse 2.8s ease-in-out infinite;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .cta-btn .material-symbols-outlined {
+      font-size: 22px;
+    }
+
+    .security-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .security-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+    }
+
+    .security-row .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    @media (min-width: 1024px) {
+      .oferta-section { padding: 120px 32px 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="oferta-section">
+    <div class="oferta-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="oferta-headline">
+        <h2>Sua entrada para o método completo</h2>
+      </div>
+
+      <p class="oferta-subtitle">
+        Tudo que você viu até aqui, reunido em um único acesso, com garantia de 7 dias e condição especial de primeira turma.
+      </p>
+
+      <div class="oferta-card">
+
+        <div class="stack-label">O que está incluído</div>
+
+        <ul class="stack-list">
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Método completo em vídeo (48 aulas)
+            </span>
+            <span class="stack-item-value">R$ 897</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Caderno de precificação
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Guia de fotos com celular
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 01. Pack de 30 receitas
+            </span>
+            <span class="stack-item-value">R$ 297</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 02. Mentoria ao vivo Shopee
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 03. Calendário anual de datas
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+        </ul>
+
+        <div class="stack-total">
+          <span class="stack-total-label">Valor real do pacote</span>
+          <span class="stack-total-value">R$ 1.882</span>
+        </div>
+
+        <div class="price-block">
+          <div class="price-intro">De entrada, por apenas</div>
+          <div class="price-amount">
+            <span class="price-currency">R$</span>
+            <span class="price-value">297</span>
+          </div>
+          <div class="price-footer">ou 12 parcelas de R$ 29,70 no cartão</div>
+        </div>
+
+        <a href="#" class="cta-btn">
+          Quero minha vaga agora
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+
+        <div class="security-row">
+          <span><span class="material-symbols-outlined">lock</span>Compra segura</span>
+          <span><span class="material-symbols-outlined">verified</span>Garantia de 7 dias</span>
+          <span><span class="material-symbols-outlined">credit_card</span>Parcelado em até 12x</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garantia. Flat Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#fafafa',
+            surface: '#f0f0f2',
+            ink: '#18181b',
+            accent: '#d4d4d8',
+            warm: '#c2956b',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(194,149,107,0.09) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+
+    .selo {
+      width: 220px;
+      height: 220px;
+      border-radius: 9999px;
+      background: #fafafa;
+      border: 2.5px solid #18181b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(194,149,107,0.15);
+    }
+    .selo::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 9999px;
+      border: 1.5px dashed #c2956b;
+    }
+    .selo-dias {
+      font-size: 3.8rem;
+      font-weight: 800;
+      line-height: 1;
+      color: #18181b;
+    }
+    .selo-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c2956b;
+      margin-top: 6px;
+    }
+    .selo-icon {
+      position: absolute;
+      top: -22px;
+      background: #c2956b;
+      width: 44px;
+      height: 44px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #18181b;
+    }
+    .selo-icon .material-symbols-outlined {
+      color: #fafafa;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body class="text-ink font-sans antialiased">
+
+  <section class="w-full py-20 md:py-32 px-6">
+    <div class="max-w-4xl mx-auto">
+
+      <div class="flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-10 md:p-16">
+
+        <div class="fade-up flex justify-center mb-10">
+          <div class="selo">
+            <div class="selo-icon">
+              <span class="material-symbols-outlined">verified</span>
+            </div>
+            <p class="selo-dias">7</p>
+            <p class="selo-label">Dias de Garantia</p>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <div class="fade-up fade-up-delay-1">
+            <div class="warm-line mx-auto mb-6"></div>
+            <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+              Garantia incondicional de 7 dias
+            </h2>
+          </div>
+
+          <div class="fade-up fade-up-delay-2 mt-8 max-w-xl mx-auto space-y-5">
+            <p class="text-base md:text-lg font-light text-gray-600 leading-relaxed">
+              Garantia incondicional de 7 dias, conforme regra mínima de compra online no Brasil. Se o material não fizer sentido para o seu caso, você solicita reembolso dentro do prazo pela própria plataforma de pagamento, com o código da transação e o e-mail da compra.
+            </p>
+            <p class="text-base md:text-lg font-light text-gray-600 leading-relaxed">
+              Você testa a organização dos arquivos e os vídeos de uso. Se não for o que você precisa, pede estorno dentro do prazo, sem letra miúda escondida.
+            </p>
+          </div>
+
+          <div class="fade-up fade-up-delay-3 mt-10 flex flex-wrap justify-center gap-6">
+            <div class="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <span class="material-symbols-outlined text-warm" style="font-size:20px;">check_circle</span>
+              Prazo pela plataforma
+            </div>
+            <div class="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <span class="material-symbols-outlined text-warm" style="font-size:20px;">check_circle</span>
+              Política visível no checkout
+            </div>
+            <div class="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <span class="material-symbols-outlined text-warm" style="font-size:20px;">check_circle</span>
+              7 dias para avaliar
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

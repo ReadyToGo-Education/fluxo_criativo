@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academy.. Problema/Dor</title>
+
+  <!-- Google Fonts: Inter 300-800 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .flat-border {
+      border: 1.5px solid #2a2a3a;
+    }
+
+    /* Radial gradient background */
+    .radial-glow {
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(108, 92, 231, 0.08) 0%, transparent 70%);
+    }
+
+    .radial-glow-bottom {
+      background: radial-gradient(ellipse 50% 50% at 50% 100%, rgba(108, 92, 231, 0.06) 0%, transparent 70%);
+    }
+
+    /* Pain card hover */
+    .pain-card {
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pain-card:hover {
+      transform: translateX(6px);
+      border-color: rgba(108, 92, 231, 0.4);
+      box-shadow: 0 0 24px rgba(108, 92, 231, 0.08);
+    }
+
+    /* FadeUp animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+    .delay-5 { transition-delay: 0.5s; }
+
+    /* Icon container */
+    .icon-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 12px;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1.5px solid rgba(108, 92, 231, 0.2);
+    }
+
+    /* Header link hover */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: #6c5ce7;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover { color: #6c5ce7; }
+    .nav-link:hover::after { width: 100%; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════ SEÇÃO PROBLEMA / DOR ═══════════════ -->
+  <section id="dor" class="relative pt-32 pb-24 radial-glow overflow-hidden">
+
+    <!-- Decorative blurred orb -->
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]" style="background: radial-gradient(circle, #6c5ce7, transparent 70%);"></div>
+
+    <div class="relative max-w-4xl mx-auto px-6">
+
+      <!-- Section label -->
+      <p class="fade-up text-warm text-sm font-semibold tracking-widest uppercase mb-6">
+        A realidade que ninguém fala
+      </p>
+
+      <!-- Headline -->
+      <h2 class="fade-up delay-1 text-3xl sm:text-4xl lg:text-5xl font-800 leading-tight max-w-3xl mb-6">
+        Você trabalha, se esforça, estuda<span class="text-warm">...</span><br class="hidden sm:block" />
+        e mesmo assim sente que está no mesmo lugar
+      </h2>
+
+      <!-- Subheadline -->
+      <p class="fade-up delay-2 text-lg sm:text-xl text-ink/50 font-light max-w-2xl mb-16 leading-relaxed">
+        Se alguma dessas cenas parece familiar, você não está sozinho. Milhares de profissionais vivem esse ciclo silencioso todos os dias.
+      </p>
+
+      <!-- Pain Cards -->
+      <div class="space-y-5">
+
+        <!-- Card 1. Promoções -->
+        <div class="fade-up delay-1 pain-card flat-border rounded-2xl bg-surface p-6 sm:p-8 flex gap-5 items-start">
+          <div class="icon-box">
+            <span class="material-symbols-outlined text-warm text-2xl">trending_up</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-ink mb-2">
+              Assistir colegas serem promovidos enquanto você continua na mesma posição
+            </h3>
+            <p class="text-ink/45 font-light leading-relaxed">
+              Você chega cedo, entrega no prazo, faz mais do que pedem. Mas quando a promoção aparece, vai para outra pessoa. E ninguém explica o motivo. O que falta parece invisível. e isso corrói por dentro.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2. Currículos sem resposta -->
+        <div class="fade-up delay-2 pain-card flat-border rounded-2xl bg-surface p-6 sm:p-8 flex gap-5 items-start">
+          <div class="icon-box">
+            <span class="material-symbols-outlined text-warm text-2xl">send</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-ink mb-2">
+              Enviar dezenas de currículos e não receber nenhuma resposta
+            </h3>
+            <p class="text-ink/45 font-light leading-relaxed">
+              Cada vaga parece perfeita. Você adapta o currículo, escreve uma carta, envia. E depois... silêncio. Dias viram semanas. A caixa de entrada continua vazia. A autoconfiança vai diminuindo a cada tentativa frustrada.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3. Síndrome do impostor -->
+        <div class="fade-up delay-3 pain-card flat-border rounded-2xl bg-surface p-6 sm:p-8 flex gap-5 items-start">
+          <div class="icon-box">
+            <span class="material-symbols-outlined text-warm text-2xl">person_off</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-ink mb-2">
+              Sentir que a qualquer momento vão descobrir que você não é tão bom assim
+            </h3>
+            <p class="text-ink/45 font-light leading-relaxed">
+              Numa reunião, alguém faz uma pergunta e seu coração dispara. Você evita falar, fica com medo de parecer incompetente. Mesmo tendo experiência, parece que todo mundo sabe mais que você. É a síndrome do impostor travando suas melhores ideias.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 4. Cursos que não funcionam -->
+        <div class="fade-up delay-4 pain-card flat-border rounded-2xl bg-surface p-6 sm:p-8 flex gap-5 items-start">
+          <div class="icon-box">
+            <span class="material-symbols-outlined text-warm text-2xl">school</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-ink mb-2">
+              Investir em cursos que prometem o mundo e não entregam nada prático
+            </h3>
+            <p class="text-ink/45 font-light leading-relaxed">
+              Mais um certificado na parede. Mais um login em plataforma que você não vai acessar depois da primeira semana. O conhecimento é genérico, a aplicação é zero. E o boleto continua chegando. junto com a sensação de que foi enganado de novo.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 5. Salário estagnado -->
+        <div class="fade-up delay-5 pain-card flat-border rounded-2xl bg-surface p-6 sm:p-8 flex gap-5 items-start">
+          <div class="icon-box">
+            <span class="material-symbols-outlined text-warm text-2xl">money_off</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-ink mb-2">
+              Ver seu salário parado há anos enquanto o custo de vida só aumenta
+            </h3>
+            <p class="text-ink/45 font-light leading-relaxed">
+              O número na conta não muda. Mas o preço do mercado, do aluguel e do plano de saúde sobe todo ano. Você faz conta, corta supérfluo, adia planos. E começa a se perguntar: será que é isso mesmo? Será que esse é o teto?
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Closing emotional line -->
+      <div class="fade-up mt-16 text-center">
+        <p class="text-ink/40 text-base sm:text-lg font-light italic max-w-xl mx-auto leading-relaxed">
+          "O problema não é falta de esforço. É falta de direção. E quanto mais tempo passa, mais difícil parece sair desse ciclo."
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Bottom glow -->
+    <div class="absolute bottom-0 left-0 w-full h-40 radial-glow-bottom pointer-events-none"></div>
+  </section>
+
+  <!-- ═══════════════ FADE-UP OBSERVER ═══════════════ -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

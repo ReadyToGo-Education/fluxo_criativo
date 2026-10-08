@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier - Método Crochê</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000000;
+            --surface-1: #0a0a0a;
+            --surface-2: #111113;
+            --surface-3: #1c1c1e;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::selection {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        /* ── Header ── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: var(--accent);
+        }
+
+        /* ── Main ── */
+        main {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 96px 32px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 28px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to bottom right, #ffffff 30%, rgba(255, 255, 255, 0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 .accent-word {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-weight: 400;
+            -webkit-text-fill-color: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.0625rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 780px;
+        }
+
+        /* ── Checklist ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            list-style: none;
+            margin: 4px 0;
+            text-align: left;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 200ms ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .check-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+        }
+        .check-icon .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--accent);
+        }
+
+        .check-item span:last-child {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        /* ── Video ── */
+        .video-card {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: var(--surface-1);
+            position: relative;
+            width: 100%;
+        }
+
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 300px;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(255, 255, 255, 0) 10%,
+                rgba(143, 143, 143, 0.5) 50%,
+                rgba(255, 255, 255, 0) 90%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            z-index: 2;
+        }
+        .video-card::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            max-width: 200px;
+            height: 4px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(143, 143, 143, 0.15),
+                transparent
+            );
+            filter: blur(3px);
+            z-index: 1;
+        }
+
+        .video-chrome {
+            height: 48px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 8px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #e5484d; }
+        .dot-yellow { background: #f5d90a; }
+        .dot-green { background: #30a46c; }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+        }
+        .video-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+        .video-meta-item .material-symbols-outlined {
+            font-size: 16px;
+        }
+        .video-meta-divider {
+            width: 1px;
+            height: 12px;
+            background: var(--border);
+        }
+
+        /* ── CTA Button (glassmorphism) ── */
+        .cta-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            height: 48px;
+            padding: 0 24px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            background: linear-gradient(104deg, rgba(253, 253, 253, 0.06) 5%, rgba(240, 240, 228, 0.1) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            color: #fff;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: all 200ms ease;
+        }
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.92);
+            color: #000;
+            border-color: transparent;
+            box-shadow:
+                0px 0px 4px rgba(255, 255, 255, 0.06),
+                0px 1px 14px rgba(255, 255, 255, 0.12),
+                0px 3px 32px rgba(255, 255, 255, 0.18);
+        }
+        .cta-button:hover .material-symbols-outlined {
+            color: #000;
+        }
+        .cta-button .material-symbols-outlined {
+            font-size: 18px;
+            transition: color 200ms ease;
+        }
+
+        .cta-sub {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes scaleIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+            30% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .anim-up {
+            animation: fadeUpIn 0.8s cubic-bezier(0.36, 0.66, 0.6, 1) forwards;
+            opacity: 0;
+        }
+        .anim-scale {
+            animation: scaleIn 1s cubic-bezier(0.36, 0.66, 0.6, 1) forwards;
+            opacity: 0;
+        }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.15s; }
+        .delay-3 { animation-delay: 0.25s; }
+        .delay-4 { animation-delay: 0.35s; }
+        .delay-5 { animation-delay: 0.45s; }
+        .delay-6 { animation-delay: 0.55s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            main {
+                padding: 64px 20px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Atelier<span>.</span></div>
+    </header>
+
+    <main>
+        <div class="content">
+
+            <h1 class="anim-up delay-2">
+                Transforme seu croche em uma<br>renda de verdade.
+            </h1>
+
+            <p class="subtitle anim-up delay-3">
+                O metodo completo para voce que faz pecas lindas mas nao sabe como vender e deseja elevar sua arte ao patamar de atelier.
+            </p>
+
+            <ul class="checklist anim-up delay-4">
+                <li class="check-item">
+                    <div class="check-icon">
+                        <span class="material-symbols-outlined">check</span>
+                    </div>
+                    <span>Aprenda a precificar sem trabalhar no prejuizo</span>
+                </li>
+                <li class="check-item">
+                    <div class="check-icon">
+                        <span class="material-symbols-outlined">check</span>
+                    </div>
+                    <span>Descubra quais pecas dao lucro e saida rapida</span>
+                </li>
+                <li class="check-item">
+                    <div class="check-icon">
+                        <span class="material-symbols-outlined">check</span>
+                    </div>
+                    <span>Monte sua vitrine online e atraia clientes todos os dias</span>
+                </li>
+            </ul>
+
+            <div class="anim-scale delay-5" style="width: 100%; max-width: 780px;">
+                <div class="video-card">
+                    <div class="video-chrome">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+                    <div class="video-embed">
+                        <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentacao do Metodo"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-meta">
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">play_circle</span>
+                            Assista a aula gratuita
+                        </div>
+                        <div class="video-meta-divider"></div>
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">timer</span>
+                            15 minutos
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-wrap anim-up delay-6">
+                <button class="cta-button">
+                    Quero transformar meu croche
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+                <span class="cta-sub">Acesso imediato ao metodo completo</span>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

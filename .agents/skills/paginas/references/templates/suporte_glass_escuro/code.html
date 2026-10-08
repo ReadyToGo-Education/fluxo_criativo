@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suporte. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .suporte-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .suporte-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 620px;
+      height: 420px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .suporte-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .suporte-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .suporte-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .suporte-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .suporte-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .suporte-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px 26px;
+      text-align: center;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .suporte-card:nth-child(1) { animation-delay: 0.15s; }
+    .suporte-card:nth-child(2) { animation-delay: 0.25s; }
+    .suporte-card:nth-child(3) { animation-delay: 0.35s; }
+    .suporte-card:nth-child(4) { animation-delay: 0.45s; }
+
+    .suporte-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 32px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .suporte-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 16px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.35s ease;
+    }
+
+    .suporte-card:hover .suporte-icon {
+      background: var(--accent-glow-strong);
+    }
+
+    .suporte-icon .material-symbols-outlined {
+      font-size: 32px;
+      color: var(--accent);
+    }
+
+    .suporte-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .suporte-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @media (min-width: 640px) {
+      .suporte-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .suporte-grid { grid-template-columns: repeat(4, 1fr); }
+      .suporte-section { padding: 120px 32px 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="suporte-section">
+    <div class="suporte-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="suporte-headline">
+        <h2>Você não vai estar sozinha nessa</h2>
+      </div>
+
+      <p class="suporte-subtitle">
+        Mais do que um curso, você entra numa rede de apoio de artesãs que estão construindo o mesmo caminho.
+      </p>
+
+      <div class="suporte-grid">
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">forum</span></div>
+          <div class="suporte-title">Comunidade exclusiva</div>
+          <div class="suporte-desc">
+            Grupo fechado com outras artesãs para compartilhar peças, tirar dúvidas e trocar experiências todos os dias.
+          </div>
+        </div>
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">video_call</span></div>
+          <div class="suporte-title">Mentorias ao vivo</div>
+          <div class="suporte-desc">
+            Encontros mensais ao vivo para analisar peças, preços e postagens. Você manda o caso e a gente resolve junto.
+          </div>
+        </div>
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">support_agent</span></div>
+          <div class="suporte-title">Acesso direto ao suporte</div>
+          <div class="suporte-desc">
+            Canal exclusivo para dúvidas rápidas, com resposta em até 24 horas nos dias úteis, direto da equipe pedagógica.
+          </div>
+        </div>
+
+        <div class="suporte-card">
+          <div class="suporte-icon"><span class="material-symbols-outlined">update</span></div>
+          <div class="suporte-title">Atualizações vitalícias</div>
+          <div class="suporte-desc">
+            Sempre que o mercado mudar ou eu gravar novas aulas, você recebe tudo sem pagar nada a mais pelo acesso.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

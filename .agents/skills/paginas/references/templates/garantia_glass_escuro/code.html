@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garantia. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 48px var(--accent-glow), 0 0 96px var(--accent-glow); }
+      50% { box-shadow: 0 0 72px var(--accent-glow-strong), 0 0 128px var(--accent-glow); }
+    }
+
+    .garantia-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .garantia-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 720px;
+      height: 560px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .garantia-container {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .garantia-seal {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(194, 149, 107, 0.25), rgba(17, 17, 19, 0.9));
+      border: 2px solid var(--accent-glow-strong);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUpIn 0.8s ease both, pulseGlow 4s ease-in-out infinite 0.8s;
+    }
+
+    .garantia-seal::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 1px dashed var(--accent-glow-strong);
+    }
+
+    .garantia-seal .material-symbols-outlined {
+      font-size: 72px;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .garantia-seal-days {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .garantia-headline {
+      margin-bottom: 20px;
+      animation: fadeUpIn 0.7s ease 0.15s both;
+    }
+
+    .garantia-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .garantia-body {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 36px 32px;
+      animation: fadeUpIn 0.7s ease 0.3s both;
+    }
+
+    .garantia-body p {
+      font-size: 1.0625rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+
+    .garantia-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .garantia-body strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .garantia-sign {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      font-style: italic;
+    }
+
+    @media (min-width: 1024px) {
+      .garantia-section { padding: 120px 32px 140px; }
+      .garantia-seal { width: 220px; height: 220px; }
+      .garantia-seal .material-symbols-outlined { font-size: 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="garantia-section">
+    <div class="garantia-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="garantia-seal">
+        <span class="material-symbols-outlined">verified</span>
+        <div class="garantia-seal-days">7 dias</div>
+      </div>
+
+      <div class="garantia-headline">
+        <h2>Garantia incondicional de 7 dias</h2>
+      </div>
+
+      <div class="garantia-body">
+        <p>
+          Você entra, acessa todo o conteúdo, aplica nas suas peças e testa por <strong>7 dias completos</strong>. Se sentir que o método não é para você, por qualquer motivo, basta mandar uma mensagem.
+        </p>
+        <p>
+          Devolvemos <strong>100% do valor investido</strong>, sem perguntas, sem burocracia, sem olhar torto. O risco fica todo comigo, porque eu confio no que construí.
+        </p>
+        <p>
+          Se depois de uma semana você achar que não vale, volta para o seu ponto de partida sem ter perdido um real.
+        </p>
+        <div class="garantia-sign">
+          Essa é a minha palavra. E palavra de artesã vale contrato.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

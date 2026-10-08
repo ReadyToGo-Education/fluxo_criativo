@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Quem. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.08) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+
+    .list-card {
+      position: relative;
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+    .list-card:hover {
+      border-color: rgba(108, 92, 231, 0.5);
+      background-color: rgba(18, 18, 26, 0.95);
+      transform: translateY(-4px);
+    }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed rgba(42, 42, 58, 0.8);
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+
+    .icon-yes {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(108, 92, 231, 0.15); border: 1.5px solid rgba(108, 92, 231, 0.4);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-no {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(224, 90, 90, 0.1); border: 1.5px solid rgba(224, 90, 90, 0.3);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Antes de continuar
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Este método é para <span class="text-warm">um perfil específico</span>
+        </h2>
+        <p class="text-ink/45 text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto mt-5">
+          Veja se o seu momento combina com o que vamos entregar.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="list-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <p class="text-[0.72rem] font-700 uppercase tracking-widest text-warm/80 mb-6">Para quem é</p>
+
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined text-warm text-[16px]">check</span></span>
+            <span>Quer transformar sua habilidade manual em uma fonte de renda previsível</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined text-warm text-[16px]">check</span></span>
+            <span>Já produz peças mas ainda não consegue vender com consistência</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined text-warm text-[16px]">check</span></span>
+            <span>Está disposta a seguir um passo a passo e aplicar por pelo menos 30 dias</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined text-warm text-[16px]">check</span></span>
+            <span>Quer aprender a precificar, fotografar e divulgar sem depender de terceiros</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined text-warm text-[16px]">check</span></span>
+            <span>Busca independência financeira trabalhando de casa</span>
+          </div>
+        </div>
+
+        <div class="list-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <p class="text-[0.72rem] font-700 uppercase tracking-widest text-ink/30 mb-6">Para quem não é</p>
+
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined text-[#e05a5a] text-[16px]">close</span></span>
+            <span class="text-ink/40">Procura resultado sem esforço ou atalhos mágicos</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined text-[#e05a5a] text-[16px]">close</span></span>
+            <span class="text-ink/40">Não tem disposição para aprender algo novo e testar na prática</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined text-[#e05a5a] text-[16px]">close</span></span>
+            <span class="text-ink/40">Espera que o método funcione sozinho, sem dedicação pessoal</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined text-[#e05a5a] text-[16px]">close</span></span>
+            <span class="text-ink/40">Acredita que o problema está sempre no mercado, nunca no processo</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined text-[#e05a5a] text-[16px]">close</span></span>
+            <span class="text-ink/40">Quer aprender a teoria mas não pretende colocar em prática</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

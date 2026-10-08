@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoridade. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .autoridade-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .autoridade-section::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 680px;
+      height: 440px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .autoridade-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .autoridade-headline {
+      text-align: center;
+      margin-bottom: 56px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .autoridade-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .autoridade-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      align-items: center;
+      margin-bottom: 48px;
+      animation: fadeUpIn 0.7s ease 0.15s both;
+    }
+
+    .autoridade-photo {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(194, 149, 107, 0.12), rgba(17, 17, 19, 0.9));
+      border: 1px solid var(--border-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 380px;
+      margin: 0 auto;
+      box-shadow: 0 0 48px var(--accent-glow), 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .autoridade-photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .autoridade-photo-placeholder .material-symbols-outlined {
+      font-size: 56px;
+      color: var(--accent);
+    }
+
+    .autoridade-photo-placeholder span:last-child {
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+
+    .autoridade-bio-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .autoridade-bio h3 {
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+
+    .autoridade-bio p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .autoridade-bio p:last-child {
+      margin-bottom: 0;
+    }
+
+    .autoridade-bio strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .creds-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      animation: fadeUpIn 0.7s ease 0.3s both;
+    }
+
+    .cred-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 22px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: border-color 0.35s ease, transform 0.35s ease;
+    }
+
+    .cred-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .cred-icon {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cred-icon .material-symbols-outlined {
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    .cred-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cred-number {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .cred-label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    @media (min-width: 820px) {
+      .autoridade-main { grid-template-columns: 360px 1fr; gap: 48px; }
+      .autoridade-photo { max-width: none; }
+      .creds-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .autoridade-section { padding: 120px 32px 140px; }
+      .creds-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="autoridade-section">
+    <div class="autoridade-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="autoridade-headline">
+        <h2>Quem está por trás do método</h2>
+      </div>
+
+      <div class="autoridade-main">
+
+        <div class="autoridade-photo">
+          <div class="autoridade-photo-placeholder">
+            <span class="material-symbols-outlined">person</span>
+            <span>[Sua foto aqui]</span>
+          </div>
+        </div>
+
+        <div class="autoridade-bio">
+          <div class="autoridade-bio-name">Criadora do método</div>
+          <h3>Olá, eu sou a Helena Vieira</h3>
+          <p>
+            Comecei a fazer crochê aos 14 anos, sentada no chão da sala da minha avó, aprendendo a primeira correntinha. O que era passatempo virou refúgio, e depois virou a forma que encontrei para sustentar minha casa quando fiquei desempregada em 2019.
+          </p>
+          <p>
+            Nos primeiros meses eu vendia para amigas e ganhava pouco. Foi quando entendi que o problema nunca foi o crochê, era a forma como eu vendia. A partir daí, estudei marketing digital aplicado ao artesanato e, em três anos, <strong>faturei mais de 400 mil reais</strong> vendendo peças pela internet.
+          </p>
+          <p>
+            Hoje, minha missão é levar esse conhecimento para outras artesãs que, assim como eu, carregam um talento nas mãos e merecem transformar isso em renda digna, sem sair de casa.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="creds-grid">
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">inventory_2</span></div>
+          <div class="cred-content">
+            <div class="cred-number">+1.200 peças</div>
+            <div class="cred-label">vendidas online desde 2020</div>
+          </div>
+        </div>
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">school</span></div>
+          <div class="cred-content">
+            <div class="cred-number">+800 alunas</div>
+            <div class="cred-label">formadas nas turmas anteriores</div>
+          </div>
+        </div>
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">star</span></div>
+          <div class="cred-content">
+            <div class="cred-number">Destaque 2024</div>
+            <div class="cred-label">Feira Mãos que Criam, Brasília</div>
+          </div>
+        </div>
+
+        <div class="cred-card">
+          <div class="cred-icon"><span class="material-symbols-outlined">trending_up</span></div>
+          <div class="cred-content">
+            <div class="cred-number">+400 mil</div>
+            <div class="cred-label">faturados com o crochê em 3 anos</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

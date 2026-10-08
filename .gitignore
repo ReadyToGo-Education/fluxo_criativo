@@ -143,6 +143,9 @@ inputs/
 
 package-lock.json
 package.json
-# Exportacoes locais para outros agentes (contem caminhos da maquina local)
-.agents/
-.codex/
+# Codex: .agents/ e .codex/agents/ + .codex/hooks.json são gerados por
+# scripts/exportar-para-codex.py e vão para o repositório. O resto de .codex/
+# (configuração pessoal do Codex) fica local.
+.codex/*
+!.codex/agents/
+!.codex/hooks.json

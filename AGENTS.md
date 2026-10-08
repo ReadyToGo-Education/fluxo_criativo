@@ -13,6 +13,8 @@ Este projeto é o **Workshop Marketing IA**: um assistente de marketing digital,
 5. Quando o comando apontar skills ou referências, leia somente os arquivos necessários em `.claude/skills/`.
 6. Se houver conflito entre `CLAUDE.md`, uma skill e um command, prefira o command específico lido para a tarefa atual. Se o conflito afetar arquitetura, script ou risco de sobrescrita, avise o usuário antes de seguir.
 
+As pastas `.agents/` e `.codex/` são geradas a partir de `.claude/` por `scripts/exportar-para-codex.py`. Nunca edite essas pastas: altere o original em `.claude/` e rode o script de novo.
+
 No Codex, este repositório está em **Modo Codex**. Slash commands do Claude Code não executam automaticamente. Pedido como `/copy-pagina`, `copy-pagina`, `segue o comando copy-pagina` ou `quero ajustar a página` deve ser interpretado como: abrir o arquivo em `.claude/commands/` e executar o roteiro manualmente.
 
 ## Papel do Agente

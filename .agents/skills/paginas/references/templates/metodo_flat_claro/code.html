@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier. Método</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#fafafa',
+            surface: '#f0f0f2',
+            ink: '#18181b',
+            accent: '#d4d4d8',
+            warm: '#c2956b',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #fafafa; color: #18181b; -webkit-font-smoothing: antialiased; }
+
+    .flat-border { border: 1.5px solid #18181b; }
+
+    /* fadeUp */
+    .fadeUp {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fadeUp.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fadeUp-delay-1 { transition-delay: 0.1s; }
+    .fadeUp-delay-2 { transition-delay: 0.2s; }
+    .fadeUp-delay-3 { transition-delay: 0.3s; }
+    .fadeUp-delay-4 { transition-delay: 0.4s; }
+
+    /* subtle radial gradient */
+    .section-metodo {
+      background: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.06) 0%, transparent 65%);
+    }
+
+    /* step card image */
+    .step-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1.5px solid #18181b;
+      filter: sepia(0.2) saturate(0.9);
+    }
+
+    /* step number */
+    .step-number {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 3rem;
+      line-height: 1;
+      color: #c2956b;
+    }
+
+    /* connector arrow between cards */
+    .connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c2956b;
+    }
+    .connector .material-symbols-outlined {
+      font-size: 28px;
+    }
+
+    /* micro-step bullets */
+    .micro-list {
+      list-style: none;
+      padding: 0;
+    }
+    .micro-list li {
+      position: relative;
+      padding-left: 20px;
+      font-weight: 400;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: rgba(24, 24, 27, 0.7);
+    }
+    .micro-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c2956b;
+    }
+
+    /* responsive connector rotation */
+    @media (max-width: 767px) {
+      .connector .material-symbols-outlined {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-metodo py-24 sm:py-32 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Headline -->
+      <div class="text-center max-w-2xl mx-auto mb-6">
+        <h2 class="fadeUp font-inter font-700 text-ink text-2xl sm:text-3xl leading-snug tracking-tight">
+          Método Modelo Pronto em 4 Passos
+        </h2>
+      </div>
+
+      <!-- Philosophy paragraph -->
+      <div class="text-center max-w-lg mx-auto mb-16">
+        <p class="fadeUp fadeUp-delay-1 font-inter font-light text-ink/70 text-base sm:text-lg leading-relaxed">
+          <em>Planilhas Pro</em> é a biblioteca onde cada pacote segue a mesma sequência: escolher, aplicar, aprender com vídeo e evoluir com melhorias. Repetir a sequência reduz variância entre pessoas e abas.
+        </p>
+      </div>
+
+      <!-- 3-column grid with connectors -->
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-6 md:gap-0 items-stretch">
+
+        <!-- Step 1 -->
+        <div class="fadeUp fadeUp-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur overflow-hidden flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1601985705806-5b9a71f6004f?w=600&h=400&fit=crop&q=80"
+            alt="Planilha de gestão aberta no notebook"
+            class="step-img"
+            loading="lazy"
+          >
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="step-number">01</span>
+              <span class="material-symbols-outlined text-warm" style="font-size:28px;">sell</span>
+            </div>
+            <h3 class="font-inter font-bold text-ink text-lg mb-3">Passo 1. Escolher o modelo do momento</h3>
+            <ul class="micro-list">
+              <li>Identifica o que está na frente: caixa, venda, meta ou operação</li>
+              <li>Puxa o pacote certo na biblioteca em vez de montar estrutura do zero</li>
+              <li>Menos tempo em formatação e mais tempo em dado real</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Connector 1→2 -->
+        <div class="connector hidden md:flex px-3">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+        <div class="connector flex md:hidden justify-center py-2">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="fadeUp fadeUp-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur overflow-hidden flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&h=400&fit=crop&q=80"
+            alt="Mãos digitando em planilha no computador"
+            class="step-img"
+            loading="lazy"
+          >
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="step-number">02</span>
+              <span class="material-symbols-outlined text-warm" style="font-size:28px;">storefront</span>
+            </div>
+            <h3 class="font-inter font-bold text-ink text-lg mb-3">Passo 2. Instalar e aplicar na rotina</h3>
+            <ul class="micro-list">
+              <li>Baixa e abre no Excel ou Planilhas Google</li>
+              <li>Preenche com dado real do negócio na sequência do arquivo</li>
+              <li>Reduz erro de fórmula básica e abas que não conversam</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Connector 2→3 -->
+        <div class="connector hidden md:flex px-3">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+        <div class="connector flex md:hidden justify-center py-2">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="fadeUp fadeUp-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur overflow-hidden flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&q=80"
+            alt="Vídeo tutorial em tela ao lado da planilha"
+            class="step-img"
+            loading="lazy"
+          >
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="step-number">03</span>
+              <span class="material-symbols-outlined text-warm" style="font-size:28px;">favorite</span>
+            </div>
+            <h3 class="font-inter font-bold text-ink text-lg mb-3">Passos 3 e 4. Vídeos de uso e evolução</h3>
+            <ul class="micro-list">
+              <li>Vídeos curtos no clique certo para não travar na primeira dúvida</li>
+              <li>Melhorias e versões quando o negócio muda de mês para mês</li>
+              <li>Gestão padronizada que não obsoleta na primeira virada de escala</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.fadeUp').forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

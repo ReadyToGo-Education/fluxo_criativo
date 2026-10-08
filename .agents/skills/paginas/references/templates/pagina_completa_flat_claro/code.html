@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nome do Produto. Transformação Principal</title>
+  <meta name="description" content="Descrição de até 160 caracteres com a promessa principal do produto.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { base:'#fafafa', surface:'#f0f0f2', ink:'#18181b', accent:'#d4d4d8', warm:'#c2956b' },
+          fontFamily: { sans:['Inter','sans-serif'], inter:['Inter','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+/* === hero_flat_claro === */
+
+.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #fafafa;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(194, 149, 107, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(194, 149, 107, 0.04) 0%, transparent 40%);
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .tpl-hero-flat .cta-button {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .tpl-hero-flat .cta-button:hover {
+            background-color: #c2956b;
+            border-color: #c2956b;
+            transform: translateY(-1px);
+        }
+
+        .check-item {
+            transition: transform 0.2s ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .video-wrapper {
+            position: relative;
+        }
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: -8px;
+            bottom: -8px;
+            border: 1.5px solid #d4d4d8;
+            z-index: 0;
+        }
+
+        .tag {
+            letter-spacing: 0.15em;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+        .animate-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .animate-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .animate-in-delay-5 { animation-delay: 0.5s; opacity: 0; }
+
+/* === dor === */
+
+.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #fafafa;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(194, 149, 107, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(194, 149, 107, 0.04) 0%, transparent 40%);
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .pain-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pain-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(24, 24, 27, 0.06);
+        }
+        .pain-card:hover .pain-icon-wrap {
+            background-color: #c2956b;
+            border-color: #c2956b;
+        }
+        .pain-card:hover .pain-icon-wrap .material-symbols-outlined {
+            color: #fafafa;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+        .animate-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .animate-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .animate-in-delay-5 { animation-delay: 0.5s; opacity: 0; }
+        .animate-in-delay-6 { animation-delay: 0.6s; opacity: 0; }
+
+        .warm-line {
+            width: 48px;
+            height: 2px;
+            background-color: #c2956b;
+        }
+
+/* === paliativo === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .paliativo-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .paliativo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .paliativo-card:hover .x-icon {
+      background-color: #c2956b;
+      border-color: #c2956b;
+    }
+    .paliativo-card:hover .x-icon .material-symbols-outlined {
+      color: #fff;
+    }
+    .x-icon {
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+/* === provas === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .depo-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .depo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .depo-avatar {
+      width: 64px; height: 64px; border-radius: 9999px; object-fit: cover;
+    }
+    .divider-line {
+      height: 1px; background: rgba(24,24,27,0.1); margin: 18px 0;
+    }
+
+/* === cta === */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #fafafa; color: #18181b; -webkit-font-smoothing: antialiased; }
+
+    .flat-border { border: 1.5px solid #18181b; }
+
+    /* fadeUp */
+    .fadeUp {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fadeUp.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fadeUp-delay-1 { transition-delay: 0.1s; }
+    .fadeUp-delay-2 { transition-delay: 0.2s; }
+    .fadeUp-delay-3 { transition-delay: 0.3s; }
+
+    /* CTA button */
+    .tpl-cta-flat .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #c2956b;
+      color: #fafafa;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+      padding: 18px 40px;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+    .tpl-cta-flat .cta-btn:hover {
+      background: #b0844f;
+      transform: translateY(-2px);
+    }
+    .tpl-cta-flat .cta-btn .material-symbols-outlined {
+      font-size: 20px;
+      transition: transform 0.25s ease;
+    }
+    .tpl-cta-flat .cta-btn:hover .material-symbols-outlined {
+      transform: translateX(4px);
+    }
+
+    /* subtle radial gradient */
+    .section-cta {
+      background: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.06) 0%, transparent 65%);
+    }
+
+/* === metodo === */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #fafafa; color: #18181b; -webkit-font-smoothing: antialiased; }
+
+    .flat-border { border: 1.5px solid #18181b; }
+
+    /* fadeUp */
+    .fadeUp {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fadeUp.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fadeUp-delay-1 { transition-delay: 0.1s; }
+    .fadeUp-delay-2 { transition-delay: 0.2s; }
+    .fadeUp-delay-3 { transition-delay: 0.3s; }
+    .fadeUp-delay-4 { transition-delay: 0.4s; }
+
+    /* subtle radial gradient */
+    .section-metodo {
+      background: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.06) 0%, transparent 65%);
+    }
+
+    /* step card image */
+    .step-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1.5px solid #18181b;
+      filter: sepia(0.2) saturate(0.9);
+    }
+
+    /* step number */
+    .step-number {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 3rem;
+      line-height: 1;
+      color: #c2956b;
+    }
+
+    /* connector arrow between cards */
+    .connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c2956b;
+    }
+    .connector .material-symbols-outlined {
+      font-size: 28px;
+    }
+
+    /* micro-step bullets */
+    .micro-list {
+      list-style: none;
+      padding: 0;
+    }
+    .micro-list li {
+      position: relative;
+      padding-left: 20px;
+      font-weight: 400;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: rgba(24, 24, 27, 0.7);
+    }
+    .micro-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c2956b;
+    }
+
+    /* responsive connector rotation */
+    @media (max-width: 767px) {
+      .connector .material-symbols-outlined {
+        transform: rotate(90deg);
+      }
+    }
+
+/* === para_quem === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+
+    .list-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .list-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed rgba(24,24,27,0.12);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+
+    .icon-yes {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: #18181b; color: #fafafa;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .icon-no {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: transparent; border: 1.5px solid rgba(24,24,27,0.2); color: rgba(24,24,27,0.35);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+/* === entregaveis === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+    .fade-up-delay-5 { transition-delay: 0.40s; }
+    .fade-up-delay-6 { transition-delay: 0.48s; }
+
+    .entrega-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .entrega-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .entrega-card:hover .icon-box {
+      background-color: #c2956b;
+    }
+    .entrega-card:hover .icon-box .material-symbols-outlined {
+      color: #fafafa;
+    }
+    .icon-box {
+      transition: background-color 0.25s ease;
+    }
+
+/* === bonus === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+
+    .bonus-card { transition: transform 0.25s ease, box-shadow 0.25s ease; position: relative; }
+    .bonus-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .bonus-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #18181b;
+      color: #fafafa;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .bonus-image {
+      height: 180px;
+      background: linear-gradient(135deg, #f4e7d9 0%, #e6d2ba 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      border-radius: 14px 14px 0 0;
+    }
+    .valor-riscado {
+      text-decoration: line-through;
+      text-decoration-color: #c2956b;
+      text-decoration-thickness: 2px;
+    }
+
+/* === stack === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.09) 0%, transparent 65%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+
+    .stack-card .stack-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px dashed rgba(24,24,27,0.15);
+      font-size: 0.95rem;
+    }
+    .stack-card .stack-item:last-child { border-bottom: none; }
+    .stack-card .stack-item .material-symbols-outlined {
+      color: #c2956b;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .valor-total {
+      text-decoration: line-through;
+      text-decoration-color: #c2956b;
+      text-decoration-thickness: 2px;
+    }
+
+    .stack-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stack-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+
+/* === suporte === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .suporte-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .suporte-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .suporte-card:hover .icon-circle {
+      background-color: #c2956b;
+    }
+    .suporte-card:hover .icon-circle .material-symbols-outlined {
+      color: #fafafa;
+    }
+    .icon-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.25s ease;
+    }
+
+/* === garantia === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(194,149,107,0.09) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+
+    .selo {
+      width: 220px;
+      height: 220px;
+      border-radius: 9999px;
+      background: #fafafa;
+      border: 2.5px solid #18181b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(194,149,107,0.15);
+    }
+    .selo::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 9999px;
+      border: 1.5px dashed #c2956b;
+    }
+    .selo-dias {
+      font-size: 3.8rem;
+      font-weight: 800;
+      line-height: 1;
+      color: #18181b;
+    }
+    .selo-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c2956b;
+      margin-top: 6px;
+    }
+    .selo-icon {
+      position: absolute;
+      top: -22px;
+      background: #c2956b;
+      width: 44px;
+      height: 44px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #18181b;
+    }
+    .selo-icon .material-symbols-outlined {
+      color: #fafafa;
+      font-size: 24px;
+    }
+
+/* === autoridade === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+    .fade-up-delay-4 { transition-delay: 0.4s; }
+
+    .foto-autora {
+      aspect-ratio: 4/5;
+      background: linear-gradient(135deg, #e6d2ba 0%, #c2956b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+    }
+    .foto-autora img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+      filter: sepia(0.15) saturate(0.92);
+    }
+
+    .marco-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .marco-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .marco-numero {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #c2956b;
+      line-height: 1;
+    }
+    .marco-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: rgba(24,24,27,0.6);
+      margin-top: 6px;
+    }
+
+/* === faq === */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #fafafa; color: #18181b; -webkit-font-smoothing: antialiased; }
+
+    .flat-border { border: 1.5px solid #18181b; }
+
+    .warm-line {
+      width: 48px;
+      height: 2px;
+      background-color: #c2956b;
+    }
+
+    /* Accordion */
+    .faq-item { transition: background 0.3s ease; }
+    .faq-item:hover { background: #f0f0f2; }
+
+    .faq-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #18181b;
+      letter-spacing: -0.01em;
+      gap: 16px;
+    }
+
+    .faq-trigger .material-symbols-outlined {
+      font-size: 22px;
+      color: #c2956b;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-trigger .material-symbols-outlined {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 560px;
+    }
+
+    .faq-answer-inner {
+      padding: 0 24px 20px;
+      font-size: 0.9375rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(24, 24, 27, 0.6);
+    }
+
+    /* fadeUp */
+    .fadeUp {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fadeUp.visible { opacity: 1; transform: translateY(0); }
+    .fadeUp-delay-1 { transition-delay: 0.1s; }
+    .fadeUp-delay-2 { transition-delay: 0.2s; }
+
+/* === oferta === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.09) 0%, transparent 65%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+
+    .oferta-card .stack-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px dashed rgba(24,24,27,0.15);
+      font-size: 0.95rem;
+    }
+    .oferta-card .stack-item:last-child { border-bottom: none; }
+    .oferta-card .stack-item .material-symbols-outlined {
+      color: #c2956b;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+    .oferta-card .valor-total {
+      text-decoration: line-through;
+      text-decoration-color: #c2956b;
+      text-decoration-thickness: 2px;
+    }
+
+    #oferta .cta-btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #c2956b;
+      color: #fafafa;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 20px 40px;
+      border: 1.5px solid #18181b;
+      border-radius: 0;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+    #oferta .cta-btn:hover {
+      background: #b0844f;
+      transform: translateY(-2px);
+    }
+    #oferta .cta-btn .material-symbols-outlined {
+      font-size: 22px;
+      transition: transform 0.25s ease;
+    }
+    #oferta .cta-btn:hover .material-symbols-outlined { transform: translateX(4px); }
+  </style>
+</head>
+<body class="text-ink font-sans antialiased selection:bg-ink selection:text-base min-h-screen flex flex-col">
+
+<div class="tpl-hero-flat">
+<header class="w-full border-b border-accent/60 bg-base/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-center items-center">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">Planilhas<span class="text-warm">Pro</span></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-16 md:py-24 flex-grow flex items-center">
+
+        <section class="grid md:grid-cols-12 gap-12 lg:gap-20 items-center w-full">
+
+            <div class="md:col-span-5 flex flex-col gap-6">
+
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.08] tracking-tighter text-ink animate-in animate-in-delay-2">
+                    O faturamento sobe e o número no Excel não acompanha no mesmo ritmo.
+                </h1>
+
+                <p class="text-lg text-gray-500 max-w-lg leading-relaxed font-light animate-in animate-in-delay-3">
+                    Quando o controle vive em planilhas soltas e modelos genéricos, a saída é padronizar a gestão com modelos prontos para usar, no ritmo de quem ainda faz venda, entrega e caixa no mesmo dia.
+                </p>
+
+                <ul class="flex flex-col gap-3.5 my-2 animate-in animate-in-delay-4">
+                    <li class="flex items-center gap-3 check-item">
+                        <span class="w-5 h-5 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-white text-sm">check</span>
+                        </span>
+                        <span class="text-ink font-medium text-[15px]">Fechamento de mês sem herói na equipe: modelo já desenhado para repetir a lógica</span>
+                    </li>
+                    <li class="flex items-center gap-3 check-item">
+                        <span class="w-5 h-5 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-white text-sm">check</span>
+                        </span>
+                        <span class="text-ink font-medium text-[15px]">Mesmo padrão mês a mês para cruzar resultado e falar com sócio ou contador</span>
+                    </li>
+                    <li class="flex items-center gap-3 check-item">
+                        <span class="w-5 h-5 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-white text-sm">check</span>
+                        </span>
+                        <span class="text-ink font-medium text-[15px]">Pacotes para MEI e pequeno negócio com vídeo no clique certo</span>
+                    </li>
+                </ul>
+
+                <div class="flex flex-col gap-3 animate-in animate-in-delay-5">
+                    <button type="button" class="flat-border bg-ink text-white w-fit px-8 py-4 uppercase tracking-widest text-sm font-bold cta-button flex items-center gap-3" onclick="document.getElementById('oferta').scrollIntoView({behavior:'smooth'})">
+                        Ver como padronizar sem começar do zero
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+                    <span class="text-xs text-gray-400 font-light ml-1">Acesso à área de membros após confirmação do pagamento</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-7 w-full animate-in animate-in-delay-4">
+                <div class="video-wrapper">
+                    <div class="relative w-full aspect-video flat-border bg-ink z-10">
+                        <iframe
+                            class="absolute top-0 left-0 w-full h-full"
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentação Planilhas Pro"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mt-6 ml-1">
+                    <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                        <span class="material-symbols-outlined text-sm">play_circle</span>
+                        Assista a aula gratuita
+                    </div>
+                    <div class="w-px h-3 bg-accent"></div>
+                    <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                        <span class="material-symbols-outlined text-sm">timer</span>
+                        15 minutos
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<div class="tpl-flat-dor">
+<main class="flex-grow">
+
+        <section class="max-w-5xl mx-auto px-6 py-20 md:py-28">
+
+            <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+                <div class="warm-line mx-auto mb-6 animate-in animate-in-delay-1"></div>
+
+                <h2 class="text-3xl sm:text-4xl md:text-[2.75rem] font-extrabold leading-[1.12] tracking-tighter text-ink animate-in animate-in-delay-2">
+                    O negócio gira, mas o controle ainda parece improviso.
+                </h2>
+
+                <p class="text-lg text-gray-500 font-light leading-relaxed mt-6 animate-in animate-in-delay-3">
+                    Se alguma dessas cenas parece familiar, o gargalo raramente é falta de vontade. É falta de padrão único entre caixa, venda e operação.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-6 md:gap-8">
+
+                <div class="pain-card flat-border bg-white p-7 md:p-8 flex flex-col gap-5 animate-in animate-in-delay-3">
+                    <div class="pain-icon-wrap w-12 h-12 rounded-full flat-border flex items-center justify-center shrink-0 transition-all duration-300">
+                        <span class="material-symbols-outlined text-ink text-xl transition-colors duration-300">schedule</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold tracking-tight leading-snug mb-2">Fechamento de mês vira correria</h3>
+                        <p class="text-[15px] text-gray-500 font-light leading-relaxed">
+                            Você junta número em cima da hora porque ninguém sabe qual aba é a oficial. O contador ou o sócio pede um dado e você volta para o improviso.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pain-card flat-border bg-white p-7 md:p-8 flex flex-col gap-5 animate-in animate-in-delay-4">
+                    <div class="pain-icon-wrap w-12 h-12 rounded-full flat-border flex items-center justify-center shrink-0 transition-all duration-300">
+                        <span class="material-symbols-outlined text-ink text-xl transition-colors duration-300">trending_down</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold tracking-tight leading-snug mb-2">Três planilhas, três verdades</h3>
+                        <p class="text-[15px] text-gray-500 font-light leading-relaxed">
+                            Uma versão no computador, outra no drive, outra no WhatsApp. Cada um preenche do jeito dele e o total não fecha.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pain-card flat-border bg-white p-7 md:p-8 flex flex-col gap-5 animate-in animate-in-delay-5">
+                    <div class="pain-icon-wrap w-12 h-12 rounded-full flat-border flex items-center justify-center shrink-0 transition-all duration-300">
+                        <span class="material-symbols-outlined text-ink text-xl transition-colors duration-300">inventory_2</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold tracking-tight leading-snug mb-2">Grátis que resolve um pedaço</h3>
+                        <p class="text-[15px] text-gray-500 font-light leading-relaxed">
+                            Planilha de banco ou blog até ajuda em um recorte. Só que ela não conversa com venda, meta e rotina no mesmo padrão.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pain-card flat-border bg-white p-7 md:p-8 flex flex-col gap-5 animate-in animate-in-delay-6">
+                    <div class="pain-icon-wrap w-12 h-12 rounded-full flat-border flex items-center justify-center shrink-0 transition-all duration-300">
+                        <span class="material-symbols-outlined text-ink text-xl transition-colors duration-300">heart_broken</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold tracking-tight leading-snug mb-2">Medo de mexer e quebrar tudo</h3>
+                        <p class="text-[15px] text-gray-500 font-light leading-relaxed">
+                            Toda alteração vira aposta. Aí você adia, e o mês fecha no susto de novo.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-14 md:mt-16 animate-in animate-in-delay-6">
+                <p class="text-base text-gray-400 font-light leading-relaxed max-w-lg mx-auto">
+                    O que falta não é mais uma planilha solta. É um padrão que aguente o ritmo do seu negócio.
+                </p>
+                <div class="warm-line mx-auto mt-6"></div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<div class="tpl-flat-paliativo">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Headline -->
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Caminhos que parecem lógicos.
+          <span class="text-gray-400">E ainda assim não viram padrão.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          A maioria dos MEIs e pequenos negócios passa por isso antes de encaixar modelo, vídeo e rotina no mesmo lugar.
+        </p>
+      </div>
+
+      <!-- Cards Grid 2x2 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Card 1 -->
+        <div class="paliativo-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/phone/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Planilha grátis de banco ou fintech</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Resolve um recorte (fluxo ou orçamento), mas não amarra venda, meta e operação no mesmo vocabulário. Você continua com buraco entre áreas.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paliativo-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/market/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Modelo genérico de blog ou grupo</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Baixou, duplicou, virou três versões “oficiais”. Ninguém sabe qual usar. O retrabalho volta no mês seguinte.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paliativo-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/friends/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Super pack barato com milhares de arquivos</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Volume não virou uso. Você abriu quase nada e ficou com desconfiança na qualidade. Sem método, arquivo demais vira ruído.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paliativo-card fade-up fade-up-delay-4 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/coins/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Curso longo de Excel</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Certificado não fecha mês. O que faltava era modelo pronto para o seu negócio e vídeo no ponto da dúvida, não aula infinita.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Bridge -->
+      <div class="fade-up mt-14 md:mt-20 text-center">
+        <p class="text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Nenhuma dessas saídas segura porque nenhuma cria padrão único entre áreas.
+          <span class="text-warm font-semibold">O que falta é sequência repetível com modelo pronto.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-provas">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Depoimentos de modelo
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Substitua por depoimentos reais com autorização antes de rodar anúncio pago.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=47" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Marina S.</p>
+              <p class="text-xs text-gray-500">MEI de serviços</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            Antes eu misturava Pix com gasto pessoal no mesmo arquivo. Hoje eu fecho a semana com um painel que eu consigo explicar em cinco minutos.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=32" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Roberto L.</p>
+              <p class="text-xs text-gray-500">Pequeno comércio</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            A gente tinha três planilhas de venda e nenhuma batia com o caixa. Padronizar cortou a reunião de vamos alinhar o Excel.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=49" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Fernanda K.</p>
+              <p class="text-xs text-gray-500">Freelancer</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            Eu não queria mais curso. Queria modelo que rodasse. Os vídeos curtos me poupam ir ao YouTube genérico.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<section class="section-cta tpl-cta-flat py-24 sm:py-32 px-6">
+    <div class="max-w-xl mx-auto text-center">
+
+      <h2 class="fadeUp font-inter font-700 text-ink text-2xl sm:text-3xl leading-snug tracking-tight">
+        Se você reconhece o caos de versões,<br>o próximo passo é ver o método em quatro passos.
+      </h2>
+
+      <p class="fadeUp fadeUp-delay-1 font-inter font-light text-ink/70 text-base sm:text-lg leading-relaxed mt-6 max-w-md mx-auto">
+        A biblioteca Planilhas Pro organiza a entrega em modelo pronto, vídeo de uso e melhorias quando o negócio muda.
+      </p>
+
+      <div class="fadeUp fadeUp-delay-2 mt-10">
+        <p class="text-3xl sm:text-4xl font-extrabold text-ink mb-1">12x de R$&nbsp;16,42</p>
+        <p class="text-sm text-ink/50">ou R$&nbsp;197,00 à vista</p>
+      </div>
+
+      <div class="fadeUp fadeUp-delay-3 mt-8">
+        <button type="button" class="cta-btn" onclick="document.getElementById('oferta').scrollIntoView({behavior:'smooth'})">
+          Quero ver o método e a oferta
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+
+      <p class="fadeUp fadeUp-delay-3 font-normal text-ink/40 text-sm mt-5 tracking-tight">
+        <span class="material-symbols-outlined align-middle text-base mr-1" style="font-size:16px;">lock</span>
+        Acesso imediato · Garantia de 7 dias
+      </p>
+
+    </div>
+  </section>
+
+<div class="tpl-flat-metodo">
+<section class="section-metodo py-24 sm:py-32 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Headline -->
+      <div class="text-center max-w-2xl mx-auto mb-6">
+        <h2 class="fadeUp font-inter font-700 text-ink text-2xl sm:text-3xl leading-snug tracking-tight">
+          Método Modelo Pronto em 4 Passos
+        </h2>
+      </div>
+
+      <!-- Philosophy paragraph -->
+      <div class="text-center max-w-lg mx-auto mb-16">
+        <p class="fadeUp fadeUp-delay-1 font-inter font-light text-ink/70 text-base sm:text-lg leading-relaxed">
+          <em>Planilhas Pro</em> é a biblioteca onde cada pacote segue a mesma sequência: escolher, aplicar, aprender com vídeo e evoluir com melhorias. Repetir a sequência reduz variância entre pessoas e abas.
+        </p>
+      </div>
+
+      <!-- 3-column grid with connectors -->
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-6 md:gap-0 items-stretch">
+
+        <!-- Step 1 -->
+        <div class="fadeUp fadeUp-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur overflow-hidden flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1601985705806-5b9a71f6004f?w=600&h=400&fit=crop&q=80"
+            alt="Planilha de gestão aberta no notebook"
+            class="step-img"
+            loading="lazy"
+          >
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="step-number">01</span>
+              <span class="material-symbols-outlined text-warm" style="font-size:28px;">sell</span>
+            </div>
+            <h3 class="font-inter font-bold text-ink text-lg mb-3">Passo 1. Escolher o modelo do momento</h3>
+            <ul class="micro-list">
+              <li>Identifica o que está na frente: caixa, venda, meta ou operação</li>
+              <li>Puxa o pacote certo na biblioteca em vez de montar estrutura do zero</li>
+              <li>Menos tempo em formatação e mais tempo em dado real</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Connector 1→2 -->
+        <div class="connector hidden md:flex px-3">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+        <div class="connector flex md:hidden justify-center py-2">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="fadeUp fadeUp-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur overflow-hidden flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&h=400&fit=crop&q=80"
+            alt="Mãos digitando em planilha no computador"
+            class="step-img"
+            loading="lazy"
+          >
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="step-number">02</span>
+              <span class="material-symbols-outlined text-warm" style="font-size:28px;">storefront</span>
+            </div>
+            <h3 class="font-inter font-bold text-ink text-lg mb-3">Passo 2. Instalar e aplicar na rotina</h3>
+            <ul class="micro-list">
+              <li>Baixa e abre no Excel ou Planilhas Google</li>
+              <li>Preenche com dado real do negócio na sequência do arquivo</li>
+              <li>Reduz erro de fórmula básica e abas que não conversam</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Connector 2→3 -->
+        <div class="connector hidden md:flex px-3">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+        <div class="connector flex md:hidden justify-center py-2">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="fadeUp fadeUp-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur overflow-hidden flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&q=80"
+            alt="Vídeo tutorial em tela ao lado da planilha"
+            class="step-img"
+            loading="lazy"
+          >
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="step-number">03</span>
+              <span class="material-symbols-outlined text-warm" style="font-size:28px;">favorite</span>
+            </div>
+            <h3 class="font-inter font-bold text-ink text-lg mb-3">Passos 3 e 4. Vídeos de uso e evolução</h3>
+            <ul class="micro-list">
+              <li>Vídeos curtos no clique certo para não travar na primeira dúvida</li>
+              <li>Melhorias e versões quando o negócio muda de mês para mês</li>
+              <li>Gestão padronizada que não obsoleta na primeira virada de escala</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-paraquem">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Para quem é e para quem não é
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Confira se o perfil bate com a rotina de gestão que a biblioteca cobre.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="list-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-8 md:p-10">
+          <p class="text-xs uppercase tracking-widest font-bold mb-6">Para quem é</p>
+
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined" style="font-size:16px;">check</span></span>
+            <span>É MEI, dono de pequeno negócio, freelancer ou gestor que acumula funções e usa Excel ou Planilhas Google em nível básico a intermediário</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined" style="font-size:16px;">check</span></span>
+            <span>Já sentiu que planilha grátis ou pack gigante não resolveram o encaixe com a operação</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined" style="font-size:16px;">check</span></span>
+            <span>Quer padronizar fechamento, metas e visão de caixa sem promessa de lucro mágico</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-yes"><span class="material-symbols-outlined" style="font-size:16px;">check</span></span>
+            <span>Aceita seguir vídeos de uso e colocar dado real na planilha</span>
+          </div>
+        </div>
+
+        <div class="list-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-8 md:p-10">
+          <p class="text-xs uppercase tracking-widest font-bold text-gray-400 mb-6">Para quem não é</p>
+
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined" style="font-size:16px;">close</span></span>
+            <span class="text-gray-400">Quer só mil arquivos por dez reais sem critério de uso</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined" style="font-size:16px;">close</span></span>
+            <span class="text-gray-400">Espera assessoria contábil ou jurídica no lugar de ferramenta</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined" style="font-size:16px;">close</span></span>
+            <span class="text-gray-400">Não pretende abrir planilha nem assistir vídeo de apoio</span>
+          </div>
+          <div class="check-row">
+            <span class="icon-no"><span class="material-symbols-outlined" style="font-size:16px;">close</span></span>
+            <span class="text-gray-400">Busca promessa de resultado fiscal garantido ou lucro certo só por comprar template</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-entregaveis">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          O que vem na compra
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Valores de referência para ancorar percepção. Ajuste se o seu pacote mudar.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="entrega-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box w-14 h-14 rounded-xl flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:28px;">dashboard</span>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-semibold mb-2 leading-snug">Biblioteca Planilhas Pro</h3>
+              <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+                Pacotes de fluxo e caixa, vendas e metas e rotina operacional. Modelos editáveis alinhados ao método. Valor de referência: R$ 697,00.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entrega-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box w-14 h-14 rounded-xl flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:28px;">play_circle</span>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-semibold mb-2 leading-snug">Vídeos de uso por pacote</h3>
+              <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+                Passo a passo no arquivo certo. Valor de referência: R$ 397,00.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entrega-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box w-14 h-14 rounded-xl flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:28px;">update</span>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-semibold mb-2 leading-snug">Melhorias e atualizações</h3>
+              <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+                Material em ciclo contínuo conforme calendário do produtor. Valor de referência: R$ 297,00.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entrega-card fade-up fade-up-delay-4 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box w-14 h-14 rounded-xl flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:28px;">support_agent</span>
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-semibold mb-2 leading-snug">Canal de suporte com o produtor</h3>
+              <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+                E-mail ou WhatsApp business, política de resposta na área de membros. Valor de referência: R$ 197,00.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-bonus">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Três bônus na mesma compra
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Complementos para fechar mês, precificar serviço e organizar envio ao contador.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bonus-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm overflow-hidden">
+          <div class="bonus-image flat-border border-l-0 border-r-0 border-t-0">
+            <span class="material-symbols-outlined text-ink" style="font-size: 72px;">auto_stories</span>
+          </div>
+          <div class="p-7 md:p-8">
+            <span class="bonus-badge mb-4">Bônus 1</span>
+            <h3 class="text-xl font-bold mt-4 mb-3 leading-snug">Checklist Fechamento em 30 minutos</h3>
+            <p class="text-sm font-light text-gray-500 leading-relaxed mb-5">
+              Lista do que conferir antes de cruzar com contador ou sócio.
+            </p>
+            <p class="text-sm font-semibold">
+              Valor individual: <span class="valor-riscado text-gray-500">R$ 97,00</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="bonus-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm overflow-hidden">
+          <div class="bonus-image flat-border border-l-0 border-r-0 border-t-0">
+            <span class="material-symbols-outlined text-ink" style="font-size: 72px;">groups</span>
+          </div>
+          <div class="p-7 md:p-8">
+            <span class="bonus-badge mb-4">Bônus 2</span>
+            <h3 class="text-xl font-bold mt-4 mb-3 leading-snug">Planilha Precificação rápida de serviço</h3>
+            <p class="text-sm font-light text-gray-500 leading-relaxed mb-5">
+              Para quem vende hora ou pacote e precisa de número mínimo antes de passar orçamento.
+            </p>
+            <p class="text-sm font-semibold">
+              Valor individual: <span class="valor-riscado text-gray-500">R$ 147,00</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="bonus-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm overflow-hidden">
+          <div class="bonus-image flat-border border-l-0 border-r-0 border-t-0">
+            <span class="material-symbols-outlined text-ink" style="font-size: 72px;">trending_up</span>
+          </div>
+          <div class="p-7 md:p-8">
+            <span class="bonus-badge mb-4">Bônus 3</span>
+            <h3 class="text-xl font-bold mt-4 mb-3 leading-snug">Modelo Pasta do contador em uma página</h3>
+            <p class="text-sm font-light text-gray-500 leading-relaxed mb-5">
+              O que mandar pronto para reduzir ida e volta.
+            </p>
+            <p class="text-sm font-semibold">
+              Valor individual: <span class="valor-riscado text-gray-500">R$ 77,00</span>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fade-up mt-14 text-center">
+        <p class="text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Os três bônus saem com a biblioteca. <span class="text-warm font-semibold">Soma de R$ 321,00 em referência de extras.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-stack">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="fade-up text-center mb-12">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Stack de valor de referência
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Itens separados para ancorar percepção antes do investimento de hoje.
+        </p>
+      </div>
+
+      <div class="stack-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-8 md:p-10">
+
+        <p class="text-xs uppercase tracking-widest text-warm font-bold mb-5">O que está incluso</p>
+
+        <div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Biblioteca Planilhas Pro (pacotes de gestão alinhados ao método)</span>
+            <span class="font-semibold">R$ 697,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Vídeos de uso por pacote</span>
+            <span class="font-semibold">R$ 397,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Melhorias e atualizações</span>
+            <span class="font-semibold">R$ 297,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Suporte direto com o produtor</span>
+            <span class="font-semibold">R$ 197,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Bônus (checklist, precificação, pasta contador)</span>
+            <span class="font-semibold">R$ 321,00</span>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t-2 border-ink flex justify-between items-center">
+          <span class="text-sm font-medium text-gray-500">Total ancorado</span>
+          <span class="valor-total text-2xl font-extrabold text-gray-400">R$ 1.909,00</span>
+        </div>
+
+        <div class="mt-6 text-center">
+          <p class="text-sm font-light text-gray-500">Investimento hoje: R$ 197,00 à vista ou 12x de R$ 16,42 (sujeito à taxa da plataforma, se houver).</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-provas">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Depoimentos de modelo
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Substitua por depoimentos reais com autorização antes de rodar anúncio pago.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=47" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Marina S.</p>
+              <p class="text-xs text-gray-500">MEI de serviços</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            Antes eu misturava Pix com gasto pessoal no mesmo arquivo. Hoje eu fecho a semana com um painel que eu consigo explicar em cinco minutos.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=32" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Roberto L.</p>
+              <p class="text-xs text-gray-500">Pequeno comércio</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            A gente tinha três planilhas de venda e nenhuma batia com o caixa. Padronizar cortou a reunião de vamos alinhar o Excel.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=49" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Fernanda K.</p>
+              <p class="text-xs text-gray-500">Freelancer</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            Eu não queria mais curso. Queria modelo que rodasse. Os vídeos curtos me poupam ir ao YouTube genérico.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-suporte">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Depois da compra
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Acesso à área de membros, download e canal de dúvida com prazo claro.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="suporte-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="icon-circle flat-border mb-5">
+            <span class="material-symbols-outlined text-ink" style="font-size:28px;">folder_open</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-semibold mb-3 leading-snug">Área de membros e arquivos</h3>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Link de download e lista de arquivos da versão atual na página de entrega. Você sabe o que veio na compra sem surpresa de nome genérico.
+          </p>
+        </div>
+
+        <div class="suporte-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="icon-circle flat-border mb-5">
+            <span class="material-symbols-outlined text-ink" style="font-size:28px;">support_agent</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-semibold mb-3 leading-snug">Suporte com o produtor</h3>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Dúvidas de uso: e-mail ou WhatsApp business, endereço na área do aluno. Prazo de resposta em até 48 horas úteis, salvo feriados ou manutenção avisada.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="fade-up mt-14 text-center">
+        <p class="text-base md:text-lg font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          Se a venda passar por marketplace, parte do acesso é gerida pela plataforma. Mesmo assim o contato do produtor fica visível para você não depender só de robô genérico.
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-garantia">
+<section class="w-full py-20 md:py-32 px-6">
+    <div class="max-w-4xl mx-auto">
+
+      <div class="flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-10 md:p-16">
+
+        <div class="fade-up flex justify-center mb-10">
+          <div class="selo">
+            <div class="selo-icon">
+              <span class="material-symbols-outlined">verified</span>
+            </div>
+            <p class="selo-dias">7</p>
+            <p class="selo-label">Dias de Garantia</p>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <div class="fade-up fade-up-delay-1">
+            <div class="warm-line mx-auto mb-6"></div>
+            <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+              Garantia incondicional de 7 dias
+            </h2>
+          </div>
+
+          <div class="fade-up fade-up-delay-2 mt-8 max-w-xl mx-auto space-y-5">
+            <p class="text-base md:text-lg font-light text-gray-600 leading-relaxed">
+              Garantia incondicional de 7 dias, conforme regra mínima de compra online no Brasil. Se o material não fizer sentido para o seu caso, você solicita reembolso dentro do prazo pela própria plataforma de pagamento, com o código da transação e o e-mail da compra.
+            </p>
+            <p class="text-base md:text-lg font-light text-gray-600 leading-relaxed">
+              Você testa a organização dos arquivos e os vídeos de uso. Se não for o que você precisa, pede estorno dentro do prazo, sem letra miúda escondida.
+            </p>
+          </div>
+
+          <div class="fade-up fade-up-delay-3 mt-10 flex flex-wrap justify-center gap-6">
+            <div class="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <span class="material-symbols-outlined text-warm" style="font-size:20px;">check_circle</span>
+              Prazo pela plataforma
+            </div>
+            <div class="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <span class="material-symbols-outlined text-warm" style="font-size:20px;">check_circle</span>
+              Política visível no checkout
+            </div>
+            <div class="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <span class="material-symbols-outlined text-warm" style="font-size:20px;">check_circle</span>
+              7 dias para avaliar
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-autoridade">
+<section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Autoridade do criador
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+
+        <div class="fade-up fade-up-delay-1 md:col-span-5">
+          <div class="flat-border rounded-2xl p-2 bg-white/70 backdrop-blur-sm">
+            <div class="foto-autora">
+              <img src="https://i.pravatar.cc/500?img=48" alt="Foto do criador">
+            </div>
+          </div>
+        </div>
+
+        <div class="fade-up fade-up-delay-2 md:col-span-7">
+          <p class="text-xs uppercase tracking-widest text-warm font-bold mb-3">Criador das Planilhas Pro</p>
+          <h3 class="text-2xl md:text-3xl font-extrabold leading-tight mb-6">
+            [Seu nome]
+          </h3>
+
+          <div class="space-y-4 text-base font-light text-gray-600 leading-relaxed">
+            <p>
+              Inclua de duas a quatro linhas reais: tempo de mercado, nicho que atendeu, por que passou a vender modelos, resultado próprio ou de clientes com permissão.
+            </p>
+            <p class="text-sm text-warm italic">
+              Esta seção está com placeholder. Substitua por biografia verdadeira antes de divulgar anúncios pagos.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 md:mt-20">
+
+        <div class="marco-card fade-up fade-up-delay-1 flat-border rounded-xl bg-white/70 backdrop-blur-sm p-6 text-center">
+          <p class="marco-numero text-xl md:text-2xl">A definir</p>
+          <p class="marco-label">anos no nicho (opcional)</p>
+        </div>
+
+        <div class="marco-card fade-up fade-up-delay-2 flat-border rounded-xl bg-white/70 backdrop-blur-sm p-6 text-center">
+          <p class="marco-numero text-xl md:text-2xl">A definir</p>
+          <p class="marco-label">clientes atendidos (opcional)</p>
+        </div>
+
+        <div class="marco-card fade-up fade-up-delay-3 flat-border rounded-xl bg-white/70 backdrop-blur-sm p-6 text-center">
+          <p class="marco-numero text-xl md:text-2xl">A definir</p>
+          <p class="marco-label">prova social (opcional)</p>
+        </div>
+
+        <div class="marco-card fade-up fade-up-delay-4 flat-border rounded-xl bg-white/70 backdrop-blur-sm p-6 text-center">
+          <p class="marco-numero text-xl md:text-2xl">A definir</p>
+          <p class="marco-label">marco de autoridade (opcional)</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-faq">
+<section class="py-24 sm:py-32 px-6">
+    <div class="max-w-2xl mx-auto">
+
+      <div class="text-center mb-14 fadeUp">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="font-inter font-800 text-ink text-3xl sm:text-4xl leading-tight tracking-tight">
+          Perguntas frequentes
+        </h2>
+        <p class="font-inter font-light text-ink/50 text-base sm:text-lg leading-relaxed mt-4 max-w-lg mx-auto">
+          Se a sua dúvida está aqui, é porque dezenas de pessoas perguntaram a mesma coisa antes de entrar.
+        </p>
+      </div>
+
+      <div class="fadeUp fadeUp-delay-1 space-y-0">
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Por que pagar se existe planilha grátis no banco?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Grátis resolve um recorte. Aqui o foco é pacote integrado ao método, com o mesmo padrão entre áreas e vídeo no ponto da dúvida.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Funciona no Excel antigo ou só no 365?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Informe na área de membros a versão mínima testada. Se você usa Planilhas Google, siga o guia de importação quando existir.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>E se eu travar no meio?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Use o vídeo do pacote no trecho correspondente. Se ainda travar, abra o suporte pelo canal indicado na área do aluno.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Como sei o que veio na compra?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Lista fechada de arquivos e versão (ex.: v1.2) na página de entrega. Sem surpresa de arquivo genérico com nome diferente do anunciado.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Compra segura?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Pagamento por plataforma conhecida (Hotmart, Kiwify ou a que você usar), com e-mail de confirmação e política de reembolso visível.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Isso substitui contador?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Não. É ferramenta de organização. Decisão fiscal e tributária continua com profissional habilitado quando for o caso.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border border-b-0">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Posso parcelar?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Sim, quando a plataforma oferecer parcelamento. O valor por parcela segue a regra da operadora.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Atualização inclui novos arquivos para sempre?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              As melhorias seguem o calendário anunciado na área do aluno (ex.: ciclo de atualização por trimestre). Leia a política específica na página do produto na hora da compra.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fadeUp fadeUp-delay-2 text-center mt-12">
+        <p class="text-ink/40 text-sm font-light">
+          Outra dúvida? Use o canal indicado na área do aluno após a compra.
+        </p>
+        <div class="warm-line mx-auto mt-6"></div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-flat-oferta">
+<section id="oferta" class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="fade-up text-center mb-12">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Oferta final
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Biblioteca Planilhas Pro com pacotes alinhados ao Método Modelo Pronto em 4 Passos, vídeos, melhorias, suporte e os três bônus. Valor de referência total acima de mil reais em itens separados.
+        </p>
+      </div>
+
+      <div class="fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-8 md:p-10">
+
+        <p class="text-xs uppercase tracking-widest text-warm font-bold mb-5">O que está incluso</p>
+
+        <div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Biblioteca Planilhas Pro</span>
+            <span class="font-semibold">R$ 697,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Vídeos de uso por pacote</span>
+            <span class="font-semibold">R$ 397,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Melhorias e atualizações</span>
+            <span class="font-semibold">R$ 297,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Suporte direto com o produtor</span>
+            <span class="font-semibold">R$ 197,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Três bônus (checklist, precificação, pasta contador)</span>
+            <span class="font-semibold">R$ 321,00</span>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t-2 border-ink">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-medium text-gray-500">Total ancorado (referência)</span>
+            <span class="valor-total text-lg font-semibold text-gray-500">R$ 1.909,00</span>
+          </div>
+          <div class="text-center mt-6">
+            <p class="text-sm font-medium text-gray-500">Investimento hoje</p>
+            <p class="text-5xl md:text-6xl font-extrabold mt-2 leading-none">12x R$&nbsp;16,42</p>
+            <p class="text-sm text-gray-500 mt-2">ou R$&nbsp;197,00 à vista (conforme plataforma)</p>
+          </div>
+
+          <p class="text-xs text-center text-gray-500 mt-4 max-w-lg mx-auto leading-relaxed">
+            Sem escassez artificial inventada. Se houver data de reajuste real (ex.: virada de versão), mencione com transparência na página do produto.
+          </p>
+
+          <div class="mt-8">
+            <a class="cta-btn" href="https://COLOCAR_LINK_HOTMART_OU_KIWIFY">
+              Quero entrar na Planilhas Pro agora
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+          </div>
+
+          <p class="text-xs text-center text-gray-400 mt-6 max-w-xl mx-auto leading-relaxed">
+            Ao continuar, você concorda com os termos da plataforma de pagamento e com a política de privacidade do site. Dados tratados conforme LGPD na medida em que você preencher formulários ou entrar em lista.
+          </p>
+
+          <div class="mt-6 flex flex-wrap justify-center gap-4 md:gap-6 text-xs font-medium text-gray-500">
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">lock</span>
+              Compra 100% segura
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">credit_card</span>
+              Cartão, pix ou boleto
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">shield</span>
+              Garantia de 7 dias
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">bolt</span>
+              Acesso imediato
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+  <footer class="border-t border-accent/60 py-10 px-6 text-center" style="background:#fafafa;">
+    <p class="text-sm text-gray-500">SuaMarca &copy; 2026. Todos os direitos reservados.</p>
+    <p class="text-xs text-gray-400 mt-2">
+      <a href="#" class="underline hover:text-ink/60">Termos de uso</a>
+      <span class="mx-2">&middot;</span>
+      <a href="#" class="underline hover:text-ink/60">Política de privacidade</a>
+    </p>
+  </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fadeUpObs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.fade-up, .fadeUp').forEach((el) => fadeUpObs.observe(el));
+});
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+</script>
+
+
+</body>
+</html>

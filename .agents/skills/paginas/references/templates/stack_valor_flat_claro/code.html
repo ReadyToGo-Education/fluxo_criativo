@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack de Valor. Flat Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#fafafa',
+            surface: '#f0f0f2',
+            ink: '#18181b',
+            accent: '#d4d4d8',
+            warm: '#c2956b',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.09) 0%, transparent 65%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+
+    .stack-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px dashed rgba(24,24,27,0.15);
+      font-size: 0.95rem;
+    }
+    .stack-item:last-child { border-bottom: none; }
+    .stack-item .material-symbols-outlined {
+      color: #c2956b;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .valor-total {
+      text-decoration: line-through;
+      text-decoration-color: #c2956b;
+      text-decoration-thickness: 2px;
+    }
+
+    .stack-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stack-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+  </style>
+</head>
+<body class="text-ink font-sans antialiased">
+
+  <section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="fade-up text-center mb-12">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Stack de valor de referência
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Itens separados para ancorar percepção antes do investimento de hoje.
+        </p>
+      </div>
+
+      <div class="stack-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-8 md:p-10">
+
+        <p class="text-xs uppercase tracking-widest text-warm font-bold mb-5">O que está incluso</p>
+
+        <div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Biblioteca Planilhas Pro (pacotes de gestão alinhados ao método)</span>
+            <span class="font-semibold">R$ 697,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Vídeos de uso por pacote</span>
+            <span class="font-semibold">R$ 397,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Melhorias e atualizações</span>
+            <span class="font-semibold">R$ 297,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Suporte direto com o produtor</span>
+            <span class="font-semibold">R$ 197,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Bônus (checklist, precificação, pasta contador)</span>
+            <span class="font-semibold">R$ 321,00</span>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t-2 border-ink flex justify-between items-center">
+          <span class="text-sm font-medium text-gray-500">Total ancorado</span>
+          <span class="valor-total text-2xl font-extrabold text-gray-400">R$ 1.909,00</span>
+        </div>
+
+        <div class="mt-6 text-center">
+          <p class="text-sm font-light text-gray-500">Investimento hoje: R$ 197,00 à vista ou 12x de R$ 16,42 (sujeito à taxa da plataforma, se houver).</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>
