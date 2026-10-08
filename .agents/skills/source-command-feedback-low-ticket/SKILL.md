@@ -233,7 +233,7 @@ Feedback completo entregue. O que quer fazer agora?
 
 ### Opção 1. Copy corrigida
 
-Reescreva a copy aplicando as correções, seção por seção, na ordem recomendada da régua, mantendo a abertura escolhida (ou a recomendada, se o mentorado aceitar a troca). Mantenha os depoimentos reais que a página já tem; se ela não tiver nenhum, use os provisórios da régua e entregue a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)". Se faltar a seção de quem criou o produto e o resumo não tiver os marcos reais, faça a pergunta do item 2 da seção "Como esta régua funciona no projeto", na skill, antes de reescrever. Siga as regras da ETAPA 2 da régua e a rotina de auto-revisão de copy do CLAUDE.md, com a exceção da régua. Se houver estudos, entregue no fim a lista "PARA VOCÊ CONFERIR (não vai na página)".
+Reescreva a copy aplicando as correções, seção por seção, na ordem recomendada da régua, mantendo a abertura escolhida (ou a recomendada, se o mentorado aceitar a troca). Ao reescrever os bullets, se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (gerado pelo `/copy-bullets`), comece por ele, pela tabela do item 1 da skill. Mantenha os depoimentos reais que a página já tem; se ela não tiver nenhum, use os provisórios da régua e entregue a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)". Se faltar a seção de quem criou o produto e o resumo não tiver os marcos reais, faça a pergunta do item 2 da seção "Como esta régua funciona no projeto", na skill, antes de reescrever. Siga as regras da ETAPA 2 da régua e a rotina de auto-revisão de copy do CLAUDE.md, com a exceção da régua. Se houver estudos, entregue no fim a lista "PARA VOCÊ CONFERIR (não vai na página)".
 
 Depois, pergunte:
 ```

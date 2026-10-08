@@ -197,7 +197,7 @@ Espelho visual em tempo real do trabalho do Claude no projeto. Cada um dos 7 age
 - `/produto-consumidor`. Obsoleto, redireciona para `/produto-concepcao`.
 
 ### Copy
-`/copy-pagina`, `/copy-anuncio`, `/copy-social`, `/copy-roteiro`, `/copy-variacao-post`, `/elementos-literarios`
+`/copy-pagina`, `/copy-anuncio`, `/copy-bullets`, `/copy-social`, `/copy-roteiro`, `/copy-variacao-post`, `/elementos-literarios`
 
 Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 blocos de checklist) antes de ser exibida ao usuário. Auto-revisão invisível.
 
