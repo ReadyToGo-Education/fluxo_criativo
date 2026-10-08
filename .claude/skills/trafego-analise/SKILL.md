@@ -7,12 +7,13 @@ description: >
   Criativos & Copy, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle &
   Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B. Aluno escolhe um output por vez, recebe
   análise completa pelo método VTSD com handoff para skill executora quando ação for necessária.
-  Lê dados via /trafego-insights (com cache local em arquivo .md). Use quando o aluno pedir
+  Lê dados em duas camadas: base pelos scripts Python da própria skill (com cache local) e
+  complemento por breakdown sob demanda em cada sub-skill. Use quando o aluno pedir
   análise narrada, ranking, comparativo, diagnóstico, mapa do funil, ou quiser ensinar tráfego
   pelo método.
 ---
 
-# Tráfego Análise. 9 Outputs Narrativos VTSD
+# Tráfego Análise. 10 Outputs Narrativos VTSD
 
 Análise narrada de campanhas Meta Ads pela lente da metodologia VTSD (Venda Todo Santo Dia, Leandro Ladeira). Cada métrica de tráfego é o termômetro de um elemento do método. O propósito é conectar dado → método → decisão, e entregar análise pedagógica que serve tanto para operar quanto para ensinar.
 
@@ -42,7 +43,7 @@ Ler `FB_AD_ACCOUNT_IDS` no `.env` (campo com múltiplas contas separadas por ví
 Construir a string `act_<id1>,act_<id2>,...` a partir de `FB_AD_ACCOUNT_IDS` e disparar:
 
 ```
-curl -s "https://graph.facebook.com/v21.0/?ids=act_1234567890,act_0987654321,act_1122334455,act_5566778899&fields=name&access_token=<TOKEN_DO_ENV>"
+curl -s "https://graph.facebook.com/v25.0/?ids=act_1234567890,act_0987654321,act_1122334455,act_5566778899&fields=name&access_token=<TOKEN_DO_ENV>"
 ```
 
 A resposta vem em JSON único:
@@ -383,18 +384,62 @@ Todo sub-skill entrega obrigatoriamente:
 
 ---
 
-## Fonte de Dados
+## Fonte de Dados. Arquitetura em duas camadas
 
-**Opção A. Via `/trafego-insights` (recomendado):**
-- Invocar `/trafego-insights` com escopo, período e breakdowns que o output exige.
-- A skill consulta cache local em `meus-produtos/{ativo}/trafego/insights/` antes da API.
-- Resultado é salvo no cache para próximas chamadas (mesma ou outras skills).
+Os dados chegam por duas camadas complementares. Elas não competem: a primeira traz o conjunto base de todo output, a segunda cobre o que é específico de cada um.
 
-**Opção B. Entrada manual:**
-- Solicitar CSV exportado do Gerenciador de Anúncios ou dados colados diretamente.
-- Confirmar período: últimos 7, 14 ou 30 dias.
+### Camada 1. Base, via scripts Python (obrigatória)
 
-Ao iniciar qualquer output: confirmar a fonte se houver ambiguidade.
+`scripts/trafego_fetch.py` seguido de `scripts/trafego_processar.py`, detalhados no Passo 4. Trazem a lista de campanhas com o filtro de status aplicado, as métricas do período, o comparativo semana contra semana, os orçamentos e o gasto do dia. Cache em `skill-analise/cache/`.
+
+**A base nunca é buscada por `curl` direto.** Os scripts resolvem cinco bugs conhecidos que reaparecem toda vez que alguém os contorna:
+
+| Bug | Como o script resolve |
+|---|---|
+| `UnicodeEncodeError` no Windows | `sys.stdout.buffer.write(...encode('utf-8'))` em vez de `print()` |
+| HTTP 400 por `landing_page_views` no topo | O campo vive dentro de `actions`, como `landing_page_view` |
+| Rate limit por chamadas repetidas | Um processo, chamadas sequenciais com retry e cache em disco |
+| `effective_status` rejeitado no `/insights` | O filtro é válido em `/campaigns` e propagado por lista de IDs |
+| Connect rate inflado | Usa `link_click` (outbound), não `clicks` (que inclui engajamento no post) |
+
+### Camada 2. Complemento por output (sob demanda)
+
+Breakdowns e endpoints que só um output precisa: demografia, geografia, horário, dispositivo, ad sets com problema de entrega, `review_feedback` de anúncios, orçamento por adset. São chamadas `GET` diretas, **uma por `Bash(curl ...)`**, definidas em cada sub-skill.
+
+Estas chamadas **complementam** a base, nunca a substituem. A tabela de parâmetros por output e a regra de deduplicação de conversões vivem no command `/trafego-analise`, Passo 4.
+
+### Entrada manual (fallback)
+
+Sem conexão Meta configurada, aceitar CSV exportado do Gerenciador ou dados colados. Confirmar o período antes de analisar.
+
+### Os dois caches, e a diferença entre eles
+
+| Cache | Quem escreve | Quem lê |
+|---|---|---|
+| `skill-analise/cache/` | `trafego_fetch.py` desta skill | Só a `/trafego-analise` |
+| `meus-produtos/{ativo}/trafego/insights/` | `/trafego-insights` | `/trafego-otimizar`, `/trafego-escalar` |
+
+São caches distintos, com donos distintos. Esta skill não lê nem escreve o cache do `/trafego-insights`.
+
+---
+
+## Regra obrigatória de deduplicação de conversões
+
+Vale para os 10 outputs, sem exceção. Violar esta regra duplica compras e receita em silêncio, e todo número derivado (ROAS, CPA, taxa de conversão do funil) sai errado junto, sem nenhum sinal de erro.
+
+O Meta retorna a **mesma** conversão em vários `action_type` dentro da mesma resposta. Somar os tipos de uma linha da tabela conta a mesma venda de 3 a 7 vezes.
+
+| Métrica | Tipo canônico a usar | Tipos a ignorar, são duplicatas |
+|---|---|---|
+| Compras (contagem) | `offsite_conversion.fb_pixel_purchase` | `purchase`, `omni_purchase`, `onsite_web_purchase`, `web_in_store_purchase`, `onsite_web_app_purchase`, `web_app_in_store_purchase`, `offsite_purchase_add_20_s_calls` |
+| Receita (valor, em `action_values`) | `offsite_conversion.fb_pixel_purchase` | todos os tipos da linha acima |
+| Leads (contagem) | `offsite_conversion.fb_pixel_lead` | `lead`, `onsite_web_lead`, `offsite_lead_add_20_s_calls` |
+| Checkouts iniciados | `offsite_conversion.fb_pixel_initiate_checkout` | `initiate_checkout`, `omni_initiated_checkout`, `onsite_web_initiate_checkout` |
+| Adicionar ao carrinho | `offsite_conversion.fb_pixel_add_to_cart` | `add_to_cart`, `omni_add_to_cart`, `onsite_web_add_to_cart`, `onsite_web_app_add_to_cart` |
+
+**Conversões personalizadas** (`offsite_conversion.custom.*`) carregam IDs de pixel próprios. Nunca somar com as padrão acima. Antes de incluir em qualquer cálculo de receita, checar se o valor atribuído é plausível: valor na casa dos milhões por evento indica pixel mal configurado, não venda.
+
+**Regra prática.** Ao iterar sobre `actions` ou `action_values`, filtrar **exatamente** o tipo canônico. Se ele não aparecer na resposta de uma campanha, assumir zero para aquela campanha. **Nunca** usar um tipo da coluna de duplicatas como fallback: é assim que o número infla sem ninguém perceber.
 
 ---
 
@@ -472,7 +517,7 @@ Leitura fundamental:
 - SEMPRE identificar o gargalo principal antes de listar secundários.
 - NUNCA usar jargão técnico sem explicar em linguagem do método.
 - Para ações de execução (pausar, mudar budget, criar regra, criar audience, criar teste), encaminhar para a skill executora correta. Esta skill **narra**, não executa edição.
-- Sempre que possível, aproveitar o cache local em `meus-produtos/{ativo}/trafego/insights/` para evitar requisições redundantes à Graph API.
+- Sempre que possível, aproveitar o cache local em `skill-analise/cache/` para evitar requisições redundantes à Graph API. Esse é o cache desta skill, escrito por `trafego_fetch.py`. Não confundir com `meus-produtos/{ativo}/trafego/insights/`, que pertence ao `/trafego-insights`.
 - Um output por vez. Não tentar entregar 3 outputs em uma resposta.
 - **Export HTML é opcional e SEMPRE precedido por confirmação explícita do aluno.** Nunca gerar HTML automaticamente. Quando gerado, o arquivo SEMPRE traz banner de "snapshot" no topo com timestamp visível, deixando claro que não é dado live.
 - HTML de export sempre vai para `meus-produtos/{ativo}/trafego/analise/`. Nunca em pasta global, nunca na raiz, nunca sobrescrever (cada export é arquivo novo com timestamp próprio).

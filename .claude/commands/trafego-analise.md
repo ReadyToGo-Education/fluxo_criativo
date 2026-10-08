@@ -1,6 +1,6 @@
 ---
 name: workshop-marketing:trafego-analise
-description: Análise narrada de tráfego pago Meta Ads com terminologia VTSD (Mandala 18 tipos, Urgência Oculta, Quadro na Parede, Furadeira, Decorados, 3 Identidades, HOT/COLD/SUPERCOLD, Caixa Rápido, Pico vs Evergreen). 9 outputs narrativos: Diagnóstico Rápido, Performance & Funil, Criativos & Copy, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção. Busca dados diretamente na Graph API sem intermediários. Cada output entrega diagnóstico, causa provável, interpretação VTSD e ação recomendada com handoff para skill executora.
+description: Análise narrada de tráfego pago Meta Ads com terminologia VTSD (Mandala 18 tipos, Urgência Oculta, Quadro na Parede, Furadeira, Decorados, 3 Identidades, HOT/COLD/SUPERCOLD, Caixa Rápido, Pico vs Evergreen). 10 outputs narrativos: Diagnóstico Rápido, Performance & Funil, Criativos & Copy, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B. Lê os dados base pelos scripts Python da skill e complementa com breakdowns sob demanda por output. Cada output entrega diagnóstico, causa provável, interpretação VTSD e ação recomendada com handoff para skill executora.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---
@@ -11,12 +11,17 @@ Análise narrada de campanhas Meta Ads pela lente da metodologia VTSD (Venda Tod
 
 Esta skill **narra**, não executa edição. Quando a análise sugere ação, faz handoff para a skill executora correspondente.
 
+A especificação técnica completa está em `.claude/skills/trafego-analise/SKILL.md`. Este command é o orquestrador.
+
 ---
 
 ## Passo 0. Contexto e conexão Meta
 
 ### 0.1 Produto ativo
 Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`.
+
+### 0.1b Ler a especificação da skill
+Ler `.claude/skills/trafego-analise/SKILL.md` para carregar a arquitetura de dados em duas camadas, a regra de deduplicação de conversões, o cálculo do Health Score, o glossário VTSD e o protocolo padrão de cada output.
 
 ### 0.2 Conexão Meta (gate duro)
 Ler `META_AUTH_MODO` no `.env`.
@@ -142,9 +147,49 @@ Qual período da análise?
 
 ---
 
-## Passo 4. Busca direta na Graph API
+## Passo 4. Buscar os dados
 
 🔍 Próximo passo: buscar métricas da conta. Tempo estimado: cerca de 30 segundos.
+
+Os dados chegam em **duas camadas**, e a ordem importa. A base vem sempre dos scripts Python da skill. Só o complemento específico de cada output vai direto na Graph API. Ver "Fonte de Dados" em `.claude/skills/trafego-analise/SKILL.md`.
+
+### Camada 1. Base, via scripts Python (obrigatória, roda primeiro)
+
+```bash
+python3 .claude/skills/trafego-analise/scripts/trafego_fetch.py \
+  --account {CONTA_ATIVA_ID} \
+  --filtro "{ESCOPO_FILTRO_TEXTO}" \
+  --periodo {PERIODO} \
+  --status "{STATUS_FILTRO_LISTA}" \
+  --output {SLUG_OUTPUT} \
+  --project-root . \
+  --cache-dir skill-analise/cache
+```
+
+```bash
+python3 .claude/skills/trafego-analise/scripts/trafego_processar.py \
+  --account {CONTA_ATIVA_ID} \
+  --filtro "{ESCOPO_FILTRO_TEXTO}" \
+  --periodo {PERIODO} \
+  --output {SLUG_OUTPUT} \
+  --cache-dir skill-analise/cache \
+  --ticket {PRECO_DO_PRODUTO}
+```
+
+Mapeamento de `--status` a partir do `STATUS_FILTRO` do Passo 0.55:
+
+| Escolha | `--status` |
+|---|---|
+| [1] Somente ativas | `ACTIVE` |
+| [2] Somente pausadas | `PAUSED,WITH_ISSUES` |
+| [3] Ativas + pausadas | `ACTIVE,PAUSED,WITH_ISSUES` |
+| [4] Histórico completo | `ACTIVE,PAUSED,WITH_ISSUES,ARCHIVED` |
+
+**Nunca substituir esta camada por `curl`.** Os scripts existem porque resolvem `UnicodeEncodeError` no Windows, HTTP 400 por `landing_page_views` no topo, rate limit, `effective_status` rejeitado no `/insights` e connect rate inflado por usar `clicks` em vez de `link_click`. Contornar os scripts reintroduz os cinco bugs.
+
+### Camada 2. Complemento por output (sob demanda, depois da base)
+
+O que vem abaixo cobre o que os scripts não trazem: breakdowns específicos, ad sets com problema de entrega, `review_feedback` e orçamentos por adset. Cada chamada é um `Bash(curl ...)` separado.
 
 ### Campos base (usados em todos os outputs)
 
@@ -175,21 +220,9 @@ video_p75_watched_actions,video_p95_watched_actions
 
 ### Regra obrigatória de deduplicação de conversões
 
-> Esta regra se aplica a TODOS os outputs. Violar ela causa duplicação silenciosa de compras e receita.
+> Fonte única: `.claude/skills/trafego-analise/SKILL.md`, seção "Regra obrigatória de deduplicação de conversões". Carregue a tabela de tipos canônicos de lá antes de calcular qualquer métrica derivada.
 
-O Meta retorna a mesma conversão em múltiplos `action_type` na mesma resposta. **NUNCA somar tipos que representam o mesmo evento.**
-
-| Métrica | Tipo canônico a usar | Tipos a IGNORAR (duplicatas) |
-|---------|---------------------|------------------------------|
-| Compras (contagem) | `offsite_conversion.fb_pixel_purchase` | `purchase`, `omni_purchase`, `onsite_web_purchase`, `web_in_store_purchase`, `onsite_web_app_purchase`, `web_app_in_store_purchase`, `offsite_purchase_add_20_s_calls` |
-| Receita (valor) | `offsite_conversion.fb_pixel_purchase` (em `action_values`) | todos os outros tipos acima |
-| Leads (contagem) | `offsite_conversion.fb_pixel_lead` | `lead`, `onsite_web_lead`, `offsite_lead_add_20_s_calls` |
-| Checkouts (contagem) | `offsite_conversion.fb_pixel_initiate_checkout` | `initiate_checkout`, `omni_initiated_checkout`, `onsite_web_initiate_checkout` |
-| Adicionar ao carrinho | `offsite_conversion.fb_pixel_add_to_cart` | `add_to_cart`, `omni_add_to_cart`, `onsite_web_add_to_cart`, `onsite_web_app_add_to_cart` |
-
-**Conversões customizadas** (`offsite_conversion.custom.*`) têm IDs de pixel específicos — nunca somar com as padrão acima. Verificar se o valor atribuído é plausível antes de incluir em qualquer cálculo de receita (valores de R$ milhões por evento indicam pixel misconfigured).
-
-**Regra prática:** ao iterar sobre `actions` ou `action_values`, filtrar **exatamente** o tipo canônico listado acima. Se o tipo canônico não estiver presente na resposta para uma campanha, assumir zero para aquela campanha — nunca tentar alternativas da lista de duplicatas como fallback.
+Resumo do que está em jogo: o Meta devolve a mesma conversão em vários `action_type` na mesma resposta. Somar os tipos de uma mesma linha conta a mesma venda de 3 a 7 vezes, e ROAS, CPA e taxas do funil saem errados junto, sem sinal de erro. Filtrar **exatamente** o tipo canônico. Tipo canônico ausente significa zero para aquela campanha, nunca fallback para uma duplicata.
 
 ### Endpoint base (Modo APP)
 

@@ -72,11 +72,11 @@ date -d "60 days ago" +%Y-%m-%d
 **Passo 2 — Disparar 2 chamadas curl separadas (cada uma é uma `Bash(curl ...)` independente):**
 
 ```
-curl -s "https://graph.facebook.com/v21.0/act_<ACCOUNT_ID>/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<atual_de>%22%2C%22until%22%3A%22<atual_ate>%22%7D&limit=500&access_token=<TOKEN_DO_ENV>"
+curl -s "https://graph.facebook.com/v25.0/act_<ACCOUNT_ID>/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<atual_de>%22%2C%22until%22%3A%22<atual_ate>%22%7D&limit=500&access_token=<TOKEN_DO_ENV>"
 ```
 
 ```
-curl -s "https://graph.facebook.com/v21.0/act_<ACCOUNT_ID>/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<ant_de>%22%2C%22until%22%3A%22<ant_ate>%22%7D&limit=500&access_token=<TOKEN_DO_ENV>"
+curl -s "https://graph.facebook.com/v25.0/act_<ACCOUNT_ID>/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<ant_de>%22%2C%22until%22%3A%22<ant_ate>%22%7D&limit=500&access_token=<TOKEN_DO_ENV>"
 ```
 
 Notar o `time_range` URL-encoded: `%7B` é `{`, `%22` é `"`, `%2C` é `,`, `%7D` é `}`. URL final é `time_range={"since":"YYYY-MM-DD","until":"YYYY-MM-DD"}`.

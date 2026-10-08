@@ -4,7 +4,10 @@ description: >
   Base de conhecimento e fluxo executável para subir campanha nova no Meta Ads (Facebook + Instagram)
   via Marketing API. Cobre apenas infoprodutos com objetivos OUTCOME_SALES (perpétuo de venda direta)
   e OUTCOME_LEADS (lançamento de captação). Conduz coleta de insumos, exige pixel ativo e mapeamento
-  de evento, mostra preview YAML antes de criar e sobe a campanha PAUSED por padrão. Consultada pelo
+  de evento, mostra preview YAML antes de criar e sobe a campanha PAUSED por padrão. Inclui três
+  sub-skills de detalhamento operacional: publico-interesses (targeting e busca de interesses),
+  criativos-upload (upload de mídia e montagem do AdCreative) e preview-execucao (payloads da
+  Marketing API, orçamento em centavos e tratamento de falha). Consultada pelo
   command /trafego-criar-campanha. Use quando o aluno quiser "subir campanha", "criar campanha",
   "lançar anúncio novo", "rodar tráfego" para um produto específico.
 ---
@@ -120,7 +123,7 @@ Validar coerência com ticket:
 Antes de qualquer pergunta, fazer chamada na Marketing API para puxar a lista de pixels da conta de anúncios:
 
 ```
-GET https://graph.facebook.com/v22.0/act_{FB_AD_ACCOUNT_ID}/adspixels?fields=id,name,last_fired_time,is_unavailable&access_token={token}
+GET https://graph.facebook.com/v25.0/act_{FB_AD_ACCOUNT_ID}/adspixels?fields=id,name,last_fired_time,is_unavailable&access_token={token}
 ```
 
 Onde `{token}` é `META_ACCESS_TOKEN` (modo MCP) ou `FB_ACCESS_TOKEN_PERMANENTE` (modo APP), conforme `META_AUTH_MODO`.
@@ -166,7 +169,7 @@ Pergunta única, com duas opções:
 Se o aluno escolher **1. Compra**: definir `optimization_goal = OFFSITE_CONVERSIONS` com evento `Purchase` e seguir para 5.3.
 
 Se o aluno escolher **2. Personalizado**: chamar a Marketing API para listar conversões personalizadas da conta:
-- Tool MCP: `mcp__claude_ai_Meta_Ads__ads_get_ad_entities` filtrando por `level: customconversion` e `ad_account_id` da `META_AD_ACCOUNT_ID`. Caminho alternativo via App: `GET https://graph.facebook.com/v22.0/act_{ad_account_id}/customconversions?fields=id,name,custom_event_type,description&limit=10` usando token salvo em `META_ACCESS_TOKEN` (ou `FB_ACCESS_TOKEN_PERMANENTE` no modo APP).
+- Tool MCP: `mcp__claude_ai_Meta_Ads__ads_get_ad_entities` filtrando por `level: customconversion` e `ad_account_id` da `META_AD_ACCOUNT_ID`. Caminho alternativo via App: `GET https://graph.facebook.com/v25.0/act_{ad_account_id}/customconversions?fields=id,name,custom_event_type,description&limit=10` usando token salvo em `META_ACCESS_TOKEN` (ou `FB_ACCESS_TOKEN_PERMANENTE` no modo APP).
 - Mostrar até **10 primeiras** conversões personalizadas, numeradas, com nome e tipo. Se a conta tiver mais que 10, avisar: "Mostrando 10 primeiras de N conversões. Se a desejada não aparecer, digite o nome ou ID."
 - Se a conta não tiver nenhuma conversão personalizada, avisar: "Não encontrei conversões personalizadas nesta conta. Crie uma no Gerenciador de Eventos > Conversões personalizadas, ou volte para a opção 1 (Compra)."
 - Aluno escolhe pelo número, nome ou ID. Salvar `custom_conversion_id` para usar no `promoted_object` do conjunto de anúncios.
@@ -182,6 +185,8 @@ Se qualquer validação falhar:
 **Não aceitar Sales/Leads sem pixel.** É regra dura.
 
 ### Fase 6. Público
+
+> **Detalhamento operacional:** `sub-skills/publico-interesses.md`. Traz o `targeting` JSON de cada modo, o fluxo de busca de interesses na Graph API com critérios de filtro e ranking, os posicionamentos e as consequências de Special Ad Categories. Carregue ao entrar nesta fase.
 
 Apresentar **3 opções numeradas**, com a opção 1 marcada como recomendada. Adaptar a recomendação à trilha (low/mid/high) e ao produto ativo.
 
@@ -218,7 +223,7 @@ Passo a passo obrigatório:
 **6.2.c. Buscar interesses na Marketing API.** Para cada termo, chamar:
 
 ```
-GET https://graph.facebook.com/v22.0/search?type=adinterest&q={termo}&limit=10&locale=pt_BR&access_token={token}
+GET https://graph.facebook.com/v25.0/search?type=adinterest&q={termo}&limit=10&locale=pt_BR&access_token={token}
 ```
 
 Onde `{token}` é `META_ACCESS_TOKEN` (modo MCP) ou `FB_ACCESS_TOKEN_PERMANENTE` (modo APP).
@@ -298,6 +303,9 @@ Por default, assumir array vazio. Perguntar apenas se o produto/oferta sugere ca
 Se nenhum desses sinais, seguir com `special_ad_categories: []`. Mostrar no preview pra aluno confirmar visualmente.
 
 ### Fase 7. Criativos
+
+> **Detalhamento operacional:** `sub-skills/criativos-upload.md`. Traz os endpoints de upload de imagem e vídeo, o gate de processamento do vídeo, a montagem do `AdCreative` (`link_data` vs `video_data`), os CTAs válidos por objetivo e o campo `url_tags` dos UTMs. Carregue ao entrar nesta fase.
+
 Pergunta (3 opções, nesta ordem):
 > "Como você quer adicionar os criativos?
 >
@@ -387,6 +395,8 @@ Mostrar no preview. Aluno pode editar nome de qualquer nível antes de confirmar
 ---
 
 ## 3. Preview antes de criar (sempre)
+
+> **Detalhamento operacional:** `sub-skills/preview-execucao.md`. Traz a regra de conversão de orçamento para centavos, as validações pré-escrita, os payloads reais de cada `POST`, o tratamento de falha parcial, o mapa de erros da criação e a ativação posterior. Carregue antes de montar o preview.
 
 Antes de qualquer chamada à Marketing API que modifique a conta:
 
@@ -491,6 +501,8 @@ Aceitar três tipos de resposta:
 ---
 
 ## 4. Execução da criação
+
+> **Payloads completos de cada chamada:** `sub-skills/preview-execucao.md`, seção 4. **Atenção ao orçamento: a API recebe centavos, não reais.** Enviar `100` querendo R$ 100 cria uma campanha de R$ 1,00 por dia.
 
 Após aprovação, criar em ordem:
 
