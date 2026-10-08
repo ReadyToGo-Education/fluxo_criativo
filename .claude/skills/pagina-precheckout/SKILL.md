@@ -47,7 +47,7 @@ Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o
 
 Estrutura mínima:
 - `<header>`: logo ou nome do produto (pegar do resumo).
-- Seção principal: H1 com nome da oferta, subtítulo com preço, 3 bullets curtos de benefício (puxar dos Decorados principais do resumo), formulário (Nome, Email, WhatsApp), botão "Ir para o pagamento seguro".
+- Seção principal: H1 com nome da oferta, subtítulo com preço, 3 bullets curtos de benefício (puxar dos Decorados principais do resumo ou, se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md`, dos 10 bullets quentes salvos pelo `/copy-bullets`), formulário (Nome, Email, WhatsApp), botão "Ir para o pagamento seguro".
 - Rodapé: selo "Compra 100% segura" + link de contato.
 - CSS inline: mobile first, fonte do Google Fonts (Inter), paleta baseada na cor do produto ou azul escuro padrão.
 - JS inline:

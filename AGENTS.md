@@ -658,6 +658,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/copy-pagina`: criar copy completa e, conforme o fluxo atual, encaminhar página HTML.
 - `/copy-anuncio`: criar anúncios para Meta Ads com Mandala da Criatividade.
 - `/copy-roteiro`: criar roteiro de vendas ou conteúdo.
+- `/copy-bullets`: gerar 110 bullets do produto nas 11 técnicas, salvos para as páginas reaproveitarem.
 - `/copy-social`: criar conteúdo para redes sociais.
 - `/copy-variacao-post`: criar variações de um post.
 - `/elementos-literarios`: aplicar 1 a 3 elementos literários em uma peça.

@@ -35,7 +35,7 @@ Digite o número:
 ```
 
 **Se escolher 1 (turbinar existente):**
-- Pergunta 2: "Cole aqui a copy que você quer turbinar"
+- Pergunta 2: "Cole aqui a copy que você quer turbinar". Se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (gerado pelo `/copy-bullets`), ofereça também turbinar os 10 bullets quentes salvos, sem o aluno precisar colar.
 - Pergunta 3: "Onde essa copy vai ser usada?"
   ```
   1. Anúncio (gancho de 3 segundos)
