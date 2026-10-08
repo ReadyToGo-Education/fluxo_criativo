@@ -360,6 +360,46 @@ def parse_objecoes_do_idconsumidor(idc_texto: str | None) -> list[dict]:
     return objecoes
 
 
+# Cabecalho de balde. Canonico: "### Balde N: Nome" (gerador-idconsumidor).
+# Legados aceitos na leitura: "➤ Pra quem é - Nome" e "**Balde N – Nome**".
+_BALDE_HEAD_RE = re.compile(
+    r"^(?:###\s+Balde\s+\d+\s*:\s*(?P<a>.+?)"
+    r"|[➤➜➢]\s*Pra quem [eé]\s*[-–—:]\s*(?P<b>.+?)"
+    r"|\*\*Balde\s+\d+\s*[-–—:]\s*(?P<c>.+?)\*\*)\s*$",
+    re.MULTILINE | re.IGNORECASE,
+)
+
+
+def parse_baldes(baldes_txt: str) -> list[dict]:
+    heads = list(_BALDE_HEAD_RE.finditer(baldes_txt))
+    baldes = []
+    for i, h in enumerate(heads):
+        nome = (h.group("a") or h.group("b") or h.group("c") or "").strip().strip("[]")
+        fim = heads[i + 1].start() if i + 1 < len(heads) else len(baldes_txt)
+        corpo = baldes_txt[h.end():fim].strip()
+        itens = [
+            re.sub(r"^\d+\.\s+", "", ln).strip()
+            for ln in corpo.splitlines()
+            if re.match(r"^\s*\d+\.\s+", ln)
+        ]
+        desc_m = re.search(
+            r"\*\*Descri[cç][aã]o:\*\*\s*(.+?)(?=\n\s*\n|\*\*Como|\Z)",
+            corpo,
+            re.DOTALL,
+        )
+        if desc_m:
+            descricao = desc_m.group(1).strip()
+        else:
+            descricao = ""
+            for par in re.split(r"\n\s*\n", corpo):
+                par = par.strip()
+                if par and not par.startswith("**Como") and not re.match(r"^\d+\.\s+", par):
+                    descricao = par
+                    break
+        baldes.append({"nome": nome, "descricao": descricao, "itens": itens})
+    return baldes
+
+
 def parse_identidade_consumidor(perfil: str, idc: str) -> dict:
     fonte = idc or perfil
     # Para quem e
@@ -452,55 +492,7 @@ def parse_identidade_consumidor(perfil: str, idc: str) -> dict:
                 baldes_txt = idc[inicio: fim_m.start() if fim_m else len(idc)].strip()
 
         if baldes_txt:
-            # formato 1: seta + "Pra quem \u00e9" + separador (- ou \u2014 ou \u2013 ou :) + nome + itens numerados
-            for m in re.finditer(
-                r"[\u27a4\u279c\u27a2]\s*Pra quem [e\u00e9]\s*[-\u2013\u2014:]\s*(.+?)\n\n?((?:\d+\.\s+[^\n]+\n?)+)",
-                baldes_txt,
-                re.IGNORECASE,
-            ):
-                nome = m.group(1).strip().strip("[]")
-                itens = [
-                    re.sub(r"^\d+\.\s+", "", ln).strip()
-                    for ln in m.group(2).splitlines()
-                    if ln.strip()
-                ]
-                baldes.append({"nome": nome, "descricao": "", "itens": itens})
-
-            # formato 2: **Balde N – Nome**\nDescricao
-            if not baldes:
-                for m in re.finditer(
-                    r"\*\*Balde\s+\d+\s*[-\u2013\u2014]\s*(.+?)\*\*\n+(.+?)(?=\n\n\*\*Balde|\Z)",
-                    baldes_txt,
-                    re.DOTALL,
-                ):
-                    nome = m.group(1).strip()
-                    descricao = m.group(2).strip()
-                    baldes.append({"nome": nome, "descricao": descricao, "itens": []})
-
-            # formato 3: ### Balde N: Nome (gerado pelo gerador-idconsumidor)
-            if not baldes:
-                for m in re.finditer(
-                    r"^###\s+Balde\s+\d+:\s*(.+?)\s*$\n+(.*?)(?=^###\s+Balde\s+\d+:|\Z)",
-                    baldes_txt,
-                    re.MULTILINE | re.DOTALL,
-                ):
-                    nome = m.group(1).strip()
-                    corpo = m.group(2).strip()
-                    desc_m = re.search(
-                        r"\*\*Descri[cç][aã]o:\*\*\s*(.+?)(?=\n\n|\*\*Como|\Z)",
-                        corpo,
-                        re.DOTALL,
-                    )
-                    if desc_m:
-                        descricao = desc_m.group(1).strip()
-                    else:
-                        descricao = ""
-                        for p in re.split(r"\n\s*\n", corpo):
-                            p = p.strip()
-                            if p and not p.startswith("**Como"):
-                                descricao = p
-                                break
-                    baldes.append({"nome": nome, "descricao": descricao, "itens": []})
+            baldes = parse_baldes(baldes_txt)
     return {
         "para_quem_e": para_quem,
         "perfil_demo": {k: v for k, v in perfil_demo.items() if v},
