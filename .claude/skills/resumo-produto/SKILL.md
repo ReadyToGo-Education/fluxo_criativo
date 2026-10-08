@@ -158,7 +158,7 @@ A mesma tabela do fim do modelo. Exemplos de quando uma skill precisa dela:
 
 | Skill | Lê do original |
 |---|---|
-| Páginas de vendas (`/copy-pagina`, `paginas`, `/lt-pagina`) | Os 50 Decorados para bullets, os baldes "Para quem é" e as objeções com os 7 argumentos para a seção de objeções e o FAQ |
+| Páginas de vendas (`/copy-pagina`, `paginas`) | Os 50 Decorados para bullets, os baldes "Para quem é" e as objeções com os 7 argumentos para a seção de objeções e o FAQ |
 | `/comercial-playbook` | Objeções com os 7 argumentos |
 | Pesquisa de concorrentes e referências | Seções específicas da pesquisa de mercado |
 

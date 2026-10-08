@@ -555,6 +555,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 **Copy:**
 - `/copy-pagina`. Criar copy e/ou página HTML profissional (vendas, captura ou obrigado)
 - `/copy-anuncio`. Criar anúncios para Meta Ads (Mandala da Criatividade, 18 tipos)
+- `/copy-bullets`. Gerar 110 bullets do produto nas 11 técnicas (Halbert, Carlton, Bencivenga) e os 10 mais fortes; ficam salvos para as páginas reaproveitarem
 - `/elementos-literarios`. Aplicar 1 a 3 dos 26 elementos literários do Light Copy
 - `/criativo-estatico`. Gerar criativos estáticos para anúncios (prompt para colar em ferramenta externa OU geração automática via API)
 - `/gerar-furadeira`. Gerar a Furadeira (método do produto) no `perfil.md` aplicando uma das 6 mecânicas (Fases, Condicional, Enquadramento, Listas, Empecilhos, Dinâmica de Entrega) escolhida automaticamente conforme o nicho
@@ -566,7 +567,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/lt-funil`. Criar produto de entrada low ticket (quiz, desafio, agente GPT)
 - `/lt-criar-produto`. Criar o conteúdo real do produto digital
 - `/lt-quiz`. Gerar perguntas do quiz
-- `/lt-pagina`. Gerar as 4 leads low ticket
+- `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 7 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página
 - `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
 
 **Tráfego Pago (Meta Ads via API ou MCP):**
@@ -610,7 +611,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 
 **Feedback:**
 - `/feedback-pagina`. Corrigir e otimizar página de vendas existente
-- `/feedback-low-ticket`. Corrigir página low ticket (copy, estrutura, design + gera HTML novo)
+- `/feedback-low-ticket`. Corrigir página low ticket pela régua v16 (copy, estrutura e design; entrega a copy corrigida e um prompt novo para o Lovable)
 
 **Toolkit (projetos estruturados):**
 - `/toolkit-novo`. Iniciar um projeto de marketing estruturado (lançamento, funil completo, reestruturação)

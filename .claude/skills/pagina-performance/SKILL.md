@@ -4,7 +4,7 @@ description: >
   Audita a performance de uma página HTML gerada (peso, requisições, imagens,
   fontes, CSS/JS bloqueante, Core Web Vitals estimados) e corrige automaticamente
   os problemas encontrados, devolvendo a página otimizada. Pensada para páginas
-  estáticas single-file produzidas pelas skills `copy-pagina`, `lt-pagina` e
+  estáticas single-file produzidas pelas skills `copy-pagina` e
   `ht-pagina-inscricao`.
 ---
 
@@ -14,7 +14,7 @@ Roda uma auditoria de performance em uma página HTML que já existe no projeto 
 
 ## Quando Usar
 
-- Logo após gerar uma página com `/copy-pagina`, `/lt-pagina` ou `/ht-pagina-inscricao`.
+- Logo após gerar uma página com `/copy-pagina` ou `/ht-pagina-inscricao`.
 - Quando o usuário disser "audita essa página", "tá lenta", "melhora o PageSpeed", "otimiza essa página", "deixa essa página leve".
 - Antes de instalar Pixel ou publicar via Lovable. Página rápida primeiro, tracking depois.
 

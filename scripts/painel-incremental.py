@@ -20,6 +20,7 @@ Secoes validas (ids que aparecem na sidebar e marcadores SECTION):
     identidade-consumidor
     identidade-comunicador
     copy-pagina
+    low-ticket           (/lt-pagina e /lt-quiz)
     comercial-playbook   (exclusivo de /comercial-playbook)
 
 O painel vive em:
@@ -1202,6 +1203,179 @@ def parse_comercial_playbook(slug: str, produto_dir: Path) -> dict:
     }
 
 
+# Nomes curtos das 7 aberturas da régua low ticket (usados nos nomes de arquivo).
+ABERTURAS_LT = {
+    "demonstracao": "Demonstração",
+    "comparacao": "Comparação",
+    "plug-and-play": "Plug & Play",
+    "imaginacao-do-resultado": "Imaginação do Resultado",
+    "defesa-de-tese": "Defesa de Tese",
+    "dor-espelhada": "Dor Espelhada",
+    "resultado-direto": "Resultado Direto",
+    # lt-copy-corrigida-{slug} e lt-prompt-lovable-corrigido-{slug}, do /feedback-low-ticket
+    "corrigida": "Versão corrigida (/feedback-low-ticket)",
+}
+
+
+def _abertura_do_arquivo(stem: str, prefixo: str, slug: str) -> str:
+    """lt-copy-{slug}-{abertura} -> {abertura}. Aceita nome fora do padrão."""
+    resto = stem[len(prefixo):]
+    if resto.split("-", 1)[0] in ("corrigida", "corrigido"):
+        return "corrigida"
+    if resto.startswith(f"{slug}-"):
+        return resto[len(slug) + 1:]
+    for chave in ABERTURAS_LT:
+        if resto.endswith(chave):
+            return chave
+    return resto
+
+
+def _rotulo_abertura(chave: str) -> str:
+    return ABERTURAS_LT.get(chave) or chave.replace("-", " ").strip().capitalize()
+
+
+def _data_arquivo(mtime: float) -> str:
+    from datetime import datetime
+    return datetime.fromtimestamp(mtime).strftime("%d/%m/%Y às %H:%M")
+
+
+def _primeira_tabela_md(texto: str) -> dict | None:
+    """Primeira tabela markdown do texto: {cabecalho: [...], linhas: [[...]]}."""
+    bloco: list[str] = []
+    for linha in texto.splitlines() + [""]:
+        if linha.strip().startswith("|"):
+            bloco.append(linha.strip())
+            continue
+        if len(bloco) >= 3 and re.match(r"^\|[\s:|-]+\|?$", bloco[1]):
+            celulas = [
+                [c.strip() for c in ln.strip("|").split("|")]
+                for ln in bloco
+            ]
+            return {"cabecalho": celulas[0], "linhas": celulas[2:]}
+        bloco = []
+    return None
+
+
+def _promessa_central(texto: str) -> str:
+    linhas = texto.splitlines()
+    for i, linha in enumerate(linhas):
+        if "PROMESSA CENTRAL" not in linha.upper():
+            continue
+        depois = linha.split(":", 1)[1] if ":" in linha else ""
+        depois = depois.replace("*", "").strip()
+        if depois:
+            return depois
+        for seguinte in linhas[i + 1:]:
+            if seguinte.strip():
+                return seguinte.replace("*", "").strip()
+    return ""
+
+
+def parse_low_ticket(slug: str, produto_dir: Path) -> dict:
+    """Entregas low ticket do produto. Fontes: os arquivos salvos pelo
+    /lt-pagina (entregas/copy-pagina/lt-aberturas-*, lt-copy-* e
+    entregas/paginas/lt-prompt-lovable-*) e o quiz-meta.json do /lt-quiz."""
+    pasta_copy = produto_dir / "entregas" / "copy-pagina"
+    pasta_paginas = produto_dir / "entregas" / "paginas"
+
+    def rel(p: Path) -> str:
+        return p.relative_to(produto_dir).as_posix()
+
+    def por_data(arquivos: Iterable[Path]) -> list[Path]:
+        return sorted(arquivos, key=lambda p: p.stat().st_mtime, reverse=True)
+
+    pagina: dict = {}
+    aberturas = por_data(pasta_copy.glob("lt-aberturas-*.md")) if pasta_copy.is_dir() else []
+    preferido = pasta_copy / f"lt-aberturas-{slug}.md"
+    arq_aberturas = preferido if preferido.exists() else (aberturas[0] if aberturas else None)
+    if arq_aberturas:
+        texto = ler_arquivo(arq_aberturas)
+        pagina["aberturas"] = {"caminho": rel(arq_aberturas)}
+        pagina["promessa"] = _promessa_central(texto)
+        pagina["tabela"] = _primeira_tabela_md(texto)
+
+    testes: dict[str, dict] = {}
+    if pasta_copy.is_dir():
+        for p in pasta_copy.glob("lt-copy-*.md"):
+            testes.setdefault(_abertura_do_arquivo(p.stem, "lt-copy-", slug), {})["copy"] = p
+    if pasta_paginas.is_dir():
+        for p in pasta_paginas.glob("lt-prompt-lovable-*.md"):
+            testes.setdefault(_abertura_do_arquivo(p.stem, "lt-prompt-lovable-", slug), {})["prompt"] = p
+
+    lista = []
+    for chave, arquivos in testes.items():
+        mtime = max(p.stat().st_mtime for p in arquivos.values())
+        # A régua v16 lista os depoimentos fictícios sob este título até o aluno trocar pelos reais.
+        provisorios = "copy" in arquivos and "DEPOIMENTOS PROVISÓRIOS" in ler_arquivo(arquivos["copy"]).upper()
+        lista.append({
+            "abertura": _rotulo_abertura(chave),
+            "copy": rel(arquivos["copy"]) if "copy" in arquivos else "",
+            "prompt": rel(arquivos["prompt"]) if "prompt" in arquivos else "",
+            "provisorios": provisorios,
+            "atualizado_em": _data_arquivo(mtime),
+            "_mtime": mtime,
+            "_copy_path": arquivos.get("copy"),
+        })
+    lista.sort(key=lambda t: t["_mtime"], reverse=True)
+
+    recente = next((t for t in lista if t["_copy_path"]), None)
+    if recente:
+        conteudo = ler_arquivo(recente["_copy_path"])
+        # O título do arquivo (# ...) já aparece no cabeçalho do documento.
+        conteudo = "\n".join(
+            ln for ln in conteudo.splitlines() if not re.match(r"^#\s", ln)
+        )
+        pagina["copy_recente"] = {
+            "abertura": recente["abertura"],
+            "caminho": recente["copy"],
+            "conteudo": conteudo,
+        }
+    for t in lista:
+        t.pop("_mtime")
+        t.pop("_copy_path")
+    pagina["testes"] = lista
+
+    quiz: dict = {}
+    meta_path = produto_dir / "entregas" / "quiz" / "quiz-meta.json"
+    if meta_path.exists():
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            meta = {}
+        prompt = str(meta.get("prompt_path") or "").replace("\\", "/")
+        if prompt:
+            candidato = Path(prompt)
+            if not candidato.is_absolute():
+                candidato = (REPO_ROOT / prompt) if prompt.startswith("meus-produtos/") else (produto_dir / prompt)
+            try:
+                prompt = candidato.resolve().relative_to(produto_dir.resolve()).as_posix()
+            except ValueError:
+                pass
+        gerado = str(meta.get("generated_at") or "")
+        try:
+            from datetime import datetime
+            gerado = datetime.fromisoformat(gerado.replace("Z", "+00:00")).strftime("%d/%m/%Y")
+        except ValueError:
+            pass
+        quiz = {
+            "lovable_url": meta.get("lovable_url") or "",
+            "prompt": prompt,
+            "gerado_em": gerado,
+        }
+    else:
+        # Prompt salvo, mas o link do Lovable ainda não foi registrado.
+        pasta_quiz = produto_dir / "entregas" / "quiz"
+        prompts = por_data(pasta_quiz.glob("quiz-*.md")) if pasta_quiz.is_dir() else []
+        if prompts:
+            quiz = {
+                "lovable_url": "",
+                "prompt": rel(prompts[0]),
+                "gerado_em": _data_arquivo(prompts[0].stat().st_mtime).split(" ")[0],
+            }
+
+    return {"pagina": pagina, "quiz": quiz}
+
+
 # ----- monta dados por secao -----
 
 def montar_dados(secao: str, produto_dir: Path, slug: str) -> tuple[dict, str]:
@@ -1268,6 +1442,8 @@ def montar_dados(secao: str, produto_dir: Path, slug: str) -> tuple[dict, str]:
         return tmpl.parse_copy_pagina(produto_dir, slug, REPO_ROOT), nome_produto
     if secao == "comercial-playbook":
         return parse_comercial_playbook(slug, produto_dir), nome_produto
+    if secao == "low-ticket":
+        return parse_low_ticket(slug, produto_dir), nome_produto
     if secao == "dashboards":
         return parse_dashboards(produto_dir), nome_produto
     if secao == "analise-trafego":
@@ -1292,6 +1468,7 @@ def secoes_preenchidas(html_txt: str) -> list[str]:
         "identidade-comunicador": "Identidade do comunicador",
         "pesquisa": "Pesquisa de mercado",
         "copy-pagina": "Copy da pagina",
+        "low-ticket": "Low ticket",
         "comercial-playbook": "Playbook comercial",
     }
     for sid, rotulo in rotulo_por_id.items():

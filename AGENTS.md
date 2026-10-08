@@ -658,6 +658,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/copy-pagina`: criar copy completa e, conforme o fluxo atual, encaminhar página HTML.
 - `/copy-anuncio`: criar anúncios para Meta Ads com Mandala da Criatividade.
 - `/copy-roteiro`: criar roteiro de vendas ou conteúdo.
+- `/copy-bullets`: gerar 110 bullets do produto nas 11 técnicas, salvos para as páginas reaproveitarem.
 - `/copy-social`: criar conteúdo para redes sociais.
 - `/copy-variacao-post`: criar variações de um post.
 - `/elementos-literarios`: aplicar 1 a 3 elementos literários em uma peça.
@@ -672,7 +673,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/lt-funil`: criar funil low ticket.
 - `/lt-criar-produto`: criar conteúdo real do produto digital.
 - `/lt-quiz`: gerar perguntas de quiz.
-- `/lt-pagina`: gerar página ou leads low ticket conforme o command.
+- `/lt-pagina`: criar a página de vendas low ticket pela régua v16 (7 aberturas, copy completa e prompt para o Lovable).
 - `/lt-otimizar`: analisar planilha ou campanhas low ticket.
 
 ### Tráfego Pago
@@ -723,7 +724,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 ### Feedback
 
 - `/feedback-pagina`: corrigir e otimizar página de vendas existente.
-- `/feedback-low-ticket`: corrigir página low ticket.
+- `/feedback-low-ticket`: corrigir página low ticket pela régua v16.
 
 ### Toolkit
 

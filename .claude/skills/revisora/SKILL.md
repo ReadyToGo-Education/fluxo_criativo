@@ -51,11 +51,15 @@ Copy Light Copy não grita. Troque todo "!" por ".".
 ### 1.3 Pergunta no gancho proibida
 Leads e primeiras linhas nunca começam com pergunta. Reescreva como afirmação.
 
+**Exceção: páginas low ticket** (`/lt-pagina` e `/feedback-low-ticket`, régua `.claude/skills/pagina-low-ticket/SKILL.md`). Ali a pergunta na headline é permitida, porque abre a lacuna das 7 aberturas. Não reescreva.
+
 ### 1.4 Estrutura "Não é X. É Y." proibida
 Substitua por afirmação direta de Y.
 
 ### 1.5 "Mesmo que" e "sem precisar" proibidos como muleta
 Use curiosidade, especificidade ou inadequação no lugar.
+
+**Exceção: páginas low ticket** (mesma régua do item 1.3). As fórmulas da régua "mesmo sem [obstáculo]" (promessa central) e "Como [resultado] mesmo com [obstáculo]" (bullets) são permitidas.
 
 ### 1.6 Produto fora do lead
 Nome do produto, "curso", "treinamento", "compre", nome do método ou sigla não podem aparecer nas primeiras linhas. O lead fala da dor, desejo ou transformação do leitor.
@@ -114,6 +118,8 @@ Se o texto citar uma sigla, acrônimo ou nome de técnica sem explicar o que é 
 ### 4.5 Depoimento sem resultado concreto (flag)
 
 Se houver depoimentos que apenas elogiam ("material lindo", "professor incrível", "mudou minha vida", "recomendo muito") sem mencionar resultado específico, número, prazo ou mudança tangível, sinalize: `[REVISORA: depoimento fraco. Exigido: antes + resultado específico com número + prazo + palavras-chave em negrito. Ver Manual Parte 2, princípio 14.]`
+
+**Exceção: páginas low ticket** (mesma régua do item 1.3). Quando o aluno ainda não tem depoimentos reais, a seção DEPOIMENTOS nasce com depoimentos provisórios (fictícios). Não os sinalize por serem inventados; confira só se seguem a régua (resultado imediato, um ângulo por depoimento, detalhe concreto da vida) e se a entrega traz a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)". Se a lista faltar, sinalize: `[REVISORA: depoimentos provisórios sem a lista de troca. Incluir a lista antes de entregar.]`
 
 ### 4.6 Autoridade genérica (flag)
 

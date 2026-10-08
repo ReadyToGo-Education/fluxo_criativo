@@ -192,7 +192,7 @@ Para cada bloco, se faltar dado objetivo (URL de checkout, nome do criador, URL 
 
 **Itens 8 a 11 (copy, headline, placeholders, análise de imagens):**
 
-- **8. Incrementar copy:** comparar HTML com `copy-pagina/copy-{slug}.md` quando existir; sugerir reforços em bullets, parágrafos curtos ou CTAs sem contradizer a copy aprovada. Aplicar **Etapa 0** do SKILL `paginas`. Se não houver arquivo de copy, usar `resumo-produto.md` e **uma** pergunta por vez sobre o que reforçar.
+- **8. Incrementar copy:** comparar HTML com `copy-pagina/copy-{slug}.md` quando existir; sugerir reforços em bullets, parágrafos curtos ou CTAs sem contradizer a copy aprovada. Para os bullets, partir de `copy-pagina/bullets-{slug}.md` (gerado pelo `/copy-bullets`) quando existir. Aplicar **Etapa 0** do SKILL `paginas`. Se não houver arquivo de copy, usar `resumo-produto.md` e **uma** pergunta por vez sobre o que reforçar.
 - **9. Ajustar headline:** foco na primeira dobra (premissa, subheadline, três bullets do hero). Propor alternativas em linguagem humana, pedir escolha ou ajuste, depois gravar no HTML. Respeitar regra de produto fora do lead quando couber.
 - **10. Verificar placeholders de imagem:** listar no chat os pontos encontrados (seletores ou trecho do `src`/`alt`), priorizar o que bloqueia publicação, pedir arquivos ou encaminhar para o fluxo da opção **7** ou geração IA.
 - **11. Análise para enriquecer com imagens:** leitura estratégica da página (hero, método, depoimentos, oferta). Entregar **lista em bullets** do tipo “seção X ganharia com print de Y”, sem gerar arte no escuro; oferecer seguir para opção **7** ou **4** (IA) se o aluno quiser.
