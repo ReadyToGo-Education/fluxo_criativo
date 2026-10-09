@@ -267,6 +267,26 @@ function indexar() {
   (D.pendentes || []).forEach((v) => { v._conta = v.c && I.camp.get(v.c) ? I.camp.get(v.c).conta : null; });
 }
 const temCheckout = () => !!(D && D.checkout);
+function moedaPrincipal() {
+  const gasto = {};
+  for (const r of D.metaDiaCamp) { const mo = (I.conta.get(r.conta) || {}).moeda; if (mo) gasto[mo] = (gasto[mo] || 0) + r.g; }
+  const g = Object.entries(gasto).sort((a, b) => b[1] - a[1])[0];
+  if (g) return g[0];
+  const freq = {};
+  D.contas.forEach((c) => { if (c.moeda) freq[c.moeda] = (freq[c.moeda] || 0) + 1; });
+  const f = Object.entries(freq).sort((a, b) => b[1] - a[1])[0];
+  return f ? f[0] : CONFIG.moeda || "BRL";
+}
+// Gasto e compra por hora das contas visíveis (cada conta tem o seu, na sua moeda).
+function horasVisiveis() {
+  if (!D.porHoraC) return { g: D.porHora || {}, cp: D.comprasHora || {}, vp: D.valorHora || {} };
+  const out = { g: {}, cp: {}, vp: {} };
+  for (const [conta, mapas] of Object.entries(D.porHoraC)) {
+    if (!contaOk(conta)) continue;
+    for (const k of ["g", "cp", "vp"]) for (const [d, arr] of Object.entries(mapas[k] || {})) { const alvo = (out[k][d] = out[k][d] || new Array(24).fill(0)); arr.forEach((x, h) => { alvo[h] += x || 0; }); }
+  }
+  return out;
+}
 const hoje = () => D.hoje;
 
 // ============================================================ estado da tela
@@ -288,7 +308,8 @@ function aplicaPeriodo() {
 
 // ============================================================ agregação
 const valor = (v) => (S.fat === "bruto" ? v.bru : (ok(v.liq) ? v.liq : v.bru));
-const contaOk = (c) => S.conta === "todas" || c === S.conta;
+// Em "Todas as contas" entram só as contas na moeda principal, para não somar real com dólar.
+const contaOk = (c) => (S.conta === "todas" ? ((I.conta.get(c) || {}).moeda || D.moedaPrincipal) === D.moedaPrincipal : c === S.conta);
 function agg(de, ate, alvo) {
   alvo = alvo || {};
   const m = { g: 0, i: 0, c: 0, v: 0, ic: 0, cp: 0, vp: 0, rs: 0, tipos: {}, ped: 0, pedAd: 0, fatCk: 0, bumpAny: 0, bumps: {}, up: 0, vendas: [] };
@@ -304,13 +325,16 @@ function agg(de, ate, alvo) {
         m.rs += r.rs || 0; if (r.tp) m.tipos[r.tp] = (m.tipos[r.tp] || 0) + (r.rs || 0);
       }
     } else {
-      const h = (D.porHora[d] || []).slice(0, corte.hora + 1), gH = h.reduce((s, x) => s + x, 0);
-      // A Meta só entrega gasto e compra por hora; o resto do dia cortado entra proporcional ao gasto.
-      const dia = { g: 0, i: 0, c: 0, v: 0, ic: 0, rs: 0 };
-      for (const r of fonte.get(d) || []) { if (!contaOk(r.conta)) continue; dia.g += r.g; dia.i += r.i; dia.c += r.c; dia.v += r.v; dia.ic += r.ic || 0; dia.rs += r.rs || 0; }
-      const frac = dia.g ? Math.min(1, gH / dia.g) : 0;
-      m.g += gH; m.i += dia.i * frac; m.c += dia.c * frac; m.v += dia.v * frac; m.ic += dia.ic * frac; m.rs += dia.rs * frac;
-      m.cp += ((D.comprasHora || {})[d] || []).slice(0, corte.hora + 1).reduce((s, x) => s + x, 0);
+      // Dia cortado numa hora. A Meta só entrega o gasto por hora; o resto entra proporcional ao gasto até essa hora.
+      const hh = S.horas.g[d] || [], gDia = hh.reduce((s, x) => s + x, 0), gH = hh.slice(0, corte.hora + 1).reduce((s, x) => s + x, 0);
+      const frac = gDia ? Math.min(1, gH / gDia) : Math.min(1, (corte.hora + 1) / 24);
+      for (const r of fonte.get(d) || []) {
+        if (!contaOk(r.conta)) continue;
+        if (alvo.camp && r.camp !== alvo.camp) continue;
+        if (alvo.ad && r.a !== alvo.ad) continue;
+        m.g += r.g * frac; m.i += r.i * frac; m.c += r.c * frac; m.v += r.v * frac; m.ic += (r.ic || 0) * frac; m.cp += (r.cp || 0) * frac; m.vp += (r.vp || 0) * frac;
+        m.rs += (r.rs || 0) * frac; if (r.tp) m.tipos[r.tp] = (m.tipos[r.tp] || 0) + (r.rs || 0) * frac;
+      }
     }
   }
   const pixel = S.modo === "pixel";
@@ -361,13 +385,33 @@ function agg(de, ate, alvo) {
   m.freq = m.alcance ? m.i / m.alcance : null;
   return m;
 }
+// As vendas do checkout só chegam quando o Claude busca. Depois da última busca o painel tem o gasto,
+// mas não as vendas: as métricas de venda param na hora da busca em vez de mostrar zero.
+function vendasAte() {
+  if (!temCheckout() || S.modo === "pixel" || !D.vendasAte) return null;
+  return { dia: D.vendasAte.slice(0, 10), hora: +D.vendasAte.slice(11, 13) };
+}
+const CAMPOS_VENDA = ["fat", "lucro", "roas", "cpa", "compras", "ticket", "conv", "convCk", "taxaBump", "taxaUp", "ped", "pedAd", "up", "bumpAny", "bumps", "vendas", "fatCk"];
+function aggV(de, ate, alvo) {
+  const m = agg(de, ate, alvo), va = vendasAte();
+  if (!va || ate < va.dia || (ate === va.dia && va.hora >= 23)) return m;
+  if (de > va.dia) {
+    CAMPOS_VENDA.forEach((k) => { m[k] = k === "vendas" ? [] : k === "bumps" ? {} : null; });
+    m.semVendas = true;
+    return m;
+  }
+  const mv = agg(de, va.dia, Object.assign({}, alvo, { corte: { dia: va.dia, hora: va.hora } }));
+  CAMPOS_VENDA.forEach((k) => { m[k] = mv[k]; });
+  m.vendasParcial = true;
+  return m;
+}
 function periodoAnterior() {
   const n = difDias(S.de, S.ate) + 1;
   const de = somaDias(S.de, -n), ate = somaDias(S.de, -1);
   if (de < D.inicio) return { motivo: "Sem período anterior completo para comparar (o painel guarda " + (difDias(D.inicio, hoje()) + 1) + " dias)." };
   if (S.ate !== hoje()) return { de, ate, alvo: {}, txt: "Comparado com " + (de === ate ? dataBR(de) : dataBR(de) + " a " + dataBR(ate)) };
   const H = D.horaAtual;
-  if (!ok(H) || !(D.porHora || {})[ate]) return { motivo: "Sem comparação: hoje ainda está em andamento." };
+  if (!ok(H) || !S.horas.g[ate]) return { motivo: "Sem comparação: hoje ainda está em andamento." };
   return { de, ate, alvo: { corte: { dia: ate, hora: H } }, txt: "Comparado com " + (de === ate ? dataBR(de) + " até " + H + "h59" : dataBR(de) + " a " + dataBR(ate) + ", o último dia só até " + H + "h59") };
 }
 
@@ -409,12 +453,15 @@ function renderTopo() {
   $("#titulo").textContent = CONFIG.nome || "Dashboard de Tráfego";
   document.title = CONFIG.nome || "Dashboard de Tráfego";
   $("#selo-demo").hidden = !D.demo;
-  $("#ultima").textContent = D.atualizadoEm ? "Atualizado em " + D.atualizadoEm : "";
+  const partes = [];
+  if (D.atualizadoEm) partes.push("Meta atualizada em " + D.atualizadoEm);
+  if (D.checkout && D.vendasEm) partes.push("Vendas da " + D.checkout.plataforma + " buscadas em " + D.vendasEm);
+  $("#ultima").textContent = partes.join(" · ");
   $("#atalhos").innerHTML = ATALHOS.map(([k, r]) => '<button type="button" class="chip" data-p="' + k + '" aria-pressed="' + (S.periodo === k) + '">' + r + "</button>").join("");
   $("#de").value = S.de; $("#ate").value = S.ate;
   $("#de").min = $("#ate").min = D.inicio; $("#de").max = $("#ate").max = hoje();
   $("#grupo-conta").hidden = D.contas.length < 2;
-  $("#conta").innerHTML = [["todas", "Todas as contas"]].concat(D.contas.map((c) => [c.id, c.nome])).map(([v, r]) => '<option value="' + esc(v) + '"' + (S.conta === v ? " selected" : "") + ">" + esc(r) + "</option>").join("");
+  $("#conta").innerHTML = [["todas", "Todas as contas" + (D.contas.some((c) => c.moeda && c.moeda !== D.moedaPrincipal) ? " em " + D.moedaPrincipal : "")]].concat(D.contas.map((c) => [c.id, c.nome + (c.moeda && c.moeda !== D.moedaPrincipal ? " (" + c.moeda + ")" : "")])).map(([v, r]) => '<option value="' + esc(v) + '"' + (S.conta === v ? " selected" : "") + ">" + esc(r) + "</option>").join("");
   const ck = temCheckout();
   $("#grupo-modo").hidden = !ck; $("#grupo-valor").hidden = !ck;
   if (ck) {
@@ -426,8 +473,17 @@ function renderTopo() {
   else if (!ck) av.unshift("Compras e faturamento como a Meta registra pelo pixel, na janela de atribuição da conta. Com as vendas do checkout ligadas, o painel mostra o valor líquido, o bump, o upsell e a origem de cada venda.");
   else if (S.modo === "pixel") av.unshift("Modo pixel: compras e faturamento como a Meta registra (valor bruto do pixel). Bump e upsell continuam vindo do checkout.");
   if (ck && S.modo === "todas" && S.conta !== "todas") av.unshift("Com uma conta escolhida, vendas orgânicas e sem rastreio ficam de fora: elas não pertencem a nenhuma conta.");
+  const fora = D.contas.filter((c) => c.moeda && c.moeda !== D.moedaPrincipal);
+  if (S.conta === "todas" && fora.length) av.push((fora.length === 1 ? "A conta " + fora[0].nome + " usa " + fora[0].moeda + " e fica" : "As contas " + fora.map((c) => c.nome + " (" + c.moeda + ")").join(", ") + " ficam") + " fora do total, para não somar moedas diferentes. Para ver " + (fora.length === 1 ? "os números dela, escolha a conta" : "os números delas, escolha cada conta") + " no seletor.");
+  const vaTopo = vendasAte();
+  let erroVendas = "";
+  if (vaTopo && S.ate >= vaTopo.dia) {
+    const horas = (Date.now() - new Date(D.vendasAte).getTime()) / 36e5;
+    erroVendas = "As vendas da " + D.checkout.plataforma + " vão até " + D.vendasEm + ". Do que veio depois, o painel tem o gasto mas ainda não as vendas: faturamento, lucro, ROAS e CPA param nessa hora. Para trazer as vendas novas, peça ao Claude: atualize as vendas do dashboard.";
+    if (horas < 12) { av.unshift(erroVendas); erroVendas = ""; }
+  }
   if (S.ate === hoje()) av.push("A Meta leva de 1 a 3 horas para fechar os números da última hora: o dia de hoje ainda vai mudar.");
-  $("#avisos").innerHTML = (S.erro ? '<div class="aviso erro">' + esc(S.erro) + "</div>" : "") + av.map((t) => '<div class="aviso">' + esc(t) + "</div>").join("");
+  $("#avisos").innerHTML = (S.erro ? '<div class="aviso erro">' + esc(S.erro) + "</div>" : "") + (erroVendas ? '<div class="aviso erro">' + esc(erroVendas) + "</div>" : "") + av.map((t) => '<div class="aviso">' + esc(t) + "</div>").join("");
 }
 
 // ============================================================ visão geral
@@ -460,7 +516,9 @@ function renderGeralRes() {
 }
 function renderGeral() {
   if (S.res) return renderGeralRes();
-  const m = agg(S.de, S.ate);
+  const m = aggV(S.de, S.ate);
+  const subV = m.semVendas ? "Vendas ainda não buscadas" : m.vendasParcial ? "Até a última busca de vendas" : "";
+  const comparaV = !m.semVendas && !m.vendasParcial;
   const ant = periodoAnterior();
   const p = ant.de ? agg(ant.de, ant.ate, ant.alvo) : null;
   $("#geral-comp").textContent = ant.txt || ant.motivo;
@@ -470,9 +528,9 @@ function renderGeral() {
   const lucroCls = ok(m.lucro) ? (m.lucro >= 0 ? "val-pos" : "val-neg") : "";
   $("#cards-1").innerHTML =
     card("Investimento", "Valor gasto em anúncios no período.", F.moeda(m.g), "", p ? delta(m.g, p.g, null) : "") +
-    card("Faturamento", "Soma de " + escopo + ". Valor: " + fonteFat + ".", F.moeda(m.fat), "", p ? delta(m.fat, p.fat, true) : "") +
-    card("Lucro após tráfego", "Faturamento menos investimento em anúncios. Não desconta impostos nem outros custos.", '<span class="' + lucroCls + '">' + F.moeda(m.lucro) + "</span>", "", p ? delta(m.lucro, p.lucro, true) : "") +
-    card("ROAS", "Faturamento ÷ investimento. Acima de 1 o investimento se pagou.", F.x2(m.roas) + indRoas(m.roas), ok(m.roas) ? (m.roas >= 1 ? "Cada 1 investido voltou " + fmt2.format(m.roas) : "Abaixo do ponto de equilíbrio (1,00)") : "", p ? delta(m.roas, p.roas, true) : "");
+    card("Faturamento", "Soma de " + escopo + ". Valor: " + fonteFat + ".", F.moeda(m.fat), subV, p && comparaV ? delta(m.fat, p.fat, true) : "") +
+    card("Lucro após tráfego", "Faturamento menos investimento em anúncios. Não desconta impostos nem outros custos.", '<span class="' + lucroCls + '">' + F.moeda(m.lucro) + "</span>", subV, p && comparaV ? delta(m.lucro, p.lucro, true) : "") +
+    card("ROAS", "Faturamento ÷ investimento. Acima de 1 o investimento se pagou.", F.x2(m.roas) + indRoas(m.roas), (subV ? subV + ". " : "") + (ok(m.roas) ? (m.roas >= 1 ? "Cada 1 investido voltou " + fmt2.format(m.roas) : "Abaixo do ponto de equilíbrio (1,00)") : ""), p && !m.semVendas ? delta(m.roas, p.roas, true) : "");
   let html =
     card("CPA", "Investimento ÷ número de compras" + (ck && !pixel ? " do produto principal." : " registradas pelo pixel."), F.moeda(m.cpa) + indCpa(m.cpa, m.ticket), ok(m.compras) ? F.num(m.compras) + " compras" + pendentesTxt() : "") +
     card("Ticket médio", "Faturamento ÷ número de compras." + (ck ? " Inclui bump e upsell do mesmo pedido." : ""), F.moeda(m.ticket), ok(m.ticket) && ck && S.fat === "liquido" && !pixel ? "Também é o CPA máximo para empatar" : "") +
@@ -525,8 +583,10 @@ function renderOrigem() {
 
 // ============================================================ funil
 function renderFunil() {
-  const m = agg(S.de, S.ate);
-  const base = agg(D.inicio, hoje());
+  const va = S.res ? null : vendasAte(), corteV = va && S.ate >= va.dia ? { corte: { dia: va.dia, hora: va.hora } } : null;
+  if (corteV && S.de > va.dia) { $("#funil").innerHTML = '<p class="vazio">As vendas deste período ainda não foram buscadas.</p>'; return; }
+  const m = corteV ? agg(S.de, va.dia, corteV) : agg(S.de, S.ate);
+  const base = corteV ? agg(D.inicio, va.dia, corteV) : agg(D.inicio, hoje());
   const pixel = S.modo === "pixel", ck = temCheckout();
   let etapas;
   if (S.res) {
@@ -554,7 +614,7 @@ function renderFunil() {
     if (ck && D.checkout.bumps && D.checkout.bumps.length) etapas.push({ rot: "Com order bump", val: m.bumpAny, fonte: "Checkout", taxa: div(m.bumpAny, m.ped), base: div(base.bumpAny, base.ped), nome: "das compras" });
     if (ck && D.checkout.upsell) etapas.push({ rot: "Com upsell", val: m.up, fonte: "Checkout", taxa: div(m.up, m.ped), base: div(base.up, base.ped), nome: "das compras" });
   }
-  $("#funil").innerHTML = etapas.map((e) => {
+  $("#funil").innerHTML = (corteV ? '<p class="small muted" style="margin:0">Até a última busca de vendas: ' + esc(D.vendasEm) + ".</p>" : "") + etapas.map((e) => {
     const alerta = ok(e.taxa) && ok(e.base) && e.base > 0 && e.taxa < e.base * 0.75 && S.de !== D.inicio;
     const taxa = e.taxa === undefined ? '<span class="etapa-taxa muted">topo do funil</span>' :
       '<span class="etapa-taxa"><b class="num">' + F.pct(ok(e.taxa) ? e.taxa * 100 : null) + "</b> " + e.nome + (ok(e.base) ? ' <span class="muted">(média ' + fmt2.format(e.base * 100) + "%)</span>" : "") + "</span>";
@@ -632,7 +692,7 @@ function diasDoPeriodo() { const r = []; for (let d = S.de; d <= S.ate; d = soma
 
 // ============================================================ ritmo de hoje
 function renderRitmo() {
-  const t = hoje(), horas = D.porHora || {}, sec = $("#sec-ritmo");
+  const t = hoje(), horas = S.horas.g, sec = $("#sec-ritmo");
   sec.hidden = !horas[t];
   if (sec.hidden) return;
   const H = ok(D.horaAtual) ? D.horaAtual : 23;
@@ -652,17 +712,20 @@ function renderRitmo() {
   const ck = temCheckout() && S.modo !== "pixel";
   const porHora = new Array(24).fill(0);
   if (ck) D.vendas.forEach((v) => { if (v.p && v.d === t) porHora[+v.t.slice(11, 13)]++; });
-  else ((D.comprasHora || {})[t] || []).forEach((n, h) => { porHora[h] = n || 0; });
+  else (S.horas.cp[t] || []).forEach((n, h) => { porHora[h] = n || 0; });
   $("#ritmo-sub").textContent = "Até " + String(H).padStart(2, "0") + "h59 de " + dataBR(t) + ". Barras: gasto por hora. Pontos verdes: " + (ck ? "pedidos" : "compras do pixel") + " na hora.";
   grafico("#ritmo-graf", horas[t].slice(0, H + 1).map((g, h) => ({ x: h + "h", y: g, extra: porHora[h], destaque: h === H, rotulo: h + "h: " + fmtMoeda.format(g) + " de gasto, " + porHora[h] + (porHora[h] === 1 ? (ck ? " pedido" : " compra") : (ck ? " pedidos" : " compras")) })), {
     W: 1180, H: 250, tipo: "barras", titulo: "Gasto por hora hoje", eixo: (v) => fmtMoeda0.format(v), valor: (v) => fmtMoeda.format(v), leitura: "#ritmo-leitura", padrao: "Passe o mouse nas barras para ver cada hora.",
   });
   $("#ritmo-cab").innerHTML = "<th>Dia</th><th>Gasto até " + H + "h</th><th>" + (ck ? "Pedidos" : "Compras") + " até " + H + "h</th><th>ROAS</th>";
+  const va = vendasAte(), NB = '<td><span class="muted small">não buscado</span></td>';
+  if (ck && va && t > va.dia) $("#ritmo-sub").textContent += " As vendas de hoje ainda não foram buscadas.";
   $("#ritmo-tab").innerHTML = dias.map((d) => {
     const gasto = gastoAte(d);
+    if (ck && va && (d > va.dia || (d === va.dia && H > va.hora))) return "<tr" + (d === t ? ' class="total"' : "") + "><td>" + rotDia(d) + "</td><td>" + F.moeda(gasto) + "</td>" + NB + NB + "</tr>";
     let ped, fat;
     if (ck) { const vs = D.vendas.filter((v) => v.d === d && +v.t.slice(11, 13) <= H); ped = vs.filter((v) => v.p).length; fat = vs.reduce((s, v) => s + valor(v), 0); }
-    else { ped = ((D.comprasHora || {})[d] || []).slice(0, H + 1).reduce((s, x) => s + (x || 0), 0); fat = ((D.valorHora || {})[d] || []).slice(0, H + 1).reduce((s, x) => s + (x || 0), 0); }
+    else { ped = (S.horas.cp[d] || []).slice(0, H + 1).reduce((s, x) => s + (x || 0), 0); fat = (S.horas.vp[d] || []).slice(0, H + 1).reduce((s, x) => s + (x || 0), 0); }
     const roas = div(fat, gasto);
     return "<tr" + (d === t ? ' class="total"' : "") + "><td>" + rotDia(d) + "</td><td>" + F.moeda(gasto) + "</td><td>" + fmtNum.format(ped) + "</td><td>" + F.x2(roas) + indRoas(roas) + "</td></tr>";
   }).join("");
@@ -710,12 +773,12 @@ function ordenar(linhas) {
 }
 function renderCampanhas() {
   const C = cols();
-  const total = agg(S.de, S.ate);
+  const total = aggV(S.de, S.ate);
   $("#camp-cab").innerHTML = C.map((c) => {
     const ord = S.ordem.col === c.k ? (S.ordem.dir > 0 ? "ascending" : "descending") : null;
     return "<th" + (c.ord === false ? "" : ' class="ord" data-k="' + c.k + '" tabindex="0"') + (ord ? ' aria-sort="' + ord + '"' : "") + ">" + c.rot + (ord ? (S.ordem.dir > 0 ? " ↑" : " ↓") : "") + (c.dica ? " " + info(c.dica) : "") + "</th>";
   }).join("");
-  let camps = D.campanhas.filter((c) => contaOk(c.conta)).map((c) => ({ id: c.id, nome: c.nome, conta: c.conta, status: c.status, orc: orcamentoCampanha(c), m: agg(S.de, S.ate, { camp: c.id }) }));
+  let camps = D.campanhas.filter((c) => contaOk(c.conta)).map((c) => ({ id: c.id, nome: c.nome, conta: c.conta, status: c.status, orc: orcamentoCampanha(c), m: aggV(S.de, S.ate, { camp: c.id }) }));
   camps = camps.filter((r) => r.m.g > 0 || r.m.compras > 0 || r.m.rs > 0 || ativo(r.status));
   camps.forEach((r) => { r.ticketRef = ok(r.m.ticket) ? r.m.ticket : total.ticket; });
   ordenar(camps);
@@ -730,7 +793,7 @@ function renderCampanhas() {
       return "<td>" + c.f(r) + "</td>";
     }).join("") + "</tr>";
     if (aberta) {
-      let ads = D.anuncios.filter((a) => a.campanha === r.id).map((a) => ({ id: a.id, nome: a.nome, status: a.status, conj: (I.conj.get(a.conjunto) || {}).nome, orc: null, m: agg(S.de, S.ate, { ad: a.id }) }));
+      let ads = D.anuncios.filter((a) => a.campanha === r.id).map((a) => ({ id: a.id, nome: a.nome, status: a.status, conj: (I.conj.get(a.conjunto) || {}).nome, orc: null, m: aggV(S.de, S.ate, { ad: a.id }) }));
       ads = ads.filter((a) => a.m.g > 0 || a.m.compras > 0 || a.m.rs > 0 || ativo(a.status));
       ads.forEach((a) => { a.ticketRef = ok(a.m.ticket) ? a.m.ticket : r.ticketRef; });
       ordenar(ads);
@@ -763,7 +826,7 @@ function renderCampanhas() {
 function renderDias() {
   S.metricaDia = metricaValida(S.metricaDia, S.res ? "res" : "fat");
   $("#metrica-dia").innerHTML = metricasDoModo().map(([k, m]) => '<option value="' + k + '"' + (S.metricaDia === k ? " selected" : "") + ">" + m.rot + "</option>").join("");
-  const linhas = diasDoPeriodo().map((d) => ({ d, m: agg(d, d) }));
+  const linhas = diasDoPeriodo().map((d) => ({ d, m: aggV(d, d) }));
   const met = METRICAS[S.metricaDia];
   grafico("#dia-graf", linhas.map((l) => ({ x: diaCurto(l.d), y: met.f(l.m), rotulo: diaSemana(l.d) + " " + diaCurto(l.d) + ": " + (ok(met.f(l.m)) ? met.fmt(met.f(l.m)) : "sem dado") })), {
     W: 1180, H: 260, tipo: linhas.length > 1 ? "linha" : "barras", titulo: met.rot + " por dia", eixo: met.eixo, valor: met.fmt, leitura: "#dia-leitura", padrao: met.rot + " por dia. Passe o mouse para ver o valor.",
@@ -774,9 +837,11 @@ function renderDias() {
     return;
   }
   $("#dia-cab").innerHTML = "<th>Dia</th><th>Investimento</th><th>Faturamento</th><th>Lucro</th><th>Compras</th><th>CPA</th><th>ROAS</th><th>Conv. da página</th>";
+  const NB = '<td><span class="muted small">não buscado</span></td>', va = vendasAte();
   $("#dia-tab").innerHTML = linhas.slice().reverse().map((l) => {
     const m = l.m, cls = ok(m.lucro) && (m.g || m.fat) ? (m.lucro >= 0 ? "val-pos" : "val-neg") : "";
-    return "<tr><td>" + diaSemana(l.d) + " " + dataBR(l.d) + "</td><td>" + F.moeda(m.g) + "</td><td>" + F.moeda(m.fat) + '</td><td class="' + cls + '">' + F.moeda(m.g || m.fat ? m.lucro : null) + "</td><td>" + F.num(m.compras) + "</td><td>" + F.moeda(m.cpa) + "</td><td>" + F.x2(m.roas) + indRoas(m.roas) + "</td><td>" + F.pct(m.conv) + "</td></tr>";
+    if (m.semVendas) return "<tr><td>" + diaSemana(l.d) + " " + dataBR(l.d) + "</td><td>" + F.moeda(m.g) + "</td>" + NB.repeat(6) + "</tr>";
+    return "<tr><td>" + diaSemana(l.d) + " " + dataBR(l.d) + (m.vendasParcial && va ? ' <span class="muted small">(vendas até ' + va.hora + "h)</span>" : "") + "</td><td>" + F.moeda(m.g) + "</td><td>" + F.moeda(m.fat) + '</td><td class="' + cls + '">' + F.moeda(m.g || m.fat ? m.lucro : null) + "</td><td>" + F.num(m.compras) + "</td><td>" + F.moeda(m.cpa) + "</td><td>" + F.x2(m.roas) + indRoas(m.roas) + "</td><td>" + F.pct(m.conv) + "</td></tr>";
   }).join("");
 }
 
@@ -788,7 +853,7 @@ function renderGaveta() {
   const ent = tipo === "camp" ? I.camp.get(id) : I.ad.get(id);
   if (!ent) { S.gaveta = null; camada.innerHTML = ""; return; }
   const alvo = tipo === "camp" ? { camp: id } : { ad: id };
-  const m = agg(S.de, S.ate, alvo);
+  const m = aggV(S.de, S.ate, alvo);
   const camp = tipo === "camp" ? ent : I.camp.get(ent.campanha);
   const orc = tipo === "camp" ? orcamentoCampanha(ent) : (I.conj.get(ent.conjunto) || {}).orcDia;
   const base = [[tipo === "camp" ? "Orçamento diário" : "Orçamento diário do conjunto", F.moeda(orc)], ["Investimento", F.moeda(m.g)], ["Impressões", F.num(m.i)], ["Alcance", F.num(m.alcance)], ["Frequência", F.x2(m.freq)],
@@ -801,7 +866,7 @@ function renderGaveta() {
       ["ROAS", F.x2(m.roas)], ["Lucro após tráfego", F.moeda(m.g || m.fat ? m.lucro : null)],
     ]);
   const t = hoje();
-  const tres = [somaDias(t, -2), somaDias(t, -1), t].map((d) => ({ d, m: agg(d, d, alvo) }));
+  const tres = [somaDias(t, -2), somaDias(t, -1), t].map((d) => ({ d, m: aggV(d, d, alvo) }));
   S.metricaGaveta = metricaValida(S.metricaGaveta, S.res ? "cpr" : "roas");
   const opcoes = metricasDoModo().map(([k, x]) => '<option value="' + k + '"' + (S.metricaGaveta === k ? " selected" : "") + ">" + x.rot + "</option>").join("");
   const lista = temCheckout() && S.modo !== "pixel" ? m.vendas.filter((v) => v.p || v.u).slice().reverse().slice(0, 40) : [];
@@ -815,7 +880,7 @@ function renderGaveta() {
     (temCheckout() && S.modo !== "pixel" ? '<section class="painel"><h3 style="font-size:14px">Vendas no período</h3>' + (lista.length ? '<div class="tabela-wrap"><table><thead><tr><th>Quando</th><th>Itens</th><th>Valor</th></tr></thead><tbody>' + lista.map((v) => "<tr><td>" + diaCurto(v.d) + " " + v.t.slice(11, 16) + '</td><td style="text-align:left;white-space:normal">' + esc((v.it || []).join(" + ")) + "</td><td>" + F.moeda(valor(v)) + "</td></tr>").join("") + "</tbody></table></div>" : '<p class="small muted" style="margin:0">Nenhuma venda atribuída no período.</p>') + "</section>" : "") +
     "</aside>";
   const met = METRICAS[S.metricaGaveta];
-  grafico("#gaveta-graf", diasDoPeriodo().map((d) => { const x = agg(d, d, alvo); const v = met.f(x); const tem = x.g || x.compras || x.rs; return { x: diaCurto(d), y: tem ? v : null, rotulo: diaCurto(d) + ": " + (ok(v) && tem ? met.fmt(v) : "sem dado") }; }), {
+  grafico("#gaveta-graf", diasDoPeriodo().map((d) => { const x = aggV(d, d, alvo); const v = met.f(x); const tem = x.g || x.compras || x.rs; return { x: diaCurto(d), y: tem ? v : null, rotulo: diaCurto(d) + ": " + (ok(v) && tem ? met.fmt(v) : "sem dado") }; }), {
     W: 560, H: 220, tipo: S.de !== S.ate ? "linha" : "barras", titulo: met.rot + " por dia", eixo: met.eixo, valor: met.fmt, leitura: "#gaveta-leitura", padrao: met.rot + " por dia",
   });
   $("#metrica-gaveta").addEventListener("change", (e) => { S.metricaGaveta = e.target.value; renderGaveta(); });
@@ -857,6 +922,9 @@ function renderNotas() {
 function render() {
   if (!D) return;
   aplicaPeriodo();
+  const contaSel = S.conta !== "todas" ? I.conta.get(S.conta) : null;
+  moeda = (contaSel && contaSel.moeda) || D.moedaPrincipal || D.moeda || "BRL"; preparaFormatos();
+  S.horas = horasVisiveis();
   S.res = calcModoRes();
   renderTopo(); renderGeral(); renderOrigem(); renderFunil(); renderRitmo(); renderCampanhas(); renderDias(); renderGaveta(); renderNotas();
 }
@@ -1015,7 +1083,6 @@ function num(v) {
   if (Array.isArray(v)) return v.length ? num(v[0] && v[0].value !== undefined ? v[0].value : v[0]) : null;
   if (typeof v === "object") {
     if (Array.isArray(v.values)) return num(v.values[0] && v.values[0].value); // "results" vem como {indicator, values: [{value}]}
-    if (typeof v.unit === "string" && v.unit.length === 3) moeda = v.unit;
     return num(v.value);
   }
   return null;
@@ -1075,7 +1142,7 @@ const BASE = ["name", "amount_spent", "impressions", "link_click", "landing_page
 const CAND = {
   ic: ["omni_initiated_checkout"],
   vp: ["offsite_conversion_fb_pixel_purchase_values"],
-  roas: ["purchase_roas"], campanha: ["campaign_id"], conjunto: ["adset_id"],
+  roas: ["purchase_roas"], res: ["results"], campanha: ["campaign_id"], conjunto: ["adset_id"],
 };
 function enumDe(no, prof) {
   if (!no || typeof no !== "object" || (prof || 0) > 6) return null;
@@ -1089,7 +1156,7 @@ function enumDe(no, prof) {
 // Cada item de `escolhidos` é uma lista: quando o conector aceita vários nomes candidatos,
 // todos vão na consulta e a leitura usa o primeiro que vier preenchido.
 async function descobrir(conta) {
-  let salvo = null; try { salvo = JSON.parse(store.get("dt_campos_v3") || "null"); } catch (e) {}
+  let salvo = null; try { salvo = JSON.parse(store.get("dt_campos_v4") || "null"); } catch (e) {}
   if (salvo && salvo.servidor === SERVER && Date.now() - salvo.quando < 7 * 864e5) { PAG = salvo.pag; diag.campos = Object.assign({ origem: "salvo neste navegador" }, salvo); return salvo; }
   let props = null;
   try { const d = await mcp.describeTool(SERVER, TOOL); props = (d.inputSchema && d.inputSchema.properties) || null; }
@@ -1118,7 +1185,7 @@ async function descobrir(conta) {
     catch (e) { if (e && (e.code === "tool_error" || e.code === "bad_request")) r.hora = false; else throw e; }
   }
   PAG = r.pag;
-  store.set("dt_campos_v3", JSON.stringify(r));
+  store.set("dt_campos_v4", JSON.stringify(r));
   diag.campos = Object.assign({ origem: props ? "esquema" : "teste" }, r);
   return r;
 }
@@ -1156,12 +1223,13 @@ async function coletar(fresco) {
   if (!contas.length) throw { code: "sem_contas", total: todasContas.length };
   const cfg = await descobrir(contas[0].ad_account_id);
   const E = cfg.escolhidos;
+  for (const k of Object.keys(CAND)) E[k] = E[k] || []; // descoberta antiga sem algum campo
   const tz = contas[0].timezone_name || contas[0].timezone || null;
   const { dia: t, hora: H } = fusoHoje(tz);
   const inicio = somaDias(t, -30);
-  const metr = ["amount_spent", "impressions", "link_click", "landing_page_view", "omni_purchase", "results"].concat(E.ic, E.vp, E.roas);
-  const pais = [].concat(E.campanha, E.conjunto);
-  const D2 = { demo: false, hoje: t, inicio, horaAtual: H, contas: [], campanhas: [], conjuntos: [], anuncios: [], metaDiaCamp: [], metaDiaAd: [], porHora: {}, comprasHora: {}, valorHora: {}, alcance: {}, vendas: [], pendentes: [], avisos: [], checkout: null };
+  const metr = ["amount_spent", "impressions", "link_click", "landing_page_view", "omni_purchase"].concat(E.ic || [], E.vp || [], E.roas || [], E.res || []);
+  const pais = [].concat(E.campanha || [], E.conjunto || []);
+  const D2 = { demo: false, hoje: t, inicio, horaAtual: H, contas: [], campanhas: [], conjuntos: [], anuncios: [], metaDiaCamp: [], metaDiaAd: [], porHora: {}, comprasHora: {}, valorHora: {}, porHoraC: {}, alcance: {}, vendas: [], pendentes: [], avisos: [], checkout: null };
   const achou = { ic: 0, vp: 0, roas: 0 };
   const pega = (r, lista, k) => { for (const f of lista) { const x = num(r[f]); if (x != null) { achou[k]++; return x; } } return null; };
   const paiDe = (r, lista) => { for (const f of lista) if (r[f] != null && r[f] !== "") return String(typeof r[f] === "object" ? r[f].id || r[f].value : r[f]); return null; };
@@ -1176,7 +1244,7 @@ async function coletar(fresco) {
   const tarefas = [];
   for (const a of contas) {
     const id = a.ad_account_id;
-    D2.contas.push({ id: String(id), nome: a.ad_account_name || String(id) });
+    D2.contas.push({ id: String(id), nome: a.ad_account_name || String(id), moeda: a.currency || CONFIG.moeda || "BRL" });
     const base = { ad_account_id: id, sort: "amount_spent_descending", limit: 1000 };
     for (const preset of ["last_30d", "today"]) {
       tarefas.push(async () => {
@@ -1223,7 +1291,8 @@ async function coletar(fresco) {
           const d = String(r.date_start || "").slice(0, 10), h = parseInt(dim(r, HORA), 10);
           if (!d || !(h >= 0 && h < 24) || (preset !== "today" && d === t)) continue;
           const l = linhaMeta(r, {});
-          for (const [mapa, val] of [[D2.porHora, l.g], [D2.comprasHora, l.cp], [D2.valorHora, l.vp]]) { (mapa[d] = mapa[d] || new Array(24).fill(0))[h] += val; }
+          const pc = (D2.porHoraC[String(id)] = D2.porHoraC[String(id)] || { g: {}, cp: {}, vp: {} });
+          for (const [k, val] of [["g", l.g], ["cp", l.cp], ["vp", l.vp]]) { (pc[k][d] = pc[k][d] || new Array(24).fill(0))[h] += val; }
         }
       });
     }
@@ -1231,7 +1300,7 @@ async function coletar(fresco) {
   const res = await emLotes(tarefas, 4);
   const falhas = res.filter((r) => !r.ok);
   falhas.forEach((f) => diag.erros.push((f.e && f.e.code) + ": " + String((f.e && f.e.message) || "").slice(0, 300)));
-  if (falhas.some((f) => f.e && f.e.code === "tool_error")) store.set("dt_campos_v3", "");
+  if (falhas.some((f) => f.e && f.e.code === "tool_error")) store.set("dt_campos_v4", "");
   if (falhas.length === res.length) throw falhas[0].e;
   if (falhas.length) D2.avisos.push("Parte dos números não veio da Meta nesta atualização (" + falhas.length + " de " + res.length + " consultas). Clique em Atualizar dados de novo em alguns minutos.");
   if (!D2.metaDiaCamp.length) D2.avisos.push("A Meta não devolveu gasto nos últimos 30 dias para " + (contas.length > 1 ? "estas contas" : "esta conta") + ".");
@@ -1241,7 +1310,7 @@ async function coletar(fresco) {
   D2.campanhas = [...camps.values()]; D2.conjuntos = [...conjs.values()]; D2.anuncios = [...ads.values()].filter((a) => a.campanha);
   diag.orcamentoBruto = ORCAMENTO_BRUTO.slice();
   diag.totais = { campanhas: D2.campanhas.length, conjuntos: D2.conjuntos.length, anuncios: ads.size, anunciosComCampanha: D2.anuncios.length, linhasCamp: D2.metaDiaCamp.length, linhasAd: D2.metaDiaAd.length, diasPorHora: Object.keys(D2.porHora).length, fuso: tz, hoje: t, hora: H };
-  D2.moeda = moeda;
+  D2.moeda = CONFIG.moeda || "BRL";
   D2.atualizadoEm = new Date().toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
   await anexarVendas(D2);
   return D2;
@@ -1268,7 +1337,8 @@ async function anexarVendas(D2) {
     D2.pendentes = Array.isArray(info.pendentes) ? info.pendentes : [];
     D2.checkout = Object.assign({ plataforma: plat }, CONFIG.checkout, info.checkout || {});
     if (diag) diag.vendas = { plataforma: D2.checkout.plataforma, pedidos: vendas.length, pendentes: D2.pendentes.length, geradoEm: info.geradoEm };
-    if (info.geradoEm) D2.avisos.push("Vendas da " + D2.checkout.plataforma + " buscadas em " + info.geradoEm + ". Para trazer as vendas novas, peça ao Claude: atualize as vendas do dashboard.");
+    D2.vendasEm = info.geradoEm || null;
+    D2.vendasAte = info.geradoEmIso || null;
   } catch (e) {
     D2.avisos.push("Não consegui ler as vendas da " + plat + " agora. O painel mostra as compras registradas pelo pixel.");
     if (diag) diag.erros.push("vendas: " + String((e && (e.code || e.message)) || e));
@@ -1294,7 +1364,7 @@ function textoErro(e) {
 const NEGADO = new Set(["needs_reauth", "server_not_connected", "server_not_found", "selection_required", "not_in_manifest", "consent_required", "blocked_by_policy", "approval_required"]);
 
 // ============================================================ instantâneo e diagnóstico
-const CHAVE_SNAP = "dt_snapshot_v3"; // trocar a versão quando o formato dos dados mudar
+const CHAVE_SNAP = "dt_snapshot_v4"; // trocar a versão quando o formato dos dados mudar
 function lerSnapshot() { try { const s = JSON.parse(store.get(CHAVE_SNAP) || "null"); return s && s.conector === SERVER && s.dados ? s : null; } catch (e) { return null; } }
 function salvarSnapshot(dados) { const limpo = JSON.parse(JSON.stringify(dados, (k, v) => (k === "_conta" ? undefined : v))); store.set(CHAVE_SNAP, JSON.stringify({ conector: SERVER, quando: Date.now(), dados: limpo })); }
 async function gravarDiag() {
@@ -1312,6 +1382,7 @@ function usar(dados) {
   D = dados;
   moeda = D.moeda || moeda; preparaFormatos();
   indexar();
+  D.moedaPrincipal = moedaPrincipal();
   const salvo = store.get("dt_modo");
   if (!temCheckout()) S.modo = "pixel";
   else if (!S.modo || (S.modo === "pixel" && !salvo)) S.modo = salvo || "anuncio";
@@ -1332,7 +1403,7 @@ async function atualizar(fresco) {
     if (fresco) toast("Números atualizados.");
   } catch (e) {
     if (diag) diag.erros.push((e && e.code) + ": " + String((e && e.message) || "").slice(0, 300));
-    if (e && e.code === "tool_error") store.set("dt_campos_v3", ""); // na próxima vez, descobre os campos de novo
+    if (e && e.code === "tool_error") store.set("dt_campos_v4", ""); // na próxima vez, descobre os campos de novo
     S.erro = textoErro(e);
     if (D && NEGADO.has(e && e.code)) { D = null; store.set(CHAVE_SNAP, ""); }
     if (D) render(); else { mostrarSecoes(false); estado('<div class="aviso erro">' + esc(S.erro) + "</div>"); }

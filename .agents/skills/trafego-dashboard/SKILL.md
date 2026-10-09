@@ -102,6 +102,7 @@ Claude encontra o seu dashboard.
 - Pasta: meus-produtos/_dashboard-trafego/dashboard-trafego/
 - Personalizado: não
 - Criado em: 2026-10-09
+- Atualização automática das vendas: 8h, 12h, 16h e 20h (tarefa dashboard-vendas-dashboard-trafego) | não
 - Atualizado em: 2026-10-09
 ```
 
@@ -150,6 +151,7 @@ Tudo isso já está no modelo; serve para diagnosticar.
 - O conector pode cortar a resposta no `limit` sem devolver a próxima página. A página pede `limit: 1000` (o máximo) e avisa no topo quando uma consulta chega ao limite.
 - A página ainda lê o esquema da ferramenta (`describeTool`) e testa os campos quando o conector mudar. O resultado fica guardado no navegador por 7 dias; se uma consulta falhar por campo inválido, ela descobre de novo na próxima atualização.
 - Sem valor de compra no conector, o faturamento do pixel sai de `purchase_roas × investimento`.
+- Moeda: cada conta usa a sua (`currency` em `ads_get_ad_accounts`). O painel mostra a conta escolhida na moeda dela e, em "Todas as contas", soma só as contas da moeda principal (a de maior gasto), com aviso das que ficaram de fora. Nunca somar moedas diferentes.
 - Orçamento: objeto com moeda é usado como veio; número puro é tratado como centavos (padrão da Graph API).
 - Erros por código, com a mensagem de correção certa (reconectar, adicionar o conector, liberar a permissão, esperar). Negativa de acesso apaga da tela os dados anteriores.
 
@@ -182,7 +184,9 @@ A ferramenta pode avisar que o conector não foi observado nesta sessão. É esp
 
 A página não enxerga o computador do aluno. As vendas ficam **no banco do próprio artefato**, na coleção `vendas`: o documento `info` (quando foram buscadas, plataforma, nomes dos produtos, Pix e boletos aguardando) e os lotes `lote-1`, `lote-2`... com os pedidos (cada lote com até 200 KB). A página lê esse banco quando abre e no botão Atualizar dados. Para trazer vendas novas não é preciso publicar a página de novo: o Claude grava no banco e o aluno clica em Atualizar dados.
 
-**Só o Claude busca vendas novas na plataforma**, porque a credencial fica no `.env` e nunca vai para a página. Quando o aluno pedir "atualiza as vendas do dashboard", seguir a seção 6.3.
+**Só o Claude busca vendas novas na plataforma**, porque a credencial fica no `.env` e nunca vai para a página, e não existe conector da Hotmart nem da Kiwify no Claude. Quando o aluno pedir "atualiza as vendas do dashboard", seguir a seção 6.3; para não depender disso, oferecer a atualização automática (seção 6.6).
+
+**Depois da última busca, o painel não finge zero.** O topo mostra "Vendas da {plataforma} buscadas em {dia} às {hora}" ao lado do horário da Meta. Quando o período escolhido passa da última busca, faturamento, lucro, ROAS e CPA são calculados só até a hora da busca (o gasto também, para a conta fechar), com a marca "Até a última busca de vendas"; dias inteiros depois da busca aparecem como "não buscado" no dia a dia e no ritmo de hoje. Um aviso no topo explica isso e fica vermelho quando a última busca tem mais de 12 horas.
 
 ### 6.2 Quando entra e como configurar
 
@@ -194,7 +198,7 @@ A página não enxerga o computador do aluno. As vendas ficam **no banco do pró
 Verificar só os nomes das variáveis, nunca exibir valores. Se as duas plataformas estiverem no `.env`, perguntar qual vende o produto deste dashboard. Sem nenhuma, o dashboard sai sem vendas do checkout e, **depois da entrega**, o comando oferece ligar (seção 6.4).
 
 1. Conferir as credenciais: `python3 .claude/skills/trafego-dashboard/scripts/{coletor} --verificar`.
-2. Listar os produtos vendidos nos últimos 90 dias: `... --listar-produtos` (id, nome e número de vendas).
+2. Listar os produtos vendidos nos últimos 90 dias: `... --listar-produtos` (id, nome e número de vendas). **Lista vazia** (produto que ainda não vendeu): avisar "Ainda não encontrei vendas na {plataforma} nos últimos 90 dias. Vou ligar assim mesmo: toda venda que entrar conta como pedido. Quando as primeiras vendas aparecerem, me peça para configurar o produto principal, o bump e o upsell." e gravar `checkout` com `principais` e `bumps` vazios e `upsell` nulo. Pular os passos 3 e 4.
 3. Perguntar, uma por vez e numerado a partir da lista: produto principal (pode ser mais de um), order bumps (ou nenhum), upsell (ou nenhum) e, se houver upsell, a janela em horas (padrão 24).
 4. Gravar em `config.json` > `checkout` (seção 2.1) e remontar a página.
 
@@ -206,7 +210,7 @@ Verificar só os nomes das variáveis, nunca exibir valores. Se as duas platafor
    ```
    Ele grava `banco/info.json` e `banco/lote-1.json` (e mais lotes, se houver) e informa quantos.
 2. `ArtifactData` com `action: "list"`, a URL do dashboard e `collection: "vendas"`, para pegar a versão de cada documento que já existe.
-3. `ArtifactData` com `action: "batch"` e a URL, uma entrada por arquivo da pasta `banco/`: `{"op": "set", "collection": "vendas", "doc_id": "{nome do arquivo sem .json}", "file_path": "meus-produtos/_dashboard-trafego/{slug}/banco/{arquivo}", "if_version": {versão lida no passo 2, só quando o documento já existe}}`. Lote que existia no banco e não existe mais na pasta entra como `{"op": "delete", ..., "if_version": ...}`. Até 50 entradas por chamada.
+3. Avisar o aluno antes de gravar: "Vou gravar as vendas no seu painel. O Claude vai mostrar um pedido de permissão: clique em permitir." Depois, `ArtifactData` com `action: "batch"` e a URL, uma entrada por arquivo da pasta `banco/`: `{"op": "set", "collection": "vendas", "doc_id": "{nome do arquivo sem .json}", "file_path": "meus-produtos/_dashboard-trafego/{slug}/banco/{arquivo}", "if_version": {versão lida no passo 2, só quando o documento já existe}}`. Lote que existia no banco e não existe mais na pasta entra como `{"op": "delete", ..., "if_version": ...}`. Até 50 entradas por chamada.
 4. Avisar o aluno para clicar em Atualizar dados no dashboard.
 
 Saídas de erro do coletor: `ERRO_CREDENCIAIS` (faltam variáveis no `.env`), `ERRO_TOKEN` (a plataforma recusou as credenciais; na Hotmart, conferir se a credencial não é do tipo sandbox), `ERRO_VENDAS` (falha na consulta). Mostrar ao aluno em linguagem simples, sem valores do `.env`.
@@ -276,6 +280,55 @@ A origem de cada venda vem do rastreio que chega ao checkout (`src`, `sck` e, na
 - **Anúncios:** no Gerenciador, em cada anúncio, campo "Parâmetros de URL": `src=meta_{{ad.id}}`. A Meta troca `{{ad.id}}` pelo id do anúncio e o painel liga a venda ao anúncio e à campanha.
 - **Bio, Direct, Stories, YouTube, WhatsApp:** links com `?src=bio`, `?src=direct`, `?src=stories`, `?src=youtube`, `?src=whatsapp`.
 - **Página de vendas no meio do caminho:** abrir a página com `?src=teste`, clicar no botão de compra e conferir se o endereço do checkout termina com `src=teste`. Se não terminar, o rastreio se perde e a venda aparece como "Sem rastreio".
+
+### 6.6 Atualização automática das vendas (só com Hotmart ou Kiwify)
+
+Oferecer só quando o dashboard tem vendas do checkout ligadas, uma vez, depois que as primeiras vendas chegaram ao painel:
+
+```
+Quer que eu busque as vendas da {plataforma} sozinho, sem você precisar pedir?
+
+1. Sim, às 8h, 12h, 16h e 20h (recomendado)
+2. Sim, uma vez por dia, às 8h
+3. Não, eu peço quando quiser
+
+Digite o número:
+```
+
+Com 1 ou 2, criar uma tarefa agendada do app do Claude com `create_scheduled_task` (servidor `scheduled-tasks`; carregar com `ToolSearch` se estiver adiada):
+
+- `taskId`: `dashboard-vendas-{slug}`
+- `title`: "Vendas do {nome do dashboard}"
+- `cronExpression`: `0 8,12,16,20 * * *` (opção 1) ou `0 8 * * *` (opção 2), no horário local do aluno
+- `description`: "Busca as vendas da {plataforma} e atualiza o dashboard de tráfego."
+- `prompt`, completo, porque a tarefa começa sem nada desta conversa:
+
+```
+Atualize as vendas do dashboard de tráfego "{nome}" do projeto Severino.
+
+1. Na pasta {caminho absoluto da raiz do projeto}, rode:
+   {python3 ou py -3} .claude/skills/trafego-dashboard/scripts/{coletor} --config meus-produtos/_dashboard-trafego/{slug}/config.json --pasta meus-produtos/_dashboard-trafego/{slug}
+2. Se a saída tiver ERRO_CREDENCIAIS ou ERRO_TOKEN, pare e responda só: "As vendas do dashboard não foram atualizadas: a credencial da {plataforma} precisa ser conferida no Severino."
+3. Com a ferramenta ArtifactData e a URL {url do dashboard}: action "list" na coleção "vendas" para ler a versão de cada documento; depois action "batch" com um "set" por arquivo da pasta meus-produtos/_dashboard-trafego/{slug}/banco/ (doc_id = nome do arquivo sem .json, file_path = o arquivo, if_version = a versão lida, só quando o documento já existe) e um "delete" para cada lote que está no banco e não está mais na pasta.
+4. Nunca mostre valores do .env.
+5. Termine com uma linha: "Vendas do dashboard atualizadas até {hora}."
+```
+
+Depois de criar, explicar em poucas linhas:
+
+```
+Pronto. A tarefa "Vendas do {nome}" vai buscar as vendas {nos horários}.
+
+- Ela roda com o app do Claude aberto. Se o computador estiver desligado
+  no horário, roda assim que você abrir o app.
+- Na primeira vez, o Claude pode pedir permissão para gravar no painel.
+  Se aparecer a opção de permitir sempre, escolha ela.
+- Cada busca gasta um pouco do seu uso do Claude.
+
+Para mudar o horário ou parar, é só me pedir.
+```
+
+Gravar no registro (seção 3) a linha "Atualização automática das vendas". Quando o aluno pedir para mudar o horário ou parar, usar `update_scheduled_task` ou desligar a tarefa e atualizar o registro.
 
 ---
 

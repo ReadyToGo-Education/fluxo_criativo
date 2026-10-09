@@ -121,6 +121,7 @@ def gravar(pasta, plataforma, cfg, pedidos, pendentes, produtos, tz, dias):
         lotes.append(atual)
     info = {
         "geradoEm": datetime.now(tz).strftime("%d/%m às %H:%M"),
+        "geradoEmIso": datetime.now(tz).strftime("%Y-%m-%dT%H:%M:%S"),  # o painel corta as métricas de venda nesta hora
         "plataforma": plataforma,
         "checkout": {
             "plataforma": plataforma,

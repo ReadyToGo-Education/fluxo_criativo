@@ -41,7 +41,7 @@ Digite o número:
 - **1:** repetir o link e lembrar do botão "Atualizar dados". Encerrar.
 - **2:** Passo 5.
 - **3:** Passo 6.
-- **4:** Passo 1.
+- **4:** Passo 1. O novo dashboard precisa de outro nome (pergunta 2.0), senão sobrescreve o que já existe.
 - **5:** encerrar sem perguntar mais nada.
 
 Se houver mais de um dashboard no registro, listar todos numerados e perguntar qual abrir.
@@ -91,16 +91,40 @@ Digite o número:
 
 Uma pergunta por vez.
 
-**2.1 Contas de anúncios.**
+**2.0 Nome (só quando o aluno já tem um dashboard).** Cada dashboard tem a sua pasta; com o mesmo nome, o novo sobrescreveria o antigo.
+
+```
+Como quer chamar este novo dashboard?
+(ex: "Cliente Papel Semente", "Lançamento de março")
+```
+
+O nome vira o título da página e a pasta (`meus-produtos/_dashboard-trafego/{slug do nome}/`). Se o slug já existir, acrescentar `-2`.
+
+**2.1 Contas de anúncios.** Quando as ferramentas do conector da Meta estão na conversa, listar as contas com `ads_get_ad_accounts` (só as liberadas para leitura) e mostrar com número, nome, id mascarado e moeda:
 
 ```
 Quais contas de anúncios entram no dashboard?
 
-1. Todas as que o conector enxerga, com seletor no topo (recomendado)
-2. Só algumas (me passe o nome ou o id de cada uma)
+1. Todas as contas abaixo, com seletor no topo
+2. Conta Principal (act_1234...7890) · R$
+3. Cliente X (act_2345...8901) · R$
+4. Conta antiga (act_3456...9012) · US$
+
+Digite um número ou vários separados por vírgula:
+```
+
+Sem as ferramentas do conector na conversa, perguntar sem pedir id:
+
+```
+Quais contas de anúncios entram no dashboard?
+
+1. Todas as que o conector enxerga, com seletor no topo
+2. Só algumas (diga o nome de cada uma como aparece no Gerenciador)
 
 Digite o número:
 ```
+
+Contas em moedas diferentes podem entrar juntas: o painel mostra cada conta na moeda dela e, em "Todas as contas", soma só as contas da moeda principal.
 
 **2.2 Vendas do checkout.** Verificar no `.env` só se existem as variáveis da Hotmart (`HOTMART_CLIENT_ID` e `HOTMART_CLIENT_SECRET`) ou da Kiwify (`KIWIFY_CLIENT_ID`, `KIWIFY_CLIENT_SECRET` e `KIWIFY_ACCOUNT_ID`). Nunca exibir valores.
 
@@ -157,11 +181,13 @@ O link ficou salvo no projeto. Para ver de novo, é só pedir
 "abre meu dashboard".
 ```
 
-Em seguida:
+Terminar a mensagem de entrega pedindo só uma coisa: "Abra o link e me avise quando os números aparecerem." Uma pergunta por vez, nesta ordem, cada uma depois da resposta da anterior:
 
-1. Pedir que o aluno avise quando abrir. Quando ele avisar, ler o diagnóstico (seção 7 da skill) e corrigir o que aparecer antes de encerrar.
-2. **Sem vendas do checkout:** fazer a oferta da seção 6.4 da skill, uma vez.
-3. Oferecer uma vez: "Quer que eu fixe o dashboard na barra lateral do Claude?" Se sim, `Artifact` com `action: "pin"`. Nunca fixar sem o aluno pedir.
+1. **Quando o aluno avisar que abriu:** ler o diagnóstico (seção 7 da skill), corrigir o que aparecer e confirmar em uma linha o que o painel leu ("4 campanhas e 11 anúncios lidos, sem erro").
+2. **Vendas do checkout:**
+   - Sem Hotmart nem Kiwify ligada: fazer a oferta da seção 6.4 da skill, uma vez.
+   - Com Hotmart ou Kiwify ligada: oferecer a atualização automática das vendas (seção 6.6 da skill), uma vez.
+3. **Por último:** "Quer que eu fixe o dashboard na barra lateral do Claude?" Se sim, `Artifact` com `action: "pin"`. Nunca fixar sem o aluno pedir.
 
 ---
 
@@ -192,7 +218,7 @@ Mostrar o resumo do ajuste e pedir confirmação (1. Pode aplicar / 2. Quero mud
 🔍 Próximo passo: buscar as vendas novas da {Hotmart | Kiwify} e atualizar o dashboard. Tempo estimado: cerca de 60 segundos.
 ```
 
-Seguir a seção 6.3 da skill (coletor e envio para o banco do artefato; a página não precisa ser publicada de novo).
+Seguir a seção 6.3 da skill (coletor e envio para o banco do artefato; a página não precisa ser publicada de novo). Antes de gravar, avisar: "Vou gravar as vendas no seu painel. O Claude vai mostrar um pedido de permissão: clique em permitir."
 
 ```
 ✅ Concluído: vendas atualizadas até {hora}. Abra o dashboard e clique em "Atualizar dados".
