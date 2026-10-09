@@ -35,6 +35,8 @@ O dashboard é um **artefato do Claude** (uma página guardada na conta Claude d
 
 Sem vendas do checkout, compras e faturamento são os do pixel (janela de atribuição da conta) e o painel avisa isso no topo.
 
+**Contas sem compra (mensagens, cadastro, perfil).** Quando não há checkout ligado e a conta (ou a conta escolhida no seletor) não tem nenhuma compra no pixel em 30 dias, mas tem resultado, o painel troca sozinho para o **modo resultados**: cards de resultado (com o nome do tipo, por exemplo "Conversas iniciadas"), custo por resultado e taxa de resultado (resultados ÷ cliques no link, só quando o resultado vem de um clique); funil até o resultado (sem a etapa de visitas quando a campanha manda para o WhatsApp); campanhas com colunas de resultado e o tipo ao lado do nome; dia a dia e gaveta com resultado e custo por resultado; ritmo de hoje só com gasto, porque a Meta não entrega resultado por hora. O resultado de cada linha vem do campo `results` da Meta, que traz o tipo (`indicator`) e o número; tipos diferentes somados aparecem como "Resultados", com aviso.
+
 ---
 
 ## 2. Arquivos
@@ -142,7 +144,7 @@ O nome vai para `config.json` (`conector`) e para o manifesto da publicação. A
 Tudo isso já está no modelo; serve para diagnosticar.
 
 - Por conta: campanhas e anúncios por dia (`last_30d` mais `today`, `time_increment: "1"`), conjuntos ativos (orçamento), alcance por janela (hoje, ontem, 7, 14 e 30 dias, em campanha e anúncio) e quebra por hora (`hourly_stats_aggregated_by_advertiser_time_zone`, `last_30d` mais `today`, só no nível da conta).
-- Campos conferidos no conector oficial (`ads_get_field_context`, 09/10/2026): `name`, `effective_status`, `daily_budget` (vem como objeto com valor em reais), `amount_spent`, `impressions`, `link_click`, `landing_page_view`, `omni_purchase`, `omni_initiated_checkout`, `offsite_conversion_fb_pixel_purchase_values` (valor das compras no site), `purchase_roas`, `reach`, `campaign_id` (conjunto e anúncio) e `adset_id` (anúncio). Métrica sem evento volta como `null`: conta sem pixel de compra mostra compras e faturamento vazios, e isso é dado, não erro.
+- Campos conferidos no conector oficial (`ads_get_field_context`, 09/10/2026): `name`, `effective_status`, `daily_budget` (vem como objeto com valor em reais), `amount_spent`, `impressions`, `link_click`, `landing_page_view`, `omni_purchase`, `omni_initiated_checkout`, `offsite_conversion_fb_pixel_purchase_values` (valor das compras no site), `purchase_roas`, `reach`, `results` (resultado do objetivo, como `{"indicator": "actions:onsite_conversion.messaging_conversation_started_7d", "values": [{"value": "40"}]}`), `campaign_id` (conjunto e anúncio) e `adset_id` (anúncio). Métrica sem evento volta como `null`: conta sem pixel de compra mostra compras e faturamento vazios, e isso é dado, não erro.
 - Formatos que o conector exige: `time_range` é texto JSON (`'{"since":"AAAA-MM-DD","until":"AAAA-MM-DD"}'`), a próxima página vai em `cursor`, o filtro é `{field: "{nível}.campo", operator, value: [...]}` e o nível da conta não aceita `sort` nem `filtering`.
 - Sem filtro, o conector devolve também campanhas, conjuntos e anúncios antigos sem entrega (uma conta teve mais de 2.000 conjuntos). Por isso as consultas de campanha e anúncio filtram `impressions` maior que zero e a de conjuntos filtra `effective_status` igual a `ACTIVE`.
 - O conector pode cortar a resposta no `limit` sem devolver a próxima página. A página pede `limit: 1000` (o máximo) e avisa no topo quando uma consulta chega ao limite.
@@ -286,7 +288,7 @@ O que conferir:
 | Campo | Sinal de problema | O que fazer |
 |---|---|---|
 | `erros` | Qualquer item | Ler o código e seguir a seção 4.3 |
-| `achou.ic`, `achou.vp` e `achou.roas` = 0 | Funil sem checkout e faturamento zerado | Primeiro conferir se a conta tem eventos de compra (contas de mensagem ou cadastro não têm). Se tiver e mesmo assim vier zero, ver o nome do campo com `ads_get_field_context` e ajustar `CAND` no modelo |
+| `achou.ic`, `achou.vp` e `achou.roas` = 0 | Funil sem checkout e faturamento zerado | Primeiro conferir se a conta tem eventos de compra (contas de mensagem ou cadastro não têm, e o painel entra sozinho no modo resultados). Se tiver e mesmo assim vier zero, ver o nome do campo com `ads_get_field_context` e ajustar `CAND` no modelo |
 | `campos.escolhidos.campanha` vazio ou `totais.anunciosComCampanha` = 0 | Seta dos anúncios não aparece | Ver em `amostras` como vem a campanha do anúncio e incluir em `CAND.campanha` |
 | `orcamentoBruto` | Orçamento 100 vezes maior ou menor | Ajustar a função `orcamento` no modelo |
 | `campos.hora` falso | Sem ritmo de hoje e sem comparação cortada na hora | Esperado em conectores sem a quebra por hora |

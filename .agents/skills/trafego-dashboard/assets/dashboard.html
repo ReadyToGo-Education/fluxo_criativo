@@ -167,7 +167,7 @@ details.diag pre{white-space:pre-wrap;word-break:break-word;font-size:12px;backg
     <div class="secao-cab"><h2 id="h-ritmo">Ritmo de hoje</h2><span class="small muted" id="ritmo-sub"></span></div>
     <div class="grafico" id="ritmo-graf"></div>
     <div class="leitura" id="ritmo-leitura"></div>
-    <div class="tabela-wrap"><table><thead><tr><th>Dia</th><th id="ritmo-col-g">Gasto</th><th id="ritmo-col-c">Compras</th><th>ROAS</th></tr></thead><tbody id="ritmo-tab"></tbody></table></div>
+    <div class="tabela-wrap"><table><thead><tr id="ritmo-cab"></tr></thead><tbody id="ritmo-tab"></tbody></table></div>
   </section>
 
   <section class="painel" id="sec-campanhas" aria-labelledby="h-camp">
@@ -291,7 +291,7 @@ const valor = (v) => (S.fat === "bruto" ? v.bru : (ok(v.liq) ? v.liq : v.bru));
 const contaOk = (c) => S.conta === "todas" || c === S.conta;
 function agg(de, ate, alvo) {
   alvo = alvo || {};
-  const m = { g: 0, i: 0, c: 0, v: 0, ic: 0, cp: 0, vp: 0, ped: 0, pedAd: 0, fatCk: 0, bumpAny: 0, bumps: {}, up: 0, vendas: [] };
+  const m = { g: 0, i: 0, c: 0, v: 0, ic: 0, cp: 0, vp: 0, rs: 0, tipos: {}, ped: 0, pedAd: 0, fatCk: 0, bumpAny: 0, bumps: {}, up: 0, vendas: [] };
   const corte = alvo.corte;
   const fonte = alvo.ad ? I.diaAd : I.diaCamp;
   for (let d = de; d <= ate; d = somaDias(d, 1)) {
@@ -301,10 +301,15 @@ function agg(de, ate, alvo) {
         if (alvo.camp && r.camp !== alvo.camp) continue;
         if (alvo.ad && r.a !== alvo.ad) continue;
         m.g += r.g; m.i += r.i; m.c += r.c; m.v += r.v; m.ic += r.ic || 0; m.cp += r.cp || 0; m.vp += r.vp || 0;
+        m.rs += r.rs || 0; if (r.tp) m.tipos[r.tp] = (m.tipos[r.tp] || 0) + (r.rs || 0);
       }
     } else {
-      const h = (D.porHora[d] || []).slice(0, corte.hora + 1);
-      m.g += h.reduce((s, x) => s + x, 0);
+      const h = (D.porHora[d] || []).slice(0, corte.hora + 1), gH = h.reduce((s, x) => s + x, 0);
+      // A Meta só entrega gasto e compra por hora; o resto do dia cortado entra proporcional ao gasto.
+      const dia = { g: 0, i: 0, c: 0, v: 0, ic: 0, rs: 0 };
+      for (const r of fonte.get(d) || []) { if (!contaOk(r.conta)) continue; dia.g += r.g; dia.i += r.i; dia.c += r.c; dia.v += r.v; dia.ic += r.ic || 0; dia.rs += r.rs || 0; }
+      const frac = dia.g ? Math.min(1, gH / dia.g) : 0;
+      m.g += gH; m.i += dia.i * frac; m.c += dia.c * frac; m.v += dia.v * frac; m.ic += dia.ic * frac; m.rs += dia.rs * frac;
       m.cp += ((D.comprasHora || {})[d] || []).slice(0, corte.hora + 1).reduce((s, x) => s + x, 0);
     }
   }
@@ -348,6 +353,8 @@ function agg(de, ate, alvo) {
   m.cpic = div(m.g, m.ic);
   m.icBase = m.ic;
   m.convCk = m.ic ? (pixel ? m.cp : m.pedAd) / m.ic * 100 : null;
+  m.cpr = div(m.g, m.rs);
+  m.taxaRes = m.c ? m.rs / m.c * 100 : null;
   const chave = { hoje: "hoje", ontem: "ontem", "7d": "7d", "14d": "14d", "30d": "30d" }[S.periodo];
   const alc = chave && D.alcance && D.alcance[chave] ? D.alcance[chave][alvo.ad || alvo.camp] : null;
   m.alcance = (alvo.camp || alvo.ad) && ok(alc) ? alc : null;
@@ -363,6 +370,33 @@ function periodoAnterior() {
   if (!ok(H) || !(D.porHora || {})[ate]) return { motivo: "Sem comparação: hoje ainda está em andamento." };
   return { de, ate, alvo: { corte: { dia: ate, hora: H } }, txt: "Comparado com " + (de === ate ? dataBR(de) + " até " + H + "h59" : dataBR(de) + " a " + dataBR(ate) + ", o último dia só até " + H + "h59") };
 }
+
+// ============================================================ resultado das campanhas sem compra
+// Contas que anunciam para mensagens, cadastro ou perfil não têm compra no pixel. Nesses casos
+// o painel mostra o resultado do objetivo de cada campanha, como o Gerenciador.
+const TIPOS = [
+  [/messaging|conversation/i, "Conversas iniciadas", "conversas"],
+  [/lead/i, "Leads", "leads"],
+  [/registration/i, "Cadastros", "cadastros"],
+  [/purchase/i, "Compras", "compras"],
+  [/profile_visit/i, "Visitas ao perfil", "visitas ao perfil"],
+  [/landing_page_view/i, "Visualizações da página", "visualizações da página"],
+  [/link_click/i, "Cliques no link", "cliques no link"],
+  [/thruplay|video_view|video_play/i, "Visualizações do vídeo", "visualizações do vídeo"],
+  [/engagement/i, "Engajamentos", "engajamentos"],
+  [/like/i, "Curtidas na página", "curtidas"],
+  [/reach/i, "Pessoas alcançadas", "pessoas alcançadas"],
+];
+const POR_CLIQUE = /conversas|leads|cadastros|compras|visualizações da página/;
+function tipoDe(ind) { const x = ind && TIPOS.find(([re]) => re.test(ind)); return x ? { nome: x[1], curto: x[2] } : { nome: "Resultados", curto: "resultados" }; }
+function tipoDominante(m) {
+  const lista = Object.entries(m.tipos || {}).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
+  if (!lista.length) return { nome: "Resultados", curto: "resultados", misto: false };
+  const total = lista.reduce((s, [, n]) => s + n, 0), nomes = new Set(lista.map(([k]) => tipoDe(k).nome));
+  if (nomes.size === 1 || lista[0][1] / total >= 0.8) return Object.assign(tipoDe(lista[0][0]), { misto: nomes.size > 1 });
+  return { nome: "Resultados", curto: "resultados", misto: true };
+}
+function calcModoRes() { if (temCheckout()) return false; const b = agg(D.inicio, hoje()); return b.cp === 0 && b.rs > 0; }
 
 // ============================================================ sinais
 function indRoas(x) { if (!ok(x)) return ""; if (x < 1) return '<span class="ind ruim" title="Abaixo de 1: o investimento não se pagou"></span>'; if (x >= META.roas_bom) return '<span class="ind bom" title="Acima da meta de ROAS"></span>'; return ""; }
@@ -388,7 +422,8 @@ function renderTopo() {
     $("#valor").innerHTML = [["liquido", "Líquido"], ["bruto", "Bruto"]].map(([k, r]) => '<button type="button" data-f="' + k + '" aria-pressed="' + (S.fat === k) + '"' + (S.modo === "pixel" ? " disabled" : "") + ">" + r + "</button>").join("");
   }
   const av = (D.avisos || []).slice();
-  if (!ck) av.unshift("Compras e faturamento como a Meta registra pelo pixel, na janela de atribuição da conta. Com as vendas do checkout ligadas, o painel mostra o valor líquido, o bump, o upsell e a origem de cada venda.");
+  if (!ck && S.res) av.unshift("Estas campanhas não registram compra pelo pixel. O painel mostra o resultado que cada campanha busca (" + tipoDominante(agg(S.de, S.ate)).curto + ") e o custo por resultado, como o Gerenciador.");
+  else if (!ck) av.unshift("Compras e faturamento como a Meta registra pelo pixel, na janela de atribuição da conta. Com as vendas do checkout ligadas, o painel mostra o valor líquido, o bump, o upsell e a origem de cada venda.");
   else if (S.modo === "pixel") av.unshift("Modo pixel: compras e faturamento como a Meta registra (valor bruto do pixel). Bump e upsell continuam vindo do checkout.");
   if (ck && S.modo === "todas" && S.conta !== "todas") av.unshift("Com uma conta escolhida, vendas orgânicas e sem rastreio ficam de fora: elas não pertencem a nenhuma conta.");
   if (S.ate === hoje()) av.push("A Meta leva de 1 a 3 horas para fechar os números da última hora: o dia de hoje ainda vai mudar.");
@@ -405,7 +440,26 @@ function delta(atual, antes, maiorMelhor) {
 function card(rot, dica, val, sub, extra) {
   return '<div class="card"><div class="card-rot">' + rot + (dica ? info(dica) : "") + '</div><div class="card-val num">' + val + "</div>" + (extra || "") + (sub ? '<div class="card-sub">' + sub + "</div>" : "") + "</div>";
 }
+function renderGeralRes() {
+  const m = agg(S.de, S.ate), ant = periodoAnterior(), p = ant.de ? agg(ant.de, ant.ate, ant.alvo) : null;
+  $("#geral-comp").textContent = ant.txt || ant.motivo;
+  const tp = tipoDominante(m), porClique = POR_CLIQUE.test(tp.curto);
+  $("#cards-1").innerHTML =
+    card("Investimento", "Valor gasto em anúncios no período.", F.moeda(m.g), "", p ? delta(m.g, p.g, null) : "") +
+    card(tp.nome, "Resultado do objetivo de cada campanha, como a Meta conta no Gerenciador." + (tp.misto ? " As campanhas buscam resultados diferentes e o total soma todos." : ""), F.num(m.rs), tp.misto ? "Soma de tipos diferentes de resultado" : "", p ? delta(m.rs, p.rs, true) : "") +
+    card("Custo por resultado", "Investimento ÷ resultados.", F.moeda(m.cpr), "", p ? delta(m.cpr, p.cpr, false) : "") +
+    (porClique
+      ? card("Taxa de resultado", "Resultados ÷ cliques no link: quantos cliques viram " + tp.curto + ".", F.pct(m.taxaRes), "", p ? delta(m.taxaRes, p.taxaRes, true) : "")
+      : card("Impressões", "Vezes que os anúncios apareceram.", F.num(m.i), "", p ? delta(m.i, p.i, true) : ""));
+  $("#cards-2").className = "cards n2";
+  $("#cards-2").innerHTML =
+    card("CPM", "Custo por mil impressões.", F.moeda(m.cpm), F.num(m.i) + " impressões") +
+    card("CTR do link", "Cliques no link ÷ impressões.", F.pct(m.ctr) + indCtr(m.ctr), "") +
+    card("CPC do link", "Investimento ÷ cliques no link.", F.moeda(m.cpc), F.num(m.c) + " cliques no link") +
+    card("Custo por visita", "Investimento ÷ visitas na página (visualizações da página de destino).", F.moeda(m.cpv), F.num(m.v) + " visitas");
+}
 function renderGeral() {
+  if (S.res) return renderGeralRes();
   const m = agg(S.de, S.ate);
   const ant = periodoAnterior();
   const p = ant.de ? agg(ant.de, ant.ate, ant.alvo) : null;
@@ -474,16 +528,32 @@ function renderFunil() {
   const m = agg(S.de, S.ate);
   const base = agg(D.inicio, hoje());
   const pixel = S.modo === "pixel", ck = temCheckout();
-  const compras = pixel ? m.cp : m.pedAd, comprasBase = pixel ? base.cp : base.pedAd;
-  const etapas = [
-    { rot: "Impressões", val: m.i, fonte: "Meta" },
-    { rot: "Cliques no link", val: m.c, fonte: "Meta", taxa: div(m.c, m.i), base: div(base.c, base.i), nome: "CTR" },
-    { rot: "Visitas na página", val: m.v, fonte: "Meta", taxa: div(m.v, m.c), base: div(base.v, base.c), nome: "dos cliques" },
-    { rot: "Checkout iniciado", val: m.ic, fonte: "Pixel", taxa: div(m.ic, m.v), base: div(base.ic, base.v), nome: "das visitas" },
-    { rot: "Compras", val: compras, fonte: pixel ? "Pixel" : "Checkout", taxa: div(compras, m.ic), base: div(comprasBase, base.ic), nome: "dos checkouts" },
-  ];
-  if (ck && D.checkout.bumps && D.checkout.bumps.length) etapas.push({ rot: "Com order bump", val: m.bumpAny, fonte: "Checkout", taxa: div(m.bumpAny, m.ped), base: div(base.bumpAny, base.ped), nome: "das compras" });
-  if (ck && D.checkout.upsell) etapas.push({ rot: "Com upsell", val: m.up, fonte: "Checkout", taxa: div(m.up, m.ped), base: div(base.up, base.ped), nome: "das compras" });
+  let etapas;
+  if (S.res) {
+    const tp = tipoDominante(m);
+    etapas = [{ rot: "Impressões", val: m.i, fonte: "Meta" }];
+    if (POR_CLIQUE.test(tp.curto)) {
+      etapas.push({ rot: "Cliques no link", val: m.c, fonte: "Meta", taxa: div(m.c, m.i), base: div(base.c, base.i), nome: "CTR" });
+      const usaVisita = div(base.v, base.c) > 0.3; // campanha para WhatsApp quase não gera visita na página
+      if (usaVisita) etapas.push({ rot: "Visitas na página", val: m.v, fonte: "Meta", taxa: div(m.v, m.c), base: div(base.v, base.c), nome: "dos cliques" });
+      etapas.push(usaVisita
+        ? { rot: tp.nome, val: m.rs, fonte: "Meta", taxa: div(m.rs, m.v), base: div(base.rs, base.v), nome: "das visitas" }
+        : { rot: tp.nome, val: m.rs, fonte: "Meta", taxa: div(m.rs, m.c), base: div(base.rs, base.c), nome: "dos cliques" });
+    } else {
+      etapas.push({ rot: tp.nome, val: m.rs, fonte: "Meta", taxa: div(m.rs, m.i), base: div(base.rs, base.i), nome: "das impressões" });
+    }
+  } else {
+    const compras = pixel ? m.cp : m.pedAd, comprasBase = pixel ? base.cp : base.pedAd;
+    etapas = [
+      { rot: "Impressões", val: m.i, fonte: "Meta" },
+      { rot: "Cliques no link", val: m.c, fonte: "Meta", taxa: div(m.c, m.i), base: div(base.c, base.i), nome: "CTR" },
+      { rot: "Visitas na página", val: m.v, fonte: "Meta", taxa: div(m.v, m.c), base: div(base.v, base.c), nome: "dos cliques" },
+      { rot: "Checkout iniciado", val: m.ic, fonte: "Pixel", taxa: div(m.ic, m.v), base: div(base.ic, base.v), nome: "das visitas" },
+      { rot: "Compras", val: compras, fonte: pixel ? "Pixel" : "Checkout", taxa: div(compras, m.ic), base: div(comprasBase, base.ic), nome: "dos checkouts" },
+    ];
+    if (ck && D.checkout.bumps && D.checkout.bumps.length) etapas.push({ rot: "Com order bump", val: m.bumpAny, fonte: "Checkout", taxa: div(m.bumpAny, m.ped), base: div(base.bumpAny, base.ped), nome: "das compras" });
+    if (ck && D.checkout.upsell) etapas.push({ rot: "Com upsell", val: m.up, fonte: "Checkout", taxa: div(m.up, m.ped), base: div(base.up, base.ped), nome: "das compras" });
+  }
   $("#funil").innerHTML = etapas.map((e) => {
     const alerta = ok(e.taxa) && ok(e.base) && e.base > 0 && e.taxa < e.base * 0.75 && S.de !== D.inicio;
     const taxa = e.taxa === undefined ? '<span class="etapa-taxa muted">topo do funil</span>' :
@@ -544,16 +614,20 @@ function grafico(sel, serie, o) {
 }
 const METRICAS = {
   g: { rot: "Investimento", f: (m) => m.g, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
-  fat: { rot: "Faturamento", f: (m) => m.fat, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
-  lucro: { rot: "Lucro após tráfego", f: (m) => m.lucro, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
-  roas: { rot: "ROAS", f: (m) => m.roas, fmt: (v) => fmt2.format(v), eixo: (v) => fmt2.format(v) },
-  cpa: { rot: "CPA", f: (m) => m.cpa, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
-  compras: { rot: "Compras", f: (m) => m.compras, fmt: (v) => fmtNum.format(v), eixo: (v) => fmtNum.format(v) },
+  fat: { so: "compra", rot: "Faturamento", f: (m) => m.fat, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
+  lucro: { so: "compra", rot: "Lucro após tráfego", f: (m) => m.lucro, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
+  roas: { so: "compra", rot: "ROAS", f: (m) => m.roas, fmt: (v) => fmt2.format(v), eixo: (v) => fmt2.format(v) },
+  cpa: { so: "compra", rot: "CPA", f: (m) => m.cpa, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
+  compras: { so: "compra", rot: "Compras", f: (m) => m.compras, fmt: (v) => fmtNum.format(v), eixo: (v) => fmtNum.format(v) },
   cpc: { rot: "CPC do link", f: (m) => m.cpc, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda.format(v) },
   cpm: { rot: "CPM", f: (m) => m.cpm, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda0.format(v) },
   ctr: { rot: "CTR do link", f: (m) => m.ctr, fmt: (v) => fmt2.format(v) + "%", eixo: (v) => fmt2.format(v) + "%" },
-  conv: { rot: "Conversão da página", f: (m) => m.conv, fmt: (v) => fmt2.format(v) + "%", eixo: (v) => fmt2.format(v) + "%" },
+  conv: { so: "compra", rot: "Conversão da página", f: (m) => m.conv, fmt: (v) => fmt2.format(v) + "%", eixo: (v) => fmt2.format(v) + "%" },
+  res: { so: "res", rot: "Resultados", f: (m) => m.rs, fmt: (v) => fmtNum.format(Math.round(v)), eixo: (v) => fmtNum.format(v) },
+  cpr: { so: "res", rot: "Custo por resultado", f: (m) => m.cpr, fmt: (v) => fmtMoeda.format(v), eixo: (v) => fmtMoeda.format(v) },
 };
+const metricasDoModo = () => Object.entries(METRICAS).filter(([, x]) => !x.so || (x.so === "res") === !!S.res);
+const metricaValida = (k, padrao) => (metricasDoModo().some(([c]) => c === k) ? k : padrao);
 function diasDoPeriodo() { const r = []; for (let d = S.de; d <= S.ate; d = somaDias(d, 1)) r.push(d); return r; }
 
 // ============================================================ ritmo de hoje
@@ -562,6 +636,19 @@ function renderRitmo() {
   sec.hidden = !horas[t];
   if (sec.hidden) return;
   const H = ok(D.horaAtual) ? D.horaAtual : 23;
+  const dias = Object.keys(horas).sort().reverse().slice(0, 8);
+  const rotDia = (d) => (d === t ? "Hoje" : diaSemana(d) + " " + diaCurto(d));
+  const gastoAte = (d) => horas[d].slice(0, H + 1).reduce((s, x) => s + x, 0);
+  if (S.res) {
+    // A Meta não entrega o resultado por hora: o ritmo mostra só o gasto.
+    $("#ritmo-sub").textContent = "Até " + String(H).padStart(2, "0") + "h59 de " + dataBR(t) + ". Barras: gasto por hora.";
+    grafico("#ritmo-graf", horas[t].slice(0, H + 1).map((g, h) => ({ x: h + "h", y: g, destaque: h === H, rotulo: h + "h: " + fmtMoeda.format(g) + " de gasto" })), {
+      W: 1180, H: 250, tipo: "barras", titulo: "Gasto por hora hoje", eixo: (v) => fmtMoeda0.format(v), valor: (v) => fmtMoeda.format(v), leitura: "#ritmo-leitura", padrao: "Passe o mouse nas barras para ver cada hora.",
+    });
+    $("#ritmo-cab").innerHTML = "<th>Dia</th><th>Gasto até " + H + "h</th><th>Gasto no dia todo</th>";
+    $("#ritmo-tab").innerHTML = dias.map((d) => "<tr" + (d === t ? ' class="total"' : "") + "><td>" + rotDia(d) + "</td><td>" + F.moeda(gastoAte(d)) + "</td><td>" + (d === t ? VAZIO : F.moeda(horas[d].reduce((s, x) => s + x, 0))) + "</td></tr>").join("");
+    return;
+  }
   const ck = temCheckout() && S.modo !== "pixel";
   const porHora = new Array(24).fill(0);
   if (ck) D.vendas.forEach((v) => { if (v.p && v.d === t) porHora[+v.t.slice(11, 13)]++; });
@@ -570,15 +657,14 @@ function renderRitmo() {
   grafico("#ritmo-graf", horas[t].slice(0, H + 1).map((g, h) => ({ x: h + "h", y: g, extra: porHora[h], destaque: h === H, rotulo: h + "h: " + fmtMoeda.format(g) + " de gasto, " + porHora[h] + (porHora[h] === 1 ? (ck ? " pedido" : " compra") : (ck ? " pedidos" : " compras")) })), {
     W: 1180, H: 250, tipo: "barras", titulo: "Gasto por hora hoje", eixo: (v) => fmtMoeda0.format(v), valor: (v) => fmtMoeda.format(v), leitura: "#ritmo-leitura", padrao: "Passe o mouse nas barras para ver cada hora.",
   });
-  $("#ritmo-col-g").textContent = "Gasto até " + H + "h";
-  $("#ritmo-col-c").textContent = ck ? "Pedidos até " + H + "h" : "Compras até " + H + "h";
-  $("#ritmo-tab").innerHTML = Object.keys(horas).sort().reverse().slice(0, 8).map((d) => {
-    const gasto = horas[d].slice(0, H + 1).reduce((s, x) => s + x, 0);
+  $("#ritmo-cab").innerHTML = "<th>Dia</th><th>Gasto até " + H + "h</th><th>" + (ck ? "Pedidos" : "Compras") + " até " + H + "h</th><th>ROAS</th>";
+  $("#ritmo-tab").innerHTML = dias.map((d) => {
+    const gasto = gastoAte(d);
     let ped, fat;
     if (ck) { const vs = D.vendas.filter((v) => v.d === d && +v.t.slice(11, 13) <= H); ped = vs.filter((v) => v.p).length; fat = vs.reduce((s, v) => s + valor(v), 0); }
     else { ped = ((D.comprasHora || {})[d] || []).slice(0, H + 1).reduce((s, x) => s + (x || 0), 0); fat = ((D.valorHora || {})[d] || []).slice(0, H + 1).reduce((s, x) => s + (x || 0), 0); }
     const roas = div(fat, gasto);
-    return "<tr" + (d === t ? ' class="total"' : "") + "><td>" + (d === t ? "Hoje" : diaSemana(d) + " " + diaCurto(d)) + "</td><td>" + F.moeda(gasto) + "</td><td>" + fmtNum.format(ped) + "</td><td>" + F.x2(roas) + indRoas(roas) + "</td></tr>";
+    return "<tr" + (d === t ? ' class="total"' : "") + "><td>" + rotDia(d) + "</td><td>" + F.moeda(gasto) + "</td><td>" + fmtNum.format(ped) + "</td><td>" + F.x2(roas) + indRoas(roas) + "</td></tr>";
   }).join("");
 }
 
@@ -600,6 +686,16 @@ const COLS = [
   { k: "conv", rot: "Conv. da página", v: (r) => r.m.conv, f: (r) => F.pct(r.m.conv), dica: "Compras ÷ visitas na página vindas deste item." },
   { k: "ticket", rot: "Ticket médio", v: (r) => r.m.ticket, f: (r) => F.moeda(r.m.ticket), dica: "Faturamento atribuído ÷ compras." },
 ];
+const colDe = (k) => COLS.find((c) => c.k === k);
+const COLS_RES = [
+  colDe("nome"), colDe("status"), colDe("orc"), colDe("g"),
+  { k: "rs", rot: "Resultados", v: (r) => r.m.rs, f: (r) => F.num(r.m.rs), dica: "Resultado do objetivo de cada campanha, como no Gerenciador. O tipo aparece ao lado do nome." },
+  { k: "cpr", rot: "Custo por resultado", v: (r) => r.m.cpr, f: (r) => F.moeda(r.m.cpr), dica: "Investimento ÷ resultados." },
+  colDe("cpm"), colDe("freq"), colDe("cpc"), colDe("ctr"),
+  { k: "c", rot: "Cliques no link", v: (r) => r.m.c, f: (r) => F.num(r.m.c) },
+  colDe("cpv"),
+];
+const cols = () => (S.res ? COLS_RES : COLS);
 const ativo = (s) => s === "ACTIVE" || s === "IN_PROCESS" || s === "WITH_ISSUES";
 const STATUS_TXT = { ACTIVE: "Ativa", PAUSED: "Pausada", ARCHIVED: "Arquivada", DELETED: "Apagada", CAMPAIGN_PAUSED: "Campanha pausada", ADSET_PAUSED: "Conjunto pausado", IN_PROCESS: "Em processamento", WITH_ISSUES: "Com problema", PENDING_REVIEW: "Em análise", DISAPPROVED: "Reprovado", PREAPPROVED: "Pré-aprovado" };
 function orcamentoCampanha(c) {
@@ -608,18 +704,19 @@ function orcamentoCampanha(c) {
   return soma || null;
 }
 function ordenar(linhas) {
-  const col = COLS.find((c) => c.k === S.ordem.col);
+  const col = cols().find((c) => c.k === S.ordem.col);
   if (!col || !col.v) return linhas;
   return linhas.sort((a, b) => { const x = col.v(a), y = col.v(b); if (!ok(x) && !ok(y)) return 0; if (!ok(x)) return 1; if (!ok(y)) return -1; return (x - y) * S.ordem.dir; });
 }
 function renderCampanhas() {
+  const C = cols();
   const total = agg(S.de, S.ate);
-  $("#camp-cab").innerHTML = COLS.map((c) => {
+  $("#camp-cab").innerHTML = C.map((c) => {
     const ord = S.ordem.col === c.k ? (S.ordem.dir > 0 ? "ascending" : "descending") : null;
     return "<th" + (c.ord === false ? "" : ' class="ord" data-k="' + c.k + '" tabindex="0"') + (ord ? ' aria-sort="' + ord + '"' : "") + ">" + c.rot + (ord ? (S.ordem.dir > 0 ? " ↑" : " ↓") : "") + (c.dica ? " " + info(c.dica) : "") + "</th>";
   }).join("");
   let camps = D.campanhas.filter((c) => contaOk(c.conta)).map((c) => ({ id: c.id, nome: c.nome, conta: c.conta, status: c.status, orc: orcamentoCampanha(c), m: agg(S.de, S.ate, { camp: c.id }) }));
-  camps = camps.filter((r) => r.m.g > 0 || r.m.compras > 0 || ativo(r.status));
+  camps = camps.filter((r) => r.m.g > 0 || r.m.compras > 0 || r.m.rs > 0 || ativo(r.status));
   camps.forEach((r) => { r.ticketRef = ok(r.m.ticket) ? r.m.ticket : total.ticket; });
   ordenar(camps);
   const multi = D.contas.length > 1;
@@ -627,20 +724,20 @@ function renderCampanhas() {
   for (const r of camps) {
     const aberta = S.abertas.has(r.id);
     const temAds = D.anuncios.some((a) => a.campanha === r.id);
-    html += "<tr>" + COLS.map((c) => {
-      if (c.k === "nome") return '<td><div class="nome">' + (temAds ? '<button type="button" class="seta" data-abre="' + esc(r.id) + '" aria-expanded="' + aberta + '" aria-label="Mostrar anúncios">' + (aberta ? "▾" : "▸") + "</button>" : '<span class="seta"></span>') + '<button type="button" class="nome-txt" data-gaveta="camp:' + esc(r.id) + '" title="' + esc(r.nome) + '">' + esc(r.nome) + "</button>" + (multi ? '<span class="tag">' + esc((I.conta.get(r.conta) || {}).nome || "") + "</span>" : "") + "</div></td>";
+    html += "<tr>" + C.map((c) => {
+      if (c.k === "nome") return '<td><div class="nome">' + (temAds ? '<button type="button" class="seta" data-abre="' + esc(r.id) + '" aria-expanded="' + aberta + '" aria-label="Mostrar anúncios">' + (aberta ? "▾" : "▸") + "</button>" : '<span class="seta"></span>') + '<button type="button" class="nome-txt" data-gaveta="camp:' + esc(r.id) + '" title="' + esc(r.nome) + '">' + esc(r.nome) + "</button>" + (S.res && r.m.rs ? '<span class="tag">' + esc(tipoDominante(r.m).curto) + "</span>" : "") + (multi ? '<span class="tag">' + esc((I.conta.get(r.conta) || {}).nome || "") + "</span>" : "") + "</div></td>";
       if (c.k === "status") return '<td style="text-align:left"><span class="status' + (ativo(r.status) ? " ativa" : "") + '">' + esc(STATUS_TXT[r.status] || r.status || "") + "</span></td>";
       return "<td>" + c.f(r) + "</td>";
     }).join("") + "</tr>";
     if (aberta) {
       let ads = D.anuncios.filter((a) => a.campanha === r.id).map((a) => ({ id: a.id, nome: a.nome, status: a.status, conj: (I.conj.get(a.conjunto) || {}).nome, orc: null, m: agg(S.de, S.ate, { ad: a.id }) }));
-      ads = ads.filter((a) => a.m.g > 0 || a.m.compras > 0 || ativo(a.status));
+      ads = ads.filter((a) => a.m.g > 0 || a.m.compras > 0 || a.m.rs > 0 || ativo(a.status));
       ads.forEach((a) => { a.ticketRef = ok(a.m.ticket) ? a.m.ticket : r.ticketRef; });
       ordenar(ads);
-      if (!ads.length) html += '<tr class="linha-ad"><td colspan="' + COLS.length + '" class="muted">Nenhum anúncio com entrega no período.</td></tr>';
+      if (!ads.length) html += '<tr class="linha-ad"><td colspan="' + C.length + '" class="muted">Nenhum anúncio com entrega no período.</td></tr>';
       for (const a of ads) {
-        html += '<tr class="linha-ad">' + COLS.map((c) => {
-          if (c.k === "nome") return '<td><div class="nome" style="padding-left:24px"><button type="button" class="nome-txt" data-gaveta="ad:' + esc(a.id) + '" title="' + esc(a.nome + (a.conj ? " · conjunto " + a.conj : "")) + '">' + esc(a.nome) + "</button></div></td>";
+        html += '<tr class="linha-ad">' + C.map((c) => {
+          if (c.k === "nome") return '<td><div class="nome" style="padding-left:24px"><button type="button" class="nome-txt" data-gaveta="ad:' + esc(a.id) + '" title="' + esc(a.nome + (a.conj ? " · conjunto " + a.conj : "")) + '">' + esc(a.nome) + "</button>" + (S.res && a.m.rs ? '<span class="tag">' + esc(tipoDominante(a.m).curto) + "</span>" : "") + "</div></td>";
           if (c.k === "status") return '<td style="text-align:left"><span class="status' + (ativo(a.status) ? " ativa" : "") + '">' + esc(STATUS_TXT[a.status] || a.status || "") + "</span></td>";
           if (c.k === "orc") return "<td>" + VAZIO + "</td>";
           return "<td>" + c.f(a) + "</td>";
@@ -648,28 +745,34 @@ function renderCampanhas() {
       }
     }
   }
-  const cel = (m, k) => "<td>" + COLS.find((x) => x.k === k).f({ m: m, orc: null, ticketRef: m.ticket }) + "</td>";
+  const cel = (m, k) => "<td>" + C.find((x) => x.k === k).f({ m: m, orc: null, ticketRef: m.ticket }) + "</td>";
   if (temCheckout() && S.modo !== "pixel") {
     const semAd = agg(S.de, S.ate, { semAnuncio: true });
-    if (semAd.vendas.length) html += '<tr class="linha-extra"><td>Anúncio não identificado no rastreio</td><td></td>' + COLS.slice(2).map((c) => (c.k === "compras" ? "<td>" + F.num(semAd.ped) + "</td>" : c.k === "ticket" ? "<td>" + F.moeda(div(semAd.fatCk, semAd.ped)) + "</td>" : "<td></td>")).join("") + "</tr>";
+    if (semAd.vendas.length) html += '<tr class="linha-extra"><td>Anúncio não identificado no rastreio</td><td></td>' + C.slice(2).map((c) => (c.k === "compras" ? "<td>" + F.num(semAd.ped) + "</td>" : c.k === "ticket" ? "<td>" + F.moeda(div(semAd.fatCk, semAd.ped)) + "</td>" : "<td></td>")).join("") + "</tr>";
     if (S.modo === "todas" && S.conta === "todas") {
       const org = agg(S.de, S.ate, { organico: true });
-      html += '<tr class="linha-extra"><td>Orgânico, direto e sem rastreio</td><td></td>' + COLS.slice(2).map((c) => (c.k === "compras" ? "<td>" + F.num(org.ped) + "</td>" : c.k === "ticket" ? "<td>" + F.moeda(div(org.fatCk, org.ped)) + "</td>" : "<td></td>")).join("") + "</tr>";
+      html += '<tr class="linha-extra"><td>Orgânico, direto e sem rastreio</td><td></td>' + C.slice(2).map((c) => (c.k === "compras" ? "<td>" + F.num(org.ped) + "</td>" : c.k === "ticket" ? "<td>" + F.moeda(div(org.fatCk, org.ped)) + "</td>" : "<td></td>")).join("") + "</tr>";
     }
   }
   const orcTotal = camps.filter((r) => ativo(r.status)).reduce((s, r) => s + (r.orc || 0), 0);
-  html += '<tr class="total"><td>Total do período</td><td></td>' + COLS.slice(2).map((c) => (c.k === "orc" ? "<td>" + F.moeda(orcTotal || null) + "</td>" : c.k === "freq" ? "<td>" + VAZIO + "</td>" : cel(total, c.k))).join("") + "</tr>";
-  $("#camp-corpo").innerHTML = camps.length ? html : '<tr><td colspan="' + COLS.length + '" class="vazio">Nenhuma campanha com entrega no período.</td></tr>';
+  html += '<tr class="total"><td>Total do período</td><td></td>' + C.slice(2).map((c) => (c.k === "orc" ? "<td>" + F.moeda(orcTotal || null) + "</td>" : c.k === "freq" ? "<td>" + VAZIO + "</td>" : cel(total, c.k))).join("") + "</tr>";
+  $("#camp-corpo").innerHTML = camps.length ? html : '<tr><td colspan="' + C.length + '" class="vazio">Nenhuma campanha com entrega no período.</td></tr>';
 }
 
 // ============================================================ dia a dia
 function renderDias() {
-  $("#metrica-dia").innerHTML = Object.entries(METRICAS).map(([k, m]) => '<option value="' + k + '"' + (S.metricaDia === k ? " selected" : "") + ">" + m.rot + "</option>").join("");
+  S.metricaDia = metricaValida(S.metricaDia, S.res ? "res" : "fat");
+  $("#metrica-dia").innerHTML = metricasDoModo().map(([k, m]) => '<option value="' + k + '"' + (S.metricaDia === k ? " selected" : "") + ">" + m.rot + "</option>").join("");
   const linhas = diasDoPeriodo().map((d) => ({ d, m: agg(d, d) }));
-  const met = METRICAS[S.metricaDia] || METRICAS.fat;
+  const met = METRICAS[S.metricaDia];
   grafico("#dia-graf", linhas.map((l) => ({ x: diaCurto(l.d), y: met.f(l.m), rotulo: diaSemana(l.d) + " " + diaCurto(l.d) + ": " + (ok(met.f(l.m)) ? met.fmt(met.f(l.m)) : "sem dado") })), {
     W: 1180, H: 260, tipo: linhas.length > 1 ? "linha" : "barras", titulo: met.rot + " por dia", eixo: met.eixo, valor: met.fmt, leitura: "#dia-leitura", padrao: met.rot + " por dia. Passe o mouse para ver o valor.",
   });
+  if (S.res) {
+    $("#dia-cab").innerHTML = "<th>Dia</th><th>Investimento</th><th>" + esc(tipoDominante(agg(S.de, S.ate)).nome) + "</th><th>Custo por resultado</th><th>CTR do link</th><th>CPM</th>";
+    $("#dia-tab").innerHTML = linhas.slice().reverse().map(({ d, m }) => "<tr><td>" + diaSemana(d) + " " + dataBR(d) + "</td><td>" + F.moeda(m.g) + "</td><td>" + F.num(m.rs) + "</td><td>" + F.moeda(m.cpr) + "</td><td>" + F.pct(m.ctr) + indCtr(m.ctr) + "</td><td>" + F.moeda(m.cpm) + "</td></tr>").join("");
+    return;
+  }
   $("#dia-cab").innerHTML = "<th>Dia</th><th>Investimento</th><th>Faturamento</th><th>Lucro</th><th>Compras</th><th>CPA</th><th>ROAS</th><th>Conv. da página</th>";
   $("#dia-tab").innerHTML = linhas.slice().reverse().map((l) => {
     const m = l.m, cls = ok(m.lucro) && (m.g || m.fat) ? (m.lucro >= 0 ? "val-pos" : "val-neg") : "";
@@ -688,28 +791,31 @@ function renderGaveta() {
   const m = agg(S.de, S.ate, alvo);
   const camp = tipo === "camp" ? ent : I.camp.get(ent.campanha);
   const orc = tipo === "camp" ? orcamentoCampanha(ent) : (I.conj.get(ent.conjunto) || {}).orcDia;
-  const itens = [
-    [tipo === "camp" ? "Orçamento diário" : "Orçamento diário do conjunto", F.moeda(orc)], ["Investimento", F.moeda(m.g)], ["Impressões", F.num(m.i)], ["Alcance", F.num(m.alcance)], ["Frequência", F.x2(m.freq)],
-    ["CPM", F.moeda(m.cpm)], ["Cliques no link", F.num(m.c)], ["CPC do link", F.moeda(m.cpc)], ["CTR do link", F.pct(m.ctr)], ["Visitas na página", F.num(m.v)],
-    ["Custo por visita", F.moeda(m.cpv)], ["Checkouts (pixel)", F.num(m.ic)], ["Custo por checkout", F.moeda(m.cpic)], ["Conversão do checkout", F.pct(m.convCk)],
-    ["Compras", F.num(m.compras)], ["CPA", F.moeda(m.cpa)], ["Faturamento", F.moeda(m.fat)], ["Ticket médio", F.moeda(m.ticket)], ["Conversão da página", F.pct(m.conv)],
-    ["ROAS", F.x2(m.roas)], ["Lucro após tráfego", F.moeda(m.g || m.fat ? m.lucro : null)],
-  ];
+  const base = [[tipo === "camp" ? "Orçamento diário" : "Orçamento diário do conjunto", F.moeda(orc)], ["Investimento", F.moeda(m.g)], ["Impressões", F.num(m.i)], ["Alcance", F.num(m.alcance)], ["Frequência", F.x2(m.freq)],
+    ["CPM", F.moeda(m.cpm)], ["Cliques no link", F.num(m.c)], ["CPC do link", F.moeda(m.cpc)], ["CTR do link", F.pct(m.ctr)], ["Visitas na página", F.num(m.v)], ["Custo por visita", F.moeda(m.cpv)]];
+  const itens = S.res
+    ? base.concat([[tipoDominante(m).nome, F.num(m.rs)], ["Custo por resultado", F.moeda(m.cpr)], ["Taxa de resultado", F.pct(m.taxaRes)]])
+    : base.concat([
+      ["Checkouts (pixel)", F.num(m.ic)], ["Custo por checkout", F.moeda(m.cpic)], ["Conversão do checkout", F.pct(m.convCk)],
+      ["Compras", F.num(m.compras)], ["CPA", F.moeda(m.cpa)], ["Faturamento", F.moeda(m.fat)], ["Ticket médio", F.moeda(m.ticket)], ["Conversão da página", F.pct(m.conv)],
+      ["ROAS", F.x2(m.roas)], ["Lucro após tráfego", F.moeda(m.g || m.fat ? m.lucro : null)],
+    ]);
   const t = hoje();
   const tres = [somaDias(t, -2), somaDias(t, -1), t].map((d) => ({ d, m: agg(d, d, alvo) }));
-  const opcoes = Object.entries(METRICAS).map(([k, x]) => '<option value="' + k + '"' + (S.metricaGaveta === k ? " selected" : "") + ">" + x.rot + "</option>").join("");
+  S.metricaGaveta = metricaValida(S.metricaGaveta, S.res ? "cpr" : "roas");
+  const opcoes = metricasDoModo().map(([k, x]) => '<option value="' + k + '"' + (S.metricaGaveta === k ? " selected" : "") + ">" + x.rot + "</option>").join("");
   const lista = temCheckout() && S.modo !== "pixel" ? m.vendas.filter((v) => v.p || v.u).slice().reverse().slice(0, 40) : [];
   camada.innerHTML = '<div class="fundo" data-fecha="1"></div><aside class="gaveta" role="dialog" aria-modal="true" aria-label="Detalhe">' +
     '<div class="gaveta-cab"><div style="display:grid;gap:4px;min-width:0"><span class="small muted">' + (tipo === "camp" ? "Campanha" : "Anúncio · " + esc(camp ? camp.nome : "")) + '</span><h2 style="overflow-wrap:anywhere">' + esc(ent.nome) + '</h2><span class="status' + (ativo(ent.status) ? " ativa" : "") + '">' + esc(STATUS_TXT[ent.status] || ent.status || "") + '</span></div><button type="button" class="btn" data-fecha="1">Fechar</button></div>' +
     '<div class="small muted">Período: ' + (S.de === S.ate ? dataBR(S.de) : dataBR(S.de) + " a " + dataBR(S.ate)) + "</div>" +
     '<div class="metricas">' + itens.map(([r, v]) => "<div><span>" + r + "</span><b>" + v + "</b></div>").join("") + "</div>" +
     '<section class="painel"><div class="secao-cab"><h3 style="font-size:14px">Evolução diária</h3><select id="metrica-gaveta" aria-label="Métrica do gráfico do detalhe">' + opcoes + '</select></div><div class="grafico" id="gaveta-graf"></div><div class="leitura" id="gaveta-leitura"></div></section>' +
-    '<section class="painel"><h3 style="font-size:14px">Últimos 3 dias</h3><p class="small muted" style="margin:0">Antes de pausar, confira se a Meta já não cortou a verba sozinha e se houve venda nos 3 dias.</p><div class="tabela-wrap"><table><thead><tr><th>Dia</th><th>Gasto</th><th>Compras</th><th>CPA</th><th>ROAS</th></tr></thead><tbody>' +
-    tres.map((x) => "<tr><td>" + (x.d === t ? "Hoje" : diaSemana(x.d) + " " + diaCurto(x.d)) + "</td><td>" + F.moeda(x.m.g) + "</td><td>" + F.num(x.m.compras) + "</td><td>" + F.moeda(x.m.cpa) + "</td><td>" + F.x2(x.m.roas) + indRoas(x.m.roas) + "</td></tr>").join("") + "</tbody></table></div></section>" +
+    '<section class="painel"><h3 style="font-size:14px">Últimos 3 dias</h3><p class="small muted" style="margin:0">Antes de pausar, confira se a Meta já não cortou a verba sozinha e se houve ' + (S.res ? "resultado" : "venda") + ' nos 3 dias.</p><div class="tabela-wrap"><table><thead><tr><th>Dia</th><th>Gasto</th>' + (S.res ? "<th>Resultados</th><th>Custo por resultado</th>" : "<th>Compras</th><th>CPA</th><th>ROAS</th>") + '</tr></thead><tbody>' +
+    tres.map((x) => "<tr><td>" + (x.d === t ? "Hoje" : diaSemana(x.d) + " " + diaCurto(x.d)) + "</td><td>" + F.moeda(x.m.g) + "</td>" + (S.res ? "<td>" + F.num(x.m.rs) + "</td><td>" + F.moeda(x.m.cpr) + "</td>" : "<td>" + F.num(x.m.compras) + "</td><td>" + F.moeda(x.m.cpa) + "</td><td>" + F.x2(x.m.roas) + indRoas(x.m.roas) + "</td>") + "</tr>").join("") + "</tbody></table></div></section>" +
     (temCheckout() && S.modo !== "pixel" ? '<section class="painel"><h3 style="font-size:14px">Vendas no período</h3>' + (lista.length ? '<div class="tabela-wrap"><table><thead><tr><th>Quando</th><th>Itens</th><th>Valor</th></tr></thead><tbody>' + lista.map((v) => "<tr><td>" + diaCurto(v.d) + " " + v.t.slice(11, 16) + '</td><td style="text-align:left;white-space:normal">' + esc((v.it || []).join(" + ")) + "</td><td>" + F.moeda(valor(v)) + "</td></tr>").join("") + "</tbody></table></div>" : '<p class="small muted" style="margin:0">Nenhuma venda atribuída no período.</p>') + "</section>" : "") +
     "</aside>";
-  const met = METRICAS[S.metricaGaveta] || METRICAS.roas;
-  grafico("#gaveta-graf", diasDoPeriodo().map((d) => { const x = agg(d, d, alvo); const v = met.f(x); return { x: diaCurto(d), y: x.g || x.compras ? v : null, rotulo: diaCurto(d) + ": " + (ok(v) && (x.g || x.compras) ? met.fmt(v) : "sem dado") }; }), {
+  const met = METRICAS[S.metricaGaveta];
+  grafico("#gaveta-graf", diasDoPeriodo().map((d) => { const x = agg(d, d, alvo); const v = met.f(x); const tem = x.g || x.compras || x.rs; return { x: diaCurto(d), y: tem ? v : null, rotulo: diaCurto(d) + ": " + (ok(v) && tem ? met.fmt(v) : "sem dado") }; }), {
     W: 560, H: 220, tipo: S.de !== S.ate ? "linha" : "barras", titulo: met.rot + " por dia", eixo: met.eixo, valor: met.fmt, leitura: "#gaveta-leitura", padrao: met.rot + " por dia",
   });
   $("#metrica-gaveta").addEventListener("change", (e) => { S.metricaGaveta = e.target.value; renderGaveta(); });
@@ -719,11 +825,17 @@ function renderGaveta() {
 // ============================================================ notas
 function renderNotas() {
   const ck = temCheckout();
-  const linhas = [
-    ["Investimento, impressões, cliques, visitas", "Meta Ads, por campanha, por anúncio e por dia. Visitas são as visualizações da página de destino registradas pela Meta."],
+  const linhas = [["Investimento, impressões, cliques, visitas", "Meta Ads, por campanha, por anúncio e por dia. Visitas são as visualizações da página de destino registradas pela Meta."]];
+  if (S.res) linhas.push(
+    ["Resultados", "O resultado do objetivo de cada campanha, contado pela Meta como no Gerenciador: conversas iniciadas no WhatsApp ou no Direct, leads, cadastros, visitas ao perfil. Quando as campanhas buscam resultados diferentes, o total soma todos."],
+    ["Custo por resultado", "Investimento ÷ resultados."],
+    ["Taxa de resultado", "Resultados ÷ cliques no link. Só aparece quando o resultado vem de um clique (conversa, lead, cadastro)."],
+    ["Ritmo de hoje", "A Meta não entrega o resultado por hora, então o ritmo mostra só o gasto. Na comparação com o período anterior, o resultado do último dia entra proporcional ao gasto até a mesma hora."],
+  );
+  else linhas.push(
     ["Checkout iniciado", "Pixel da Meta (evento de finalização de compra iniciada), atribuído pela própria Meta aos anúncios."],
     ["Compras e faturamento pelo pixel", "As compras e o valor que a Meta registra, na janela de atribuição da conta. Costuma divergir do checkout."],
-  ];
+  );
   if (ck) linhas.push(
     ["Vendas, bump e upsell", "Checkout (" + esc(D.checkout.plataforma || "Hotmart") + "). Bump: item comprado logo depois do produto principal, pela mesma compradora. Upsell: comprado pela mesma compradora até " + ((D.checkout.upsell || {}).janela_horas || 24) + " horas depois."],
     ["Só de anúncio", "Conta só as vendas em que o rastreio do link (src ou sck) leva até um anúncio, conjunto ou campanha."],
@@ -732,8 +844,8 @@ function renderNotas() {
     ["Origem das vendas", "Canal de cada venda pelo rastreio do link: bio, Direct, YouTube, WhatsApp... Sem rastreio: a venda chegou sem nenhum parâmetro (link salvo, Google, endereço digitado ou link sem marcação)."],
     ["Reembolsos", "Venda reembolsada sai do dia em que foi feita na próxima atualização das vendas. O pixel da Meta continua contando a compra."],
   );
+  if (!S.res) linhas.push(["Conversão do checkout", "Compras ÷ checkouts iniciados que a Meta atribui aos anúncios."]);
   linhas.push(
-    ["Conversão do checkout", "Compras ÷ checkouts iniciados que a Meta atribui aos anúncios."],
     ["Dias", "Cada dia segue o fuso da conta de anúncios. O alcance e a frequência são calculados pela Meta e só aparecem nos atalhos de período."],
     ["Período anterior", "Mesmo número de dias, imediatamente antes do período escolhido. Quando o período inclui hoje, o último dia anterior é cortado na mesma hora."],
     ["Moeda", "Tudo em " + moeda + ", a moeda da conta de anúncios."],
@@ -745,6 +857,7 @@ function renderNotas() {
 function render() {
   if (!D) return;
   aplicaPeriodo();
+  S.res = calcModoRes();
   renderTopo(); renderGeral(); renderOrigem(); renderFunil(); renderRitmo(); renderCampanhas(); renderDias(); renderGaveta(); renderNotas();
 }
 function liga() {
@@ -796,7 +909,7 @@ const dataLocal = (x) => x.getFullYear() + "-" + pad(x.getMonth() + 1) + "-" + p
 function semente(s) { return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 const CURVA = [0.6, 0.4, 0.3, 0.25, 0.25, 0.35, 0.7, 1.2, 1.7, 2, 2.2, 2.3, 2.4, 2.4, 2.3, 2.3, 2.4, 2.6, 2.9, 3.2, 3.4, 3.2, 2.4, 1.3];
 const somaCurva = CURVA.reduce((s, x) => s + x, 0);
-function gerarDemo(comCheckout) {
+function gerarDemo(comCheckout, mensagens) {
   const rnd = semente(20261009);
   const ruido = (a) => 1 + (rnd() * 2 - 1) * a;
   const poisson = (l) => { const L = Math.exp(-l); let k = 0, p = 1; do { k++; p *= rnd(); } while (p > L); return k - 1; };
@@ -832,7 +945,7 @@ function gerarDemo(comCheckout) {
     let gastoDia = 0, cpDia = 0;
     for (const c of C) {
       if (c.fim && d > c.fim) continue;
-      const linhaC = { d, conta, camp: c.id, g: 0, i: 0, c: 0, v: 0, ic: 0, cp: 0, vp: 0 };
+      const linhaC = { d, conta, camp: c.id, g: 0, i: 0, c: 0, v: 0, ic: 0, cp: 0, vp: 0, rs: 0, tp: null };
       for (const a of A.filter((x) => x.campanha === c.id)) {
         const g = Math.round(c.verba * a.peso * ruido(0.18) * frac * 100) / 100;
         const i = Math.round(g / (31 * ruido(0.2) * (c.rmkt ? 1.6 : 1)) * 1000);
@@ -841,11 +954,13 @@ function gerarDemo(comCheckout) {
         const ic = poisson(v * 0.11 * Math.sqrt(a.efic * c.efic) * fds);
         const n = poisson(ic * 0.4 * Math.sqrt(a.efic * c.efic));
         const cp = Math.max(0, n + (rnd() < 0.22 ? -1 : 0) + (rnd() < 0.12 ? 1 : 0));
-        const vp = Math.round(cp * 214 * ruido(0.05) * 100) / 100;
-        D2.metaDiaAd.push({ d, conta, camp: c.id, a: a.id, g, i, c: cl, v, ic, cp, vp });
-        Object.assign(linhaC, { g: linhaC.g + g, i: linhaC.i + i, c: linhaC.c + cl, v: linhaC.v + v, ic: linhaC.ic + ic, cp: linhaC.cp + cp, vp: linhaC.vp + vp });
+        let vp = Math.round(cp * 214 * ruido(0.05) * 100) / 100, rs = cp, tp = "actions:offsite_conversion.fb_pixel_purchase";
+        if (mensagens) { vp = 0; rs = poisson(cl * 0.33 * Math.sqrt(a.efic)); tp = "actions:onsite_conversion.messaging_conversation_started_7d"; }
+        const cpLinha = mensagens ? 0 : cp, icLinha = mensagens ? 0 : ic, vLinha = mensagens ? Math.round(v * 0.05) : v;
+        D2.metaDiaAd.push({ d, conta, camp: c.id, a: a.id, g, i, c: cl, v: vLinha, ic: icLinha, cp: cpLinha, vp, rs, tp });
+        Object.assign(linhaC, { g: linhaC.g + g, i: linhaC.i + i, c: linhaC.c + cl, v: linhaC.v + vLinha, ic: linhaC.ic + icLinha, cp: linhaC.cp + cpLinha, vp: linhaC.vp + vp, rs: linhaC.rs + rs, tp });
         (imp[d] = imp[d] || {})[a.id] = i; imp[d][c.id] = (imp[d][c.id] || 0) + i;
-        gastoDia += g; cpDia += cp;
+        gastoDia += g; cpDia += mensagens ? 0 : cp;
         if (comCheckout) for (let k = 0; k < n; k++) {
           const h = d === t ? horaSorteada(H) : horaSorteada(23);
           const venda = { t: d + "T" + pad(h) + ":" + pad(Math.floor(rnd() * 60)) + ":00", rt: rnd() < 0.06 ? "facebook_ads" : "meta_" + a.id, liq: 178.53, bru: 197, p: true, b: [], u: false, it: ["Método principal"] };
@@ -898,7 +1013,11 @@ function num(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : null;
   if (typeof v === "string") { const t = v.trim(); if (!/^-?[\d.,]+%?$/.test(t)) return null; const n = parseFloat(t.replace(",", ".")); return Number.isFinite(n) ? n : null; }
   if (Array.isArray(v)) return v.length ? num(v[0] && v[0].value !== undefined ? v[0].value : v[0]) : null;
-  if (typeof v === "object") { if (typeof v.unit === "string" && v.unit.length === 3) moeda = v.unit; return num(v.value); }
+  if (typeof v === "object") {
+    if (Array.isArray(v.values)) return num(v.values[0] && v.values[0].value); // "results" vem como {indicator, values: [{value}]}
+    if (typeof v.unit === "string" && v.unit.length === 3) moeda = v.unit;
+    return num(v.value);
+  }
   return null;
 }
 const parseP = (p) => { if (typeof p === "string") { try { return JSON.parse(p); } catch (e) { return null; } } return p; };
@@ -1040,7 +1159,7 @@ async function coletar(fresco) {
   const tz = contas[0].timezone_name || contas[0].timezone || null;
   const { dia: t, hora: H } = fusoHoje(tz);
   const inicio = somaDias(t, -30);
-  const metr = ["amount_spent", "impressions", "link_click", "landing_page_view", "omni_purchase"].concat(E.ic, E.vp, E.roas);
+  const metr = ["amount_spent", "impressions", "link_click", "landing_page_view", "omni_purchase", "results"].concat(E.ic, E.vp, E.roas);
   const pais = [].concat(E.campanha, E.conjunto);
   const D2 = { demo: false, hoje: t, inicio, horaAtual: H, contas: [], campanhas: [], conjuntos: [], anuncios: [], metaDiaCamp: [], metaDiaAd: [], porHora: {}, comprasHora: {}, valorHora: {}, alcance: {}, vendas: [], pendentes: [], avisos: [], checkout: null };
   const achou = { ic: 0, vp: 0, roas: 0 };
@@ -1050,7 +1169,7 @@ async function coletar(fresco) {
     const g = num(r.amount_spent) || 0;
     let vp = pega(r, E.vp, "vp");
     if (vp == null) { const roas = pega(r, E.roas, "roas"); vp = roas != null ? roas * g : null; }
-    return Object.assign({ d: String(r.date_start || "").slice(0, 10), g, i: num(r.impressions) || 0, c: num(r.link_click) || 0, v: num(r.landing_page_view) || 0, ic: pega(r, E.ic, "ic") || 0, cp: num(r.omni_purchase) || 0, vp: vp || 0 }, extra);
+    return Object.assign({ d: String(r.date_start || "").slice(0, 10), g, i: num(r.impressions) || 0, c: num(r.link_click) || 0, v: num(r.landing_page_view) || 0, ic: pega(r, E.ic, "ic") || 0, cp: num(r.omni_purchase) || 0, vp: vp || 0, rs: num(r.results) || 0, tp: r.results && typeof r.results === "object" ? r.results.indicator || null : null }, extra);
   };
   const JANELAS = [["hoje", "today", t, t], ["ontem", "yesterday", somaDias(t, -1), somaDias(t, -1)], ["7d", "last_7d", somaDias(t, -6), t], ["14d", "last_14d", somaDias(t, -13), t], ["30d", "last_30d", somaDias(t, -29), t]];
   const camps = new Map(), conjs = new Map(), ads = new Map();
@@ -1117,7 +1236,7 @@ async function coletar(fresco) {
   if (falhas.length) D2.avisos.push("Parte dos números não veio da Meta nesta atualização (" + falhas.length + " de " + res.length + " consultas). Clique em Atualizar dados de novo em alguns minutos.");
   if (!D2.metaDiaCamp.length) D2.avisos.push("A Meta não devolveu gasto nos últimos 30 dias para " + (contas.length > 1 ? "estas contas" : "esta conta") + ".");
   if (diag.cortado) D2.avisos.push("A conta tem mais linhas do que a Meta entrega numa consulta. Alguns números podem estar menores do que no Gerenciador.");
-  if (D2.metaDiaCamp.length && !achou.ic) D2.avisos.push("O conector não informou o checkout iniciado. A etapa aparece zerada no funil.");
+  if (D2.metaDiaCamp.some((r) => r.cp > 0) && !achou.ic) D2.avisos.push("O conector não informou o checkout iniciado. A etapa aparece zerada no funil.");
   diag.achou = achou;
   D2.campanhas = [...camps.values()]; D2.conjuntos = [...conjs.values()]; D2.anuncios = [...ads.values()].filter((a) => a.campanha);
   diag.orcamentoBruto = ORCAMENTO_BRUTO.slice();
@@ -1175,7 +1294,7 @@ function textoErro(e) {
 const NEGADO = new Set(["needs_reauth", "server_not_connected", "server_not_found", "selection_required", "not_in_manifest", "consent_required", "blocked_by_policy", "approval_required"]);
 
 // ============================================================ instantâneo e diagnóstico
-const CHAVE_SNAP = "dt_snapshot_v2"; // trocar a versão quando o formato dos dados mudar
+const CHAVE_SNAP = "dt_snapshot_v3"; // trocar a versão quando o formato dos dados mudar
 function lerSnapshot() { try { const s = JSON.parse(store.get(CHAVE_SNAP) || "null"); return s && s.conector === SERVER && s.dados ? s : null; } catch (e) { return null; } }
 function salvarSnapshot(dados) { const limpo = JSON.parse(JSON.stringify(dados, (k, v) => (k === "_conta" ? undefined : v))); store.set(CHAVE_SNAP, JSON.stringify({ conector: SERVER, quando: Date.now(), dados: limpo })); }
 async function gravarDiag() {
@@ -1201,7 +1320,7 @@ function usar(dados) {
   estado(""); mostrarSecoes(true); render();
 }
 async function atualizar(fresco) {
-  if (CONFIG.demo) { S.erro = null; usar(gerarDemo(location.hash !== "#sem-checkout")); if (fresco) toast("Dados de demonstração. No painel ligado à sua conta, este botão busca os números novos na Meta."); return; }
+  if (CONFIG.demo) { S.erro = null; usar(gerarDemo(!["#sem-checkout", "#mensagens"].includes(location.hash), location.hash === "#mensagens")); if (fresco) toast("Dados de demonstração. No painel ligado à sua conta, este botão busca os números novos na Meta."); return; }
   if (coletando) return;
   if (!mcp) { toast("Esta visualização não tem acesso ao conector da Meta. Abra a página no claude.ai, logado na sua conta."); return; }
   coletando = true;
