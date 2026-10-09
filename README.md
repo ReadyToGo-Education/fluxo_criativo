@@ -230,7 +230,7 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/trafego-criar-campanha`. Cria campanha via Marketing API. PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo. Cobre objetivos OUTCOME_SALES (perpétuo) e OUTCOME_LEADS (lançamento).
 - `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh) e emite sinal de prontidão para escala. Inclui sub-skill `acoes-lote` (em massa por filtro).
 - `/trafego-analise`. Análise narrada VTSD em 9 outputs (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B).
-- `/trafego-dashboard`. Dashboard da conta de anúncios com dados ao vivo, publicado como artefato do Claude conectado ao MCP da Meta. Se o aluno já tem um, entrega o link (salvo em `meus-produtos/dashboard-trafego.md`); se não tem, cria. Sem MCP, monta o dashboard estático (legado).
+- `/trafego-dashboard`. Dashboard da conta de anúncios publicado como artefato do Claude conectado ao MCP da Meta, montado a partir de um modelo pronto (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia). Com credenciais da Hotmart ou da Kiwify no `.env`, inclui as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link (salvo em `meus-produtos/dashboard-trafego.md`); se não tem, cria. Sem MCP, monta o dashboard estático (legado).
 
 Skill interna acionada automaticamente: `trafego-escalar` (5 modos de escala, 3 velocidades, freios escalonados, tetos), invocada por `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
 
@@ -337,7 +337,7 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 - `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + sub-skill acoes-lote.
 - `trafego-escalar/`. 5 modos de escala (vertical, horizontal, vertical+horizontal, consolidação CBO, Advantage).
 - `trafego-analise/`. 9 outputs narrativos VTSD.
-- `trafego-dashboard/`. Dashboard ao vivo (artefato com o MCP da Meta) e o roteiro do dashboard estático legado.
+- `trafego-dashboard/`. Modelo do dashboard (`assets/dashboard.html`), scripts de montagem e de vendas da Hotmart e da Kiwify e o roteiro do dashboard estático legado.
 
 **Pesquisa e dados**
 - `pesquisa-mercado/`. 9 eixos completos.

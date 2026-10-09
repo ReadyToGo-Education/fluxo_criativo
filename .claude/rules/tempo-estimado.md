@@ -92,7 +92,9 @@
 | Dashboard Instagram (download + HTML) | 3 a 5 minutos | minutos |
 | Dashboard TikTok (download + HTML) | 3 a 5 minutos | minutos |
 | Dashboard YouTube (download + HTML) | 3 a 5 minutos | minutos |
-| Dashboard de tráfego ao vivo (montar e publicar o artefato com o MCP da Meta) | 3 a 5 minutos | minutos |
+| Montar e publicar o dashboard de tráfego (modelo pronto, sem Hotmart) | cerca de 90 segundos | segundos |
+| Montar e publicar o dashboard com vendas do checkout (Hotmart ou Kiwify) | 2 a 3 minutos | minutos |
+| Buscar as vendas do checkout e atualizar o dashboard | cerca de 60 segundos | segundos |
 | Ajustar o dashboard de tráfego ao vivo (editar e publicar de novo) | cerca de 90 segundos | segundos |
 
 ---

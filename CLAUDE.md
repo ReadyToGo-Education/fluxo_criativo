@@ -470,7 +470,7 @@ Todos os 5 commands `/trafego-*` invocáveis pelo usuário:
 - `/trafego-criar-campanha`. Criação de campanha via Marketing API.
 - `/trafego-otimizar`. Diagnóstico e otimização. Inclui ações em lote por filtro.
 - `/trafego-analise`. Análise narrada VTSD em 9 outputs (exceto Modo Demo, que usa dados fictícios).
-- `/trafego-dashboard`. Dashboard ao vivo (artefato do Claude com o conector MCP da Meta) ou, sem MCP, dashboard estático (legado).
+- `/trafego-dashboard`. Dashboard da conta de anúncios (artefato do Claude com o conector MCP da Meta, montado a partir de um modelo pronto), com vendas da Hotmart ou da Kiwify quando há credenciais no `.env`, ou, sem artefato, dashboard estático (legado).
 
 **Skill interna (não invocável diretamente pelo usuário):**
 - `trafego-escalar`. Invocada automaticamente por `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
@@ -482,7 +482,7 @@ Os commands legados (`/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar`) 
 O link do dashboard ao vivo de cada aluno fica salvo em `meus-produtos/dashboard-trafego.md` (nunca neste arquivo). Sempre que o aluno pedir para ver ou abrir o dashboard, o painel de anúncios ou os números da conta num painel ("abre meu dashboard", "cadê meu painel de anúncios"), em qualquer conversa:
 
 1. Ler `meus-produtos/dashboard-trafego.md`.
-2. **Se houver link:** responder "Você já tem um dashboard ativo. Ele está aqui: {link}" e lembrar que dá para clicar em "Atualizar agora". Se o aluno quiser ajustar ou criar outro, seguir o `/trafego-dashboard`.
+2. **Se houver link:** responder "Você já tem um dashboard ativo. Ele está aqui: {link}" e lembrar que dá para clicar em "Atualizar dados". Se o aluno quiser ajustar ou criar outro, seguir o `/trafego-dashboard`.
 3. **Se não houver:** seguir o `/trafego-dashboard`, que procura um dashboard criado em outro lugar e, se não achar, cria um novo.
 
 ### Quando outras skills de tráfego forem criadas no futuro
@@ -576,7 +576,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/trafego-criar-campanha`. Subir campanha nova via Marketing API (PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo). Cobre Sales e Leads
 - `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência + gargalo) para 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Quando a campanha está pronta, aciona automaticamente a escala.
 - `/trafego-analise`. Análise narrada VTSD reorganizada em 9 outputs (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção). Aluno escolhe um output por vez e recebe diagnóstico com handoff para skill executora.
-- `/trafego-dashboard`. Abrir ou criar o dashboard da conta de anúncios com dados ao vivo (artefato do Claude conectado ao MCP da Meta). Se o aluno já tem um, entrega o link. Sem MCP, monta o dashboard estático (legado)
+- `/trafego-dashboard`. Abrir, criar ou atualizar o dashboard da conta de anúncios (artefato do Claude conectado ao MCP da Meta): visão geral com comparação, funil, ritmo do dia, campanhas com anúncios e dia a dia. Com credenciais da Hotmart ou da Kiwify no `.env`, mostra as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link. Sem MCP, monta o dashboard estático (legado)
 
 **Dados e Automações:**
 - `/ads-relatorio`. Criar rotina diária automática que busca métricas do Facebook Ads e envia relatório pelo WhatsApp via Z-API. Agente agendado na nuvem do Claude, roda todo dia às 8h sem precisar do computador ligado.
