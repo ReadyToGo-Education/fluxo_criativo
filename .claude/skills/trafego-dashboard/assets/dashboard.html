@@ -904,6 +904,8 @@ const parseP = (p) => { if (typeof p === "string") { try { return JSON.parse(p);
 function linhas(payload) { const p = parseP(payload); if (!p) return []; let e = p.ad_entities; if (typeof e === "string") { try { e = JSON.parse(e); } catch (_) { e = []; } } return Array.isArray(e) ? e : []; }
 function proximo(payload) { const p = parseP(payload) || {}; return (p.pagination && p.pagination.next_cursor) || p.next_cursor || (p.paging && p.paging.next && p.paging.cursors && p.paging.cursors.after) || null; }
 function dim(r, k) { let v = r[k]; if (v == null && r.breakdowns && typeof r.breakdowns === "object") v = r.breakdowns[k]; if (v && typeof v === "object") v = v.value !== undefined ? v.value : null; return v; }
+// Sem este filtro o conector devolve também campanhas e anúncios antigos, sem nenhuma entrega no período.
+const comEntrega = (nivel) => [{ field: nivel + ".impressions", operator: "GREATER_THAN", value: ["0"] }];
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const normId = (id) => String(id || "").replace(/^act_/, "");
 function cacheOpt(fresco) { return { cache: fresco ? { staleTime: 300000, gcTime: 86400000, refresh: true } : { staleTime: 300000, gcTime: 86400000 } }; }
@@ -925,7 +927,7 @@ async function chamar(input, fresco, rotulo, tool) {
   }
 }
 function amostra(rotulo, payload, rs) {
-  if (diag.amostras[rotulo]) return;
+  if (diag.amostras[rotulo] && diag.amostras[rotulo].linhas) return; // guarda a primeira resposta com linhas
   const p = parseP(payload) || {}, r = rs[0] || {};
   const curto = (v) => (v && typeof v === "object" ? JSON.stringify(v).slice(0, 80) : String(v).slice(0, 40));
   diag.amostras[rotulo] = { chavesResposta: Object.keys(p), linhas: rs.length, linha: Object.fromEntries(Object.entries(r).filter(([k]) => !/name|nome/i.test(k)).map(([k, v]) => [k, curto(v)])) };
@@ -939,7 +941,9 @@ async function todas(input, fresco, rotulo) {
     try { p = await chamar(inp, fresco, rotulo + (pag ? " p" + (pag + 1) : "")); }
     catch (e) { if (pag && (e.code === "tool_error" || e.code === "bad_request")) { diag.avisos.push(rotulo + ": a paginação falhou, ficaram " + out.length + " linhas."); break; } throw e; }
     const rs = linhas(p); out = out.concat(rs); amostra(rotulo, p, rs);
-    cur = proximo(p); pag++;
+    cur = rs.length ? proximo(p) : null; pag++;
+    // O conector pode cortar no limite sem devolver a próxima página: avisa em vez de mostrar número menor calado.
+    if (!cur && input.limit && rs.length >= input.limit) { diag.avisos.push(rotulo + ": chegou ao limite de " + input.limit + " linhas sem próxima página."); diag.cortado = true; }
     if (cur && !PAG) { diag.avisos.push(rotulo + ": a resposta tem mais páginas, mas o conector não informou como pedir a próxima."); break; }
   } while (cur && pag < 40);
   return out;
@@ -949,8 +953,8 @@ async function todas(input, fresco, rotulo) {
 // está disponível; senão testa cada campo com uma consulta pequena.
 const BASE = ["name", "amount_spent", "impressions", "link_click", "landing_page_view", "omni_purchase"];
 const CAND = {
-  ic: ["omni_initiated_checkout", "initiate_checkout", "initiated_checkout", "omni_initiate_checkout", "offsite_conversion_fb_pixel_initiate_checkout"],
-  vp: ["omni_purchase_value", "purchase_value", "omni_purchase_conversion_value", "website_purchase_value", "purchase_conversion_value"],
+  ic: ["omni_initiated_checkout"],
+  vp: ["offsite_conversion_fb_pixel_purchase_values"],
   roas: ["purchase_roas"], campanha: ["campaign_id"], conjunto: ["adset_id"],
 };
 function enumDe(no, prof) {
@@ -965,14 +969,14 @@ function enumDe(no, prof) {
 // Cada item de `escolhidos` é uma lista: quando o conector aceita vários nomes candidatos,
 // todos vão na consulta e a leitura usa o primeiro que vier preenchido.
 async function descobrir(conta) {
-  let salvo = null; try { salvo = JSON.parse(store.get("dt_campos_v2") || "null"); } catch (e) {}
+  let salvo = null; try { salvo = JSON.parse(store.get("dt_campos_v3") || "null"); } catch (e) {}
   if (salvo && salvo.servidor === SERVER && Date.now() - salvo.quando < 7 * 864e5) { PAG = salvo.pag; diag.campos = Object.assign({ origem: "salvo neste navegador" }, salvo); return salvo; }
   let props = null;
   try { const d = await mcp.describeTool(SERVER, TOOL); props = (d.inputSchema && d.inputSchema.properties) || null; }
   catch (e) { diag.avisos.push("Esquema da ferramenta indisponível (" + (e && e.code) + "). Campos testados um a um."); }
   const campos = props ? enumDe(props.fields) : null, quebras = props ? enumDe(props.breakdowns) : null;
   const r = { servidor: SERVER, quando: Date.now(), escolhidos: {}, hora: false, range: false, pag: null };
-  r.pag = props ? ["after", "cursor", "next_cursor", "page_cursor", "pagination_cursor", "page_token"].find((k) => k in props) || null : "after";
+  r.pag = props ? ["cursor", "after", "next_cursor", "page_cursor", "pagination_cursor", "page_token"].find((k) => k in props) || null : "cursor";
   r.range = !!(props && props.time_range && JSON.stringify(props.time_range).includes("since"));
   diag.esquema = props ? { parametros: Object.keys(props), campos: campos ? campos.length : "sem lista", quebras: quebras ? quebras.length : "sem lista" } : "indisponível";
   if (campos) {
@@ -994,7 +998,7 @@ async function descobrir(conta) {
     catch (e) { if (e && (e.code === "tool_error" || e.code === "bad_request")) r.hora = false; else throw e; }
   }
   PAG = r.pag;
-  store.set("dt_campos_v2", JSON.stringify(r));
+  store.set("dt_campos_v3", JSON.stringify(r));
   diag.campos = Object.assign({ origem: props ? "esquema" : "teste" }, r);
   return r;
 }
@@ -1053,10 +1057,10 @@ async function coletar(fresco) {
   for (const a of contas) {
     const id = a.ad_account_id;
     D2.contas.push({ id: String(id), nome: a.ad_account_name || String(id) });
-    const base = { ad_account_id: id, sort: "amount_spent_descending", limit: 300 };
+    const base = { ad_account_id: id, sort: "amount_spent_descending", limit: 1000 };
     for (const preset of ["last_30d", "today"]) {
       tarefas.push(async () => {
-        const rs = await todas(Object.assign({}, base, { level: "campaign", date_preset: preset, time_increment: "1", fields: ["name", "effective_status", "daily_budget"].concat(metr) }), fresco, "campanhas por dia " + preset);
+        const rs = await todas(Object.assign({}, base, { level: "campaign", date_preset: preset, time_increment: "1", filtering: comEntrega("campaign"), fields: ["name", "effective_status", "daily_budget"].concat(metr) }), fresco, "campanhas por dia " + preset);
         for (const r of rs) {
           const cid = String(r.id || r.campaign_id || "");
           if (!cid || (preset !== "today" && String(r.date_start || "").slice(0, 10) === t)) continue;
@@ -1067,7 +1071,7 @@ async function coletar(fresco) {
         }
       });
       tarefas.push(async () => {
-        const rs = await todas(Object.assign({}, base, { level: "ad", date_preset: preset, time_increment: "1", fields: ["name", "effective_status"].concat(pais, metr) }), fresco, "anúncios por dia " + preset);
+        const rs = await todas(Object.assign({}, base, { level: "ad", date_preset: preset, time_increment: "1", filtering: comEntrega("ad"), fields: ["name", "effective_status"].concat(pais, metr) }), fresco, "anúncios por dia " + preset);
         for (const r of rs) {
           const aid = String(r.id || r.ad_id || "");
           if (!aid || (preset !== "today" && String(r.date_start || "").slice(0, 10) === t)) continue;
@@ -1079,14 +1083,14 @@ async function coletar(fresco) {
       });
     }
     tarefas.push(async () => {
-      const rs = await todas(Object.assign({}, base, { level: "adset", date_preset: "last_30d", fields: ["name", "effective_status", "daily_budget"].concat(E.campanha) }), fresco, "conjuntos");
+      const rs = await todas(Object.assign({}, base, { level: "adset", date_preset: "last_30d", filtering: [{ field: "adset.effective_status", operator: "IN", value: ["ACTIVE"] }], fields: ["name", "effective_status", "daily_budget"].concat(E.campanha) }), fresco, "conjuntos");
       for (const r of rs) { const sid = String(r.id || r.adset_id || ""); if (sid) conjs.set(sid, { id: sid, campanha: paiDe(r, E.campanha), nome: r.name || sid, status: r.effective_status, orcDia: orcamento(r.daily_budget) }); }
     });
     for (const [chave, preset, de, ate] of JANELAS) {
       for (const nivel of ["campaign", "ad"]) {
         tarefas.push(async () => {
-          const per = cfg.range ? { time_range: { since: de, until: ate } } : { date_preset: preset };
-          const rs = await todas(Object.assign({}, base, per, { level: nivel, fields: ["reach"] }), fresco, "alcance " + nivel + " " + chave);
+          const per = cfg.range ? { time_range: JSON.stringify({ since: de, until: ate }) } : { date_preset: preset };
+          const rs = await todas(Object.assign({}, base, per, { level: nivel, filtering: comEntrega(nivel), fields: ["reach"] }), fresco, "alcance " + nivel + " " + chave);
           const alvo = (D2.alcance[chave] = D2.alcance[chave] || {});
           for (const r of rs) { const rid = String(r.id || r.campaign_id || r.ad_id || ""); const x = num(r.reach); if (rid && ok(x)) alvo[rid] = (alvo[rid] || 0) + x; }
         });
@@ -1094,7 +1098,7 @@ async function coletar(fresco) {
     }
     if (cfg.hora) for (const preset of ["last_30d", "today"]) {
       tarefas.push(async () => {
-        const rs = await todas({ ad_account_id: id, level: "ad_account", date_preset: preset, time_increment: "1", breakdowns: [HORA], fields: ["amount_spent", "omni_purchase"].concat(E.vp, E.roas), limit: 300 }, fresco, "por hora " + preset);
+        const rs = await todas({ ad_account_id: id, level: "ad_account", date_preset: preset, time_increment: "1", breakdowns: [HORA], fields: ["amount_spent", "omni_purchase"].concat(E.vp, E.roas), limit: 1000 }, fresco, "por hora " + preset);
         for (const r of rs) {
           const d = String(r.date_start || "").slice(0, 10), h = parseInt(dim(r, HORA), 10);
           if (!d || !(h >= 0 && h < 24) || (preset !== "today" && d === t)) continue;
@@ -1107,10 +1111,11 @@ async function coletar(fresco) {
   const res = await emLotes(tarefas, 4);
   const falhas = res.filter((r) => !r.ok);
   falhas.forEach((f) => diag.erros.push((f.e && f.e.code) + ": " + String((f.e && f.e.message) || "").slice(0, 300)));
-  if (falhas.some((f) => f.e && f.e.code === "tool_error")) store.set("dt_campos_v2", "");
+  if (falhas.some((f) => f.e && f.e.code === "tool_error")) store.set("dt_campos_v3", "");
   if (falhas.length === res.length) throw falhas[0].e;
   if (falhas.length) D2.avisos.push("Parte dos números não veio da Meta nesta atualização (" + falhas.length + " de " + res.length + " consultas). Clique em Atualizar dados de novo em alguns minutos.");
   if (!D2.metaDiaCamp.length) D2.avisos.push("A Meta não devolveu gasto nos últimos 30 dias para " + (contas.length > 1 ? "estas contas" : "esta conta") + ".");
+  if (diag.cortado) D2.avisos.push("A conta tem mais linhas do que a Meta entrega numa consulta. Alguns números podem estar menores do que no Gerenciador.");
   if (D2.metaDiaCamp.length && !achou.ic) D2.avisos.push("O conector não informou o checkout iniciado. A etapa aparece zerada no funil.");
   diag.achou = achou;
   D2.campanhas = [...camps.values()]; D2.conjuntos = [...conjs.values()]; D2.anuncios = [...ads.values()].filter((a) => a.campanha);
@@ -1156,7 +1161,7 @@ function textoErro(e) {
 const NEGADO = new Set(["needs_reauth", "server_not_connected", "server_not_found", "selection_required", "not_in_manifest", "consent_required", "blocked_by_policy", "approval_required"]);
 
 // ============================================================ instantâneo e diagnóstico
-const CHAVE_SNAP = "dt_snapshot_v1";
+const CHAVE_SNAP = "dt_snapshot_v2"; // trocar a versão quando o formato dos dados mudar
 function lerSnapshot() { try { const s = JSON.parse(store.get(CHAVE_SNAP) || "null"); return s && s.conector === SERVER && s.dados ? s : null; } catch (e) { return null; } }
 function salvarSnapshot(dados) { const limpo = JSON.parse(JSON.stringify(dados, (k, v) => (k === "_conta" ? undefined : v))); store.set(CHAVE_SNAP, JSON.stringify({ conector: SERVER, quando: Date.now(), dados: limpo })); }
 async function gravarDiag() {
@@ -1194,7 +1199,7 @@ async function atualizar(fresco) {
     if (fresco) toast("Números atualizados.");
   } catch (e) {
     if (diag) diag.erros.push((e && e.code) + ": " + String((e && e.message) || "").slice(0, 300));
-    if (e && e.code === "tool_error") store.set("dt_campos_v2", ""); // na próxima vez, descobre os campos de novo
+    if (e && e.code === "tool_error") store.set("dt_campos_v3", ""); // na próxima vez, descobre os campos de novo
     S.erro = textoErro(e);
     if (D && NEGADO.has(e && e.code)) { D = null; store.set(CHAVE_SNAP, ""); }
     if (D) render(); else { mostrarSecoes(false); estado('<div class="aviso erro">' + esc(S.erro) + "</div>"); }

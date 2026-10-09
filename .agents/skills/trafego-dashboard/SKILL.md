@@ -140,9 +140,12 @@ O nome vai para `config.json` (`conector`) e para o manifesto da publicação. A
 
 Tudo isso já está no modelo; serve para diagnosticar.
 
-- Por conta: campanhas e anúncios por dia (`last_30d` mais `today`, `time_increment: "1"`), conjuntos (orçamento), alcance por janela (hoje, ontem, 7, 14 e 30 dias, em campanha e anúncio) e quebra por hora (`hourly_stats_aggregated_by_advertiser_time_zone`, `last_30d` mais `today`).
-- Campos fixos: `name`, `effective_status`, `daily_budget`, `amount_spent`, `impressions`, `link_click`, `landing_page_view`, `omni_purchase`, `reach`.
-- Campos que variam entre versões do conector (checkout iniciado, valor da compra, campanha e conjunto de cada anúncio): a página lê o esquema da ferramenta (`describeTool`); sem esquema, testa os nomes candidatos com consultas pequenas e guarda o resultado no navegador por 7 dias. Se uma consulta falhar por campo inválido, ela descobre de novo na próxima atualização.
+- Por conta: campanhas e anúncios por dia (`last_30d` mais `today`, `time_increment: "1"`), conjuntos ativos (orçamento), alcance por janela (hoje, ontem, 7, 14 e 30 dias, em campanha e anúncio) e quebra por hora (`hourly_stats_aggregated_by_advertiser_time_zone`, `last_30d` mais `today`, só no nível da conta).
+- Campos conferidos no conector oficial (`ads_get_field_context`, 09/10/2026): `name`, `effective_status`, `daily_budget` (vem como objeto com valor em reais), `amount_spent`, `impressions`, `link_click`, `landing_page_view`, `omni_purchase`, `omni_initiated_checkout`, `offsite_conversion_fb_pixel_purchase_values` (valor das compras no site), `purchase_roas`, `reach`, `campaign_id` (conjunto e anúncio) e `adset_id` (anúncio). Métrica sem evento volta como `null`: conta sem pixel de compra mostra compras e faturamento vazios, e isso é dado, não erro.
+- Formatos que o conector exige: `time_range` é texto JSON (`'{"since":"AAAA-MM-DD","until":"AAAA-MM-DD"}'`), a próxima página vai em `cursor`, o filtro é `{field: "{nível}.campo", operator, value: [...]}` e o nível da conta não aceita `sort` nem `filtering`.
+- Sem filtro, o conector devolve também campanhas, conjuntos e anúncios antigos sem entrega (uma conta teve mais de 2.000 conjuntos). Por isso as consultas de campanha e anúncio filtram `impressions` maior que zero e a de conjuntos filtra `effective_status` igual a `ACTIVE`.
+- O conector pode cortar a resposta no `limit` sem devolver a próxima página. A página pede `limit: 1000` (o máximo) e avisa no topo quando uma consulta chega ao limite.
+- A página ainda lê o esquema da ferramenta (`describeTool`) e testa os campos quando o conector mudar. O resultado fica guardado no navegador por 7 dias; se uma consulta falhar por campo inválido, ela descobre de novo na próxima atualização.
 - Sem valor de compra no conector, o faturamento do pixel sai de `purchase_roas × investimento`.
 - Orçamento: objeto com moeda é usado como veio; número puro é tratado como centavos (padrão da Graph API).
 - Erros por código, com a mensagem de correção certa (reconectar, adicionar o conector, liberar a permissão, esperar). Negativa de acesso apaga da tela os dados anteriores.
@@ -240,11 +243,11 @@ O que conferir:
 | Campo | Sinal de problema | O que fazer |
 |---|---|---|
 | `erros` | Qualquer item | Ler o código e seguir a seção 4.3 |
-| `campos.escolhidos.ic` vazio ou `achou.ic` = 0 | Funil sem checkout iniciado | Ver em `amostras` como o conector chama o evento e incluir o nome em `CAND.ic` no modelo |
+| `achou.ic`, `achou.vp` e `achou.roas` = 0 | Funil sem checkout e faturamento zerado | Primeiro conferir se a conta tem eventos de compra (contas de mensagem ou cadastro não têm). Se tiver e mesmo assim vier zero, ver o nome do campo com `ads_get_field_context` e ajustar `CAND` no modelo |
 | `campos.escolhidos.campanha` vazio ou `totais.anunciosComCampanha` = 0 | Seta dos anúncios não aparece | Ver em `amostras` como vem a campanha do anúncio e incluir em `CAND.campanha` |
 | `orcamentoBruto` | Orçamento 100 vezes maior ou menor | Ajustar a função `orcamento` no modelo |
 | `campos.hora` falso | Sem ritmo de hoje e sem comparação cortada na hora | Esperado em conectores sem a quebra por hora |
-| `avisos` com paginação | Linhas cortadas | Ver o nome do parâmetro de página no esquema |
+| `avisos` com "limite" ou `cortado` | Linhas cortadas pelo conector | Comparar o investimento da conta (nível `ad_account`) com a soma da página e, se faltar, dividir a consulta por período |
 
 Correção no modelo vale para todos os alunos: corrigir em `assets/dashboard.html`, remontar e publicar de novo.
 
