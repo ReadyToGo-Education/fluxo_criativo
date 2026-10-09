@@ -4,8 +4,8 @@ description: >
   Dashboard de tráfego do Meta Ads publicado como artefato do Claude e ligado ao conector MCP
   da Meta: visão geral com comparação ao período anterior, funil com alerta de etapa, ritmo do
   dia por hora, campanhas com anúncios e gaveta de detalhe, evolução diária e, quando o aluno
-  tem as credenciais da Hotmart no .env, vendas reais com bump, upsell, valor líquido e origem
-  de cada venda. Especificação técnica usada pelo /trafego-dashboard: modelo pronto em
+  tem as credenciais da Hotmart ou da Kiwify no .env, vendas reais com bump, upsell, valor
+  líquido e origem de cada venda. Especificação técnica usada pelo /trafego-dashboard: modelo pronto em
   assets/dashboard.html, scripts de montagem e de vendas, registro do link em
   meus-produtos/dashboard-trafego.md, publicação, diagnóstico, ajustes e o caminho legado.
   Use quando o aluno pedir para ver, abrir, criar, atualizar ou ajustar o dashboard de tráfego.
@@ -23,17 +23,17 @@ O dashboard é um **artefato do Claude** (uma página guardada na conta Claude d
 
 | Seção | Conteúdo | Aparece quando |
 |---|---|---|
-| Topo | Período (Hoje, Ontem, 7, 14 e 30 dias ou datas), conta, "Vendas contadas" (Só de anúncio, Todas as vendas, Pixel da Meta), Líquido ou Bruto, botão Atualizar dados | Conta e botões de vendas só com mais de uma conta ou com Hotmart |
-| Visão geral | Investimento, Faturamento, Lucro após tráfego, ROAS (com variação contra o período anterior, cortado na mesma hora quando o período inclui hoje), CPA, Ticket médio, Conversão da página, Conversão do checkout, Order bump e Upsell | Bump e upsell só com Hotmart |
-| Origem das vendas | Pedidos e faturamento por canal fora dos anúncios (bio, Direct, YouTube, sem rastreio...) | Só com Hotmart |
-| Funil | Impressões, cliques no link, visitas, checkout iniciado, compras (e bump e upsell com Hotmart). Destaca a etapa com taxa mais de 25% abaixo da média dos 30 dias | Sempre |
+| Topo | Período (Hoje, Ontem, 7, 14 e 30 dias ou datas), conta, "Vendas contadas" (Só de anúncio, Todas as vendas, Pixel da Meta), Líquido ou Bruto, botão Atualizar dados | Conta e botões de vendas só com mais de uma conta ou com vendas do checkout |
+| Visão geral | Investimento, Faturamento, Lucro após tráfego, ROAS (com variação contra o período anterior, cortado na mesma hora quando o período inclui hoje), CPA, Ticket médio, Conversão da página, Conversão do checkout, Order bump e Upsell | Bump e upsell só com vendas do checkout |
+| Origem das vendas | Pedidos e faturamento por canal fora dos anúncios (bio, Direct, YouTube, sem rastreio...) | Só com vendas do checkout |
+| Funil | Impressões, cliques no link, visitas, checkout iniciado, compras (e bump e upsell com vendas do checkout). Destaca a etapa com taxa mais de 25% abaixo da média dos 30 dias | Sempre |
 | Ritmo de hoje | Gasto por hora, compras na hora e tabela dos últimos 8 dias até a mesma hora | Quando o conector entrega a quebra por hora |
 | Campanhas | 15 colunas (orçamento, investimento, compras, CPA, ROAS, CPM, frequência, CPC e CTR do link, custo por visita e por checkout, conversão, ticket), seta que abre os anúncios e gaveta de detalhe com 21 métricas, gráfico diário e últimos 3 dias | Sempre (anúncios só quando o conector informa a campanha de cada anúncio) |
 | Dia a dia | Gráfico com métrica escolhida e tabela por dia | Sempre |
 | Notas | Como cada número é calculado e de onde vem | Sempre |
 | Diagnóstico da conexão | O que o conector respondeu na última atualização | Sempre (fechado) |
 
-Sem Hotmart, compras e faturamento são os do pixel (janela de atribuição da conta) e o painel avisa isso no topo.
+Sem vendas do checkout, compras e faturamento são os do pixel (janela de atribuição da conta) e o painel avisa isso no topo.
 
 ---
 
@@ -43,10 +43,11 @@ Sem Hotmart, compras e faturamento são os do pixel (janela de atribuição da c
 |---|---|
 | `assets/dashboard.html` | Modelo. Não editar para um aluno: as escolhas dele ficam no `config.json`. |
 | `scripts/montar-dashboard.py` | Gera a página do aluno: copia o modelo e troca só o bloco `CONFIG`. `--demo` gera a versão de demonstração (dados fictícios, sem conector). |
-| `scripts/hotmart-vendas.py` | Lê as credenciais da Hotmart no `.env`, busca as vendas e grava o `vendas.json` publicado junto da página. Sem nome, e-mail ou documento de quem comprou. |
+| `scripts/hotmart-vendas.py` e `scripts/kiwify-vendas.py` | Leem as credenciais da plataforma no `.env`, buscam as vendas e gravam a pasta `banco/` que o Claude envia para o banco do artefato (seção 6.3). Sem nome, e-mail ou documento de quem comprou. |
+| `scripts/_vendas_comum.py` | Parte comum aos dois coletores: junta principal, bump e upsell num pedido e divide as vendas em lotes. |
 | `references/legado-dashboard-estatico.md` | Caminho sem artefato (fotografia em HTML). |
 
-Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`** com `config.json`, `index.html` e, com Hotmart, `vendas.json`. A pasta começa com `_` para não ser confundida com um produto.
+Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`** com `config.json`, `index.html` e, com vendas do checkout, `vendas.json` (conferência local) e `banco/` (o que vai para o artefato). A pasta começa com `_` para não ser confundida com um produto.
 
 ### 2.1 `config.json`
 
@@ -65,7 +66,7 @@ Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`**
 - `conector`: nome exato do conector da Meta na conta Claude do aluno (seção 4.2).
 - `contas`: lista vazia usa todas as contas que o conector libera para leitura (com seletor no topo quando há mais de uma). Para fixar, ids no formato `act_123...`.
 - `metas`: só mudam se o aluno pedir. ROAS bom acende o ponto verde; CTR mínimo e frequência máxima acendem o ponto amarelo.
-- `checkout`: `null` sem Hotmart. Com Hotmart:
+- `checkout`: `null` sem vendas do checkout. Com Hotmart ou Kiwify (`plataforma` com o nome exato e os ids como a plataforma mostra; na Kiwify são códigos longos):
 
 ```json
 "checkout": {
@@ -95,7 +96,7 @@ Claude encontra o seu dashboard.
 - Link: https://claude.ai/artifact/...
 - Contas de anúncios: todas as que o conector libera para leitura
 - Conector: Meta MCP
-- Vendas do checkout: Hotmart (produto principal 1234567) | não ligadas
+- Vendas do checkout: Hotmart (produto principal 1234567) | Kiwify (...) | não ligadas
 - Pasta: meus-produtos/_dashboard-trafego/dashboard-trafego/
 - Personalizado: não
 - Criado em: 2026-10-09
@@ -159,13 +160,12 @@ Tudo isso já está no modelo; serve para diagnosticar.
    ```bash
    python3 .claude/skills/trafego-dashboard/scripts/montar-dashboard.py --config meus-produtos/_dashboard-trafego/{slug}/config.json --saida meus-produtos/_dashboard-trafego/{slug}/index.html
    ```
-3. Com Hotmart ligada, gerar as vendas (seção 6.3) antes de publicar.
-4. Carregar as skills `artifact-capabilities` e `artifact-design` (contrato de publicação) e publicar com a ferramenta `Artifact`:
+3. Carregar as skills `artifact-capabilities` e `artifact-design` (contrato de publicação) e publicar com a ferramenta `Artifact`:
    - `file_path`: `meus-produtos/_dashboard-trafego/{slug}/index.html`
    - `icon`: `chart`
    - `description`: "Dashboard do Meta Ads com visão geral, funil, campanhas e evolução diária, lido pelo conector da Meta."
-   - `capabilities`: `{"mcp": {"servers": [{"server": "{conector}", "tools": ["ads_get_ad_accounts", "ads_get_ad_entities"]}]}, "db": {}}` (o `db` guarda o diagnóstico da conexão para o Claude ler na seção 7)
-   - Com Hotmart: `files`: `{"vendas.json": "meus-produtos/_dashboard-trafego/{slug}/vendas.json"}`
+   - `capabilities`: `{"mcp": {"servers": [{"server": "{conector}", "tools": ["ads_get_ad_accounts", "ads_get_ad_entities"]}]}, "db": {}}` (o `db` é o banco do artefato: guarda o diagnóstico da conexão e as vendas do checkout)
+4. Com vendas do checkout ligadas, enviar as vendas para o banco (seção 6.3) logo depois de publicar.
 5. Gravar o bloco no registro (seção 3) com a URL devolvida.
 
 A ferramenta pode avisar que o conector não foi observado nesta sessão. É esperado quando a sessão do Claude Code não carrega o conector: a página foi feita para descobrir os campos sozinha. Confirmar com o diagnóstico (seção 7) depois que o aluno abrir.
@@ -174,39 +174,68 @@ A ferramenta pode avisar que o conector não foi observado nesta sessão. É esp
 
 ---
 
-## 6. Vendas da Hotmart (opcional)
+## 6. Vendas do checkout: Hotmart ou Kiwify (opcional)
 
-### 6.1 Quando entra
+### 6.1 Onde as vendas ficam
 
-Só quando o `.env` tem `HOTMART_CLIENT_ID` e `HOTMART_CLIENT_SECRET` (e, se o aluno tiver, `HOTMART_BASIC`). Verificar só os nomes das variáveis, nunca exibir valores. Sem elas, o dashboard sai sem nada de Hotmart e, **depois da entrega**, o comando oferece ligar (seção 6.4).
+A página não enxerga o computador do aluno. As vendas ficam **no banco do próprio artefato**, na coleção `vendas`: o documento `info` (quando foram buscadas, plataforma, nomes dos produtos, Pix e boletos aguardando) e os lotes `lote-1`, `lote-2`... com os pedidos (cada lote com até 200 KB). A página lê esse banco quando abre e no botão Atualizar dados. Para trazer vendas novas não é preciso publicar a página de novo: o Claude grava no banco e o aluno clica em Atualizar dados.
 
-### 6.2 Configurar
+**Só o Claude busca vendas novas na plataforma**, porque a credencial fica no `.env` e nunca vai para a página. Quando o aluno pedir "atualiza as vendas do dashboard", seguir a seção 6.3.
 
-1. Conferir as credenciais: `python3 .claude/skills/trafego-dashboard/scripts/hotmart-vendas.py --verificar`.
+### 6.2 Quando entra e como configurar
+
+| Plataforma | Variáveis no `.env` | Coletor |
+|---|---|---|
+| Hotmart | `HOTMART_CLIENT_ID`, `HOTMART_CLIENT_SECRET` e, se tiver, `HOTMART_BASIC` | `scripts/hotmart-vendas.py` |
+| Kiwify | `KIWIFY_CLIENT_ID`, `KIWIFY_CLIENT_SECRET` e `KIWIFY_ACCOUNT_ID` | `scripts/kiwify-vendas.py` |
+
+Verificar só os nomes das variáveis, nunca exibir valores. Se as duas plataformas estiverem no `.env`, perguntar qual vende o produto deste dashboard. Sem nenhuma, o dashboard sai sem vendas do checkout e, **depois da entrega**, o comando oferece ligar (seção 6.4).
+
+1. Conferir as credenciais: `python3 .claude/skills/trafego-dashboard/scripts/{coletor} --verificar`.
 2. Listar os produtos vendidos nos últimos 90 dias: `... --listar-produtos` (id, nome e número de vendas).
 3. Perguntar, uma por vez e numerado a partir da lista: produto principal (pode ser mais de um), order bumps (ou nenhum), upsell (ou nenhum) e, se houver upsell, a janela em horas (padrão 24).
 4. Gravar em `config.json` > `checkout` (seção 2.1) e remontar a página.
 
-### 6.3 Gerar e atualizar as vendas
+### 6.3 Buscar e enviar as vendas
 
-```bash
-python3 .claude/skills/trafego-dashboard/scripts/hotmart-vendas.py --config meus-produtos/_dashboard-trafego/{slug}/config.json --saida meus-produtos/_dashboard-trafego/{slug}/vendas.json
-```
+1. Rodar o coletor:
+   ```bash
+   python3 .claude/skills/trafego-dashboard/scripts/{coletor} --config meus-produtos/_dashboard-trafego/{slug}/config.json --pasta meus-produtos/_dashboard-trafego/{slug}
+   ```
+   Ele grava `banco/info.json` e `banco/lote-1.json` (e mais lotes, se houver) e informa quantos.
+2. `ArtifactData` com `action: "list"`, a URL do dashboard e `collection: "vendas"`, para pegar a versão de cada documento que já existe.
+3. `ArtifactData` com `action: "batch"` e a URL, uma entrada por arquivo da pasta `banco/`: `{"op": "set", "collection": "vendas", "doc_id": "{nome do arquivo sem .json}", "file_path": "meus-produtos/_dashboard-trafego/{slug}/banco/{arquivo}", "if_version": {versão lida no passo 2, só quando o documento já existe}}`. Lote que existia no banco e não existe mais na pasta entra como `{"op": "delete", ..., "if_version": ...}`. Até 50 entradas por chamada.
+4. Avisar o aluno para clicar em Atualizar dados no dashboard.
 
-Depois, publicar de novo na mesma URL com `files` (seção 5). O botão Atualizar dados da página relê o `vendas.json` publicado, mas **só o Claude busca vendas novas na Hotmart**. Quando o aluno pedir "atualiza as vendas do dashboard", rodar o script e publicar de novo. A página mostra no topo quando as vendas foram buscadas.
+Saídas de erro do coletor: `ERRO_CREDENCIAIS` (faltam variáveis no `.env`), `ERRO_TOKEN` (a plataforma recusou as credenciais; na Hotmart, conferir se a credencial não é do tipo sandbox), `ERRO_VENDAS` (falha na consulta). Mostrar ao aluno em linguagem simples, sem valores do `.env`.
 
-Saídas de erro do script: `ERRO_CREDENCIAIS` (faltam variáveis no `.env`), `ERRO_TOKEN` (a Hotmart recusou as credenciais: conferir se a credencial não é do tipo sandbox), `ERRO_VENDAS` (falha na consulta). Mostrar ao aluno em linguagem simples, sem valores do `.env`.
+Como cada plataforma entra no pedido:
+
+- **Hotmart:** valor líquido é a comissão de produtor (`/sales/commissions`); sem ela, preço menos a taxa da Hotmart. Bump: mesma compradora até 15 minutos depois do principal. Upsell: mesma compradora até a janela configurada.
+- **Kiwify:** valores chegam em centavos e são convertidos. Líquido é o `net_amount` da venda (com coprodução, é uma aproximação). Bump e upsell são ligados pelo `parent_order_id` quando a Kiwify informa; senão, pela mesma regra de horário da Hotmart. A consulta pede os detalhes completos da venda (`view_full_sale_details`) para trazer o rastreio.
 
 ### 6.4 Oferta depois da entrega (aluno sem credenciais)
 
 Oferecer uma vez, depois de entregar o link:
 
 ```
-Quer ligar as vendas da Hotmart no dashboard? Com isso ele passa a mostrar
-as vendas reais (não só o que o pixel registra), o valor líquido que cai
-na sua conta, a taxa de order bump e de upsell e de onde veio cada venda
-(anúncio, bio, Direct, sem rastreio).
+Quer ligar as vendas do seu checkout no dashboard? Com isso ele passa a
+mostrar as vendas reais (não só o que o pixel registra), o valor líquido
+que cai na sua conta, a taxa de order bump e de upsell e de onde veio
+cada venda (anúncio, bio, Direct, sem rastreio).
 
+Onde você vende?
+
+1. Hotmart
+2. Kiwify
+3. Agora não
+
+Digite o número:
+```
+
+**Hotmart:**
+
+```
 Para isso eu preciso de uma credencial da Hotmart. O caminho é:
 
 1. Entre na Hotmart e abra o menu Ferramentas.
@@ -216,17 +245,31 @@ Para isso eu preciso de uma credencial da Hotmart. O caminho é:
 4. Deixe a opção sandbox desmarcada e clique em Confirmar.
 5. A Hotmart mostra três dados: Client ID, Client Secret e Basic.
 
-1. Já tenho os três, quero ligar agora
-2. Agora não
-
-Digite o número:
+Quando tiver os três, me avise que eu peço um por vez.
 ```
 
-Se escolher 1: pedir os três valores, um por vez, e gravar no `.env` como `HOTMART_CLIENT_ID`, `HOTMART_CLIENT_SECRET` e `HOTMART_BASIC`, **sem ecoar nenhum valor no chat** (confirmar só "salvo"). Seguir com a seção 6.2.
+Gravar no `.env` como `HOTMART_CLIENT_ID`, `HOTMART_CLIENT_SECRET` e `HOTMART_BASIC`.
+
+**Kiwify:**
+
+```
+Para isso eu preciso de uma chave de API da Kiwify. O caminho é:
+
+1. Entre na Kiwify e abra o menu Apps.
+2. Clique em API e depois em Criar API Key.
+3. A Kiwify mostra o client_id e o client_secret da chave. No mesmo lugar
+   aparece o Account ID da sua conta.
+
+Quando tiver os três, me avise que eu peço um por vez.
+```
+
+Gravar no `.env` como `KIWIFY_CLIENT_ID`, `KIWIFY_CLIENT_SECRET` e `KIWIFY_ACCOUNT_ID`.
+
+Nas duas plataformas: pedir os valores um por vez e **nunca ecoar nenhum valor no chat** (confirmar só "salvo"). Depois, seguir a seção 6.2. Os caminhos de clique vêm da documentação oficial de cada plataforma; se o aluno não achar o botão, pedir um print da tela e guiar por ele.
 
 ### 6.5 Rastreio do link
 
-A origem de cada venda vem do rastreio que chega ao checkout (`src` ou `sck`). Orientar o aluno uma vez, ao ligar a Hotmart:
+A origem de cada venda vem do rastreio que chega ao checkout (`src`, `sck` e, na Kiwify, também as UTMs). Orientar o aluno uma vez, ao ligar as vendas:
 
 - **Anúncios:** no Gerenciador, em cada anúncio, campo "Parâmetros de URL": `src=meta_{{ad.id}}`. A Meta troca `{{ad.id}}` pelo id do anúncio e o painel liga a venda ao anúncio e à campanha.
 - **Bio, Direct, Stories, YouTube, WhatsApp:** links com `?src=bio`, `?src=direct`, `?src=stories`, `?src=youtube`, `?src=whatsapp`.
@@ -256,7 +299,7 @@ Correção no modelo vale para todos os alunos: corrigir em `assets/dashboard.ht
 ## 8. Ajustar o dashboard
 
 1. Ler o registro e o `config.json`.
-2. Mudança de configuração (conta, nome, metas, produtos da Hotmart): editar `config.json`, remontar e publicar na mesma URL.
+2. Mudança de configuração (conta, nome, metas, produtos do checkout): editar `config.json`, remontar e publicar na mesma URL.
 3. Mudança de layout (tirar seção, nova coluna, outro gráfico): `Artifact` com `action: "read"`, editar **só** o pedido no `index.html` do aluno, publicar na mesma URL e marcar `Personalizado: sim` no registro.
 4. Ferramenta nova do conector: passar o conjunto completo de servidores e ferramentas em `capabilities` (o que não for repetido perde a permissão). Sem ferramenta nova, omitir `capabilities`.
 5. Atualizar `Atualizado em` no registro.
@@ -276,8 +319,8 @@ Sem a ferramenta `Artifact`, ou quando o aluno não quer o conector, o dashboard
 1. **Antes de criar, procurar um dashboard que já existe** (seção 3).
 2. **Só leitura.** Nenhuma ferramenta de escrita no manifesto.
 3. **Nunca inventar dado.** Sem dado, a página mostra "—".
-4. **Nunca embutir dado real do aluno no código da página.** O que é da conta vem do conector; o que é da Hotmart vem do `vendas.json`.
-5. **Nunca colocar token, chave ou senha** na página, no `config.json`, no registro ou no chat. As credenciais da Hotmart ficam só no `.env`.
-6. **O `vendas.json` não leva nome, e-mail nem documento** de quem comprou.
+4. **Nunca embutir dado real do aluno no código da página.** O que é da conta vem do conector; as vendas do checkout vêm do banco do artefato.
+5. **Nunca colocar token, chave ou senha** na página, no `config.json`, no banco do artefato, no registro ou no chat. As credenciais da Hotmart e da Kiwify ficam só no `.env`.
+6. **As vendas não levam nome, e-mail nem documento** de quem comprou, nem no banco do artefato nem no `vendas.json` local.
 7. **O link vive em `meus-produtos/dashboard-trafego.md`**, nunca no `CLAUDE.md`.
 8. **Não mostrar código ao aluno.** Ele recebe o link e uma explicação curta.

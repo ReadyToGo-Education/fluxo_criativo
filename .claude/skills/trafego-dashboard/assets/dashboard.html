@@ -771,7 +771,8 @@ function liga() {
 // Cada venda traz o texto do rastreio do link (src ou sck). Se ele contém o id de um anúncio
 // ou de uma campanha da conta, a venda é ligada a ele. Senão vira venda orgânica pelo canal.
 const CANAIS = [[/bio|link.?na.?bio|linktree/i, "Bio do Instagram"], [/direct|dm\b/i, "Direct"], [/stor(y|ies)/i, "Stories"], [/you.?tube|\byt\b/i, "YouTube"], [/whats|wpp|zap/i, "WhatsApp"], [/e-?mail|newsletter/i, "E-mail"], [/tik.?tok/i, "TikTok"], [/google|gads|search/i, "Google"], [/telegram/i, "Telegram"], [/podcast/i, "Podcast"]];
-const PAGO = /^(fb|ig|meta|face|insta|ads?|anuncio|pago|paid|cpc)/i;
+// "ig" e "insta" ficam de fora: costumam marcar o link orgânico do Instagram.
+const PAGO = /^(fb|meta|face|ads?|anuncio|pago|paid|cpc)/i;
 function resolverRastreio(v) {
   if (!v.d && v.t) v.d = v.t.slice(0, 10);
   if (v.rt === undefined) return; // venda que já chegou com origem, campanha e anúncio definidos
@@ -1126,19 +1127,32 @@ async function coletar(fresco) {
   await anexarVendas(D2);
   return D2;
 }
+// As vendas do checkout (Hotmart ou Kiwify) ficam no banco do próprio artefato, na coleção
+// "vendas": o documento "info" e os lotes "lote-1", "lote-2"... O Claude grava esses documentos
+// quando o aluno pede "atualize as vendas do dashboard"; a página só lê.
 async function anexarVendas(D2) {
   if (!CONFIG.checkout) return;
+  const plat = CONFIG.checkout.plataforma || "Hotmart";
   try {
-    const r = await fetch("vendas.json", { cache: "no-store" });
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    const j = await r.json();
-    D2.vendas = Array.isArray(j.vendas) ? j.vendas : [];
-    D2.pendentes = Array.isArray(j.pendentes) ? j.pendentes : [];
-    D2.checkout = Object.assign({ plataforma: "Hotmart" }, CONFIG.checkout, j.checkout || {});
-    if (j.geradoEm) D2.avisos.push("Vendas do checkout atualizadas em " + j.geradoEm + ". Para trazer as vendas novas, peça ao Claude: atualize as vendas do dashboard.");
+    const db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+    if (!db) throw new Error("banco do artefato indisponível nesta visualização");
+    const snap = await db.collection("vendas").limit(200).get();
+    const docs = {};
+    snap.docs.forEach((d) => { if (d.exists) docs[d.id] = d.data(); });
+    const info = docs.info;
+    if (!info) { D2.avisos.push("As vendas da " + plat + " ainda não chegaram ao painel. Peça ao Claude: atualize as vendas do dashboard."); return; }
+    const produtos = info.produtos || {};
+    let vendas = [];
+    for (let n = 1; n <= (info.lotes || 0); n++) vendas = vendas.concat((docs["lote-" + n] || {}).vendas || []);
+    vendas.forEach((v) => { if (!v.it) v.it = (v.i || []).map((id) => produtos[id] || id); });
+    D2.vendas = vendas;
+    D2.pendentes = Array.isArray(info.pendentes) ? info.pendentes : [];
+    D2.checkout = Object.assign({ plataforma: plat }, CONFIG.checkout, info.checkout || {});
+    if (diag) diag.vendas = { plataforma: D2.checkout.plataforma, pedidos: vendas.length, pendentes: D2.pendentes.length, geradoEm: info.geradoEm };
+    if (info.geradoEm) D2.avisos.push("Vendas da " + D2.checkout.plataforma + " buscadas em " + info.geradoEm + ". Para trazer as vendas novas, peça ao Claude: atualize as vendas do dashboard.");
   } catch (e) {
-    D2.avisos.push("Não consegui abrir o arquivo de vendas do checkout. O painel mostra as compras registradas pelo pixel.");
-    diag && diag.erros.push("vendas.json: " + String(e && e.message));
+    D2.avisos.push("Não consegui ler as vendas da " + plat + " agora. O painel mostra as compras registradas pelo pixel.");
+    if (diag) diag.erros.push("vendas: " + String((e && (e.code || e.message)) || e));
   }
 }
 

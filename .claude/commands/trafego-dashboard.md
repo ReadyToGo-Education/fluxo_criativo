@@ -1,13 +1,13 @@
 ---
 name: workshop-marketing:trafego-dashboard
-description: Abre, cria ou atualiza o dashboard de tráfego do Meta Ads. Verifica se o aluno já tem um dashboard (artefato do Claude ligado ao conector da Meta) e entrega o link; se não tiver, monta o dashboard a partir do modelo (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia) e salva o link em meus-produtos/dashboard-trafego.md. Com as credenciais da Hotmart no .env, inclui as vendas reais com bump, upsell e origem; sem elas, oferece ligar depois. Use quando o aluno pedir "meu dashboard", "painel de anúncios", "dashboard de tráfego", "atualiza as vendas do dashboard" ou quiser ajustar o dashboard.
+description: Abre, cria ou atualiza o dashboard de tráfego do Meta Ads. Verifica se o aluno já tem um dashboard (artefato do Claude ligado ao conector da Meta) e entrega o link; se não tiver, monta o dashboard a partir do modelo (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia) e salva o link em meus-produtos/dashboard-trafego.md. Com as credenciais da Hotmart ou da Kiwify no .env, inclui as vendas reais com bump, upsell e origem; sem elas, oferece ligar depois. Use quando o aluno pedir "meu dashboard", "painel de anúncios", "dashboard de tráfego", "atualiza as vendas do dashboard" ou quiser ajustar o dashboard.
 ---
 
 # Tráfego Dashboard. Seu Painel do Meta Ads
 
 Entrega ao aluno um dashboard da conta de anúncios, guardado na conta Claude dele, que busca os números novos na Meta com um clique em "Atualizar dados".
 
-A especificação técnica (modelo, scripts, registro, publicação, Hotmart, diagnóstico, ajustes e legado) está em `.claude/skills/trafego-dashboard/SKILL.md`. Este command é o roteiro com o aluno.
+A especificação técnica (modelo, scripts, registro, publicação, vendas da Hotmart e da Kiwify, diagnóstico, ajustes e legado) está em `.claude/skills/trafego-dashboard/SKILL.md`. Este command é o roteiro com o aluno.
 
 ---
 
@@ -31,7 +31,7 @@ O que quer fazer?
 
 1. Só abrir (o link acima já está pronto)
 2. Ajustar este dashboard
-3. Atualizar as vendas da Hotmart        ← só se o registro disser que a Hotmart está ligada
+3. Atualizar as vendas do checkout       ← só se o registro disser que Hotmart ou Kiwify está ligada
 4. Criar um dashboard novo
 5. Encerrar
 
@@ -102,10 +102,11 @@ Quais contas de anúncios entram no dashboard?
 Digite o número:
 ```
 
-**2.2 Hotmart.** Verificar no `.env` só se existem as variáveis `HOTMART_CLIENT_ID` e `HOTMART_CLIENT_SECRET` (nunca exibir valores).
+**2.2 Vendas do checkout.** Verificar no `.env` só se existem as variáveis da Hotmart (`HOTMART_CLIENT_ID` e `HOTMART_CLIENT_SECRET`) ou da Kiwify (`KIWIFY_CLIENT_ID`, `KIWIFY_CLIENT_SECRET` e `KIWIFY_ACCOUNT_ID`). Nunca exibir valores.
 
-- **Existem:** seguir a seção 6.2 da skill (verificar, listar produtos, perguntar produto principal, bumps, upsell e janela, uma pergunta por vez).
-- **Não existem:** não perguntar nada sobre Hotmart agora. A oferta vem depois da entrega (Passo 4).
+- **Existem as de uma plataforma:** seguir a seção 6.2 da skill (verificar, listar produtos, perguntar produto principal, bumps, upsell e janela, uma pergunta por vez).
+- **Existem as das duas:** perguntar qual plataforma vende o produto deste dashboard (1. Hotmart / 2. Kiwify) e seguir a seção 6.2.
+- **Não existem:** não perguntar nada sobre checkout agora. A oferta vem depois da entrega (Passo 4).
 
 **2.3 Confirmação.**
 
@@ -115,8 +116,8 @@ Resumo do dashboard que vou criar:
 - Conector: {nome}
 - Seções: visão geral com comparação ao período anterior, funil,
   ritmo de hoje por hora, campanhas com anúncios e detalhe, dia a dia
-- Vendas: {pelo pixel da Meta | Hotmart, produto principal {nome},
-  bump {nome}, upsell {nome}}
+- Vendas: {pelo pixel da Meta | Hotmart ou Kiwify, produto principal
+  {nome}, bump {nome}, upsell {nome}}
 
 1. Tudo certo, pode criar
 2. Quero ajustar algo
@@ -132,11 +133,11 @@ Digite o número:
 🔍 Próximo passo: montar e publicar o seu dashboard de tráfego (3 passos). Tempo estimado: cerca de 90 segundos.
 ```
 
-Com Hotmart, o tempo é o de "Montar e publicar o dashboard com vendas da Hotmart" em `.claude/rules/tempo-estimado.md`.
+Com vendas do checkout, o tempo é o de "Montar e publicar o dashboard com vendas do checkout" em `.claude/rules/tempo-estimado.md`.
 
 - `⏳ Passo 1/3: preparar a configuração do dashboard.` (`config.json`, seção 2.1 da skill)
-- `⏳ Passo 2/3: montar a página.` Com Hotmart: `⏳ Passo 2/3: montar a página e buscar as vendas da Hotmart.` (seção 5, itens 2 e 3)
-- `⏳ Passo 3/3: publicar na sua conta Claude e salvar o link.` (seção 5, itens 4 e 5)
+- `⏳ Passo 2/3: montar a página.` (seção 5, item 2)
+- `⏳ Passo 3/3: publicar na sua conta Claude e salvar o link.` Com vendas do checkout: `⏳ Passo 3/3: publicar na sua conta Claude, enviar as vendas e salvar o link.` (seção 5, itens 3 a 5)
 
 ---
 
@@ -159,7 +160,7 @@ O link ficou salvo no projeto. Para ver de novo, é só pedir
 Em seguida:
 
 1. Pedir que o aluno avise quando abrir. Quando ele avisar, ler o diagnóstico (seção 7 da skill) e corrigir o que aparecer antes de encerrar.
-2. **Sem Hotmart:** fazer a oferta da seção 6.4 da skill, uma vez.
+2. **Sem vendas do checkout:** fazer a oferta da seção 6.4 da skill, uma vez.
 3. Oferecer uma vez: "Quer que eu fixe o dashboard na barra lateral do Claude?" Se sim, `Artifact` com `action: "pin"`. Nunca fixar sem o aluno pedir.
 
 ---
@@ -185,13 +186,13 @@ Mostrar o resumo do ajuste e pedir confirmação (1. Pode aplicar / 2. Quero mud
 
 ---
 
-## Passo 6. Atualizar as vendas da Hotmart
+## Passo 6. Atualizar as vendas do checkout
 
 ```
-🔍 Próximo passo: buscar as vendas novas da Hotmart e atualizar o dashboard. Tempo estimado: cerca de 60 segundos.
+🔍 Próximo passo: buscar as vendas novas da {Hotmart | Kiwify} e atualizar o dashboard. Tempo estimado: cerca de 60 segundos.
 ```
 
-Seguir a seção 6.3 da skill (script e nova publicação na mesma URL).
+Seguir a seção 6.3 da skill (coletor e envio para o banco do artefato; a página não precisa ser publicada de novo).
 
 ```
 ✅ Concluído: vendas atualizadas até {hora}. Abra o dashboard e clique em "Atualizar dados".
@@ -210,7 +211,7 @@ Ler `.claude/skills/trafego-dashboard/references/legado-dashboard-estatico.md` e
 1. **Primeiro procurar, depois criar.**
 2. **Só leitura.** O dashboard não pausa, não ativa e não muda orçamento. Para executar ações, `/trafego-otimizar`.
 3. **Nunca mostrar código** nem detalhes técnicos ao aluno.
-4. **Nunca exibir token nem credencial**, nem do `.env` nem de lugar nenhum. Credenciais da Hotmart recebidas no chat vão direto para o `.env`, sem eco.
+4. **Nunca exibir token nem credencial**, nem do `.env` nem de lugar nenhum. Credenciais da Hotmart ou da Kiwify recebidas no chat vão direto para o `.env`, sem eco.
 5. **O link fica em `meus-produtos/dashboard-trafego.md`.** Nunca no `CLAUDE.md`.
 6. **Uma pergunta por vez**, sempre com opções numeradas.
 
