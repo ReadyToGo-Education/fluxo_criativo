@@ -37,7 +37,9 @@ PLANO_POR_DATA = [
                            "dois dias antes do fim da janela, e remanejou a verba as 23h35)"),
     ("2026-10-10", 280.00, "A39 R$ 100 + A47 R$ 60 + A50 R$ 60 + A51 R$ 60 (teste de 7 dias do A50 e do A51, "
                            "de 10/10 a 16/10, decisao do Rodrigo em 09/10)"),
-    ("2026-10-17", 160.00, "A39 R$ 100 + A47 R$ 60 (A50 e A51 vencem em 16/10 as 23h59)"),
+    ("2026-10-11", 260.00, "A39 R$ 80 + A47 R$ 60 + A50 R$ 60 + A51 R$ 60 (o Rodrigo baixou o A39 de R$ 100 "
+                           "para R$ 80 em 10/10 as 19h33, depois de seis dias sem cadastro)"),
+    ("2026-10-17", 140.00, "A39 R$ 80 + A47 R$ 60 (A50 e A51 vencem em 16/10 as 23h59)"),
 ]
 
 # Divisao esperada POR CONJUNTO, a partir da data em que passou a valer.
@@ -55,7 +57,8 @@ COMPOSICAO_POR_DATA = [
     # 09/10: o Rodrigo publicou o A50 e o A51, um anuncio por conjunto, R$ 60/dia cada,
     # inicio 10/10 00h01 e fim 16/10 23h59. Conferido pela API no mesmo dia.
     ("2026-10-10", {"A39": 100.0, "A47": 60.0, "A50": 60.0, "A51": 60.0}),
-    ("2026-10-17", {"A39": 100.0, "A47": 60.0}),
+    ("2026-10-11", {"A39": 80.0, "A47": 60.0, "A50": 60.0, "A51": 60.0}),
+    ("2026-10-17", {"A39": 80.0, "A47": 60.0}),
 ]
 
 
