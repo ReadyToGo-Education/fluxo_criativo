@@ -350,7 +350,7 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 - `dashboard-social/`. Orquestrador unificado.
 
 **Programação de conteúdo**
-- `programar-carrossel/`. Tarefa recorrente no `/schedule` do Claude para gerar carrossel automaticamente em 1 dos 7 estilos.
+- `programar-carrossel/`. Tarefa recorrente no `/schedule` do Claude para gerar carrossel automaticamente em 1 dos 9 estilos.
 - `programar-carrossel-noticia/`. Variante focada em carrossel de notícia.
 
 **Painel e suporte**

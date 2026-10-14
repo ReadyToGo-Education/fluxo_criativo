@@ -394,6 +394,9 @@ def parse_baldes(baldes_txt: str) -> list[dict]:
             descricao = ""
             for par in re.split(r"\n\s*\n", corpo):
                 par = par.strip()
+                # Linha separadora (---) depois do último balde não é descrição.
+                if re.fullmatch(r"[-*_]{3,}", par):
+                    continue
                 if par and not par.startswith("**Como") and not re.match(r"^\d+\.\s+", par):
                     descricao = par
                     break
