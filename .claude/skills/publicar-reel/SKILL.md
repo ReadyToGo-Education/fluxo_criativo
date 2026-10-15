@@ -42,6 +42,12 @@ Devolve JSON com vídeo, capa, duração, formato do YouTube (short até 3 min, 
 
 **Dois formatos (aula de quarta, desde 07/10/2026):** quando a pasta tem um vídeo horizontal (16:9) e um vertical (9:16), o `extrair.py` separa sozinho. `youtube_video` e `youtube_capa` são o horizontal com a capa 16:9 (vai ao YouTube como vídeo normal, nunca Short), e `video` e `capa` são o vertical (Instagram + Facebook). Arquivo com "bruta" ou "bruto" no nome é ignorado. Na ficha, mostre os dois vídeos e as duas capas, cada um no seu canal, e no Passo 5 peça ao Rodrigo o **vertical** e a capa **vertical**, avisando para não pegar o horizontal.
 
+**Vertical acima de 1 GB: comprimir antes do Planner (obrigatório).** O vertical do R023 (1,25 GB, 1440x2560, 8 min) foi programado, o Facebook saiu, mas o Instagram ficou parado na fila sem erro, e nem o "Publicar agora" destravou (14/10/2026). Refeito só no Instagram com uma cópia 1080x1920 de 383 MB, saiu na hora. O R020 (921 MB) tinha saído normal. Regra: se `video_mb` passar de 900, gere antes da ficha uma cópia ao lado do original e peça ao Rodrigo essa cópia no Passo 5:
+`ffmpeg -i "<vertical>.mp4" -vf "scale=1080:1920" -c:v libx264 -preset medium -b:v 6M -maxrate 8M -bufsize 16M -pix_fmt yuv420p -r 30 -c:a aac -b:a 128k -ar 48000 -movflags +faststart "<vertical> - INSTAGRAM 1080.mp4"`
+Isso leva alguns minutos. Na ficha, mostre o tamanho da cópia. A Meta exibe o Reel em 1080x1920 de qualquer forma.
+
+**Depois do horário, confira o Instagram pela API** (`/{ig_user}/media?limit=1`). O card do Planner continua "programado" quando o post trava, e só a API mostra se o Reel existe.
+
 Se faltar vídeo, capa ou HTML, pare e diga ao Rodrigo o que falta na pasta. Não publique sem capa sem perguntar.
 
 ## Passo 3. Ficha de confirmação (obrigatória, uma vez só)
