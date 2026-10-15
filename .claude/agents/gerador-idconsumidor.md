@@ -135,7 +135,7 @@ Não é para: [3 a 5 exclusões que ajudam a posicionar — quem NÃO é o públ
 
 [REGRA: os 5 perfis devem representar recortes distintos — por profissão, momento de vida, dor dominante, nível de consciência ou objetivo imediato. Não são variações do mesmo perfil.]
 
-[FORMATO OBRIGATÓRIO — use exatamente esta estrutura para cada balde:]
+[FORMATO OBRIGATÓRIO E CANÔNICO. Use exatamente `### Balde N: Nome` para cada balde. É o formato que o verificador (`scripts/verificar-idconsumidor.py`) e o painel esperam. PROIBIDO usar `➤ Pra quem é - Nome` ou `**Balde N – Nome**` (formatos legados, só lidos em produtos antigos).]
 
 ### Balde 1: [Nome descritivo do segmento]
 
