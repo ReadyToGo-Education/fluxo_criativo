@@ -1,6 +1,6 @@
 ---
 name: workshop-marketing:criativo-estatico
-description: Gera criativo estático de anúncio (imagem) para Instagram. Orquestrador que pergunta o formato e direciona para a sub-skill correspondente. Cobre 28 formatos. Promessa Simples, Caixinha de Perguntas, Criativo Surreal, AIDA Completo, UGC Rotina Real, POV, Problema-Solução, Jeito Certo x Jeito Errado, Checklist, ASMR/Sensação, Meme, Jogo dos 7 Erros, Criativo Notícia, Associação Criativa, Criativo História com Quebra de Objeção, O Desespero de Quem, Fofinho, Nunca, Sempre, Timelapse, UGC Coisas Estranhas, Você Merece, Objetos Estranhos, Reflexão Editorial, Copa / Futebol, Eleições, Centro das Atenções e Problema x Solução Emoji. Em todos, no fim o aluno escolhe gerar a imagem colando o prompt no ChatGPT ou direto pela API. Use sempre que o usuário pedir criativo estático, anúncio em imagem, arte de anúncio, promessa simples, caixinha de perguntas, criativo surreal, anúncio surreal, anúncio AIDA, UGC, POV, problema e solução, jeito certo e errado, checklist, ASMR, meme, jogo dos 7 erros, criativo notícia, associação criativa, criativo história, desespero de quem, fofinho, criativo nunca, criativo sempre, timelapse, UGC coisas estranhas, você merece, objetos estranhos, reflexão editorial, copa, criativo copa, copa do mundo, criativo futebol, eleições, criativo eleições, criativo político, criativo eleitoral, centro das atenções, criativo radial, infográfico radial, objeto central com dicas, problema solução emoji, criativo com emoji, ou variantes desses formatos.
+description: Gera criativo estático de anúncio (imagem) para Instagram. Orquestrador que pergunta o formato e direciona para a sub-skill correspondente. Cobre 29 formatos. Promessa Simples, Caixinha de Perguntas, Criativo Surreal, AIDA Completo, UGC Rotina Real, POV, Problema-Solução, Jeito Certo x Jeito Errado, Checklist, ASMR/Sensação, Meme, Jogo dos 7 Erros, Criativo Notícia, Associação Criativa, Criativo História com Quebra de Objeção, O Desespero de Quem, Fofinho, Nunca, Sempre, Timelapse, UGC Coisas Estranhas, Você Merece, Objetos Estranhos, Reflexão Editorial, Copa / Futebol, Eleições, Centro das Atenções, Problema x Solução Emoji e Quadrinho (Jornada em 4 quadros ou Paródia em 3 quadros). Em todos, no fim o aluno escolhe gerar a imagem colando o prompt no ChatGPT ou direto pela API. Use sempre que o usuário pedir criativo estático, anúncio em imagem, arte de anúncio, promessa simples, caixinha de perguntas, criativo surreal, anúncio surreal, anúncio AIDA, UGC, POV, problema e solução, jeito certo e errado, checklist, ASMR, meme, jogo dos 7 erros, criativo notícia, associação criativa, criativo história, desespero de quem, fofinho, criativo nunca, criativo sempre, timelapse, UGC coisas estranhas, você merece, objetos estranhos, reflexão editorial, copa, criativo copa, copa do mundo, criativo futebol, eleições, criativo eleições, criativo político, criativo eleitoral, centro das atenções, criativo radial, infográfico radial, objeto central com dicas, problema solução emoji, criativo com emoji, quadrinho, criativo em quadrinhos, HQ, tirinha, paródia de filme, cena de filme, ou variantes desses formatos.
 allowed-tools: Read, Write, Bash, WebSearch
 ---
 
@@ -34,7 +34,7 @@ Da combinação desses arquivos, extrair pra passar pras sub-skills:
 - **Tipo**: do `tipo.md` se existir.
 - **Preço**: do `preco.md` se existir.
 
-Esse contexto enriquecido (real + inferido) é compartilhado entre as 28 sub-skills. As sub-skills SEMPRE mostram o resumo do contexto ao aluno antes de prosseguir, marcando claramente o que veio do perfil e o que foi inferido, pedindo confirmação ou correção.
+Esse contexto enriquecido (real + inferido) é compartilhado entre as 29 sub-skills. As sub-skills SEMPRE mostram o resumo do contexto ao aluno antes de prosseguir, marcando claramente o que veio do perfil e o que foi inferido, pedindo confirmação ou correção.
 
 **Importante**: o objetivo é NUNCA fazer entrevista do zero quando há contexto disponível. Mesmo com perfil ausente, o slug + tipo + preço já dão pistas suficientes pra montar um chute inicial que o aluno confirma ou ajusta.
 
@@ -72,14 +72,17 @@ Se a mensagem inicial do aluno mencionar EXPLICITAMENTE o nome do formato, pular
 | "eleições", "eleicoes", "criativo eleições", "anúncio eleições", "campanha eleições", "criativo político", "criativo politico", "criativo eleitoral", "ads eleições", "criativo votação", "criativo voto", "tema eleição", "anúncio eleitoral" | Eleições | `.claude/commands/criativo-estatico/eleicoes.md` |
 | "centro das atenções", "centro de atenção", "criativo centro", "criativo radial", "criativo com objeto central", "infográfico radial", "infografico radial", "dicas ao redor", "objeto central com dicas", "infográfico com setas" | Centro das Atenções | `.claude/commands/criativo-estatico/centro-das-atencoes.md` |
 | "problema solução emoji", "problema solucao emoji", "problema solução com emoji", "criativo com emoji", "criativo problema solução emoji", "criativo comparativo com emoji", "criativo de valor com emoji", "grid problema solução", "dor e solução com emoji" | Problema × Solução Emoji | `.claude/commands/criativo-estatico/problema-solucao-emoji.md` |
+| "quadrinho", "quadrinhos", "criativo em quadrinhos", "anúncio em quadrinhos", "HQ ilustrada", "tirinha", "jornada em 4 quadros", "quadrinho de 3", "paródia", "paródia de filme", "cena de filme", "cena de novela" | Quadrinho (Jornada ou Paródia) | `.claude/commands/criativo-estatico/quadrinho.md` |
 
 **Desambiguação Problema-Solução:** "problema solução", "problema e solução", "antes e depois" puros (sem citar emoji, grid ou "com emoji") vão pro formato 7 (Problema-Solução, arte dividida UGC). Só roteie pro formato 28 (Problema × Solução Emoji) quando a mensagem mencionar explicitamente "emoji", "grid" ou "comparativo com emoji".
+
+**Desambiguação Quadrinho:** "quadrinho", "HQ", "tirinha" e "paródia" vão pro formato 29 (Quadrinho, ilustrado). Só roteie pro formato 15 (Criativo História + Quebra de Objeção) quando a mensagem citar "quebra de objeção", "diálogo 4 quadros", "criativo história" ou "fotos reais".
 
 Se não tiver atalho claro, seguir pro Passo 2 (menu).
 
 ### 2. Pergunta de roteamento (menu padrão)
 
-Apresente as 28 opções:
+Apresente as 29 opções:
 
 ```
 Qual formato de criativo você quer criar?
@@ -200,6 +203,12 @@ Qual formato de criativo você quer criar?
     direita. 5 variações por ângulo de dor, escolhe uma. Estética editorial
     (Apple, Aesop), conteúdo de valor com CTA suave, nunca comercial.
 
+29. Quadrinho (Jornada em 4 quadros ou Paródia em 3 quadros)
+    Anúncio em história em quadrinhos ilustrada. Jornada: uma protagonista
+    vai do problema ao resultado em 4 quadros. Paródia: cena famosa de filme
+    ou novela com a fala adaptada pra sua oferta, em 3 quadros. Eu recomendo
+    o estilo pelo momento do anúncio e você confirma.
+
 Em qualquer formato, no fim você escolhe gerar a imagem colando o prompt no
 ChatGPT (grátis) ou direto pela API (tem custo, salva o arquivo automático).
 
@@ -238,6 +247,7 @@ Conforme a resposta:
 - **26** ou termos relacionados a Eleições: leia `.claude/commands/criativo-estatico/eleicoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 - **27** ou termos relacionados a Centro das Atenções: leia `.claude/commands/criativo-estatico/centro-das-atencoes.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 - **28** ou termos relacionados a Problema × Solução Emoji: leia `.claude/commands/criativo-estatico/problema-solucao-emoji.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
+- **29** ou termos relacionados a Quadrinho (quadrinho, HQ, tirinha, paródia, cena de filme): leia `.claude/commands/criativo-estatico/quadrinho.md` com a ferramenta Read e siga o fluxo descrito nesse arquivo.
 
 O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO precisam ler o `resumo-produto.md` de novo, podem usar o que já foi extraído.
 
@@ -247,5 +257,5 @@ O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO pr
 - As sub-skills herdam todas as regras globais do CLAUDE.md. Light Copy, auto-revisão obrigatória de copy, anúncio de próximo passo, aprovação antes de salvar, acentuação correta em pt_BR.
 - O orquestrador NÃO gera copy nem texto de anúncio. Apenas roteia.
 - Cada sub-skill tem fluxo próprio. O orquestrador não define perguntas, opções de saída ou regras de geração. Quem define isso é o arquivo da sub-skill.
-- Se o aluno escolher um número inválido (fora de 1 a 28), repetir o menu de forma curta sem mostrar a descrição das opções de novo.
+- Se o aluno escolher um número inválido (fora de 1 a 29), repetir o menu de forma curta sem mostrar a descrição das opções de novo.
 - Se a sub-skill terminar e o aluno quiser criar outro criativo de outro formato, retornar a esta skill (`/criativo-estatico`) em vez de chamar a outra sub-skill direto. O Passo 0 garante contexto fresco.
