@@ -98,13 +98,28 @@ def main() -> None:
     alertas = []
 
     # Material bruto não é vídeo final
-    todos = [f for f in pasta.glob("*.mp4") if not re.search(r"brut[ao]", f.name, re.I)]
+    # Arquivo de edição (_edicao_*.json) manda: "saida" é o vídeo final e "bruto" é a gravação sem edição
+    final_edicao, brutos = None, set()
+    for ed in pasta.glob("_edicao_*.json"):
+        try:
+            cfg = json.loads(ed.read_text(encoding="utf-8"))
+        except ValueError:
+            continue
+        if cfg.get("bruto"): brutos.add(Path(cfg["bruto"]).name)
+        if cfg.get("saida") and (pasta / Path(cfg["saida"]).name).exists():
+            final_edicao = pasta / Path(cfg["saida"]).name
+    # Fora: material bruto, rascunhos com "_" na frente e cópias antigas
+    todos = [f for f in pasta.glob("*.mp4")
+             if not re.search(r"brut[ao]", f.name, re.I) and not f.name.startswith("_") and f.name not in brutos]
     if not todos:
         raise SystemExit(f"Nenhum .mp4 final na pasta {pasta}")
     por_tamanho = lambda fs: sorted(fs, key=lambda f: f.stat().st_size, reverse=True)
     dims = {f: dimensoes(f) for f in todos}
     verticais = por_tamanho([f for f in todos if dims[f][1] > dims[f][0]])
     horizontais = por_tamanho([f for f in todos if dims[f][0] > dims[f][1]])
+    if final_edicao and final_edicao in verticais:
+        verticais = [final_edicao] + [f for f in verticais if f != final_edicao]
+        alertas.append(f"Vídeo final indicado pelo arquivo de edição: {final_edicao.name}")
     video = (verticais or por_tamanho(todos))[0]          # Instagram + Facebook
     video_h = horizontais[0] if horizontais else None      # YouTube, quando existir
     if len(verticais) > 1:
