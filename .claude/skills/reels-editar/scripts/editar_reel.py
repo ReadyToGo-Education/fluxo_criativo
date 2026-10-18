@@ -100,6 +100,14 @@ for troca in cfg.get("trocas", []):
         if it["t"].lower().strip(".,?!") == troca[0]:
             it["t"] = re.sub(re.escape(troca[0]), troca[1], it["t"], flags=re.I)
 
+def com_separador(t):
+    m = re.match(r"^(R\$)?(\d{4,})([.,%?!]*)$", t)
+    if not m: return t
+    n = f"{int(m.group(2)):,}".replace(",", ".")
+    return (m.group(1) or "") + n + m.group(3)
+for it in itens:
+    it["t"] = com_separador(it["t"])
+
 # número por extenso e em algarismo casam igual ("quatro bilhões" no JSON acha "4 bilhões" na fala, e vice-versa)
 NUMEROS = {w: str(k) for k, ws in enumerate(["zero", "um uma", "dois duas", "tres", "quatro", "cinco", "seis", "sete",
            "oito", "nove", "dez", "onze", "doze", "treze", "quatorze catorze", "quinze", "dezesseis", "dezessete",
@@ -119,6 +127,13 @@ def acha(frase, depois=0.0):
             return itens[k]["s"], itens[k + len(alvo) - 1]["e"]
     raise SystemExit(f"Frase não encontrada na fala: {frase}")
 
+# frases corrigidas pelo sentido: [como saiu na fala, como deve ficar na legenda], palavra por palavra
+for errado, certo in cfg.get("trocas_frase", []):
+    s0, _ = acha(errado)
+    k0 = next(k for k, it in enumerate(itens) if abs(it["s"] - s0) < 1e-6)
+    for k, palavra in enumerate(certo.split()):
+        itens[k0 + k]["t"] = palavra
+
 # ---------- cenas do OBS ----------
 # Aulas gravadas no OBS alternam só rosto e tela dividida (a aula em cima, creme). Na tela dividida
 # não tem zoom (cortaria a aula) e a legenda sobe para entre a tela e a cabeça.
@@ -127,15 +142,21 @@ if cfg.get("cenas_obs"):
     cache = TRAB / "cenas_divididas.json"
     if not cache.exists():
         import numpy as np
-        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", cfg["bruto"], "-vf", "fps=2,crop=1080:900:0:30,scale=54:45",
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", cfg["bruto"], "-vf", "fps=2,crop=1080:900:0:30,scale=108:90",
                               "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
-        x = np.frombuffer(raw, np.uint8).reshape(-1, 45, 54, 3).astype(float)
-        creme = np.abs(x.reshape(len(x), -1, 3).mean(1) - cfg.get("cor_tela", [247, 242, 232])).sum(1) < 45
-        jan, ini = [], 0
-        for i in range(1, len(creme) + 1):
-            if i == len(creme) or creme[i] != creme[ini]:
-                if creme[ini] and (i - ini) / 2 >= 1.0: jan.append([ini / 2, i / 2])
-                ini = i
+        x = np.frombuffer(raw, np.uint8).reshape(-1, 90, 108, 3).astype(float)
+        fracao = (np.abs(x - cfg.get("cor_tela", [247, 242, 232])).sum(3) < 40).reshape(len(x), -1).mean(1)
+        creme = fracao > 0.30
+        idx = np.where(creme)[0]
+        for a, b in zip(idx[:-1], idx[1:]):
+            if 1 < b - a <= 8: creme[a:b] = True  # buraco de até 4 s no meio da tela dividida
+        jan, ini = [], None
+        for i in range(len(creme) + 1):
+            v = creme[i] if i < len(creme) else False
+            if v and ini is None: ini = i
+            if not v and ini is not None:
+                if (i - ini) / 2 >= 1.5: jan.append([ini / 2, i / 2])
+                ini = None
         json.dump(jan, open(cache, "w"))
     CENAS_DIV = json.load(open(cache))
     print("tela dividida (bruto):", ", ".join(f"{a:.0f}-{b:.0f}s" for a, b in CENAS_DIV))
@@ -235,7 +256,7 @@ for it in itens:
     if re.search(r"[.,?!]$", it["t"]) or len(atual) >= 3 or sum(len(x["t"]) for x in atual) >= 15:
         blocos.append(atual); atual = []
 if atual: blocos.append(atual)
-limpa = lambda t: re.sub(r"[.,!?]", "", t).upper()
+limpa = lambda t: re.sub(r"(?<!\d)[.,]|[.,](?!\d)|[!?]", "", t).upper()  # tira pontuação, mas mantém 1.500 e 2,5
 
 # janelas dos cartões de prova (calculadas antes, porque a legenda muda de lugar na tela dividida)
 cartoes = cfg.get("cartoes", [])

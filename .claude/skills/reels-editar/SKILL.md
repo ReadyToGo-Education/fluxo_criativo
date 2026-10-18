@@ -74,11 +74,13 @@ Ler `fala.txt`, `preparo.json`, a imagem `rosto_grade.jpg`, o roteiro (seção "
 
 ### Erros e regravações (padrão do R026, 18/10/2026)
 
-1. Montar a fala em blocos separados por pausa (`fala.txt`) e comparar com a fala do roteiro.
-2. Procurar frases repetidas: sequências de 3 ou 4 palavras iguais em até 40 s de distância. Separar **erro** (frase recomeçada ou regravada) de **repetição de propósito** (retomada do exemplo, lista, reforço da tese).
-3. Conferir palavra esticada (mais de 1,5 s) ou de confiança baixa, retranscrevendo o trecho isolado: costuma ser pausa de pensamento ou tropeço que o Whisper engoliu.
-4. **Fica a última tentativa completa**, a menos que ela tenha hesitação e uma anterior esteja limpa. Os cortes vão no meio do silêncio entre as falas (medir com silencedetect a -40 dB, porque o Whisper adianta o começo da palavra).
-5. Mostrar ao Rodrigo, antes de renderizar, uma tabela com os tempos do bruto: o que sai, o que fica e por quê, mais os cortes opcionais (frase reformulada) separados para ele decidir.
+0. **Em vídeo com regravação, transcrever também fala por fala**: `{PY} {SKILL}/scripts/transcrever_por_fala.py "{TRAB}/audio16k.wav" "{TRAB}/palavras_por_fala.json"`. A transcrição inteira **funde duas tentativas da mesma frase** (R026: "a referência que eu utilizo" dita duas vezes virou uma frase só, com o "32%" esticado por 5 s, e passou batido). A fala por fala separa as tentativas, mas erra mais palavras isoladas. Usar a fala por fala para **achar** os erros. Na legenda, usar a inteira e trocar só os trechos fundidos pela fala por fala (sem perder palavra na emenda).
+1. **Ler a fala inteira pelo sentido**, bloco por bloco, como editor, e não só procurar repetição. Pergunta para cada frase: ela se completa? Diz o que ele quis dizer? Contradiz o que veio antes? No R026 o Rodrigo apontou dois erros de sentido que não eram repetição: "despesa pessoal paga **com o dinheiro do próprio dono**" (sai, retoma na frase seguinte) e uma frase que não se completava ("toda a mercadoria, pós-preparo, algumas outras não…"; sai inteira).
+2. Procurar frases repetidas: sequências de 3 ou 4 palavras iguais em até 40 s. Separar **erro** (frase recomeçada ou regravada) de **repetição de propósito** (retomada do exemplo, lista, reforço da tese). Frase reformulada logo em seguida ("vou fazer ela para ti nesse momento. Eu posso te perguntar agora") vira corte opcional.
+3. Conferir palavra esticada (mais de 1,5 s) ou de confiança baixa: costuma ser tentativa fundida, pausa de pensamento ou tropeço que o Whisper engoliu.
+4. **Fica a última tentativa completa**, a menos que ela tenha hesitação e uma anterior esteja limpa. Hesitação solta ("E…" antes do CTA) também sai. Os cortes vão **no meio do silêncio** entre as falas (silencedetect a -40 dB, porque o Whisper adianta o começo da palavra e corta palavra pela metade).
+5. Mostrar ao Rodrigo, antes de renderizar, uma tabela com os tempos do bruto: o que sai, o que fica e por quê, mais os cortes opcionais separados para ele decidir.
+6. Na conferência, ouvir/ler cada emenda: a legenda não pode ter palavra que o corte tirou nem perder palavra que ficou. Números sempre com separador (150.000, R$ 1.500, nunca 150000) e erro de transcrição que muda o sentido corrigido com `trocas_frase` (ex.: "quando está sobrando" → "quanto está sobrando").
 
 Conferir o plano rodando `{PY} {SKILL}/scripts/editar_reel.py "{pasta}/_edicao_R0XX.json"` (sem `--render`, leva segundos). Se sair "Frase não encontrada na fala", trocar o trecho pelo texto exato de `fala.txt`.
 
