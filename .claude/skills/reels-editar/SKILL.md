@@ -42,11 +42,12 @@ Rodar `{PY} {SKILL}/scripts/instalar.py --verificar`.
 
 1. Código do Reel: vem da mensagem (ex.: R028). Se faltar, listar as pastas `R### - Nome` que têm vídeo bruto e ainda não têm `R0XX_editado.mp4`, e perguntar qual (opções numeradas).
 2. Rodar `{PY} {SKILL}/scripts/preparar.py "{caminho da pasta}"`. Ele:
-   - acha o **bruto** (maior `.mp4`/`.mov` sem `_` no começo e sem `editado` no nome), a **capa** `CAPA_*.png`, o **roteiro** `Reels_*.html` e os **cartões** `TELA_*.png`;
-   - transcreve com o Whisper na placa de vídeo (cerca de 15 segundos por minuto de fala);
-   - grava em `{TRAB}`: `palavras.json`, `fala.txt` (fala com o tempo de cada linha), `rosto_grade.jpg` e `preparo.json` (resumo, que ele também imprime).
+   - acha o **bruto** (maior `.mp4`/`.mov` sem `_` no começo e sem `editado` no nome; se a pasta tiver `… - Vertical.mp4` e `… - Horizontal.mp4`, pega o vertical, ou o horizontal com `--horizontal`, e o trabalho vai para `R0XXV` ou `R0XXH`), a **capa** `CAPA_*.png`, o **roteiro** `Reels_*.html` e os **cartões** `TELA_*.png`;
+   - transcreve duas vezes com o Whisper na placa de vídeo: a fala inteira (`palavras.json`, base da legenda) e **fala por fala** (`palavras_por_fala.json`, que separa duas tentativas da mesma frase);
+   - grava em `{TRAB}`: `fala.txt`, `fala_por_fala.txt` (cada fala entre pausas, com início e fim), `rosto_grade.jpg` e `preparo.json` (resumo, que ele também imprime).
 3. Se sair `SEM_BRUTO`: avisar que a pasta ainda não tem o vídeo gravado e parar.
 4. Se o Reel já tem `_edicao_R0XX.json` na pasta (reedição), partir dele e pular para o Passo 3 com as mudanças que o Rodrigo pediu.
+5. **Sempre ler a `fala_por_fala.txt` inteira pelo sentido** e seguir "Erros e regravações" (no Passo 2) antes de montar o JSON. Mesmo em Reel curto de take único: erro de sentido não é repetição de palavra.
 
 ---
 
@@ -151,15 +152,18 @@ Versões anteriores do mesmo Reel, se houver re-render, vão para `_R0XX_editado
 
 ## O padrão aprovado (não mudar sem pedido)
 
-Fonte: R024 e R027, 16 a 18/10/2026. Detalhes na memória `reels-edicao-padrao`.
+Fonte: R024, R025, R026 (vertical e horizontal) e R027, 16 a 18/10/2026. Detalhes na memória `reels-edicao-padrao`.
 
-- **Pausas:** só corta acima de 1,0 s, deixando 0,8 s, com dissolvência de 0,12 s. Cortar mais ficou "muito acelerado" (v1 e v2 do R027 reprovadas).
+- **Takes:** fala inteira lida pelo sentido; fica a última tentativa completa; frase errada ou que não se completa sai; corte no meio do silêncio; tabela de takes aprovada pelo Rodrigo antes da render (R026).
+- **Pausas:** só corta acima de 1,0 s, deixando 0,8 s, e só se o corte economizar 0,4 s, com dissolvência de 0,12 s. Cortar mais ficou "muito acelerado" (v1 e v2 do R027 reprovadas).
+- **Números na legenda:** separador de milhar sempre (150.000, R$ 1.500, nunca 150000); ano sem ponto (2026). Erro de transcrição que muda o sentido vai em `trocas_frase`.
+- **Aulas do OBS:** zoom só na cena de rosto, legenda acima da cabeça na tela dividida, cor sem mexer na exposição da tela; horizontal 16:9 derivado do vertical aprovado.
 - **Zoom:** suave e contínuo (curva S), ancorado no rosto. Nunca punch-in seco.
 - **Legenda:** Montserrat ExtraBold, maiúscula, palavra falada em destaque, base em y 1516; na tela dividida sobe para a linha da divisão (y 962).
 - **Título:** cartão na cor da capa, selo espaçado, linhas em preto (Inter 900), última linha branca na tarja vermelha inclinada.
 - **Cartões:** tela dividida, notícia em cima (fundo `#0A1712`), vídeo embaixo.
 - **Áudio D:** DeepFilterNet + ClearerVoice 75% + ganho linear a -14 LUFS com limitador em -1,5 dB (o loudnorm levantava a respiração).
-- **Cor C:** balanço de branco pela pele e exposição pelo rosto, medidos em cada vídeo, com acabamento Instagram leve.
+- **Cor C:** balanço de branco pela pele e exposição pelo rosto, medidos em cada vídeo, com acabamento Instagram leve. Com camisa ou parede branca no quadro, o branco neutro manda (90%) para não amarelar (R025).
 - **Capa** no primeiro quadro (miniatura do WhatsApp) e **1 s de respiro** no fim, com o áudio sumindo em 0,6 s.
 
 ## Arquivos da skill
@@ -168,7 +172,8 @@ Fonte: R024 e R027, 16 a 18/10/2026. Detalhes na memória `reels-edicao-padrao`.
 |---|---|
 | `scripts/instalar.py` | instalação de primeira vez e conferência (`--verificar`) |
 | `scripts/preparar.py` | acha os arquivos, transcreve, grava a grade do rosto e o resumo |
-| `scripts/transcrever.py` | faster-whisper large-v3-turbo com o tempo de cada palavra |
+| `scripts/transcrever.py` | faster-whisper large-v3-turbo com o tempo de cada palavra (fala inteira, base da legenda) |
+| `scripts/transcrever_por_fala.py` | mesma transcrição, mas fala por fala (corta nos silêncios): separa tentativas repetidas |
 | `scripts/editar_reel.py` | plano (sem `--render`) e render completo (com `--render`) |
 | `scripts/cor.py` | cor C |
 | `scripts/aprimorar_voz.py` | aprimorar voz do áudio D (roda no Python com PyTorch CUDA) |

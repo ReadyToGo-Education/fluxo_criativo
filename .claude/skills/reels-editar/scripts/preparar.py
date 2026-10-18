@@ -1,5 +1,7 @@
 # Prepara um Reel para edição: acha os arquivos da pasta, transcreve a fala e tira os quadros do rosto.
-# Uso: py -3 preparar.py "caminho/da/pasta/R0XX - Nome" [--sem-transcrever]
+# Uso: py -3 preparar.py "caminho/da/pasta/R0XX - Nome" [--horizontal] [--sem-transcrever]
+# Aula gravada no OBS nas duas saídas ("... - Bruta - Vertical.mp4" e "... - Horizontal.mp4"): sem --horizontal
+# prepara o vertical (trabalho em R0XXV); com --horizontal, o horizontal (R0XXH).
 # Grava em %LOCALAPPDATA%/reels-editar/trabalho/R0XX/:
 #   audio16k.wav, palavras.json (cada palavra com início, fim e confiança),
 #   rosto_grade.jpg (3 quadros da bruta com grade de 10% e as zonas seguras), preparo.json (resumo).
@@ -15,15 +17,23 @@ m = re.match(r"(R\d{3})", pasta.name)
 if not m:
     raise SystemExit(f"A pasta precisa começar pelo código do Reel (ex.: R028 - Nome): {pasta.name}")
 codigo = m.group(1)
-trab = TRABALHO / codigo
-trab.mkdir(parents=True, exist_ok=True)
 
 # ---------- arquivos da pasta ----------
 videos = [v for v in pasta.glob("*.mp4") if not v.name.startswith("_") and "editado" not in v.name.lower()]
 videos += [v for v in pasta.glob("*.mov") if not v.name.startswith("_")]
 if not videos:
     raise SystemExit("SEM_BRUTO: nenhum vídeo bruto na pasta (o .mp4 gravado, sem _ no começo e sem 'editado' no nome).")
-bruto = max(videos, key=lambda v: v.stat().st_size)
+orientados = {o: [v for v in videos if o in v.name.lower()] for o in ("vertical", "horizontal")}
+if orientados["vertical"] or orientados["horizontal"]:  # aula com as duas saídas do OBS
+    lado = "horizontal" if "--horizontal" in sys.argv else "vertical"
+    if not orientados[lado]:
+        raise SystemExit(f"SEM_BRUTO: não achei o bruto {lado} na pasta.")
+    bruto = max(orientados[lado], key=lambda v: v.stat().st_size)
+    codigo += "H" if lado == "horizontal" else "V"
+else:
+    bruto = max(videos, key=lambda v: v.stat().st_size)
+trab = TRABALHO / codigo
+trab.mkdir(parents=True, exist_ok=True)
 capas = sorted(pasta.glob("CAPA_*.png"))
 roteiros = sorted(pasta.glob("Reels_*.html"))
 cartoes = sorted(pasta.glob("TELA_*.png"))
@@ -45,6 +55,21 @@ palavras_arq = trab / "palavras.json"
 if "--sem-transcrever" not in sys.argv or not palavras_arq.exists():
     subprocess.run(ambiente()["whisper"] + [str(SCRIPTS / "transcrever.py"), str(audio16k), str(palavras_arq)], check=True)
 palavras = json.load(open(palavras_arq, encoding="utf-8"))
+# segunda transcrição, fala por fala: separa duas tentativas da mesma frase que a transcrição inteira funde
+# (R026). Serve para ACHAR erros e regravações; a legenda continua saindo da transcrição inteira.
+por_fala_arq = trab / "palavras_por_fala.json"
+if "--sem-transcrever" not in sys.argv or not por_fala_arq.exists():
+    subprocess.run(ambiente()["whisper"] + [str(SCRIPTS / "transcrever_por_fala.py"), str(audio16k), str(por_fala_arq)],
+                   check=True)
+por_fala = json.load(open(por_fala_arq, encoding="utf-8"))
+blocos, cur = [], []
+for w in por_fala:
+    if cur and w["s"] - cur[-1]["e"] > 0.6:
+        blocos.append(cur); cur = []
+    cur.append(w)
+if cur: blocos.append(cur)
+(trab / "fala_por_fala.txt").write_text("\n".join(f"[{b[0]['s']:6.2f}-{b[-1]['e']:6.2f}] " + " ".join(x["w"] for x in b)
+                                                   for b in blocos) + "\n", encoding="utf-8")
 
 # fala em texto corrido, com o tempo no começo de cada linha (para casar com o roteiro)
 linhas, atual = [], []
@@ -101,6 +126,7 @@ resumo = {
     "pausas_acima_de_1s": [f"{a:.2f} ({d:.2f} s)" for a, d in pausas],
     "rosto_grade": str(trab / "rosto_grade.jpg"),
     "fala": str(trab / "fala.txt"),
+    "fala_por_fala": str(trab / "fala_por_fala.txt"),
 }
 json.dump(resumo, open(trab / "preparo.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(json.dumps(resumo, ensure_ascii=False, indent=1))
