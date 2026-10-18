@@ -68,7 +68,17 @@ Ler `fala.txt`, `preparo.json`, a imagem `rosto_grade.jpg`, o roteiro (seção "
 | `cor_legenda` | `amarelo`, `verde`, `vermelho` ou `laranja`, **diferente da do Reel anterior**: ler o `_edicao_R0XX.json` do maior código abaixo do atual que tiver um. Evitar a cor igual ao fundo do título. Uma cor fixa do começo ao fim. |
 | `trocas` | sempre `["pra", "para"]` (padrão de fala na legenda); acrescentar correções de grafia que o Whisper errou. |
 | `pausas_manter` | só se o roteiro marcar uma pausa dramática acima de 1 s que não pode ser encurtada (tempo de início da pausa, de `pausas_acima_de_1s`). |
-| fixos | `pausa_min` 1.0, `pausa_fica` 0.8, `legenda_base_y` 1516, `titulo_ate` 3.0, `cor` `C`, `aprimorar_voz` 75, `saida` `R0XX_editado.mp4`. Não mudar sem pedido do Rodrigo. |
+| `remover` | takes descartados (erros e regravações), `[[início, fim], ...]` no tempo do bruto. Ver "Erros e regravações" abaixo. **Só preencher depois de o Rodrigo aprovar a lista.** |
+| `cenas_obs` | `true` quando o bruto é aula gravada no OBS que alterna só rosto e tela dividida já montada (aula creme em cima). O editor detecta as cenas sozinho: zoom só no rosto, legenda da tela dividida em `legenda_div_y` (1130) e cor só com balanço de branco (sem mexer na exposição da tela). Usar com `zoom_base` `[1.0, 1.0]` e `cartoes` vazio. |
+| fixos | `pausa_min` 1.0, `pausa_fica` 0.8, `corte_minimo` 0.4 (só corta pausa se economizar 0,4 s), `legenda_base_y` 1516, `titulo_ate` 3.0, `cor` `C`, `aprimorar_voz` 75, `saida` `R0XX_editado.mp4`. Não mudar sem pedido do Rodrigo. |
+
+### Erros e regravações (padrão do R026, 18/10/2026)
+
+1. Montar a fala em blocos separados por pausa (`fala.txt`) e comparar com a fala do roteiro.
+2. Procurar frases repetidas: sequências de 3 ou 4 palavras iguais em até 40 s de distância. Separar **erro** (frase recomeçada ou regravada) de **repetição de propósito** (retomada do exemplo, lista, reforço da tese).
+3. Conferir palavra esticada (mais de 1,5 s) ou de confiança baixa, retranscrevendo o trecho isolado: costuma ser pausa de pensamento ou tropeço que o Whisper engoliu.
+4. **Fica a última tentativa completa**, a menos que ela tenha hesitação e uma anterior esteja limpa. Os cortes vão no meio do silêncio entre as falas (medir com silencedetect a -40 dB, porque o Whisper adianta o começo da palavra).
+5. Mostrar ao Rodrigo, antes de renderizar, uma tabela com os tempos do bruto: o que sai, o que fica e por quê, mais os cortes opcionais (frase reformulada) separados para ele decidir.
 
 Conferir o plano rodando `{PY} {SKILL}/scripts/editar_reel.py "{pasta}/_edicao_R0XX.json"` (sem `--render`, leva segundos). Se sair "Frase não encontrada na fala", trocar o trecho pelo texto exato de `fala.txt`.
 

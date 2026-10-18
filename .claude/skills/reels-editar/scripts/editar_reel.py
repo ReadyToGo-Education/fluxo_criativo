@@ -31,7 +31,11 @@ FPS = 30
 INICIO, FIM = cfg["inicio"], cfg["fim"]
 FX, FY = cfg["rosto"]
 
-palavras = [w for w in json.load(open(cfg["palavras"], encoding="utf-8")) if INICIO - 0.6 <= w["s"] < FIM]
+# takes descartados (erros e regravações aprovados pelo Rodrigo): [início, fim] no tempo do bruto
+TAKES_FORA = sorted(tuple(x) for x in cfg.get("remover", []))
+fora_do_take = lambda w: any(a - 0.05 <= w["s"] and w["e"] <= b + 0.05 for a, b in TAKES_FORA)
+palavras = [w for w in json.load(open(cfg["palavras"], encoding="utf-8"))
+            if INICIO - 0.6 <= w["s"] < FIM and not fora_do_take(w)]
 
 # ---------- pausas reais do áudio ----------
 txt = subprocess.run(["ffmpeg", "-hide_banner", "-i", cfg["audio16k"], "-af",
@@ -47,9 +51,15 @@ for a, b in silencios:
     if any(abs(a - m) < 0.15 for m in manter):
         continue
     fica = next((v for k, v in especiais.items() if abs(a - float(k)) < 0.15), PAUSA_FICA)
-    if b - a >= PAUSA_MIN and (b - a) - fica >= 0.15:
+    if b - a >= PAUSA_MIN and (b - a) - fica >= cfg.get("corte_minimo", 0.4):
         remover.append((a + fica / 2, b - fica / 2))
 
+# junta os cortes de pausa com os takes descartados (sem sobreposição)
+juntos = []
+for a, b in sorted(remover + list(TAKES_FORA)):
+    if juntos and a <= juntos[-1][1] + 0.05: juntos[-1][1] = max(juntos[-1][1], b)
+    else: juntos.append([a, b])
+remover = [tuple(x) for x in juntos]
 trechos, cur = [], INICIO
 for a, b in remover:
     trechos.append((cur, a)); cur = b
@@ -78,6 +88,13 @@ itens = []
 for w in palavras:
     s, e = ajusta(w)
     itens.append({"t": w["w"], "s": mapa(s), "e": mapa(e)})
+juntados = []
+for it in itens:
+    t = it["t"]
+    if juntados and (t in ("$", "%", "%,", "%.") or re.match(r"^[.,]\d", t) or t.startswith("-")):
+        juntados[-1]["t"] += t; juntados[-1]["e"] = it["e"]; continue
+    juntados.append(it)
+itens = juntados
 for troca in cfg.get("trocas", []):
     for it in itens:
         if it["t"].lower().strip(".,?!") == troca[0]:
@@ -102,9 +119,34 @@ def acha(frase, depois=0.0):
             return itens[k]["s"], itens[k + len(alvo) - 1]["e"]
     raise SystemExit(f"Frase não encontrada na fala: {frase}")
 
+# ---------- cenas do OBS ----------
+# Aulas gravadas no OBS alternam só rosto e tela dividida (a aula em cima, creme). Na tela dividida
+# não tem zoom (cortaria a aula) e a legenda sobe para entre a tela e a cabeça.
+CENAS_DIV = []  # janelas de tela dividida no tempo do bruto
+if cfg.get("cenas_obs"):
+    cache = TRAB / "cenas_divididas.json"
+    if not cache.exists():
+        import numpy as np
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", cfg["bruto"], "-vf", "fps=2,crop=1080:900:0:30,scale=54:45",
+                              "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
+        x = np.frombuffer(raw, np.uint8).reshape(-1, 45, 54, 3).astype(float)
+        creme = np.abs(x.reshape(len(x), -1, 3).mean(1) - cfg.get("cor_tela", [247, 242, 232])).sum(1) < 45
+        jan, ini = [], 0
+        for i in range(1, len(creme) + 1):
+            if i == len(creme) or creme[i] != creme[ini]:
+                if creme[ini] and (i - ini) / 2 >= 1.0: jan.append([ini / 2, i / 2])
+                ini = i
+        json.dump(jan, open(cache, "w"))
+    CENAS_DIV = json.load(open(cache))
+    print("tela dividida (bruto):", ", ".join(f"{a:.0f}-{b:.0f}s" for a, b in CENAS_DIV))
+def div_out():
+    return [(mapa(a), mapa(b)) for a, b in CENAS_DIV if mapa(b) - mapa(a) > 0.2]
+def na_cena_div(t):
+    return any(a - 0.01 <= t < b for a, b in div_out())
+
 # ---------- zoom suave (pontos-chave com transição em curva S) ----------
 chaves = [(0.0, 1.0), (cfg.get("titulo_ate", 3.0), 1.0)]
-base = [1.06, 1.0]
+base = cfg.get("zoom_base", [1.06, 1.0])
 for k, z in enumerate(cfg["zoom"]):
     s, _ = acha(z["de"], chaves[-1][0] - 1)
     _, e = acha(z["ate"], s)
@@ -123,7 +165,11 @@ def expr_zoom(desloc):
         if abs(z1 - z0) < 1e-6: continue
         c = f"clip(({t}-{t0:.3f})/{t1 - t0:.3f},0,1)"
         partes.append(f"{z1 - z0:+.3f}*{c}*{c}*(3-2*{c})")
-    return "".join(partes)
+    z = "".join(partes)
+    if CENAS_DIV:  # na tela dividida do OBS o zoom fica em 1
+        fora = "+".join(f"between({t},{a:.3f},{b:.3f})" for a, b in div_out())
+        z = f"1+(({z})-1)*(1-min(1,{fora}))"
+    return z
 
 # ---------- título dos 3 primeiros segundos, no padrão da capa (PNG transparente) ----------
 # Cartão menta com o selo verde espaçado e as linhas em preto (Inter 900), e a última linha
@@ -235,7 +281,9 @@ for bi, bl in enumerate(blocos):
                 partes_l.append(r"{\c" + cor + "}" + limpa(x["t"]) + r"{\c&HFFFFFF&}")
             else:
                 partes_l.append(limpa(x["t"]))
-        pos = r"{\an5\pos(540,962)}" if na_divisao(ini) else ""  # na tela dividida, a legenda fica na linha da divisão
+        if na_divisao(ini): pos = r"{\an5\pos(540,962)}"  # tela dividida com cartão: legenda na linha da divisão
+        elif na_cena_div(ini): pos = r"{\an2\pos(540,%d)}" % cfg.get("legenda_div_y", 1130)  # tela dividida do OBS
+        else: pos = ""  # na tela dividida, a legenda fica na linha da divisão
         ev.append(f"Dialogue: 0,{ts(ini)},{ts(fim)},Leg,,0,0,0,,{pos}" + " ".join(partes_l))
 leg_y = cfg.get("legenda_base_y", 1516)
 (TRAB / "legenda.ass").write_text(f"""[Script Info]
@@ -292,15 +340,28 @@ if cfg.get("cor", "C") != "nenhuma":
     sys.path.insert(0, str(FERR))
     from cor import filtro_cor
     quadros = []
+    rosto_jan, cur_r = [], INICIO  # trechos só de rosto (a tela creme da aula não pode virar referência de branco)
+    for a, b in sorted(CENAS_DIV):
+        if a > cur_r: rosto_jan.append((cur_r, min(a, FIM)))
+        cur_r = max(cur_r, b)
+    if cur_r < FIM: rosto_jan.append((cur_r, FIM))
+    tot = sum(b - a for a, b in rosto_jan)
+    def tempo_rosto(frac):
+        alvo = frac * tot
+        for a, b in rosto_jan:
+            if alvo <= b - a: return a + alvo
+            alvo -= b - a
+        return rosto_jan[-1][1] - 1
     for k, frac in enumerate((0.2, 0.4, 0.6, 0.8)):
         q = TRAB / f"cor_{k}.png"
-        t = INICIO + frac * (FIM - INICIO)
+        t = tempo_rosto(frac)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", cfg["bruto"], "-frames:v", "1",
                         "-vf", "scale=1080:1920", str(q)], check=True)
         quadros.append(str(q))
     cx, cy = FX * 1080, FY * 1920
     rosto_caixa = tuple(int(v) for v in cfg.get("rosto_caixa", (cx - 70, cy - 200, cx + 70, cy - 20)))
-    FILTRO_COR, info_cor = filtro_cor(quadros, rosto_caixa, acabamento=cfg.get("cor", "C") == "C")
+    FILTRO_COR, info_cor = filtro_cor(quadros, rosto_caixa, acabamento=cfg.get("cor", "C") == "C",
+                                      exposicao=cfg.get("cor_exposicao", not cfg.get("cenas_obs")))
     FILTRO_COR = "," + FILTRO_COR
     print("cor:", {k: (float(v) if not isinstance(v, list) else v) for k, v in info_cor.items()})
 
@@ -401,7 +462,15 @@ if "--render" in sys.argv:
                          cwd=TRAB, capture_output=True, text=True, errors="ignore").stderr
     integrado = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", med)[-1])
     ganho = -14.0 - integrado
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", "montado.mkv", "-c:v", "copy", "-af",
-                    f"volume={ganho:.2f}dB,alimiter=limit=0.841:attack=2:release=60:level=false,aresample=48000",
-                    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", cfg["saida"]], cwd=TRAB, check=True)
+    # o limitador segura parte do ganho (mais em vídeo longo): mede o resultado e corrige até 2 vezes
+    for _ in range(3):
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", "montado.mkv", "-c:v", "copy", "-af",
+                        f"volume={ganho:.2f}dB,alimiter=limit=0.841:attack=2:release=60:level=false,aresample=48000",
+                        "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", cfg["saida"]], cwd=TRAB, check=True)
+        med = subprocess.run(["ffmpeg", "-hide_banner", "-i", cfg["saida"], "-vn", "-af", "ebur128", "-f", "null", "-"],
+                             capture_output=True, text=True, errors="ignore").stderr
+        final = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", med)[-1])
+        if abs(final + 14.0) <= 0.3: break
+        ganho += -14.0 - final
+    print(f"volume final {final:.1f} LUFS")
     print(f"render pronto em {time.time() - t_ini:.0f}s: {cfg['saida']}")

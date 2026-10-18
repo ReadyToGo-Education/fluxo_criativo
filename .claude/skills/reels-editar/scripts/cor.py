@@ -28,7 +28,7 @@ def medir(quadros, rosto):
     branco = brancos.mean(0) if len(brancos) > BRANCO_MIN * total else None
     return np.mean(pele, 0), np.concatenate(lum), branco
 
-def filtro_cor(quadros, rosto, acabamento=True, quente=0.0):
+def filtro_cor(quadros, rosto, acabamento=True, quente=0.0, exposicao=True):
     pele, lum, branco = medir(quadros, rosto)
     r, g, b = pele
     ganho_r = 1 + FORCA * ((PELE_RG * g / r) - 1)
@@ -48,6 +48,8 @@ def filtro_cor(quadros, rosto, acabamento=True, quente=0.0):
     verm = (r * ganho_r / 255 - lo) / (hi - lo)  # trava: o vermelho da pele não passa de 0,92
     if 0 < verm < 1 and verm ** (1 / gama) > 0.92:
         gama = max(np.log(verm) / np.log(0.92), 0.85)
+    if not exposicao:  # só balanço de branco (aulas do OBS: a tela creme não pode escurecer nem clarear)
+        lo, hi, gama = 0.0, 1.0, 1.0
     f = [f"colorchannelmixer=rr={ganho_r:.3f}:bb={ganho_b:.3f}",
          f"colorlevels=rimin={lo:.3f}:gimin={lo:.3f}:bimin={lo:.3f}:rimax={hi:.3f}:gimax={hi:.3f}:bimax={hi:.3f}",
          f"eq=gamma={gama:.3f}"]
