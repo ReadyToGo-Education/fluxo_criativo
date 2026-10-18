@@ -72,6 +72,14 @@ Ler `fala.txt`, `preparo.json`, a imagem `rosto_grade.jpg`, o roteiro (seção "
 | `cenas_obs` | `true` quando o bruto é aula gravada no OBS que alterna só rosto e tela dividida já montada (aula creme em cima). O editor detecta as cenas sozinho: zoom só no rosto, legenda da tela dividida em `legenda_div_y` (1130) e cor só com balanço de branco (sem mexer na exposição da tela). Usar com `zoom_base` `[1.0, 1.0]` e `cartoes` vazio. |
 | fixos | `pausa_min` 1.0, `pausa_fica` 0.8, `corte_minimo` 0.4 (só corta pausa se economizar 0,4 s), `legenda_base_y` 1516, `titulo_ate` 3.0, `cor` `C`, `aprimorar_voz` 75, `saida` `R0XX_editado.mp4`. Não mudar sem pedido do Rodrigo. |
 
+### Versão horizontal 16:9 (aula do YouTube, padrão do R026)
+
+Quando a aula foi gravada no OBS nas duas saídas (`R0XX - Bruta - Vertical.mp4` e `R0XX - Bruta - Horizontal.mp4`), editar **primeiro o vertical** até a aprovação e depois derivar o horizontal:
+1. Medir o deslocamento entre os dois áudios (correlação do volume a cada 10 ms; no R026 o horizontal estava 0,13 s depois, constante).
+2. Copiar `_edicao_R0XX_vertical.json` para `_edicao_R0XX_horizontal.json` com `formato` `16:9`, o bruto e a capa do YouTube (`CAPA_*_YouTube_1920x1080.png`), `inicio`, `fim` e `remover` somados ao deslocamento, e a transcrição corrigida do vertical deslocada (mesma legenda, mesmos takes).
+3. Ajustar o enquadramento: `rosto` e `rosto_caixa` em pixels de 1920 × 1080, `titulo_x`/`titulo_y` no lado livre (R026: `titulo_x` 400, `titulo_y` 110, tamanho 52, à esquerda do rosto), `legenda_base_y` e `legenda_div_y` 930 (embaixo e centralizada, como no R023 publicado).
+4. Na horizontal do OBS, a tela dividida é a aula em tela cheia com a câmera no canto inferior direito; o editor detecta sozinho.
+
 ### Erros e regravações (padrão do R026, 18/10/2026)
 
 0. **Em vídeo com regravação, transcrever também fala por fala**: `{PY} {SKILL}/scripts/transcrever_por_fala.py "{TRAB}/audio16k.wav" "{TRAB}/palavras_por_fala.json"`. A transcrição inteira **funde duas tentativas da mesma frase** (R026: "a referência que eu utilizo" dita duas vezes virou uma frase só, com o "32%" esticado por 5 s, e passou batido). A fala por fala separa as tentativas, mas erra mais palavras isoladas. Usar a fala por fala para **achar** os erros. Na legenda, usar a inteira e trocar só os trechos fundidos pela fala por fala (sem perder palavra na emenda).

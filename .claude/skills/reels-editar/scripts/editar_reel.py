@@ -28,6 +28,8 @@ D = 0.12            # duração da dissolvência em cada corte
 PAUSA_MIN = cfg.get("pausa_min", 1.0)    # só corta pausa maior que isso (padrão dos Reels publicados: pausa típica 0,7 a 0,8 s)
 PAUSA_FICA = cfg.get("pausa_fica", 0.8)  # quanto da pausa cortada permanece
 FPS = 30
+HORIZONTAL = cfg.get("formato") == "16:9"  # aula do YouTube; o padrão é Reel 9:16
+W, H = (1920, 1080) if HORIZONTAL else (1080, 1920)
 INICIO, FIM = cfg["inicio"], cfg["fim"]
 FX, FY = cfg["rosto"]
 
@@ -103,6 +105,8 @@ for troca in cfg.get("trocas", []):
 def com_separador(t):
     m = re.match(r"^(R\$)?(\d{4,})([.,%?!]*)$", t)
     if not m: return t
+    if not m.group(1) and len(m.group(2)) == 4 and 1900 <= int(m.group(2)) <= 2100:
+        return t  # ano fica sem ponto (2026)
     n = f"{int(m.group(2)):,}".replace(",", ".")
     return (m.group(1) or "") + n + m.group(3)
 for it in itens:
@@ -142,7 +146,7 @@ if cfg.get("cenas_obs"):
     cache = TRAB / "cenas_divididas.json"
     if not cache.exists():
         import numpy as np
-        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", cfg["bruto"], "-vf", "fps=2,crop=1080:900:0:30,scale=108:90",
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", cfg["bruto"], "-vf", "fps=2," + ("crop=1400:1000:40:40" if HORIZONTAL else "crop=1080:900:0:30") + ",scale=108:90",
                               "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
         x = np.frombuffer(raw, np.uint8).reshape(-1, 90, 108, 3).astype(float)
         fracao = (np.abs(x - cfg.get("cor_tela", [247, 242, 232])).sum(3) < 40).reshape(len(x), -1).mean(1)
@@ -232,18 +236,22 @@ escreve(dt, 10 + bx, 10 + bt - round(TT * 0.06), vermelha, f_tit, esp_tit, PAPEL
 tarja = tarja.rotate(2, resample=Image.BICUBIC, expand=True)
 
 alt_total = alt_cartao + tarja.height // 2
-y0 = max(300, min(cfg.get("titulo_y", 900), 1240 - alt_total))  # entre y 300 (grid 4:5 e cabeçalho) e 1248 (zona segura do Reels)
-ov = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0)); dr = ImageDraw.Draw(ov)
-x0 = (1080 - larg_cartao) / 2
+if HORIZONTAL:  # 16:9: o título vai onde o enquadramento deixar livre (titulo_x e titulo_y), longe das bordas
+    y0 = max(60, min(cfg.get("titulo_y", 80), H - 60 - alt_total))
+else:  # 9:16: entre y 300 (grid 4:5 e cabeçalho) e 1248 (zona segura do Reels)
+    y0 = max(300, min(cfg.get("titulo_y", 900), 1240 - alt_total))
+CX = cfg.get("titulo_x", W / 2)
+ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); dr = ImageDraw.Draw(ov)
+x0 = CX - larg_cartao / 2
 dr.rounded_rectangle([x0, y0, x0 + larg_cartao, y0 + alt_cartao], radius=round(TT * 0.3), fill=FUNDO)
 y = y0 + pad
 lt = largura(dr, cfg["pilula"].upper(), f_tag, esp_tag)
-escreve(dr, (1080 - lt) / 2, y, cfg["pilula"].upper(), f_tag, esp_tag, COR_SELO)
+escreve(dr, CX - lt / 2, y, cfg["pilula"].upper(), f_tag, esp_tag, COR_SELO)
 y += alt_tag
 for l in pretas:
     w = largura(dr, l, f_tit, esp_tit)
-    escreve(dr, (1080 - w) / 2, y - round(TT * 0.1), l, f_tit, esp_tit, TINTA); y += passo
-ov.alpha_composite(tarja, (round((1080 - tarja.width) / 2), round(y0 + alt_cartao - tarja.height / 2)))
+    escreve(dr, CX - w / 2, y - round(TT * 0.1), l, f_tit, esp_tit, TINTA); y += passo
+ov.alpha_composite(tarja, (round(CX - tarja.width / 2), round(y0 + alt_cartao - tarja.height / 2)))
 ov.save(TRAB / "titulo.png")
 print(f"título: y {y0} a {y0 + alt_total}")
 
@@ -303,20 +311,20 @@ for bi, bl in enumerate(blocos):
             else:
                 partes_l.append(limpa(x["t"]))
         if na_divisao(ini): pos = r"{\an5\pos(540,962)}"  # tela dividida com cartão: legenda na linha da divisão
-        elif na_cena_div(ini): pos = r"{\an2\pos(540,%d)}" % cfg.get("legenda_div_y", 1130)  # tela dividida do OBS
+        elif na_cena_div(ini): pos = r"{\an2\pos(%d,%d)}" % (W // 2, cfg.get("legenda_div_y", 1000 if HORIZONTAL else 1130))  # tela dividida do OBS
         else: pos = ""  # na tela dividida, a legenda fica na linha da divisão
         ev.append(f"Dialogue: 0,{ts(ini)},{ts(fim)},Leg,,0,0,0,,{pos}" + " ".join(partes_l))
-leg_y = cfg.get("legenda_base_y", 1516)
+leg_y = cfg.get("legenda_base_y", 1000 if HORIZONTAL else 1516)
 (TRAB / "legenda.ass").write_text(f"""[Script Info]
 ScriptType: v4.00+
-PlayResX: 1080
-PlayResY: 1920
+PlayResX: {W}
+PlayResY: {H}
 WrapStyle: 2
 ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Leg,Montserrat ExtraBold,62,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,1,0,1,4,3,2,60,60,{1920 - leg_y},1
+Style: Leg,Montserrat ExtraBold,62,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,1,0,1,4,3,2,60,60,{H - leg_y},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -377,9 +385,9 @@ if cfg.get("cor", "C") != "nenhuma":
         q = TRAB / f"cor_{k}.png"
         t = tempo_rosto(frac)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", cfg["bruto"], "-frames:v", "1",
-                        "-vf", "scale=1080:1920", str(q)], check=True)
+                        "-vf", f"scale={W}:{H}", str(q)], check=True)
         quadros.append(str(q))
-    cx, cy = FX * 1080, FY * 1920
+    cx, cy = FX * W, FY * H
     rosto_caixa = tuple(int(v) for v in cfg.get("rosto_caixa", (cx - 70, cy - 200, cx + 70, cy - 20)))
     FILTRO_COR, info_cor = filtro_cor(quadros, rosto_caixa, acabamento=cfg.get("cor", "C") == "C",
                                       exposicao=cfg.get("cor_exposicao", not cfg.get("cenas_obs")))
@@ -390,7 +398,7 @@ if cfg.get("cor", "C") != "nenhuma":
 p = []
 for i, ((a, b), o) in enumerate(zip(trechos, offs)):
     p.append(f"[0:v]trim={a:.3f}:{b:.3f},setpts=PTS-STARTPTS,fps={FPS},"
-             f"zoompan=z='{expr_zoom(o)}':x='{FX}*(iw-iw/zoom)':y='{FY}*(ih-ih/zoom)':d=1:s=1080x1920:fps={FPS}{FILTRO_COR},"
+             f"zoompan=z='{expr_zoom(o)}':x='{FX}*(iw-iw/zoom)':y='{FY}*(ih-ih/zoom)':d=1:s={W}x{H}:fps={FPS}{FILTRO_COR},"
              f"setsar=1,format=yuv420p[v{i}]")
     p.append(f"[1:a]atrim={a:.3f}:{b:.3f},asetpts=PTS-STARTPTS[a{i}]")
 uv, ua = "[v0]", "[a0]"
@@ -430,7 +438,7 @@ else:
         ult = f"[vc{k}]"
         print(f"cartão {k + 1}: {t0:.2f}s a {t1:.2f}s  ({Path(c['arquivo']).name})")
 p.append(f"{ult}subtitles=legenda.ass:fontsdir='{FONTES.as_posix().replace(':', '\\:')}'[vm]")
-p.append(f"[3:v]scale=1080:1920,setsar=1,fps={FPS},format=yuv420p,trim=end_frame=1,setpts=PTS-STARTPTS[cv]")
+p.append(f"[3:v]scale={W}:{H},setsar=1,fps={FPS},format=yuv420p,trim=end_frame=1,setpts=PTS-STARTPTS[cv]")
 p.append(f"anullsrc=r=48000:cl=mono,atrim=end={1 / FPS:.4f}[sil]")
 p.append(f"{ua}afade=t=out:st={DUR - 0.6:.3f}:d=0.6[afim]")
 p.append(f"[cv][sil][vm][afim]concat=n=2:v=1:a=1[vout][aout]")
