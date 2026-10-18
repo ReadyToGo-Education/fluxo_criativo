@@ -1,0 +1,35 @@
+{
+  "codigo": "R0XX",
+  "bruto": "R0XX_AAAAMMDDHHMMSSmmm.mp4",
+  "capa": "CAPA_R0XX_Nome.png",
+  "saida": "R0XX_editado.mp4",
+  "inicio": 0.7,
+  "fim": 72.3,
+  "rosto": [0.53, 0.43],
+  "pausa_min": 1.0,
+  "pausa_fica": 0.8,
+  "pausas_manter": [],
+  "pausas_especiais": {},
+  "trocas": [["pra", "para"]],
+  "zoom": [
+    {"de": "primeiras palavras da frase de virada", "ate": "últimas palavras", "zoom": 1.15},
+    {"de": "frase da tese", "ate": "fim da tese", "zoom": 1.25, "empurra": true},
+    {"de": "me segue", "ate": "dono de restaurante", "zoom": 1.1}
+  ],
+  "pilula": "DONO DE RESTAURANTE",
+  "titulo": ["LINHA PRETA 1", "LINHA PRETA 2", "LINHA DA TARJA VERMELHA"],
+  "titulo_ate": 3.0,
+  "titulo_fundo": "#F4C63A",
+  "titulo_selo": "#0A1712",
+  "titulo_y": 300,
+  "titulo_tamanho": 56,
+  "legenda_base_y": 1516,
+  "cartoes": [
+    {"arquivo": "TELA_R0XX_1_Nome.png", "palavra": "palavra falada quando o cartão entra", "dura": 3.0, "largura": 1000}
+  ],
+  "tela_dividida": true,
+  "palavras_chave": ["número central", "termo central", "me segue"],
+  "cor_legenda": "verde",
+  "cor": "C",
+  "aprimorar_voz": 75
+}

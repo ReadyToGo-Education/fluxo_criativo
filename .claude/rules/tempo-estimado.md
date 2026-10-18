@@ -82,8 +82,8 @@ Medido em 16/10/2026 no R027 (bruto 4K de 63 segundos, transcrição no processa
 | Operação | Tempo estimado | Unidade |
 |----------|----------------|---------|
 | Transcrever o bruto com o tempo de cada palavra (até 1 minuto de fala, na placa de vídeo) | cerca de 15 segundos | segundos |
-| Renderizar cortes, zoom suave, legenda, título e capa (bruto 4K de 1 minuto) | cerca de 90 segundos | segundos |
-| Edição completa de um Reel de 1 minuto (transcrição, cortes, áudio, render e conferência) | 3 a 5 minutos | minutos |
+| Renderizar com áudio D (IA), cor C, zoom, legenda, título, cartões e capa (bruto 4K de 1 minuto) | 2 a 4 minutos | minutos |
+| Edição completa de um Reel de 1 minuto (transcrição, cortes, áudio, render e conferência) | 4 a 6 minutos | minutos |
 
 ---
 
