@@ -37,6 +37,7 @@ trab.mkdir(parents=True, exist_ok=True)
 capas = sorted(pasta.glob("CAPA_*.png"))
 roteiros = sorted(pasta.glob("Reels_*.html"))
 cartoes = sorted(pasta.glob("TELA_*.png"))
+telas_html = sorted(pasta.glob("_TELA_*.html"))  # aula gravada só com a câmera: as telas saem daqui
 
 def sonda(arq):
     r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
@@ -116,7 +117,7 @@ primeira = palavras[0] if palavras else None
 resumo = {
     "codigo": codigo, "pasta": str(pasta), "trabalho": str(trab),
     "bruto": bruto.name, "duracao_bruto": round(duracao, 2),
-    "capa": [c.name for c in capas], "roteiro": [r.name for r in roteiros], "cartoes": [c.name for c in cartoes],
+    "capa": [c.name for c in capas], "roteiro": [r.name for r in roteiros], "cartoes": [c.name for c in cartoes], "tela_html": [t.name for t in telas_html],
     "palavras": len(palavras),
     "primeira_palavra": primeira and f"{primeira['s']:.2f} {primeira['w']}",
     # o fim do vídeo é o fim da última palavra real + 1 s de respiro; palavra de baixa confiança no fim

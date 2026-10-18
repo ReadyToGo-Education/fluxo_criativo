@@ -31,7 +31,31 @@ FPS = 30
 HORIZONTAL = cfg.get("formato") == "16:9"  # aula do YouTube; o padrão é Reel 9:16
 W, H = (1920, 1080) if HORIZONTAL else (1080, 1920)
 INICIO, FIM = cfg["inicio"], cfg["fim"]
-FX, FY = cfg["rosto"]
+FX0, FY0 = cfg["rosto"]  # centro do rosto em fração do quadro do bruto
+
+# ---------- enquadramento: bruto em outra proporção ----------
+# Aula gravada só com a câmera: câmera 4K em 16:9 vira o Reel 9:16 e o celular na vertical vira o YouTube 16:9.
+# O quadro é recortado em volta do rosto antes do zoom (PRE); FX e FY passam a valer dentro do recorte.
+_sonda = json.loads(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                    "stream=width,height:stream_side_data=rotation", "-of", "json", cfg["bruto"]],
+                                   capture_output=True, text=True).stdout)["streams"][0]
+BW, BH = _sonda["width"], _sonda["height"]
+if any(abs(int(d.get("rotation", 0))) == 90 for d in _sonda.get("side_data_list", [])):
+    BW, BH = BH, BW  # celular gravado de pé
+
+def regiao(aspecto, alt=1.0, rosto_y=0.42):
+    """Recorte (x, y, w, h) do bruto na proporção pedida, com o rosto no centro e a rosto_y da altura."""
+    h = min(BH * alt, BW / aspecto); w = h * aspecto
+    x = min(max(FX0 * BW - w / 2, 0), BW - w); y = min(max(FY0 * BH - rosto_y * h, 0), BH - h)
+    par = lambda v: int(v) // 2 * 2
+    return par(x), par(y), par(w), par(h)
+
+PRE, FX, FY = "", FX0, FY0
+if abs(BW / BH - W / H) > 0.02:
+    px, py, pw, ph = regiao(W / H, 1.0, 0.40)
+    PRE = f"crop={pw}:{ph}:{px}:{py},"
+    FX, FY = (FX0 * BW - px) / pw, (FY0 * BH - py) / ph
+    print(f"bruto {BW}x{BH} recortado em {pw}x{ph} a partir de ({px}, {py}) para {W}x{H}")
 
 # takes descartados (erros e regravações aprovados pelo Rodrigo): [início, fim] no tempo do bruto
 TAKES_FORA = sorted(tuple(x) for x in cfg.get("remover", []))
@@ -138,6 +162,52 @@ for errado, certo in cfg.get("trocas_frase", []):
     for k, palavra in enumerate(certo.split()):
         itens[k0 + k]["t"] = palavra
 
+def acha_aprox(frase, depois=0.0):
+    """Como acha(), mas aceita fala que fugiu um pouco do roteiro: primeiro trecho parecido (80%) depois de 'depois'."""
+    try:
+        return acha(frase, depois) + (1.0,)
+    except SystemExit:
+        pass
+    from difflib import SequenceMatcher
+    alvo = norm(frase); n = len(alvo.split())
+    ws = [norm(i["t"]) for i in itens]
+    melhor = (0.0, None)
+    for k in range(len(ws) - n + 1):
+        if itens[k]["s"] < depois: continue
+        r = SequenceMatcher(None, alvo, " ".join(ws[k:k + n])).ratio()
+        if r >= 0.8: melhor = (r, k); break
+        if r > melhor[0]: melhor = (r, k)
+    if melhor[0] < 0.6:
+        raise SystemExit(f"Palavra da tela não encontrada na fala: {frase}")
+    k = melhor[1]
+    return itens[k]["s"], itens[k + n - 1]["e"], melhor[0]
+
+# ---------- telas da aula gravada só com a câmera ----------
+# "telas" no JSON (montada do roteiro, seção 1.1): cada troca de cena e cada clique ancorados numa palavra falada.
+# Na cena "tela": vertical com a tela em cima e a câmera embaixo; horizontal com a tela cheia e a câmera no canto.
+TELAS = cfg.get("telas", [])
+AULA = bool(TELAS)
+TELA_JAN, CLIQUES = [], []  # janelas com a tela e [tempo, número do clique], no tempo do vídeo final
+if AULA:
+    cena, ini, ult_t = "rosto", None, 0.0
+    for marca in TELAS:
+        s, _, conf = acha_aprox(marca["palavra"], ult_t - 0.01)
+        ult_t = s
+        if conf < 1.0:
+            print(f"  âncora aproximada ({conf:.0%}): \"{marca['palavra']}\" em {s:.2f}s")
+        t = max(s - 0.10, 0)  # a cena troca logo antes da palavra
+        if marca.get("cena") == "tela" and cena != "tela":
+            ini, cena = t, "tela"
+        elif marca.get("cena") == "rosto" and cena == "tela":
+            TELA_JAN.append([ini, t]); cena = "rosto"
+        if "clique" in marca:
+            CLIQUES.append([max(s - 0.15, 0), int(marca["clique"])])
+    if cena == "tela":
+        TELA_JAN.append([ini, DUR + 1])
+    CLIQUES.sort()
+    print("telas:", ", ".join(f"{a:.1f}-{b:.1f}s" for a, b in TELA_JAN))
+    print("cliques:", ", ".join(f"{n} em {t:.1f}s" for t, n in CLIQUES))
+
 # ---------- cenas do OBS ----------
 # Aulas gravadas no OBS alternam só rosto e tela dividida (a aula em cima, creme). Na tela dividida
 # não tem zoom (cortaria a aula) e a legenda sobe para entre a tela e a cabeça.
@@ -164,7 +234,8 @@ if cfg.get("cenas_obs"):
         json.dump(jan, open(cache, "w"))
     CENAS_DIV = json.load(open(cache))
     print("tela dividida (bruto):", ", ".join(f"{a:.0f}-{b:.0f}s" for a, b in CENAS_DIV))
-def div_out():
+def div_out():  # janelas de tela no vídeo final (aula do OBS ou telas geradas do roteiro)
+    if AULA: return [tuple(j) for j in TELA_JAN]
     return [(mapa(a), mapa(b)) for a, b in CENAS_DIV if mapa(b) - mapa(a) > 0.2]
 def na_cena_div(t):
     return any(a - 0.01 <= t < b for a, b in div_out())
@@ -191,7 +262,7 @@ def expr_zoom(desloc):
         c = f"clip(({t}-{t0:.3f})/{t1 - t0:.3f},0,1)"
         partes.append(f"{z1 - z0:+.3f}*{c}*{c}*(3-2*{c})")
     z = "".join(partes)
-    if CENAS_DIV:  # na tela dividida do OBS o zoom fica em 1
+    if div_out():  # na tela dividida o zoom fica em 1
         fora = "+".join(f"between({t},{a:.3f},{b:.3f})" for a, b in div_out())
         z = f"1+(({z})-1)*(1-min(1,{fora}))"
     return z
@@ -385,7 +456,7 @@ if cfg.get("cor", "C") != "nenhuma":
         q = TRAB / f"cor_{k}.png"
         t = tempo_rosto(frac)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", cfg["bruto"], "-frames:v", "1",
-                        "-vf", f"scale={W}:{H}", str(q)], check=True)
+                        "-vf", f"{PRE}scale={W}:{H}", str(q)], check=True)
         quadros.append(str(q))
     cx, cy = FX * W, FY * H
     rosto_caixa = tuple(int(v) for v in cfg.get("rosto_caixa", (cx - 70, cy - 200, cx + 70, cy - 20)))
@@ -396,16 +467,50 @@ if cfg.get("cor", "C") != "nenhuma":
 
 # ---------- filtro ----------
 p = []
+# câmera da cena "tela" da aula: vertical, metade de baixo (1080 × 960) com o plano aberto;
+# horizontal, quadradinho no canto inferior direito, fora da zona útil da tela (x 385 a 1535)
+CANTO = cfg.get("camera_canto", [360, 296])
+CANTO_XY = (W - 24 - CANTO[0], H - 24 - CANTO[1])
+if AULA:
+    if HORIZONTAL:
+        CAM_W, CAM_H = CANTO
+        cx_, cy_, cw_, ch_ = regiao(CAM_W / CAM_H, cfg.get("camera_altura", 0.75), 0.42)  # canto pequeno: um pouco mais perto
+    else:
+        CAM_W, CAM_H = 1080, 960
+        cx_, cy_, cw_, ch_ = regiao(CAM_W / CAM_H, cfg.get("camera_altura", 1.0), 0.40)
+    CAM = f"crop={cw_}:{ch_}:{cx_}:{cy_},scale={CAM_W}:{CAM_H}"
 for i, ((a, b), o) in enumerate(zip(trechos, offs)):
-    p.append(f"[0:v]trim={a:.3f}:{b:.3f},setpts=PTS-STARTPTS,fps={FPS},"
-             f"zoompan=z='{expr_zoom(o)}':x='{FX}*(iw-iw/zoom)':y='{FY}*(ih-ih/zoom)':d=1:s={W}x{H}:fps={FPS}{FILTRO_COR},"
+    corte = f"[0:v]trim={a:.3f}:{b:.3f},setpts=PTS-STARTPTS,fps={FPS}"
+    if AULA:
+        p.append(f"{corte},split[r{i}][q{i}]"); corte = f"[r{i}]"
+        p.append(f"[q{i}]{CAM}{FILTRO_COR},setsar=1,format=yuv420p[k{i}]")
+    else:
+        corte += ","
+    p.append(f"{corte}{PRE}zoompan=z='{expr_zoom(o)}':x='{FX}*(iw-iw/zoom)':y='{FY}*(ih-ih/zoom)':d=1:s={W}x{H}:fps={FPS}{FILTRO_COR},"
              f"setsar=1,format=yuv420p[v{i}]")
     p.append(f"[1:a]atrim={a:.3f}:{b:.3f},asetpts=PTS-STARTPTS[a{i}]")
-uv, ua = "[v0]", "[a0]"
+uv, ua, uk = "[v0]", "[a0]", "[k0]"
 for i in range(1, len(trechos)):
     p.append(f"{uv}[v{i}]xfade=transition=fade:duration={D}:offset={offs[i]:.3f}[xv{i}]")
     p.append(f"{ua}[a{i}]acrossfade=d={D}:c1=tri:c2=tri[xa{i}]")
     uv, ua = f"[xv{i}]", f"[xa{i}]"
+    if AULA:
+        p.append(f"{uk}[k{i}]xfade=transition=fade:duration={D}:offset={offs[i]:.3f}[xk{i}]")
+        uk = f"[xk{i}]"
+cartoes = cfg.get("cartoes", [])
+if AULA:
+    # a trilha das telas (tela_trilha.mp4, um PNG por clique com dissolvência) entra só nas janelas de tela
+    it = 4 + len(cartoes)
+    p.append(f"[{it}:v]setsar=1,format=yuv420p[tl]")
+    if HORIZONTAL:
+        p.append(f"[{it + 1}:v]format=gray,scale={CAM_W}:{CAM_H}[msk]")
+        p.append(f"{uk}format=yuva420p[k_a];[k_a][msk]alphamerge[k_m]")
+        p.append(f"[tl][k_m]overlay={CANTO_XY[0]}:{CANTO_XY[1]}:eof_action=pass[comp]")
+    else:
+        p.append(f"[tl]{uk}vstack[comp]")
+    jt = "+".join(f"between(t,{a:.3f},{b:.3f})" for a, b in TELA_JAN)
+    p.append(f"{uv}[comp]overlay=0:0:eof_action=pass:enable='{jt}'[va]")
+    uv = "[va]"
 ta = cfg.get("titulo_ate", 3.0)
 p.append(f"[2:v]format=rgba,fade=t=in:st=0:d=0.2:alpha=1,fade=t=out:st={ta - 0.3}:d=0.3:alpha=1[tit]")
 ult = "[vt]"
@@ -450,8 +555,55 @@ for (a, b), o in zip(trechos, offs):
 print("zoom:", ", ".join(f"{t:.2f}={z:.2f}" for t, z in chaves))
 # plano salvo para o conferir.py escolher os quadros de conferência (tempos já no vídeo final, sem o quadro da capa)
 json.dump({"duracao": DUR + 1 / FPS, "fps": FPS, "titulo_ate": cfg.get("titulo_ate", 3.0), "zoom": chaves[:-1],
-           "cartoes": tempos, "cortes": offs[1:], "saida": cfg["saida"]},
+           "cartoes": tempos, "cortes": offs[1:], "saida": cfg["saida"], "formato": "16:9" if HORIZONTAL else "9:16",
+           "telas": TELA_JAN, "cliques": CLIQUES},
           open(TRAB / "plano.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+# ---------- trilha das telas (aula gravada só com a câmera) ----------
+def trilha_telas():
+    """Exporta as telas do HTML (um PNG por clique) e monta tela_trilha.mp4 com a duração do vídeo final:
+    cada clique entra na sua palavra com dissolvência de 0,3 s, como a transição da própria tela."""
+    from telas import exportar, total_cliques
+    html_tela = Path(na_pasta(cfg["tela_html"]))
+    pasta = TRAB / "telas"
+    total = exportar(html_tela, pasta)
+    marcas = [list(c) for c in CLIQUES] or [[0.0, 1]]
+    falta = [n for _, n in marcas if not 1 <= n <= total]
+    if falta:
+        raise SystemExit(f"A tela tem {total} cliques; o roteiro pede {falta}.")
+    marcas[0][0] = 0.0  # antes do primeiro clique a tela já mostra o primeiro
+    XF = 0.3
+    for k in range(1, len(marcas)):  # cliques colados: dá tempo da dissolvência
+        marcas[k][0] = max(marcas[k][0], marcas[k - 1][0] + XF + 0.05)
+    imgs = []
+    for _, n in marcas:
+        if HORIZONTAL:  # moldura atrás da câmera do canto, desenhada na própria tela
+            im = Image.open(pasta / f"tela_{n:02d}.png").convert("RGBA")
+            dr = ImageDraw.Draw(im)
+            x, y = CANTO_XY
+            dr.rounded_rectangle([x - 6, y - 6, x + CANTO[0] + 5, y + CANTO[1] + 5], radius=26, fill=(15, 92, 46, 255))
+            arq = TRAB / f"tela_h_{n:02d}.png"; im.convert("RGB").save(arq); imgs.append(arq)
+        else:
+            imgs.append(pasta / f"tela_v_{n:02d}.png")
+    if HORIZONTAL:
+        msk = Image.new("L", tuple(CANTO), 0)
+        ImageDraw.Draw(msk).rounded_rectangle([0, 0, CANTO[0] - 1, CANTO[1] - 1], radius=20, fill=255)
+        msk.save(TRAB / "camera_mascara.png")
+    fim = DUR + 1
+    cmd, f = ["ffmpeg", "-v", "error", "-y"], []
+    for k, ((t0, _), arq) in enumerate(zip(marcas, imgs)):
+        t1 = marcas[k + 1][0] if k + 1 < len(marcas) else fim
+        cmd += ["-loop", "1", "-framerate", str(FPS), "-t", f"{t1 - t0 + XF:.3f}", "-i", str(arq)]
+        f.append(f"[{k}:v]setsar=1,format=yuv420p[i{k}]")
+    ult = "[i0]"
+    for k in range(1, len(marcas)):
+        f.append(f"{ult}[i{k}]xfade=transition=fade:duration={XF}:offset={marcas[k][0]:.3f}[x{k}]"); ult = f"[x{k}]"
+    (TRAB / "filtro_telas.txt").write_text(";\n".join(f) + f";\n{ult}trim=duration={fim:.3f}[out]", encoding="utf-8")
+    saida = TRAB / "tela_trilha.mp4"
+    subprocess.run(cmd + ["-filter_complex_script", str(TRAB / "filtro_telas.txt"), "-map", "[out]", "-r", str(FPS),
+                          "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-pix_fmt", "yuv420p", str(saida)], check=True)
+    print(f"trilha das telas: {len(marcas)} cliques, {fim:.1f}s")
+    return saida
 
 # ---------- render ----------
 if "--render" in sys.argv:
@@ -482,6 +634,10 @@ if "--render" in sys.argv:
            "-loop", "1", "-t", "0.1", "-framerate", str(FPS), "-i", cfg["capa"]]
     for c in cartoes:
         cmd += ["-loop", "1", "-t", f"{DUR + 1:.2f}", "-framerate", str(FPS), "-i", c["arquivo"]]
+    if AULA:
+        cmd += ["-i", str(trilha_telas())]
+        if HORIZONTAL:
+            cmd += ["-loop", "1", "-t", f"{DUR + 1:.2f}", "-framerate", str(FPS), "-i", str(TRAB / "camera_mascara.png")]
     cmd += ["-filter_complex_script", "filtro.txt", "-map", "[vout]", "-map", "[aout]", "-c:v", "libx264",
             "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "pcm_s24le", "montado.mkv"]
     subprocess.run(cmd, cwd=TRAB, check=True)

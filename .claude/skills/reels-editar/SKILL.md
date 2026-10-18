@@ -70,7 +70,8 @@ Ler `fala.txt`, `preparo.json`, a imagem `rosto_grade.jpg`, o roteiro (seção "
 | `trocas` | sempre `["pra", "para"]` (padrão de fala na legenda); acrescentar correções de grafia que o Whisper errou. |
 | `pausas_manter` | só se o roteiro marcar uma pausa dramática acima de 1 s que não pode ser encurtada (tempo de início da pausa, de `pausas_acima_de_1s`). |
 | `remover` | takes descartados (erros e regravações), `[[início, fim], ...]` no tempo do bruto. Ver "Erros e regravações" abaixo. **Só preencher depois de o Rodrigo aprovar a lista.** |
-| `cenas_obs` | `true` quando o bruto é aula gravada no OBS que alterna só rosto e tela dividida já montada (aula creme em cima). O editor detecta as cenas sozinho: zoom só no rosto, legenda da tela dividida em `legenda_div_y` (1130) e cor só com balanço de branco (sem mexer na exposição da tela). Usar com `zoom_base` `[1.0, 1.0]` e `cartoes` vazio. |
+| `cenas_obs` | `true` quando o bruto é aula gravada no OBS que alterna só rosto e tela dividida já montada (aula creme em cima). O editor detecta as cenas sozinho: zoom só no rosto, legenda da tela dividida em `legenda_div_y` (1130) e cor só com balanço de branco (sem mexer na exposição da tela). Usar com `zoom_base` `[1.0, 1.0]` e `cartoes` vazio. Aula gravada só com a câmera não usa `cenas_obs`: usa `telas` (ver "Aula gravada só com a câmera"). |
+| `telas` e `tela_html` | aula gravada só com a câmera: a lista de trocas de cena e cliques ancorados na fala e o `_TELA_R0XX_*.html` de onde saem as telas. Ver a seção abaixo. |
 | fixos | `pausa_min` 1.0, `pausa_fica` 0.8, `corte_minimo` 0.4 (só corta pausa se economizar 0,4 s), `legenda_base_y` 1516, `titulo_ate` 3.0, `cor` `C`, `aprimorar_voz` 75, `saida` `R0XX_editado.mp4`. Não mudar sem pedido do Rodrigo. |
 
 ### Versão horizontal 16:9 (aula do YouTube, padrão do R026)
@@ -80,6 +81,34 @@ Quando a aula foi gravada no OBS nas duas saídas (`R0XX - Bruta - Vertical.mp4`
 2. Copiar `_edicao_R0XX_vertical.json` para `_edicao_R0XX_horizontal.json` com `formato` `16:9`, o bruto e a capa do YouTube (`CAPA_*_YouTube_1920x1080.png`), `inicio`, `fim` e `remover` somados ao deslocamento, e a transcrição corrigida do vertical deslocada (mesma legenda, mesmos takes).
 3. Ajustar o enquadramento: `rosto` e `rosto_caixa` em pixels de 1920 × 1080, `titulo_x`/`titulo_y` no lado livre (R026: `titulo_x` 400, `titulo_y` 110, tamanho 52, à esquerda do rosto), `legenda_base_y` e `legenda_div_y` 930 (embaixo e centralizada, como no R023 publicado).
 4. Na horizontal do OBS, a tela dividida é a aula em tela cheia com a câmera no canto inferior direito; o editor detecta sozinho.
+
+### Aula gravada só com a câmera (padrão a partir de 18/10/2026)
+
+Desde 18/10 as aulas da Linha Editorial são gravadas **só com a câmera**: sem OBS, sem clicar na tela e sem trocar de cena. O editor cria as telas a partir do `_TELA_R0XX_*.html` e as troca na palavra marcada no roteiro.
+
+**Orientação de gravação para o Rodrigo** (repassar quando ele for gravar uma aula, em linguagem simples):
+- câmera em 4K na horizontal, se possível; se for o celular, na vertical;
+- deixar espaço acima da cabeça (a legenda sobe para ali quando a tela aparece);
+- falar a aula inteira olhando para a câmera, no ritmo do roteiro: não precisa clicar em nada nem trocar de cena;
+- errou, respira e repete a frase inteira (a última tentativa completa é a que fica).
+
+**Montagem** (vale para o vertical e para o horizontal, a partir do mesmo bruto):
+1. Rodar `{PY} {SKILL}/scripts/telas.py roteiro "{pasta}/Reels_0XX_*.html" "{pasta}/_edicao_R0XX.json"`. Ele lê a tabela da seção 1.1 (fala, cena e clique, frase por frase) e grava no JSON a lista `telas`: cada troca de cena (`"cena": "tela"` ou `"rosto"`) e cada clique (`"clique": N`) ancorados nas 4 primeiras palavras da frase, ou no trecho entre aspas quando o roteiro diz `clique 9 em "fora da ficha técnica"`.
+2. **Conferir cada âncora contra a `fala.txt`** e trocar pelo trecho exato do que ele falou (no teste do R026, o roteiro dizia "A primeira: quanto você" e ele falou "A primeira questão é…", e "Agora divide" virou "E então você divide"). O plano aceita fala parecida (80%) e avisa "âncora aproximada", mas o certo é a âncora exata. Âncora dentro de um take removido não existe mais: mover para a tentativa que ficou.
+3. Preencher `tela_html` com o nome do `_TELA_R0XX_*.html`. **Não usar** `cenas_obs` nem `cartoes` junto com `telas`.
+4. `rosto` é o centro do rosto em fração do **bruto** (lido na `rosto_grade.jpg`). Se o bruto tem outra proporção (câmera 16:9 para o Reel, celular 9:16 para o YouTube), o editor recorta em volta do rosto sozinho.
+5. Rodar o plano: ele imprime as janelas de tela e o tempo de cada clique. No resumo para aprovação (Passo 3), incluir: "Telas: {N} cliques, tela de {a} a {b} s, ..., cada clique na palavra marcada".
+
+O que o editor faz no render:
+- exporta um PNG por clique pelo Chrome sem janela (`?p=1`, `?p=2`…), em 1920 × 1080 e no recorte da metade de cima do vertical (1080 × 960, a zona útil x 385 a 1535 com a altura inteira), e monta a trilha das telas com dissolvência de 0,3 s em cada clique;
+- **vertical 9:16:** cena "tela" = tela em cima (y 0 a 960) e a câmera embaixo, em plano aberto recortado pelo rosto; legenda na linha acima da cabeça (`legenda_div_y`, 1130);
+- **horizontal 16:9:** cena "tela" = tela cheia com a câmera num quadradinho de cantos redondos no canto inferior direito (360 × 296, fora da zona útil), com moldura verde; legenda em `legenda_div_y` (1000);
+- cena "rosto" = só a câmera, com o zoom suave de sempre; nas telas o zoom fica em 1;
+- a cor C é medida e aplicada só na câmera: a tela entra por cima, sem mexer na exposição dela.
+
+Campos opcionais: `camera_altura` (fração da altura do bruto usada na câmera da cena "tela": padrão 1.0 no vertical e 0.75 no canto do horizontal; menor aproxima), `camera_canto` (tamanho do quadradinho do horizontal, padrão `[360, 296]`).
+
+O horizontal sai do mesmo bruto e do mesmo JSON: copiar `_edicao_R0XX.json` para `_edicao_R0XX_horizontal.json` com `formato` `16:9`, o `codigo` com `H`, a capa do YouTube, `saida` própria, `titulo_x`/`titulo_y` no lado livre e `legenda_base_y` 930. Não há deslocamento de áudio: é a mesma gravação.
 
 ### Erros e regravações (padrão do R026, 18/10/2026)
 
@@ -158,6 +187,7 @@ Fonte: R024, R025, R026 (vertical e horizontal) e R027, 16 a 18/10/2026. Detalhe
 - **Pausas:** só corta acima de 1,0 s, deixando 0,8 s, e só se o corte economizar 0,4 s, com dissolvência de 0,12 s. Cortar mais ficou "muito acelerado" (v1 e v2 do R027 reprovadas).
 - **Números na legenda:** separador de milhar sempre (150.000, R$ 1.500, nunca 150000); ano sem ponto (2026). Erro de transcrição que muda o sentido vai em `trocas_frase`.
 - **Aulas do OBS:** zoom só na cena de rosto, legenda acima da cabeça na tela dividida, cor sem mexer na exposição da tela; horizontal 16:9 derivado do vertical aprovado.
+- **Aulas só de câmera (desde 18/10, testado com a simulação do R026):** telas geradas do `_TELA_*.html`, trocadas na palavra da seção 1.1; vertical com tela em cima e câmera embaixo, horizontal com tela cheia e câmera no canto; as mesmas regras de zoom, legenda, cor e áudio das aulas do OBS.
 - **Zoom:** suave e contínuo (curva S), ancorado no rosto. Nunca punch-in seco.
 - **Legenda:** Montserrat ExtraBold, maiúscula, palavra falada em destaque, base em y 1516; na tela dividida sobe para a linha da divisão (y 962).
 - **Título:** cartão na cor da capa, selo espaçado, linhas em preto (Inter 900), última linha branca na tarja vermelha inclinada.
@@ -177,7 +207,8 @@ Fonte: R024, R025, R026 (vertical e horizontal) e R027, 16 a 18/10/2026. Detalhe
 | `scripts/editar_reel.py` | plano (sem `--render`) e render completo (com `--render`) |
 | `scripts/cor.py` | cor C |
 | `scripts/aprimorar_voz.py` | aprimorar voz do áudio D (roda no Python com PyTorch CUDA) |
-| `scripts/conferir.py` | folha de conferência e medição de volume |
+| `scripts/telas.py` | aula só de câmera: exporta as telas do `_TELA_*.html` (um PNG por clique) e monta a lista `telas` da seção 1.1 do roteiro |
+| `scripts/conferir.py` | folha de conferência (com cada clique e cada volta ao rosto, na aula) e medição de volume |
 | `scripts/ambiente.py` | onde ficam as ferramentas pesadas e quais Pythons usar |
 | `fonts/` | Montserrat e Inter (licença OFL, ver `fonts/LICENCA.md`) |
 | `references/modelo-edicao.json` | modelo do JSON de edição |
