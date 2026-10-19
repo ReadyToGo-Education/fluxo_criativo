@@ -191,7 +191,7 @@ Faz ajustes pontuais em uma pagina HTML ja gerada: headline, cores, CTA, FAQ, SE
 
 ### /pagina-lovable
 
-Publica a pagina HTML diretamente no Lovable.
+Leva a pagina HTML para o Lovable e publica. Com o conector do Lovable ligado no Claude, ele cria, confere e publica sozinho; sem o conector, entrega um prompt pronto para colar. O Lovable recria a pagina com IA: para copia identica ao arquivo, use o /pagina-vercel.
 
 ### /pagina-vercel
 

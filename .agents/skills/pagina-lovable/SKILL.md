@@ -1,56 +1,63 @@
 ---
 name: pagina-lovable
 description: >
-  Publica uma página HTML do projeto direto no Lovable via API, sem o aluno
-  precisar fazer upload manual nem mexer em servidor. Configura a chave da API,
-  faz o deploy, devolve o link público da página e salva o histórico. Skill de
-  infraestrutura. Roda depois da página estar pronta, idealmente após
-  /pagina-performance, /pagina-pixel e /pagina-checkout.
+  Leva uma página HTML do projeto para o Lovable e devolve o link público
+  .lovable.app. Com o conector do Lovable ligado no Claude, cria o projeto,
+  confere e publica sozinho. Sem o conector, entrega um prompt pronto para
+  colar no Lovable. Skill de infraestrutura. Roda depois da página estar
+  pronta, idealmente após /pagina-performance, /pagina-pixel e /pagina-checkout.
 ---
 
-# Página Lovable. Publicação via API
+# Página Lovable. Publicação pelo conector do Lovable
 
-Pega uma página HTML local e publica diretamente no Lovable, devolvendo o link público pra usar em anúncio, biografia, email, onde quer que seja. Sem upload manual, sem WordPress, sem hospedagem própria.
+Pega uma página HTML local e leva para o Lovable, devolvendo o link público pra usar em anúncio, biografia, email, onde quer que seja.
+
+## Como o Lovable recebe uma página (leia antes de tudo)
+
+O Lovable não tem caminho para subir um HTML pronto e publicar como está. A API pública dele só republica projetos que já existem e exige plano Business ou Enterprise. Por isso esta skill não usa chave de API do Lovable.
+
+Os dois caminhos reais:
+
+1. **Conector do Lovable no Claude (padrão).** O Claude manda a página como anexo, o Lovable recria a página no projeto dele, o Claude confere e publica. Funciona em todos os planos do Lovable e gasta créditos da conta do aluno.
+2. **Prompt pronto (sem conector).** O Severino monta um prompt com o conteúdo e o visual da página, e o aluno cola no chat do Lovable.
+
+Nos dois caminhos o Lovable **recria** a página com a IA dele. Ela não é copiada byte a byte: texto, cores e links são pedidos de forma literal, mas o aluno confere antes de publicar. Quando a página precisa sair idêntica ao arquivo, o caminho é o `/pagina-vercel`, que publica o HTML exatamente como está.
 
 ## Quando Usar
 
 - Última etapa do fluxo de página, depois que tudo já foi feito (copy + performance + pixel + checkout).
-- Quando o usuário disser "publica essa página", "manda pro Lovable", "preciso do link", "hospeda essa página".
+- Quando o usuário disser "manda pro Lovable", "publica no Lovable", "quero editar essa página no Lovable".
+- Se o usuário só quer o link público e não faz questão do Lovable, ofereça também o `/pagina-vercel`.
 
 ## O Que Fazer
 
-### 0. Contexto e verificação de API
+### 0. Contexto e verificações
 
 Leia `meus-produtos/.ativo`. Se não houver produto, oriente a rodar `/produto-novo` antes.
 
-**Verificar chave da API do Lovable:**
+**Página com função no servidor não vai para o Lovable.** Se o HTML chama `fetch('/api/...')` (pre-checkout do `/pagina-precheckout` no modo com função, captura do `/pagina-active` no Modo B), pare e explique: "Essa página depende de uma função que só roda na Vercel. Publique pelo /pagina-vercel, que sobe a página e a função juntas." Ofereça rodar o `/pagina-vercel`.
 
-Leia `.env` e procure `LOVABLE_API_KEY`.
+**Verificar o conector do Lovable:** procure ferramentas cujo nome termina em `__create_project`, `__deploy_project` e `__get_file_upload_url` (o conector do Lovable no Claude).
 
-**Cenário A. Chave existe e não está vazia.** Siga em frente.
+**Cenário A. O conector está disponível.** Siga para o passo 1.
 
-**Cenário B. Chave não existe ou está vazia.**
-
-Mostre o setup guiado:
+**Cenário B. O conector não está disponível.** Mostre:
 ```
-Pra publicar no Lovable preciso da API key dele. Cadastro rápido:
+Pra publicar direto no Lovable, preciso que o Lovable esteja conectado ao Claude. É uma vez só:
 
-1. Acesse https://lovable.dev e faça login
-2. Vá em Settings > API Keys
-3. Clique em "Create API key"
-4. Copie a chave gerada (começa com lov_ ou similar)
-5. Cole aqui no chat
+1. No Claude, clique no + da caixa de mensagem
+2. Conectores > Procurar conectores
+3. Busque Lovable e clique em Conectar (ele pede o login do Lovable)
+4. Feche o Claude por completo e abra de novo
 
-Não abra o .env, eu salvo a chave pra você.
+Quem usa o Claude Code pelo terminal pode rodar: claude mcp add --transport http lovable "https://mcp.lovable.dev"
+
+O que prefere?
+1. Vou conectar agora e já volto
+2. Seguir sem conector: você me dá o prompt pronto e eu colo no Lovable
+3. Publicar pelo /pagina-vercel (a página sai idêntica ao arquivo)
 ```
-
-Quando o usuário colar a chave:
-- Valide que tem mais de 20 caracteres e é alfanumérica.
-- Salve no `.env` na raiz do projeto, na linha `LOVABLE_API_KEY=...`. Se a linha já existir, substitua o valor. Se o `.env` não existir, crie.
-- Verifique se `.env` está no `.gitignore`. Se não estiver, adicione.
-- Confirme: "Chave salva. Pronto pra publicar."
-
-(Padrão do projeto, ver memória `feedback_chaves_api_no_chat`. Nunca pedir pra abrir o .env.)
+Se 1, aguarde o aluno voltar e confira de novo. Se o conector continuar sem aparecer depois de reabrir o Claude, siga com a opção 2. Se 2, vá para o passo 6. Se 3, acione o `/pagina-vercel`.
 
 ### 1. Coletar dados (uma pergunta por vez)
 
@@ -63,77 +70,94 @@ Quando o usuário colar a chave:
 
 Sugira como padrão: `{ativo}-{nome do arquivo sem extensão}`. Se o usuário aprovar, use isso.
 
-**Pergunta 3. Subdomínio personalizado?**
-1. Usar o subdomínio padrão que o Lovable atribuir
-2. Quero escolher o subdomínio (ex: `crencaraiz`)
+**Pergunta 3. Nova página ou atualização?**
+1. Publicar como nova página (cria um projeto novo no Lovable)
+2. Atualizar uma página que já existe lá
 
-Se 2, peça o subdomínio. Avise que pode estar ocupado, e nesse caso o Lovable retorna erro e a gente tenta outro.
+Se já existe registro em `meus-produtos/{ativo}/entregas/.lovable` com o `project_id` dessa página, ofereça direto "Atualizar `nome` (publicada em {data})".
 
-**Pergunta 4. Versionamento?**
-1. Publicar como nova página (cria do zero no Lovable)
-2. Atualizar uma página que já existe lá (preciso do project_id)
+### 2. Confirmação antes de criar
 
-Se já existe registro em `meus-produtos/{ativo}/entregas/.lovable` com `project_id` da página, ofereça direto "Atualizar `nome` (publicada em {data})".
-
-### 2. Confirmação antes de subir
+Antes, chame a ferramenta `get_workspace` do conector (ou `list_workspaces`, se houver mais de uma área de trabalho) para saber em qual conta o projeto vai nascer e o saldo de créditos.
 
 Mostre o resumo:
 ```
-Vou publicar agora:
+Vou levar a página para o Lovable:
 
 Arquivo:     meus-produtos/{ativo}/entregas/paginas/{nome}.html
 Tamanho:     {KB}
 Nome:        {nome}
-Subdomínio:  {auto / escolhido}
+Conta:       {área de trabalho do Lovable}
+Créditos:    {saldo}
 Modo:        {nova / atualizar}
 
-1. Publicar
+O Lovable recria a página com a IA dele e isso gasta créditos da sua conta. No plano grátis, uma página longa pode não terminar no mesmo dia.
+
+1. Criar no Lovable
 2. Cancelar
 ```
 
-### 3. Publicação via API
+### 3. Criar no Lovable pelo conector
 
-Use `Bash` com `curl` pra fazer a requisição. Endpoint base e payload conforme documentação do Lovable.
+1. Chame `get_file_upload_url` com `file_name` = nome do arquivo HTML e `content_type` = `text/html`. Envie o arquivo para o `upload_url` devolvido com `curl -X PUT -T "{caminho do arquivo}" -H "Content-Type: text/html" "{upload_url}"` e guarde o `file_id`.
+2. **Nova página:** chame `create_project` com `files` = [`file_id`], `wait` = verdadeiro e `initial_message` com o pedido abaixo. **Atualização:** chame `send_message` com o `project_id` salvo, o mesmo `file_id` em `files` e o pedido abaixo, trocando a primeira frase por "Substitua a página atual pela do arquivo HTML anexado."
 
-**Cenário "nova página":**
-```bash
-curl -X POST "https://api.lovable.dev/v1/projects" \
-  -H "Authorization: Bearer $LOVABLE_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "{nome}",
-    "subdomain": "{subdomínio ou null}",
-    "html": "{conteúdo do arquivo escapado}"
-  }'
+Pedido (preencha os dados entre colchetes a partir do HTML):
+```
+Recrie como página única o arquivo HTML anexado, o mais fiel possível ao original.
+
+Regras:
+1. Copie todos os textos exatamente como estão no arquivo, com a mesma acentuação. Não reescreva, não resuma e não traduza nada.
+2. Mantenha a ordem das seções, as cores, as fontes, os espaçamentos e o comportamento no celular do arquivo.
+3. Mantenha todos os links e botões com os mesmos endereços, inclusive os de checkout: [lista dos links de checkout e de WhatsApp encontrados no HTML].
+4. Mantenha as imagens com os mesmos endereços. Onde o arquivo tem um espaço reservado para imagem, mantenha o espaço reservado.
+5. Se o arquivo tem Meta Pixel ou outro código de rastreamento no head, coloque o mesmo código no index.html do projeto, sem alterar o ID: [ID do Pixel, se houver].
+6. Não crie login, banco de dados nem páginas extras. É só esta página.
+7. Página em português do Brasil.
 ```
 
-**Cenário "atualizar página existente":**
-```bash
-curl -X PATCH "https://api.lovable.dev/v1/projects/{project_id}" \
-  -H "Authorization: Bearer $LOVABLE_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "html": "{conteúdo do arquivo escapado}"
-  }'
+3. Se a resposta vier com status `awaiting_input`, o Lovable parou para pedir uma aprovação. Avise o aluno para abrir o projeto no Lovable e aprovar, ou responda pelo `send_message` se for uma pergunta simples sobre a página.
+4. Se a chamada passar do tempo, acompanhe com `get_message`. Não repita o `create_project`: chamada repetida cria projeto duplicado ou devolve a mesma resposta.
+
+### 4. Conferir antes de publicar
+
+Chame `get_project` com o `project_id`. Ele devolve uma imagem da tela atual. Compare com o HTML local: seções na ordem, headline e textos principais iguais, botões de compra presentes. Se algo faltou, peça a correção com `send_message`, uma vez, citando exatamente o que mudar.
+
+Mostre ao aluno o resultado da conferência e o link do projeto no Lovable para ele olhar, e pergunte:
 ```
+A página ficou pronta no Lovable. Confira pelo link do projeto antes de publicar.
 
-Por causa do tamanho do HTML, em vez de embutir o conteúdo direto na linha de comando, salve o body num arquivo temporário JSON em `meus-produtos/{ativo}/entregas/paginas/.lovable-payload.json` e use `--data @arquivo`. Apague depois.
-
-**Importante.** A documentação oficial do Lovable é a fonte de verdade. Se a chamada falhar com 404 ou 400, leia a mensagem de erro do response e adapte (ex: endpoint pode ser `/v1/sites`, header pode ser `X-API-Key`, payload pode usar `content` em vez de `html`). Não tente "adivinhar" mais de 3 vezes. Se passar de 3 tentativas, mostre o erro completo pro usuário e pergunte:
-```
-A API do Lovable retornou um erro que não consigo resolver sozinho.
-Erro: {mensagem}
-
-1. Tentar de novo (com ajuste)
-2. Confere a documentação do Lovable e me passa o endpoint correto
+1. Publicar
+2. Quero ajustar algo
 3. Cancelar
 ```
 
-### 4. Salvar histórico
+### 5. Publicar
 
-Em sucesso, salve em `meus-produtos/{ativo}/entregas/.lovable` (modo append):
+Chame `deploy_project` com o `project_id` e `name` = nome escolhido. Ele devolve o endereço público `.lovable.app`. Siga para o passo 7.
+
+### 6. Caminho sem conector: prompt pronto
+
+1. Monte o mesmo pedido do passo 3, colocando, logo depois das regras, o conteúdo da página em texto: a ordem das seções e, em cada seção, os textos literais, os botões com os links, as cores (variáveis do CSS) e as fontes. Não cole o HTML inteiro: o prompt precisa caber em 50.000 caracteres.
+2. Se a página já está publicada num endereço público (ex: pelo `/pagina-vercel`), acrescente no prompt "Use como referência visual a página {url}" e gere também o link `https://lovable.dev/#prompt={prompt codificado para URL}&html={url codificada}`, que abre o Lovable com tudo preenchido. Use o link só se ele tiver menos de 50.000 caracteres; se passar, entregue só o prompt.
+3. Salve em `meus-produtos/{ativo}/entregas/paginas/{nome}-prompt-lovable.md`.
+4. Instrua:
 ```
-{timestamp}|{nome}|{project_id}|{url_publica}|{arquivo}
+Pronto. Prompt salvo em meus-produtos/{ativo}/entregas/paginas/{nome}-prompt-lovable.md
+
+1. Abra https://lovable.dev e comece um projeto novo
+2. Cole o prompt inteiro no chat (se aparecer "Paste attached", clique em "Paste inline")
+3. Confira se a página ficou igual à original
+4. Clique em Publish, no canto superior direito, e copie o endereço .lovable.app
+5. Volte aqui e me mande o link
+```
+Quando o aluno mandar o link, siga para o passo 7 sem `project_id`.
+
+### 7. Salvar histórico
+
+Salve em `meus-produtos/{ativo}/entregas/.lovable` (modo append):
+```
+{timestamp}|{nome}|{project_id ou "manual"}|{url_publica}|{arquivo}
 ```
 
 E também atualize/crie `meus-produtos/{ativo}/entregas/paginas/.lovable-link.md`:
@@ -142,31 +166,32 @@ E também atualize/crie `meus-produtos/{ativo}/entregas/paginas/.lovable-link.md
 
 ## {nome}
 - URL: {url_publica}
-- Project ID: {project_id}
+- Project ID: {project_id ou "criado manualmente"}
 - Arquivo local: {caminho}
 - Última publicação: {data}
 ```
 
-### 5. Resumo final
+### 8. Resumo final
 
 ```
-Pronto. Página publicada.
+Pronto. Página publicada no Lovable.
 
 URL pública:  {url}
-Project ID:   {id}
 Arquivo:      {caminho local}
 Histórico:    meus-produtos/{ativo}/entregas/.lovable
 
 Próximos passos sugeridos:
+- Abra o link no celular e confira os botões de compra
 - Cole o link na bio do Instagram
 - Use no /copy-anuncio como destino dos anúncios
 ```
 
 ## Regras
 
-- Nunca peça login ou senha do Lovable. Só a API key, que o usuário cola no chat.
-- Nunca exponha a chave em mensagens, logs ou arquivos fora do `.env`. Não imprima a chave no resumo.
-- Sempre confirme antes de publicar. Publicação é ação irreversível em termos de URL pública.
-- Se a API key ficar inválida (401), avise e peça uma nova, salvando por cima.
-- Se a documentação real do Lovable divergir do template usado aqui, **prefira a documentação oficial**, esses payloads são exemplos.
+- Nunca peça login ou senha do Lovable no chat. O login acontece na tela do próprio Lovable, quando o aluno conecta.
+- Não use chave de API do Lovable: ela só serve para republicar projeto existente e exige plano Business ou Enterprise.
+- Sempre confirme antes de criar o projeto (gasta créditos) e antes de publicar (o endereço fica público).
+- Sempre avise que o Lovable recria a página com IA e que o aluno confere antes de publicar. Para cópia idêntica, ofereça o `/pagina-vercel`.
+- Página que chama `/api/` nunca vai para o Lovable: ela depende da função na Vercel.
+- Não repita `create_project` em caso de demora: acompanhe com `get_message`.
 - Não use travessão em nenhum texto exibido ao usuário.

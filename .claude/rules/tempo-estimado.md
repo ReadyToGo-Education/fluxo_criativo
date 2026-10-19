@@ -44,6 +44,8 @@
 | Página low ticket, Etapa 1 (promessa, 7 aberturas e tabela de testes) | 2 a 3 minutos | minutos |
 | Página low ticket, Etapa 2 (copy completa) | 3 a 5 minutos | minutos |
 | Página low ticket, Etapa 3 (prompt do Lovable) | 2 a 3 minutos | minutos |
+| Levar a página para o Lovable pelo conector (criar, conferir e publicar) | 3 a 5 minutos | minutos |
+| Montar o prompt pronto do Lovable para uma página (sem conector) | cerca de 90 segundos | segundos |
 | Gerar copy de anúncio (18 tipos, Mandala) | 2 a 3 minutos | minutos |
 | Gerar sequência de emails (5 a 7 emails) | 2 a 3 minutos | minutos |
 | Gerar carrossel (10 slides) | cerca de 60 segundos | segundos |
