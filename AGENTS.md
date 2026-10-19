@@ -681,7 +681,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 
 ### Tráfego Pago
 
-- `/trafego-conexao`: configurar conexão com Meta Ads (MCP recomendado, App de reserva).
+- `/trafego-conexao`: conectar com Meta Ads sempre pelo conector (MCP) e testar; App só se a conta não estiver liberada no conector.
 - `/trafego-insights`: ler métricas e derivadas.
 - `/trafego-criar-campanha`: criar campanha via Marketing API ou MCP.
 - `/trafego-otimizar`: diagnosticar e otimizar campanhas, com camada de lucro.

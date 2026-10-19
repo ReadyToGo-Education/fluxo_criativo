@@ -513,7 +513,7 @@ Proibido criar CSS ou componentes que não estejam nos arquivos de referência.
 
 > Esta regra tem prioridade sobre qualquer outra instrução de execução das skills de tráfego. Aplica-se a todo command que comece com `/trafego-*` ou que precise tocar a Marketing API do Meta (Facebook Ads, Instagram Ads).
 
-**Toda skill que faz operação no Meta Ads precisa de conexão configurada antes de qualquer outra ação.** A conexão é estabelecida pelo command `/trafego-conexao`, que valida e salva a escolha em `META_AUTH_MODO` no `.env`. Existem só dois modos:
+**Toda skill que faz operação no Meta Ads precisa de conexão configurada antes de qualquer outra ação.** A conexão é estabelecida pelo command `/trafego-conexao`, que valida e salva o modo em `META_AUTH_MODO` no `.env`. O aluno não escolhe o modo no início: a conexão sempre começa pelo conector da Meta e é testada; o App só é oferecido depois desse teste, quando a conta não foi liberada no conector ou o conector não responde. Existem só dois modos:
 
 - **`MCP_CONECTOR` (padrão, recomendado).** Conector oficial Claude + Meta, login por OAuth, sem token e sem App no Facebook Developers.
 - **`APP` (reserva).** App via Facebook Developers com token permanente no `.env`. Serve para quem tem a conta de anúncios ainda não liberada pela Meta no MCP (a Meta libera conta por conta; a conta não liberada devolve `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out"). Configurado pela sequência `/criar-aplicativo-analise-ads` e `/gerar-token-permanente-facebook-ads` (que já lista as contas e grava a conta padrão). O `/obter-id-conta-anuncios` só entra se a conta padrão continuar faltando depois dessa listagem.
@@ -664,7 +664,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
 
 **Tráfego Pago (Meta Ads via MCP ou App):**
-- `/trafego-conexao`. Configurar conexão com Meta Ads (MCP do Claude, recomendado, ou App Facebook Developers para conta ainda não liberada no MCP) e salvar preferência em META_AUTH_MODO
+- `/trafego-conexao`. Conectar com o Meta Ads sempre pelo conector da Meta no Claude, testar e, só se a conta ainda não estiver liberada no conector, configurar o App Facebook Developers. Salva o modo em META_AUTH_MODO
 - `/trafego-insights`. Ler métricas de campanhas com cálculo automático de derivadas (connect rate, conversão por etapa, custo por etapa). Modo campanha única ou conta completa com ranking de urgência
 - `/trafego-criar-campanha`. Subir campanha nova (PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo). Cobre Sales e Leads
 - `/trafego-otimizar`. Confere se o dado é confiável e faz o diagnóstico em 2 camadas (tendência + gargalo) para 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high), com camada de lucro e ponto de equilíbrio. Quando a campanha está pronta, aciona automaticamente a escala.

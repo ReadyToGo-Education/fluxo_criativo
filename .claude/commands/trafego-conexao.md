@@ -1,20 +1,22 @@
 ---
 name: workshop-marketing:trafego-conexao
-description: Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Confere os pré-requisitos no Meta, pergunta se o aluno quer usar o conector oficial da Meta no Claude (recomendado, MCP via OAuth) ou o App via Facebook Developers (reserva, token permanente no .env), valida a conexão e salva o modo em META_AUTH_MODO e a conta padrão em FB_AD_ACCOUNT_ID. Skill reutilizável, chamada por qualquer skill de Meta Ads quando META_AUTH_MODO ainda não está configurada ou tem valor antigo.
+description: Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Confere os pré-requisitos no Meta, conecta sempre primeiro pelo conector oficial da Meta no Claude (MCP via OAuth, sem token) e testa; só se a conta ainda não estiver liberada no conector (ou o conector não responder) configura o App via Facebook Developers (token permanente no .env). Valida a conexão e salva o modo em META_AUTH_MODO e a conta padrão em FB_AD_ACCOUNT_ID. Skill reutilizável, chamada por qualquer skill de Meta Ads quando META_AUTH_MODO ainda não está configurada ou tem valor antigo.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---
 
 # Tráfego Conexão. Conectar o Projeto com o Meta Ads
 
-Orquestrador da conexão. Pergunta o modo, executa o caminho escolhido, valida e salva a preferência em `META_AUTH_MODO` no `.env`. As skills `/trafego-*` e os commands `/ads-relatorio` e `/enviar-relatorio-ads` leem essa variável para saber qual caminho usar.
+Orquestrador da conexão. Conduz sempre pelo conector da Meta, testa, e só passa para o App quando o teste mostra que o conector não serve para a conta do aluno. Valida e salva a preferência em `META_AUTH_MODO` no `.env`. As skills `/trafego-*` e os commands `/ads-relatorio` e `/enviar-relatorio-ads` leem essa variável para saber qual caminho usar.
 
 A especificação técnica completa está em `.claude/skills/trafego-conexao/SKILL.md`. Leia esse arquivo antes do Passo 0: ele é a fonte de verdade de cada passo abaixo.
 
 Os dois modos:
 
-- **`MCP_CONECTOR`** (recomendado). Conector oficial da Meta adicionado no Claude. Login pelo Facebook, sem token, sem App, sem instalar nada.
-- **`APP`** (reserva). App no Facebook Developers com token permanente no `.env`. Para quem tem a conta de anúncios ainda não liberada pela Meta no conector.
+- **`MCP_CONECTOR`** (sempre o primeiro caminho). Conector oficial da Meta adicionado no Claude. Login pelo Facebook, sem token, sem App, sem instalar nada.
+- **`APP`** (reserva). App no Facebook Developers com token permanente no `.env`. Só entra depois do teste do conector: conta ainda não liberada pela Meta no conector, ou conector sem resposta depois das conferências.
+
+O aluno não escolhe o modo no início. Se ele pedir o App antes de testar, explicar em 2 linhas que o conector é mais simples e propor o teste; só seguir direto para o App se ele insistir.
 
 ---
 
@@ -28,19 +30,16 @@ Aplicar a seção **0. Pré-requisitos no Meta** da SKILL. Se o aluno não tiver
 
 Aplicar a seção **1. Passo 0** da SKILL, lendo só a linha `META_AUTH_MODO` do `.env`:
 
-- **`MCP_CONECTOR` ou `APP`:** antes do menu, conferir o que falta. No `APP`, se `FB_ACCESS_TOKEN_PERMANENTE` estiver sem valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env`), avisar em 1 linha que o token não está salvo e acionar direto o `/gerar-token-permanente-facebook-ads` para gerar um token novo do App que já existe (o modo `APP` só é gravado depois que um token do App passa nos testes), sem o menu e sem o `/criar-aplicativo-analise-ads`. Só criar App (seção 4.2 da SKILL desde o passo 1) se o aluno disser que não tem mais o App. Nos dois modos, conferir se `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar, avisar em 1 linha que falta escolher a conta padrão e ir direto para a validação (Opção 3 da SKILL), que completa a conta. Com tudo presente, oferecer as 4 opções da SKILL: manter, trocar de modo, validar ou trocar a conta padrão.
-- **`HIBRIDO` (valor legado de versão antiga):** explicar que agora só existem dois modos, perguntar e, com a confirmação do aluno, validar e regravar como `MCP_CONECTOR` (recomendado) ou `APP`. O token salvo continua no `.env`.
+- **`MCP_CONECTOR` ou `APP`:** antes do menu, conferir o que falta. No `APP`, se `FB_ACCESS_TOKEN_PERMANENTE` estiver sem valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env`), avisar em 1 linha que o token não está salvo e acionar direto o `/gerar-token-permanente-facebook-ads` para gerar um token novo do App que já existe (o modo `APP` só é gravado depois que um token do App passa nos testes), sem o menu e sem o `/criar-aplicativo-analise-ads`. Só criar App (seção 4.2 da SKILL desde o passo 1) se o aluno disser que não tem mais o App. Nos dois modos, conferir se `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar, avisar em 1 linha que falta escolher a conta padrão e ir direto para a validação ("Validar a conexão atual" da SKILL), que completa a conta. Com tudo presente, mostrar o menu da SKILL: no conector, manter, validar ou trocar a conta padrão (sem opção de trocar para o App); no App, manter, passar para o conector (recomendado), validar ou trocar a conta padrão.
+- **`HIBRIDO` (valor legado de versão antiga):** avisar que agora a conexão é pelo conector, testar o conector e gravar `MCP_CONECTOR` se passar; se a conta não estiver liberada, validar o token que já existe e gravar `APP`. O token salvo continua no `.env`.
 - **Valor não reconhecido:** avisar e seguir para o Passo 1.
 - **Ausente ou vazio:** seguir para o Passo 1 sem aviso.
 
 ---
 
-## Passo 1. Escolher o modo
+## Passo 1. Conectar pelo conector da Meta
 
-Aplicar a seção **2. Passo 1** da SKILL. O aluno escolhe:
-
-1. Conector da Meta no Claude (recomendado). Vai para o Passo 2A.
-2. App via Facebook Developers (reserva). Vai para o Passo 2B.
+Aplicar a seção **2. Passo 1** da SKILL: sem perguntar o modo, explicar em poucas linhas que a conexão vai pelo conector oficial da Meta (cerca de 1 minuto, sem token) e que, depois de conectar, a conta é testada. Seguir para o Passo 2A.
 
 ---
 
@@ -54,7 +53,9 @@ Este passo também é usado pelo `/trafego-dashboard` quando o aluno ainda não 
 
 ---
 
-## Passo 2B. Caminho App
+## Passo 2B. Caminho App (só depois do teste do conector)
+
+Só chega aqui quando o Passo 3 mostrou que a conta não foi liberada no conector (seção 5.1.2 da SKILL) ou que o conector não responde depois das conferências da seção 5.1, quando o modo `APP` já estava ativo, ou quando o aluno insistiu no App.
 
 🔍 Próximo passo: criar o App no Facebook Developers e gerar o token permanente. Tempo estimado: 8 a 12 minutos.
 
@@ -75,7 +76,7 @@ Depois, Passo 3.
 
 Aplicar a seção **5** da SKILL, conforme o modo:
 
-- **MCP:** seção 5.1 (descobrir a tool pelo final do nome `ads_get_ad_accounts` e chamar) e 5.1.1 (conta padrão com a coluna do conector, por `is_ads_mcp_enabled` e `is_queryable`). Conta não liberada no conector: seção 5.1.2, que oferece o modo App.
+- **MCP:** seção 5.1 (descobrir a tool pelo final do nome `ads_get_ad_accounts` e chamar) e 5.1.1 (conta padrão com a coluna do conector, por `is_ads_mcp_enabled` e `is_queryable`). Conta não liberada no conector: seção 5.1.2, que explica e recomenda o App (Passo 2B). Conector sem resposta: as conferências da 5.1 primeiro; só se a segunda tentativa falhar, oferecer o App.
 - **APP:** seção 5.2 (3 testes, cada um numa chamada `Bash` própria) e, em caso de erro, o mapa de erros da seção 5.3.
 
 Nunca salvar `META_AUTH_MODO` antes da validação passar.
