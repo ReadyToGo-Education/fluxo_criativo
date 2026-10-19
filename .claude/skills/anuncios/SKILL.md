@@ -27,59 +27,66 @@ description: >
 
 ### Os 18 Tipos de Anúncios
 
-1. **Comparação**. Comparar dois produtos, modelos ou situações para mostrar qual é melhor.
-   Exemplo: pessoa que vende todo dia vs pessoa que vende só 6 vezes por ano; gráfico de fluxo de caixa constante vs picos de lançamento.
+> **Fonte única da lista:** `.claude/skills/mandala-de-anuncios/SKILL.md` (seção "Os 21 tipos de anúncio"). São 18 tipos principais e 3 extras. Se a lista mudar, muda lá primeiro e depois aqui.
 
-2. **Problema/Solução**. Identificar um problema específico e apresentar a solução prática.
-   Exemplo: baixa margem no digital = falta de público engajado (solução: criar conteúdo primeiro); maquiadora sem noivas = anunciar no Google em vez de só no Instagram.
+1. **Comparação**. Comparar duas situações, modelos ou resultados para mostrar qual é melhor.
+   Exemplo: pessoa que vende todo dia vs pessoa que vende só 6 vezes por ano; fluxo de caixa constante vs picos de lançamento.
 
-3. **Explicação**. Explicar por que algo funciona ou não funciona, com lógica direta.
-   Exemplo: "Abdominal não faz a barriga aparecer porque tem gordura por cima. Só déficit calórico seca. O treino mais eficiente é intensivo combinado com dieta."
+2. **Apelo Emocional**. História ou situação que toca em sentimentos.
+   Exemplo: o tio que pede R$ 400 para o remédio do coração, levando a uma reflexão sobre ter dinheiro sobrando para ajudar quem a gente ama.
+
+3. **Certo vs Errado**. Mostrar o erro que o público comete e a forma correta de fazer.
+   Exemplo: jeito errado de anunciar (começar com pergunta) vs jeito certo (começar com premissa); problema de relacionamento tratado com silêncio vs com ajuda profissional.
 
 4. **Curiosidade**. Informação surpreendente e verificável que gera vontade de saber mais.
    Exemplo: "98% dos top faturadores da Hotmart estão em algum tipo de mentoria"; "Um curso de pompoarismo faturou R$150 milhões"; "Fiz R$170 milhões com 7 vídeos de 15 minutos."
 
-5. **Reflexão**. Provocar reflexão profunda sobre um paradoxo ou contradição do nicho.
-   Exemplo: "Nunca foi tão ruim ser classe média (inflação, sem casa, sem carro), mas nunca foi tão fácil enriquecer (dá para empreender sem fábrica, sem estoque, sem funcionário)."
-
-6. **Certo/Errado**. Mostrar o erro que o público comete e a forma correta de fazer.
-   Exemplo: jeito errado de anunciar (começar com pergunta) vs jeito certo (começar com premissa); problema de relacionamento sendo tratado com silêncio vs com ajuda profissional.
-
-7. **Demonstração**. Mostrar como funciona na prática, ao vivo, sem edição excessiva.
+5. **Demonstração**. Mostrar como funciona na prática, ao vivo, sem edição excessiva.
    Exemplo: demonstrar uma função do Excel que a maioria não conhece; exercício de respiração para ansiedade com antes e depois; mostrar o app em uso real.
 
-8. **Procedimento**. Mostrar o passo a passo que leva ao resultado, com sequência clara.
-   Exemplo: os 3 passos para fechar uma venda por WhatsApp sem parecer insistente; a sequência de aquecimento antes de abrir o carrinho; a rotina de 20 minutos que substitui 2 horas de treino.
+6. **Oportunidade**. Revelar algo que o público não percebeu como oportunidade real.
+   Exemplo: "Dá para ganhar o equivalente a 10% de aumento usando milhas no cotidiano"; "Protocolo de desinflamação que emagrece sem cortar grupo alimentar".
 
-9. **Impacto Visual**. Imagem ou vídeo que para o scroll antes de qualquer texto.
+7. **Visual**. Imagem ou vídeo que para o scroll antes de qualquer texto.
    Exemplo: lagosta gigante com azeite em câmera lenta; copo enchendo lentamente para ilustrar acúmulo de juros; Coca-Cola 2L de 2014 ao lado da mini Coca de hoje pelo mesmo preço.
 
-10. **Oportunidade**. Revelar algo que o público não percebeu como oportunidade real.
-    Exemplo: "Dá para ganhar o equivalente a 10% de aumento usando milhas no cotidiano"; "Protocolo de desinflamação que emagrece sem cortar grupo alimentar"; profissional de RH que cobra R$800/hora fazendo o que já faz, mas como consultora.
+8. **Dilema**. Apresentar duas opções onde nenhuma parece completamente boa, e depois resolver.
+   Exemplo: "R$1.000 todo dia ou R$30.000 no fim do mês"; "Demitir o funcionário bom ou realocá-lo quando a IA já faz o mesmo trabalho".
 
-11. **História**. Narrativa real com começo, virada e moral que conecta ao tema do produto.
-    Exemplo: história da guia de cachoeira de 70 anos, analfabeta, que deixou todos os jovens para trás na trilha — e a moral sobre o "superpoder" que a educação dá ou tira.
+9. **Clickbait**. Frase chamativa que gera clique por inversão de expectativa, depois revela e conecta ao tema. Precisa entregar conteúdo real depois da chamada.
+   Exemplo: "Tô muito triste... porque não consigo parar de vender"; "Estou preocupado... com o tanto de pedido que entrou essa semana."
 
-12. **Prova Social**. Evidência concreta e verificável de que o método funciona.
-    Exemplo: print do aluno mostrando a primeira venda, troféu da Hotmart, capacete com 10 mil nomes de alunos. Prova é fato específico, não elogio genérico ("mudou minha vida").
+10. **Prova**. Evidência concreta e verificável de que o método funciona.
+    Exemplo: print do aluno mostrando a primeira venda, depoimento com antes, resultado e prazo, troféu da Hotmart, capacete com 10 mil nomes de alunos. Prova é fato específico, não elogio genérico ("mudou minha vida").
 
-13. **Clickbait**. Frase chamativa que gera clique por inversão de expectativa — depois revela e conecta ao tema.
-    Exemplo: "Tô muito triste... porque não consigo parar de vender"; "Estou preocupado... com o tanto de pedido que entrou essa semana."
-
-14. **Sensação**. Criar experiência sensorial ou emocional imediata no público.
-    Exemplo: exercício de respiração ao vivo para ansiedade (o público faz junto); hambúrguer suculento em câmera lenta criando desejo; imagem de catarro verde para mostrar consistência de esforço sem glamour.
-
-15. **Contraste**. Preto no branco entre dois cenários ou perfis opostos.
+11. **Contraste**. Como a comparação, só que preto no branco entre dois cenários ou perfis opostos.
     Exemplo: perfil que estava 20kg acima vs hoje; perpétuo como o formiguinha que trabalha todo dia vs lançamento como o gigante que come muito mas dorme o resto do tempo.
 
-16. **Ensino**. Entregar uma técnica ou insight real que o público pode aplicar agora.
-    Exemplo: os 3 sinais de que a copy está repelindo em vez de atrair; como identificar o momento certo para dobrar o investimento em tráfego sem aumentar o CPA.
+12. **História**. História pessoal, de cliente ou parábola, com começo, virada e moral que conecta ao tema do produto.
+    Exemplo: a guia de cachoeira de 70 anos, analfabeta, que deixou todos os jovens para trás na trilha, e a moral sobre o "superpoder" que a educação dá ou tira.
 
-17. **Revelação**. Revelar algo que contraria o senso comum do nicho.
-    Exemplo: "O produto mais vendido da plataforma não é o mais completo — é o mais específico"; "A maioria dos alunos que compra curso online nunca assiste mais de 30% e ainda assim tem resultado."
+13. **Ultra Segmentado**. Fala direto com um público bem específico dentro do nicho.
+    Exemplo: mães de crianças de 4 a 5 anos; aposentados do INSS; quem é do signo de Touro ("gosta de comer bem, mas custa caro"). Mesmo produto, anúncio diferente para cada recorte.
 
-18. **Dilema**. Apresentar duas opções onde nenhuma parece completamente boa — e depois resolver.
-    Exemplo: "R$1.000 todo dia ou R$30.000 no fim do mês — qual você escolheria?"; "Demitir o funcionário bom ou realocá-lo quando a IA já faz o mesmo trabalho?"
+14. **Reflexão**. Provocar reflexão profunda sobre um paradoxo ou contradição da vida, com o nicho como pano de fundo.
+    Exemplo: "Nunca foi tão ruim ser classe média (inflação, sem casa, sem carro), mas nunca foi tão fácil enriquecer (dá para empreender sem fábrica, sem estoque, sem funcionário)."
+
+15. **Explicação**. Explicar por que algo funciona ou não funciona, com lógica direta.
+    Exemplo: "Abdominal não faz a barriga aparecer porque tem gordura por cima. Só déficit calórico seca. O treino mais eficiente é intensivo combinado com dieta."
+
+16. **Problema-Solução**. Identificar um problema específico e apresentar a solução prática.
+    Exemplo: baixa margem no digital = falta de público engajado (solução: criar conteúdo primeiro); maquiadora sem noivas = anunciar no Google em vez de só no Instagram.
+
+17. **Sensação**. Criar experiência sensorial ou emocional imediata no público.
+    Exemplo: exercício de respiração ao vivo para ansiedade (o público faz junto); hambúrguer suculento em câmera lenta criando desejo; imagem de catarro verde criando nojo.
+
+18. **Mito**. Quebrar uma mentira ou crença errada do mercado.
+    Exemplo: "o mito de que só produto barato vende no perpétuo"; "o mito de que lançamento fatura mais que perpétuo"; "o mito de que correr queima mais que caminhar".
+
+**Extras (usar quando fizer sentido; regras completas na `mandala-de-anuncios`):**
+19. **Pesquisa Científica**. Estudo ou dado de pesquisa como premissa de autoridade, com instituição, número e data.
+20. **Atualidades**. Notícia real e recente ligada ao nicho, com ponte argumentativa para o produto.
+21. **Atualidades Trend**. Trend, meme ou bordão do momento adaptado ao nicho.
 
 ## Regras de Anúncio VTSD
 

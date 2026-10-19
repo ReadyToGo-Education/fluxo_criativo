@@ -15,7 +15,7 @@ Cria videos com avatar IA que NAO sao "avatares falando em fundo branco". Cada v
 2. **Background configurado por cena** (cor solida, imagem ou video de b-roll) via campo `background`.
 3. **Rotacao de avatares** quando fizer sentido (2 avatares no mesmo video, tipo corte entre narrador e testemunho).
 4. **Pesquisa visual previa** inspirada na skill `criativo-estatico` para descobrir referencias virais do nicho antes de montar a direcao das cenas.
-5. **Mapeamento Mandala para direcao visual**: cada um dos 18 tipos de anuncio tem sugestao automatica de cor, ritmo, tipo de background e combinacao de avatares.
+5. **Mapeamento Mandala para direcao visual**: cada um dos 21 tipos da Mandala (18 principais e 3 extras, lista da skill `mandala-de-anuncios`) tem sugestão automática de cor, ritmo, tipo de background e combinacao de avatares.
 6. **Variacao entre videos**: quando o usuario gera varias pecas da mesma campanha, a skill evita repetir a mesma combinacao de avatar + background.
 
 ## REGRA DE CUSTO
@@ -114,26 +114,29 @@ Se faltar produto ativo ou perfil, pare e oriente o usuario a rodar `/produto-no
 ```
 Qual tipo de anuncio combina com a mensagem?
 
-1. Comparacao
-2. Problema/Solucao
-3. Explicacao
+1. Comparação
+2. Apelo Emocional
+3. Certo vs Errado
 4. Curiosidade
-5. Reflexao
-6. Certo/Errado
-7. Demonstracao
-8. Procedimento
-9. Impacto Visual
-10. Oportunidade
-11. Historia
-12. Prova Social
-13. Clickbait
-14. Sensacao
-15. Contraste
-16. Ensino
-17. Revelacao
-18. Dilema
+5. Demonstração
+6. Oportunidade
+7. Visual
+8. Dilema
+9. Clickbait
+10. Prova
+11. Contraste
+12. História
+13. Ultra Segmentado
+14. Reflexão
+15. Explicação
+16. Problema-Solução
+17. Sensação
+18. Mito
+19. Pesquisa Científica
+20. Atualidades
+21. Atualidades Trend
 
-(Se nao souber, digite 0 que eu sugiro 3 baseados no produto)
+(Se não souber, digite 0 que eu sugiro 3 baseados no produto)
 ```
 
 Guardar na sessao: `tipo_mandala`, `objetivo`, `momento`.
@@ -337,24 +340,27 @@ Use esta tabela para a direcao base. Combine com a direcao visual do Passo 3 par
 
 | Tipo da Mandala | Paleta base | Ritmo | Bg cena 1 | Bg cena do meio | Bg CTA | Avatares |
 |---|---|---|---|---|---|---|
-| Comparacao | Dividida (A vs B) | Medio | Cor A solida | Split visual (img A vs img B) | Cor B solida | 1 avatar, split no b-roll |
-| Problema/Solucao | Escuro > claro | Medio | Cor escura (#1a1a1a) | Imagem do problema | Cor clara da marca | 1 avatar |
-| Explicacao | Neutro + acento | Lento | Cor neutra | Grafico/diagrama em imagem | Acento da marca | 1 avatar |
-| Curiosidade | Contraste alto | Rapido | Cor inusitada (roxo, verde neon) | Imagem enigmatica | Cor solida forte | 1 avatar |
-| Reflexao | Tons frios | Lento | Cor profunda (#0d1b2a) | Imagem contemplativa | Mesma cor cena 1 | 1 avatar |
-| Certo/Errado | Vermelho + verde | Medio | Vermelho (errado) | Imagem do erro | Verde (certo) | 1 avatar, 2 angulos |
-| Demonstracao | Cor da marca | Rapido | Cor da marca | Video/imagem do produto em uso | Cor da marca | 1 avatar |
-| Procedimento | Cor da marca + numeracao | Medio | Cor solida | Imagem do passo | Cor da marca | 1 avatar |
-| Impacto Visual | Cores vibrantes | Rapido | Imagem forte | Imagem forte | Cor solida | 1 avatar |
-| Oportunidade | Dourado/amarelo | Medio | Amarelo (#f5b800) | Imagem da oportunidade | Amarelo | 1 avatar |
-| Historia | Cinematografico | Lento | Imagem de abertura (contexto) | Sequencia de imagens | Cor solida | 1 ou 2 avatares |
-| Prova Social | Azul/verde confianca | Medio | Imagem da pessoa real | Depoimento em quote visual | Cor de confianca | **2 avatares** (narrador + testemunho) |
-| Clickbait | Cores chocantes | Rapido | Cor forte (vermelho, amarelo) | Imagem inesperada | Cor solida | 1 avatar |
-| Sensacao | Cor emocional | Lento | Imagem sensorial | Imagem sensorial | Cor solida | 1 avatar |
-| Contraste | Preto + branco ou 2 cores | Medio | Cor A solida | Cor B solida (contraste) | Mix das duas | 1 avatar |
-| Ensino | Cor neutra limpa | Medio | Cor neutra | Grafico/exemplo | Cor da marca | 1 avatar |
-| Revelacao | Escuro > luz | Medio | Preto/escuro | Imagem que "revela" | Cor clara | 1 avatar |
-| Dilema | 2 cores em conflito | Medio | Cor A | Cor B | Cor resolutiva | 1 avatar |
+| Comparação | Dividida (A vs B) | Médio | Cor A sólida | Split visual (img A vs img B) | Cor B sólida | 1 avatar, split no b-roll |
+| Apelo Emocional | Tons quentes e suaves | Lento | Imagem da cena real (pessoa, família, momento) | Close de um detalhe que emociona | Cor quente da marca | 1 avatar |
+| Certo vs Errado | Vermelho + verde | Médio | Vermelho (errado) | Imagem do erro | Verde (certo) | 1 avatar, 2 ângulos |
+| Curiosidade | Contraste alto | Rápido | Cor inusitada (roxo, verde neon) | Imagem enigmática | Cor sólida forte | 1 avatar |
+| Demonstração | Cor da marca | Rápido | Cor da marca | Vídeo ou imagem do produto em uso | Cor da marca | 1 avatar |
+| Oportunidade | Dourado/amarelo | Médio | Amarelo (#f5b800) | Imagem da oportunidade | Amarelo | 1 avatar |
+| Visual | Cores vibrantes | Rápido | Imagem forte | Imagem forte | Cor sólida | 1 avatar |
+| Dilema | 2 cores em conflito | Médio | Cor A | Cor B | Cor resolutiva | 1 avatar |
+| Clickbait | Cores chocantes | Rápido | Cor forte (vermelho, amarelo) | Imagem inesperada | Cor sólida | 1 avatar |
+| Prova | Azul/verde confiança | Médio | Imagem da pessoa real | Depoimento em quote visual | Cor de confiança | **2 avatares** (narrador + testemunho) |
+| Contraste | Preto + branco ou 2 cores | Médio | Cor A sólida | Cor B sólida (contraste) | Mix das duas | 1 avatar |
+| História | Cinematográfico | Lento | Imagem de abertura (contexto) | Sequência de imagens | Cor sólida | 1 ou 2 avatares |
+| Ultra Segmentado | Cores do universo do público (ex: tons infantis para mães, tons sóbrios para aposentados) | Médio | Imagem que identifica o público na hora | Situação típica desse público | Cor da marca | 1 avatar |
+| Reflexão | Tons frios | Lento | Cor profunda (#0d1b2a) | Imagem contemplativa | Mesma cor cena 1 | 1 avatar |
+| Explicação | Neutro + acento | Lento | Cor neutra | Gráfico ou diagrama em imagem | Acento da marca | 1 avatar |
+| Problema-Solução | Escuro > claro | Médio | Cor escura (#1a1a1a) | Imagem do problema | Cor clara da marca | 1 avatar |
+| Sensação | Cor emocional | Lento | Imagem sensorial | Imagem sensorial | Cor sólida | 1 avatar |
+| Mito | Escuro > luz | Médio | Preto/escuro com a palavra "MITO" | Imagem que desmonta a crença | Cor clara | 1 avatar |
+| Pesquisa Científica | Branco + azul institucional | Médio | Cor neutra clara | Dado do estudo em destaque (instituição, número) | Acento da marca | 1 avatar |
+| Atualidades | Estilo manchete (preto, branco, vermelho) | Rápido | Manchete da notícia | Imagem ligada à notícia | Cor da marca | 1 avatar |
+| Atualidades Trend | Cores do trend | Rápido | Referência visual do meme ou trend | Adaptação ao nicho | Cor da marca | 1 avatar |
 
 **Como usar a tabela:** pegar a linha do tipo escolhido, ajustar as cores com a paleta que veio da direcao visual do Passo 3. Se o nicho usa pasteis, traduzir "vermelho" para rosa-coral, "verde" para verde-menta, mantendo a ideia de contraste.
 
@@ -377,7 +383,7 @@ Use esta tabela para a direcao base. Combine com a direcao visual do Passo 3 par
 
 ### Exemplo concreto de quebra em cenas
 
-Roteiro aprovado (tipo Problema/Solucao, nicho: produtividade para empreendedoras):
+Roteiro aprovado (tipo Problema-Solução, nicho: produtividade para empreendedoras):
 
 > "O cansaco da empreendedora nao vem do volume de trabalho. Vem da fragmentacao. Voce abre 14 abas, comeca tres tarefas, e a noite chega sem nada concluido. O problema nao e falta de tempo, e ausencia de estrutura. Quando a agenda e montada em blocos de decisao em vez de blocos de tempo, o dia termina com energia sobrando. Comenta BLOCOS que eu te mando o mapa de 20 minutos."
 
@@ -459,7 +465,7 @@ curl -s "https://api.heygen.com/v2/avatars" \
 
 1. **Historico de uso.** Leia `meus-produtos/{ativo}/entregas/videos/.avatares-usados.json` (se existir). Essa lista tem os avatares usados nos ultimos 5 videos deste produto. Na listagem ao usuario, marque com asterisco os que ja foram usados e coloque os novos no topo.
 2. **Diversidade.** Liste 8 avatares variados (genero, idade, estilo). Dos 8, pelo menos 4 devem ser novos.
-3. **Filtro por tipo da Mandala.** Se o tipo pede mais de 1 avatar (ex: Prova Social), peca duas escolhas.
+3. **Filtro por tipo da Mandala.** Se o tipo pede mais de 1 avatar (ex: Prova), peca duas escolhas.
 
 Formato da listagem:
 

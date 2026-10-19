@@ -230,15 +230,15 @@ Calibrar a duração a partir dos virais encontrados na pesquisa. usar duração
 
 | Estrutura | Quando usar | Lógica de retenção |
 |---|---|---|
-| **Loop Perfeito** | Revelação, insights | O final conecta ao gancho. incentiva replay |
-| **Tutorial de 3 Passos** | Procedimento, ensino | Cada passo avança a narrativa. pessoa assiste até o fim para completar |
+| **Loop Perfeito** | Mito, Curiosidade | O final conecta ao gancho. incentiva replay |
+| **Tutorial de 3 Passos** | Demonstração, Explicação | Cada passo avança a narrativa. pessoa assiste até o fim para completar |
 | **Quebra-Padrão** | Contraste, paradoxo | Começo inesperado para o cérebro. força a pausa no scroll |
 
 Usar estruturas diferentes nas 3 variações sempre que possível.
 
 ### 4. Geração (após aprovação do resumo)
 
-Use a Mandala de 18 Tipos (skill vtsd-completo):
+Use a Mandala de 18 Tipos (lista única em `.claude/skills/mandala-de-anuncios/SKILL.md`, a mesma da skill `anuncios` e da `vtsd-completo`; os 3 extras, Pesquisa Científica, Atualidades e Atualidades Trend, também valem):
 
 **Para Meta Ads, gere 3 variações usando tipos diferentes da Mandala da Criatividade:**
 - Variação 1: [tipo escolhido]. ex: Comparação, Certo vs Errado

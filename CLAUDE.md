@@ -870,7 +870,7 @@ Este assistente é treinado na metodologia VTSD. Sempre que criar materiais, apl
   Total: 70 itens por produto. Essa é a fonte obrigatória para temas de anúncio, bullets de página, ganchos de conteúdo e linhas de email.
 - **3 Identidades**. Comunicador, Consumidor e Produto.
 - **Light Copy**. Estilo argumentativo, lógico, conversacional, não óbvio.
-- **Mandala da Criatividade**. 18 tipos de anúncio combinados com **4 objetivos** (Descoberta, Relacionamento, Conversão, RMKT) e **3 momentos de consumo**.
+- **Mandala da Criatividade**. 18 tipos de anúncio combinados com **4 objetivos** (Descoberta, Relacionamento, Conversão, RMKT) e **3 momentos de consumo**. A lista oficial dos tipos fica em `.claude/skills/mandala-de-anuncios/SKILL.md` (18 principais e 3 extras: Pesquisa Científica, Atualidades e Atualidades Trend). Toda skill que cita tipos da Mandala usa os nomes dessa lista.
 - **Estrutura 8D**. Estrutura padrão da página de vendas VTSD. Mantemos o nome "8D" por convenção, mas a estrutura oficial tem **11 seções** (algumas se repetem, como Prova Social que aparece em dois blocos). A ordem padrão é a que está em `.claude/agents/construtor-de-paginas.md`:
   1. Primeira Dobra (Premissa + subheadline + 3 bullets Urgência Oculta+Decorado + vídeo placeholder)
   2. Provas Sociais

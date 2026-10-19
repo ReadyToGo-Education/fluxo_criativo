@@ -852,7 +852,7 @@ Sempre que criar materiais de marketing, use esta base:
 - **Urgências Ocultas:** 7 categorias com 10 itens cada, totalizando 70 itens.
 - **3 Identidades:** Comunicador, Consumidor e Produto.
 - **Light Copy:** escrita argumentativa, lógica, conversacional e não óbvia.
-- **Mandala da Criatividade:** 18 tipos de anúncio combinados com objetivos e momentos de consumo.
+- **Mandala da Criatividade:** 18 tipos de anúncio combinados com objetivos e momentos de consumo. Lista oficial dos tipos: `.claude/skills/mandala-de-anuncios/SKILL.md` (18 principais e 3 extras).
 - **Estrutura 8D:** página de vendas com seções de conversão.
 - **VVV:** estrutura de vídeo de vendas de valor.
 - **Elementos Literários:** 26 técnicas de escrita persuasiva. Usar 1 a 3 por peça, nunca "mínimo 3".
