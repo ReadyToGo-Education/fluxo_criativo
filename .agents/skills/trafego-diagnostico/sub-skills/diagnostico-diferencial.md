@@ -43,7 +43,7 @@ Pedir à `/trafego-insights`:
 - `serie_diaria` das métricas-norte
 
 Complementar (leitura pura, por modo, conforme a seção 3.1 do SKILL.md):
-- Segmentação dos conjuntos (quando a hipótese de canibalização ou de remarketing for relevante).
+- Segmentação dos conjuntos (quando a hipótese de canibalização ou de remarketing for relevante), com a regra de remarketing da seção 3.1 do SKILL.md (inclusão, exclusão e semelhante).
 
 Reforços opcionais no modo MCP (seção 3.2 do SKILL.md), quando as tools existirem na conta:
 - `ads_account_get_activity_logs`: confirma ou descarta "orçamento aumentou recentemente" e "campanha perdeu estabilidade após mudança" com data e autor da alteração. Responde "o que mudou na conta?".
@@ -128,7 +128,7 @@ Expandidas em relação à `/trafego-otimizar` (que tem 6: criativo, técnico, p
 |-------|---------|------|
 | > 10 campanhas ativas | confirma | médio |
 | > 5 conjuntos por campanha com < R$ 50/dia cada | confirma | alto |
-| Conjuntos em LEARNING_LIMITED | confirma | alto |
+| Conjuntos com aprendizado limitado (`learning_stage_info.status` = `FAIL`; sem o campo, sinal não avaliado) | confirma | alto |
 | Anúncios sem entrega (impressões = 0) | confirma | médio |
 | Campanhas com objetivos conflitantes no mesmo público | confirma | alto |
 | Criativos duplicados em campanhas diferentes | confirma | médio |
@@ -157,8 +157,8 @@ Expandidas em relação à `/trafego-otimizar` (que tem 6: criativo, técnico, p
 4. **Ranquear as 3 categorias com maior probabilidade**
 5. **Para cada hipótese no top 3**, montar o bloco completo (ver output)
 6. **Se no Diagnóstico Completo**, ajustar probabilidades conforme inteligência cruzada:
-   - Score de confiança baixo → teto de 50% em todas as hipóteses
-   - Auditoria flagrou fragmentação severa → elevar "estrutura_aprendizado"
+   - Faixa geral de confiança da conta `dados_insuficientes` → teto de 50% em todas as hipóteses; `baixa_confianca` → teto de 70% (regra em `score-confianca.md`, "Impacto nos outros módulos")
+   - Score de saúde estrutural da auditoria abaixo de 40 → elevar "estrutura_aprendizado"
    - Falso vencedor flagrou entidades → excluir do cálculo de "o que funciona"
 
 ## Explicação obrigatória no output (regra dura)

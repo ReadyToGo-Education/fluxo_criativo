@@ -72,12 +72,14 @@ date -d "60 days ago" +%Y-%m-%d
 **Passo 2. Disparar 2 chamadas curl separadas (cada uma é uma `Bash(curl ...)` independente):**
 
 ```
-curl -s "https://graph.facebook.com/v25.0/act_<ACCOUNT_ID>/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<atual_de>%22%2C%22until%22%3A%22<atual_ate>%22%7D&limit=500&access_token=<TOKEN_DO_ENV>"
+curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<atual_de>%22%2C%22until%22%3A%22<atual_ate>%22%7D&limit=500&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 ```
-curl -s "https://graph.facebook.com/v25.0/act_<ACCOUNT_ID>/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<ant_de>%22%2C%22until%22%3A%22<ant_ate>%22%7D&limit=500&access_token=<TOKEN_DO_ENV>"
+curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights?fields=campaign_id,campaign_name,spend,impressions,cpm,actions,action_values&level=campaign&time_range=%7B%22since%22%3A%22<ant_de>%22%2C%22until%22%3A%22<ant_ate>%22%7D&limit=500&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
+
+O token entra por substituição dentro do próprio comando (seção "LEITURA SEGURA DO .env" do CLAUDE.md); nunca escrever o valor nem exibir o comando com ele no chat.
 
 Notar o `time_range` URL-encoded: `%7B` é `{`, `%22` é `"`, `%2C` é `,`, `%7D` é `}`. URL final é `time_range={"since":"YYYY-MM-DD","until":"YYYY-MM-DD"}`.
 
@@ -89,10 +91,10 @@ Cada `curl` retorna `{"data": [{"campaign_id": "...", "spend": "...", "cpm": "..
 
 #### Modo MCP_CONECTOR
 
-Buscar com `mcp__*__ads_get_ad_entities` em `level=campaign`, uma chamada por janela (atual e anterior), usando o **dicionário de campos do MCP** (a tool **não** aceita `actions`/`action_values`/`outbound_clicks`):
+Buscar com `mcp__*__ads_get_ad_entities` em `level: "campaign"`, uma chamada por janela (atual e anterior, cada uma com `time_range` em texto JSON), `limit: 1000` e filtro `campaign.impressions` maior que zero, usando os **campos conferidos do conector** (a tool **não** aceita `actions`/`action_values`/`outbound_clicks`; tabela completa no **Contrato anti-erros** do `SKILL.md` e em `trafego-insights/SKILL.md` §10.1):
 
-- Para ROAS/ranking: `purchase_roas`, `actions:omni_purchase`, `cost_per_result`, `result_values`, `spend`, `impressions`, `cpm`, `ctr` (+ `id`, `name`).
-- Para o funil: `actions:link_click`, `video_p25_watched_actions`; eventos de página/checkout (LPV, initiate_checkout) podem não estar no dicionário básico, confirmar com `ads_get_field_context`. Se a tool não entregar, omitir as etapas do funil que dependem desse evento e avisar o aluno (nunca inventar o número). Se o aluno precisar do funil completo com frequência, o modo App (`/trafego-conexao`) traz esses eventos dentro do array `actions`.
+- Para ROAS/ranking: `purchase_roas`, `omni_purchase` (compras), `offsite_conversion_fb_pixel_purchase_values` (valor das compras; sem ele, `purchase_roas × amount_spent`), `results` (leads quando o objetivo é cadastro), `amount_spent` (gasto; nunca `spend`), `impressions`, `reach`, `name`. CPM = `amount_spent ÷ impressions × 1000`, calculado.
+- Para o funil: `link_click`, `landing_page_view`, `omni_initiated_checkout` e `omni_purchase` (todos conferidos na conta real). CTR de link = `link_click ÷ impressions`, calculado. `video_p25_watched_actions` (Hook Rate) não foi conferido: confirmar com `ads_get_field_context` antes. Se um campo vier `null` ou for recusado, omitir só a etapa que depende dele e avisar o aluno (nunca inventar o número); quando ajudar, guiar a leitura da coluna correspondente no Gerenciador de Anúncios.
 
 **Nunca** usar `ads_insights_performance_trend` aqui: ela só faz tendência temporal de conta/anúncio/conjunto e **não tem nível campanha**: retorna vazio para ranking e funil. Whitelist de campos + `limit` sempre, e se o retorno for salvo em arquivo (conta grande), processar com python/jq. Ver **Contrato anti-erros** no `SKILL.md` (Passo 0).
 
@@ -118,8 +120,10 @@ Usar tipo canônico. Nunca somar outros tipos de purchase.
 
 ### CPL
 ```
-CPL = sum(spend) / sum(actions onde action_type = "offsite_conversion.fb_pixel_lead")
+CPL = sum(spend) / leads
+leads = actions[lead] (total da Meta: site + formulário instantâneo); sem ele, actions[offsite_conversion.fb_pixel_lead]
 ```
+Nunca somar os dois tipos de lead (regra de leads da tabela de deduplicação do command). No MCP: `amount_spent ÷ results` quando o objetivo é cadastro.
 
 ### CPA
 ```
@@ -296,10 +300,14 @@ CPL: R$ {X}  ·  Total leads: {N}  ·  Spend: R$ {Y}
 |---|---|---|---|
 | Hook Rate (vídeo) | < 15% | 15% a 25% | > 25% |
 | CTR (link) | < 1% | 1% a 2% | > 2% |
-| Connect Rate | < 50% | 50% a 70% | > 70% |
+| Connect Rate | < 60% | 60% a 79% | 80% ou mais |
 | Checkout Rate | < 5% | 5% a 12% | > 12% |
-| Conversion Rate | < 20% | 20% a 35% | > 35% |
+| Conversion Rate (checkout → compra) | abaixo da metade do piso da faixa do ticket | abaixo do piso da faixa | dentro ou acima da faixa |
 | Lead Rate | < 5% | 5% a 15% | > 15% |
+
+**Connect Rate abaixo de 70%:** a primeira hipótese é técnica (página lenta, link errado, redirecionamento). Conferir com `/pagina-performance` e a congruência anúncio x página com `/trafego-oferta-funil` antes de mexer no anúncio.
+
+**Conversion Rate (checkout → compra) não tem corte fixo:** a faixa sai do ticket do resumo do produto, na tabela da §3.5 de `trafego-oferta-funil/SKILL.md` (coluna "Conclusão de checkout"; ex.: até R$ 297, de 25% a 45%; acima de R$ 2.500, de 5% a 15%). Exibir junto a ressalva da §3.5: o checkout iniciado da Hotmart e da Kiwify dispara mais solto, então o número é aproximação, nunca prova de checkout quebrado.
 
 Se `landing_page_views` não retornar (pixel sem evento de LP view), omitir as linhas "LP VIEWS", "Connect Rate" e tudo que depende delas. Alertar: "LP views não rastreado. Conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
 

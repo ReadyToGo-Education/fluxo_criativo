@@ -7,7 +7,7 @@ model: sonnet
 
 # Tráfego Conexão. Conectar o Projeto com o Meta Ads
 
-Orquestrador da conexão. Pergunta o modo, executa o caminho escolhido, valida e salva a preferência em `META_AUTH_MODO` no `.env`. As skills `/trafego-*` e os commands `/ads-relatorio`, `/enviar-relatorio-ads` e `/lt-otimizar` leem essa variável para saber qual caminho usar.
+Orquestrador da conexão. Pergunta o modo, executa o caminho escolhido, valida e salva a preferência em `META_AUTH_MODO` no `.env`. As skills `/trafego-*` e os commands `/ads-relatorio` e `/enviar-relatorio-ads` leem essa variável para saber qual caminho usar.
 
 A especificação técnica completa está em `.claude/skills/trafego-conexao/SKILL.md`. Leia esse arquivo antes do Passo 0: ele é a fonte de verdade de cada passo abaixo.
 
@@ -28,7 +28,7 @@ Aplicar a seção **0. Pré-requisitos no Meta** da SKILL. Se o aluno não tiver
 
 Aplicar a seção **1. Passo 0** da SKILL, lendo só a linha `META_AUTH_MODO` do `.env`:
 
-- **`MCP_CONECTOR` ou `APP`:** oferecer manter, trocar ou validar.
+- **`MCP_CONECTOR` ou `APP`:** antes do menu, conferir o que falta. No `APP`, se `FB_ACCESS_TOKEN_PERMANENTE` estiver sem valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env`), avisar em 1 linha que o token não está salvo e acionar direto o `/gerar-token-permanente-facebook-ads` para gerar um token novo do App que já existe (o modo `APP` só é gravado depois que um token do App passa nos testes), sem o menu e sem o `/criar-aplicativo-analise-ads`. Só criar App (seção 4.2 da SKILL desde o passo 1) se o aluno disser que não tem mais o App. Nos dois modos, conferir se `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar, avisar em 1 linha que falta escolher a conta padrão e ir direto para a validação (Opção 3 da SKILL), que completa a conta. Com tudo presente, oferecer as 4 opções da SKILL: manter, trocar de modo, validar ou trocar a conta padrão.
 - **`HIBRIDO` (valor legado de versão antiga):** explicar que agora só existem dois modos, perguntar e, com a confirmação do aluno, validar e regravar como `MCP_CONECTOR` (recomendado) ou `APP`. O token salvo continua no `.env`.
 - **Valor não reconhecido:** avisar e seguir para o Passo 1.
 - **Ausente ou vazio:** seguir para o Passo 1 sem aviso.
@@ -75,7 +75,7 @@ Depois, Passo 3.
 
 Aplicar a seção **5** da SKILL, conforme o modo:
 
-- **MCP:** seção 5.1 (descobrir a tool pelo final do nome `ads_get_ad_accounts` e chamar) e 5.1.1 (conta padrão com a coluna do conector, `is_ads_mcp_enabled`). Conta não liberada no conector: seção 5.1.2, que oferece o modo App.
+- **MCP:** seção 5.1 (descobrir a tool pelo final do nome `ads_get_ad_accounts` e chamar) e 5.1.1 (conta padrão com a coluna do conector, por `is_ads_mcp_enabled` e `is_queryable`). Conta não liberada no conector: seção 5.1.2, que oferece o modo App.
 - **APP:** seção 5.2 (3 testes, cada um numa chamada `Bash` própria) e, em caso de erro, o mapa de erros da seção 5.3.
 
 Nunca salvar `META_AUTH_MODO` antes da validação passar.
@@ -92,7 +92,7 @@ Aplicar a seção **6** da SKILL:
 - **APP:** conferir com `grep -q` o que o `/gerar-token-permanente-facebook-ads` já gravou e completar o que faltar.
 - **Os dois modos:** tentar descobrir e gravar `FB_PAGE_ID` e `FB_INSTAGRAM_USER_ID` (seção 6.3). Se não der, seguir sem travar.
 
-Não sobrescrever outras variáveis. Não tocar em `RELATORIO_AUTH_MODO`.
+Gravar cada variável com o comando de uma linha da seção "LEITURA SEGURA DO .env" do CLAUDE.md (item 4), sem abrir o `.env` com Read, Edit ou Write. Não sobrescrever outras variáveis. Não tocar em `RELATORIO_AUTH_MODO`.
 
 ---
 

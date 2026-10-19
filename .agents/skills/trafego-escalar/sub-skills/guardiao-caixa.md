@@ -14,11 +14,11 @@ Tudo aqui é leitura: não passa pelo gate 🛡️. As ações que saem daqui (c
 
 Consumir via `/trafego-insights`:
 - `escopo: conta_completa`
-- Campos: gasto (`spend`), orçamento (`daily_budget` ou `lifetime_budget`), compras, valor de compra, custo por compra
+- Campos: gasto, orçamento (`daily_budget` ou `lifetime_budget`), compras, valor de compra, custo por compra
 - Por campanha ativa: gasto no período, conversões, CPA, ROAS
-- `teto_de_orcamento_diario_brl` do Passo 0.7 da escalar (input opcional)
+- `teto_conta_diario_brl` do Passo 0.7 da escalar (teto da conta inteira; input opcional, obrigatório no modo Carteira)
 
-> **Nomes de campo por modo** (mapa da §3.5.1 da `trafego-otimizar`): no MCP, compras vêm de `actions:omni_purchase`, CPA de `cost_per_action_type:omni_purchase`, ROAS de `purchase_roas` e o valor de compra é derivado (`purchase_roas × spend`); `actions` e `action_values` crus não existem na tool `ads_get_ad_entities`. No APP (curl), valem os nomes clássicos (`actions`, `action_values`, `cost_per_action_type`).
+> **Nomes de campo por modo** (contrato do conector em `trafego-insights/SKILL.md` §10.1 "Contrato do conector da Meta (MCP)"): no MCP, gasto vem de `amount_spent` (nunca `spend`), compras de `omni_purchase`, ROAS de `purchase_roas`, valor de compra de `offsite_conversion_fb_pixel_purchase_values` (sem ele, `purchase_roas × amount_spent`) e orçamento de `daily_budget` (objeto em reais). CPA = `amount_spent ÷ omni_purchase`; `cost_per_action_type` só se `ads_get_field_context` mostrar o campo. `actions` e `action_values` crus não existem na tool `ads_get_ad_entities`. No APP (curl), valem os nomes clássicos (`spend`, `actions`, `action_values`, `cost_per_action_type`), com orçamento em centavos (dividir por 100).
 
 ## O que calcula
 
@@ -27,7 +27,7 @@ Consumir via `/trafego-insights`:
 **Base canônica: `gasto_medio_7d`** (gasto real, não orçamento configurado).
 
 ```
-gasto_medio_7d = soma de spend dos últimos 7 dias / 7
+gasto_medio_7d = soma do gasto dos últimos 7 dias / 7
 budget_configurado = soma de daily_budget de todas as campanhas/adsets ativos
 ```
 
@@ -35,15 +35,15 @@ Usar `gasto_medio_7d` como referência para urgência e projeção (é o gasto r
 
 ### 2. Teto de referência
 
-- Se o aluno declarou `teto_de_orcamento_diario_brl`: usar esse valor
-- Se não declarou: usar `gasto_medio_7d` como base e avisar: "Sem teto declarado, uso o gasto médio recente (R$ {X}/dia) como referência."
+- Se o aluno declarou `teto_conta_diario_brl`: usar esse valor
+- Se não declarou: usar `gasto_medio_7d` como base e avisar: "Sem teto declarado, uso o gasto médio recente (R$ {X}/dia) como referência." Com teto inferido, a utilização fica perto de 100% por construção: nesse caso a urgência não é classificada pela utilização, só por vazamentos e lucro/dia. **O modo Carteira da escalar não aceita teto inferido** (exige teto declarado, §3.6 da escalar).
 
 ### 3. Projeção mensal
 
 ```
 dias_restantes_mes = último dia do mês - hoje
 gasto_projetado_mes = gasto_medio_7d × dias_restantes_mes
-gasto_acumulado_mes = soma de spend desde o dia 1 do mês
+gasto_acumulado_mes = soma do gasto desde o dia 1 do mês
 gasto_total_estimado = gasto_acumulado_mes + gasto_projetado_mes
 ```
 
@@ -70,7 +70,7 @@ gasto_pos_incremento = gasto_diario_total + soma_dos_incrementos
 folga = teto - gasto_pos_incremento
 ```
 
-Se `folga < 0`: incrementos **ultrapassam o teto**. Alertar e propor ajuste.
+Se `folga < 0`: incrementos **ultrapassam o teto**. Alertar e propor o incremento reduzido até caber no teto (ex.: teto de R$ 500/dia, gasto de R$ 420/dia e incremento de R$ 96 viram incremento de R$ 80). Só quando não sobra folga nenhuma antes do incremento (teto menos o gasto atual zero ou negativo) é o teto operacional da escalar (§9 da escalar).
 
 ## Classificação de urgência de caixa
 
@@ -80,13 +80,15 @@ Se `folga < 0`: incrementos **ultrapassam o teto**. Alertar e propor ajuste.
 | `caixa_atencao` | Gasto entre 70 e 90% do teto OU 1 vazamento detectado OU margem apertada | Escalar com cautela, priorizar eficiência |
 | `caixa_critico` | Gasto > 90% do teto OU lucro/dia negativo na conta OU 2+ vazamentos | NÃO escalar. Cortar vazamentos primeiro. |
 
+**Modo Carteira da escalar:** a urgência que decide a Fase 2 é recalculada sobre o gasto projetado depois dos cortes da Fase 1 (gasto atual menos os cortes), e os vazamentos que já estão na Fase 1 não contam para os "2+ vazamentos". Se continuar `caixa_critico` depois dos cortes, a escalar entrega só a Fase 1 (Passo 0.86 da escalar).
+
 ## Mapa de caixa (saída visual)
 
 ```
 MAPA DE CAIXA DA CONTA
 Teto: R$ 500/dia (declarado) | Gasto atual: R$ 420/dia (84%)
 Projeção mês: R$ 12.600 | Folga: R$ 80/dia
-Urgência: ATENÇÃO ⚠️
+Urgência: CRÍTICO 🔴 (2 vazamentos)
 
 Campanha              | Gasto/dia | % Gasto | Conversões | % Conv | Eficiência
 ──────────────────────|───────────|─────────|────────────|────────|──────────
@@ -100,8 +102,10 @@ Vazamentos detectados:
 🔴 Teste Broad: consome 9% sem nenhuma conversão
 
 Recomendação:
-- Cortar/reduzir Campanha C e Teste Broad libera R$ 140/dia (pela /trafego-otimizar)
-- Essa folga pode escalar a Campanha A Perpétuo com segurança
+- NÃO escalar antes de cortar: cortar/reduzir Campanha C e Teste Broad libera R$ 140/dia (pela /trafego-otimizar)
+- Depois dos cortes, o gasto projetado cai para R$ 280/dia (56% do teto), sem vazamentos:
+  caixa seguro, com folga de R$ 220/dia para escalar a Campanha A Perpétuo
+  (no modo Carteira, é essa urgência recalculada que libera a Fase 2)
 ```
 
 ## Explicação obrigatória

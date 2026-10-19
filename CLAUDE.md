@@ -101,8 +101,8 @@ source .env
 curl -s "https://graph.facebook.com/...?access_token=${FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-**Em comandos `Bash` executados pelo Claude (single-call, casa com pattern do allow):**
-- O token vai inline na URL **só dentro do comando que o Claude executa naquele momento**.
+**Em comandos `Bash` executados pelo Claude (uma chamada por comando):**
+- O token entra na URL por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`, seção "LEITURA SEGURA DO .env") **só dentro do comando que o Claude executa naquele momento**.
 - O comando NÃO é salvo em arquivo. É exibido (mascarado) e executado.
 - Nenhum arquivo do projeto recebe o valor literal.
 
@@ -185,10 +185,11 @@ Substituir o valor real por `***TOKEN_MASCARADO***`. Quando útil pro debug, mos
 
 ### Padrão correto
 
-1. **Checar se a variável existe, sem mostrar o valor:**
+1. **Checar se a variável tem valor, sem mostrar o valor:**
    ```bash
-   grep -q "^FB_ACCESS_TOKEN_PERMANENTE=" .env && echo "presente" || echo "ausente"
+   grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env && echo "presente" || echo "ausente"
    ```
+   O ponto depois do `=` exige valor: a linha vazia (`FB_AD_ACCOUNT_ID=`, como vem do `.env.example`) conta como ausente. Vale o mesmo padrão para `FB_AD_ACCOUNT_ID` e qualquer outra variável.
 2. **Ler valor que não é sensível (pode aparecer):**
    ```bash
    grep "^META_AUTH_MODO=" .env | cut -d= -f2-
@@ -199,15 +200,22 @@ Substituir o valor real por `***TOKEN_MASCARADO***`. Quando útil pro debug, mos
    curl -s "https://graph.facebook.com/v25.0/me?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
    ```
    O valor entra na chamada na hora de executar e nunca fica numa variável visível nem num comando separado.
+4. **Gravar no `.env` sem abrir o arquivo.** Para atualizar ou acrescentar uma variável que não é segredo (`META_AUTH_MODO`, `FB_AD_ACCOUNT_ID`, `FB_AD_ACCOUNT_IDS`, `FB_PAGE_ID`, `FB_INSTAGRAM_USER_ID`, `META_PIXEL_ID`, `EXPORT_TEMA` e outros IDs), usar uma chamada `Bash` que apaga a linha antiga (inclusive a vazia, vinda do `.env.example`) e acrescenta a nova, sem imprimir nada:
+   ```bash
+   touch .env && sed -i '/^FB_PAGE_ID=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; } && printf 'FB_PAGE_ID=%s\n' "<valor>" >> .env
+   ```
+   O trecho do meio garante a quebra de linha antes da linha nova (sem ele, a linha nova grudaria na última variável do arquivo). No Mac, trocar `sed -i` por `sed -i ''`. Onde uma skill ou command disser "salvar no `.env` com Edit", usar este comando no lugar.
+   Segredo colado pelo aluno (token, chave de API) é gravado pelo command de configuração que o recebeu, em duas chamadas: a primeira, sem o valor, apaga a linha antiga e garante a quebra de linha (`touch .env && sed -i '/^FB_ACCESS_TOKEN_PERMANENTE=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; }`); a segunda só acrescenta (`printf 'FB_ACCESS_TOKEN_PERMANENTE=%s\n' "<valor colado>" >> .env`). Esta segunda chamada é a única em que o valor aparece no texto de um comando (o aluno acabou de colar no chat): nada mais vai na mesma chamada, e o valor nunca é repetido na resposta. Quando o segredo novo ainda vai ser testado e pode substituir um que funcionava, a primeira chamada guarda a linha antiga com outro nome em vez de apagar, até o teste passar (Passo 4 do `/gerar-token-permanente-facebook-ads`). Depois, confirmar só com "salvo".
 
 ### Proibições absolutas
 
 - `cat .env`, `head .env`, `tail .env`, `cat .env | grep ...`
+- Abrir o `.env` com as ferramentas Read, Edit ou Write: o Edit e o Write exigem ler o arquivo antes, e a leitura traz para a conversa todos os segredos dele. Para gravar, usar o item 4.
 - Qualquer `grep` que devolva linha com valor sensível (`grep "TOKEN" .env`, `grep "KEY" .env`, `grep "SECRET" .env`)
 - `echo $FB_ACCESS_TOKEN_PERMANENTE`, `export FB_TOKEN=$(grep ...)` seguido de comando que use a variável
 - Confiar em `sed` ou `tr` aplicado depois de um `grep` que já imprimiu o valor
 
-Antes de rodar qualquer comando que toque o `.env`, conferir: ele vai imprimir alguma linha com variável sensível? Se sim, trocar por `grep -q` (presença) ou pela substituição dentro do `curl`.
+Antes de rodar qualquer comando que toque o `.env`, conferir: ele vai imprimir alguma linha com variável sensível? Se sim, trocar por `grep -q` (presença), pela substituição dentro do `curl` ou pela gravação do item 4.
 
 ---
 
@@ -233,7 +241,7 @@ Antes de rodar qualquer comando que toque o `.env`, conferir: ele vai imprimir a
 Quando uma skill precisa de várias chamadas Graph API + cálculos:
 
 1. Calcular timestamps via `Bash(date +%s)` separados (cada um = 1 Bash call).
-2. Para cada chamada Graph API, disparar `Bash(curl -s "https://graph.facebook.com/...?access_token=<TOKEN_DO_ENV>")` **individual**, com `<TOKEN_DO_ENV>` substituído pelo valor de `FB_ACCESS_TOKEN_PERMANENTE` lido do `.env` no momento da execução.
+2. Para cada chamada Graph API, disparar `Bash(curl -s "https://graph.facebook.com/...?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)")` **individual**, com o token entrando por substituição dentro do próprio `curl`, como no padrão da seção "LEITURA SEGURA DO .env". Nunca ler o valor para depois colar no comando.
 3. Receber o JSON de retorno como texto.
 4. Processar mentalmente os JSONs (somar, comparar, calcular delta) — Claude faz o cálculo direto na resposta, sem código intermediário.
 5. Apresentar resultado ao aluno em linguagem natural, mascarando qualquer token na exibição.
@@ -254,7 +262,7 @@ O Claude Code tem proteções anti-injection que ignoram allow list quando detec
 - Script bash com aspas duplas dentro de aspas simples
 - Brace expansion combinada com aspas (`${...}`, `$(...)`)
 
-Em todas essas situações, o pop-up nativo dispara e exibe o comando completo — incluindo o token. Mantendo cada chamada Graph API como uma `Bash(curl ...)` simples e direta, o pattern do allow casa, o pop-up não dispara, e o token continua invisível pro aluno.
+Em todas essas situações, o pop-up nativo dispara e exibe o comando completo. O perigo está no formato em que o token aparece escrito no próprio comando (heredoc, `TOKEN="..."`, pipe para Python): aí ele vai inteiro para a tela. A única exceção é a gravação do segredo que o aluno acabou de colar (item 4 da seção "LEITURA SEGURA DO .env"), que não serve de modelo para nenhuma outra chamada. O formato padrão do projeto é cada chamada Graph API como um `curl` simples, com o token entrando por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`). Esse formato também pode pedir aprovação, mas o pop-up mostra só a expressão, nunca o valor do token.
 
 ### Exceção controlada
 
@@ -276,7 +284,7 @@ Esse caminho mantém cada chamada Bash simples e cobre o pattern matching.
 
 **Regra dura:** antes de executar QUALQUER operação de escrita na Graph API, a skill ou agente **DEVE** apresentar ao aluno um bloco de confirmação no chat e aguardar resposta explícita. Nunca executar direto.
 
-**Vale também para o MCP da Meta.** Toda ferramenta de escrita do conector (`ads_create_*`, `ads_update_*`, `ads_activate_entity`, `ads_boost_ig_post`, `ads_delete_custom_audience`, `ads_pixel_event_*` de criação, edição ou exclusão) passa pelo mesmo bloco 🛡️ antes de ser chamada.
+**Vale também para o MCP da Meta.** Toda ferramenta de escrita do conector (`ads_create_*`, `ads_update_*`, `ads_activate_entity`, `ads_boost_ig_post`, `ads_delete_custom_audience`, `ads_pixel_event_*` e `ads_pixel_parameter_*` de criação, edição ou exclusão, `ads_experiment_abtest_create_test`, `ads_experiment_abtest_update_test`, `ads_experiment_lift_create_test` e qualquer outra que crie, altere ou apague algo na conta) passa pelo mesmo bloco 🛡️ antes de ser chamada.
 
 ### Formato obrigatório do bloco de confirmação
 
@@ -321,7 +329,7 @@ Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 | Pausar / ativar adset | POST `/{adset_id}` | `/trafego-otimizar`, `/trafego-regras` |
 | Atualizar orçamento de adset/campanha | POST `/{id}` com `daily_budget` | `/trafego-otimizar`, `/trafego-escalar` |
 | Pausar / ativar anúncio | POST `/{ad_id}` | `/trafego-otimizar` |
-| Apagar anúncio, conjunto ou campanha | DELETE `/{id}` (sempre à parte, regra 7) | `/trafego-otimizar` |
+| Arquivar anúncio, conjunto ou campanha (apagar, não: não há ferramenta no MCP e não se roda `curl -X DELETE` direto, regra 7; a exclusão é feita à mão no Gerenciador) | POST `/{id}` com `status=ARCHIVED` ou `ads_update_entity` | `/trafego-otimizar` |
 | Criar público (personalizado, semelhante, engajamento, lista de clientes) | POST `/customaudiences` ou `ads_create_custom_audience` | `/trafego-publicos` |
 | Apagar público | `ads_delete_custom_audience` (sempre à parte, regra 7) | `/trafego-publicos` |
 | Criar regra automática | POST `/adrules_library` (só no modo App; no MCP é feita à mão no Gerenciador) | `/trafego-regras` |
@@ -508,7 +516,7 @@ Proibido criar CSS ou componentes que não estejam nos arquivos de referência.
 **Toda skill que faz operação no Meta Ads precisa de conexão configurada antes de qualquer outra ação.** A conexão é estabelecida pelo command `/trafego-conexao`, que valida e salva a escolha em `META_AUTH_MODO` no `.env`. Existem só dois modos:
 
 - **`MCP_CONECTOR` (padrão, recomendado).** Conector oficial Claude + Meta, login por OAuth, sem token e sem App no Facebook Developers.
-- **`APP` (reserva).** App via Facebook Developers com token permanente no `.env`. Serve para quem tem a conta de anúncios ainda não liberada pela Meta no MCP (a Meta libera conta por conta; a conta não liberada devolve `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out"). Configurado pela sequência `/criar-aplicativo-analise-ads`, `/gerar-token-permanente-facebook-ads` e `/obter-id-conta-anuncios`.
+- **`APP` (reserva).** App via Facebook Developers com token permanente no `.env`. Serve para quem tem a conta de anúncios ainda não liberada pela Meta no MCP (a Meta libera conta por conta; a conta não liberada devolve `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out"). Configurado pela sequência `/criar-aplicativo-analise-ads` e `/gerar-token-permanente-facebook-ads` (que já lista as contas e grava a conta padrão). O `/obter-id-conta-anuncios` só entra se a conta padrão continuar faltando depois dessa listagem.
 
 Não existe modo híbrido no Severino. Se o `.env` trouxer `META_AUTH_MODO=HIBRIDO` (de outro material), o `/trafego-conexao` explica e regrava como `MCP_CONECTOR` (ou `APP`, se a conta não estiver liberada no MCP) depois de validar e confirmar com o aluno.
 
@@ -528,9 +536,9 @@ Público semelhante (lookalike), público de engajamento e de visualização de 
 Antes de executar qualquer ação, a skill deve:
 
 1. **Ler `META_AUTH_MODO`** no `.env`.
-2. **Se vazio ou ausente:** acionar `/trafego-conexao` e aguardar conclusão. Não tentar adivinhar, não cair em fallback, não pedir credenciais ad-hoc.
-3. **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool cujo nome termina em `ads_get_ad_accounts` (ou outra `ads_*` do conector da Meta) está disponível. O começo do nome da tool varia de instalação para instalação. Se nenhuma estiver, instruir o aluno a reabrir o Claude Code (MCP recém-adicionado pode precisar de reload). Se persistir, voltar ao `/trafego-conexao` para diagnosticar. Se a conta escolhida vier como não liberada, oferecer o modo App pelo `/trafego-conexao`.
-4. **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`, sempre com `grep -q` (seção "LEITURA SEGURA DO .env"). Se faltar algum, acionar `/trafego-conexao`. O `FB_PAGE_ID`, usado pelo `/trafego-criar-campanha`, é descoberto e gravado pela própria skill ou pelo `/trafego-conexao` quando falta.
+2. **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar conclusão. Não tentar adivinhar, não cair em fallback, não pedir credenciais ad-hoc.
+3. **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool cujo nome termina em `ads_get_ad_accounts` (ou outra `ads_*` do conector da Meta) está disponível. O começo do nome da tool varia de instalação para instalação. Se nenhuma estiver, instruir o aluno a reabrir o Claude Code (MCP recém-adicionado pode precisar de reload). Se persistir, voltar ao `/trafego-conexao` para diagnosticar. Se a conta escolhida vier como não liberada, oferecer o modo App pelo `/trafego-conexao`. Conferir também se `FB_AD_ACCOUNT_ID` tem valor (padrão da seção "LEITURA SEGURA DO .env"). Se faltar (conexão feita por uma versão antiga, que no MCP não gravava a conta), acionar `/trafego-conexao`: ele completa a conta pela opção Validar (seção 5.1.1 da SKILL: lista com `ads_get_ad_accounts`, grava sem perguntar quando há 1 conta liberada e pergunta quando há mais) e volta para a skill. Nunca chamar o conector com a conta vazia.
+4. **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env`, sempre com o padrão da seção "LEITURA SEGURA DO .env" (linha vazia conta como ausente). Se faltar algum, acionar `/trafego-conexao`. O `FB_PAGE_ID`, usado pelo `/trafego-criar-campanha`, é descoberto e gravado pela própria skill ou pelo `/trafego-conexao` quando falta.
 
 A skill **nunca prossegue** sem essa validação passar.
 
@@ -541,7 +549,7 @@ Todos os commands `/trafego-*` invocáveis pelo usuário:
 - `/trafego-criar-campanha`. Criação de campanha via Marketing API ou MCP.
 - `/trafego-otimizar`. Diagnóstico e otimização, com camada de lucro. Inclui ações em lote por filtro e atalhos compostos.
 - `/trafego-escalar`. Escala de campanha validada (também acionada pelo `/trafego-otimizar` quando `sinal_para_escala.pronta: true`).
-- `/trafego-analise`. Análise narrada VTSD em outputs (exceto Modo Demo, que usa dados fictícios).
+- `/trafego-analise`. Análise narrada VTSD em 10 outputs.
 - `/trafego-diagnostico`. Investigação antes de agir: hipóteses, auditoria estrutural, falso vencedor e score de confiança (apenas leitura).
 - `/trafego-criativos`. Leitura de atenção, intenção e conversão dos criativos, DNA e briefing do próximo teste (apenas leitura).
 - `/trafego-oferta-funil`. Funil depois do clique, congruência anúncio x página, oferta e checkout (apenas leitura).

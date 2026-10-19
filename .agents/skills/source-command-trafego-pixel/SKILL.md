@@ -32,9 +32,9 @@ Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (gerar o 
 ### 0.2 Conexão Meta (gate duro)
 Ler `META_AUTH_MODO` no `.env`.
 
-- **Vazio ou ausente:** acionar `/trafego-conexao` antes de prosseguir.
-- **`MCP_CONECTOR`:** confirmar que existe tool terminada em `ads_get_datasets`. Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`.
-- **`APP`:** confirmar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` no `.env` com `grep -q` (sem exibir valor).
+- **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar a conclusão antes de prosseguir.
+- **`MCP_CONECTOR`:** confirmar que existe tool terminada em `ads_get_datasets` e que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`; se faltar, a opção "Validar" do `/trafego-conexao` completa). Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`.
+- **`APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env` com `grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env` (sem exibir valor; linha vazia conta como ausente). Se faltar, acionar `/trafego-conexao`.
 
 Este command só lê: não tem bloco 🛡️ porque não escreve na conta.
 

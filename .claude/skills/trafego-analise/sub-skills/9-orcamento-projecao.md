@@ -41,7 +41,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns
   ?fields=id,name,status,daily_budget,lifetime_budget,budget_remaining,start_time,stop_time
   &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 ```bash
@@ -51,42 +51,42 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &level=campaign
   &date_preset=today
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-> **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (listagem de campanhas desta mesma chamada): cruzar o retorno com a listagem e manter apenas as campanhas com o status desejado.
+> **Nota de API:** na listagem acima, `{STATUS_FILTRO}` é o valor da coluna "já codificado" da tabela do Passo 0.55 do `SKILL.md`, nunca a lista com colchetes e aspas crus. O parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (listagem de campanhas desta mesma chamada): cruzar o retorno com a listagem e manter apenas as campanhas com o status desejado.
 
 **Chamada 9b. Gasto do mês corrente até hoje**
 
 ```bash
 # Modo APP
-# Calcular since=primeiro dia do mês corrente, until=hoje (YYYY-MM-DD)
+# Calcular {PRIMEIRO_DIA_MES} (dia 1 do mês corrente) e {HOJE} (YYYY-MM-DD), cada um num Bash(date ...) separado
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=campaign_id,campaign_name,spend,actions,action_values,cost_per_action_type,frequency
   &level=campaign
-  &time_range={'since':'{PRIMEIRO_DIA_MES}','until':'{HOJE}'}
+  &time_range=%7B%22since%22%3A%22{PRIMEIRO_DIA_MES}%22%2C%22until%22%3A%22{HOJE}%22%7D
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Chamada 9c. Gasto do mês anterior (para comparativo)**
 
 ```bash
 # Modo APP
-# Calcular since=primeiro dia do mês anterior, until=último dia do mês anterior
+# Calcular {PRIMEIRO_DIA_MES_ANTERIOR} e {ULTIMO_DIA_MES_ANTERIOR} (YYYY-MM-DD), cada um num Bash(date ...) separado
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=spend,actions,action_values
   &level=account
-  &time_range={'since':'{PRIMEIRO_DIA_MES_ANTERIOR}','until':'{ULTIMO_DIA_MES_ANTERIOR}'}
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &time_range=%7B%22since%22%3A%22{PRIMEIRO_DIA_MES_ANTERIOR}%22%2C%22until%22%3A%22{ULTIMO_DIA_MES_ANTERIOR}%22%7D
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Notas sobre orçamentos na API:**
 - `budget_remaining` só é populado pela API para campanhas com **lifetime budget**. Para campanhas com **daily budget**, o campo retorna nulo. Calcular o restante manualmente: `restante = daily_budget − spend_hoje`.
-- `daily_budget` e `lifetime_budget` são retornados em centavos (inteiros). Dividir por 100 para obter valor em reais.
+- No modo APP (Graph API), `daily_budget` e `lifetime_budget` vêm como número em centavos (inteiros): dividir por 100 para obter o valor em reais. No modo MCP_CONECTOR, o `daily_budget` vem como objeto com moeda, já em reais: usar o valor como veio. Número puro, em qualquer modo, é centavos. Cada conta tem a sua moeda: nunca somar contas de moedas diferentes.
 - Campanhas CBO: o orçamento fica no nível de campanha. Campanhas ABO: o orçamento está no nível de adset. Para ABO, usar chamada adicional ao nível de adsets se necessário.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=campaign` para 9a; `mcp__*__ads_insights_performance_trend` com `date_preset=this_month` para 9b e com o mês anterior para 9c.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "campaign"` para 9a (orçamentos, com `filtering: [{field: "campaign.effective_status", operator: "IN", value: STATUS_FILTRO}]`) e para 9b (gasto do mês por campanha, `date_preset: "this_month"` ou `time_range` em texto JSON do dia 1 até hoje, filtro `campaign.impressions` maior que zero), sempre com `limit: 1000`. A `ads_insights_performance_trend` não faz nível campanha: fica só para a 9c, que é da conta inteira (mês anterior, `date_preset: "last_month"`), ou a 9c também sai do `ads_get_ad_entities` com `level: "ad_account"`.
 
 ### Referência de produto (benchmarks)
 
@@ -111,7 +111,8 @@ Usar tipo canônico. Nunca somar outros tipos de purchase.
 
 ### CPL por campanha
 ```
-CPL = spend / sum(actions onde action_type = "offsite_conversion.fb_pixel_lead")
+CPL = spend / leads
+leads = actions[lead] (total da Meta); sem ele, actions[offsite_conversion.fb_pixel_lead]; nunca a soma
 ```
 
 ### CPA por campanha
@@ -427,7 +428,7 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Candidato a escala (captação de leads) com freq entre 3.0 e 3.5 | "trafego-escalar": modo horizontal (nova audience ou novo adset) |
 | Perdedor com gasto significativo (venda direta) | "trafego-otimizar": atalho "pausar com filtro" (ROAS < 1 OU gasto > X + zero conversão) |
 | Perdedor com gasto significativo (captação de leads) | "trafego-otimizar": atalho "pausar com filtro" (CPL > 150% do benchmark OU gasto > X + zero leads) |
-| Pulverização: nenhuma campanha > 25% do budget | "trafego-otimizar", consolidar manualmente: pausar os menores e redirecionar |
+| Pulverização: nenhuma campanha > 25% do budget | "trafego-otimizar" para pausar em lote as menores; a verba liberada vai para "trafego-escalar" (campanha que já é vencedora) ou para uma estrutura consolidada nova em "trafego-criar-campanha". Fluxo que passa por duas skills: plano numerado mostrado uma vez e um "aprovar tudo" |
 | Top 1 concentra > 70% do budget | "trafego-testes": duplicar variando criativo ou audience para criar redundância |
 | Projeção do mês > 20% acima do mês anterior com piora de ROAS/CPL | "trafego-otimizar": diagnóstico de ineficiência antes de continuar investindo |
 | Budget esgotando antes do horário nobre (estimativa de hoje) | "trafego-regras": criar regra automática de alerta por budget diário |

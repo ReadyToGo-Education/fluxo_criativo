@@ -27,11 +27,11 @@ Você é o diagnosticador de pixels da conta de anúncios. Seu papel é ler os d
 
 ## 🔌 Passo 0. Modo de conexão e roteamento (antes de qualquer leitura)
 
-1. Ler `META_AUTH_MODO` do `.env` (valor não sensível): `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`. Se vazio, acionar `/trafego-conexao`.
-2. **Esta skill é 100% leitura: não tem bloco 🛡️ de escrita nem lacuna em nenhum dos dois modos.** Toda leitura de pixel tem tool MCP equivalente. O que muda por modo é só o transporte:
-   - **`MCP_CONECTOR`:** tools do conector, descobertas pelo **final do nome** (o prefixo do servidor varia, pode ser um UUID): `ads_get_datasets`, `ads_get_dataset_details`, `ads_get_dataset_stats`, `ads_get_dataset_quality`, `ads_get_ad_entities`, `ads_get_ad_account_custom_audiences`. Sem token. Se a conta vier com `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out", avisar que a Meta ainda não liberou a conta no conector e oferecer o modo App pelo `/trafego-conexao`.
-   - **`APP`:** `curl` GET na Graph API, `v25.0`, com `FB_ACCESS_TOKEN_PERMANENTE` inline lido do `.env` no momento da execução (presença conferida antes com `grep -q`, valor nunca exibido; na tela, `***TOKEN_MASCARADO***`) e **`curl -g`** quando o `fields` tiver chaves aninhadas (ex: `promoted_object{pixel_id}`).
-3. Ver o mapa completo curl → tool na seção 2. No MCP, o `ad_account_id` vem de `FB_AD_ACCOUNT_ID` do `.env`.
+1. Ler `META_AUTH_MODO` do `.env` (valor não sensível): `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`. Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar.
+2. **Esta skill é 100% leitura: não tem bloco 🛡️ de escrita em nenhum dos dois modos.** Toda leitura de pixel tem tool MCP equivalente, com uma exceção: o objeto promovido da checagem da seção 1.4 (qual pixel cada campanha usa para otimizar) pode não vir pelo conector. Nesse caso, o bloco sai como "não verificado pelo conector" e a conferência é guiada no Gerenciador (seção 1.4). O que muda por modo é o transporte:
+   - **`MCP_CONECTOR`:** tools do conector, descobertas pelo **final do nome** (o prefixo do servidor varia, pode ser um UUID): `ads_get_datasets`, `ads_get_dataset_details`, `ads_get_dataset_stats`, `ads_get_dataset_quality`, `ads_get_ad_entities`, `ads_get_field_context` (checagem 1.4), `ads_get_ad_account_custom_audiences`. Sem token. Se a conta vier com `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out", avisar que a Meta ainda não liberou a conta no conector e oferecer o modo App pelo `/trafego-conexao`.
+   - **`APP`:** `curl` GET na Graph API, `v25.0`, com `FB_ACCESS_TOKEN_PERMANENTE` inline lido do `.env` no momento da execução (presença com valor conferida antes com `grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env`, valor nunca exibido; na tela, `***TOKEN_MASCARADO***`) e **`curl -g`** quando o `fields` tiver chaves aninhadas (ex: `promoted_object{pixel_id}`).
+3. Ver o mapa completo curl → tool na seção 2. Nos dois modos, o `ad_account_id` vem de `FB_AD_ACCOUNT_ID` do `.env`: conferir que a linha tem valor com `grep -q "^FB_AD_ACCOUNT_ID=." .env` (linha vazia conta como ausente). Se faltar, acionar `/trafego-conexao` (no MCP, a opção "Validar" completa).
 
 ### Passo 0.1. Tipo de funil do produto ativo
 
@@ -85,7 +85,12 @@ APP:  GET -g /act_{ad_account_id}/campaigns
         ?fields=id,name,objective,status,promoted_object{pixel_id,custom_event_type}
         &effective_status=%5B%22ACTIVE%22%5D
         &limit=200
-MCP:  ads_get_ad_entities (campanhas ativas; campo do objeto promovido confirmado com ads_get_field_context)
+MCP:  ads_get_ad_entities, level "campaign",
+        filtering [{field: "campaign.effective_status", operator: "IN", value: ["ACTIVE"]}]
+        (no nível conjunto: level "adset" e field "adset.effective_status").
+      Antes, conferir com ads_get_field_context se o campo do objeto promovido existe
+      (no nível campanha ou conjunto). Se não existir ou voltar "Unsupported field(s)",
+      o bloco vira "não verificado pelo conector" (regra abaixo).
 ```
 
 Em campanhas de OUTCOME_SALES (perpétuo) ou OUTCOME_LEADS (lançamento), o `promoted_object.pixel_id` revela qual pixel a campanha usa como evento de otimização. Se o objeto promovido estiver no nível do conjunto, ler nos conjuntos.
@@ -94,6 +99,7 @@ Em campanhas de OUTCOME_SALES (perpétuo) ou OUTCOME_LEADS (lançamento), o `pro
 - Agrupar campanhas pelo pixel que estão usando.
 - Cruzar com a saúde de cada pixel (do bloco principal): se uma campanha aponta para um pixel 🔴 (sem atividade), levantar 🚨 sinal crítico imediato.
 - Se uma campanha não tem pixel no objeto promovido (ex: objetivo de tráfego), marcar como "sem otimização por evento". Não é problema.
+- A regra acima só vale quando o objeto promovido foi lido. No MCP sem o campo, não classificar nenhuma campanha: mostrar "🎯 PIXEL USADO POR CAMPANHA: não verificado pelo conector" e guiar a conferência no Gerenciador de Anúncios (abrir cada conjunto ativo, seção Conversão, e ver o conjunto de dados e o evento escolhidos). Se o aluno informar uma campanha que usa um pixel 🔴, vale o mesmo 🚨. No modo App, a leitura direta funciona.
 
 **Output esperado:**
 
@@ -142,7 +148,7 @@ curl -gs "https://graph.facebook.com/v25.0/<PIXEL_ID>/stats?aggregation=event_to
 | `GET /{pixel_id}?fields=...` (metadados do pixel) | `ads_get_dataset_details` |
 | `GET /{pixel_id}/stats?aggregation=event_total_counts` (totais por evento) | `ads_get_dataset_stats` |
 | `GET /{pixel_id}/stats?aggregation=event_match_quality` (qualidade de correspondência e deduplicação) | `ads_get_dataset_quality` |
-| `GET /act_{id}/campaigns?fields=...promoted_object{pixel_id}` (checagem 1.4) | `ads_get_ad_entities` |
+| `GET /act_{id}/campaigns?fields=...promoted_object{pixel_id}` (checagem 1.4) | `ads_get_ad_entities` (objeto promovido só se `ads_get_field_context` listar o campo; senão, "não verificado pelo conector", ver seção 1.4) |
 | `GET /act_{id}/customaudiences` (cruzamento com públicos) | `ads_get_ad_account_custom_audiences` |
 
 A versão de API vigente (modo APP) é `v25.0`, alinhada com a `/trafego-insights`. No MCP, o formato do retorno de `ads_get_dataset_stats` e `ads_get_dataset_quality` difere do `aggregation=...` do curl: ler conforme o que a tool entrega (totais canônicos por evento), mantendo as mesmas regras de classificação das seções 3 a 5.

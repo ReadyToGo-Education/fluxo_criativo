@@ -16,7 +16,8 @@ Atalhos que orquestram múltiplas skills em uma única operação. Pensados para
 2. /trafego-publicos opção [5] (lookalike 1%)
    └── cria o público "[WS] LAL1pct-Compradores-{produto-slug}"
 3. /trafego-criar-campanha (objetivo OUTCOME_SALES, público da etapa 2)
-   └── cria campanha PAUSED
+   └── cria campanha PAUSED (sem criativo pronto, nasce só com campanha e conjuntos;
+       os anúncios entram depois pela seção 7.8 da skill)
 4. Devolve IDs + handoff para acompanhamento
 ```
 
@@ -99,7 +100,9 @@ Configurações:
 - Produto ativo: curso-tarot
 - Público de origem: Purchase 90d (atual: 580 pessoas, qualidade aceitável)
 - Lookalike: 1% Brasil (~2M pessoas)
-- Campanha: budget R$ 50/dia, criativo a definir, status PAUSED
+- Campanha: budget R$ 50/dia, status PAUSED
+- Criativos: {prontos: os anúncios entram no mesmo lote | pendentes: a campanha nasce só
+  com campanha e conjuntos, sem anúncios, e não entrega até você adicionar os anúncios}
 
 Aprovar tudo? Responda "aprovar tudo" para executar as 4 etapas em sequência,
 ou "não" para cancelar. Se preferir aprovar etapa por etapa, responda "uma por vez".
@@ -120,9 +123,9 @@ resultados:
 handoffs:
   - texto: "Aguardar 24h para o lookalike popular antes de ativar a campanha"
   - texto: "Para ativar a campanha quando estiver pronta"
-    acao: "reativar <id_campanha>: ads_activate_entity (MCP) ou POST status=ACTIVE (APP), com gate 🛡️"
-  - texto: "Para criar o criativo da campanha"
-    acao: "/copy-anuncio + /criativo-estatico (ângulo em /mandala-de-anuncios)"
+    acao: "/trafego-criar-campanha: 'ativa a campanha <id_campanha>' (seção 7.6: bloco 🛡️ próprio listando a campanha, cada conjunto e cada anúncio, ativados no mesmo lote, na ordem anúncios, conjuntos e campanha)"
+  - texto: "Para criar o criativo da campanha (se os anúncios ficaram pendentes)"
+    acao: "/copy-anuncio + /criativo-estatico (ângulo em /mandala-de-anuncios); depois, /trafego-criar-campanha: 'adiciona os anúncios na campanha <id_campanha>' (seção 7.8 da skill, com bloco 🛡️ próprio)"
 
 rollback:
   - campanha <id_campanha>: deixar PAUSED (não gasta) ou arquivar

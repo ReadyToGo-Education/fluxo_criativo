@@ -29,11 +29,11 @@ A especificação técnica completa está em `.claude/skills/trafego-criativos/S
 Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gerar conforme a seção "Contexto Persistente do Negócio" do CLAUDE.md). Do resumo saem, sem perguntar: nome do produto, ticket, tipo, Quadro, Furadeira, público, Urgências Ocultas e Decorados principais.
 
 ### 0.2 Conexão Meta (gate duro)
-Ler `META_AUTH_MODO` no `.env`.
+Ler `META_AUTH_MODO` no `.env` (`grep "^META_AUTH_MODO=" "{RAIZ_PROJETO}/.env" | cut -d= -f2-`). Toda leitura do `.env` usa o caminho absoluto da raiz do projeto (`{RAIZ_PROJETO}`), nunca o relativo ao diretório atual (seção 3.3 da skill).
 
-- **Vazio ou ausente:** acionar `/trafego-conexao`.
-- **`MCP_CONECTOR`:** confirmar que existe tool terminada em `ads_get_ad_entities`. Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`.
-- **`APP`:** confirmar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q` (sem exibir valor).
+- **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar, sem adivinhar nem cair em fallback.
+- **`MCP_CONECTOR`:** confirmar que existe tool terminada em `ads_get_ad_entities` e que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." "{RAIZ_PROJETO}/.env"`; se faltar, a opção "Validar" do `/trafego-conexao` completa). Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`.
+- **`APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor com `grep -q "^NOME=." "{RAIZ_PROJETO}/.env"` (sem exibir valor; o ponto faz a linha vazia contar como ausente).
 
 Esta skill só lê: não tem bloco 🛡️ porque não escreve na conta.
 
@@ -90,14 +90,14 @@ Progresso:
 ⏳ Passo 2/7: intenção criativa.
 ⏳ Passo 3/7: conversão criativa.
 ⏳ Passo 4/7: diagnóstico por criativo.
-⏳ Passo 5/7: DNA dos vencedores.
+⏳ Passo 5/7: DNA dos criativos que mais vendem.
 ⏳ Passo 6/7: briefings dos próximos testes.
 ⏳ Passo 7/7: consolidação do relatório.
 ```
 
 ### Opções [2] a [7]. Módulos individuais
 
-🔍 Próximo passo: {nome do módulo}. Tempo estimado: cerca de 90 segundos.
+🔍 Próximo passo: rodar o módulo {nome do módulo}. Tempo estimado: cerca de 90 segundos.
 
 Aplicar a sub-skill correspondente. Entregar o relatório de 7 seções + YAML.
 
@@ -128,8 +128,9 @@ Registrar a linha no `meus-produtos/{ativo}/entregas/trafego/criativos/INDEX.md`
 |--------|---------------|
 | Briefing de teste pronto | Produzir: `/copy-anuncio`, `/mandala-de-anuncios`, `/criativo-estatico`; vídeo: `/video-heygen`, `/video-remotion`, `/video-editar`. Depois testar com `/trafego-testes` |
 | Criativo com falha confirmada | "Quer pausar ou ajustar via `/trafego-otimizar`?" |
-| Vencedor confirmado | "Antes de escalar, rodo o falso vencedor da `/trafego-diagnostico`? Depois, `/trafego-escalar`." |
+| Vencedor confirmado (régua de vencedor da seção 10 do SKILL, não o piso de leitura de 15 vendas) | "Antes de escalar, rodo o falso vencedor da `/trafego-diagnostico`? Depois, `/trafego-escalar`." |
 | Problema na página, não no criativo (`falha_pos_clique`) | `/trafego-oferta-funil` |
+| Falso conversor criativo (vende só no remarketing) | `/trafego-testes` para isolar em público frio, ou `/trafego-otimizar` para pausar o anúncio nos conjuntos frios (com o bloco 🛡️ de lá) |
 | Tipo da Mandala ausente na conta | Gap Finder do output [3] da `/trafego-analise` e produção em `/copy-anuncio` |
 
 ---

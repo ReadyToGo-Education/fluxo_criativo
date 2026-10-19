@@ -43,7 +43,6 @@ A régua é o produto real: Quadro, Furadeira, objeções e Urgências Ocultas l
 | Urgência | **Urgência Oculta** | A urgência está conectada a uma Urgência Oculta do resumo (o custo de NÃO agir, a dor que continua) ou é contador falso? |
 | CTA | **Identidade do Consumidor** | O CTA fala para a pessoa certa? Usa a linguagem do público-alvo? |
 | Bônus | **Caixa Rápido** | Os bônus entregam resultado rápido (Caixa Rápido) ou são "PDF que ninguém lê"? |
-
 | FAQ | **Objeções** | O FAQ responde às objeções principais do resumo, com argumento, ou só a dúvidas operacionais? |
 
 **Regra:** a tradução VTSD complementa a leitura estrutural. Primeiro o elemento e a nota, depois a leitura pelo método.
@@ -62,6 +61,8 @@ Exemplo: Clareza da promessa (peso 15) → 0, 7 ou 15. Garantia (peso 10) → 0,
 |-------------|-----------------|-------------|
 | Alto (80+) | Alta | Oferta e tráfego alinhados. Funil saudável. |
 | Alto (80+) | Baixa | Problema NÃO é a oferta. Investigar preço, público, checkout ou tráfego. |
+| Razoável (50 a 79) | Baixa | Oferta é causa provável parcial. Priorizar os elementos de maior peso com nota baixa e seguir para a auditoria no `/feedback-pagina` (`/feedback-low-ticket` em página low ticket). |
+| Razoável (50 a 79) | Alta | Oferta sustenta a conversão, mas tem pontos fracos. Melhorar os elementos de maior peso pode ampliar o resultado; não é a prioridade do funil. |
 | Baixo (< 50) | Baixa | **Oferta é a causa provável.** Prioridade: melhorar os elementos com menor pontuação. |
 | Baixo (< 50) | Alta | Oferta fraca mas converte (público muito qualificado). Melhorar oferta pode ampliar resultado. |
 
@@ -138,7 +139,7 @@ diagnostico_oferta:
   cruzamento:
     score_oferta: razoavel
     conversao_pagina: baixa
-    diagnostico: "Oferta é causa provável. Priorizar clareza da promessa e prova."
+    diagnostico: "Oferta é causa provável parcial. Priorizar clareza da promessa e prova."
     proximo_passo: "/feedback-pagina"
 
   prioridade_melhoria:

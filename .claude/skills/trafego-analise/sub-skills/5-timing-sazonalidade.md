@@ -39,17 +39,19 @@ Deseja estender o período de análise para 60 ou 90 dias? (opcional)
 3. Não, continuar com o período atual
 ```
 
+Na extensão, 90 dias é o preset `last_90d`; 60 dias não tem preset (`last_60d` não existe): usar `time_range` com as datas calculadas (de 60 dias atrás até ontem, em chamadas `Bash(date ...)` separadas).
+
 ### Campos adicionais
 
 Nenhum campo adicional além dos que já vêm do Passo 4. Os detalhamentos de timing são obtidos por breakdowns e `time_increment` nas chamadas adicionais abaixo.
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
+`{PERIOD_PARAM}` é o parâmetro de período da tabela do Passo 3 do command (`date_preset=last_Nd` ou, no customizado, o `time_range` já codificado). As três chamadas abaixo são no nível da conta, nos dois modos, e esse nível não aceita filtro de campanha: com `ESCOPO_FILTRO` diferente de `conta_completa`, avisar o aluno que horário, dia da semana e tendência mensal são da conta inteira, não do grupo escolhido.
+
 **Chamada 5a. Horário do dia (breakdown por hora)**
 
-Usa `since` / `until` derivados do período do aluno. O breakdown `hourly_stats_aggregated_by_advertiser_time_zone` retorna 24 linhas agregando todo o período: uma linha por hora (0 a 23) no fuso da conta do anunciante.
-
-Nota técnica: este breakdown não é compatível com `date_preset`. Converter o período do aluno para `since` / `until` antes de montar a URL.
+Usa o mesmo período do aluno. O breakdown `hourly_stats_aggregated_by_advertiser_time_zone`, no nível da conta e com `time_increment=1`, retorna uma linha por dia × hora (0 a 23, no fuso da conta do anunciante): cerca de 24 linhas por dia, então seguir a paginação até o fim. Somando as linhas por hora, sai a distribuição do período inteiro (Resposta 4 e vbars); agrupando pelo dia da semana de `date_start` e pela hora, sai a matriz do heatmap.
 
 ```bash
 # Modo APP
@@ -57,13 +59,15 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=spend,impressions,clicks,actions,action_values,cost_per_action_type
   &breakdowns=hourly_stats_aggregated_by_advertiser_time_zone
   &level=account
-  &since={DATA_INICIO}
-  &until={DATA_FIM}
+  &{PERIOD_PARAM}
+  &time_increment=1
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `breakdown=hourly_stats_aggregated_by_advertiser_time_zone` e as datas convertidas. Conferir os parâmetros pelo schema da tool; se ela não aceitar o recorte por hora, avisar o aluno e omitir a análise por horário (nunca inventar a distribuição).
+Se a resposta trouxer `paging.next`, buscar a próxima página repetindo o mesmo `curl` com `&after=<valor de paging.cursors.after>` e o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`), até a resposta não trazer mais `paging.next`. Nunca copiar, reaproveitar, exibir nem salvar a URL de `paging.next` ou `paging.previous`: ela traz o token (regra de paginação da `trafego-insights/SKILL.md` §10.2.1).
+
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "ad_account"`, `breakdowns: ["hourly_stats_aggregated_by_advertiser_time_zone"]` (no plural e em lista), `time_increment: "1"`, o período do aluno (`date_preset`, ou `time_range` em texto JSON no customizado), `limit: 1000` e a paginação por `cursor`. Campos: `amount_spent`, `impressions`, `link_click`, `omni_purchase`, `purchase_roas` (ou `offsite_conversion_fb_pixel_purchase_values`) para o ROAS do Template A e `results` para os leads do Template B. É a mesma consulta que o `/trafego-dashboard` usa na conta real. Antes, conferir que o recorte por hora aparece na lista `breakdowns` do schema da tool; só se ela recusar, avisar o aluno e omitir a análise por horário (nunca inventar a distribuição).
 
 ---
 
@@ -79,36 +83,36 @@ Retorna uma linha por dia calendário (formato `YYYY-MM-DD`). A partir dessas da
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=spend,impressions,clicks,actions,action_values,cost_per_action_type
   &level=account
-  &date_preset={PERIOD_DO_ALUNO}
+  &{PERIOD_PARAM}
   &time_increment=1
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 Nota: o parâmetro `effective_status` NÃO é aceito no endpoint `/insights` (vale apenas nos endpoints de listagem `/campaigns`, `/adsets` e `/ads`). Se o filtro por status for necessário, a filtragem é feita na etapa anterior, na listagem de campanhas.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `time_increment=1` e os parâmetros de período equivalentes.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `time_increment=1` e os parâmetros de período equivalentes (série da conta inteira, uso permitido da tool de tendência).
 
 ---
 
 **Chamada 5c. Mensal (tendência de 6 meses: sempre fixa, independente do período principal)**
 
-Retorna uma linha por mês calendário. Usar sempre `last_180d` com `time_increment=monthly` para garantir 6 meses de histórico independente do que o aluno escolheu no Passo 3.
+Retorna uma linha por mês calendário. Usar sempre um `time_range` de 6 meses com `time_increment=monthly` para garantir o histórico independente do que o aluno escolheu no Passo 3: `since` = primeiro dia do mês de 5 meses atrás e `until` = ontem (o último dia com dado, ancorado no retorno, regra 4 do Contrato anti-erros), calculados em chamadas `Bash(date ...)` separadas. Não existe `date_preset=last_180d` nem `last_6_months`.
 
 ```bash
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=spend,impressions,clicks,cpm,actions,action_values,cost_per_action_type
   &level=account
-  &date_preset=last_180d
+  &time_range=%7B%22since%22%3A%22{DATA_6M_INICIO}%22%2C%22until%22%3A%22{ONTEM}%22%7D
   &time_increment=monthly
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 Sem filtro de status: `effective_status` não vale em `/insights` (ver nota da Chamada 5b). Se necessário, a filtragem é feita na etapa de listagem de campanhas.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `time_increment=monthly` e `date_preset=last_180d`.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com granularidade mensal e o mesmo período de 6 meses (`time_range` em texto JSON), conferindo no schema da tool como ela recebe o período. Se ela não aceitar 6 meses, avisar o aluno e omitir a tendência mensal (nunca inventar).
 
 ### Referência de produto
 
@@ -121,7 +125,7 @@ Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e
 | Métrica | Fórmula | Tipo canônico |
 |---|---|---|
 | CPA | `spend` / `purchases` | `offsite_conversion.fb_pixel_purchase` |
-| CPL | `spend` / `leads` | `offsite_conversion.fb_pixel_lead` |
+| CPL | `spend` / `leads` | `lead` (total); sem ele, `offsite_conversion.fb_pixel_lead`; nunca a soma (regra de leads do command) |
 | ROAS | `sum(action_values onde action_type = "offsite_conversion.fb_pixel_purchase")` / `spend` | `offsite_conversion.fb_pixel_purchase` |
 | CPM | (`spend` / `impressions`) × 1000 | - |
 
@@ -224,7 +228,7 @@ Se diferença < 15%: informar "Efeito salário não detectado neste período, di
 
 ### Resposta 4. "Qual horário do dia meus anúncios performam melhor?"
 
-Usar dados da Chamada 5a (24 linhas, uma por hora). Agrupar em 4 faixas para visualização inicial, depois detalhar a hora exata de melhor e pior desempenho.
+Usar dados da Chamada 5a, somando as linhas de todos os dias por hora (24 horas, de 0 a 23). Agrupar em 4 faixas para visualização inicial, depois detalhar a hora exata de melhor e pior desempenho.
 
 **Template A. Venda direta (OUTCOME_SALES):**
 
@@ -491,14 +495,14 @@ Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.sect
 
 | Gráfico | Componente / receita | Fonte de dado | Posição |
 |---|---|---|---|
-| Heatmap hora × dia da semana de CPA | SVG heatmap (receita H via helper `heatmap`, `scale:"good_low"`) | matriz hora×dia cruzando Chamada 5a com 5b: **ver regra abaixo** | `.chart-card` full-width, topo da "Visão visual" |
+| Heatmap hora × dia da semana de CPA | SVG heatmap (receita H via helper `heatmap`, `scale:"good_low"`) | matriz hora×dia montada das linhas da Chamada 5a (dia × hora): **ver regra abaixo** | `.chart-card` full-width, topo da "Visão visual" |
 | CPA por faixa horária (4 buckets) | SVG barras verticais (receita G via helper `vbars`) | Chamada 5a agregada em 0-5h / 6-11h / 12-17h / 18-23h | `.charts-grid`, junto da Resposta 4 |
-| Tendência mensal de CPM (6 meses) | SVG linha (receita F via helper `line`) | Chamada 5c (`time_increment=monthly`, `last_180d`), série de CPM | `.chart-card` full-width, junto da Análise adicional (tendência mensal) |
+| Tendência mensal de CPM (6 meses) | SVG linha (receita F via helper `line`) | Chamada 5c (`time_increment=monthly`, `time_range` de 6 meses), série de CPM | `.chart-card` full-width, junto da Análise adicional (tendência mensal) |
 
-**Regra do heatmap hora × dia da semana (limitação real da API):** o breakdown `hourly_stats_aggregated_by_advertiser_time_zone` (Chamada 5a) entrega **24 valores agregados sobre todo o período**, NÃO cruzados com o dia da semana. A Meta **não oferece** breakdown combinado hora×dia em uma única chamada de insights de conta. Caminhos, em ordem de preferência:
+**Regra do heatmap hora × dia da semana:** o breakdown `hourly_stats_aggregated_by_advertiser_time_zone` combinado com `time_increment=1` no nível da conta (Chamada 5a, nos dois modos) devolve uma linha por dia × hora numa única chamada. Caminhos, em ordem de preferência:
 
-1. **Matriz real:** disparar a Chamada 5a uma vez por dia da semana, restringindo `since`/`until` a cada conjunto de datas do mesmo weekday no período (7 chamadas). Montar a matriz 7×24 (ou 7×4 faixas) e renderizar o heatmap com `scale:"good_low"` (CPA baixo = verde, alto = vermelho). Custa 7 chamadas extras e exige período ≥ 4 semanas para amostragem confiável por célula.
-2. **Degradar para vbars:** se as 7 chamadas estourarem rate limit ou o período for curto, renderizar apenas o gráfico de **CPA por faixa horária** (vbars, 4 buckets, agregado do período) e **omitir o heatmap**, documentando no chat que o cruzamento hora×dia exige período longo.
-3. **Nunca inventar a matriz** a partir dos 24 valores agregados: isso fabricaria um cruzamento que o dado não contém.
+1. **Matriz real:** com as linhas da Chamada 5a, agrupar pelo dia da semana de `date_start` e pela hora, somar investimento e conversões em cada célula e só então calcular o CPA de cada célula. O resultado é a matriz 7×24 (ou 7×4 faixas), renderizada com `scale:"good_low"` (CPA baixo = verde, alto = vermelho). São cerca de 24 linhas por dia: paginar até o fim e avisar o aluno se uma consulta bater no `limit` sem próxima página. Exige período ≥ 4 semanas para amostragem confiável por célula.
+2. **Degradar para vbars:** se a quebra por hora não vier ou o período for curto, renderizar apenas o gráfico de **CPA por faixa horária** (vbars, 4 buckets, agregado do período) e **omitir o heatmap**, documentando no chat o motivo.
+3. **Nunca inventar a matriz** a partir de valores agregados do período: isso fabricaria um cruzamento que o dado não contém.
 
 Regras dos gráficos: usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`); CPA/CPL é "quanto menor melhor" → no heatmap usar `scale:"good_low"`, nas vbars colorir verde a faixa de menor CPA e vermelho a de maior; rótulos de mês saem como `YYYY-MM` ou abreviados; se a Chamada 5c retornar menos de 3 meses com `spend > R$ 200`, omitir a linha de tendência de CPM.

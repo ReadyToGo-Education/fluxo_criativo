@@ -15,7 +15,7 @@ user-invocable: false
 
 O command `/trafego-conexao` é o orquestrador. Esta skill guarda a especificação de cada passo e a referência que as outras skills de tráfego consultam (lacunas do conector, descoberta de ferramentas, mapa de erros).
 
-A preferência fica gravada em `META_AUTH_MODO` no `.env`. Todas as skills `/trafego-*` leem essa variável no Passo 0, e os commands `/ads-relatorio`, `/enviar-relatorio-ads` e `/lt-otimizar` também consultam ela para decidir o caminho.
+A preferência fica gravada em `META_AUTH_MODO` no `.env`. Todas as skills `/trafego-*` leem essa variável no Passo 0, e os commands `/ads-relatorio` e `/enviar-relatorio-ads` também consultam ela para decidir o caminho.
 
 Existem só dois valores válidos:
 
@@ -106,7 +106,7 @@ Quem cria públicos é o `/trafego-publicos`. Se a Meta recusar algum subtipo na
 
 ### Conta não liberada no conector
 
-A Meta libera o conector conta por conta. Sinais de conta ainda não liberada: `is_ads_mcp_enabled: false` no retorno de `ads_get_ad_accounts`, ou erro com a mensagem "Ads MCP is gradually being rolled out". Nesse caso, avisar o aluno em linguagem simples e oferecer trocar para o modo App pelo `/trafego-conexao` (mensagem na seção 5.1.2).
+A Meta libera o conector conta por conta. Sinais de conta ainda não liberada: `is_ads_mcp_enabled: false` (ou `is_queryable: false`) no retorno de `ads_get_ad_accounts`, ou erro com a mensagem "Ads MCP is gradually being rolled out". Nesse caso, avisar o aluno em linguagem simples e oferecer trocar para o modo App pelo `/trafego-conexao` (mensagem na seção 5.1.2).
 
 Diferente disso é **uma ferramenta específica em liberação gradual** (erro do tipo "This tool is new and is being gradually rolled out across ad accounts"). A conta funciona, só aquela tool ainda não. Não travar: seguir o plano B da skill que chamou (exemplo: Fase 5.0 do `/trafego-criar-campanha` para a listagem de pixels).
 
@@ -126,6 +126,8 @@ Quando encaixar naturalmente, as skills podem oferecer estas ferramentas. Os par
 | `ads_get_creatives` | Criativos da conta |
 | `ads_get_custom_audience_adsets` | Conjuntos que usam um público |
 | `ads_boost_ig_post` | Impulsionar post do Instagram |
+
+As de escrita (`ads_experiment_abtest_create_test`, `ads_experiment_abtest_update_test`, as `ads_pixel_event_*` e `ads_pixel_parameter_*` de criação, edição ou exclusão e `ads_boost_ig_post`, que gasta verba) passam pelo bloco 🛡️ do CLAUDE.md antes da chamada.
 
 ---
 
@@ -191,7 +193,23 @@ grep "^META_AUTH_MODO=" .env | cut -d= -f2-
 
 Se o `.env` não existir, tratar como Caso 4.
 
-**Caso 1. Valor `MCP_CONECTOR` ou `APP`.** Traduzir para o aluno (`MCP_CONECTOR` = "conector da Meta (MCP)", `APP` = "App do Facebook Developers") e perguntar:
+**Caso 1. Valor `MCP_CONECTOR` ou `APP`.** Antes do menu, conferir o que a conexão precisa (linha vazia conta como ausente). No modo `APP`, primeiro o token:
+
+```bash
+grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env && echo "presente" || echo "ausente"
+```
+
+Se vier `ausente`, avisar em 1 linha ("O modo App está ativo, mas o token não está salvo. Vou gerar um token novo no seu App.") e acionar direto o `/gerar-token-permanente-facebook-ads`, sem mostrar o menu e sem passar pelo `/criar-aplicativo-analise-ads`. O modo `APP` só é gravado depois que um token do App passa nos testes, então esse aluno já tem o App e o Usuário do Sistema: ele vai direto ao passo de gerar o token, como na opção 2 da 4.1. Esse command também lista as contas e grava a conta padrão. Ao terminar, seguir como no fim da 4.2 (passo 3, só se a conta continuar faltando, e depois a seção 5.2). Só se o aluno disser que não tem mais o App (apagou o App ou perdeu o acesso a ele), seguir a 4.2 desde o passo 1.
+
+Nos dois modos, a conta padrão:
+
+```bash
+grep -q "^FB_AD_ACCOUNT_ID=." .env && echo "presente" || echo "ausente"
+```
+
+Se vier `ausente` (conexão feita por uma versão antiga, que no MCP não gravava a conta, ou `.env` copiado do `.env.example`), avisar em 1 linha ("A conexão está ativa, mas falta escolher a conta de anúncios padrão.") e aplicar direto a Opção 3 abaixo, sem mostrar o menu. Vale também quando o `/trafego-conexao` foi acionado por outra skill por falta do token ou da conta: ao terminar, voltar para ela.
+
+Com o token (no `APP`) e a conta presentes, traduzir o modo para o aluno (`MCP_CONECTOR` = "conector da Meta (MCP)", `APP` = "App do Facebook Developers") e perguntar:
 
 ```
 Já existe uma conexão configurada com o Meta Ads.
@@ -210,7 +228,7 @@ Digite o número:
 
 - **Opção 1:** encerrar com "Conexão atual mantida. Modo ativo: {valor traduzido}."
 - **Opção 2:** seguir para a seção 2. As variáveis do modo anterior (ex.: `FB_ACCESS_TOKEN_PERMANENTE`) ficam no `.env`, caso o aluno queira voltar.
-- **Opção 3:** ir direto para a validação (seção 5) do modo registrado. Se a validação passar e faltar `FB_AD_ACCOUNT_ID`, `FB_PAGE_ID` ou `FB_INSTAGRAM_USER_ID`, completar pela seção 6 sem refazer o resto.
+- **Opção 3:** ir direto para a validação (seção 5) do modo registrado. No MCP, a seção 5.1 segue para a 5.1.1, que lista as contas e grava `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS`. No APP, se faltar `FB_AD_ACCOUNT_ID`, rodar antes a listagem da seção 4.3 (o teste 3 da 5.2 usa a conta). Se a validação passar e faltar `FB_PAGE_ID` ou `FB_INSTAGRAM_USER_ID`, completar pela seção 6 sem refazer o resto.
 - **Opção 4:** listar as contas do modo registrado (MCP: seção 5.1.1, com a coluna do conector; APP: seção 4.3), deixar o aluno escolher a nova padrão e regravar só `FB_AD_ACCOUNT_ID` (e completar `FB_PAGE_ID` e `FB_INSTAGRAM_USER_ID` da nova conta pela seção 6.3). No MCP, não aceitar como padrão uma conta marcada como não liberada no conector (seção 5.1.2). O resto da conexão fica como está.
 
 **Caso 2. Valor `HIBRIDO` (legado).** Esse valor vem de uma versão antiga das skills de tráfego. Aqui só existem os dois modos acima. Explicar e confirmar antes de regravar:
@@ -325,15 +343,17 @@ Com a confirmação, seguir para a seção 5.1.
 
 ## 4. Caminho B. App via Facebook Developers
 
-O caminho do App usa as skills de configuração do projeto, nesta ordem: `/criar-aplicativo-analise-ads` → `/gerar-token-permanente-facebook-ads` → `/obter-id-conta-anuncios`. Esta seção só acrescenta o que vem antes e o que vem depois delas.
+O caminho do App usa as skills de configuração do projeto, nesta ordem: `/criar-aplicativo-analise-ads` → `/gerar-token-permanente-facebook-ads` (que já lista as contas e grava a conta padrão) → `/obter-id-conta-anuncios` (só se a conta padrão continuar faltando). Esta seção só acrescenta o que vem antes e o que vem depois delas.
 
 ### 4.1 Checar token existente antes de qualquer passo de criação (regra dura)
 
-O aluno pode já ter um App configurado de uma execução anterior. Mostrar o passo a passo de criação do zero nesse caso gera retrabalho. Checar a presença sem expor o valor:
+O aluno pode já ter um App configurado de uma execução anterior. Mostrar o passo a passo de criação do zero nesse caso gera retrabalho. Checar se o token tem valor, sem expor o valor:
 
 ```bash
-grep -q "^FB_ACCESS_TOKEN_PERMANENTE=" .env && echo "presente" || echo "ausente"
+grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env && echo "presente" || echo "ausente"
 ```
+
+A linha vazia (`FB_ACCESS_TOKEN_PERMANENTE=`, como vem do `.env.example`) conta como ausente e vai para a 4.2.
 
 **Token presente:** pular a criação e perguntar:
 
@@ -347,7 +367,7 @@ fazer?
 Digite o número:
 ```
 
-- **Opção 1:** validar pela seção 5.2. Se passar, completar a conta padrão (4.3) e salvar (6.2). Não recriar nada.
+- **Opção 1:** se faltar `FB_AD_ACCOUNT_ID`, listar as contas pela 4.3 antes (o teste 3 da 5.2 usa a conta). Depois validar pela seção 5.2 e, se passar, salvar (6.2). Não recriar nada.
 - **Opção 2:** acionar `/gerar-token-permanente-facebook-ads`. O App e o Usuário do Sistema já existem, então o aluno vai direto ao passo de gerar o token.
 
 **Token ausente:** seguir para 4.2.
@@ -355,7 +375,7 @@ Digite o número:
 ### 4.2 Encadeamento das skills do App
 
 1. **`/criar-aplicativo-analise-ads`.** Cria o App no developers.facebook.com com os 7 casos de uso, cadastra a política de privacidade e publica o App.
-2. **`/gerar-token-permanente-facebook-ads`** (encadeada pela primeira). Cria o Usuário do Sistema, atribui os ativos (Conta de Anúncios, App, Página, Instagram e Conjunto de Dados), gera o token com expiração "Nunca", roda os 3 testes, grava `FB_ACCESS_TOKEN_PERMANENTE` e `META_AUTH_MODO=APP`, lista as contas que o token enxerga e grava `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS`.
+2. **`/gerar-token-permanente-facebook-ads`** (encadeada pela primeira). Cria o Usuário do Sistema, atribui os ativos (Conta de Anúncios, App, Página, Instagram e Conjunto de Dados), gera o token com expiração "Nunca", grava `FB_ACCESS_TOKEN_PERMANENTE` (sem abrir o `.env`, guardando o token anterior como `FB_ACCESS_TOKEN_ANTERIOR` até os testes passarem), roda os 3 testes com o token por substituição, grava `META_AUTH_MODO=APP`, lista as contas que o token enxerga e grava `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS`.
 3. **`/obter-id-conta-anuncios`.** Só quando `FB_AD_ACCOUNT_ID` continuar ausente depois do passo 2. Antes de acionar, rodar a listagem automática da seção 4.3: se ela devolver contas, a conta sai dali; se vier vazia, a correção é atribuir a conta ao Usuário do Sistema (Passo 2 do `/gerar-token-permanente-facebook-ads`), não digitar o ID.
 
 Ao fim do encadeamento, voltar aqui e seguir para a seção 5.2.
@@ -408,7 +428,7 @@ curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,nam
 
 ### 5.1 Modo `MCP_CONECTOR`
 
-🔍 Próximo passo: validar o conector da Meta. Tempo estimado: cerca de 15 segundos.
+🔍 Próximo passo: validar o conector da Meta. Tempo estimado: cerca de 20 segundos.
 
 **Descoberta da tool pelo final do nome (regra para todas as skills de tráfego).** O prefixo das tools muda conforme o ambiente: pode ser `mcp__Meta_Ads__...` ou um identificador longo, como `mcp__9dc3edbb-e8b6-44ae-a6f0-4917300912c1__ads_get_ad_accounts`. O que é estável é o final do nome (`ads_get_ad_accounts`, `ads_create_campaign` etc.). Estratégia, em ordem:
 
@@ -419,6 +439,7 @@ curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,nam
 Resultados:
 
 - **Lista de contas:** conexão validada. Seguir para 5.1.1 usando esse mesmo retorno (não fazer segunda chamada).
+- **Lista vazia:** nenhuma conta foi autorizada no login do Facebook. Tratar como erro de permissão (abaixo). Nunca seguir com a conta padrão vazia.
 - **Nenhuma tool do conector disponível:**
 
   ```
@@ -440,15 +461,19 @@ Resultados:
 
 ### 5.1.1 Selecionar e salvar a conta padrão (modo MCP)
 
-As tools de escrita do conector (`ads_create_campaign`, `ads_create_ad_set`, `ads_create_ad`, `ads_create_custom_audience` etc.) exigem `ad_account_id`. Por isso o modo MCP também salva a conta padrão no `.env`. Do retorno de `ads_get_ad_accounts`, ler (quando vierem) `name`, `account_id`, `currency`, `account_status` e `is_ads_mcp_enabled`.
+As tools de escrita do conector (`ads_create_campaign`, `ads_create_ad_set`, `ads_create_ad`, `ads_create_custom_audience` etc.) exigem `ad_account_id`. Por isso o modo MCP também salva a conta padrão no `.env`. O retorno de `ads_get_ad_accounts` vem numa lista `ad_accounts`. De cada conta, ler (quando vierem) `ad_account_id` (pode vir com `act_`; salvar só os dígitos), `ad_account_name`, `currency`, `timezone_name`, `is_ads_mcp_enabled` e `is_queryable`, os nomes que o modelo do `/trafego-dashboard` usa na conta real. Se vierem com outro nome (`name`, `account_id`), usar o equivalente. `account_status` pode não vir no conector: sem ele, a coluna Status fica de fora.
 
-**Caso A. 1 conta.** Salvar como `FB_AD_ACCOUNT_ID` sem perguntar:
+Uma conta está **liberada** no conector quando nem `is_ads_mcp_enabled` nem `is_queryable` vêm `false`. Nos outros casos, ela é "ainda não": não entra em `FB_AD_ACCOUNT_IDS` e não vira padrão.
+
+**Caso A. 1 conta.** Se ela estiver liberada, salvar como `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS` sem perguntar:
 
 ```
-✅ Conta identificada: {name} (act_{account_id}), em {currency}. Salva no .env como conta padrão.
+✅ Conta identificada: {ad_account_name} (act_{dígitos do ad_account_id}), em {currency}. Salva no .env como conta padrão.
 ```
 
-**Caso B. 2 ou mais contas.** Mostrar a tabela com a coluna "Conector" (`is_ads_mcp_enabled`) e a coluna "Status" (`account_status`, mapa da seção 4.3):
+Se a única conta vier "ainda não", ir direto para a seção 5.1.2.
+
+**Caso B. 2 ou mais contas.** Mostrar a tabela com a coluna "Conector" (liberada ou ainda não, pela regra acima) e a coluna "Status" (`account_status`, quando vier; mapa da seção 4.3):
 
 ```
 Contas que o conector enxerga:
@@ -462,13 +487,13 @@ Qual conta você quer usar como padrão? Digite o número.
 (Contas marcadas "ainda não" não funcionam no conector por enquanto.)
 ```
 
-Se o aluno escolher uma conta "ainda não" (`is_ads_mcp_enabled: false`), aplicar a seção 5.1.2 para essa conta.
+Se o aluno escolher uma conta "ainda não" (`is_ads_mcp_enabled` ou `is_queryable` igual a `false`), aplicar a seção 5.1.2 para essa conta.
 
-Salvar o `account_id` escolhido (só dígitos) como `FB_AD_ACCOUNT_ID` e a lista das contas liberadas como `FB_AD_ACCOUNT_IDS`. Seguir para a seção 6.
+Salvar o `ad_account_id` escolhido (só dígitos) como `FB_AD_ACCOUNT_ID` e a lista das contas liberadas como `FB_AD_ACCOUNT_IDS`. Seguir para a seção 6.
 
 ### 5.1.2 Conta não liberada no conector
 
-Quando todas as contas vierem com `is_ads_mcp_enabled: false`, quando o aluno precisar de uma conta ainda não liberada, ou quando a chamada devolver "Ads MCP is gradually being rolled out":
+Quando todas as contas vierem "ainda não" (`is_ads_mcp_enabled` ou `is_queryable` igual a `false`), quando o aluno precisar de uma conta ainda não liberada, ou quando a chamada devolver "Ads MCP is gradually being rolled out":
 
 ```
 A Meta ainda não liberou essa conta de anúncios para o conector do
@@ -534,7 +559,7 @@ Depois de cada teste, descrever o resultado em linguagem natural ("Teste 1 passo
 |---|---|---|
 | Nenhuma tool `ads_*` encontrada | Conector não adicionado, desconectado ou Claude não reiniciado | Mensagem da seção 5.1 |
 | Erro de permissão em `ads_get_ad_accounts` | Nenhuma conta autorizada no login do Facebook | Refazer o passo 6 da seção 3.1 |
-| `is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out" | Conta ainda não liberada pela Meta | Seção 5.1.2 |
+| `is_ads_mcp_enabled: false`, `is_queryable: false` ou "Ads MCP is gradually being rolled out" | Conta ainda não liberada pela Meta | Seção 5.1.2 |
 | "This tool is new and is being gradually rolled out" | Uma tool específica ainda não liberada para a conta | Plano B da skill que chamou (ver "Conta não liberada no conector") |
 
 Se a tela do Business Manager ou do Facebook Developers não bater com o roteiro, pedir ao aluno que descreva o que está vendo. A Meta muda a interface sem aviso.
@@ -543,7 +568,7 @@ Se a tela do Business Manager ou do Facebook Developers não bater com o roteiro
 
 ## 6. Salvamento no `.env`
 
-Salvar só depois que a validação passar. Atualizar a linha existente ou acrescentar a nova com `Edit` cirúrgico, sem sobrescrever outras variáveis e sem exibir o conteúdo do `.env` no chat (seção "LEITURA SEGURA DO .env" do CLAUDE.md). Para conferir se uma variável já existe, usar `grep -q`.
+Gravar `META_AUTH_MODO` só depois que a validação passar (seção 9, princípio 1). A conta padrão listada na 4.3 e o token gravado pelo `/gerar-token-permanente-facebook-ads` podem ir antes, porque os testes da 5.2 usam os dois. Gravar cada variável com o comando de uma linha do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md, que apaga a linha antiga (inclusive a vazia, vinda do `.env.example`) e acrescenta a nova, sem abrir o arquivo, sem duplicar a linha e sem mexer nas outras variáveis. Nunca usar Read, Edit ou Write no `.env`: o Edit exige ler o arquivo inteiro antes, com o token e as outras chaves. Para conferir se uma variável já tem valor, usar o padrão da mesma seção (`grep -q "^FB_AD_ACCOUNT_ID=." .env`): linha vazia conta como ausente.
 
 **Nunca tocar em `RELATORIO_AUTH_MODO`.** É dos commands legados `/ads-relatorio` e `/enviar-relatorio-ads`, que serão migrados em outra rodada.
 
@@ -568,6 +593,8 @@ FB_AD_ACCOUNT_IDS={id_1},{id_2}
 ```
 
 Quase tudo já foi gravado pelo `/gerar-token-permanente-facebook-ads`. Aqui a skill só confere com `grep -q` e completa o que faltar (o token nunca é digitado ou exibido por esta skill).
+
+Depois que a validação da 5.2 passar, apagar a sobra de uma geração de token interrompida, se houver: `sed -i '/^FB_ACCESS_TOKEN_ANTERIOR=/d' .env` (no Mac, `sed -i ''`). O token validado é o que vale; a cópia antiga deixaria a próxima geração confusa.
 
 ### 6.3 Página e Instagram (os dois modos)
 
@@ -632,8 +659,8 @@ Toda skill que fala com o Meta Ads, no Passo 0 (depois de ler o produto ativo e 
 
 1. Ler `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
 2. **Vazio, ausente ou valor não reconhecido** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar. Não adivinhar, não cair em fallback, não pedir credencial avulsa.
-3. **`MCP_CONECTOR`:** usar as tools do conector, descobertas pelo final do nome (seção 5.1). O `ad_account_id` vem de `FB_AD_ACCOUNT_ID`. Nunca montar `curl` com token nesse modo, mesmo que exista um token antigo no `.env`. Nas 4 lacunas, seguir o passo manual guiado (seção "Lacunas do MCP").
-4. **`APP`:** conferir `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q`. Se faltar algum, acionar `/trafego-conexao`. Chamadas por `curl`, uma por `Bash`, com o token por substituição dentro do próprio comando e `curl -g` quando o `fields=` tiver campos aninhados (regras do CLAUDE.md).
+3. **`MCP_CONECTOR`:** usar as tools do conector, descobertas pelo final do nome (seção 5.1). O `ad_account_id` vem de `FB_AD_ACCOUNT_ID`: conferir antes se ele tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar (conexão feita por uma versão antiga, que no MCP não gravava a conta), acionar `/trafego-conexao`, que vai direto à Opção 3 do Caso 1 (seção 1) e completa a conta pela 5.1.1: lista com `ads_get_ad_accounts`, grava sem perguntar quando há 1 conta liberada e pergunta quando há mais. Depois, voltar à skill. Nunca chamar o conector com a conta vazia. Nunca montar `curl` com token nesse modo, mesmo que exista um token antigo no `.env`. Nas 4 lacunas, seguir o passo manual guiado (seção "Lacunas do MCP").
+4. **`APP`:** conferir se `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor, com o padrão da seção "LEITURA SEGURA DO .env" do CLAUDE.md (linha vazia conta como ausente). Se faltar algum, acionar `/trafego-conexao`. Chamadas por `curl`, uma por `Bash`, com o token por substituição dentro do próprio comando e `curl -g` quando o `fields=` tiver campos aninhados (regras do CLAUDE.md).
 5. **Escrita na conta, nos dois modos:** bloco 🛡️ do CLAUDE.md antes de executar, um "sim" por lote dentro do mesmo fluxo, e exclusão sempre com bloco e "sim" próprios (L4).
 
 Esta skill é idempotente: pode ser chamada várias vezes sem efeito colateral.

@@ -35,29 +35,29 @@ Mas pode trazer respostas adicionais correlacionadas a essas perguntas
 
 Aplicar somente a campanhas com `created_time` há mais de 7 dias em relação ao início do período analisado. Campanhas mais recentes estão provavelmente em fase de aprendizado ativo e não têm dado comparativo suficiente.
 
-Para calcular o CPA das "primeiras 24h": usar `since/until` correspondendo ao dia de criação da campanha. A data vem da listagem de campanhas (`GET /act_{AD_ACCOUNT_ID_ATUAL}/campaigns?fields=id,name,created_time,start_time`); com ela em mãos, executar a Chamada 6f abaixo com datas manuais. Para o CPA "pós-aprendizado": usar o período selecionado pelo aluno.
+Para calcular o CPA das "primeiras 24h": usar `time_range` com `since` e `until` correspondendo ao dia de criação da campanha. A data vem da listagem de campanhas (`GET /act_{AD_ACCOUNT_ID_ATUAL}/campaigns?fields=id,name,created_time,start_time`); com ela em mãos, executar a Chamada 6f abaixo com datas manuais. Para o CPA "pós-aprendizado": usar o período selecionado pelo aluno.
 
 **Chamada 6f. Insights das primeiras 24-48h por campanha (executar após obter `created_time`/`start_time` na listagem de campanhas)**
 
 Para cada campanha elegível (com `created_time` há mais de 7 dias), substituir `{DATA_INICIO}` pela data de `start_time` da campanha no formato `YYYY-MM-DD` e `{DATA_INICIO_MAIS_2}` por essa data acrescida de 2 dias:
 
 ```bash
-# Modo APP
+# Modo APP (time_range e filtering URL-codificados: since/until soltos são ignorados pelo /insights)
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=campaign_id,campaign_name,spend,impressions,clicks,
           actions,cost_per_action_type
   &level=campaign
   &time_increment=1
-  &since={DATA_INICIO}&until={DATA_INICIO_MAIS_2}
-  &filtering=[{'field':'campaign.id','operator':'IN','value':['{CAMPAIGN_ID}']}]
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &time_range=%7B%22since%22%3A%22{DATA_INICIO}%22%2C%22until%22%3A%22{DATA_INICIO_MAIS_2}%22%7D
+  &filtering=%5B%7B%22field%22%3A%22campaign.id%22%2C%22operator%22%3A%22IN%22%2C%22value%22%3A%5B%22{CAMPAIGN_ID}%22%5D%7D%5D
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 > **Nota de API:** `landing_page_views` é inválido no parâmetro `fields` da Insights API (erro 400). O valor de visualizações da página de destino vem do array `actions` (action_type = `landing_page_view`), já retornado nos campos acima.
 
 `time_increment=1` retorna uma linha por dia. Somar os dias dentro da janela para obter o CPA acumulado das primeiras 24-48h. Cruzar com o CPA do período completo (Chamada principal) para calcular a variação de aprendizado.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` em nível campanha com o intervalo dos 2 primeiros dias de cada campanha (`since/until`), uma chamada por campanha elegível. A `ads_insights_performance_trend` não serve aqui: ela não faz nível campanha (ver **Contrato anti-erros** no `SKILL.md`).
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` em nível campanha (`level: "campaign"`, filtro `{field: "campaign.id", operator: "IN", value: ["{CAMPAIGN_ID}"]}`, `time_increment: "1"`) com o intervalo dos 2 primeiros dias de cada campanha em `time_range` **como texto JSON** (`"{\"since\":\"{DATA_INICIO}\",\"until\":\"{DATA_INICIO_MAIS_2}\"}"`, ver Contrato anti-erros), uma chamada por campanha elegível. A `ads_insights_performance_trend` não serve aqui: ela não faz nível campanha (ver **Contrato anti-erros** no `SKILL.md`).
 
 ```
 🎓 FASE DE APRENDIZADO  ·  {período}
@@ -192,7 +192,7 @@ Dados vêm da chamada de insights com breakdown `publisher_platform` e os campos
 
 ### Resposta 5. "Tem alguma campanha onde estou pagando caro por clique mas ninguém converte na página?"
 
-Dados vêm dos campos `clicks`, `landing_page_views` e `cost_per_action_type` da chamada principal.
+Dados vêm da chamada principal: cliques no link = `link_click` do array `actions` (ou `inline_link_clicks`), nunca o campo de topo `clicks`, que soma cliques em qualquer parte do post e derruba o connect rate; visitas = `landing_page_view` do array `actions`; custos de `cost_per_action_type`. Se `link_click` não vier, usar `clicks` só como último recurso e avisar o aluno que o connect rate sai subestimado. No modo MCP, usar direto os campos `link_click` e `landing_page_view` do `ads_get_ad_entities`.
 
 ```
 🚪 GARGALO CLIQUE → PÁGINA  ·  {período}
@@ -206,7 +206,7 @@ Dados vêm dos campos `clicks`, `landing_page_views` e `cost_per_action_type` da
 **Cruzamento obrigatório com CPC efetivo:**
 
 ```
-  CPC efetivo médio:   R$ {X}  (spend / cliques)
+  CPC efetivo médio:   R$ {X}  (spend / link_click)
   Connect Rate:        {Y%}
   Custo por LP view:   R$ {Z}  (spend / landing_page_views)
 
@@ -215,10 +215,12 @@ Dados vêm dos campos `clicks`, `landing_page_views` e `cost_per_action_type` da
 
 | CPC efetivo | Connect Rate | Quadrante | O que significa |
 |---|---|---|---|
-| Alto (> R$ 3) | Baixo (< 50%) | 🔴 Dupla ineficiência | Paga caro pelo clique E a página não carrega. Dois problemas distintos |
-| Alto (> R$ 3) | Alto (> 70%) | 🟡 Caro mas funciona | Leilão caro: investigar CPM e sazonalidade no output [2] |
-| Baixo (≤ R$ 3) | Baixo (< 50%) | 🟠 Problema de página | Clique barato mas a página perde o visitante: auditar velocidade |
-| Baixo (≤ R$ 3) | Alto (> 70%) | 🟢 Eficiente | Tráfego qualificado chegando. Próximo gargalo está na conversão |
+| Alto (> R$ 3) | Baixo (< 80%) | 🔴 Dupla ineficiência | Paga caro pelo clique E perde visitante antes de a página carregar. Dois problemas distintos |
+| Alto (> R$ 3) | Alto (80% ou mais) | 🟡 Caro mas funciona | Leilão caro: investigar CPM e sazonalidade no output [2] |
+| Baixo (≤ R$ 3) | Baixo (< 80%) | 🟠 Problema de página | Clique barato mas a página perde o visitante: auditar velocidade |
+| Baixo (≤ R$ 3) | Alto (80% ou mais) | 🟢 Eficiente | Tráfego qualificado chegando. Próximo gargalo está na conversão |
+
+Connect Rate pela régua única do projeto (a mesma da §3.5 de `trafego-oferta-funil/SKILL.md`): 80% ou mais saudável, 60% a 79% atenção, abaixo de 60% crítico. Abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento): conferir com `/pagina-performance` e a congruência anúncio x página com `/trafego-oferta-funil` antes de mexer no anúncio.
 
 **Cruzamento complementar: clique caro sem compra** (independe de LP views). Filtrar campanhas com `cost_per_inline_link_click` > 2× benchmark do nicho E taxa de conversão (purchases / inline_link_clicks) < 1%:
 
@@ -241,16 +243,16 @@ Se `landing_page_views` não retornar (pixel sem evento de LP view configurado):
 
 ### Resposta 6. "Qual a taxa de rejeição entre clique no anúncio e ação no site?"
 
-Dados vêm dos campos `clicks` e `landing_page_views` da chamada principal (complementam a Resposta 5 com foco na taxa de abandono por campanha individual).
+Dados vêm de `link_click` e `landing_page_view` (array `actions`) da chamada principal, com a mesma regra da Resposta 5: nunca o campo de topo `clicks` (complementam a Resposta 5 com foco na taxa de abandono por campanha individual).
 
 | Connect Rate | Classificação | Hipótese principal |
 |---|---|---|
-| > 70% | 🟢 Saudável | Página carrega rápido e URL está correta |
-| 50% a 70% | 🟡 Atenção | Monitorar: possível lentidão pontual |
-| 30% a 50% | 🟠 Atenção alta | Página lenta ou redirect com problema |
-| < 30% | 🔴 Crítico | URL do anúncio quebrada, redirect em loop ou página bloqueada |
+| 80% ou mais | 🟢 Saudável | Página carrega rápido e URL está correta |
+| 70% a 79% | 🟡 Atenção | Monitorar: possível lentidão pontual |
+| 60% a 69% | 🟠 Atenção (primeira hipótese técnica) | Página lenta, link errado ou redirecionamento: conferir com `/pagina-performance` e a congruência com `/trafego-oferta-funil` antes de mexer no anúncio |
+| < 60% | 🔴 Crítico | URL do anúncio quebrada, redirect em loop, página muito lenta ou bloqueada |
 
-Aplicar a tabela de classificação acima para cada campanha individualmente e sinalizar as que estiverem abaixo de 50%. Se `landing_page_views` não retornar, indicar a mesma limitação da Resposta 5.
+Aplicar a tabela de classificação acima para cada campanha individualmente e sinalizar as que estiverem abaixo de 70% (primeira hipótese técnica), com prioridade para as abaixo de 60%. Se `landing_page_views` não retornar, indicar a mesma limitação da Resposta 5.
 
 ---
 
@@ -309,7 +311,7 @@ Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar 
     → coberto? Se não: cruzar video_avg_time_watched com publisher_platform e comparar retenção por canal
 
 [ ] Campanha pagando caro por clique mas sem conversão na página?
-    → coberto? Se não: calcular connect_rate (LPV / link_clicks) por campanha e sinalizar as com connect_rate < 30%
+    → coberto? Se não: calcular connect_rate (LPV / link_clicks) por campanha e sinalizar as com connect_rate < 70% (crítico abaixo de 60%)
 
 [ ] Taxa de rejeição entre clique no anúncio e ação no site?
     → coberto? Se não: calcular bounce_rate = (link_clicks - LPV) / link_clicks por campanha
@@ -346,7 +348,7 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Anúncio com CPA WoW > +50% e freq < 4 | "trafego-otimizar": pausar anúncio específico |
 | Hold Rate < 8% em Reels | "copy-anuncio": reescrever criativo adaptado para formato vertical curto com Decorados nos primeiros 10s (vídeo: "video-editar" ou "video-remotion") |
 | Produto de consideração sem retargeting | "trafego-publicos" (criar audience de visitantes) + "trafego-testes" (campanha de remarketing) |
-| Connect Rate < 30% | "pagina-performance": auditar velocidade e URL do anúncio ("trafego-oferta-funil" para confirmar o gargalo depois do clique) |
+| Connect Rate < 70% | "pagina-performance": auditar velocidade, link e redirecionamento do anúncio ("trafego-oferta-funil" para conferir a congruência anúncio x página), antes de mexer no anúncio |
 | CPC alto + Connect Rate baixo | "pagina-performance" (velocidade) e output [2] (CPM do leilão): problemas distintos |
 | Pixel sem LP view configurado | "trafego-pixel": configurar evento de landing page view |
 

@@ -16,7 +16,7 @@ Lê as páginas de upsell/downsell (oferta pós-compra) e estima o take rate: qu
 | Upsell pós-compra | página depois de pagar | 3–15% (típico 3–8%; bem otimizado 8–15%) | 🟢 média-alta |
 | Downsell | após recusar o upsell | 2–8% (sempre abaixo do upsell) | 🟡 média |
 
-Os links do Passo 0.97 são quase sempre **upsell/downsell pós-compra**, não order bump. Saúde do upsell pós-compra: abaixo de 2% = algo errado, 5–8% = bem otimizado. Fontes: Focus Digital, CartHook, Growth Suite, Hotmart, Ensinio.
+Os links do Passo 0.97 são quase sempre **upsell/downsell pós-compra**, não order bump. Saúde do upsell pós-compra: abaixo de 2% = algo errado; 3% a 8% = típico; acima de 8% = bem otimizado. Fontes: Focus Digital, CartHook, Growth Suite, Hotmart, Ensinio.
 
 ## Passo a passo
 
@@ -27,10 +27,14 @@ Os links do Passo 0.97 são quase sempre **upsell/downsell pós-compra**, não o
 ## Estimativa de take rate
 
 - `take_rate = compras_upsell ÷ compras_principal` (quem chega na página de upsell = quem comprou a principal).
-- **Só dá para calcular pelo Meta se o upsell tiver evento próprio distinguível:** conversão personalizada separada, ou produto/pixel separado. Procurar em `ads_get_customconversions` (MCP) ou `/act_<id>/customconversions` (App) e no array `actions` (`offsite_conversion.custom.*`).
+- **Só dá para calcular pelo Meta se o upsell tiver evento próprio distinguível:** conversão personalizada separada, ou produto/pixel separado. Como achar e contar, por modo (seção 4.5 do SKILL.md):
+  - **App:** listar com `GET /act_<id>/customconversions` e contar, no array `actions` dos insights, a entrada `offsite_conversion.custom.<id>` (`curl -g`, token só por substituição dentro do comando, mascarado na tela).
+  - **MCP:** listar com `ads_get_customconversions`. Depois, conferir com `ads_get_field_context` se o `ads_get_ad_entities` aceita um campo de ação para essa conversão (por exemplo `actions:offsite_conversion.custom.<id>`). Nunca pedir `actions` cru (seção 3 do SKILL.md). Se o campo não existir, marcar `fonte_take_rate: "indisponivel_no_mcp"` e usar o relatório da Hotmart ou da Kiwify.
 - **Se o upsell dispara o MESMO evento `purchase` da principal, o Meta NÃO separa as duas compras.** Declarar: "o take rate real só sai do relatório da plataforma (Hotmart/Kiwify); o pixel não distingue." **Nunca inventar o número.**
 
 ## Explicação obrigatória
+
+Este bloco vale só quando o take rate é medível (o upsell tem evento próprio no pixel). Se o upsell usa o mesmo `purchase` da oferta principal, ou o campo não existe no conector, não mostrar percentual: usar o bloco "Quando não dá pra medir pelo Meta".
 
 ```
 ESTEIRA PÓS-COMPRA
@@ -41,8 +45,7 @@ Upsell ("{nome}"): take rate {X}% dos compradores
 O que significa: de cada 100 pessoas que compraram o produto
 principal, {X} também levaram o upsell.
 
-Confiança: {alta se evento próprio | baixa se compartilha purchase}.
-{Se compartilha: "Esse número é estimativa; o real está na Hotmart."}
+Confiança: alta (o upsell tem evento próprio no pixel).
 ```
 
 ## Quando não dá pra medir pelo Meta
@@ -51,9 +54,11 @@ Confiança: {alta se evento próprio | baixa se compartilha purchase}.
 Não consigo isolar a compra do upsell pelo pixel (ele usa o
 mesmo evento 'purchase' do produto principal). Posso LER a oferta
 da página e dizer se está bem construída, mas o take rate exato
-você tira do relatório da Hotmart (vendas do produto de upsell
+você tira do relatório da Hotmart ou da Kiwify (vendas do produto de upsell
 ÷ vendas do produto principal).
 ```
+
+Se o motivo for o conector não entregar o campo da conversão do upsell (`indisponivel_no_mcp`), trocar a primeira frase por: "O conector da Meta não entrega a contagem da conversão do upsell nesta conta."
 
 ## Output YAML
 
@@ -66,7 +71,7 @@ upsell_downsell:
       url: "https://.../upsell"
       oferta: { promessa: "...", preco: "R$ 497", complementa: true }
       take_rate: 0.11
-      fonte_take_rate: "custom_conversion_separada"  # ou "compartilha_purchase_indisponivel"
+      fonte_take_rate: "custom_conversion_separada"  # ou "compartilha_purchase_indisponivel" ou "indisponivel_no_mcp"
       confianca: alta
       benchmark: "upsell pós-compra 3–15% (típico 3–8%)"
     - tipo: downsell

@@ -49,9 +49,9 @@ Toda escrita segue a seção "GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESC
 
 1. **Produto ativo.** Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md`, seguindo a seção "Contexto Persistente do Negócio" do CLAUDE.md. Do resumo saem: **preço e tipo** (definem o mínimo de conversões: 50 por lado em low e middle ticket, 30 em high ticket), **Quadro, Urgências Ocultas, Decorados, público e objeções** (para sugerir hipóteses e ângulos da Mandala). Não perguntar o que o resumo já tem.
 2. **Conexão Meta.** Ler `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
-   - **Vazio:** acionar `/trafego-conexao`.
-   - **`MCP_CONECTOR`:** confirmar uma tool cujo nome termina em `ads_get_ad_accounts` (descobrir sempre pelo final do nome). Conta não liberada no conector: explicar e oferecer o modo App pelo `/trafego-conexao`. No MCP não há token: `ad_account_id` e IDs vêm de `FB_AD_ACCOUNT_ID` e das listagens.
-   - **`APP`:** confirmar com `grep -q` `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID`.
+   - **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar a conclusão. Não adivinhar o modo, não cair em outro caminho e não pedir credencial avulsa.
+   - **`MCP_CONECTOR`:** confirmar uma tool cujo nome termina em `ads_get_ad_accounts` (descobrir sempre pelo final do nome). Conta não liberada no conector: explicar e oferecer o modo App pelo `/trafego-conexao`. No MCP não há token: `ad_account_id` e IDs vêm de `FB_AD_ACCOUNT_ID` e das listagens. Conferir que a variável tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar, a opção "Validar" do `/trafego-conexao` completa.
+   - **`APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor (`grep -q "^NOME=." .env`, com o ponto: linha vazia conta como ausente). Se faltar algum, acionar `/trafego-conexao`.
 3. **O que o MCP faz e o que não faz nesta skill:**
    - **Faz:** criar campanha, conjunto e anúncio; copiar conjunto e anúncio de um existente (`source_*_id`); aplicar mudanças com `ads_update_entity`; listar imagens e vídeos da biblioteca; ler métricas; teste A/B oficial.
    - **Não lê a segmentação do conjunto:** `ads_get_ad_entities` não devolve `targeting`, `age_min`, `age_max` nem `promoted_object` (responde `Unsupported field(s)`). Por isso o "ler e recriar" da seção "Lições de campo" da `ab-generico.md` só funciona no App. No MCP: copiar pelo `source_*_id` e, se falhar, duplicação guiada no Gerenciador (o aluno duplica, a skill confere).
@@ -132,7 +132,7 @@ A `ab-generico.md` tem a tabela de cada `dimensao`: nível (anúncio, conjunto, 
 | Listar campanhas, conjuntos e anúncios molde | `ads_get_ad_entities` | `GET /act_<id>/campaigns` etc. |
 | Ler `targeting`, idade, `promoted_object` do molde | não existe no MCP | `GET -g /<id>?fields=targeting,promoted_object,...` |
 | Listar imagens e vídeos | `ads_get_ad_images` / `ads_get_ad_videos` | `GET /act_<id>/adimages`, `/advideos` |
-| Métricas do teste | `ads_insights_*` ou `/trafego-insights` | `GET /<entity_id>/insights` |
+| Métricas do teste | `ads_get_ad_entities` no nível do teste, com filtro pelo id das variações (ex.: `filtering: [{field: "ad.id", operator: "IN", value: [...]}]`), ou `/trafego-insights` | `GET /<entity_id>/insights` |
 | Teste A/B oficial | `ads_experiment_check_eligibility`, `ads_experiment_abtest_create_test`, `ads_experiment_abtest_get_test`, `ads_experiment_list_tests` | Gerenciador → Testes A/B |
 
 Permissão (App): `ads_management`. No App, cada `curl` é um `Bash` separado, com o token lido do `.env` na própria chamada e `curl -g` quando `fields` tiver `{}`.
@@ -191,7 +191,7 @@ Ex: CPA da variação B > 2 vezes o CPA de A, com 30 ou mais conversões por lad
 
 ## Critério de inconclusivo
 {Quando o teste não dá para julgar e precisa ser estendido ou refeito.}
-Ex: menos de 50 conversões por lado depois de 7 dias, ou diferença menor que 5% entre A e B.
+Ex: menos de 50 conversões por lado depois de 7 dias, ou diferença menor que a do critério de vitória (no exemplo acima, menos de 10% entre A e B).
 
 ## Inputs
 - Orçamento por variação: R$ X/dia
@@ -240,7 +240,7 @@ Conjuntos idênticos exceto na dimensão testada, cada um com orçamento própri
 ### 5.3 Teste A/B oficial da Meta (opção no MCP)
 A Meta tem o teste A/B nativo, que divide o público de forma garantida (ninguém vê os dois lados). Para quem quer essa garantia:
 - **MCP:** conferir se a campanha pode entrar com `ads_experiment_check_eligibility`, criar com `ads_experiment_abtest_create_test`, acompanhar com `ads_experiment_abtest_get_test` e listar com `ads_experiment_list_tests`. Os parâmetros vêm do schema de cada tool na hora (a skill não inventa). A criação passa pelo bloco 🛡️.
-- **App:** passo manual guiado no Gerenciador (Testes A/B).
+- **App:** passo manual guiado no Gerenciador (Testes A/B). A skill grava mesmo assim o arquivo de hipótese (`modelo: ab_oficial_meta`), para a leitura da opção [11].
 
 O fluxo padrão da skill continua sendo o 5.1 e o 5.2 (duplicar variando 1 dimensão). O teste oficial aparece como opção no "Aviso de viés" da `ab-generico.md`.
 
@@ -270,8 +270,9 @@ teste:
       orcamento: 30 BRL/dia
   janela_minima: 7 dias
   conversoes_minimas_por_lado: 50
+  criterio_vitoria: "CPA da vencedora ≤ 90% do CPA da perdedora (diferença de 10% ou mais), com o mínimo de conversões em cada lado"
   criterio_parada: "CPA da variação > 2 vezes o controle com 30 ou mais conversões por lado"
-  criterio_inconclusivo: "menos de 50 conversões por lado depois da janela, ou diferença menor que 5%"
+  criterio_inconclusivo: "menos de 50 conversões por lado depois da janela, ou diferença menor que a do critério de vitória"
 
   status_inicial: PAUSED
   data_inicio_prevista: 2026-05-05

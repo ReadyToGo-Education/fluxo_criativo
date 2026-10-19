@@ -48,9 +48,9 @@ Você é um gestor de tráfego sênior protegendo o próprio dinheiro. Seu papel
 ### Passo 0.2. Conexão Meta (gate duro)
 
 1. Ler `META_AUTH_MODO` do `.env` (valor não sensível): `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
-2. **Vazio ou ausente:** acionar `/trafego-conexao` e aguardar. Não adivinhar, não pedir credencial avulsa.
-3. **`MCP_CONECTOR`:** confirmar que existe pelo menos uma tool cujo nome **termina** em `ads_get_ad_entities` (o prefixo do servidor varia por ambiente, pode ser um UUID; descobrir sempre pelo final do nome). Se nenhuma aparecer, pedir para reabrir o Claude Code; se persistir, voltar ao `/trafego-conexao`. Se a conta vier com `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out", avisar em linguagem simples que a Meta ainda não liberou essa conta no conector e oferecer trocar para o modo App pelo `/trafego-conexao`.
-4. **`APP`:** confirmar presença de `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` sem exibir valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=" .env && echo presente || echo ausente`). Se faltar algum, acionar `/trafego-conexao`.
+2. **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar. Não adivinhar, não cair em outro caminho, não pedir credencial avulsa.
+3. **`MCP_CONECTOR`:** confirmar que existe pelo menos uma tool cujo nome **termina** em `ads_get_ad_entities` (o prefixo do servidor varia por ambiente, pode ser um UUID; descobrir sempre pelo final do nome). Se nenhuma aparecer, pedir para reabrir o Claude Code; se persistir, voltar ao `/trafego-conexao`. Conferir também se `FB_AD_ACCOUNT_ID` tem valor (mesmo padrão do item 4); se faltar, a opção "Validar" do `/trafego-conexao` completa. Se a conta vier com `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out", avisar em linguagem simples que a Meta ainda não liberou essa conta no conector e oferecer trocar para o modo App pelo `/trafego-conexao`.
+4. **`APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor, sem exibir o valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env && echo presente || echo ausente`; o mesmo para `FB_AD_ACCOUNT_ID`). O ponto depois do `=` exige pelo menos um caractere: linha com a variável sem valor (como vem do `.env.example`) conta como ausente. Se faltar algum, acionar `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar. Esta skill é 100% leitura: não tem lacuna em nenhum dos dois modos.
 
@@ -296,8 +296,9 @@ Quando o aluno escolhe "Diagnóstico Completo", os módulos rodam em ordem fixa 
 - Diferencial por último: com dados validados, estrutura mapeada e vencedores confirmados, investigar o gargalo real.
 
 **Inteligência cruzada entre módulos:**
-- Se o score de confiança retorna `dados_insuficientes` para a conta inteira, o diferencial roda com aviso explícito e todas as hipóteses recebem teto de 50% de probabilidade.
-- Se a auditoria detecta fragmentação severa (score < 40), o diferencial adiciona "estrutura/aprendizado" como hipótese com peso elevado automaticamente.
+- Se o score de confiança retorna `dados_insuficientes` para a conta inteira (inclusive pela trava de menos de 7 dias), o diferencial roda com aviso explícito e todas as hipóteses recebem teto de 50% de probabilidade. Com `baixa_confianca`, o teto é de 70%.
+- Se o score de saúde estrutural da auditoria ficar abaixo de 40, o diferencial adiciona "estrutura/aprendizado" como hipótese com peso elevado automaticamente.
+- Se a auditoria marca conjuntos como algoritmo cego (menos de 1 conversão por dia, contando só os dias desde a criação do conjunto dentro dos últimos 30, eixos 2 e 5), o falso vencedor classifica como `inconclusivo` as entidades dos que não atingem, no período analisado, o mínimo de conversões do `vencedor_real` da trilha (15 em low e mid, 10 em high, 30 leads em lançamento); os que atingem seguem a avaliação normal, com o aviso de algoritmo cego.
 - Se o falso vencedor flagra entidades, o diferencial exclui essas entidades do cálculo de "o que está funcionando".
 
 ### Relatório consolidado (Passo 5 do Completo)
@@ -363,7 +364,7 @@ A `trafego-diagnostico` **nunca faz fetch direto** de métricas de performance. 
 
 | Módulo | Escopo | Nível | Janelas | Dados extras |
 |--------|--------|-------|---------|--------------|
-| Score de confiança | `conta_completa` | `campaign` + `adset` | 3 da trilha | `incluir_serie_diaria: true` (métricas-norte) |
+| Score de confiança | `conta_completa` | `campaign` + `adset` + `ad` | 3 da trilha | `incluir_serie_diaria: true` (métricas-norte); o nível `ad` dá o gasto por anúncio da variável 7 |
 | Auditoria estrutural | `conta_completa` | `campaign` + `adset` + `ad` | últimos 30d | `effective_status`, `created_time`, `daily_budget`, `objective` |
 | Falso vencedor | campanha(s) específica(s) ou `conta_completa` | `campaign` + `adset` + `ad` | 3 da trilha | frequência, `serie_diaria` |
 | Diagnóstico diferencial | campanha(s) específica(s) ou `conta_completa` | todos | 3 da trilha + período anterior | todas as derivadas, `comparar_periodos` |
@@ -376,9 +377,9 @@ Quando a insights não traz um dado, buscar direto, sempre leitura pura. No `MCP
 
 | Dado complementar | Usado em | `MCP_CONECTOR` | `APP` (curl GET) |
 |---|---|---|---|
-| `effective_status`, `created_time`, orçamento, `objective` de campanhas, conjuntos e anúncios | auditoria (idade, fragmentação, coerência), score | `ads_get_ad_entities` (campos confirmados com `ads_get_field_context`) | `/act_<id>/adsets?fields=id,name,campaign_id,effective_status,created_time,daily_budget,lifetime_budget` (filtro `effective_status` com colchetes codificados: `%5B%22ACTIVE%22%5D`) |
-| Fase de aprendizado | auditoria (eixo 5), diferencial (estrutura) | `ads_get_ad_entities`, se `ads_get_field_context` listar o campo de aprendizado; senão, usar o `effective_status` (`LEARNING_LIMITED`) | `/{adset_id}?fields=learning_stage_info` |
-| Segmentação dos conjuntos (públicos personalizados, interesses, idade) | auditoria (canibalização), score (variável 8), falso vencedor (remarketing) | `ads_get_ad_entities` costuma não trazer `targeting`: confirmar com `ads_get_field_context`. Para separar remarketing de prospecção, cruzar `ads_get_ad_account_custom_audiences` com `ads_get_custom_audience_adsets` (quais conjuntos usam cada público). Sem nenhum dos dois: marcar "segmentação não verificada" e perguntar ao aluno | `curl -g` em `/{adset_id}?fields=targeting{custom_audiences,excluded_custom_audiences,flexible_spec,age_min,age_max,geo_locations{countries},targeting_automation}` |
+| `effective_status`, `created_time`, orçamento, `objective` de campanhas, conjuntos e anúncios | auditoria (idade, fragmentação, coerência), score | `ads_get_ad_entities` por `level` (campos confirmados com `ads_get_field_context`), com `limit: 1000` e a próxima página pelo `cursor`. Filtrar o que está rodando, como no App: conjuntos com `filtering: [{field: "adset.effective_status", operator: "IN", value: ["ACTIVE"]}]`; campanhas e anúncios com `{nível}.impressions` `GREATER_THAN` `["0"]` (sem filtro, o conector devolve entidades antigas sem entrega). Se vierem 1000 linhas sem próxima página, avisar o aluno que a lista pode estar cortada. Formatos no contrato do conector: `trafego-insights/SKILL.md` §10.1 | `/act_<id>/adsets?fields=id,name,campaign_id,effective_status,created_time,daily_budget,lifetime_budget` (filtro `effective_status` com colchetes codificados: `%5B%22ACTIVE%22%5D`) |
+| Fase de aprendizado | auditoria (eixo 5), diferencial (estrutura) | `ads_get_ad_entities` com o campo de aprendizado (`learning_stage_info`), se `ads_get_field_context` listar esse campo (`FAIL` = aprendizado limitado). Senão, marcar "aprendizado não verificado": o `effective_status` não informa a fase de aprendizado e o conector não mostra essa fase. Nesse caso, usar só a densidade de conversões (eixo 5 da auditoria) como estimativa, com esse rótulo no relatório | `/{adset_id}?fields=learning_stage_info` (`status`: `LEARNING`, `SUCCESS` ou `FAIL`; `FAIL` = aprendizado limitado) |
+| Segmentação dos conjuntos (públicos personalizados, interesses, idade) | auditoria (canibalização), score (variável 8), falso vencedor (remarketing) | `ads_get_ad_entities` costuma não trazer `targeting`: confirmar com `ads_get_field_context`. Para separar remarketing de prospecção, cruzar `ads_get_ad_account_custom_audiences` com `ads_get_custom_audience_adsets` (quais conjuntos usam cada público), aplicando a regra de remarketing abaixo. Sem nenhum dos dois: marcar "segmentação não verificada" e perguntar ao aluno | `curl -g` em `/{adset_id}?fields=targeting{custom_audiences,excluded_custom_audiences,flexible_spec,age_min,age_max,geo_locations{countries},targeting_automation}`. Para separar o semelhante, ler o `subtype` dos públicos em `/act_<id>/customaudiences?fields=id,name,subtype` |
 | Pixel e API de Conversões | score (variável 9, qualidade da atribuição) | `ads_get_datasets` + `ads_get_dataset_stats` (ou `ads_get_dataset_quality`) | `/act_<id>/adspixels?fields=id,name,last_fired_time` + `/{pixel_id}/stats?aggregation=event_total_counts` |
 
 Para o retrato completo de pixel e CAPI, o caminho é a `/trafego-pixel`.
@@ -390,6 +391,13 @@ curl -gs "https://graph.facebook.com/v25.0/<ADSET_ID>?fields=targeting{custom_au
 ```
 
 **Nunca inferir público (frio, quente, aberto, lookalike) pelo nome da campanha ou do conjunto.** O rótulo sai da segmentação real. Se leu só uma amostra, declarar "verifiquei X de N conjuntos".
+
+**Regra de remarketing (vale nos dois modos e em todos os módulos):**
+- Conta como remarketing (quente) só o público personalizado **incluído** no conjunto e que não seja semelhante.
+- Público semelhante é prospecção (frio). Ele é identificado pelo `subtype` `LOOKALIKE` (no MCP, vem na listagem `ads_get_ad_account_custom_audiences` ou em `ads_get_custom_audience`; no App, na leitura de `customaudiences` acima), nunca pelo nome.
+- Público usado como exclusão (ex.: compradores excluídos, `excluded_custom_audiences`) não conta como remarketing.
+- Interesses (`flexible_spec`) e público aberto são prospecção.
+- Se a leitura não disser se o público está incluído ou excluído naquele conjunto (pode acontecer no cruzamento com `ads_get_custom_audience_adsets`, que pode listar também os conjuntos que excluem o público), marcar "segmentação não verificada" para esse conjunto e perguntar ao aluno.
 
 ### 3.2. Reforços opcionais do conector (modo MCP)
 
@@ -606,7 +614,7 @@ diagnostico:
 |----------|-------------|
 | Diagnóstico aponta ação operacional (pausar, reduzir, realocar) | `/trafego-otimizar` |
 | Falso vencedor detectado antes de escalar | Bloqueia a escala. Sugere `/trafego-otimizar` primeiro |
-| Auditoria sugere limpeza de estrutura | `/trafego-otimizar` (ações em lote) |
+| Auditoria sugere limpeza de estrutura | Plano numerado em 3 etapas (fluxo que atravessa duas skills): 1) `/trafego-criar-campanha` monta os conjuntos consolidados, que nascem pausados; 2) a ativação deles só a pedido do aluno, num bloco 🛡️ próprio com "sim" separado; 3) só com os consolidados ativos, `/trafego-otimizar` pausa em lote os conjuntos fragmentados sem conversão. O "aprovar tudo" vale para criar e pausar, nunca para ativar. Sem ativação, os fragmentados seguem rodando |
 | Score de confiança pede mais dados | `/trafego-insights` ou "aguardar X dias" |
 | Aluno quer narrativa mais profunda de uma campanha específica | `/trafego-analise` |
 | Diagnóstico confirma vencedor real pronto para crescer | `/trafego-escalar` |
@@ -617,7 +625,9 @@ diagnostico:
 
 ### Freio antes de escalar (regra dura)
 
-O falso vencedor e o score de confiança são o freio do `/trafego-escalar`. Só recomendar escala quando a entidade sair como `vencedor_real` **e** o score de confiança dela for 50 ou mais. Se sair `vencedor_promissor`, `falso_vencedor_provavel` ou `inconclusivo`, ou o score ficar abaixo de 50, a recomendação é **não escalar** e seguir para `/trafego-otimizar` (ou aguardar mais dados).
+O falso vencedor e o score de confiança são o freio do `/trafego-escalar`. Só recomendar escala quando a entidade sair como `vencedor_real` **e** o score de confiança dela for 50 ou mais. Com score de 50 a 74, a escala é gradual. Se sair `vencedor_promissor`, `falso_vencedor_provavel` ou `inconclusivo`, ou o score ficar abaixo de 50, a recomendação é **não escalar** e seguir para `/trafego-otimizar` (ou aguardar mais dados).
+
+O freio vale também fora desta skill: quando o detector rodou na sessão e a entidade não saiu `vencedor_real` com score de 50 ou mais, a `/trafego-otimizar` emite `pronta: false` com o motivo e a `/trafego-escalar` recusa, inclusive no handoff. Mesmo com o freio liberado, a `/trafego-escalar` ainda confere o checklist de prontidão dela (CPA, frequência, lucro, aprendizado, última edição, criativos de reserva) antes de subir verba.
 
 ### De outras skills para a diagnóstico (handoffs reversos)
 

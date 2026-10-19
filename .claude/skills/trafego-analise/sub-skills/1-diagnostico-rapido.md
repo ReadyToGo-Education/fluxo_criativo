@@ -54,20 +54,20 @@ Todas as chamadas 1a, 1b, 1c, 1d e 1e são feitas por um único script Python qu
 {PY} .claude/skills/trafego-analise/scripts/trafego_fetch.py \
   --account {AD_ACCOUNT_ID_ATUAL} \
   --filtro "{ESCOPO_FILTRO_TEXTO}" \
-  --periodo last_30d \
+  --periodo {PERIODO} \
   --status "{STATUS_FILTRO_LISTA}" \
   --output diagnostico \
   --project-root . \
-  --cache-dir skill-analise/cache
+  --cache-dir meus-produtos/{ativo}/trafego/analise/cache
 ```
 
-`{PY}` é o interpretador detectado na sessão (`python3` ou `py -3`). `{STATUS_FILTRO_LISTA}` vem do Passo 0.55 do `SKILL.md` (ex: `ACTIVE,PAUSED,WITH_ISSUES`). Depois, rodar o `trafego_processar.py` com os mesmos argumentos (inclusive `--status`) e `--ticket` com o preço do `resumo-produto.md` (Passo 4 do `SKILL.md`).
+`{PY}` é o interpretador detectado na sessão (`python3` ou `py -3`). `{PERIODO}` é o preset do Passo 3 (`last_7d`, `last_14d` ou `last_30d`); no período customizado, trocar `--periodo {PERIODO}` por `--since AAAA-MM-DD --until AAAA-MM-DD`. `{STATUS_FILTRO_LISTA}` vem do Passo 0.55 do `SKILL.md` (ex: `ACTIVE,PAUSED,WITH_ISSUES`). `{ativo}` é o produto lido em `meus-produtos/.ativo`. Depois, rodar o `trafego_processar.py` com os mesmos argumentos (inclusive `--status` e o mesmo `--cache-dir`), `--ticket` com o preço do `resumo-produto.md` e, em conta de captação, `--cpl-alvo {CPL_ALVO}` com o CPL-alvo do resumo ou perguntado ao aluno (Passo 4 do `SKILL.md`).
 
-O script faz a Chamada 0 (lista as campanhas com o status escolhido) e as 5 chamadas abaixo em sequência, com retry em rate limit, e salva o resultado em `skill-analise/cache/{account}_{periodo}_{filtro}_{status}_{output}.json`.
+O script faz a Chamada 0 (lista as campanhas com o status escolhido) e as 5 chamadas abaixo em sequência, com retry em rate limit, e salva o resultado em `meus-produtos/{ativo}/trafego/analise/cache/{account}_{periodo}_{filtro}_{status}_{output}.json` (sem `--cache-dir`, o script cai na pasta reserva `skill-analise/cache/`; por isso o caminho do produto vai sempre). O cache só é reaproveitado no mesmo dia; se o fetch devolver `{"error": ...}`, parar e explicar ao aluno que a Meta não respondeu, sem rodar o processar (Passo 4 do `SKILL.md`).
 
 **Chamada 1b. Comparativo WoW (dentro do fetch):**
 
-Busca a janela imediatamente **anterior**, do mesmo tamanho do período principal, via `time_range` fechado (uma linha agregada por campanha: **sem** `time_increment`). A janela termina 1 dia antes do início do período principal:
+Busca a janela imediatamente **anterior**, do mesmo tamanho do período principal, via `time_range` fechado (uma linha agregada por campanha: **sem** `time_increment`). A janela termina 1 dia antes do início do período principal, ancorada no `date_start` que a Meta devolveu no 1a (no customizado, nas datas informadas):
 
 | Período principal (1a) | Janela anterior (1b) |
 |---|---|
@@ -79,7 +79,7 @@ O `trafego_processar.py` compara o **agregado inteiro de 1a (atual) contra o agr
 
 **Chamada 1c. Orçamentos** (endpoint `/campaigns`, único que aceita `effective_status`; o fetch reaproveita a lista da Chamada 0):
 
-`budget_remaining` só é populado para campanhas com **lifetime budget**. Para **daily budget**, cruzar `spend_hoje` (Chamada 1d) com `daily_budget` manualmente. A API retorna valores em centavos: dividir por 100 para obter reais.
+`budget_remaining` só é populado para campanhas com **lifetime budget**. Para **daily budget**, cruzar `spend_hoje` (Chamada 1d) com `daily_budget` manualmente. No modo APP (Graph API), os orçamentos vêm como número em centavos: dividir por 100 para obter reais. No modo MCP_CONECTOR, o `daily_budget` vem como objeto com moeda, já em reais: usar o valor como veio (número puro, em qualquer modo, é centavos).
 
 **Chamada 1d. Gasto de hoje** (endpoint `/insights`, sem `effective_status`):
 
@@ -89,7 +89,7 @@ O `trafego_processar.py` compara o **agregado inteiro de 1a (atual) contra o agr
 
 Puxa uma linha por campanha por dia no período principal, com o mesmo filtro de nome e status do 1a. O `trafego_processar.py` agrupa por `date_start` e entrega `serie_diaria` (lista por dia) + `serie_diaria_svg` (geometria pronta do gráfico de linha). A soma diária fecha com o agregado do 1a (mesma janela, mesmo filtro). Usado só para o gráfico de tendência do HTML: não entra em nenhuma das 5 respostas narradas.
 
-**Modo MCP_CONECTOR:** sem scripts e sem token. Usar `mcp__*__ads_get_ad_entities` em nível campanha para 1a (período atual), 1b (janela anterior do mesmo tamanho), 1c (orçamentos) e 1d (gasto de hoje), com a whitelist de campos do dicionário do MCP (ver **Contrato anti-erros** no `SKILL.md`). `mcp__*__ads_insights_performance_trend` só serve para a série diária da conta (1e), que alimenta o gráfico de tendência: ela não faz nível campanha. Aplicar o filtro de status cruzando com a lista de campanhas do Passo 0.6 do `SKILL.md`.
+**Modo MCP_CONECTOR:** sem scripts e sem token. Usar `mcp__*__ads_get_ad_entities` em nível campanha (`level: "campaign"`, `limit: 1000`, filtro `campaign.impressions` maior que zero) para 1a (período atual), 1b (janela anterior do mesmo tamanho, `time_range` em texto JSON), 1c (orçamentos) e 1d (gasto de hoje, `date_preset: "today"`), com os campos conferidos do conector (ver **Contrato anti-erros** no `SKILL.md`). A série diária (1e) sai da mesma tool, em nível campanha, com `time_increment: "1"` no período do 1a, agrupada por `date_start` só com as campanhas do escopo: assim a soma diária fecha com o 1a. `mcp__*__ads_insights_performance_trend` só serve quando o escopo é a conta inteira (`conta_completa`): ela não faz nível campanha e não respeita o filtro de escopo. Aplicar o filtro de status cruzando com a lista de campanhas do Passo 0.6 do `SKILL.md`.
 
 ### Referência de produto (benchmarks)
 
@@ -110,7 +110,7 @@ Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`): preço e 
 
 ### Resposta 1. "Qual campanha está queimando mais dinheiro sem resultado?"
 
-Critério: campanha com `spend` > R$ 50 no período E conversões = 0 (usando tipo canônico: `offsite_conversion.fb_pixel_purchase` para vendas, `offsite_conversion.fb_pixel_lead` para captação).
+Critério: campanha com `spend` > R$ 50 no período E conversões = 0 (usando tipo canônico: `offsite_conversion.fb_pixel_purchase` para vendas; para captação, a contagem de leads da tabela de deduplicação do command: `lead` e, sem ele, `offsite_conversion.fb_pixel_lead`, nunca a soma).
 
 Montar ranking das top 3 campanhas por gasto com zero resultado:
 
@@ -179,7 +179,9 @@ CPA / CPL médio          R$ {X}            R$ {Y}              {+/-Z%}
 Campanhas ativas         {N}               -                   -
 ```
 
-Se a Chamada 1b não retornar dados comparativos (ex: período customizado muito antigo), suprimir a coluna "Período anterior" e mostrar só os valores atuais, informando o motivo.
+As linhas "Compras / Leads" e "CPA / CPL" usam a mesma métrica nas duas colunas, a indicada em `wow.metrica` (`compras` ou `leads`): rotular a linha conforme ela. Se `cpa_atual` vier nulo (nenhuma conversão no período atual), mostrar "sem vendas no período" (ou "sem leads no período") no lugar do valor e da variação, nunca "-100%".
+
+Se a Chamada 1b não retornar dados comparativos (ex: período customizado muito antigo, ou a Meta não respondeu e o processar avisou em `avisos`), suprimir a coluna "Período anterior" e mostrar só os valores atuais, informando o motivo.
 
 ---
 
@@ -250,11 +252,13 @@ Connect rate = `landing_page_view` (do array `actions`) / `link_click` (do array
 
 | Connect Rate | Pontos |
 |---|---|
-| ≥ 70% | 100 |
-| 55% a 69% | 75 |
-| 40% a 54% | 50 |
-| 20% a 39% | 25 |
-| < 20% | 10 |
+| ≥ 80% | 100 |
+| 70% a 79% | 75 |
+| 65% a 69% | 50 |
+| 60% a 64% | 25 |
+| < 60% | 10 |
+
+Os degraus seguem a régua única do Connect Rate (a mesma da §3.5 de `trafego-oferta-funil/SKILL.md`): 80% ou mais saudável (nota máxima), 60% a 79% atenção, abaixo de 60% crítico (pior nota). Abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento): conferir com `/pagina-performance` e a congruência anúncio x página com `/trafego-oferta-funil` antes de mexer no anúncio.
 
 Se `landing_page_view` não retornar para nenhuma campanha (pixel sem evento de LP view configurado): usar CTR médio como fallback.
 
@@ -277,7 +281,7 @@ Para funil de **venda direta**: ROAS médio ponderado por spend (soma de `action
 | 1.0x a 1.4x | 20 |
 | < 1.0x | 0 |
 
-Para funil de **captação de leads**: CPL médio vs. benchmark do produto (calculado via `cost_per_action_type` com tipo canônico de lead).
+Para funil de **captação de leads** (nenhuma compra no período nem na janela anterior): CPL médio (gasto ÷ leads, com a contagem de leads da tabela de deduplicação do command) vs. CPL-alvo do produto. O CPL-alvo vem do resumo ou é perguntado ao aluno e vai no `--cpl-alvo` do processar; sem ele, o D4 fica neutro (50) e o processar avisa em `avisos`.
 
 | CPL vs. benchmark | Pontos |
 |---|---|
@@ -291,7 +295,7 @@ Se conversões = 0 em todas as campanhas (pixel não rastreando): atribuir 0 pon
 
 #### Dimensão 5. Consistência temporal (peso 10%)
 
-Requer Chamada 1b. Calcular variação de CPA (ou CPL) semana atual vs. semana anterior.
+Requer Chamada 1b. Calcular variação de CPA (ou CPL) semana atual vs. semana anterior, com a mesma métrica nas duas janelas (compras se qualquer uma teve compra; senão, leads). Sem conversão no período atual e com conversão na janela anterior, a conta parou de converter: o D5 recebe a pior faixa (10) e o processar marca `d5.rotulo` = `parou de converter`. Sem conversão nas duas janelas, a variação não é calculada e o D5 fica neutro.
 
 | Variação WoW do CPA | Pontos |
 |---|---|
@@ -299,6 +303,7 @@ Requer Chamada 1b. Calcular variação de CPA (ou CPL) semana atual vs. semana a
 | Aumento +21% a +30% | 70 |
 | Aumento +31% a +50% | 40 |
 | Aumento > +50% | 10 |
+| Parou de converter (zero conversões agora, com conversões na janela anterior) | 10 |
 | Sem dados comparativos | 50 (neutro) |
 
 #### Apresentação do score
@@ -309,9 +314,17 @@ HEALTH SCORE: {XX}/100  {emoji}
   Diversidade criativa    {D1}/100  (peso 20%)  →  {N} campanhas ativas com gasto
   Saúde de públicos       {D2}/100  (peso 20%)  →  {X%} com frequência ≤ 3
   Eficiência de funil     {D3}/100  (peso 25%)  →  Connect Rate {Y%}
-  Performance financeira  {D4}/100  (peso 25%)  →  ROAS médio {Z}x  (benchmark: {W}x)
-  Consistência temporal   {D5}/100  (peso 10%)  →  CPA {+/-V%} vs. período anterior
+  Performance financeira  {D4}/100  (peso 25%)  →  {TEXTO_D4}
+  Consistência temporal   {D5}/100  (peso 10%)  →  {CPA ou CPL} {+/-V%} vs. período anterior
 ```
+
+`{TEXTO_D4}` depende do tipo de conta (campos de `health.dimensoes.d4` do processar):
+- Venda direta: `ROAS médio {Z}x  (benchmark: {W}x)`, com `roas` e `roas_benchmark`.
+- Captação com CPL-alvo: `CPL R$ {cpl}  (alvo: R$ {cpl_alvo})`.
+- Captação sem CPL-alvo (`sem_referencia` verdadeiro): `CPL R$ {cpl}, sem CPL-alvo: nota neutra`.
+- Captação sem nenhum lead no período (`cpl` vazio, nota 0): `nenhum lead no período`.
+
+Na linha do D5, escrever `CPA` quando `d5.metrica` for `compras` e `CPL` quando for `leads`. Com `d5.rotulo` = `parou de converter`, escrever `parou de converter: nenhuma {compra ou lead} no período, contra {CPA ou CPL} de R$ {cpa_anterior} no período anterior`. Sem `variacao_wow_pct` e sem esse rótulo (sem dados comparativos ou sem conversão nas duas janelas), escrever `sem dados comparativos`.
 
 | Score final | Classificação | O que significa |
 |---|---|---|
@@ -332,7 +345,7 @@ Indicar em 1 linha qual output rodar a seguir, conforme o sintoma dominante iden
 | Fadiga ou saturação de público detectada | [3] Criativos & Copy |
 | Queima de dinheiro > R$ 300 no período | [2] Performance & Funil (ranking por ROAS) |
 | Budget estourando antes das 18h | [9] Orçamento & Projeção |
-| Connect Rate < 40% | [2] Performance & Funil (gargalo de funil) |
+| Connect Rate < 60% (crítico) | [2] Performance & Funil (gargalo de funil) |
 | Score ≥ 85, sem sinais críticos | [9] Orçamento & Projeção (quem escalar) |
 
 ---
@@ -424,6 +437,6 @@ Renderizar SEMPRE os 5 gráficos abaixo, logo após o `.stats-grid` de KPIs, sob
 | Barras atual vs. anterior | `.wow-chart` (receita C) | `wow` | `.chart-card` full-width sob o `.charts-grid` |
 | Alocação: convertendo vs. queimando | `.hbar-row` (receita D) | `ranking_spend` (vendeu) + `sinais.queima` (zerou) | `.chart-card` dentro da Resposta 1 |
 
-A série diária vem da **Chamada 1E** do `trafego_fetch.py` (nível campanha + `time_increment=1`, mesmo filtro do 1a) e é agregada por dia no `trafego_processar.py`, que já entrega a geometria SVG pronta em `serie_diaria_svg`. Caches antigos sem `1e` retornam `serie_diaria_svg=null`: nesse caso o gráfico de tendência é omitido e os outros 4 continuam.
+A série diária vem da **Chamada 1E** do `trafego_fetch.py` (nível campanha + `time_increment=1`, mesmo filtro do 1a) e é agregada por dia no `trafego_processar.py`, que já entrega a geometria SVG pronta em `serie_diaria_svg`. Se a série diária não vier (a Chamada 1E falhou, o que aparece em `avisos`, ou voltou vazia), `serie_diaria_svg` é `null`: nesse caso o gráfico de tendência é omitido, o aluno é avisado, e os outros 4 continuam. Cache antigo sem `1e` não é mais reaproveitado: o fetch busca de novo.
 
 Regras dos gráficos: usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`); truncar nomes longos de campanha; o radar colore cada vértice pela mesma faixa da classificação do Health Score (verde ≥ 85, amarelo 70–84, laranja 50–69, vermelho < 50), igual à cor da barra `.dim-fill` da dimensão correspondente na Resposta 5; o funil usa largura em escala logarítmica mas exibe os números reais e a taxa de conversão entre etapas.

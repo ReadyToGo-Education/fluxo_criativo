@@ -40,11 +40,11 @@ Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes
 | Reduzir orçamento -20% | `ads_update_entity` (daily_budget) | POST /<id> daily_budget |
 | Realocação neutra (§6.3) | par de `ads_update_entity` (daily_budget) | dois POST daily_budget |
 | Limites por conjunto CBO (§6.4) | `ads_update_entity` (daily_spend_cap / daily_min_spend_target) | POST /<adset_id> ... |
-| Cost cap / bid cap (§6.5) | `ads_update_entity` (bid_strategy + bid_amount) | POST /<campaign_id> ... |
+| Cost cap / bid cap (§6.5) | `ads_update_entity`: em CBO, `bid_strategy` na campanha e `bid_amount` em cada conjunto ativo; em ABO, os dois no conjunto | CBO: POST /<campaign_id> bid_strategy + POST /<adset_id> bid_amount; ABO: POST /<adset_id> bid_strategy,bid_amount |
 | Pausar anúncio/conjunto/campanha | `ads_update_entity` (status=PAUSED) | POST /<id> status=PAUSED |
 | Cortar posicionamento (§7.4) | `ads_update_entity` (placement_soft_opt_out / targeting) | POST /<adset_id> ... |
 | Reativar (após contenção) | `ads_activate_entity` | POST /<id> status=ACTIVE |
-| Guardrail automático (§18) | sem tool no MCP: passo a passo guiado no Gerenciador (o aluno cria a regra) | handoff `/trafego-regras` (POST /act_<id>/adrules_library, com gate próprio) |
+| Guardrail automático (§18) | sem tool no MCP: handoff `/trafego-regras` (sub-fluxo [1]), que guia o aluno a criar a regra no Gerenciador | handoff `/trafego-regras` (POST /act_<id>/adrules_library, com gate próprio) |
 | Operações em lote | as mesmas, por entidade (ver acoes-lote.md) | idem |
 
 **Não passam pelo gate:** chamadas de leitura (insights, listagens, fields), seja via `ads_get_*`/`ads_insights_*`, via `/trafego-insights`, ou GET na Graph API. Estado não muda.
@@ -62,15 +62,15 @@ Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes
 
 ### 0.1 Modo de conexão
 
-1. Ler `META_AUTH_MODO` do `.env` (`grep "^META_AUTH_MODO=" .env`, variável não sensível). Vazio ou ausente: acionar `/trafego-conexao` e aguardar. Não adivinhar, não cair em fallback, não pedir credencial avulsa.
-2. **`MCP_CONECTOR` (padrão):** confirmar que existe ao menos uma tool `ads_*` do conector. Descobrir a tool pelo **final do nome** (ex.: `ads_update_entity`), nunca pelo prefixo, que varia conforme o servidor. Nenhuma disponível: pedir para reabrir o Claude Code; se persistir, voltar ao `/trafego-conexao`. Se a conta responder `is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out", avisar em linguagem simples que a Meta ainda não liberou essa conta no conector e oferecer trocar para o modo App pelo `/trafego-conexao`.
-3. **`APP` (reserva):** confirmar presença de `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q` (nunca exibir o valor). Faltou algum: `/trafego-conexao`.
+1. Ler `META_AUTH_MODO` do `.env` (`grep "^META_AUTH_MODO=" .env`, variável não sensível). Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar. Não adivinhar, não cair em fallback, não pedir credencial avulsa.
+2. **`MCP_CONECTOR` (padrão):** confirmar que existe ao menos uma tool `ads_*` do conector. Descobrir a tool pelo **final do nome** (ex.: `ads_update_entity`), nunca pelo prefixo, que varia conforme o servidor. Nenhuma disponível: pedir para reabrir o Claude Code; se persistir, voltar ao `/trafego-conexao`. Conferir também `FB_AD_ACCOUNT_ID` com valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar, a opção "Validar" do `/trafego-conexao` completa. Se a conta responder `is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out", avisar em linguagem simples que a Meta ainda não liberou essa conta no conector e oferecer trocar para o modo App pelo `/trafego-conexao`.
+3. **`APP` (reserva):** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem com valor, com `grep -q "^NOME=." .env` (o ponto faz linha vazia contar como ausente; nunca exibir o valor). Faltou algum: `/trafego-conexao`.
 
 ### 0.2 Lacunas e roteamento
 
-1. **Quase sem lacunas.** Diagnóstico, pausar, reduzir/realocar orçamento, limites por conjunto, cost cap, cortar posicionamento e reativar funcionam nos dois modos (`MCP_CONECTOR` e `APP`), porque `ads_update_entity` é passthrough genérico. **Única exceção: o guardrail automático (§18).** No MCP não existe tool de regra automática, então a skill conduz o aluno por um passo a passo guiado no Gerenciador de Anúncios, com os números já calculados. No APP, faz handoff para `/trafego-regras`.
+1. **Quase sem lacunas.** Diagnóstico, pausar, reduzir/realocar orçamento, limites por conjunto, cost cap, cortar posicionamento e reativar funcionam nos dois modos (`MCP_CONECTOR` e `APP`), porque `ads_update_entity` é passthrough genérico. **Única exceção: o guardrail automático (§18).** No MCP não existe tool de regra automática, então o guardrail vai para a `/trafego-regras` (sub-fluxo [1]), que conduz o aluno por um passo a passo guiado no Gerenciador de Anúncios, com os números já calculados. No APP, o mesmo handoff cria a regra pela API.
 2. **Roteamento:**
-   - **Leitura** (campanhas, insights, nomes de conta): preferir `/trafego-insights`. Direto: `ads_get_ad_entities` / `ads_get_ad_accounts` / `ads_insights_*` (MCP) ou curl GET (APP).
+   - **Leitura** (campanhas, insights, nomes de conta): preferir `/trafego-insights`. Direto no MCP: `ads_get_ad_entities` com `level` (`ad_account`, `campaign`, `adset` ou `ad`) para métricas e entidades de qualquer nível e `ads_get_ad_accounts` para as contas, seguindo o contrato do conector em `trafego-insights/SKILL.md` §10.1 (Contrato do conector da Meta). `ads_insights_performance_trend` só para tendência de conta, conjunto ou anúncio (não faz nível campanha). No APP: curl GET.
    - **Escrita**: `ads_update_entity` (pausar e ajustar orçamento) e `ads_activate_entity` (reativar) no MCP; curl POST no APP.
    - No MCP **não há token**: `ad_account_id` e IDs vêm de `FB_AD_ACCOUNT_ID`/`FB_AD_ACCOUNT_IDS` e da listagem.
 3. **Ferramentas extras do MCP** que podem entrar quando encaixarem no diagnóstico (parâmetros descobertos pelo schema da tool na hora, nunca inventados): `ads_account_get_activity_logs` (histórico de alterações da conta, útil para confirmar a "última edição há menos de 48h"), `ads_insights_anomaly_signal` (anomalia de métrica), `ads_insights_industry_benchmark` e `ads_insights_auction_ranking_benchmarks` (referência de mercado e de leilão, só como contexto, nunca como gatilho), `ads_get_opportunity_score`, `ads_get_ad_preview` e `ads_get_creatives` (ver o criativo que está sendo julgado).
@@ -86,10 +86,15 @@ O YAML de output (§13) usa nomes lógicos. Traduzir na hora de executar:
 | `update_campaign_budget` | `ads_update_entity` (daily_budget na campanha) | POST /<campaign_id> daily_budget |
 | `realocar_neutro` | par de `update_*_budget` (reduz um, aumenta outro; gasto total igual) | dois POST daily_budget |
 | `limitar_conjunto` | `ads_update_entity` (daily_spend_cap / daily_min_spend_target no adset) | POST /<adset_id> daily_spend_cap,daily_min_spend_target |
-| `definir_cost_cap` | `ads_update_entity` (bid_strategy + bid_amount na campanha em CBO) | POST /<campaign_id> bid_strategy,bid_amount |
+| `definir_cost_cap` | `ads_update_entity`: CBO = `bid_strategy` na campanha + `bid_amount` em cada conjunto ativo; ABO = `bid_strategy` + `bid_amount` no conjunto (§6.5) | CBO: POST /<campaign_id> bid_strategy + POST /<adset_id> bid_amount por conjunto; ABO: POST /<adset_id> bid_strategy,bid_amount |
 | `cortar_posicionamento` | `ads_update_entity` (placement_soft_opt_out ou targeting no adset) | POST /<adset_id> placement_soft_opt_out\|targeting |
-| `instalar_guardrail` | sem tool no MCP: passo a passo guiado no Gerenciador (§18) | handoff `/trafego-regras` (POST /act_<id>/adrules_library) |
+| `instalar_guardrail` | sem tool no MCP: handoff `/trafego-regras` (sub-fluxo [1], criação guiada no Gerenciador, §18) | handoff `/trafego-regras` (POST /act_<id>/adrules_library) |
 | reativar | `ads_activate_entity` | POST /<id> status=ACTIVE |
+
+**Unidade dos valores na escrita (orçamento, piso, teto e lance):**
+- **APP:** `daily_budget`, `lifetime_budget`, `bid_amount`, `daily_spend_cap` e `daily_min_spend_target` vão como número inteiro em centavos (R$ × 100). Os campos `_brl` do YAML ficam em reais, só para exibição e cálculo, e são convertidos na hora da chamada.
+- **MCP:** conferir no schema de entrada do `ads_update_entity` a unidade que ele aceita antes da primeira escrita, sem assumir centavos. Na leitura, o `daily_budget` do conector vem como objeto com moeda e valor em reais (usar como veio); número puro é centavos (Graph API).
+- O bloco 🛡️ mostra sempre o valor em reais. Depois de gravar orçamento, piso, teto ou lance, ler a entidade de novo e conferir que o valor em reais bate com o que foi aprovado no bloco 🛡️. Se não bater, avisar o aluno e propor reverter.
 
 ---
 
@@ -120,8 +125,8 @@ Ler `FB_AD_ACCOUNT_IDS` no `.env` (múltiplas contas separadas por vírgula) e `
 
 **Se houver mais de uma conta em `FB_AD_ACCOUNT_IDS`**: listar as contas disponíveis e perguntar qual usar. Para obter o nome de cada conta (leitura, rotear por modo, ver Passo 0):
 ```
-MCP: ads_get_ad_accounts (já traz name por conta)
-APP: GET /{act_ID}?fields=name&access_token=<TOKEN_DO_ENV>
+MCP: ads_get_ad_accounts (já traz ad_account_name por conta; se vier com outro nome, como name, usar o equivalente)
+APP: curl -s "https://graph.facebook.com/v25.0/act_{ID}?fields=name&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Ordenação obrigatória:** a conta cujo ID coincide com `FB_AD_ACCOUNT_ID` é a conta padrão e deve sempre aparecer em **primeiro lugar**, com a etiqueta `"padrão"` após o nome. As demais seguem na ordem de `FB_AD_ACCOUNT_IDS`.
@@ -153,11 +158,13 @@ Quais campanhas incluir na otimização?
 
 Salvar como `STATUS_FILTRO` (variável de sessão).
 
-| Escolha | `effective_status` na API |
-|---------|--------------------------|
-| [1] | `["ACTIVE"]` |
-| [2] | `["ACTIVE","WITH_ISSUES"]` |
-| [3] | `["ACTIVE","PAUSED","WITH_ISSUES"]` |
+| Escolha | `effective_status` na API (MCP: `value` do `filtering`) | Na URL do curl (APP, já codificado) |
+|---------|--------------------------|--------------------------|
+| [1] | `["ACTIVE"]` | `%5B%22ACTIVE%22%5D` |
+| [2] | `["ACTIVE","WITH_ISSUES"]` | `%5B%22ACTIVE%22%2C%22WITH_ISSUES%22%5D` |
+| [3] | `["ACTIVE","PAUSED","WITH_ISSUES"]` | `%5B%22ACTIVE%22%2C%22PAUSED%22%2C%22WITH_ISSUES%22%5D` |
+
+Dentro de URL de curl, `{STATUS_FILTRO}` usa sempre a coluna codificada: colchetes e aspas crus quebram a chamada (o curl lê `[ ]` como padrão de expansão e as aspas fecham a string do shell). Mesma regra para `time_range` e `filtering` na URL (ver `trafego-insights` §10.2.1).
 
 **Default recomendado:** [2] cobre o caso mais comum (tem campanhas rodando com algum conjunto parado por problema).
 
@@ -170,9 +177,13 @@ Salvar como `STATUS_FILTRO` (variável de sessão).
 Buscar as campanhas da conta com o status escolhido (leitura, rotear por modo, ver Passo 0). **Pedir só campos leves** (`id`, `name`, `objective`, `effective_status`, `daily_budget`), nunca métricas/insights nesta varredura inicial:
 
 ```
-MCP: ads_get_ad_entities (level=campaign, ad_account_id=AD_ACCOUNT_ID_ATUAL, effective_status=STATUS_FILTRO, fields enxutos)
-APP: GET /act_{AD_ACCOUNT_ID_ATUAL}/campaigns?fields=id,name,objective,status,daily_budget&effective_status={STATUS_FILTRO}&limit=200&access_token=<TOKEN_DO_ENV>
+MCP: ads_get_ad_entities (level: "campaign", ad_account_id: AD_ACCOUNT_ID_ATUAL,
+     filtering: [{field: "campaign.effective_status", operator: "IN", value: STATUS_FILTRO}],
+     limit: 1000, fields enxutos)
+APP: curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns?fields=id,name,objective,status,daily_budget&effective_status={STATUS_FILTRO codificado, coluna do Passo 0.55}&limit=200&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
+
+No MCP, repetir a chamada com o `cursor` devolvido enquanto houver próxima página. Se vierem 1000 linhas sem próxima página, avisar o aluno que a lista pode ter sido cortada pelo conector (contrato em `trafego-insights/SKILL.md` §10.1).
 
 > **Guard de conta grande (aprendido em sessão real).** Em contas com centenas de campanhas, a varredura com `PAUSED` ligado **estoura o limite de tokens do retorno** (visto: 365 campanhas = 101 mil caracteres, recusado). Regras duras:
 > - **Nunca** puxar a conta inteira com `PAUSED` + campos pesados. Na varredura inicial, só os campos leves acima.
@@ -285,18 +296,26 @@ Se o aluno informar o valor, salvar como `meta_cpa_cpl_declarada`. Se não, usar
 
 **Pergunta 2. Margem de contribuição (para decidir por lucro, não só por CPA):**
 
-Nunca perguntar "qual sua margem?" (ninguém sabe de cabeça e confunde com a margem líquida da empresa). Perguntar os **3 pedaços fáceis**, que o aluno sabe responder:
+Nunca perguntar "qual sua margem?" (ninguém sabe de cabeça e confunde com a margem líquida da empresa). Primeiro, perguntar se o aluno quer informar os **3 pedaços fáceis**:
 ```
-Pra eu calcular o lucro de verdade, me diz 3 custos da sua venda (pode ser aproximado):
+Para calcular o lucro de verdade, preciso de 3 taxas da sua venda:
+plataforma, reembolso e imposto (pode ser aproximado).
 
-1. Taxa da plataforma   (ex: Hotmart/Kiwify, ~1 a 10%)
-2. Reembolso médio      (ex: 5%)
-3. Imposto sobre o faturamento  (ex: 6 a 17%)
+1. Quero informar as 3 taxas
+2. Não sei agora (uso a faixa de margem de 60 a 80%)
+
+Digite o número:
 ```
+Se 1, perguntar **uma taxa por mensagem**, cada uma com o próprio exemplo, nesta ordem:
+- "Qual é a taxa da plataforma de venda? (ex: 9,9% na Hotmart; costuma ficar entre 1% e 10%)"
+- "Qual é a taxa média de reembolso? (ex: 5%)"
+- "Qual é o imposto sobre o faturamento? (ex: 6% no Simples; pode chegar a 17%)"
+
 Calcular `margem_contribuicao = 1 - (taxa_plataforma + reembolso + imposto_faturamento)` e salvar. Exemplo: 1 - (1% + 5% + 17%) = 0,77.
 
 - **Custos fixos (aluguel, salário, sala) NÃO entram aqui:** são pagos com ou sem a campanha; só servem para a "saúde da empresa" (opcional, ver §3.6).
-- Se o aluno não souber nenhum dos três: usar **modo faixa** (60% a 80%) e avisar (ver §3.6).
+- Se 2, ou se o aluno não souber nenhuma das três: usar **modo faixa** (60% a 80%) e avisar (ver §3.6).
+- Se ele informar só parte das taxas: perguntar de novo só a que faltou; se ele não souber, usar o modo faixa e avisar.
 - O imposto sobre o anúncio (Meta) é outra coisa e fica de fora por enquanto (ver §3.6).
 
 **Pergunta 3. Sazonalidade ativa (opcional):** ver `sazonalidade_ativa` em §1.2 (nenhuma, Black Friday, data comemorativa, lançamento de concorrente relevante).
@@ -306,7 +325,7 @@ Calcular `margem_contribuicao = 1 - (taxa_plataforma + reembolso + imposto_fatur
 ```
 Otimizando: {nome da campanha ou "conta completa"}
 Conta: {nome da conta}  |  Funil: {tipo}  |  Ticket: R$ {valor} (do resumo do produto)  |  Meta CPA: R$ {cpa_cpl}
-Margem de contribuição: {margem}%  |  ROAS de break-even: {1÷margem}
+Margem de contribuição: {margem}%  |  ROAS de ponto de equilíbrio: {1÷margem}
 ```
 (O **CPA de break-even** = AOV × margem só é calculado depois de puxar o AOV no diagnóstico. Aqui mostra-se o ROAS de break-even, que já é conhecido pela margem.)
 
@@ -322,9 +341,9 @@ A skill roda 4 checagens e imprime um bloco curto de confiabilidade:
 
 > **Cuidado de chamada (aprendido em sessão real):** `attribution_setting` **não existe no nível de conta** em algumas contas e, quando incluído num `fields` junto de outros campos, **derruba a chamada inteira** (`Tried accessing nonexisting field (attribution_setting)`), e você perde também o total da conta que vinha junto. Por isso: **nunca incluir `attribution_setting` numa chamada multi-campo de insights.** Pedir num teste isolado (ou simplesmente assumir o padrão omni e declarar). O resto dos campos não pode ser refém desse.
 
-**2. Saúde do pixel.** Acionar `/trafego-pixel` (ou ler o dataset, no MCP pelas tools `ads_pixel_event_*`): último disparo, volume do evento-norte (Compra ou Lead) nos últimos 7 dias, taxa de deduplicação. Se o evento está com volume baixo ou sem disparo recente, **marcar o dado como não confiável** e avisar antes de diagnosticar.
+**2. Saúde do pixel.** Acionar `/trafego-pixel` (ou ler o dataset: no MCP, `ads_get_datasets` para o último disparo, `ads_get_dataset_stats` para o volume do evento e `ads_get_dataset_quality` para a deduplicação; `ads_pixel_event_read` só como leitura complementar da configuração dos eventos): último disparo, volume do evento-norte (Compra ou Lead) nos últimos 7 dias, taxa de deduplicação. Se o evento está com volume baixo ou sem disparo recente, **marcar o dado como não confiável** e avisar antes de diagnosticar.
 
-> **Fallback quando a ferramenta de dataset não responde (aprendido em sessão real):** em algumas contas as tools de dataset/pixel ainda estão em liberação gradual (`ads_get_datasets` responde "gradually being rolled out"). Nesse caso **não travar**: inferir a saúde do pixel pelo **fluxo de compras atribuídas** que já vem nos insights (`actions:omni_purchase` aparecendo nas campanhas = evento Compra disparando) e **declarar** no carimbo ("pixel: registrando Compra, inferido pelo fluxo de vendas; stats de dataset indisponível nesta conta"). Volume absoluto baixo em high ticket é esperado e **não** é, sozinho, sinal de subnotificação.
+> **Fallback quando a ferramenta de dataset não responde (aprendido em sessão real):** em algumas contas as tools de dataset/pixel ainda estão em liberação gradual (`ads_get_datasets` responde "gradually being rolled out"). Nesse caso **não travar**: inferir a saúde do pixel pelo **fluxo de compras atribuídas** que já vem nos insights (`omni_purchase` aparecendo nas campanhas = evento Compra disparando) e **declarar** no carimbo ("pixel: registrando Compra, inferido pelo fluxo de vendas; stats de dataset indisponível nesta conta"). Volume absoluto baixo em high ticket é esperado e **não** é, sozinho, sinal de subnotificação.
 
 **3. Conciliação com o total da conta.** Puxar o total da conta (gasto, compras/leads, ROAS) na **mesma janela e atribuição** e conferir que a **soma das campanhas bate com o total**, dentro de ±5%. Mostrar a conferência ao aluno:
 ```
@@ -412,16 +431,16 @@ ROAS **não é métrica primária por padrão** no perpétuo, porque depende de 
 | Métrica | Saudável | Atenção | Crítico |
 |---|---|---|---|
 | CTR único no link Feed/Reels | ≥ 1,2% | 0,8 a 1,2% | < 0,8% |
-| Hook rate (vídeo 3s) | ≥ 25% | 18 a 25% | < 18% |
+| Hook rate (vídeo 3s, `video_p25_watched_actions ÷ impressions`; régua da `trafego-insights/SKILL.md` §4.3) | ≥ 25% | 15 a 25% | < 15% |
 | Frequência (7d) | 1,0 a 2,5 | 2,5 a 3,5 | > 3,5 |
 | CPM | ±20% da média histórica da conta | +20 a 40% | > +40% |
 
 > **Nota sobre o CTR de link (campo certo, com plano B):** a métrica é o **CTR no link**, NUNCA o `ctr` geral, que conta toda interação (curtida, comentário, expandir, salvar) e infla o número para 2 a 4 vezes o real. Ordem de preferência de campo, conforme o que a conta expõe (confirmar antes, ver §3.5):
 > 1. `unique_inline_link_click_ctr` (CTR único no link, preferido).
 > 2. `inline_link_click_ctr` (CTR no link, todos os cliques).
-> 3. **Cálculo manual:** `cliques no link ÷ impressões` (`actions:link_click ÷ impressions`), **declarando que foi calculado assim**.
+> 3. **Cálculo manual:** `cliques no link ÷ impressões` (`link_click ÷ impressions` no MCP; `inline_link_clicks ÷ impressions` no APP), **declarando que foi calculado assim**.
 >
-> **A tool `ads_get_ad_entities` (MCP) NÃO expõe os campos 1 e 2 (aprendido em sessão real):** pedir `inline_link_click_ctr` ou `unique_inline_link_click_ctr` ali volta `Unsupported field(s)`. Nessa tool, ir **direto ao cálculo manual** (item 3): `actions:link_click ÷ impressions`. Os campos 1 e 2 valem para o caminho APP (curl na Graph API), onde existem. Ver o mapa de campos reais em §3.5.1.
+> **A tool `ads_get_ad_entities` (MCP) NÃO expõe os campos 1 e 2 (aprendido em sessão real):** pedir `inline_link_click_ctr` ou `unique_inline_link_click_ctr` ali volta `Unsupported field(s)`. Nessa tool, ir **direto ao cálculo manual** (item 3): `link_click ÷ impressions`. Os campos 1 e 2 valem para o caminho APP (curl na Graph API), onde existem. Ver o mapa de campos reais em §3.5.1.
 >
 > Se a conta só expõe o `ctr` geral, **não usar como CTR de link**: reportar "CTR de link indisponível" em vez de inflar. O CTR único costuma ficar 20 a 30% abaixo do CTR no link total; os thresholds acima são aproximação inicial, calibrar pela média histórica da conta quando houver.
 >
@@ -435,7 +454,7 @@ Esta camada é o que diferencia diagnóstico raso de diagnóstico sênior. Todas
 
 > **Nível certo de consulta (aprendido em sessão real):** os eventos de funil (`landing_page_view`, `add_to_cart`, `initiate_checkout`, `purchase` + valor) **não aparecem na consulta crua em nível de campanha** com um conjunto enxuto de campos. Para calcular as derivadas, puxar os insights com as **ações de funil explícitas** (e, quando preciso, no nível de conta ou conjunto). **Se o evento não vier, marcar a métrica como `indisponível neste nível`, nunca inventar nem assumir zero.** Connect rate de "0%" por falta do evento é diferente de connect rate real de 0%.
 
-> **A tool `ads_get_ad_entities` (MCP) NÃO oferece os eventos de funil (aprendido em sessão real):** seu catálogo de ações é limitado (essencialmente `actions:omni_purchase`, `actions:link_click`, `actions:page_engagement`, `actions:comment`, `actions:like`, `actions:post_reaction`, `actions:post_save`). **Não há `landing_page_view`, `add_to_cart` nem `initiate_checkout`.** Logo, no caminho MCP, as derivadas de funil (connect rate, conversão da página, carrinho para compra, checkout para compra) ficam **`indisponível neste nível`**: declarar e decidir por métrica-norte (CPA/ROAS) + leading (CTR de link calculado, frequência). Os eventos completos de funil só vêm pelo caminho APP (curl na Graph API com `actions`/`action_values` e as ações de funil explícitas) ou via `/trafego-insights`. Nunca pedir `actions`/`action_values` "crus" na tool do MCP (volta `Unsupported field(s)`).
+> **No conector (MCP), os eventos de funil têm nome próprio na `ads_get_ad_entities`** (conferidos na conta real com `ads_get_field_context` em 09/10/2026; contrato em `trafego-insights/SKILL.md` §10.1): visita à página = `landing_page_view`, checkout iniciado = `omni_initiated_checkout`, compras = `omni_purchase`, cliques no link = `link_click`. Com eles, connect rate, conversão da página e checkout para compra são calculados também no MCP. **Carrinho não foi conferido:** checar `add_to_cart` (ou o equivalente omni) com `ads_get_field_context` antes de pedir; se não existir, a etapa carrinho para compra fica `indisponível neste nível`. Campo de evento que volta `null` significa que a conta não tem o evento na janela: declarar `indisponível neste nível`, nunca assumir zero. Nunca pedir `actions`/`action_values` "crus" na tool do MCP (volta `Unsupported field(s)`).
 
 | Métrica derivada | Fórmula | Diagnostica | Saudável | Atenção | Crítico |
 |---|---|---|---|---|---|
@@ -444,8 +463,10 @@ Esta camada é o que diferencia diagnóstico raso de diagnóstico sênior. Todas
 | **Conversão da página (lançamento)** | Leads ÷ LP Views | Landing de captação | ≥ 25% | 15 a 25% | < 15% |
 | **Conversão do anúncio** | Compras (ou Leads) ÷ Cliques | Combinação criativo + página | depende da trilha | depende | depende |
 | **Carrinho → Compra** (perpétuo) | Compras ÷ AddToCart | Atrito do checkout | ≥ 30% | 15 a 30% | < 15% |
-| **Checkout → Compra** (perpétuo) | Compras ÷ InitiateCheckout | Atrito final (pagamento, frete) | ≥ 50% | 30 a 50% | < 30% |
+| **Checkout → Compra** (perpétuo) | Compras ÷ InitiateCheckout | Atrito final (pagamento, frete) | dentro ou acima da faixa do ticket | abaixo do piso da faixa | abaixo da metade do piso |
 | **Custo por etapa** | Gasto ÷ (PV, ATC, IC, Purchase) | Onde o custo escala desproporcionalmente | analisado em razão | n/a | n/a |
+
+**Checkout → Compra sem limiar fixo:** a faixa vem da tabela da §3.5 de `trafego-oferta-funil/SKILL.md`, pelo ticket do resumo do produto (a conclusão de checkout cai conforme o ticket sobe). Esses números são estimativa, e o `initiate_checkout` da Hotmart e da Kiwify pode disparar mais "solto", deixando a taxa artificialmente baixa: tratar a comparação como aproximação, nunca como prova de checkout quebrado.
 
 **Benchmarks vs histórico:** se houver histórico ≥ 14 dias da própria conta, prioriza a média histórica como referência. Os benchmarks fixos acima só servem para contas novas.
 
@@ -453,7 +474,7 @@ Esta camada é o que diferencia diagnóstico raso de diagnóstico sênior. Todas
 
 Duas verificações que resolvem a contradição clássica "CPA horrível, mas ROAS bom".
 
-**AOV (ticket real entregue).** Calcular `valor de compra ÷ compras` (via `action_values:omni_purchase ÷ actions:omni_purchase`, ou `ROAS × gasto ÷ compras`). Comparar com o `ticket_brl` (do resumo do produto ou declarado):
+**AOV (ticket real entregue).** Calcular `valor de compra ÷ compras` (no MCP, `offsite_conversion_fb_pixel_purchase_values ÷ omni_purchase`; no APP, `action_values:omni_purchase ÷ actions:omni_purchase`; sem valor de compra, `ROAS × gasto ÷ compras`). Comparar com o `ticket_brl` (do resumo do produto ou declarado):
 - Se o AOV calculado é **muito maior que o ticket** (order bump / upsell / múltiplos produtos), a régua de CPA baseada só no ticket está errada. A skill **avisa e sugere recalcular o CPA alvo sobre o AOV real**, ou decidir por ROAS.
 - Se o AOV é **coerente com o ticket** mas o CPA está alto com ROAS maior que 1, suspeitar de **subnotificação de compras** (ver Passo 0.8).
 
@@ -473,25 +494,34 @@ Nunca substituir um campo por outro silenciosamente (foi exatamente o erro que t
 
 #### 3.5.1 Mapa de campos reais por caminho (evita chamada que quebra)
 
-> **Por que existe (sessão real):** a skill pedia campos com nome de Graph API (`actions`, `action_values`, `inline_link_click_ctr`) que a tool `ads_get_ad_entities` **rejeita**, e duas chamadas falharam antes de acertar. Esta tabela é o contrato dos campos que **existem de fato** na tool do MCP. Para o caminho APP (curl), valem os nomes clássicos da Graph API.
+> **Por que existe (sessão real):** a skill pedia campos com nome de Graph API (`actions`, `action_values`, `inline_link_click_ctr`) que a tool `ads_get_ad_entities` **rejeita**, e duas chamadas falharam antes de acertar. Esta tabela segue os campos **conferidos na conta real** com `ads_get_field_context` em 09/10/2026 (contrato do conector em `trafego-insights/SKILL.md` §10.1, com fonte na §4.3 da `trafego-dashboard`). Para o caminho APP (curl), valem os nomes clássicos da Graph API.
 
 **O que pedir na tool `ads_get_ad_entities` (MCP):**
 
 | Quero | Campo certo na tool MCP | Observação |
 |---|---|---|
-| Gasto | `spend` (volta como `amount_spent`) | ok |
-| Impressões / alcance / frequência | `impressions`, `reach`, `frequency` | ok |
-| Compras (qtde) | `actions:omni_purchase` | **não** existe `purchases` |
-| Custo por compra (CPA) | `cost_per_action_type`, lendo `cost_per_action_type:omni_purchase` | CPA pronto, sem dividir à mão |
-| ROAS | `purchase_roas` | ok |
-| Cliques no link | `actions:link_click` | base do CTR de link calculado |
-| CPM / CPC | `cpm`, `cpc` | ok |
-| Leads (qtde) | `lead` ou `actions:lead` | lançamento |
-| CTR de link | **calcular** `actions:link_click ÷ impressions` | `inline_link_click_ctr` NÃO existe aqui |
-| Valor de compra (p/ AOV) | **derivar** `purchase_roas × spend` | `action_values` NÃO existe aqui; AOV = `(purchase_roas × spend) ÷ compras` |
-| Tipo de orçamento | `daily_budget` / `lifetime_budget` na campanha e no adset | ABO vs CBO (§6.0) |
+| Gasto | `amount_spent` | conferido; `spend` é o nome da Graph API (APP) |
+| Impressões / alcance | `impressions`, `reach` | conferidos |
+| Frequência | `frequency` | não conferido: checar com `ads_get_field_context`; sem ele, calcular `impressions ÷ reach` |
+| Cliques no link | `link_click` | conferido; base do CTR de link calculado |
+| Visitas à página | `landing_page_view` | conferido; base do connect rate e da conversão da página |
+| Checkout iniciado | `omni_initiated_checkout` | conferido; base do checkout para compra |
+| Compras (qtde) | `omni_purchase` | conferido; **não** existe `purchases` |
+| Valor das compras (p/ AOV) | `offsite_conversion_fb_pixel_purchase_values` | conferido; AOV = valor ÷ `omni_purchase`. Se vier vazio, derivar `purchase_roas × amount_spent` |
+| ROAS | `purchase_roas` | conferido |
+| Resultado do objetivo (leads em captação) | `results` (objeto com `indicator` e `values`) | conferido; em campanha de leads, é a contagem de leads |
+| Custo por compra (CPA) | **calcular** `amount_spent ÷ omni_purchase` | `cost_per_action_type` não conferido: só usar se `ads_get_field_context` mostrar |
+| CPM / CPC | **calcular** CPM = `amount_spent ÷ impressions × 1000` | `cpm` e `cpc` não conferidos: checar com `ads_get_field_context`; custo por clique no link = `amount_spent ÷ link_click` |
+| Leads (qtde) | `results` (campanha de leads) | fora de campanha de leads, o campo que `ads_get_field_context` indicar. Contagem: `lead` (total da Meta) quando vier; sem ele, `offsite_conversion.fb_pixel_lead`; **nunca somar os dois** |
+| Carrinho | não conferido | checar `add_to_cart` com `ads_get_field_context`; sem campo, etapa carrinho `indisponível neste nível` |
+| CTR de link | **calcular** `link_click ÷ impressions` | `inline_link_click_ctr` NÃO existe aqui |
+| Tipo e valor de orçamento | `daily_budget` / `lifetime_budget` na campanha e no adset | ABO vs CBO (§6.0); objeto com moeda = reais, número puro = centavos |
 
-**Proibido na tool MCP** (volta `Unsupported field(s)` e derruba a chamada): `actions`, `action_values`, `inline_link_clicks`, `inline_link_click_ctr`, `unique_inline_link_click_ctr`, `landing_page_view`, `add_to_cart`, `initiate_checkout`, `attribution_setting` em chamada multi-campo de conta.
+Métrica sem evento volta `null`: é dado (a conta não tem o evento), não erro. Declarar `indisponível neste nível`.
+
+**Proibido na tool MCP** (volta `Unsupported field(s)` e derruba a chamada): `actions`, `action_values`, `inline_link_clicks`, `inline_link_click_ctr`, `unique_inline_link_click_ctr`, `attribution_setting` em chamada multi-campo de conta. `initiate_checkout` também é recusado com esse nome: o checkout iniciado se pede como `omni_initiated_checkout`.
+
+**Formatos do conector** (mesmo contrato): `time_range` vai como texto JSON (`'{"since":"AAAA-MM-DD","until":"AAAA-MM-DD"}'`); série por dia com `time_increment: "1"`; filtro no formato `filtering: [{field: "{nível}.campo", operator, value: [...]}]` (o nível `ad_account` não aceita `sort` nem `filtering`); `limit: 1000`, próxima página em `cursor` e aviso ao aluno quando a consulta bater no limite sem próxima página. Sem filtro, o conector devolve entidades antigas sem entrega: em campanha e anúncio, filtrar `impressions` maior que 0; em conjunto, `effective_status` `IN ["ACTIVE"]` (quando a pergunta é sobre o que está rodando).
 
 **Caminho APP (curl na Graph API):** aí valem os nomes clássicos: `actions`, `action_values`, `inline_link_click_ctr`, `unique_inline_link_click_ctr` e as ações de funil. Usar `curl -g` quando o `fields` tiver nesting (ver regra global no CLAUDE.md).
 
@@ -535,6 +565,8 @@ Exemplo: 1 - (1% + 5% + 17%) = **0,77**. Custos fixos (aluguel, salário, sala) 
 ```
 
 A zona **amarela** é a novidade: campanha acima da meta de CPA que **ainda dá lucro**. A skill **não contém** zona amarela, só otimiza. Contenção (§6) e pausa por dinheiro (§7) valem só na **zona vermelha** (lucro/dia negativo sustentado).
+
+**Ordem de teste da zona (por campanha):** primeiro a vermelha (lucro/dia negativo, ou seja, ROAS abaixo do break-even), depois a verde (CPA ≤ meta), e o resto é amarela. Assim, se a meta declarada passar do CPA de break-even, a campanha com prejuízo continua vermelha.
 
 **Duas visões, nunca misturadas:**
 - **Decisão de campanha:** margem de contribuição (sem custo fixo). Decide escalar/manter/conter.
@@ -603,7 +635,8 @@ Métrica-norte (CPA/CPL) acima do target?
 │     → Ação: ALERTAR aluno. NÃO pausar criativo bom.
 │         Se gasto continuar improdutivo, reduzir -20% como contenção.  [FORA DO META]
 │
-├─ 4. Conversão da página ok, mas Carrinho → Compra < 15% (perpétuo)?
+├─ 4. Conversão da página ok, mas Carrinho → Compra < 15% ou Checkout → Compra
+│     crítico pela faixa do ticket (§3.3) (perpétuo)?
 │     → CHECKOUT (atrito, pagamento, frete, confiança)
 │     → Ação: ALERTAR aluno. Mesma lógica do item 3.  [FORA DO META]
 │
@@ -675,7 +708,7 @@ Qualquer das condições:
 
 ### 6.2 Bloqueios à mudança de orçamento
 A skill não muda orçamento se:
-- Conjunto está em **fase de aprendizado ativa** (a menos que esteja queimando muito acima do CPA máximo. Aí pausa, não reduz)
+- Conjunto está em **fase de aprendizado ativa** (a menos que esteja queimando muito acima do CPA máximo. Aí pausa, não reduz). No MCP, se o campo de aprendizado não vier (`aprendizado: NAO_VERIFICADO`, contrato em `trafego-insights/SKILL.md` §10.1), o conjunto **não sai da lista**: segue marcado "aprendizado não conferido", o bloco 🛡️ avisa que o conector não mostra a fase de aprendizado desse conjunto e o aluno decide no "sim".
 - Última edição há < 48h
 - Gasto acumulado do dia < 50% do orçamento diário
 
@@ -683,7 +716,7 @@ A skill não muda orçamento se:
 
 > Otimização, não escala: o **gasto total da conta não muda**, só é redistribuído. Em vez de só cortar -20% de quem queima, a skill **move esse valor pro vencedor**, no mesmo gesto.
 
-**Dispara quando** há (a) ao menos uma campanha em contenção (zona vermelha / lucro-dia negativo, §3.6) **e** (b) ao menos um vencedor com folga (zona verde, fora de aprendizado, frequência saudável, última edição ≥ 48h).
+**Dispara quando** há (a) ao menos uma campanha em contenção (zona vermelha / lucro-dia negativo, §3.6) **e** (b) ao menos um vencedor com folga (zona verde, fora de aprendizado, frequência saudável, última edição ≥ 48h). No MCP sem o campo de aprendizado (`NAO_VERIFICADO`, §6.2), os dois lados seguem como candidatos marcados "aprendizado não conferido": o bloco 🛡️ avisa e o aluno decide no "sim".
 
 **Pergunta ao aluno** (no lugar do corte seco):
 ```
@@ -709,7 +742,7 @@ A campanha "A" está queimando. O que fazer com os R$ {corte}/dia que vou tirar 
 
 > Em CBO, em vez de pausar o conjunto ruim, **algema o gasto dele** (teto) e/ou **garante um piso** pro vencedor, sem tocar no orçamento da campanha e **sem pausar**. Aprendizado intacto, gasto total intocado.
 
-**Campos da API:** `daily_spend_cap` (teto) e `daily_min_spend_target` (piso), no **conjunto**, em **centavos**.
+**Campos da API:** `daily_spend_cap` (teto) e `daily_min_spend_target` (piso), no **conjunto**, em **centavos no APP**; no MCP, na unidade do schema da tool (ver "Unidade dos valores na escrita", no Passo 0).
 
 **Pré-requisito de dado:** exige descer ao **nível de conjunto** (qual adset do CBO ganha/queima). Se o diagnóstico parou na campanha, puxar um insight a mais (adsets da campanha) antes de propor. É leitura, não passa pelo gate.
 
@@ -731,7 +764,7 @@ Na campanha "X" (CBO), o conjunto "V" lucra e o "Q" queima. Sem mexer no orçame
 
 **Gate 🛡️:** listar campanha (CBO + orçamento), conjunto vencedor (piso) e/ou queimador (teto), marcar "reset: não" e "orçamento da campanha intocado". **Reverter = zerar os campos.**
 
-**Execução:** `ads_update_entity` no conjunto (MCP) ou POST `/<adset_id>` (APP) com `{daily_min_spend_target}` e/ou `{daily_spend_cap}` em centavos.
+**Execução:** `ads_update_entity` no conjunto (MCP) ou POST `/<adset_id>` (APP) com `{daily_min_spend_target}` e/ou `{daily_spend_cap}` (valor em reais × 100 no APP; no MCP, na unidade do schema da tool). Depois de gravar, reler o conjunto e conferir o valor em reais.
 
 **No YAML:** ação `limitar_conjunto` com `objeto_id` (adset), `daily_min_spend_target` e/ou `daily_spend_cap`.
 
@@ -750,15 +783,18 @@ Na campanha "X" (CBO), o conjunto "V" lucra e o "Q" queima. Sem mexer no orçame
 - Cost cap inicial = **CPA de break-even** (§3.6) ou a meta declarada, o que for menor. **Nunca abaixo do CPA atual de quem performa** (sufoca a entrega).
 - Aperto gradual: se já há cap, baixar no máximo ~15% por vez.
 
-**Roteamento CBO obrigatório (verificado na API):** lance no conjunto é **rejeitado** sob CBO ("Must Use Campaign Bid Strategy"). Em CBO, `bid_strategy` vai na **campanha**. O `bid_amount` tem nuance de posição em CBO, então **ler a config atual e confirmar o roteamento antes de gravar** (mesma disciplina da §6.0). Não assumir.
+**Roteamento por tipo de orçamento (obrigatório, §6.0):** ler `budget.tipo`. Sem o tipo detectado, não propor: `acao: aguardar`.
+- **CBO:** `bid_strategy` vai na **campanha** (estratégia no conjunto é **rejeitada** sob CBO, "Must Use Campaign Bid Strategy", verificado na API) e o `bid_amount` vai em **cada conjunto ativo** da campanha (o campo não existe na campanha). Tudo num lote só e num "sim" só. Na Graph API, a chamada da campanha também aceita o mapa `adset_bid_amounts` (`{adset_id: valor}`) para gravar a estratégia e os tetos de uma vez; no MCP, conferir no schema do `ads_update_entity` se ele aceita esse mapa ou se o valor vai conjunto por conjunto.
+- **ABO:** `bid_strategy` e `bid_amount` vão juntos no **conjunto** escolhido.
+- **Antes de gravar:** ler a config atual (estratégia da campanha e `bid_amount` dos conjuntos). Se uma chamada for recusada (ordem campanha e conjunto, ou falta de valor), parar e relatar ao aluno, sem improvisar outra ordem fora do lote aprovado (regra "exceto se uma chamada falhar" do gate).
 
 **Reset: SIM.** Mudar estratégia de lance reseta aprendizado. Dispara o disclaimer da §11 (custo de reaprendizado ≈ 50 × CPA target) e exige **confirmação reforçada**.
 
-**Gate 🛡️:** "definir cost cap de R$ {x} na campanha {y}", marcar "reset: SIM, reaprendizado ≈ R$ {z}", reversível (volta pra `LOWEST_COST_WITHOUT_CAP`).
+**Gate 🛡️:** em CBO, "definir cost cap de R$ {x}: estratégia na campanha {y} e teto em cada conjunto ativo", listando todos os conjuntos que recebem o valor; em ABO, "definir cost cap de R$ {x} no conjunto {z}". Marcar "reset: SIM, reaprendizado ≈ R$ {custo}" e reversível (volta para `LOWEST_COST_WITHOUT_CAP` no mesmo nível em que foi gravado: campanha em CBO, conjunto em ABO).
 
-**Execução:** `ads_update_entity` (campanha, `bid_strategy` + `bid_amount` em centavos) no MCP / POST equivalente no APP.
+**Execução:** `ads_update_entity` (MCP) ou POST equivalente (APP). CBO: campanha com `bid_strategy` + cada conjunto ativo com `bid_amount`. ABO: o conjunto com `bid_strategy` + `bid_amount`. Valor em reais × 100 no APP; no MCP, na unidade do schema da tool. Depois de gravar, reler e conferir o valor em reais.
 
-**No YAML:** ação `definir_cost_cap` (objeto_id campanha, `bid_strategy`, `bid_amount` centavos).
+**No YAML:** ação `definir_cost_cap` com `nivel: campaign` (CBO: `objeto_id` da campanha, `bid_strategy` e `conjuntos: [{adset_id, bid_amount}]`) ou `nivel: adset` (ABO: `objeto_id` do conjunto, `bid_strategy` e `bid_amount`).
 
 ---
 
@@ -910,7 +946,7 @@ condicoes_de_handoff_para_escala:
     classificacao: "nenhum"
   saude_estrutural:
     frequencia: "<=2.5"                          # perpétuo / <=3.0 lançamento
-    fora_de_aprendizado: true
+    fora_de_aprendizado: true                    # ou "nao_conferido" no MCP sem campo de aprendizado (NAO_VERIFICADO, trafego-insights §10.1): não reprova, vai com aviso em riscos_observados
     pelo_menos_um_criativo_saudavel: true
   prerequisitos_operacionais:
     ultima_edicao_horas: ">=48"
@@ -919,19 +955,27 @@ condicoes_de_handoff_para_escala:
   backup:
     criativos_saudaveis_no_conjunto: ">=2"       # >=3 para velocidade agressiva
   cooldown:
-    horas_desde_ultimo_handoff_de_descida:
+    horas_desde_ultimo_handoff_de_descida:     # fonte: data da última linha com status freio_total em
+                                               # meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md
+                                               # (sem arquivo ou sem freio_total = não houve descida)
       perpetuo_low_mid: ">=168"   # 7d
       perpetuo_high:    ">=336"   # 14d
       lancamento:       ">=24"    # lançamento mata cedo, cooldown curto
 ```
 
+> **Cooldown entre sessões:** o handoff de descida também vale quando aconteceu em outra conversa. Antes de emitir `pronta: true`, ler `meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md`; se a última linha `freio_total` estiver dentro do cooldown da trilha, emitir `pronta: false` com a data em que a campanha libera.
+
 > **Bloco `lucro`:** **zona amarela** (§3.6: CPA acima do target × 0,9 mas ROAS ≥ break-even) **não emite prontidão**. A camada de lucro exige `lucro_dia ≥ 0` sustentado pra escalar. Faz a régua de subida ficar simétrica com a régua de descida (§7 contém em zona vermelha; §12 escala em zona verde). Quando `confiabilidade_do_dado.nivel = baixa` (Passo 0.8), nunca emitir `pronta: true`: desligar o handoff até a fonte estabilizar.
 
 Se **qualquer** condição reprovar, emitir `pronta: false` com lista de critérios falhos.
 
-**Sugestão de validação via `/trafego-diagnostico`:** quando `pronta: true`, antes de encaminhar para `/trafego-escalar`, sugerir ao aluno: "Quer rodar o detector de falso vencedor (`/trafego-diagnostico` opção [4]) antes de escalar? Ele confirma que o resultado é sustentável." Se recusar ou já tiver rodado, seguir direto.
+> **Aprendizado não conferido:** no MCP, quando o conector não mostra a fase de aprendizado (`aprendizado: NAO_VERIFICADO`), o critério `fora_de_aprendizado` aceita `nao_conferido` e não reprova sozinho. A skill registra em `sinal_para_escala.riscos_observados` o aviso "fase de aprendizado não conferida pelo conector" e repete o aviso na narrativa ("Está pronta para escalar?"), para o aluno saber disso antes de aceitar o plano de escala.
 
-**Passagem do bastão:** com `pronta: true`, oferecer montar o plano de escala na hora. Com o ok do aluno, acionar a skill `trafego-escalar` passando o payload (`sinal_para_escala`, `confiabilidade_do_dado`, `lucro`, meta de CPA/CPL, conta e campanha). Montar o plano não escreve nada na conta: as escritas da escala passam pelo gate 🛡️ dela.
+**Sugestão de validação via `/trafego-diagnostico`:** quando `pronta: true`, antes de encaminhar para `/trafego-escalar`, sugerir ao aluno: "Quer rodar o detector de falso vencedor (`/trafego-diagnostico` opção [4]) antes de escalar? Ele confirma que o resultado é sustentável."
+- **Freio de escala:** se o detector rodou nesta sessão e a entidade não saiu `vencedor_real` com score de confiança 50 ou mais, emitir `pronta: false` com esse motivo e não passar o bastão (seguir para otimizar ou aguardar dados). Com `vencedor_real` e score de 75 ou mais, seguir. Com `vencedor_real` e score de 50 a 74, seguir só com escala gradual (`velocidade_sugerida: conservadora`).
+- Se o aluno recusar o detector, seguir, gravando `falso_vencedor: nao_verificado` no `sinal_para_escala` para a escala repetir o aviso no plano.
+
+**Passagem do bastão:** com `pronta: true`, oferecer montar o plano de escala na hora. Com o ok do aluno, acionar a skill `trafego-escalar` passando o payload (`sinal_para_escala`, com `falso_vencedor` e `score_confianca`, `confiabilidade_do_dado`, `lucro`, meta de CPA/CPL, conta e campanha). Montar o plano não escreve nada na conta: as escritas da escala passam pelo gate 🛡️ dela.
 
 ### 12.1 Recebimento de handoff de descida da escala
 Quando `/trafego-escalar` devolve uma campanha (freio total), a otimização recebe um payload e marca a campanha com `vinda_da_escala: true`. Isso ajusta a postura para o próximo ciclo:
@@ -945,11 +989,11 @@ Quando o handoff vem do **modo Carteira** da escalar (Fase 1: cortes e realocaç
 
 ## 13. Output esperado
 
-O output ao aluno tem **duas partes**, sempre nessa ordem: primeiro o diagnóstico narrado em bullets (legível), depois o plano técnico estruturado em YAML (executável).
+O diagnóstico tem **duas partes**: a Parte 1 (diagnóstico narrado em bullets, legível) é mostrada ao aluno; a Parte 2 (plano técnico estruturado em YAML, executável) vai para o arquivo salvo do diagnóstico e só aparece na tela se o aluno pedir.
 
 ### Parte 1. Diagnóstico narrado em bullets (visível, em português)
 
-Sempre antes do YAML, imprimir o bloco abaixo em markdown. Substituir os `{placeholders}` pelos valores reais do diagnóstico.
+Imprimir o bloco abaixo em markdown. Substituir os `{placeholders}` pelos valores reais do diagnóstico.
 
 ```markdown
 ## Confiabilidade do dado
@@ -957,7 +1001,7 @@ Sempre antes do YAML, imprimir o bloco abaixo em markdown. Substituir os `{place
 - **Janela / atribuição:** {ex: últimos 7 dias · 7d clique / 1d visualização}
 - **Pixel (evento-norte):** {ok | subnotificando | sem disparo recente}
 - **Conciliação com a conta:** {bate ✓ Δ X% | não bate: motivo}
-- **Confiança geral:** {alta | média | baixa}{se média/baixa: " · CPA rebaixado, decisão por ROAS + leading"}
+- **Confiança geral:** {alta | média | baixa}{se média/baixa: " · CPA rebaixado, decisão pelo ROAS e pelos sinais que vêm antes da venda (CTR de link, frequência)"}
 
 ## Diagnóstico
 
@@ -975,8 +1019,8 @@ Sempre antes do YAML, imprimir o bloco abaixo em markdown. Substituir os `{place
 ## Lucro (estimado, margem {margem}%)
 
 - **Resultado do período:** ~R$ {lucro_janela} de lucro de contribuição em {janela} (~R$ {lucro_dia}/dia)
-- **ROAS de break-even:** {1÷margem} · você está em {ROAS atual}
-- **CPA de break-even:** R$ {AOV×margem} · meta R$ {target} · zona predominante: {verde | amarela | vermelha}
+- **ROAS de ponto de equilíbrio:** {1÷margem} · você está em {ROAS atual} (abaixo desse ROAS, a campanha dá prejuízo)
+- **CPA de ponto de equilíbrio:** R$ {AOV×margem} · meta R$ {target} · zona predominante: {verde | amarela | vermelha} (acima desse CPA, a venda dá prejuízo)
 - {se modo faixa: "lucro em faixa, margem 60 a 80%" | se inconsistência com margem da empresa: avisar}
 
 ## Ferramentas disponíveis pra otimizar
@@ -988,10 +1032,10 @@ Sempre antes do YAML, imprimir o bloco abaixo em markdown. Substituir os `{place
 | Reduzir -20% | corta orçamento de quem queima | não | {✓/reserva · motivo curto} |
 | Realocação neutra | move do queimador pro vencedor (gasto total igual) | não | {✓/reserva · motivo} |
 | Limites por conjunto (CBO) | piso pro vencedor / teto pro queimador, sem pausar | não | {✓/reserva · motivo} |
-| Cost cap / bid cap | segura o CPA pelo leilão, sem cortar verba | sim | {✓/reserva · motivo} |
+| Limite de custo ou de lance (cost cap / bid cap) | segura o CPA pelo leilão, sem cortar verba | sim | {✓/reserva · motivo} |
 | Pausar | desliga anúncio / conjunto / campanha | não | {✓/reserva · motivo} |
-| Cortar posicionamento | desliga placement que queima (ex: Audience Network) | sim | {✓/reserva · motivo} |
-| Guardrail automático | regra que vigia e age sozinha 24h | não | {✓/reserva · motivo} |
+| Cortar posicionamento | desliga o posicionamento que gasta sem vender (ex: Audience Network) | sim | {✓/reserva · motivo} |
+| Guardrail automático | regra que vigia e age sozinha 24h (nasce desligada; vale depois que você revisa e liga) | não | {✓/reserva · motivo} |
 | Escalar (handoff `/trafego-escalar`) | sobe verba nas vencedoras | n/a | {✓/reserva · motivo} |
 | Verificar pixel (handoff `/trafego-pixel`) | checa o rastreamento | n/a | {✓/reserva · motivo} |
 | Corrigir página/checkout (handoff `/trafego-oferta-funil`) | diagnostica a oferta e encaminha a correção | n/a | {✓/reserva · motivo} |
@@ -1038,7 +1082,7 @@ Se o plano trouxer briefing de criativo novo com texto de anúncio (gancho, head
 
 ### Parte 2. Plano técnico estruturado (YAML)
 
-Imediatamente após a Parte 1, prefixar com a linha "Plano técnico estruturado (para execução):" e entregar:
+Não exibir ao aluno. Gravar no fim do arquivo do diagnóstico (Passo 11 do command), num bloco com o título "Plano técnico estruturado (para execução)". A execução usa este bloco; o gate 🛡️ descreve as ações em português. Mostrar na tela só se o aluno pedir (ver "Exceção", abaixo).
 
 ```yaml
 campaign_id: <id>
@@ -1107,10 +1151,12 @@ acoes_recomendadas:
     objeto_id: <id>
     # campos extras por tipo de ação:
     #   realocar_neutro       → de_objeto_id, para_objeto_id, valor_movido_brl
-    #   limitar_conjunto      → daily_min_spend_target, daily_spend_cap (centavos)
-    #   definir_cost_cap      → bid_strategy, bid_amount (centavos)            [reset: SIM]
+    #   limitar_conjunto      → daily_min_spend_target, daily_spend_cap (centavos no APP; no MCP, unidade do schema da tool)
+    #   definir_cost_cap      → nivel (campaign em CBO | adset em ABO), bid_strategy;
+    #                           CBO: conjuntos [{adset_id, bid_amount}]; ABO: bid_amount
+    #                           (bid_amount em centavos no APP; no MCP, unidade do schema da tool)   [reset: SIM]
     #   cortar_posicionamento → metodo (soft_opt_out|manual), posicionamento  [reset: SIM]
-    #   instalar_guardrail    → trigger, acao_regra (PAUSE|CHANGE_BUDGET|NOTIFICATION), threshold, via (manual_guiado_gerenciador | trafego_regras)
+    #   instalar_guardrail    → trigger, acao_regra (PAUSE|CHANGE_BUDGET|NOTIFICATION), threshold, gasto_minimo_brl, via: trafego_regras (no MCP, criação guiada no Gerenciador)
     #   alertar (fora do Meta) → handoff (/trafego-oferta-funil | /feedback-pagina | /feedback-low-ticket | /pagina-checkout | /pagina-performance | /pagina-pixel)
     #   refresh_criativo      → handoff (/copy-anuncio | /criativo-estatico | /mandala-de-anuncios | /trafego-testes)
     reset_aprendizado: true | false           # true em definir_cost_cap e cortar_posicionamento
@@ -1133,30 +1179,32 @@ sinal_para_escala:
   margem_de_seguranca: 0.27                  # quanto a métrica-norte está abaixo do target
   riscos_observados: [ ... ]
   criativos_de_backup_disponiveis: 2
+  falso_vencedor: vencedor_real | nao_verificado   # do detector da /trafego-diagnostico; outro resultado = pronta: false (§12)
+  score_confianca: ...                       # 0 a 100; de 50 a 74, só escala gradual; abaixo de 50, pronta: false
 
 proximas_observacoes:
   - <coisa para reanalisar em X horas>
 ```
 
 ### Exceção
-Se o aluno disser explicitamente "me dá só o YAML" ou "modo direto" na sessão, omitir a Parte 1.
+Se o aluno pedir para ver o plano técnico ("me mostra o YAML"), mostrar a Parte 2 na tela depois da Parte 1. Se ele disser explicitamente "me dá só o YAML" na sessão, omitir a Parte 1 e mostrar só a Parte 2. "Modo direto" não muda o que aparece na tela: ele só ativa o modo lote pré-aprovado do gate (CLAUDE.md).
 
-**Após entregar as duas partes,** oferecer (opcional) o painel de decisão em HTML: ver §17 e `sub-skills/_export-painel-decisao.md`.
+**Após entregar a Parte 1 (a Parte 2 vai para o arquivo do diagnóstico),** oferecer (opcional) o painel de decisão em HTML, só em trilha de perpétuo: ver §17 e `sub-skills/_export-painel-decisao.md`.
 
 ### 13.1. Tabelas em português
 
-TODA tabela markdown impressa para o aluno (antes ou depois do YAML técnico) deve usar cabeçalhos em português brasileiro. Os campos da Graph API entram em inglês mas são traduzidos no cabeçalho. Os identificadores de campo dentro do YAML técnico continuam em snake_case (vão para tool_calls).
+TODA tabela markdown impressa para o aluno deve usar cabeçalhos em português brasileiro. Os campos da Graph API entram em inglês mas são traduzidos no cabeçalho. Os identificadores de campo dentro do YAML técnico continuam em snake_case (vão para tool_calls).
 
 **Mapa obrigatório de tradução:**
 
-| Campo Graph API | Cabeçalho em português |
+| Campo Graph API (no conector, quando muda) | Cabeçalho em português |
 |---|---|
-| `spend` | Investimento |
+| `spend` (`amount_spent`) | Investimento |
 | `impressions` | Impressões |
 | `reach` | Alcance |
 | `frequency` | Frequência |
 | `clicks` | Cliques |
-| `inline_link_clicks` | Cliques no link |
+| `inline_link_clicks` (`link_click`) | Cliques no link |
 | `unique_inline_link_clicks` | Cliques únicos no link |
 | `ctr` | CTR geral |
 | `inline_link_click_ctr` | CTR no link |
@@ -1164,7 +1212,7 @@ TODA tabela markdown impressa para o aluno (antes ou depois do YAML técnico) de
 | `cpc` | CPC |
 | `cpm` | CPM |
 | `cost_per_inline_link_click` | Custo por clique no link |
-| `purchases` | Compras |
+| `purchases` (`omni_purchase`) | Compras |
 | `leads` | Leads |
 | `cpa` | CPA |
 | `cpl` | CPL |
@@ -1195,7 +1243,7 @@ TODA tabela markdown impressa para o aluno (antes ou depois do YAML técnico) de
 10. **Métricas derivadas sempre calculadas** quando o evento existe. Connect rate, conversão da página/anúncio e taxas de checkout entram no diagnóstico (lidas via `/trafego-insights`); quando o evento não vem no caminho usado, são declaradas `indisponível neste nível` (§3.3).
 11. **Não pausar quando o gargalo está fora do Meta.** Alertar o aluno, encaminhar para `/trafego-oferta-funil` e para a skill de correção (§5.2) e, se necessário, reduzir -20% como contenção, mas manter a estrutura viva.
 12. **Não escalar nesta skill.** Quem sobe orçamento e duplica conjuntos é `/trafego-escalar`. Aqui só emitir sinal de prontidão.
-13. **Respeitar cooldown.** Após handoff de descida da escala, aguardar 7d (perpétuo low/mid), 14d (perpétuo high) ou 24h (lançamento) antes de re-emitir prontidão.
+13. **Respeitar cooldown.** Após handoff de descida da escala, aguardar 7d (perpétuo low/mid), 14d (perpétuo high) ou 24h (lançamento) antes de re-emitir prontidão. A data da descida vem do histórico da escala (`meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md`, última linha `freio_total`), também entre sessões (§12).
 14. **Detectar ABO vs CBO antes de qualquer mudança de orçamento.** Ler `budget.tipo` da campanha. Em ABO, mudança vai no adset (`update_adset_budget`); em CBO, vai na campanha (`update_campaign_budget`). Sem o tipo detectado, não sugerir redução: marcar `acao: aguardar`. Em CBO com gargalo localizado, oferecer teto no conjunto, realocação ou pausa do conjunto específico em vez de reduzir a campanha inteira. Ver seção 6.0.
 15. **Validar a fonte antes de interpretar.** Rodar o Passo 0.8 (janela/atribuição, pixel, conciliação, descoberta de campos) e **mostrar a conferência ao aluno**. Sem isso, não diagnosticar.
 16. **Campo certo, sem troca silenciosa.** CTR de link nunca é o `ctr` geral. Descer na ordem de preferência de campo (§3.2) e declarar a fonte. Métrica indisponível é declarada como tal, nunca inventada nem assumida como zero.
@@ -1204,7 +1252,7 @@ TODA tabela markdown impressa para o aluno (antes ou depois do YAML técnico) de
 19. **Carimbar escopo, janela, atribuição e fonte** em todo agregado. Frequência do recorte é diferente de frequência da conta; ROAS calculado é diferente de ROAS do Gerenciador. Nunca apresentar número sem dizer de onde veio.
 20. **Decidir por lucro; CPA é guardrail, não juiz.** Traduzir para reais via margem de contribuição (§3.6). Conter ou pausar por dinheiro só na **zona vermelha** (lucro/dia negativo / ROAS abaixo do break-even). **Zona amarela** (acima da meta de CPA mas ainda lucrativa) se otimiza, não se contém. **Custo fixo (aluguel, salário) nunca entra na decisão de campanha.** Todo valor de lucro com a premissa de margem carimbada; lucro de contribuição é diferente de margem líquida da empresa.
 21. **Realocação e limites são neutros: nunca aumentam o gasto total.** A skill segura o freio (reduzir/pausar/reativar) e otimiza a distribuição (realocar do queimador pro vencedor §6.3, pôr piso/teto por conjunto em CBO §6.4), mas **subir o gasto total é escala (`/trafego-escalar`), nunca aqui.** Na realocação, teto de 20% nos **dois** lados pra não resetar aprendizado. Limites de conjunto só em CBO com 2+ conjuntos.
-22. **Ação que reseta aprendizado pede conta de custo + confirmação reforçada.** `definir_cost_cap` (§6.5) e `cortar_posicionamento` (§7.4) disparam reset: antes de propor, rodar a conta da §11 (≈ 50 × CPA target) e mostrar o custo no gate. No posicionamento, tentar **soft opt-out** antes do manual, e no manual sempre **ler, modificar e regravar** o `targeting` completo. Em CBO, lance vai na **campanha**, com verificação antes de gravar. O **guardrail (§18)** não reseta, mas não tem tool no MCP: no MCP vira passo a passo guiado no Gerenciador; no APP, handoff para `/trafego-regras`.
+22. **Ação que reseta aprendizado pede conta de custo + confirmação reforçada.** `definir_cost_cap` (§6.5) e `cortar_posicionamento` (§7.4) disparam reset: antes de propor, rodar a conta da §11 (≈ 50 × CPA target) e mostrar o custo no gate. No posicionamento, tentar **soft opt-out** antes do manual, e no manual sempre **ler, modificar e regravar** o `targeting` completo. No cost cap, em CBO a estratégia de lance vai na **campanha** e o valor do teto em **cada conjunto ativo**; em ABO, os dois vão no conjunto; sempre com leitura da config antes de gravar. O **guardrail (§18)** não reseta e vai sempre para a `/trafego-regras` (sub-fluxo [1]): no MCP, ela guia a criação no Gerenciador, porque o conector não cria regra automática; no APP, cria pela API com gate próprio.
 23. **Gate 🛡️ antes de toda escrita, DELETE nunca.** Um "sim" por lote no mesmo fluxo; atalho composto só com "aprovar tudo" explícito; esta skill não apaga entidade (pausa ou arquiva). Token nunca aparece no chat.
 
 ---
@@ -1217,7 +1265,7 @@ Quando o aluno pede "pausa tudo com ROAS<1 nas últimas 2 semanas" ou "reduz 20%
 
 Funções disponíveis:
 - `pausar_em_lote(filtro)`. Pausa todas as entidades que batem o filtro.
-- `reduzir_budget_em_lote(filtro, percent)`. Reduz budget % nas entidades que batem.
+- `reduzir_budget_em_lote(filtro, percent)`. Reduz budget % nas entidades que batem, no nível definido pela §6.0 (ABO no conjunto, CBO na campanha; anúncio não tem orçamento) e com os bloqueios da §6.2.
 - `pausar_top_n_pior(metric, n)`. Pausa as N piores em uma métrica.
 
 Critérios suportados: `roas`, `cpa`, `cpl`, `ctr`, `frequency`, `cpm`, `spend`, `impressions`, `purchases`, `leads`, `cpc`. Operadores: `less_than`, `greater_than`, `between`, `equal`. Períodos: `today`, `last_3d`, `last_7d`, `last_14d`, `last_30d`.
@@ -1249,7 +1297,9 @@ Toda execução de atalho composto segue o **modo "lote pré-aprovado" do CLAUDE
 
 > Detalhes completos em `sub-skills/_export-painel-decisao.md`.
 
-Depois de entregar o diagnóstico (§13, Parte 1 + Parte 2), oferecer **opcionalmente** um painel visual: um HTML standalone centrado em **dinheiro** (camada de lucro, §3.6) e nas **três zonas**, terminando no plano de ação. Não é relatório (isso é a `/trafego-analise`) nem dashboard ao vivo da conta (isso é o `/trafego-dashboard`); é um **painel de decisão**, fotografia do diagnóstico de hoje.
+Depois de entregar o diagnóstico (§13, Parte 1 na tela e Parte 2 no arquivo), oferecer **opcionalmente** um painel visual: um HTML standalone centrado em **dinheiro** (camada de lucro, §3.6) e nas **três zonas**, terminando no plano de ação. Não é relatório (isso é a `/trafego-analise`) nem dashboard ao vivo da conta (isso é o `/trafego-dashboard`); é um **painel de decisão**, fotografia do diagnóstico de hoje.
+
+**Só em trilha de perpétuo.** O lucro e as 3 zonas dependem de compra. Em `lancamento_*`, não oferecer o painel e dizer em 1 linha que, na captação, a leitura é pelo CPL, que já está no diagnóstico. Em conta completa com objetivos misturados, o painel entra só com as campanhas de perpétuo e avisa no topo quais campanhas de captação ficaram de fora.
 
 ```
 Quer salvar esse diagnóstico como um painel visual (HTML)? (s/n)
@@ -1277,31 +1327,17 @@ Regras (todas na sub-skill):
 
 **Mecanismo:** `adrules_library` (evaluation_spec + execution_spec: `PAUSE` / `CHANGE_BUDGET` / `NOTIFICATION` + schedule).
 
-**Por modo:**
+**Nos dois modos: handoff para `/trafego-regras`, sub-fluxo [1] (Regra automática).** A otimizar passa prontos o gatilho, a ação, o limite (o break-even do diagnóstico), o escopo (campanha ou conjunto) e o gasto mínimo sugerido na janela (4 vezes o CPA alvo, o padrão do passo 6 de `trafego-regras/sub-skills/regra-automatica.md`), para a regra não disparar com 1 venda cara. A `/trafego-regras` faz as validações, mostra o resumo em português e registra a regra em `meus-produtos/_global/trafego/regras/INDEX.md`.
 
-- **`MCP_CONECTOR`: passo a passo guiado no Gerenciador.** Não existe tool de regra automática no conector. A skill entrega o roteiro já preenchido com os números do diagnóstico e espera o aluno avisar que terminou:
+- **`MCP_CONECTOR`:** o conector não cria regra automática (lacuna). A `/trafego-regras` conduz a seção "Criar pelo Gerenciador (modo MCP)" de `regra-automatica.md`: passo a passo com os números já preenchidos, condição de gasto mínimo e o passo de desligar a regra logo depois de criar, até o aluno revisar e ligar.
+- **`APP`:** a `/trafego-regras` cria a regra via `POST /act_<id>/adrules_library`, desativada, com gate 🛡️ próprio.
 
-  ```
-  Vou te guiar pra criar a regra no Gerenciador de Anúncios. Leva uns 2 minutos.
+A regra nasce **desligada** nos dois modos (padrão da `/trafego-regras`): o vigia só começa a agir depois que o aluno revisar e ligar. Dizer isso ao aluno ao entregar o handoff.
 
-  1. Abra o Gerenciador de Anúncios e marque a caixa da campanha "{nome}".
-  2. Na barra de cima, clique em Regras e depois em Criar nova regra.
-  3. Em Ação, escolha: {pausar a campanha | diminuir o orçamento diário em 15% | só enviar notificação}.
-  4. Em Condições, coloque: {Custo por resultado} {maior que} R$ {threshold}.
-  5. Em Período de tempo, escolha: {últimos 3 dias}.
-  6. Em Programação, deixe rodando continuamente.
-  7. Dê o nome "{nome sugerido da regra}" e clique em Criar.
-
-  Os nomes dos botões podem variar um pouco conforme a versão do Gerenciador.
-  Me avisa quando terminar que eu sigo o plano.
-  ```
-
-  Agendamento por horário (ligar e pausar em faixas do dia, `adset_schedule`) não é regra automática: vai pelo MCP com `ads_update_entity`, com gate 🛡️.
-
-- **`APP`: handoff para `/trafego-regras`**, passando o trigger, a ação e o threshold prontos. Ela cria a regra via `POST /act_<id>/adrules_library` e passa pelo gate próprio.
+Agendamento por horário (ligar e pausar em faixas do dia, `adset_schedule`) não é regra automática: é o sub-fluxo de liga e pausa da `/trafego-regras` (no MCP, com `ads_update_entity`), com gate 🛡️.
 
 **Reset: não** (é criar regra; a regra só age quando o trigger bate).
 
-**Gate 🛡️ (no APP):** descrever a regra em português (o que dispara, o que faz, em qual objeto), reversível (desativar a regra).
+**Gate 🛡️:** o da `/trafego-regras` (no APP, antes do POST): regra descrita em português (o que dispara, o que faz, em qual objeto), reversível (desativar a regra).
 
-**No YAML:** ação `instalar_guardrail` (objeto_id, `trigger`, `acao_regra`, `threshold`, `via`).
+**No YAML:** ação `instalar_guardrail` (objeto_id, `trigger`, `acao_regra`, `threshold`, `gasto_minimo_brl`, `via: trafego_regras`).

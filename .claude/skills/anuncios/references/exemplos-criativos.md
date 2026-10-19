@@ -2,11 +2,11 @@
 
 ## Formato 1: Carrossel de Dores
 **Estrutura (5 slides):**
-1. Headline de impacto com pergunta
+1. Headline de impacto em afirmação (sem pergunta)
 2. Dor #1 com descrição emocional
 3. Dor #2 com consequência
 4. Dor #3 com agitação
-5. Solução + CTA ("Descubra como resolver → Link na bio")
+5. Solução + CTA ("Veja o passo a passo → Link na bio")
 
 **Quando usar:** Captura de leads, venda de curso/mentoria
 
@@ -44,12 +44,12 @@
 
 ---
 
-## Formato 5: Revelação/Segredo
+## Formato 5: Curiosidade (o que ninguém conta)
 **Estrutura:**
 - Headline: "O que [autoridades] não te contam sobre [tema]"
 - Imagem intrigante que gera curiosidade
 - Texto: revele parcialmente, deixe curiosidade
-- CTA: "Descubra o método completo"
+- CTA: "Veja a aula completa"
 
 **Quando usar:** Nichos de conhecimento, métodos exclusivos
 
@@ -59,7 +59,7 @@
 **Estrutura:**
 - Coluna 1: "O jeito comum" (❌ com problemas)
 - Coluna 2: "O [Seu Método]" (✅ com benefícios)
-- Headline: "Ainda fazendo do jeito antigo?"
+- Headline: "O jeito antigo ainda custa caro para quem faz assim"
 - CTA: "Mude agora"
 
 **Quando usar:** Quando há um método diferenciado

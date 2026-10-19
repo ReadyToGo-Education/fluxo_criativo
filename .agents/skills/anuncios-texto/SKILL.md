@@ -190,16 +190,16 @@ CERTO:
 - Destaque no beneficio principal
 - CTA no rodape
 
-### Revelacao/Segredo
-- Headline: "O que [autoridades] nao te contam sobre [tema]"
+### Curiosidade (o que ninguém conta)
+- Headline: "O que [autoridades] não te contam sobre [tema]"
 - Imagem intrigante
 - Texto parcial que gera curiosidade
-- CTA: "Descubra o metodo completo"
+- CTA: "Veja a aula completa"
 
 ### Comparacao Visual
 - Coluna 1: "O jeito comum" (X com problemas)
 - Coluna 2: "O [Seu Metodo]" (check com beneficios)
-- Headline: "Ainda fazendo do jeito antigo?"
+- Headline: "O jeito antigo ainda custa caro para quem faz assim"
 
 ### Thumb Chamativa (alto impacto)
 - Expressao facial exagerada (surpresa, choque, incredulidade)

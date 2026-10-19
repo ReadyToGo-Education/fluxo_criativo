@@ -16,7 +16,7 @@ Sub-skill compartilhada por TODOS os 10 outputs da `/trafego-analise`. Não tem 
 
 **É OBRIGATÓRIO renderizar os gráficos** que a sub-skill do output declara em "Gráficos obrigatórios". A geometria vem de:
 - `serie_diaria_svg` e `health.dimensoes` → do `trafego_processar.py` (modo APP), **ou**
-- **`trafego_chart_geom.py`** (receitas F a L): **roda em qualquer modo, não toca a API, não usa token.** No modo `MCP_CONECTOR`, onde os números foram processados à mão (sem os scripts de fetch), **é este helper que gera a geometria dos gráficos** a partir dos números já calculados. Passar o spec por arquivo: `{PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py <tipo> < /tmp/spec.json` (`{PY}` = interpretador detectado na sessão, `python3` ou `py -3`).
+- **`trafego_chart_geom.py`** (receitas F a L): **roda em qualquer modo, não toca a API, não usa token.** No modo `MCP_CONECTOR`, onde os números foram processados à mão (sem os scripts de fetch), **é este helper que gera a geometria dos gráficos** a partir dos números já calculados. Passar o spec por arquivo, sempre por caminho absoluto: gravar com o Write em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json` e rodar pelo Bash `{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"` (`{PY}` = interpretador detectado na sessão, `python3` ou `py -3`; regra completa na seção 3.2.1.2).
 
 **Checklist de conformidade: rodar ANTES de declarar o dashboard pronto.** Substituir `<ARQ>` pelo caminho do HTML recém-escrito:
 
@@ -27,9 +27,10 @@ echo -n "topbar="    ; grep -c 'class="topbar' <ARQ># = pelo menos 1 (design ofi
 echo -n "snap-warn=" ; grep -c "snap-warn"   <ARQ>  # = pelo menos 1
 echo -n "tema="      ; grep -cE 'data-theme="(escuro|terra|claro)"' <ARQ> # = 1 (tema oficial declarado)
 echo -n "bgok="      ; grep -cE -- "--bg:(#000|#D8DDC8|#f4f6f8)" <ARQ>   # = 1 (tokens de um tema oficial, não inventados)
+echo -n "explain="   ; grep -c "chart-explain" <ARQ>  # > 0 só nos exports de diagnóstico, criativos e oferta (explicação por gráfico)
 ```
 
-**Regra de bloqueio:** se `svg=0`, ou `chart-card=0`, ou `topbar=0`, ou `tema=0`, ou `bgok=0`, o export está ERRADO, **não entregar.** Refazer a partir do esqueleto oficial + gráficos antes de mostrar ao aluno. Só anunciar "snapshot salvo" depois que o checklist passar.
+**Regra de bloqueio:** se `svg=0`, ou `chart-card=0`, ou `topbar=0`, ou `tema=0`, ou `bgok=0` (e, nos exports de diagnóstico, criativos e oferta, também `explain=0`), o export está ERRADO, **não entregar.** Refazer a partir do esqueleto oficial + gráficos antes de mostrar ao aluno. Só anunciar "snapshot salvo" depois que o checklist passar.
 
 > Exceção legítima de gráfico: se um gráfico específico depende de dado que a chamada não retornou (ex: breakdown vazio), **omitir só aquele gráfico** e seguir com os demais (nunca inventar número). Mas `svg=0` total nunca é aceitável quando a sub-skill declara gráficos obrigatórios.
 
@@ -63,7 +64,7 @@ Digite o número:
    análise de novo.
 ```
 
-Se `1`/`2`/`3`: gravar `EXPORT_TEMA=escuro|terra|claro` no `.env` (criar a linha se não existir), confirmar em 1 linha ("Tema {nome} salvo como padrão dos seus dashboards. Pra trocar depois, é só pedir.") e rodar esta sub-skill com o tema escolhido. Se `4`/`n`/silêncio: encerrar normalmente.
+Se `1`/`2`/`3`: gravar `EXPORT_TEMA=escuro|terra|claro` no `.env` **sem abrir o arquivo** (nunca Read, Edit ou Write no `.env`: o Edit exige ler o arquivo inteiro, com o token), com um único comando Bash que apaga a linha antiga, garante a quebra de linha no fim do arquivo e acrescenta a nova (item 4 da seção "LEITURA SEGURA DO .env" do `CLAUDE.md`): `touch .env && sed -i '/^EXPORT_TEMA=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; } && printf 'EXPORT_TEMA=%s\n' "<tema>" >> .env` (no Mac, `sed -i ''` no lugar de `sed -i`). Só confirmar depois que o comando terminar sem erro; se falhar, avisar o aluno que o tema não foi salvo e seguir com o tema escolhido só nesta geração. Confirmar em 1 linha ("Tema {nome} salvo como padrão dos seus dashboards. Pra trocar depois, é só pedir.") e rodar esta sub-skill com o tema escolhido. Se `4`/`n`/silêncio: encerrar normalmente.
 
 **Caso 2: `EXPORT_TEMA` já configurado:**
 
@@ -75,7 +76,7 @@ Quer salvar essa análise como HTML no tema {Nome do tema}? (s/n)
    Métricas mudam, e este arquivo NÃO atualiza sozinho.
 ```
 
-Se `s`/`sim`: rodar esta sub-skill com o tema do `.env`. Se a resposta trouxer outro tema ("sim, terra"): usar o tema pedido **só nesta geração**, sem alterar o `.env`. Se o aluno pedir pra trocar o padrão ("troca meu tema pra claro"): regravar `EXPORT_TEMA` e confirmar. Se `n`/`não` ou silêncio: encerrar normalmente.
+Se `s`/`sim`: rodar esta sub-skill com o tema do `.env`. Se a resposta trouxer outro tema ("sim, terra"): usar o tema pedido **só nesta geração**, sem alterar o `.env`. Se o aluno pedir pra trocar o padrão ("troca meu tema pra claro"): regravar `EXPORT_TEMA` com o mesmo comando do Caso 1 (sem abrir o `.env`) e confirmar só se ele terminar sem erro. Se `n`/`não` ou silêncio: encerrar normalmente.
 
 **Nunca rodar export sem confirmação explícita.** Aluno que só quer texto rápido não recebe arquivo.
 
@@ -421,6 +422,10 @@ tr:hover td { background: var(--card-hover); color: var(--text); }
 .chart-legend .lg { display: inline-flex; align-items: center; gap: 6px; }
 .chart-legend .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 .chart-legend .sw.box { width: 12px; height: 12px; border-radius: 3px; }
+/* Explicação do gráfico (obrigatória nos exports de diagnóstico, criativos e oferta) */
+.chart-explain { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-light); font-size: .82rem; color: var(--text-mid); line-height: 1.6; }
+.chart-explain p + p { margin-top: 6px; }
+.chart-explain strong { color: var(--text); }
 /* Funil duplo lado a lado (receita J) */
 .dual-funnel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .dual-funnel-col .df-name { text-align: center; font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
@@ -507,7 +512,7 @@ Gráficos com muitos pontos (linha de N meses, heatmap de dezenas de células) o
 
 > Como o helper **não toca a API nem carrega token**, ele é exceção às restrições de `curl`/Python da Graph API (regra global EXECUÇÃO TÉCNICA). Padrão recomendado (evita dor de cabeça com aspas no shell): gravar o spec num arquivo temporário e redirecionar o stdin:
 > ```bash
-> {PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py <tipo> < /tmp/spec_chart.json
+> {PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"
 > ```
 
 Tipos: `line` (F), `vbars` (G), `heatmap` (H), `gauge` (I), `dual_funnel` (J), `scatter` (K), `radar` (L). Há também `divbars` (barras divergentes com linha do zero, usadas pelo painel de decisão do `/trafego-otimizar`).
@@ -524,7 +529,7 @@ Spec: `{"viewbox":[720,240],"x_labels":[...],"series":[{"name","color","axis":"l
 
 **J. Funil duplo (A vs B lado a lado)**: [10] Comparativo. Spec: `{"a":{"name","stages":[{"label","value"}]},"b":{...}}`. Saída: por lado `stages[{label,value,width_pct,meta_pct}]` (largura em escala log do topo, igual à receita B). Template: `.dual-funnel-grid` com 2 `.dual-funnel-col`; em cada, um `.df-name` + os estágios como `.funnel-stage`/`.funnel-bar` (`style="width:{width_pct}%"`) + `.funnel-meta` com `{meta_pct}% do estágio anterior`.
 
-**K. Scatter / quadrante**: [6] CPC × Connect Rate. Spec: `{"points":[{"x","y","label","color","r"}],"x_mid","y_mid","x_label","y_label"}`. Saída: `points[{cx,cy,r,color,label}]`, `x_mid_px`/`y_mid_px` (linhas de quadrante), `plot_*`, `x_label`/`y_label`. Template: 2 `<line>` de quadrante (em `x_mid_px`/`y_mid_px`, `stroke="#1f1f1f" stroke-dasharray="3 3"`) + um `<circle>` por ponto + `<text>` do label ao lado + `<text>` dos eixos. Colorir cada ponto pela zona desejada (verde = quadrante bom).
+**K. Scatter / quadrante**: [6] CPC × Connect Rate. Spec: `{"points":[{"x","y","label","color","r"}],"x_mid","y_mid","x_label","y_label"}`. Saída: `points[{cx,cy,r,color,label}]`, `x_mid_px`/`y_mid_px` (linhas de quadrante; o helper inclui `x_mid` e `y_mid` no mínimo e no máximo dos eixos, então as linhas ficam sempre dentro da área), `plot_*`, `x_label`/`y_label`. Template: 2 `<line>` de quadrante (em `x_mid_px`/`y_mid_px`, `stroke="#1f1f1f" stroke-dasharray="3 3"`) + um `<circle>` por ponto + `<text>` do label ao lado + `<text>` dos eixos. Colorir cada ponto pela zona desejada (verde = quadrante bom).
 
 **L. Radar de N eixos**: versão genérica da receita A para qualquer nº de dimensões (ex: [2] 5 etapas do funil, [8] 7 problemas). Spec: `{"viewbox":[420,360],"max":100,"rings":[100,50],"axes":[{"label","value","color"}]}`. Saída: `grid_polys` (anéis), `axis_lines[{x2,y2}]`, `data_points` (polígono de dados), `vertices[{x,y,color,value}]`, `labels[{x,y,anchor,text}]`, `cx,cy,r`. Template: um `<polygon>` por anel de grade (`stroke="#1f1f1f" fill="none"`) + um `<line>` do centro (`cx,cy`) a cada `axis_lines` + `<polygon points="{data_points}">` preenchido + um `<circle r="3.5">` por vértice na cor dele + um `<text>` por label com seu `anchor`. **Rótulos curtos** (≤12 chars) continuam recomendados, mas desde 2026-07-20 o helper faz clamp automático: rótulo que estouraria o viewBox é puxado pra dentro (nunca sai cortado). Alargue a largura do viewBox se tiver muitos eixos. Para "saúde" (maior=melhor) colora o vértice verde no alto; para "problemas" (maior=pior) colora verde no baixo e vermelho no alto.
 
@@ -536,14 +541,16 @@ Spec: `{"viewbox":[720,240],"x_labels":[...],"series":[{"name","color","axis":"l
 
 ```bash
 # via CLI (spec por arquivo pra não brigar com aspas do shell); {PY} = python3 ou py -3
-{PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py <tipo> < /tmp/spec.json
+{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"
 ```
 ```python
 # via import (quando o gerador do HTML é um script Python)
-import sys; sys.path.insert(0, ".claude/skills/trafego-analise/scripts")
+import sys; sys.path.insert(0, "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts")  # caminho absoluto, nunca relativo ao cwd
 import trafego_chart_geom as G
 geo = G.geom_radar(spec)   # spec é dict Python
 ```
+
+**Regra do spec (vale para todos os outputs e para os exports que reutilizam este design system):** `{RAIZ_PROJETO}` é o caminho absoluto da raiz do projeto (seção 9). Gravar o spec com o Write em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json` (um arquivo por gráfico, ex.: `spec-vbars.json`, `spec-radar.json`) e chamar o motor pelo Bash com os dois caminhos absolutos, como acima. Nunca `/tmp/spec.json`: no Windows, o Write e o Bash resolvem `/tmp` em pastas diferentes e o motor leria um arquivo inexistente ou um spec antigo de outra execução. Nunca caminho relativo: o `cwd` pode ter mudado. Apagar os specs ao final do export (passo 10d da seção 5). Valor ausente vai como `null` (nunca 0 inventado): o helper pula ou omite o item e devolve `avisos`, que devem ser repassados ao aluno; spec com BOM é aceito.
 
 **Tipo no CLI ≠ nome da função no import.** Mapa exato (errar aqui = `AttributeError`):
 
@@ -595,7 +602,7 @@ def vbars_svg(geo, unit="", C=C):
 | Gráfico obrigatório | Como montar o spec com os números em mãos |
 |---|---|
 | Radar Health Score ([1]) | `geom_radar` com 5 `axes` = as 5 dimensões já pontuadas (0–100), cor por faixa (verde ≥85, amarelo 70–84, laranja 50–69, vermelho <50) |
-| Radar funil vs benchmark ([2]) | `geom_radar` com cada etapa **normalizada ao benchmark**: `value = min(metrica/alvo, 1)*100`. Ex: CTR 2,42% / alvo 2% → 100; Connect 55,4% / alvo 70% → 79 |
+| Radar funil vs benchmark ([2]) | `geom_radar` com cada etapa **normalizada ao benchmark**: `value = min(metrica/alvo, 1)*100`. Ex: CTR 2,42% / alvo 2% → 100; Connect 55,4% / alvo 80% → 69 (alvo do Connect Rate = 80%, a faixa saudável da régua única) |
 | Barras posicionamento ([2]) | `geom_vbars`, um `bar` por posição com `value=ROAS`, cor por faixa |
 | Funil (B) | é CSS puro (`.funnel`), **não** usa o helper: montar as `.funnel-bar` direto com largura log e os números reais |
 | Linha de tendência diária (E) | `geom_line` com `series=[{name:"Gasto",axis:"left",area:true,values:[...por dia]},{name:"Vendas",axis:"right",dots:true,values:[...]}]` e `x_labels` = datas. **Exige série diária**: ver regra de busca na seção 5, passo 8c |
@@ -681,10 +688,10 @@ FASE 1. Gerar snapshot individual
     Definir data-theme no <html>, o link de fontes, o bloco de tokens (3.2.a) e as cores de
     gráfico (tabela CORES_GRAFICO, 3.2.c) correspondentes.
 6. Carregar template HTML da seção 3.1 + bloco do tema (3.2.a) + componentes (3.2.b).
-7. Substituir variáveis do header: {Output}, {N}, {janela}, {act_id mascarado}, {DD/MM/YYYY HH:MM}.
+7. Substituir variáveis do header: {Output}, {N}, {janela}, {act_id mascarado}, {DD/MM/YYYY HH:MM}. Quando os dados vieram do cache (`_from_cache: true` no fetch), a data e a hora do banner e da topbar são as de `_meta.gerado_em` (quando os números foram buscados), não a hora atual.
 8. Para cada bloco do output narrado, mapear para componente HTML conforme seção 4 e injetar.
 8b. Se a sub-skill do output definir uma seção "Gráficos obrigatórios" (ex: `1-diagnostico-rapido.md`), renderizar esses gráficos em SVG/CSS inline conforme as receitas da seção 3.2.1, logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Sem biblioteca, sem CDN. **Como chamar o helper e ler o retorno: seção 3.2.1.2** (nomes das funções, formato da saída, snippets prontos, montagem do spec sem os scripts de fetch).
-8c. **Gráfico de tendência diária (receita E): buscar o dado antes, não pular silenciosamente.** Se a série diária não estiver em cache (`serie_diaria_svg=null`, ou modo MCP onde os números foram processados à mão): antes de exportar, fazer **1 busca extra** da série diária no mesmo período e escopo (modo APP: insights `level=campaign&time_increment=1`; modo MCP: `ads_insights_performance_trend` com granularidade diária), agregar por dia e montar o spec do `geom_line`. Só omitir o gráfico se a busca também não retornar dados e, nesse caso, **dizer ao aluno que foi omitido e por quê**. Nunca deixar de fora sem avisar.
+8c. **Gráfico de tendência diária (receita E): buscar o dado antes, não pular silenciosamente.** Se a série diária não estiver em cache (`serie_diaria_svg=null`, ou modo MCP onde os números foram processados à mão): antes de exportar, fazer **1 busca extra** da série diária no mesmo período e escopo (modo APP: insights `level=campaign&time_increment=1`; modo MCP: `ads_get_ad_entities` em nível campanha, com `time_increment: "1"` e o filtro do escopo, agrupado por `date_start`; a `ads_insights_performance_trend` com granularidade diária só quando o escopo é a conta inteira), agregar por dia e montar o spec do `geom_line`. Só omitir o gráfico se a busca também não retornar dados e, nesse caso, **dizer ao aluno que foi omitido e por quê**. Nunca deixar de fora sem avisar.
 
    **Regra obrigatória de estrutura:** cada bloco "Resposta N" do output narrado vira uma `.section` com `.section-header`. A estrutura de cada seção de resposta é:
 
@@ -706,6 +713,7 @@ FASE 1. Gerar snapshot individual
 10. Salvar arquivo do snapshot (encoding UTF-8, sem BOM).
 10b. **GATE DE CONFORMIDADE (obrigatório, não pular).** Rodar o checklist da seção 0 sobre o arquivo recém-salvo. Se `svg=0` OU `chart-card=0` OU `topbar=0` OU `tema=0` OU `bgok=0`: o export não seguiu o design system, não tem gráficos ou usou tema inventado → **voltar ao passo 5b** (recarregar esqueleto 3.1 + tokens do tema 3.2.a + componentes 3.2.b), gerar a geometria dos gráficos via `trafego_chart_geom.py` e regravar. **Não avançar para a Fase 2 nem anunciar "snapshot salvo" enquanto o gate não passar.**
 10c. Regenerar o `index.html` da pasta (seção 3.3), apontando para o snapshot recém-criado.
+10d. Apagar os specs temporários do helper em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/` (só os `spec-*.json` gravados nesta geração).
 
 FASE 2. Atualizar painel de entregas do produto (OBRIGATÓRIO, nunca pular)
 

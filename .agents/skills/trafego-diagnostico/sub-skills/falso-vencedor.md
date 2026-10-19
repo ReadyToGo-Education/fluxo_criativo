@@ -10,7 +10,7 @@ Quando a conta tem mais de 1 produto declarado, a avaliação roda **por produto
 
 Cada produto usa **seus próprios limiares** derivados da trilha (low/mid/high):
 - Gasto relevante: ajustado ao ticket (R$ 200 para low, R$ 500 para mid, R$ 2.000 para high)
-- Conversões mínimas para `vencedor_real`: 15 (low/mid perpétuo), 10 (high perpétuo), 30 leads (lançamento)
+- Conversões mínimas para `vencedor_real`: 15 (low/mid perpétuo), 10 (high perpétuo), 30 leads (lançamento); no nível de anúncio, vale a régua de anúncio vencedor (ver os critérios do `vencedor_real` abaixo)
 
 No output, cada produto ganha sua seção de classificações. Nunca misturar entidades de produtos diferentes no mesmo ranking.
 
@@ -21,7 +21,7 @@ No output, cada produto ganha sua seção de classificações. Nunca misturar en
 - Opção [4] do menu principal
 - Automaticamente no Diagnóstico Completo (terceiro módulo da sequência)
 - Quando o aluno pergunta "essa campanha é vencedora mesmo?" ou "vale a pena escalar?"
-- **Integração crítica:** sugerido pela `/trafego-otimizar` antes de emitir `sinal_para_escala.pronta=true`, e é o freio do `/trafego-escalar` (seção 12 do SKILL.md: só escala `vencedor_real` com score de confiança 50 ou mais)
+- **Integração crítica:** sugerido pela `/trafego-otimizar` antes de emitir `sinal_para_escala.pronta=true`, e é o freio do `/trafego-escalar` (seção 12 do SKILL.md: só escala `vencedor_real` com score de confiança 50 ou mais; de 50 a 74, de forma gradual)
 
 ## Dados necessários
 
@@ -33,7 +33,7 @@ Pedir à `/trafego-insights`:
 - Frequência por entidade
 
 Complementar (leitura pura, por modo, conforme a seção 3.1 do SKILL.md):
-- Tipo de público de cada conjunto: segmentação com públicos personalizados (remarketing) ou com interesses, semelhantes e público aberto (prospecção). `APP`: `curl -g` no campo `targeting` do conjunto. `MCP_CONECTOR`: `ads_get_ad_account_custom_audiences` + `ads_get_custom_audience_adsets`, ou `ads_get_ad_entities` se `ads_get_field_context` confirmar o campo de segmentação.
+- Tipo de público de cada conjunto: segmentação com públicos personalizados (remarketing) ou com interesses, semelhantes e público aberto (prospecção). `APP`: `curl -g` no campo `targeting` do conjunto. `MCP_CONECTOR`: `ads_get_ad_account_custom_audiences` + `ads_get_custom_audience_adsets`, ou `ads_get_ad_entities` se `ads_get_field_context` confirmar o campo de segmentação. Regra de inclusão, exclusão e semelhante na seção 3.1 do SKILL.md: só conta como remarketing o público personalizado incluído no conjunto e que não seja semelhante.
 - Sem leitura possível: marcar "segmentação não verificada", perguntar ao aluno quais conjuntos são de remarketing e nunca deduzir pelo nome.
 
 ## As 4 classificações
@@ -43,9 +43,9 @@ Complementar (leitura pura, por modo, conforme a seção 3.1 do SKILL.md):
 Entidade que merece confiança e pode ser considerada para escala.
 
 **Todos os critérios devem ser verdadeiros:**
-- Gasto relevante: > R$ 200 no período (low ticket) ou > R$ 500 (mid/high)
-- Conversões: ≥ 15 (perpétuo) ou ≥ 30 leads (lançamento)
-- CPA/CPL dentro do target (ou zona verde de lucro quando margem disponível)
+- Gasto relevante: > R$ 200 no período (low ticket), > R$ 500 (mid ticket) ou > R$ 2.000 (high ticket)
+- Conversões: ≥ 15 (low e mid perpétuo), ≥ 10 (high perpétuo) ou ≥ 30 leads (lançamento). No nível de anúncio, vale também a régua única de anúncio vencedor: 50 conversões em low e mid ticket ou 30 em high ticket, contadas na janela média da trilha, ou ter saído `validado` num teste registrado pela `/trafego-testes`
+- CPA/CPL dentro do target e, em campanha de venda (métrica-norte CPA) com a margem informada no Passo 0.8, ROAS sustentado ≥ ROAS de break-even (1 ÷ margem de contribuição). Em captação de leads e lançamento (métrica-norte CPL), vale só o CPL dentro do target
 - Consistência: CV da métrica-norte < 0.30 na serie_diaria (mesmo limiar do score de confiança)
 - Frequência: < 3.0
 - Distribuição: resultado não concentrado em 1 único dia (nenhum dia com > 40% das conversões totais)
@@ -58,10 +58,11 @@ Entidade com bons sinais iniciais, mas dados insuficientes para classificar como
 
 **Critérios:**
 - CPA/CPL dentro ou próximo do target (até 1.2× target)
-- Conversões: 5-14 (perpétuo) ou 10-29 leads (lançamento)
+- Conversões: 5 a 14 (low e mid perpétuo), 5 a 9 (high perpétuo) ou 10 a 29 leads (lançamento)
 - Tendência estável ou melhorando
 - Frequência: < 3.5
 - Janela: 4-6 dias, ou 7+ dias com pouco gasto
+- Também é `vencedor_promissor` quem cai na regra de sobra do "Fluxo de avaliação" (por exemplo, conversões acima desta faixa com CV de 0,35, acima do limite de 0,30 do real)
 
 **Recomendação padrão:** manter rodando, não escalar ainda. Reavaliar em +7 dias.
 
@@ -71,7 +72,7 @@ Entidade que parece boa mas tem sinais de que o resultado é inflado ou insusten
 
 **Pelo menos 2 destes critérios devem ser verdadeiros:**
 - Poucas conversões com ROAS alto: < 10 compras mas ROAS > 3x (resultado concentrado em poucas vendas de ticket alto)
-- Dependência de remarketing: > 70% do resultado vem de conjuntos com público personalizado (remarketing), confirmado pela segmentação real
+- Dependência de remarketing: > 70% do resultado vem de conjuntos com público personalizado de remarketing (não semelhante, usado como inclusão), confirmado pela segmentação real
 - Frequência alta: > 3.5 (mesmo público vendo o anúncio muitas vezes, conversões podem ser "inevitáveis" sem ser incremental)
 - Baixa consistência: CV da métrica-norte > 0.60 (dias bons e ruins extremos)
 - Concentração temporal: > 50% das conversões em 1-2 dias (pico, não padrão)
@@ -85,7 +86,7 @@ Entidade que parece boa mas tem sinais de que o resultado é inflado ou insusten
 Dados insuficientes para classificar.
 
 **Critérios:**
-- < 5 conversões no período
+- < 5 conversões no período (perpétuo) ou < 10 leads (lançamento)
 - < 4 dias de dados
 - Gasto < R$ 50
 - Score de confiança < 25
@@ -99,7 +100,10 @@ Para cada entidade (campanha, conjunto ou anúncio) no escopo:
 1. Puxar métricas das 3 janelas + serie_diaria
 2. Calcular score de confiança (invocar sub-skill score-confianca internamente)
 3. Verificar classificação na ordem: `vencedor_real` → `vencedor_promissor` → `falso_vencedor_provavel` → `inconclusivo`
-4. Para cada entidade, gerar o bloco de output abaixo
+4. **Regra de sobra (nenhuma entidade fica sem rótulo).** Se a entidade não se encaixou em nenhuma das 4 classes:
+   - CPA/CPL até 1,2 vez a meta: é `vencedor_promissor`. O caso mais comum é o de quem tem conversões acima da faixa do promissor, menos de 2 sinais de falso e reprova um ou mais critérios do `vencedor_real`. Listar em "O que falta para confirmar" cada critério reprovado (ex.: "CV 0,35, acima do limite de 0,30").
+   - CPA/CPL acima de 1,2 vez a meta: não é candidata a vencedor. Fica fora das 4 classes, entra em `nao_candidatas` no YAML com o motivo (ex.: "CPA 1,6 vez a meta") e o caminho é a `/trafego-otimizar`. No relatório do chat, usa o bloco "Não é candidata" abaixo.
+5. Para cada entidade, gerar o bloco de output abaixo
 
 **Prioridade de avaliação (drill-down):**
 - Primeiro avaliar no nível campanha
@@ -125,8 +129,14 @@ Por que é vencedor real:
 - {evidência 2}
   Ex: "Resultado estável: variação diária de apenas 28%"
 
-Pode escalar? Sim, com cuidado, se o score de confiança
-for 50 ou mais. Rode /trafego-escalar.
+Pode escalar? É candidata, se o score de confiança for 50
+ou mais (de 50 a 74, só de forma gradual). Rode
+/trafego-escalar: antes de subir verba, ela ainda confere
+CPA da janela média até 0,9 vez a meta, frequência até 2,5
+(perpétuo) ou 3,0 (lançamento), ROAS acima do ponto de
+equilíbrio (em venda), fase de aprendizado, última edição há 48h ou
+mais e criativos de reserva. Se algum desses falhar, ela
+explica o motivo e não escala.
 ```
 
 ### Vencedor promissor
@@ -185,6 +195,21 @@ conversões e 7 dias para ter qualquer conclusão."
 O que fazer: manter rodando. Reavaliar em {X} dias.
 ```
 
+### Não é candidata (regra de sobra, fora das 4 classes)
+```
+{nome}: NÃO É CANDIDATA ⛔
+
+O que significa: o custo por resultado está acima de 1,2 vez
+a meta, então ela não está entre as vencedoras. Não dá para
+falar em escala agora.
+
+Por quê: {CPA ou CPL atual, meta e quantas vezes a meta}
+Ex: "CPA de R$ 80 para uma meta de R$ 50 (1,6 vez a meta)."
+
+O que fazer: rodar /trafego-otimizar para achar onde o custo
+está travando antes de pensar em escala.
+```
+
 ---
 
 ## Output por entidade
@@ -197,7 +222,7 @@ falso_vencedor:
       nivel: campanha | conjunto | anuncio
       classificacao: vencedor_real | vencedor_promissor | falso_vencedor_provavel | inconclusivo
       score_confianca: 72
-      motivo: "CPA dentro da meta, 22 compras em 7d, CV 0.35, frequência 1.8, 65% prospecção"
+      motivo: "CPA dentro da meta, 22 compras em 7d, CV 0.25, frequência 1.8, 65% prospecção"
       sinais_positivos:
         - "CPA R$ 42 (meta R$ 50) sustentado em 7 dias"
         - "22 compras com distribuição equilibrada entre dias"
@@ -205,15 +230,19 @@ falso_vencedor:
         - "30% do resultado vem de remarketing"
         - "2 criativos concentram 75% do gasto"
       nivel_risco: baixo | medio | alto
-      acao_recomendada: "Pode considerar escala. Antes, diversificar criativos para reduzir concentração."
+      acao_recomendada: "Pode considerar escala gradual (score 72, confiança média). Antes, diversificar criativos para reduzir concentração."
       nao_fazer: "Não escalar sem testar pelo menos 1 criativo novo. Dependência de 2 anúncios é risco."
+  nao_candidatas:
+    - id: "<id>"
+      nome: "<nome>"
+      motivo: "CPA 1,6 vez a meta: não parece vencedora. Caminho: /trafego-otimizar"
 ```
 
 ## Impacto no Diagnóstico Completo
 
 Quando rodado como terceiro módulo da sequência:
 - Recebe o score de confiança geral do módulo 1 (se baixo, classificações são automaticamente mais conservadoras)
-- Recebe alertas de fragmentação do módulo 2 (se estrutura fragmentada, entidades com pouco gasto são automaticamente `inconclusivo`)
+- Recebe do módulo 2 os conjuntos em algoritmo cego (menos de 1 conversão por dia, contando só os dias desde a criação do conjunto dentro dos últimos 30, eixos 2 e 5). Os que não atingem, no período analisado, o mínimo de conversões do `vencedor_real` da trilha (15 em low e mid, 10 em high, 30 leads em lançamento) têm as entidades classificadas como `inconclusivo`; os que atingem seguem a avaliação normal, com o aviso de algoritmo cego
 - Passa para o módulo 4 (diferencial): lista de entidades flagradas como falso vencedor, que são excluídas do cálculo de "o que está funcionando"
 
 ## Relatório humano (seções aplicáveis)

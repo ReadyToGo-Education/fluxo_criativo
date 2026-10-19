@@ -46,7 +46,7 @@ Antes de enviar qualquer texto para o payload, fazer varredura final eliminando 
 
 ## PASSO 0. Verificar Configuracao
 
-Leia `.env` e verifique se `HEYGEN_API_KEY` existe e tem valor.
+Confira se `HEYGEN_API_KEY` tem valor no `.env` sem abrir o arquivo nem mostrar a chave: `grep -q "^HEYGEN_API_KEY=." .env && echo "presente" || echo "ausente"` (linha vazia conta como ausente).
 
 **Se a chave existir**, pule para o Passo 1.
 **Se NAO tiver a chave**, conduza o setup interativo (mesmo fluxo da versao antiga):
@@ -65,17 +65,17 @@ Voce ja tem conta no HeyGen?
 Digite o numero:
 ```
 
-Se opcao 1: guie a pegar a chave em app.heygen.com > Settings > API > Create API Key (Key Name: "Workshop Marketing", tipo: "Agent"). O usuario cola a chave no chat e a skill salva no `.env` com Edit. O usuario NUNCA abre o `.env` manualmente.
+Se opção 1: guie a pegar a chave em app.heygen.com > Settings > API > Create API Key (Key Name: "Workshop Marketing", tipo: "Agent"). O usuário cola a chave no chat e a skill grava no `.env` sem abrir o arquivo, na forma do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md para segredo colado, em duas chamadas: a primeira, sem o valor, `touch .env && sed -i '/^HEYGEN_API_KEY=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; }`; a segunda, só o acréscimo, `printf 'HEYGEN_API_KEY=%s\n' "<chave colada>" >> .env` (no Mac, `sed -i ''`). Depois, confirmar só com "salvo", sem repetir a chave. O usuário NUNCA abre o `.env` manualmente.
 
-Se opcao 2: explique que o plano gratuito nao libera API. Recomendar plano Creator (US$ 24/mes anual). Depois seguir como opcao 1.
+Se opção 2: explique que o plano gratuito não libera API. Recomendar plano Creator (US$ 24/mês anual). Depois seguir como opção 1.
 
-Se opcao 3: guiar a criar conta em heygen.com, testar gratis, depois upgrade e gerar a chave.
+Se opção 3: guiar a criar conta em heygen.com, testar grátis, depois fazer o upgrade e gerar a chave.
 
 **Teste de conexao:**
 
 ```bash
 curl -s "https://api.heygen.com/v2/avatars" \
-  -H "X-Api-Key: $(grep HEYGEN_API_KEY .env | cut -d= -f2)" \
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)" \
   | head -c 500
 ```
 
@@ -179,7 +179,7 @@ Regras de derivacao:
 
 ### Caminho avancado (recomendado). Apify + analise visual real
 
-Se o caminho padrao usou apenas Urgencias Ocultas (sem dados do dashboard ou dados-nicho), verifique se `APIFY_API_TOKEN` existe no `.env`.
+Se o caminho padrao usou apenas Urgencias Ocultas (sem dados do dashboard ou dados-nicho), verifique se `APIFY_API_TOKEN` tem valor no `.env` sem abrir o arquivo: `grep -q "^APIFY_API_TOKEN=." .env && echo "presente" || echo "ausente"`.
 
 **Se o token existir**, oferca ao usuario:
 
@@ -458,7 +458,7 @@ Busque avatares via API:
 
 ```bash
 curl -s "https://api.heygen.com/v2/avatars" \
-  -H "X-Api-Key: $HEYGEN_API_KEY"
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)"
 ```
 
 **Regras novas:**
@@ -506,7 +506,7 @@ Download direto de Unsplash ou Pexels via WebFetch. Salve no mesmo local.
 
 ```bash
 curl -X POST "https://upload.heygen.com/v1/asset" \
-  -H "X-Api-Key: $HEYGEN_API_KEY" \
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)" \
   -H "Content-Type: image/jpeg" \
   --data-binary "@meus-produtos/{ativo}/entregas/videos/backgrounds/video-{data}/cena-1.jpg"
 ```
@@ -542,7 +542,7 @@ Este e o payload correto da API v2 da HeyGen. O array `video_inputs` tem um obje
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/video/generate" \
-  -H "X-Api-Key: $HEYGEN_API_KEY" \
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)" \
   -H "Content-Type: application/json" \
   -d '{
     "video_inputs": [
@@ -636,7 +636,7 @@ Polling a cada 30 segundos:
 
 ```bash
 curl -s "https://api.heygen.com/v1/video_status.get?video_id=VIDEO_ID" \
-  -H "X-Api-Key: $HEYGEN_API_KEY"
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)"
 ```
 
 Estados:

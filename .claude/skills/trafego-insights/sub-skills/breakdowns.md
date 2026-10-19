@@ -57,6 +57,8 @@ Quando o aluno pedir uma combinação proibida, fazer 2 chamadas separadas e cru
 
 ## 4. Exemplo de chamada por breakdown
 
+Forma lógica da requisição na Graph API. No `curl` (modo `APP`), `time_range` e `action_attribution_windows` vão URL-codificados (seção 10.2.1 do SKILL.md). No conector (modo `MCP_CONECTOR`), a quebra vai no parâmetro `breakdowns` do `ads_get_ad_entities`, com os valores que o schema da tool ou o `ads_get_field_context` aceitarem, e o `time_range` vai como texto JSON (seção 10.1 do SKILL.md).
+
 ### `age, gender`
 ```
 GET /act_<id>/insights
@@ -127,7 +129,7 @@ campanha-12345-2026-04-21_2026-05-04-region.md
 campanha-12345-2026-04-21_2026-05-04-dma.md
 ```
 
-Próxima vez que o aluno pedir o output [4] no mesmo período, a skill lê os 4 arquivos sem chamar API.
+Se o aluno pedir o output [4] de novo no mesmo dia, para o mesmo período e com os mesmos filtros, a skill lê os 4 arquivos sem chamar a API (regras de validade em `cache.md`, seção 5).
 
 ---
 
@@ -140,6 +142,8 @@ Próxima vez que o aluno pedir o output [4] no mesmo período, a skill lê os 4 
 3. **Breakdown + ad ativo:** alguns breakdowns só funcionam em períodos fechados (ex: `hourly_stats` em campanhas pausadas). Se a campanha está ativa hoje e o aluno pediu hoje, alertar e usar período de ontem.
 
 4. **Tamanho do payload:** breakdown demográfico em conta com muitas campanhas pode estourar 200KB. Paginar via cursor da Graph API quando necessário.
+
+5. **Conector (modo `MCP_CONECTOR`):** a quebra por hora (`hourly_stats_aggregated_by_advertiser_time_zone`) só existe no nível da conta. As demais dependem do que o schema da tool aceitar; se a quebra pedida não existir, dizer ao aluno e seguir sem ela.
 
 ---
 

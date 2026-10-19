@@ -16,16 +16,16 @@ Roda **por produto**. Cada produto tem ticket e CPA target diferentes, então be
 
 Pedir à `/trafego-insights`:
 - Nível: `ad` + `adset` (para detectar temperatura do público)
-- Campos de conversão: `actions[purchase, lead, add_to_cart, initiate_checkout]`, `action_values`, `cost_per_action_type`
-- Campos base: `landing_page_views` (dentro de actions), `impressions`, `video_3sec_views`, `spend`
+- Campos de conversão: `actions[purchase, lead, add_to_cart, initiate_checkout]`, `action_values`, `cost_per_action_type` (no MCP: `omni_purchase`, `omni_initiated_checkout`, `offsite_conversion_fb_pixel_purchase_values` e `results` quando o objetivo é leads; carrinho só depois de confirmar com `ads_get_field_context`). Leads: `lead` quando vier, senão `offsite_conversion.fb_pixel_lead`, nunca os dois somados.
+- Campos base: `landing_page_views` (dentro de actions; no MCP, `landing_page_view`), `impressions`, `video_p25_watched_actions`, `spend` (no MCP, `amount_spent`)
 - Período atual + anterior
 
 Complementar (leitura pura, por modo):
-- Segmentação de cada conjunto para detectar cold vs warm (públicos personalizados = warm, interesses ou semelhantes = cold), seguindo a escada da seção 4.5 do SKILL.md: no `MCP_CONECTOR`, `ads_get_ad_account_custom_audiences` + `ads_get_custom_audience_adsets` (ou o campo de segmentação do `ads_get_ad_entities`, se o `ads_get_field_context` confirmar); no `APP`, `curl -g` em `/{adset_id}?fields=targeting{custom_audiences,flexible_spec,targeting_automation}`; sem leitura possível, perguntar ao aluno.
+- Segmentação de cada conjunto para detectar cold vs warm (público personalizado incluído que não é semelhante = warm; semelhante ou interesses = cold), seguindo a escada da seção 4.5 do SKILL.md: no `MCP_CONECTOR`, `ads_get_ad_account_custom_audiences` (lista os públicos da conta; o subtipo de cada público vem na listagem ou em `ads_get_custom_audience`; ler todas as páginas, repetindo com o `cursor` enquanto houver próxima) + `ads_get_custom_audience_adsets` (ou o campo de segmentação do `ads_get_ad_entities`, se o `ads_get_field_context` confirmar); no `APP`, `curl -g` em `/{adset_id}?fields=targeting{custom_audiences,excluded_custom_audiences,flexible_spec,targeting_automation}` mais 1 leitura da lista de públicos da conta, com todas as páginas (`/act_<id>/customaudiences?fields=id,name,subtype&limit=500`, seguindo o cursor `paging.cursors.after` enquanto houver próxima página, sem salvar `paging.next` em disco), para separar o semelhante; sem leitura possível, perguntar ao aluno.
 
-> **Atenção modo MCP:** a visita à página (`landing_page_views`) costuma não vir em nível de anúncio no `ads_get_ad_entities` (conferir com `ads_get_field_context`). Sem ela, Offer Rate, Purchase Rate e Add to Cart Rate (que dividem pela visita) ficam `indisponivel` no MCP, ou usam `actions:link_click` como substituto de intenção, **declarando que é substituto** (seção 6.1 do SKILL.md). Não apresentar substituto como métrica real.
+> **Atenção modo MCP:** a visita à página vem como `landing_page_view` no `ads_get_ad_entities` (conferida na conta real, inclusive no nível de anúncio). Se vier `null`, a conta não registra o evento: Offer Rate, Purchase Rate e Add to Cart Rate (que dividem pela visita) ficam `indisponivel`, ou usam `link_click` como substituto de intenção, **declarando que é substituto** (seção 6.1 do SKILL.md). Não apresentar substituto como métrica real.
 >
-> **Temperatura SÓ pela segmentação real (seção 4.5 do SKILL.md):** públicos personalizados (`custom_audiences`, `excluded_connections`) = warm, interesses ou semelhantes = cold, público aberto ou Advantage+ = mixed. NUNCA inferir temperatura pelo nome do conjunto/campanha.
+> **Temperatura SÓ pela segmentação real (seção 4.5 do SKILL.md):** público personalizado incluído no conjunto que não é semelhante (`custom_audiences`) = warm; público semelhante (subtipo `LOOKALIKE`, nunca pelo nome) ou interesses (`flexible_spec`) = cold; público aberto ou Advantage+ (sem nenhum dos três) = cold (aberto). Público que só aparece na exclusão (`excluded_custom_audiences`, `excluded_connections`) não define temperatura. NUNCA inferir temperatura pelo nome do conjunto/campanha.
 
 ## Métricas derivadas
 
@@ -34,21 +34,22 @@ Complementar (leitura pura, por modo):
 | Offer Rate | (leads ou initiate_checkout) / landing_page_views | Interesse demonstrado na oferta |
 | Purchase Rate | purchases / landing_page_views | Taxa de compra pós-visita |
 | Add to Cart Rate | add_to_cart / landing_page_views | Interesse no produto |
-| Creative Conversion Rate | purchases / video_3sec_views (impressions para imagem) | Eficiência ponta a ponta |
+| Creative Conversion Rate | purchases / video_p25_watched (impressions para imagem) | Eficiência ponta a ponta |
 
 ## Conversão por temperatura de público
 
 Para cada criativo, separar a performance em conjuntos cold vs warm:
 
 **Como detectar temperatura:**
-- Conjunto com `targeting.custom_audiences` ou `targeting.excluded_connections` → **warm/remarketing**
-- Conjunto com `targeting.flexible_spec` (interesses) ou `targeting.lookalike_audience` → **cold**
-- Conjunto sem segmentação detalhada (público aberto ou Advantage+) → **mixed** (declarar limitação)
+- Conjunto com `targeting.custom_audiences` cujo público não é semelhante → **warm/remarketing**
+- Conjunto com público semelhante (subtipo `LOOKALIKE`, que também vem dentro de `targeting.custom_audiences`) ou com `targeting.flexible_spec` (interesses) → **cold**
+- Conjunto sem nenhum dos três (público aberto ou Advantage+) → **cold** (aberto)
+- Público que só aparece em `excluded_custom_audiences` ou `excluded_connections` não esquenta o conjunto: exclusão não define temperatura
 
 ```yaml
 conversao_por_temperatura:
   ad_id: "<id>"
-  ad_name: "AD - Dor - Vídeo 30s"
+  ad_name: "AD - Mito - Vídeo 30s"
   cold:
     spend: 800.00
     conversoes: 5
@@ -81,27 +82,6 @@ Dois padrões importantes que cruzam com os módulos anteriores:
 - **O que NÃO fazer:** não matar por CTR baixo. Não comparar com criativos de curiosidade vazia.
 - **O que fazer:** manter com orçamento dedicado. Testar novo gancho para aumentar alcance sem perder qualificação.
 
-## Explicação obrigatória
-
-Cada achado DEVE vir com explicação:
-
-```
-AD "Dor - Vídeo 30s": FALSO CONVERSOR CRIATIVO ⚠️
-
-O que significa: esse criativo parece ter ROAS 5.2x, mas 62% das
-vendas vieram de público de remarketing (que gastou só 20% do orçamento).
-No público frio, o CPA é R$ 160 (acima da meta de R$ 150).
-
-Por que importa: se escalar esse criativo, o orçamento vai para público
-frio onde ele NÃO converte bem. O ROAS geral vai cair drasticamente.
-
-O que NÃO fazer: não escalar baseado no ROAS geral de 5.2x.
-
-O que fazer: testar esse criativo APENAS em público frio por 7 dias.
-Se CPA ficar abaixo de R$ 180 com 10+ conversões, tem potencial.
-Se não, usar apenas para remarketing.
-```
-
 ## Output YAML
 
 ```yaml
@@ -117,8 +97,8 @@ conversao_criativa:
       purchase_rate: 0.021
       add_to_cart_rate: 0.045
       creative_conversion_rate: 0.0012
-      cpa_geral: 95.00
-      roas_geral: 3.2
+      cpa_geral: 76.92
+      roas_geral: 3.84
       temperatura:
         cold: { spend: 800, conversoes: 5, cpa: 160.00 }
         warm: { spend: 200, conversoes: 8, cpa: 25.00 }
@@ -134,7 +114,7 @@ Além do comparativo agregado entre formatos, entregar **três rankings separado
 ## Tratamento sem vídeo (imagem only)
 
 A conversão criativa funciona normalmente com imagens. As métricas de conversão (CPA, ROAS, Offer Rate, Purchase Rate) não dependem de vídeo. A única diferença:
-- Creative Conversion Rate usa `purchases / impressions` em vez de `purchases / video_3sec_views`
+- Creative Conversion Rate usa `purchases / impressions` em vez de `purchases / video_p25_watched`
 - Declarar no output: "Creative Conversion Rate calculado sobre impressões (sem dado de atenção de vídeo)"
 
 ## Explicação obrigatória
@@ -153,7 +133,33 @@ Por que importa: se escalar, o orçamento vai para público frio onde
 o criativo NÃO converte. O ROAS geral vai cair.
 
 O que NÃO fazer: não escalar baseado no ROAS geral.
-O que fazer: testar em público frio isolado por 7 dias.
+O que fazer: testar em público frio isolado por 7 dias, pelo
+/trafego-testes ([3] A/B de audiência ou [9] Duplicar com variação,
+mudando só o público). Se não se sustentar no frio, deixar só no
+remarketing: pausar o anúncio nos conjuntos frios pelo
+/trafego-otimizar, com o bloco 🛡️ de lá.
+```
+
+Exemplo preenchido (números do YAML `conversao_por_temperatura` acima):
+
+```
+AD "Mito - Vídeo 30s": FALSO CONVERSOR CRIATIVO ⚠️
+
+O que significa: esse criativo parece ter ROAS 3.8x, mas 62% das
+vendas vieram de público de remarketing (que gastou só 20% do orçamento).
+No público frio, o CPA é R$ 160 (acima da meta de R$ 150).
+
+Por que importa: se escalar esse criativo, o orçamento vai para público
+frio onde ele NÃO converte bem. O ROAS geral vai cair drasticamente.
+
+O que NÃO fazer: não escalar baseado no ROAS geral de 3.8x.
+
+O que fazer: testar esse criativo APENAS em público frio por 7 dias,
+pelo /trafego-testes ([3] A/B de audiência ou [9] Duplicar com
+variação, mudando só o público).
+Se CPA ficar abaixo de R$ 180 com 10+ conversões, tem potencial.
+Se não, deixar só no remarketing: pausar o anúncio nos conjuntos
+frios pelo /trafego-otimizar, com o bloco 🛡️ de lá.
 ```
 
 ### Gap atenção-conversão (alta atenção, baixa conversão)
@@ -204,8 +210,11 @@ Erro a evitar: escalar os 2 falsos conversores pelo ROAS geral.
 
 7. DECISÃO RECOMENDADA
 Fazer agora: isolar os 2 falsos conversores em público frio
-por 7 dias para validar.
+por 7 dias para validar, pelo /trafego-testes ([3] A/B de
+audiência ou [9] Duplicar com variação, mudando só o público).
 NÃO fazer: não escalar sem testar em cold.
 Fazer somente se: se CPA em cold ficar abaixo de R$ 180 com
-10+ conversões, o criativo tem força própria.
+10+ conversões, o criativo tem força própria. Se não ficar,
+deixar só no remarketing: pausar nos conjuntos frios pelo
+/trafego-otimizar, com o bloco 🛡️ de lá.
 ```

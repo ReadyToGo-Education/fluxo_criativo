@@ -37,9 +37,9 @@ Toda criação ou alteração de público segue a seção "GATE EM CAMADA DE CHA
 
 1. **Produto ativo.** Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md`, seguindo a seção "Contexto Persistente do Negócio" do CLAUDE.md (resumo ausente e `perfil.md` com Quadro: gerar pelo agente `gerador-resumo-produto`; sem perfil: orientar `/produto-concepcao`). O slug do produto entra no nome dos públicos. Público, Quadro, Furadeira, Decorados, Urgências Ocultas, preço e tipo vêm do resumo: nunca perguntar ao aluno o que o resumo já tem.
 2. **Conexão Meta.** Ler `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-` (valor não sensível, seção "LEITURA SEGURA DO .env" do CLAUDE.md).
-   - **Vazio ou ausente:** acionar `/trafego-conexao` e aguardar. Não pedir credenciais avulsas.
-   - **`MCP_CONECTOR`:** confirmar que existe uma tool cujo nome termina em `ads_get_ad_accounts` (ou outra `ads_*` do conector). Descobrir sempre pelo final do nome: o começo varia e pode ser um código longo. Se as tools estiverem adormecidas, buscar pelo final do nome antes de chamar. Se a conta vier como não liberada (`is_ads_mcp_enabled: false` ou erro "Ads MCP is gradually being rolled out"), explicar em linguagem simples que a Meta ainda não liberou essa conta no conector e oferecer o modo App pelo `/trafego-conexao`.
-   - **`APP`:** confirmar com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`. Faltou algum: `/trafego-conexao`.
+   - **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar. Não tentar adivinhar, não cair em fallback, não pedir credenciais avulsas.
+   - **`MCP_CONECTOR`:** confirmar que existe uma tool cujo nome termina em `ads_get_ad_accounts` (ou outra `ads_*` do conector). Descobrir sempre pelo final do nome: o começo varia e pode ser um código longo. Se as tools estiverem adormecidas, buscar pelo final do nome antes de chamar. Se a conta vier como não liberada (`is_ads_mcp_enabled: false` ou erro "Ads MCP is gradually being rolled out"), explicar em linguagem simples que a Meta ainda não liberou essa conta no conector e oferecer o modo App pelo `/trafego-conexao`. Conferir também `FB_AD_ACCOUNT_ID` com `grep -q "^FB_AD_ACCOUNT_ID=." .env`; se faltar, a opção "Validar" do `/trafego-conexao` completa.
+   - **`APP`:** confirmar com `grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env` que as duas variáveis existem com valor (o ponto faz a linha vazia contar como ausente). Faltou alguma: `/trafego-conexao`.
 3. **Conta de anúncios.** Usar `FB_AD_ACCOUNT_ID` (ou a conta escolhida no command, quando há mais de uma). As tools de escrita do MCP exigem `ad_account_id`.
 
 A sub-skill nunca prossegue sem essa validação. Vale também para `listar` (só leitura): sem conexão, a leitura falha sem mensagem clara.
@@ -52,7 +52,7 @@ O command `/trafego-publicos` apresenta o menu:
 
 ```
 [1] Público por evento padrão do pixel       (PageView, ViewContent, AddToCart, InitiateCheckout, Purchase, Lead...)
-[2] Público por evento personalizado          (evento próprio do pixel, conversão personalizada opcional)
+[2] Público por evento personalizado          (clique em botão, página visitada, UTM ou parâmetro de evento, conversão personalizada opcional)
 [3] Público de quem viu vídeo                 (25%, 50%, 75% ou 100%)
 [4] Bases por nível                           (iniciante, intermediário, avançado, a partir do resumo do produto)
 [5] Público semelhante (lookalike)            (1% a 10% a partir de um público existente)
@@ -94,8 +94,8 @@ O MCP é o caminho padrão. O modo App (`curl`) é a alternativa para conta aind
 | Criar conversão personalizada | passo manual guiado no Gerenciador de Eventos | `POST /act_<id>/customconversions` |
 | Disparos de eventos do pixel | `ads_get_dataset_stats` (pixels por `ads_get_datasets`) | `GET /<pixel_id>/stats` |
 | Buscar interesse por nome | passo manual guiado no Gerenciador (recomendar público aberto com Advantage+) | `GET /search?type=adinterest` |
-| Estimar tamanho de segmentação | passo manual guiado (o Gerenciador mostra o tamanho estimado) | `POST /act_<id>/delivery_estimate` |
-| Páginas, vídeos e anúncios (descoberta) | `ads_get_ad_account_pages`, `ads_get_ad_videos`, `ads_get_ad_entities`, `ads_get_creatives` | `GET /me/accounts`, `/<page_id>/videos`, `/act_<id>/ads` |
+| Estimar tamanho de segmentação | passo manual guiado (o Gerenciador mostra o tamanho estimado) | `GET /act_<id>/delivery_estimate` |
+| Páginas, Instagram, vídeos e anúncios (descoberta) | Páginas: `ads_get_ad_account_pages` (Página fora da conta: `ads_get_user_pages`, `ads_get_pages_for_business`); Instagram e Reels: `ads_get_ig_accounts`, `ads_get_ig_media`; anúncios: `ads_get_ad_entities`, `ads_get_creatives`. Vídeo que está só na Página: passo manual guiado | `GET /me/accounts`, `/<page_id>?fields=instagram_business_account`, `/<ig_business_id>/media`, `/<page_id>/videos`, `/act_<id>/ads` |
 
 **Parâmetros das tools do MCP:** a skill não inventa nome de parâmetro. Antes da primeira chamada de cada tool, ler o schema dela e preencher só o que o schema pede (o `subtype` é obrigatório na `ads_create_custom_audience`). Se a Meta recusar um subtipo pelo MCP (erro de parâmetro, subtipo não aceito), não insistir: explicar e seguir pelo passo manual guiado no Gerenciador descrito na sub-skill.
 
@@ -113,9 +113,10 @@ GET    /<audience_id>?fields=name,subtype,approximate_count_lower_bound,approxim
 GET    /me/accounts                         (Páginas, engajamento)
 GET    /<page_id>?fields=instagram_business_account   (conta do Instagram, engajamento)
 GET    /<page_id>/leadgen_forms             (formulários de cadastro, engajamento)
+GET    /act_<id>/delivery_estimate?optimization_goal=REACH&targeting_spec=<JSON>   (tamanho das bases por nível; só leitura)
 ```
 
-API: `v25.0`. Cada chamada é um `Bash(curl ...)` separado, token inline lido do `.env` na própria chamada (seção "LEITURA SEGURA DO .env" do CLAUDE.md) e `curl -g` quando o `fields=` tiver `{}` aninhado.
+API: `v25.0`. Cada chamada é um `Bash(curl ...)` separado, token inline lido do `.env` na própria chamada (seção "LEITURA SEGURA DO .env" do CLAUDE.md) e `curl -g` sempre que a URL tiver `{}` ou `[]` (fields aninhados, `filtering`, listas).
 
 ### 2.2 Permissões (modo App)
 - `ads_management` (escrita)
@@ -152,7 +153,7 @@ Sem elas, encaminhar ao `/trafego-conexao` para gerar o token de novo. No MCP, a
 | 90 dias | Remarketing longo |
 | 180 dias | Máximo para evento do pixel |
 
-Evento do pixel: máximo de 180 dias (a maioria das contas tem dado de até 90). Vídeo e engajamento: até 365 dias. A skill sempre pergunta a janela, com padrão de 30 dias.
+Evento do pixel: máximo de 180 dias (a maioria das contas tem dado de até 90). Vídeo e engajamento: até 365 dias (formulário de cadastro: até 90). A skill sempre pergunta a janela, com padrão de 30 dias.
 
 ---
 
@@ -201,6 +202,8 @@ Público de pixel sem histórico do evento: avisar "o tamanho aparece em até 24
 [0] Passo 0 (produto ativo, conexão, conta)
 [1] Coletar os inputs do sub-fluxo, uma pergunta por mensagem
 [2] Calcular nome, regra e janela
+     (janela acima do limite da fonte, ver seção 4 e a tabela "Limites e pegadinhas"
+      da sub-skill: voltar à pergunta da janela antes do bloco 🛡️)
 [3] Consultar tamanho estimado (quando aplicável)
 [4] Resumo em linguagem natural e confirmação
 [5] Bloco 🛡️ com o Preview YAML e "sim"
@@ -212,7 +215,7 @@ Público de pixel sem histórico do evento: avisar "o tamanho aparece em até 24
      e atualizar meus-produtos/_global/trafego/publicos/INDEX.md
 ```
 
-Antes de gerar qualquer operação longa, anunciar no padrão do CLAUDE.md, por exemplo: `🔍 Próximo passo: criar o público e conferir o tamanho estimado (3 passos). Tempo estimado: cerca de 30 segundos.`
+Antes de cada operação longa, anunciar no padrão do CLAUDE.md com a faixa calibrada de `.claude/rules/tempo-estimado.md` (tabela "Anúncio de tempo por sub-fluxo", no Passo 3 do command `/trafego-publicos`), por exemplo: `🔍 Próximo passo: criar o público na sua conta e conferir a regra gravada (2 passos). Tempo estimado: cerca de 30 segundos.`
 
 ---
 

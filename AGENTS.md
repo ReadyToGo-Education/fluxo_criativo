@@ -491,6 +491,9 @@ Proibido:
 - Copiar token de `.env` para exemplos.
 - Fazer heredoc Python com token.
 - Fazer `curl` com token pipeado para Python.
+- Abrir o `.env` para ler ou editar (`cat`, ferramentas de leitura ou edição de arquivo): a leitura traz todos os segredos para a conversa.
+
+No `.env`, seguir a seção "LEITURA SEGURA DO .env" do `CLAUDE.md`: presença com `grep -q "^NOME=." .env` (linha vazia conta como ausente), token usado por substituição dentro do `curl` e gravação com o comando de uma linha que apaga a linha antiga e acrescenta a nova, sem abrir o arquivo.
 
 Quando precisar exibir um comando ou valor sensível, mascare:
 
@@ -910,9 +913,9 @@ Toda tarefa `/trafego-*` ou qualquer operação que toque Meta Ads deve começar
 Passo 0 de tráfego:
 
 1. Ler `META_AUTH_MODO` no `.env` (só dois modos: `MCP_CONECTOR`, o padrão, e `APP`, a reserva para conta ainda não liberada pela Meta no MCP; não existe modo híbrido).
-2. Se ausente, seguir `/trafego-conexao`.
-3. Se for `MCP_CONECTOR`, verificar se a ferramenta MCP de ads está disponível no ambiente. Se não estiver, orientar reconexão ou voltar ao command de conexão. No MCP, subir vídeo novo, buscar interesse por nome, criar regra automática e apagar campanha, conjunto ou anúncio ainda não têm ferramenta: conduzir o passo a passo no Gerenciador.
-4. Se for `APP`, verificar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q`, sem imprimir o valor (nunca `cat .env`). Para criação de campanha, verificar também `FB_PAGE_ID`.
+2. Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`), seguir `/trafego-conexao` e aguardar.
+3. Se for `MCP_CONECTOR`, verificar se a ferramenta MCP de ads está disponível no ambiente. Se não estiver, orientar reconexão ou voltar ao command de conexão. Conferir também se `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar (conexão feita por versão antiga), seguir `/trafego-conexao`, que lista as contas com `ads_get_ad_accounts` e grava a conta padrão. Nunca chamar o conector com a conta vazia. No MCP, subir vídeo novo, buscar interesse por nome, criar regra automática e apagar campanha, conjunto ou anúncio ainda não têm ferramenta: conduzir o passo a passo no Gerenciador.
+4. Se for `APP`, verificar se `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor com `grep -q "^NOME=." .env` (linha vazia conta como ausente), sem imprimir o valor (nunca `cat .env`). O `FB_PAGE_ID`, usado na criação de campanha, é descoberto e gravado pela própria skill quando falta, sem travar.
 5. Não prosseguir sem conexão validada.
 
 Skills que herdam essa regra:
@@ -960,7 +963,7 @@ Regras:
 
 - Sem "sim", "aprovo", "pode" ou equivalente claro, não executar.
 - Nunca exibir o `curl` completo no chat.
-- Vale também para as ferramentas de escrita do MCP da Meta (`ads_create_*`, `ads_update_*`, `ads_activate_entity`, `ads_delete_custom_audience`).
+- Vale também para as ferramentas de escrita do MCP da Meta (`ads_create_*`, `ads_update_*`, `ads_activate_entity`, `ads_boost_ig_post`, `ads_delete_custom_audience`, `ads_pixel_event_*` e `ads_pixel_parameter_*` de criação, edição ou exclusão, `ads_experiment_abtest_create_test`, `ads_experiment_abtest_update_test`, `ads_experiment_lift_create_test` e qualquer outra que crie, altere ou apague algo na conta).
 - Um "sim" por lote, nunca por objeto: um fluxo da mesma skill (ex: campanha + conjuntos + anúncios) vai num bloco só e num "sim" só. Listar todos os objetos afetados; se forem muitos, mostrar resumo e lista completa abaixo. Só perguntar de novo se uma chamada falhar, o plano mudar ou surgir escrita fora do lote.
 - Exclusão é sempre à parte: nunca entra no "sim" do lote, ganha bloco e "sim" próprios e vai pelo MCP quando houver ferramenta (`ads_delete_custom_audience`). Sem ferramenta, não rodar `curl -X DELETE` direto: oferecer pausar ou arquivar, mostrar o comando mascarado para o usuário rodar ou guiar a exclusão no Gerenciador.
 - Fluxos que atravessam várias skills (atalhos compostos, modo Carteira do escalar, remarketing) só encadeiam sem novo gate no modo lote pré-aprovado.

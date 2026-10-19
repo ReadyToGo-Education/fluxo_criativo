@@ -7,7 +7,7 @@ Análise completa dos criativos ativos: formato, retenção de vídeo, CTA, fadi
 ## Perguntas que cobre
 
 1. "Qual formato performa melhor? Imagem, vídeo ou carrossel: quem ganha em ROAS, CTR e CPA?"
-2. "Os vídeos estão sendo assistidos até o final? (Thumbstop, Hook Rate, Hold Rate, Play-Through)"
+2. "Os vídeos estão sendo assistidos até o final? (Hook Rate ou Thumbstop, Hold Rate, Play-Through)"
 3. "Qual CTA converte mais? Saiba Mais, Compre Agora, Cadastre-se: quem tem melhor CTR e CPA?"
 4. "Tem criativo acima de 50.000 impressões que pode estar saturado? (Fadiga Map)"
 5. "Quais textos têm melhor taxa de engajamento? (ranking por CTR: spend acima de R$ 100)"
@@ -29,10 +29,11 @@ Pedir ao `/trafego-insights`:
 - **Status: usar `STATUS_FILTRO` definido no Passo 0.55** (ACTIVE, PAUSED+WITH_ISSUES, ambos, ou histórico completo). Não assumir só ACTIVE.
 - Período: usar o período definido no Passo 3. Não perguntar de novo.
 - Breakdown `publisher_platform` para split vídeo x imagem x carrossel
-- Métricas de vídeo por ad: `video_avg_time_watched_actions`, `video_p25_watched_actions` (Thumbstop), `video_thruplay_watched_actions` (Hook Rate 25%), `video_p50_watched_actions` (Hold Rate), `video_p100_watched_actions` (Play-Through)
+- Métricas de vídeo por ad: `video_avg_time_watched_actions`, `video_p25_watched_actions` (Hook Rate, que é o mesmo número do Thumbstop), `video_thruplay_watched_actions` (ThruPlay), `video_p50_watched_actions` (Hold Rate), `video_p100_watched_actions` (Play-Through)
 - Métricas por anúncio: `inline_link_clicks`, `link_clicks`, `cost_per_inline_link_click`, `actions[purchase]`, `spend`, `impressions`, `frequency`, `quality_ranking`, `engagement_rate_ranking`, `conversion_rate_ranking`
 - Para Fadiga Map: filtrar anúncios com `impressions > 50000` (status já filtrado pelo `STATUS_FILTRO` acima)
 - Para ranking de CTR: filtrar anúncios com `spend > 100` no período
+- Para o Gap Finder: nome e texto de cada anúncio (corpo e título), mesma fonte da `trafego-criativos/sub-skills/dna-criativo.md` (seção "Dados necessários")
 
 ---
 
@@ -66,18 +67,19 @@ Só para anúncios de vídeo. Se não houver vídeos ativos, informar e pular.
 ```
 🎬 RETENÇÃO DE VÍDEO: {N} vídeos ativos
 
-Thumbstop (25% assistido):  X%   benchmark > 70%
-Hook Rate  (3s / impressões): X%   benchmark > 25%
+Hook Rate (Thumbstop):       X%   saudável 25% ou mais
 Hold Rate  (50% / 3s):       X%   benchmark > 40%
 Play-Through (100%):          X%   esperado 1-5%
 
 Top 5 por Hold Rate:
-# | Anúncio | Thumbstop | Hook | Hold | Play-Through
+# | Anúncio | Hook | Hold | Play-Through
 ```
 
-Leitura obrigatória após a tabela: identificar qual etapa do funil é o gargalo principal (ex: Thumbstop ok + Hook baixo = hook não ativa Urgência Oculta nos primeiros 3 segundos).
+**Hook Rate e Thumbstop são o mesmo número:** `video_p25_watched_actions ÷ impressions` (aproximação dos 3 segundos), com a régua única da `/trafego-insights` (seção 4.3): crítico abaixo de 15%, atenção de 15% a 25%, saudável 25% ou mais. Nunca calcular o Thumbstop à parte.
 
-Para imagens (`object_type = PHOTO`, `LINK` ou `CAROUSEL`): calcular apenas CTR e CPA/CPL. Thumbstop, Hook, Hold e Play-Through marcados como `-`.
+Leitura obrigatória após a tabela: identificar qual etapa do funil é o gargalo principal (ex: Hook ok + Hold baixo = a abertura prende, mas os Decorados não seguram a pessoa até a metade do vídeo; Hook baixo = a abertura não ativa a Urgência Oculta nos primeiros 3 segundos).
+
+Para imagens (`object_type = PHOTO`, `LINK` ou `CAROUSEL`): calcular apenas CTR e CPA/CPL. Hook, Hold e Play-Through marcados como `-`.
 
 ### Bloco 3. CTAs por conversão (Q3)
 
@@ -150,7 +152,7 @@ Aplicar fórmula de score composto da Análise 3.2 em todos os anúncios ativos:
 - CTR: 53%
 - CPR invertido: 47%
 
-Imagem não tem Thumbstop (ver Bloco 2): os 25% desse componente foram redistribuídos proporcionalmente entre CTR e CPR invertido, na razão original 40:35, resultando em 53% e 47%.
+Imagem não tem métrica de vídeo (o Thumbstop é o próprio Hook Rate, ver Bloco 2): os 25% que a fórmula antiga dava ao Thumbstop foram redistribuídos proporcionalmente entre CTR e CPR invertido, na razão original 40:35, resultando em 53% e 47%.
 
 | Tier | Score | Diagnóstico | Ação |
 |---|---|---|---|
@@ -194,6 +196,8 @@ Extrair o padrão comum: formato, estrutura do título, presença de número, ti
 ## Mandala VTSD (referência para Gap Finder)
 
 Após identificar tipos de criativos ativos, listar os ausentes e sugerir ângulo concreto para cada tipo faltante.
+
+Nomes e ordem: os 18 tipos principais de `.claude/skills/mandala-de-anuncios/SKILL.md` (seção "Os 21 tipos de anúncio", itens 1 a 18). Os 3 extras (Pesquisa Científica, Atualidades, Atualidades Trend) contam como presentes quando aparecem, mas não entram na lista de ausentes: a conta de ausentes é sempre sobre os 18. Nunca usar nomes fora dessa lista. Para descobrir o tipo de cada criativo, seguir "Como descobrir o tipo de cada criativo" em `.claude/skills/trafego-criativos/sub-skills/dna-criativo.md`. Se mais da metade do gasto ficar sem tipo identificado, declarar a lista de ausentes como parcial.
 
 Gap Finder: tipos ausentes = portas fechadas para perfis diferentes de Identidade do Consumidor.
 
@@ -241,8 +245,8 @@ Renderizar todos os gráficos abaixo que tiverem dado real, logo após o `.stats
 
 | Gráfico | Componente / receita | Fonte de dado | Posição |
 |---|---|---|---|
-| Funil de retenção de vídeo | `.funnel` (receita B) | Impressões → p25 (Thumbstop) → p50 (Hold) → p100 (Play-Through), somando `video_p25/p50/p100_watched_actions` dos vídeos ativos | `.chart-card` full-width, topo da "Visão visual" |
+| Funil de retenção de vídeo | `.funnel` (receita B) | Impressões → p25 (Hook Rate) → p50 (Hold) → p100 (Play-Through), somando `video_p25/p50/p100_watched_actions` dos vídeos ativos | `.chart-card` full-width, topo da "Visão visual" |
 | Fadiga: tiers fortes vs. fracos | `.hbar-row` (receita D) | Tier ranking (Extra A): tiers S/A em `.win` (verde) vs. tiers C/D em `.burn` (vermelho); largura = gasto do tier | `.chart-card` dentro do Bloco 4 (Fadiga Map) |
 | Formato: vídeo × imagem | `.wow-chart` (receita C) | Bloco 1: ROAS (ou CTR / CPA) de vídeo × imagem como par | `.chart-card` dentro do Bloco 1 |
 
-Regras dos gráficos: usar só cores da paleta. **Funil (receita B):** largura em escala log do topo (`log10(valor)/log10(impressões)·100`); no `.funnel-meta` de cada etapa, a taxa real em relação à etapa anterior (Thumbstop %, Hold %, Play-Through %). **Barras horizontais de fadiga (receita D):** somar o gasto de cada tier; `.win` (verde) para S/A, `.burn` (vermelho) para C/D; largura proporcional ao maior gasto do conjunto; alerta visual se C+D > 30% do budget. **Barras pareadas de formato (receita C):** par vídeo × imagem por métrica-norte; a barra do formato vencedor recebe `.good` (verde); altura normalizada ao maior do par; quando a métrica é CPA (menor é melhor), inverter a leitura de cor. Se houver carrossel com gasto relevante, o `.wow-chart` aceita um terceiro grupo.
+Regras dos gráficos: usar só cores da paleta. **Funil (receita B):** largura em escala log do topo (`log10(valor)/log10(impressões)·100`); no `.funnel-meta` de cada etapa, a taxa real em relação à etapa anterior (Hook Rate %, Hold %, Play-Through %). **Barras horizontais de fadiga (receita D):** somar o gasto de cada tier; `.win` (verde) para S/A, `.burn` (vermelho) para C/D; largura proporcional ao maior gasto do conjunto; alerta visual se C+D > 30% do budget. **Barras pareadas de formato (receita C):** par vídeo × imagem por métrica-norte; a barra do formato vencedor recebe `.good` (verde); altura normalizada ao maior do par; quando a métrica é CPA (menor é melhor), inverter a leitura de cor. Se houver carrossel com gasto relevante, o `.wow-chart` aceita um terceiro grupo.

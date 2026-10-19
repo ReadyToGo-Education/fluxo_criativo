@@ -40,10 +40,10 @@ Teste recomendado:
 - Prova social acima do primeiro CTA
 - CTA com texto mais direto
 
-Métrica principal: Lead Rate ou taxa LPV→próxima etapa
-Critério de sucesso: aumento de 20%+ na taxa LPV→Lead
-Critério de morte: nenhuma melhoria após 500+ LPVs
-Dados mínimos: 7 dias, 500 LPVs na versão teste
+Métrica principal: taxa de cadastro ou carrinho (das visitas à página)
+Critério de sucesso: aumento de 20% ou mais na taxa de visita à página → cadastro
+Critério de morte: nenhuma melhoria depois de 500 visitas à página (coluna "Visualizações da página de destino" no Gerenciador)
+Dados mínimos: 7 dias, 500 visitas à página na versão teste
 
 Execução: /pagina-ajuste (página feita no Severino) ou a auditoria
 do /feedback-pagina (/feedback-low-ticket em low ticket). Copy nova
@@ -72,9 +72,9 @@ Teste recomendado:
 - Adicionar FAQ com as 5 objeções principais
 - Reforçar ancoragem de preço
 
-Métrica principal: taxa Lead/ATC→Checkout
-Critério de sucesso: aumento de 15%+ na taxa
-Critério de morte: nenhuma melhoria após 200+ leads/ATCs
+Métrica principal: taxa cadastro ou carrinho → checkout iniciado
+Critério de sucesso: aumento de 15% ou mais na taxa
+Critério de morte: nenhuma melhoria depois de 200 cadastros ou carrinhos
 
 Execução: /feedback-pagina (/feedback-low-ticket em low ticket) para
 prova, garantia e FAQ; as 5 objeções do resumo do produto são a base
@@ -89,7 +89,7 @@ Acionado quando: diagnóstico de checkout = `friccao_provavel` ou `queda_abrupta
 BRIEFING #3: REDUZIR FRICÇÃO NO CHECKOUT
 Prioridade: ALTA (tráfego qualificado chega e abandona na última etapa)
 
-Problema: taxa IC→Purchase de {X}% (bem abaixo do piso da faixa do ticket, seção 3.5 do SKILL.md; só aciona este briefing se for fricção real, não a queda natural do preço alto)
+Problema: conclusão de checkout (compras ÷ checkouts iniciados) de {X}% (bem abaixo do piso da faixa do ticket, seção 3.5 do SKILL.md; só aciona este briefing se for fricção real, não a queda natural do preço alto)
 
 Hipótese: fricção na etapa final impede a conclusão da compra.
 
@@ -100,9 +100,9 @@ Teste recomendado (verificar na plataforma):
 - Testar bump de valor menor (reduz percepção de risco)
 - Verificar se checkout mobile funciona bem
 
-Métrica principal: taxa IC→Purchase
+Métrica principal: conclusão de checkout (compras ÷ checkouts iniciados)
 Critério de sucesso: a taxa volta para dentro da faixa do ticket (seção 3.5 do SKILL.md)
-Critério de morte: taxa não melhora após 50+ ICs
+Critério de morte: taxa não melhora depois de 50 checkouts iniciados
 
 ⚠️ Esta ação é FORA do Meta. A skill não modifica checkout.
 Execução: /pagina-checkout (ligação da página com o checkout) e
@@ -111,14 +111,14 @@ os ajustes de pagamento direto na plataforma (Hotmart, Kiwify, Stripe).
 
 ### Tipo 4: Briefing técnico (connect rate)
 
-Acionado quando: connect rate < 60% (clique acontece mas visitante não chega na página) OU leitura da página detecta redirect/erro.
+Acionado quando: connect rate abaixo de 70% (clique acontece mas visitante não chega na página; abaixo de 70%, a primeira hipótese é técnica, seção 3.5 do SKILL.md) OU leitura da página detecta redirect/erro.
 
 ```
 BRIEFING #4: RESOLVER PROBLEMA TÉCNICO DE ACESSO
 Prioridade: ALTA (tráfego está sendo pago mas não chega na página)
 
 Problema: connect rate de {X}% ({Y}% do tráfego pago não
-chega na landing page).
+chega na página).
 
 Hipótese: problema técnico entre o clique e a página. Pode ser:
 redirect lento, URL errada, página fora do ar intermitente,
@@ -131,8 +131,8 @@ Verificações recomendadas:
 - Verificar se a página está online 24h (monitoramento)
 - Conferir se o link no criativo é o correto
 
-Métrica principal: connect rate (LPV / cliques)
-Critério de sucesso: connect rate sobe para > 75%
+Métrica principal: connect rate (visitas à página ÷ cliques no link)
+Critério de sucesso: connect rate sobe para 80% ou mais (faixa saudável, seção 3.5 do SKILL.md)
 Critério de morte: nenhuma melhoria após corrigir o técnico
 
 ⚠️ Esta ação é FORA do Meta. Execução: /pagina-performance (velocidade
@@ -149,15 +149,15 @@ Ordenar briefings pelo gap no funil:
 Prioridade de correções no funil:
 
 #1 ALTA: Nova primeira dobra
-   Gap: LPV→Lead (92% de perda, R$ 328/dia desperdiçados)
-   Potencial: se Lead Rate subir de 8% para 15%, CPA cai ~47%
+   Perda: visita à página → cadastro (92% de perda, R$ 328/dia desperdiçados)
+   Potencial: se a taxa de cadastro subir de 8% para 15%, CPA cai ~47%
 
 #2 MÉDIA: Reforçar prova e oferta
-   Gap: Lead→Checkout (80% de perda)
+   Perda: cadastro → checkout iniciado (80% de perda)
    Potencial: mais confiança → mais decisões de compra
 
 #3 ALTA: Reduzir fricção checkout
-   Gap: IC→Purchase (queda de 40% para 26%)
+   Perda: conclusão de checkout (compras ÷ checkouts iniciados) caiu de 40% para 26%
    Potencial: recuperar 14 pontos de conversão = ~5 vendas/semana
 ```
 
@@ -203,9 +203,9 @@ plano_correcao_funil:
       problema: "92% das visitas saem sem engajar"
       hipotese: "Primeira dobra não sustenta expectativa do anúncio"
       teste: "Nova headline alinhada + prova antes do CTA"
-      metrica_principal: "Lead Rate"
-      criterio_sucesso: "+20% na taxa LPV→Lead"
-      criterio_morte: "Nenhuma melhoria após 500 LPVs"
-      dados_minimos: "7 dias, 500 LPVs"
+      metrica_principal: "taxa de cadastro"
+      criterio_sucesso: "+20% na taxa de visita à página → cadastro"
+      criterio_morte: "Nenhuma melhoria depois de 500 visitas à página"
+      dados_minimos: "7 dias, 500 visitas à página"
       execucao: "/pagina-ajuste | /feedback-pagina | /feedback-low-ticket | /copy-pagina | /lt-pagina | /pagina-checkout | /pagina-performance"
 ```

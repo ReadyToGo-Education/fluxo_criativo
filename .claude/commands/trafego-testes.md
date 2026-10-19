@@ -21,9 +21,9 @@ Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/resumo-produto.md` (se 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
 
-- **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir.
-- **Se `MCP_CONECTOR`:** confirme que existe uma tool cujo nome termina em `ads_get_ad_accounts`. Se nenhuma estiver disponível, peça ao aluno para reabrir o Claude Code; se persistir, volte ao `/trafego-conexao`. Se a conta vier como não liberada no MCP, explique e ofereça o modo App pelo `/trafego-conexao`.
-- **Se `APP`:** confirme com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`. Se faltar algum, acione `/trafego-conexao`.
+- **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acione `/trafego-conexao` e aguarde a conclusão. Não tente adivinhar, não caia em outro caminho e não peça credencial avulsa.
+- **Se `MCP_CONECTOR`:** confirme que existe uma tool cujo nome termina em `ads_get_ad_accounts`. Se nenhuma estiver disponível, peça ao aluno para reabrir o Claude Code; se persistir, volte ao `/trafego-conexao`. Se a conta vier como não liberada no MCP, explique e ofereça o modo App pelo `/trafego-conexao`. Confira também que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar, a opção "Validar" do `/trafego-conexao` completa.
+- **Se `APP`:** confirme que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env` (`grep -q "^NOME=." .env`, com o ponto: linha vazia conta como ausente). Se faltar algum, acione `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
 

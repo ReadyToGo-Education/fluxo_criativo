@@ -11,7 +11,7 @@ Destaque exclusivo de pixels da conta sem disparo nos últimos 7 dias. É o outp
 
 ## Dados necessários
 
-> **Roteamento por modo (ver SKILL.md, Passo 0):** os GET abaixo são o caminho `APP` (curl, `v25.0`, token mascarado na tela). No `MCP_CONECTOR`: `adspixels` → `ads_get_datasets`; `/stats event_total_counts` → `ads_get_dataset_stats`; o cruzamento com públicos (Bloco 4) usa `ads_get_ad_account_custom_audiences`. Leitura pura, sem lacuna.
+> **Roteamento por modo (ver SKILL.md, Passo 0):** os GET abaixo são o caminho `APP` (curl, `v25.0`, token mascarado na tela). No `MCP_CONECTOR`: `adspixels` → `ads_get_datasets`; `/stats event_total_counts` → `ads_get_dataset_stats`; o cruzamento com públicos (Bloco 4) usa `ads_get_ad_account_custom_audiences`. Leitura pura. Única exceção: na checagem extra (pixel usado pelas campanhas), o objeto promovido pode não vir pelo conector; nesse caso, o bloco sai como "não verificado pelo conector" (SKILL.md, seção 1.4).
 
 ```
 GET /act_{ad_account_id}/adspixels?fields=id,name,last_fired_time,is_unavailable,creation_time

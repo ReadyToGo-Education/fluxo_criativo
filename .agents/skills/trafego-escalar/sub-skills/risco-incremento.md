@@ -27,7 +27,7 @@ Cada variável contribui de 0 a 12,5 pontos (total máximo 100). Score ALTO = MA
 | 7 | **Histórico pós-incremento** | 2+ ciclos anteriores bem-sucedidos | 1 ciclo ou sem histórico | Último incremento acionou freio |
 | 8 | **Saturação de audiência** | Alcance incremental estável | Alcance desacelerando | Alcance estagnado ou CPM subindo 20%+ |
 
-A variável 7 sai do histórico do produto, em `meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md` (Leitura 3 do Passo 0.75 da escalar).
+A variável 7 sai do histórico do produto, em `meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md` (Leitura 3 do Passo 0.75 da escalar). Conta ciclos, não linhas: as linhas do mesmo lote e as ativações das estruturas dele são um ciclo só.
 
 ## Cálculo
 
@@ -68,16 +68,16 @@ Quer prosseguir mesmo assim?
 Cada score DEVE vir com texto explicativo:
 
 ```
-RISCO DE INCREMENTO: +20% em "Campanha A Perpétuo", risco 37/100 (MÉDIO)
+RISCO DE INCREMENTO: +20% em "Campanha A Perpétuo", risco 30/100 (MÉDIO)
 
 O que significa: as condições são razoáveis para escalar, mas
 há sinais que pedem atenção.
 
 Por que está nesse nível:
-- Dependência criativa alta (1 anúncio concentra 65% do gasto): se
+- Dependência criativa média (1 anúncio concentra 65% do gasto): se
   esse criativo cansar, a campanha inteira cai.
-- Margem de segurança apertada (CPA a 88% do target): pouca
-  folga para absorver oscilação pós-incremento.
+- Margem de segurança moderada (CPA a 88% do target): folga
+  limitada para absorver oscilação pós-incremento.
 
 Para reduzir o risco antes de escalar:
 - Subir 1 ou 2 criativos novos (diversificar a dependência):
@@ -95,12 +95,12 @@ risco_incremento:
   campanha_id: "<id>"
   campanha_nome: "<nome>"
   incremento_proposto: "+20%"
-  score: 37
+  score: 30
   faixa: risco_medio
   variaveis:
     volume_conversoes: { valor: 22, pontos: 6 }
     consistencia_cv: { valor: 0.28, pontos: 0 }
-    margem_seguranca_cpa: { valor: 0.12, pontos: 12.5 }
+    margem_seguranca_cpa: { valor: 0.12, pontos: 6 }
     frequencia: { valor: 1.8, pontos: 0 }
     dependencia_criativa: { valor: 0.65, pontos: 6 }
     dependencia_remarketing: { valor: 0.25, pontos: 0 }
@@ -119,11 +119,11 @@ O score aparece junto de cada ação no plano, dentro do bloco 🛡️:
 
 ```
 [1] VERTICAL: subir "Campanha A Perpétuo" de R$ 200 para R$ 240 (+20%)
-    Risco: 42/100 (médio), dependência criativa + margem apertada
+    Risco: 30/100 (médio), dependência criativa + margem moderada
     Motivo: CPA 12% abaixo do target, frequência 1,8
 
 [2] HORIZONTAL: duplicar "Campanha A Perpétuo" com teste LAL 2%
-    Risco: 28/100 (baixo), base sólida, público novo
+    Risco: 24/100 (baixo), base sólida, público novo
 ```
 
 Se qualquer ação tem `risco_extremo`, ela não aparece no plano (bloqueada, mas listada como reprovada com o motivo, sem sumir). Se `risco_alto`, aparece com a tag ⚠️.

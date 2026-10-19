@@ -28,8 +28,8 @@ Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se o re
 Leia só a linha `META_AUTH_MODO` do `.env` (`grep "^META_AUTH_MODO=" .env | cut -d= -f2-`).
 
 - **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive valor legado de versão antiga): acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que existe tool do conector da Meta, procurando pelo final do nome (`ads_create_campaign`, `ads_get_ad_accounts`), como manda a seção 5.1 da skill `trafego-conexao`. Se nenhuma estiver disponível, pedir ao aluno para reabrir o Claude (conector recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conferir também `FB_AD_ACCOUNT_ID` com `grep -q`: as tools de escrita exigem a conta. Se faltar, acionar `/trafego-conexao`. Conta não liberada no conector (`is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out"): avisar e oferecer o modo App pelo `/trafego-conexao`.
-- **Se `APP`:** confirmar com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`. Se faltar algum, acionar `/trafego-conexao`. `FB_PAGE_ID` (e `FB_INSTAGRAM_USER_ID`, necessário para Reels/Stories) também é conferido: se faltar só ele, a seção 7.1 da skill descobre e grava, sem refazer a conexão.
+- **Se `MCP_CONECTOR`:** confirmar que existe tool do conector da Meta, procurando pelo final do nome (`ads_create_campaign`, `ads_get_ad_accounts`), como manda a seção 5.1 da skill `trafego-conexao`. Se nenhuma estiver disponível, pedir ao aluno para reabrir o Claude (conector recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conferir também `FB_AD_ACCOUNT_ID` com `grep -q "^FB_AD_ACCOUNT_ID=." .env` (com o ponto: linha vazia conta como ausente): as tools de escrita exigem a conta. Se faltar (conexão feita numa versão antiga, que não gravava a conta no modo MCP), acionar `/trafego-conexao` avisando que o motivo é a conta padrão, para ele ir direto à seção 5.1.1 (listar as contas com `ads_get_ad_accounts`, perguntar quando houver mais de uma e gravar `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS`), e depois voltar a este Passo 0. Nunca seguir com a conta vazia. Conta não liberada no conector (`is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out"): avisar e oferecer o modo App pelo `/trafego-conexao`.
+- **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env`, com `grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env` (linha vazia, como vem do `.env.example`, conta como ausente). Se faltar algum, acionar `/trafego-conexao`. `FB_PAGE_ID` (e `FB_INSTAGRAM_USER_ID`, necessário para Reels/Stories) também é conferido: se faltar só ele, a seção 7.1 da skill descobre e grava, sem refazer a conexão.
 
 Nunca exibir o token nem o conteúdo do `.env` (seção "LEITURA SEGURA DO .env" do CLAUDE.md). A skill nunca prossegue sem essa validação passar.
 
@@ -38,7 +38,7 @@ Nunca exibir o token nem o conteúdo do `.env` (seção "LEITURA SEGURA DO .env"
 Após a validação da conexão, decidir qual conta usar para subir a campanha:
 
 1. Ler `FB_AD_ACCOUNT_IDS` no `.env`. Lista de IDs separados por vírgula.
-2. Se `FB_AD_ACCOUNT_IDS` não existe ou está vazio, usar `FB_AD_ACCOUNT_ID` direto.
+2. Se `FB_AD_ACCOUNT_IDS` não existe ou está vazio, usar `FB_AD_ACCOUNT_ID` direto (o Passo 0.2 já garantiu que ele tem valor; sem ele, voltar ao Passo 0.2, nunca seguir com conta vazia).
 3. Se `FB_AD_ACCOUNT_IDS` tem **1 conta**, usar `FB_AD_ACCOUNT_ID` direto sem perguntar.
 4. Se `FB_AD_ACCOUNT_IDS` tem **2 ou mais contas**, perguntar:
 
@@ -87,7 +87,7 @@ Aplicar as Fases 1 a 9 da skill, uma pergunta por mensagem:
 4. **Orçamento**. ABO ou CBO + valor diário.
 5. **Tracking** (gate duro). Validar pixel ativo + evento recebendo dados.
 6. **Público**. Advantage+ (recomendado), Advantage+ com interesses (termos tirados do resumo) ou personalizado. Lookalike novo é criado pelo `/trafego-publicos`. No modo MCP, interesse por nome é lacuna: a skill recomenda Advantage+ ou conduz o passo manual guiado.
-7. **Criativos**. Arquivos em `meus-produtos/{ativo}/entregas/criativos/`, biblioteca da conta ou pendentes. Para gerar copy, sugerir `/copy-anuncio`. Para imagem, `/criativo-estatico` ou `/img-anuncio`. Para vídeo, `/video-heygen`, `/video-remotion` ou `/video-editar`. No modo MCP, vídeo novo é lacuna: o aluno sobe pelo Gerenciador e a skill usa o vídeo da biblioteca.
+7. **Criativos**. Arquivos em `meus-produtos/{ativo}/entregas/criativos/`, biblioteca da conta ou pendentes (pendentes: o lote cria só a campanha e os conjuntos, sem anúncios; os anúncios entram depois pela seção 7.8 da skill). Para gerar copy, sugerir `/copy-anuncio`. Para imagem, `/criativo-estatico` ou `/img-anuncio`. Para vídeo, `/video-heygen`, `/video-remotion` ou `/video-editar`. No modo MCP, vídeo novo é lacuna: o aluno sobe pelo Gerenciador antes do preview e a skill usa o vídeo da biblioteca.
 8. **Posicionamentos**. Advantage+ Placements (default) ou manual.
 9. **Nome da campanha**. Padrão automático, aluno pode editar.
 
@@ -134,7 +134,7 @@ Digite o número:
 
 ## Passo 4. Preview e confirmação do lote
 
-Montar o preview completo conforme a seção 3 da skill: o YAML fica salvo em `meus-produtos/{ativo}/entregas/trafego/preview-campanha-{tipo_funil}-{slug}-{data}.yaml` e o aluno vê um resumo em texto corrido, com `Nome (ID)` em toda referência e as validações pré-criação marcadas (`pixel_ativo`, `evento_recebendo_dados_7d`, `budget_coerente_com_ticket`, `page_id_valido`, `instagram_user_id_valido`, `criativos_no_formato_correto`).
+Montar o preview completo conforme a seção 3 da skill: o YAML fica salvo em `meus-produtos/{ativo}/entregas/trafego/criar-campanha/preview-campanha-{tipo_funil}-{slug}-{data}.yaml` e o aluno vê um resumo em texto corrido, com `Nome (ID)` em toda referência e as validações pré-criação marcadas (`pixel_ativo`, `evento_recebendo_dados_7d`, `budget_coerente_com_ticket`, `page_id_valido`, `instagram_user_id_valido`, `criativos_no_formato_correto`).
 
 Pedir a aprovação com **um único bloco 🛡️ para o lote inteiro** (campanha + conjuntos + criativos + anúncios + uploads), no formato do CLAUDE.md:
 
@@ -145,9 +145,9 @@ Operação: criar campanha completa (lote)
 Endpoint: {ads_create_* pelo conector | POST /act_<id>/campaigns, /adsets, /adcreatives, /ads}
 Objeto: {nome da campanha}
 O que vai mudar:
-  - 1 campanha nova "{nome}", status PAUSED
-  - {N} conjunto(s): {nomes e orçamento diário}
-  - {N} anúncio(s) com {N} criativo(s)
+  - 1 campanha nova "{nome}", status PAUSED{, orçamento de R$ X/dia se CBO}
+  - {N} conjunto(s), status PAUSED: {nomes e orçamento diário em reais}
+  - {N} anúncio(s) com {N} criativo(s), status PAUSED {ou: 0 anúncios (criativos pendentes)}
   - {N} upload(s) de imagem/vídeo (se houver)
 Reset de aprendizado esperado: não (campanha nova)
 Reversível? sim (tudo nasce pausado; dá para arquivar depois)
@@ -163,27 +163,32 @@ Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 
 ## Passo 5. Criação
 
-🔍 Próximo passo: criar a campanha, os conjuntos e os anúncios na conta. Tempo estimado: 1 a 2 minutos.
+🔍 Próximo passo: criar a campanha, os conjuntos e os anúncios na conta. Tempo estimado: 60 a 120 segundos.
 
-Aplicar a ordem da seção 4 da skill, roteando por `META_AUTH_MODO` (tools `ads_create_*` no MCP, `curl` no APP):
+Aplicar a ordem da seção 4 da skill, roteando por `META_AUTH_MODO` (tools `ads_create_*` no MCP, `curl` no APP). Orçamento na chamada: inteiro em centavos no APP (R$ × 100); no MCP, na unidade que o schema da tool pedir (seção 4 da skill).
 
-1. Campanha (status PAUSED)
+0. Mídia, só se houver arquivo novo ou vídeo: subir imagens e vídeos (APP), esperar cada vídeo ficar pronto e pegar a miniatura; no MCP, confirmar o vídeo na biblioteca e pegar a miniatura dele. Tudo antes de criar a campanha.
+1. Campanha (status PAUSED; em ABO no modo APP, com `is_adset_budget_sharing_enabled=false`, senão erro 4834011)
 2. Conjuntos (sempre com `advantage_audience` 0 ou 1, senão erro 1870227)
-3. Para cada anúncio: criativo e anúncio (vídeo sempre com miniatura, senão erro 1443226)
+3. Para cada anúncio que não está pendente: criativo e anúncio (vídeo sempre com miniatura, senão erro 1443226)
 
-Anunciar progresso por nível:
+Anunciar progresso por nível (sem o passo 0, quando não há arquivo novo nem vídeo, são 3 passos):
 ```
-⏳ Passo 1/3: criando a campanha "[nome]".
-⏳ Passo 2/3: criando [N] conjunto(s).
-⏳ Passo 3/3: criando [N] anúncio(s).
+⏳ Passo 1/4: preparando imagens e vídeos.
+⏳ Passo 2/4: criando a campanha "[nome]".
+⏳ Passo 3/4: criando [N] conjunto(s).
+⏳ Passo 4/4: criando [N] anúncio(s).
 ```
+
+Depois de criar, conferir o orçamento gravado contra o valor em reais do preview (seção 4 da skill). Se não bater, avisar antes de qualquer ativação.
 
 Em caso de falha:
+- **Falha no upload, vídeo que não fica pronto ou sem miniatura:** parar antes de criar a campanha (nada foi criado na conta). Oferecer tentar de novo, trocar o arquivo ou seguir sem aquele anúncio (com novo bloco 🛡️ do plano ajustado).
 - **Falha na campanha:** parar tudo, retornar erro detalhado.
 - **Falha num conjunto:** parar e não apagar nada automaticamente. A campanha fica PAUSED e sem conjunto não gasta. Oferecer corrigir e tentar de novo, arquivar a campanha (bloco 🛡️ próprio) ou excluir à mão pelo Gerenciador.
-- **Falha num anúncio:** preservar o que já subiu, listar quais falharam, perguntar se quer tentar de novo depois.
+- **Falha num anúncio:** preservar o que já subiu, marcar no preview salvo como pendentes (`pendente: true`) o anúncio que falhou e os que não chegaram a ser criados, listar quais falharam, perguntar se quer tentar de novo depois (seção 7.8 da skill).
 
-Depois, conduzir os passos manuais pendentes, se houver (interesses no modo MCP, vídeo novo, imagem a anexar), com os passos numerados da skill.
+Depois, conduzir os passos manuais pendentes, se houver (interesses no modo MCP, anúncio com imagem a criar pelo Gerenciador), com os passos numerados da skill. O vídeo novo do modo MCP já foi para a biblioteca antes do preview.
 
 ✅ Concluído: campanha criada com status PAUSED.
 
@@ -207,6 +212,11 @@ Anúncios criados:
 - [nome]   ID [id]   PAUSED
 - ...
 
+[Se os criativos ficaram pendentes (opção 2 da Fase 7):]
+Anúncios pendentes: [N]. A campanha não entrega enquanto os
+conjuntos estiverem sem anúncio. Quando os criativos estiverem
+prontos, me peça "adiciona os anúncios na campanha [nome]".
+
 [Se houver falhas parciais, listar separadamente:]
 Falhas:
 - [nível] [nome]   motivo: [...]
@@ -220,8 +230,9 @@ Próximos passos:
 1. Abrir no Gerenciador (link acima) e revisar visualmente cada
    anúncio (preview, copy, criativo). Se quiser, eu mostro a prévia
    de qualquer anúncio por aqui.
-2. Quando estiver tudo certo, ativar manualmente OU me peça
-   "ativa a campanha [nome]" que eu ativo.
+2. Quando estiver tudo certo, ativar no Gerenciador (a campanha,
+   os conjuntos e os anúncios, porque todos nasceram pausados) OU
+   me peça "ativa a campanha [nome]" que eu ativo tudo de uma vez.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔭 Próximo passo recomendado: /trafego-analise
@@ -238,34 +249,39 @@ pelo método VTSD. Para acompanhar os números no dia a dia, use
 
 Salvar em:
 ```
-meus-produtos/{ativo}/entregas/trafego/campanha-criada-{nome-slug}-{YYYY-MM-DD}.md
+meus-produtos/{ativo}/entregas/trafego/criar-campanha/campanha-criada-{nome-slug}-{YYYY-MM-DD}.md
 ```
 
 Conteúdo: o resumo do preview aprovado + IDs gerados + link do Gerenciador + próximos passos.
 
-Caminho absoluto a exibir: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\campanha-criada-{...}.md`
+Caminho absoluto a exibir: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\criar-campanha\campanha-criada-{...}.md`
 
 ---
 
 ## Ativação posterior
 
-Se o aluno disser depois "ativa a campanha [nome|id]":
+Se o aluno disser depois "ativa a campanha [nome|id]", seguir a seção 7.6 da skill. Ativar só a campanha não liga os conjuntos e anúncios, que também nasceram pausados, então a ativação cobre tudo:
 
-1. Mostrar o bloco 🛡️ (operação: ativar campanha; status PAUSED → ACTIVE; reversível: sim, pausando de novo) e avisar: "Uma vez ativa, a campanha começa a gastar imediatamente."
-2. Com o `sim`: MCP `ads_activate_entity` (ou `ads_update_entity` com `status=ACTIVE`); APP `POST /<campaign_id>` com `status: ACTIVE`.
-3. Confirmar a ativação e lembrar: "Monitore nas primeiras 48h. Use `/trafego-insights` para acompanhar."
+1. Ler a campanha, os conjuntos e os anúncios, com o orçamento diário (MCP `ads_get_ad_entities` nos níveis campaign, adset e ad, cada consulta já filtrada pela campanha, com `daily_budget` em reais; APP `GET /<campaign_id>`, `/adsets` e `/ads`, com `daily_budget` em centavos, dividir por 100), como no passo 1 da seção 7.6 da skill.
+2. Mostrar um único bloco 🛡️ listando a campanha, cada conjunto e cada anúncio, cada um com "status PAUSED → ACTIVE", o gasto diário em reais que começa e "reversível: sim, pausando de novo". Avisar: "Uma vez ativa, a campanha começa a gastar imediatamente." Se algum conjunto estiver sem anúncio, avisar que ele não vai entregar.
+3. Com o `sim`, ativar anúncios, depois conjuntos, por último a campanha: MCP `ads_activate_entity` (ou `ads_update_entity` com `status=ACTIVE`); APP `POST /<id>` com `status: ACTIVE` para cada objeto.
+4. Conferir com uma nova leitura o que ficou ativo e lembrar: "Monitore nas primeiras 48h. Use `/trafego-insights` para acompanhar."
+
+## Anúncios adicionados depois
+
+Se o aluno disser "adiciona os anúncios na campanha [nome]" (criativos pendentes ou anúncios que falharam), seguir a seção 7.8 da skill: criativos e copy, preview atualizado, bloco 🛡️ próprio e criação dos anúncios com `status: PAUSED`. A ativação continua sendo a de cima.
 
 ---
 
 ## Princípios que este command nunca viola
 
 1. **Sales/Leads sem pixel = não cria.** Gate duro.
-2. **Sempre PAUSED por default.** Ativação só com pedido explícito posterior.
+2. **Sempre PAUSED por default.** Ativação só com pedido explícito posterior, cobrindo campanha, conjuntos e anúncios.
 3. **Preview obrigatório, sempre.** Mesmo no modo expresso.
-4. **Um `sim` por lote.** A criação inteira é aprovada de uma vez. Ativação e arquivamento têm confirmação própria. Exclusão nunca é automática nem entra em lote.
+4. **Um `sim` por lote.** A criação inteira é aprovada de uma vez. Ativação, anúncios adicionados depois e arquivamento têm confirmação própria. Exclusão nunca é automática nem entra em lote.
 5. **Não cobre objetivos fora de Sales/Leads.** Recusa Awareness, Traffic, Engagement, App Promotion.
 6. **Liberdade de estrutura.** Aluno pode pedir customizada (ex: 2 conjuntos × 4 anúncios).
-7. **Nunca chama edição.** Edição mora em `/trafego-otimizar` e `/trafego-escalar`.
+7. **Nunca chama edição.** Edição mora em `/trafego-otimizar` e `/trafego-escalar`. Adicionar os anúncios pendentes numa campanha criada aqui é criação (seção 7.8 da skill).
 8. **Falha parcial preserva.** Não faz rollback automático.
 9. **Geração de copy via `/copy-anuncio`.** Não gera copy aqui.
 10. **Nunca exibe o token.** Nem no chat, nem em comando mostrado ao aluno.

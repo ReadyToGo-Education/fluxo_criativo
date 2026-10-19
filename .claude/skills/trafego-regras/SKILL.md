@@ -41,7 +41,7 @@ Toda escrita segue a seção "GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESC
 | Ativar, desativar, editar regra | passo manual guiado no Gerenciador | `POST /<rule_id>` |
 | Excluir regra (sempre à parte) | exclusão manual no Gerenciador | sem `curl -X DELETE` direto: Gerenciador ou comando sem token para o aluno rodar |
 | Programar liga e pausa do conjunto | `ads_update_entity` (`adset_schedule` + `pacing_type`) | `POST /<adset_id>` |
-| Trocar orçamento diário por total | `ads_update_entity` (`lifetime_budget` + `end_time`), costuma ser recusado em conjunto já publicado | `POST /<adset_id>`, mesma ressalva |
+| Trocar orçamento diário por total | `ads_update_entity`: no conjunto, `lifetime_budget` + `end_time`; em CBO, `lifetime_budget` na campanha e `end_time` em cada conjunto. Costuma ser recusado em conjunto ou campanha já publicados | `POST /<adset_id>` (em CBO, `POST /<campaign_id>` com `lifetime_budget` e `POST /<adset_id>` com `end_time` em cada conjunto), mesma ressalva |
 | Leituras de apoio (escopo, CBO ou ABO, orçamento) | `ads_get_ad_entities` | `GET` na Graph API |
 
 ---
@@ -50,9 +50,9 @@ Toda escrita segue a seção "GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESC
 
 1. **Produto ativo.** Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md`, seguindo a seção "Contexto Persistente do Negócio" do CLAUDE.md. O resumo traz o **preço** (ticket) e o **tipo** (low, middle ou high ticket), usados nas validações de gatilho (ex: CPA menor que metade do ticket, janela mínima de high ticket). Só perguntar ao aluno o que o resumo não tem (CPA alvo, margem).
 2. **Conexão Meta.** Ler `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
-   - **Vazio:** acionar `/trafego-conexao`.
-   - **`MCP_CONECTOR`:** confirmar uma tool cujo nome termina em `ads_get_ad_accounts` (descobrir sempre pelo final do nome). Conta não liberada no conector: explicar e oferecer o modo App pelo `/trafego-conexao`.
-   - **`APP`:** confirmar com `grep -q` `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID`.
+   - **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar a conclusão. Não adivinhar o modo, não cair em outro caminho e não pedir credencial avulsa.
+   - **`MCP_CONECTOR`:** confirmar uma tool cujo nome termina em `ads_get_ad_accounts` (descobrir sempre pelo final do nome). Conta não liberada no conector: explicar e oferecer o modo App pelo `/trafego-conexao`. Conferir também que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar, a opção "Validar" do `/trafego-conexao` completa.
+   - **`APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor (`grep -q "^NOME=." .env`, com o ponto: linha vazia conta como ausente). Se faltar algum, acionar `/trafego-conexao`.
 3. **Roteamento por sub-fluxo:**
 
 | Sub-fluxo | Mecanismo Meta | No MCP | No App |
@@ -101,7 +101,7 @@ Documentação de cada um:
 ```
 POST   /act_<id>/adrules_library
 GET    /act_<id>/adrules_library
-POST   /<rule_id>?execution_options=["execute_immediately"]   (executar uma vez sem esperar o gatilho)
+POST   /<rule_id>/execute                                      (executar uma vez sem esperar o gatilho; escrita, passa pelo bloco 🛡️; no modo MCP não há tool, vira passo manual no Gerenciador)
 POST   /<rule_id>  { "status": "DISABLED" }                    (desativar: forma de desfazer padrão)
 GET    /<rule_id>/history                                      (histórico de execução)
 ```
@@ -147,7 +147,7 @@ POST /<adset_id>
 - `start_minute` e `end_minute` são minutos desde a meia-noite (480 = 08:00, 1320 = 22:00).
 - `days`: 0 = domingo, 1 = segunda, ..., 6 = sábado.
 
-**`adset_schedule` exige orçamento total** (`lifetime_budget`), não funciona com orçamento diário. **Trocar orçamento diário por total num conjunto já publicado costuma ser recusado pela Meta.** A skill confere antes e explica as saídas (ver `sub-skills/liga-pausa-schedule.md`).
+**`adset_schedule` exige orçamento total** (`lifetime_budget`), não funciona com orçamento diário. Em CBO, quem precisa do orçamento total é a campanha. **Trocar orçamento diário por total num conjunto ou campanha já publicados costuma ser recusado pela Meta.** A skill confere antes e explica as saídas, inclusive para campanha CBO com orçamento diário (ver `sub-skills/liga-pausa-schedule.md`).
 
 ---
 

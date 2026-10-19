@@ -35,13 +35,13 @@ NÃO é ranking do melhor para o pior. É classificação pelo tipo de comportam
 ```
 Distribuição por perfil comportamental:
 
-| Perfil         | Qtd | % Gasto | CPA médio | Ação                    |
-|----------------|-----|---------|-----------|-------------------------|
-| Atenção        | 2   | 25%     | R$ 210    | Ajustar CTA/promessa    |
-| Intenção       | 3   | 35%     | R$ 165    | Qualificar ou manter    |
-| Conversão      | 1   | 10%     | R$ 72     | Proteger e escalar      |
-| Equilibrado    | 1   | 20%     | R$ 95     | Criar variações         |
-| Ineficiente    | 1   | 10%     | R$ 340    | Pausar                  |
+| Perfil         | Qtd | % Gasto | CPA médio | Ação                              |
+|----------------|-----|---------|-----------|-----------------------------------|
+| Atenção        | 2   | 25%     | R$ 210    | Ajustar CTA/promessa              |
+| Intenção       | 3   | 35%     | R$ 165    | Qualificar ou manter              |
+| Conversão      | 1   | 10%     | R$ 72     | Proteger; escalar só se vencedor  |
+| Equilibrado    | 1   | 20%     | R$ 95     | Criar variações                   |
+| Ineficiente    | 1   | 10%     | R$ 340    | Pausar                            |
 ```
 
 ## Ligação com a Mandala da Criatividade
@@ -94,7 +94,8 @@ Curiosidade gera clique, mas só converte em remarketing.
 ```
 
 **Regras:**
-- **Volume manda:** só chamar um tipo de "vencedor" quando ele somar 15 vendas ou mais no período. Abaixo disso, é tendência e leva ⚠️.
+- **Volume manda (dois degraus, seção 10 do SKILL.md):** 15 vendas ou mais no período é o piso para LER um tipo (dado suficiente para dizer o que ele produz nesta conta); abaixo disso, é tendência e leva ⚠️. Chamar um tipo de "vencedor" exige a régua de vencedor: 50 conversões em low e middle ticket ou 30 em high ticket, contadas na janela média da trilha, ou ter saído `validado` num teste registrado pela `/trafego-testes`. Entre o piso de leitura e a régua de vencedor, o tipo "vende nesta conta", sem o rótulo de vencedor.
+- **"Fórmula vencedora" e o perfil que vence em cada temperatura** comparam os criativos que mais vendem com os que menos vendem nesta conta. Não dão a nenhum criativo ou tipo o rótulo de vencedor, que segue só a régua acima.
 - **Não duplicar o Gap Finder:** a lista de tipos **ausentes** é do output [3] da `/trafego-analise`. Aqui entram só os tipos presentes. Para os ausentes, uma linha remetendo ao output [3] e, se fizer sentido, um briefing de teste (sub-skill `briefing-criativo.md`).
 - **Temperatura e objetivos da Mandala:** na leitura por temperatura, cold corresponde aos objetivos Descoberta e Conversão da Mandala, e warm ao objetivo RMKT.
 
@@ -106,12 +107,12 @@ Qual tipo de criativo funciona em cada temperatura de público (sempre pela segm
 Perfil que funciona por temperatura:
 
 COLD (público frio, prospecção):
-  Vencedor: criativos de conversão (CPA R$ 72)
+  Perfil que mais vende: criativos de conversão (CPA R$ 72)
   Padrão: gancho menos agressivo, promessa mais direta, CTR moderado
   Tipos da Mandala que mais vendem aqui: Mito, Prova
 
 WARM (remarketing):
-  Vencedor: criativos de intenção (CPA R$ 28)
+  Perfil que mais vende: criativos de intenção (CPA R$ 28)
   Padrão: gancho forte, urgência, CTA direto
   Tipos da Mandala que mais vendem aqui: Curiosidade
 
@@ -163,7 +164,7 @@ ou curiosidade, mas não venda.
 Perfil dominante: "conversão silenciosa", criativos com
 CTR moderado mas alta qualificação do clique.
 
-Tipos da Mandala dominantes entre os vencedores: Mito e Prova.
+Tipos da Mandala dominantes entre os que mais vendem: Mito e Prova.
 
 Padrão de gancho: ganchos que abrem com dor específica
 (não genérica) performam 40% melhor em CPA.
@@ -224,7 +225,8 @@ dna_criativo:
         vendas: 9
         vence_em: cold
         como_identificado: nome | tipo_inferido_pelo_texto
-        volume_suficiente: false
+        volume_suficiente: false   # piso de leitura: 15 vendas ou mais no período
+        vencedor: false            # régua de vencedor: 50 conversões (low e middle) ou 30 (high), ou validado na /trafego-testes
     pct_gasto_sem_tipo: 0.10
     tipos_ausentes: "ver Gap Finder do output [3] da /trafego-analise"
 

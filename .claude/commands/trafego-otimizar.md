@@ -25,11 +25,11 @@ Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/resumo-produto.md` (se 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` no `.env`.
 
-- **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool `ads_*` do conector está disponível (descobrir pelo final do nome; o prefixo varia). Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Se a Meta responder que a conta ainda não foi liberada no conector, avisar em linguagem simples e oferecer trocar para o modo App pelo `/trafego-conexao`.
-- **Se `APP`:** confirmar com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env` (nunca exibir o valor). Se faltar algum, acionar `/trafego-conexao`.
+- **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
+- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool `ads_*` do conector está disponível (descobrir pelo final do nome; o prefixo varia). Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conferir também `FB_AD_ACCOUNT_ID` com valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar, a opção "Validar" do `/trafego-conexao` completa. Se a Meta responder que a conta ainda não foi liberada no conector, avisar em linguagem simples e oferecer trocar para o modo App pelo `/trafego-conexao`.
+- **Se `APP`:** confirmar com `grep -q "^NOME=." .env` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem com valor no `.env` (nunca exibir o valor). Se faltar algum, acionar `/trafego-conexao`.
 
-A skill nunca prossegue sem essa validação passar. Única lacuna do MCP nesta skill: o **guardrail automático** (§18 da SKILL), que vira passo a passo guiado no Gerenciador.
+A skill nunca prossegue sem essa validação passar. Única lacuna do MCP nesta skill: o **guardrail automático** (§18 da SKILL), que vai para a `/trafego-regras`; no MCP, ela guia a criação da regra no Gerenciador.
 
 ### 0.3 Selecionar conta de anúncios (multi-conta)
 
@@ -81,15 +81,19 @@ Qual é o valor do produto que essa campanha vende, em reais? (ex: 97, 297, 997)
 [2] Não  (uso 50% do ticket como referência padrão)
 ```
 
-### 1.4 Margem de contribuição (3 pedaços fáceis)
+### 1.4 Margem de contribuição (3 pedaços fáceis, uma pergunta por vez)
 ```
-Pra eu calcular o lucro de verdade, me diz 3 custos da sua venda (pode ser aproximado):
+Para calcular o lucro de verdade, preciso de 3 taxas da sua venda:
+plataforma, reembolso e imposto (pode ser aproximado).
 
-1. Taxa da plataforma   (ex: Hotmart/Kiwify, ~1 a 10%)
-2. Reembolso médio      (ex: 5%)
-3. Imposto sobre o faturamento  (ex: 6 a 17%)
+1. Quero informar as 3 taxas
+2. Não sei agora (uso a faixa de margem de 60 a 80%)
+
+Digite o número:
 ```
-Calcula `margem_contribuicao = 1 - (taxa + reembolso + imposto)`. Custos fixos NÃO entram. Sem nenhum dos três: usar **modo faixa** 60 a 80%.
+Se 1, perguntar **uma taxa por mensagem**, cada uma com o próprio exemplo: taxa da plataforma de venda (ex: 9,9% na Hotmart; costuma ficar entre 1% e 10%), taxa média de reembolso (ex: 5%) e imposto sobre o faturamento (ex: 6% no Simples; pode chegar a 17%). Se o aluno informar só parte das taxas, perguntar de novo só a que faltou; se ele não souber, usar o modo faixa e avisar.
+
+Calcula `margem_contribuicao = 1 - (taxa + reembolso + imposto)`. Custos fixos NÃO entram. Se 2, ou sem nenhuma das três: usar **modo faixa** 60 a 80%.
 
 ### 1.5 Sazonalidade ativa (opcional)
 ```
@@ -102,7 +106,7 @@ Calcula `margem_contribuicao = 1 - (taxa + reembolso + imposto)`. Custos fixos N
 **Confirmação:**
 ```
 Otimizando: {nome} | Funil: {tipo} | Ticket: R$ {valor} (do resumo do produto) | Meta CPA: R$ {alvo}
-Margem de contribuição: {margem}% | ROAS de break-even: {1÷margem}
+Margem de contribuição: {margem}% | ROAS de ponto de equilíbrio: {1÷margem}
 ```
 
 ---
@@ -122,7 +126,7 @@ Imprimir o bloco `Confiabilidade do dado` ao aluno (Parte 1 do output, SKILL §1
 | Nível | Comportamento |
 |---|---|
 | `alta` | Prossegue normalmente. |
-| `media` | Prossegue, **rebaixa CPA a secundário**, decide por ROAS + leading. Aviso explícito. |
+| `media` | Prossegue, **rebaixa CPA a secundário**, decide por ROAS e sinais antecipados (CTR de link, frequência). Aviso explícito. |
 | `baixa` | Avisa a divergência e propõe ajuste antes de seguir. Nunca emite prontidão para escala. |
 
 ✅ Concluído: confiabilidade do dado {nivel}.
@@ -142,7 +146,7 @@ A otimização **não puxa dados sozinha.** Invocar `/trafego-insights` com:
 
 Se modo conta completa, drill-down nas 5 piores.
 
-> **Mapa de campos reais (§3.5.1 da SKILL):** no MCP, `ads_get_ad_entities` **não aceita** `actions`, `action_values`, `inline_link_click_ctr`, `landing_page_view`, `add_to_cart`, `initiate_checkout`. Pedir compras com `actions:omni_purchase`, ROAS com `purchase_roas`, CTR de link **calculado** (`actions:link_click ÷ impressions`). No APP via curl, valem os nomes clássicos (com `curl -g` quando houver `{}` no `fields`).
+> **Mapa de campos reais (§3.5.1 da SKILL, contrato do conector em `trafego-insights/SKILL.md` §10.1):** no MCP, `ads_get_ad_entities` **não aceita** `actions`, `action_values`, `inline_link_click_ctr`, `initiate_checkout` (o checkout iniciado é `omni_initiated_checkout`). Pedir gasto com `amount_spent`, cliques no link com `link_click`, visitas à página com `landing_page_view`, checkout iniciado com `omni_initiated_checkout`, compras com `omni_purchase`, valor das compras com `offsite_conversion_fb_pixel_purchase_values` (sem ele, `purchase_roas × amount_spent`), ROAS com `purchase_roas` e CTR de link **calculado** (`link_click ÷ impressions`). Carrinho (`add_to_cart`) não foi conferido: checar com `ads_get_field_context` antes. No APP via curl, valem os nomes clássicos (com `curl -g` quando houver `{}` no `fields`).
 
 ✅ Concluído: dados puxados e valor médio por venda calculado.
 
@@ -176,6 +180,8 @@ diagnóstico parcial sabendo que a confiabilidade é baixa.
 
 ## Passo 5. Diagnóstico em 2 camadas + lucro
 
+🔍 Próximo passo: diagnosticar a tendência, o gargalo e o lucro de cada campanha. Tempo estimado: 2 a 3 minutos (campanha única) ou 3 a 5 minutos (conta completa).
+
 ### 5.1 Tendência (§5.1 da SKILL): cruzar curta × média × longa
 - `estavel_performando`
 - `esfriando_ou_ruido`
@@ -188,7 +194,7 @@ diagnóstico parcial sabendo que a confiabilidade é baixa.
 - `criativo` (CTR baixo) [DENTRO do Meta]
 - `tecnico` (Connect Rate < 70%) [FORA do Meta]
 - `pagina` (conversão da página crítica) [FORA do Meta]
-- `checkout` (Carrinho → Compra ou Checkout → Compra crítico) [FORA do Meta]
+- `checkout` (Carrinho → Compra crítico, ou Checkout → Compra abaixo da metade do piso da faixa do ticket, tabela da §3.5 da `/trafego-oferta-funil`) [FORA do Meta]
 - `leilao_audiencia` (CPM alto)
 - `saturacao` (Frequência > 3,5)
 - `nenhum` (tudo saudável: avaliar prontidão pra escala)
@@ -198,7 +204,7 @@ diagnóstico parcial sabendo que a confiabilidade é baixa.
 Calcular pra cada campanha:
 - `roas_atual`
 - `lucro_dia = gasto_dia × (ROAS × margem - 1)`
-- **Zona:** verde (CPA ≤ meta), amarela (CPA > meta mas lucro/dia ≥ 0), vermelha (lucro/dia < 0)
+- **Zona** (testar nesta ordem): vermelha (lucro/dia < 0), verde (CPA ≤ meta), amarela (o resto: CPA > meta mas lucro/dia ≥ 0)
 
 > **Filtro de lucro obrigatório:** zona amarela **não se contém**: se otimiza o criativo. Reduzir, conter ou pausar por dinheiro só vale na **zona vermelha**.
 
@@ -213,15 +219,15 @@ A SKILL oferece 8 alavancas. Marcar cada uma como `✓` (recomendada agora, com 
 | **Reduzir -20%** | zona vermelha + gargalo dentro do Meta | não |
 | **Realocação neutra** (§6.3) | queimador + vencedor com folga (gasto total intocado) | não |
 | **Limites por conjunto CBO** (§6.4) | CBO com 2+ conjuntos e distribuição torta (`daily_spend_cap` / `daily_min_spend_target`) | não |
-| **Cost cap / bid cap** (§6.5) | lucrativa com CPA subindo, manter volume | **sim** |
+| **Cost cap / bid cap** (§6.5) | lucrativa com CPA subindo, manter volume (CBO: estratégia na campanha e teto em cada conjunto ativo; ABO: os dois no conjunto) | **sim** |
 | **Pausar** | criativo/saturação (gargalo dentro do Meta) ou conjunto/campanha em casos extremos | não |
 | **Cortar posicionamento** (§7.4) | placement queima sem converter (Audience Network etc.) | **sim** |
-| **Guardrail automático** (§18) | regra nativa que vigia 24h (CPA > break-even etc.); no MCP, passo a passo guiado no Gerenciador; no APP, `/trafego-regras` | não |
+| **Guardrail automático** (§18) | regra nativa que vigia 24h (CPA > break-even etc.), sempre pela `/trafego-regras` (sub-fluxo [1], com gasto mínimo): no MCP, ela guia a criação no Gerenciador; no APP, cria pela API. A regra nasce desligada até o aluno revisar | não |
 | **Alertar o aluno** | gargalo fora do Meta (página, checkout, técnico): `/trafego-oferta-funil` e a skill de correção | n/a |
 
 Ações que **resetam aprendizado** (cost cap, cortar posicionamento) disparam o disclaimer da §11 (≈ 50 × CPA target) + confirmação reforçada.
 
-> **Bloqueios à mudança de orçamento:** conjunto em fase de aprendizado, última edição há menos de 48h, gasto do dia abaixo de 50% do orçamento (§6.2 da SKILL).
+> **Bloqueios à mudança de orçamento:** conjunto em fase de aprendizado, última edição há menos de 48h, gasto do dia abaixo de 50% do orçamento (§6.2 da SKILL). No MCP sem o campo de aprendizado (`NAO_VERIFICADO`), o conjunto segue na lista marcado "aprendizado não conferido": o bloco 🛡️ avisa que o conector não mostra essa fase e o aluno decide no "sim".
 > **ABO vs CBO:** detectar `budget.tipo` antes de qualquer mudança de orçamento. Sem o tipo, marcar `acao: aguardar`.
 
 ---
@@ -231,22 +237,23 @@ Ações que **resetam aprendizado** (cost cap, cortar posicionamento) disparam o
 Se `tendencia: estavel_performando` E `gargalo: nenhum` E **todas** as condições da §12 da SKILL passam (incluindo o **bloco `lucro`**: ROAS sustentado ≥ break-even, lucro/dia ≥ 0), emitir `sinal_para_escala.pronta: true` com modo recomendado, velocidade sugerida, janela de referência, margem de segurança, riscos observados e criativos de backup disponíveis.
 
 > Zona amarela **não emite prontidão**: escala exige zona verde sustentada.
+> Aprendizado não conferido pelo conector (MCP sem o campo) não reprova a prontidão: o critério aceita "não conferido" e o aviso vai em riscos observados (§12 da SKILL).
 
 ---
 
-## Passo 8. Apresentar diagnóstico (Parte 1 narrada + Parte 2 YAML, §13 da SKILL)
+## Passo 8. Apresentar diagnóstico (Parte 1 na tela, Parte 2 no arquivo, §13 da SKILL)
 
-Sempre nessa ordem. A Parte 1 traz:
+Mostrar em formato legível (não YAML cru). A Parte 1 traz:
 - **Confiabilidade do dado** (do Passo 2)
 - **Diagnóstico** (trilha, métrica-norte, tendência, gargalo)
 - **O que está acontecendo** (3 observações com número)
-- **Lucro (estimado, margem X%)**: lucro do período, lucro/dia, ROAS de break-even, CPA de break-even, zona predominante
+- **Lucro (estimado, margem X%)**: lucro do período, lucro/dia, ROAS de ponto de equilíbrio, CPA de ponto de equilíbrio (com uma frase do que significam), zona predominante
 - **Ferramentas disponíveis pra otimizar**: tabela das 8 alavancas + handoffs `/trafego-escalar`, `/trafego-pixel` e `/trafego-oferta-funil`, marcadas `✓` ou `reserva` com motivo
 - **Plano de ação**: ordem de prioridade, com a regra "nenhum item evapora"
 - **Próximas observações**
 - **Está pronta para escalar?** (Sim: modo + velocidade | Não: motivos)
 
-Parte 2 (YAML técnico): incluir os blocos `confiabilidade_do_dado` e `lucro` completos, mais `acoes_recomendadas` com `reset_aprendizado` por ação.
+Parte 2 (YAML técnico): não aparece na tela. Vai num bloco no fim do arquivo do Passo 11, com os blocos `confiabilidade_do_dado` e `lucro` completos, mais `acoes_recomendadas` com `reset_aprendizado` por ação. Só mostrar se o aluno pedir ("me mostra o YAML", "me dá só o YAML"). O gate 🛡️ do Passo 9 descreve as ações em português.
 
 **Gargalo fora do Meta:** o alerta encaminha primeiro para `/trafego-oferta-funil` (diagnóstico da oferta) e, conforme o resultado, para a correção: `/feedback-pagina` ou `/feedback-low-ticket` (página), `/pagina-checkout` (checkout), `/pagina-performance` (técnico) ou `/pagina-pixel` (pixel na página). Não pausar a campanha enquanto isso; reduzir -20% só como contenção, e só em zona vermelha.
 
@@ -287,7 +294,9 @@ Para cada ação aprovada:
 
 ## Passo 10. Painel de decisão HTML opcional (§17 da SKILL)
 
-Após entregar a Parte 1 e a Parte 2, **opcionalmente** oferecer (pergunta conforme o `EXPORT_TEMA` do `.env`, ver a sub-skill):
+**Só em trilha de perpétuo** (o lucro e as 3 zonas dependem de compra). Em lançamento, não oferecer: dizer em 1 linha que, na captação, a leitura é pelo CPL, que já está no diagnóstico. Em conta completa com objetivos misturados, o painel entra só com as campanhas de perpétuo e avisa quais ficaram de fora.
+
+Após entregar a Parte 1 (a Parte 2 vai para o arquivo no Passo 11), **opcionalmente** oferecer (pergunta conforme o `EXPORT_TEMA` do `.env`, ver a sub-skill):
 ```
 Quer salvar esse diagnóstico como um painel visual (HTML)? (s/n)
 
@@ -301,14 +310,14 @@ Se `s`: rodar a sub-skill `sub-skills/_export-painel-decisao.md`. Salva em `meus
 
 ## Passo 11. Salvar diagnóstico textual
 
-Salvar em:
+Salvar na mesma subpasta do painel e do lote:
 ```
-meus-produtos/{ativo}/entregas/trafego/diagnostico-{campanha-slug}-{YYYY-MM-DD}.md
+meus-produtos/{ativo}/entregas/trafego/otimizar/otimizacao-{campanha-slug}-{YYYY-MM-DD}.md
 ```
 
-Conteúdo: Parte 1 + Parte 2 + ações aplicadas + próximas observações.
+Conteúdo: Parte 1 + ações aplicadas + próximas observações + Parte 2 (YAML técnico) num bloco no fim do arquivo.
 
-Mostrar o caminho absoluto como texto copiável: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\diagnostico-{...}.md`
+Mostrar o caminho absoluto como texto copiável: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\otimizar\otimizacao-{...}.md`
 
 ---
 
@@ -316,12 +325,14 @@ Mostrar o caminho absoluto como texto copiável: `{raiz-do-projeto}\meus-produto
 
 **Se `sinal_para_escala.pronta = true`:**
 
-Antes de encaminhar para escala, sugerir ao aluno: "Quer rodar o detector de falso vencedor (`/trafego-diagnostico` opção [4]) antes de escalar? Ele confirma que o resultado é sustentável." Se o aluno recusar ou já tiver rodado, seguir direto para a escala.
+Antes de encaminhar para escala, sugerir ao aluno: "Quer rodar o detector de falso vencedor (`/trafego-diagnostico` opção [4]) antes de escalar? Ele confirma que o resultado é sustentável."
+- Se o detector rodou nesta sessão e a campanha não saiu `vencedor_real` com score de confiança 50 ou mais: não passar o bastão. Trocar para `pronta: false` com esse motivo e seguir pelo bloco "Se `sinal_para_escala.pronta = false`", abaixo. Com `vencedor_real` e score de 50 a 74, seguir só com velocidade conservadora (escala gradual).
+- Se o aluno recusar o detector: seguir para a escala, gravando `falso_vencedor: nao_verificado` no `sinal_para_escala`.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔭 Próximo passo recomendado: /trafego-escalar
-A campanha está em zona verde com ROAS sustentado acima do break-even.
+A campanha está em zona verde com ROAS sustentado acima do ponto de equilíbrio.
 Use modo {modo_recomendado} e velocidade {velocidade_sugerida}
 (vieram no diagnóstico).
 
@@ -332,7 +343,7 @@ Quer que eu já monte o plano de escala?
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Se `1`: acionar a skill `trafego-escalar` passando o payload do diagnóstico (`sinal_para_escala`, `confiabilidade_do_dado`, `lucro`, meta de CPA/CPL, conta e campanha). A escala pula a coleta de contexto (Passo 0.1 da SKILL dela) e vai direto para o risco, o guardião de caixa e o plano com gate 🛡️. Montar o plano não escreve nada na conta.
+Se `1`: acionar a skill `trafego-escalar` passando o payload do diagnóstico (`sinal_para_escala`, com `falso_vencedor` e `score_confianca`, `confiabilidade_do_dado`, `lucro`, meta de CPA/CPL, conta e campanha). A escala pula a coleta de contexto (Passo 0.1 da SKILL dela) e vai direto para o risco, o guardião de caixa e o plano com gate 🛡️. Montar o plano não escreve nada na conta.
 
 **Se `sinal_para_escala.pronta = false`:**
 
@@ -373,7 +384,7 @@ Outras opções conforme o contexto:
 7. **Não pausa por gargalo fora do Meta.** Alerta o aluno, encaminha para `/trafego-oferta-funil` e para a correção, mantém a estrutura viva.
 8. **Detectar ABO vs CBO** antes de mexer em orçamento.
 9. **Não escala.** Quem cresce orçamento é `/trafego-escalar`.
-10. **Cooldown** após handoff de descida da escala (7d perpétuo low/mid, 14d perpétuo high, 24h lançamento).
+10. **Cooldown** após handoff de descida da escala (7d perpétuo low/mid, 14d perpétuo high, 24h lançamento), lido de `meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md` (última linha `freio_total`), também entre sessões.
 11. **Apenas dados nativos do Gerenciador.** Sem tracking custom. Sem inventar dado.
 12. **Nenhum item evapora.** Toda campanha vermelha aparece no plano ou como reserva com motivo.
 13. **Token nunca aparece no chat.** Sempre mascarado.

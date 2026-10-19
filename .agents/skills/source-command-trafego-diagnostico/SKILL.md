@@ -31,9 +31,9 @@ Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se o res
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Ler `META_AUTH_MODO` no `.env`.
 
-- **Vazio ou ausente:** acionar `/trafego-conexao` antes de prosseguir.
-- **`MCP_CONECTOR`:** confirmar que existe tool terminada em `ads_get_ad_entities`. Se não houver, pedir para reabrir o Claude Code; se persistir, voltar ao `/trafego-conexao`. Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`.
-- **`APP`:** confirmar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` no `.env` com `grep -q` (nunca exibir o valor). Se faltar, acionar `/trafego-conexao`.
+- **Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar antes de prosseguir.
+- **`MCP_CONECTOR`:** confirmar que existe tool terminada em `ads_get_ad_entities`. Se não houver, pedir para reabrir o Claude Code; se persistir, voltar ao `/trafego-conexao`. Conferir também se `FB_AD_ACCOUNT_ID` tem valor; se faltar, a opção "Validar" do `/trafego-conexao` completa. Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`.
+- **`APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env` com `grep -q "^NOME_DA_VARIAVEL=." .env` (o ponto exige valor: linha vazia conta como ausente; nunca exibir o valor). Se faltar, acionar `/trafego-conexao`.
 
 O comando nunca prossegue sem essa validação passar. Esta skill só lê: não tem bloco 🛡️ porque não escreve na conta.
 
@@ -171,9 +171,9 @@ Conforme a seção 12 do SKILL.md, sugerir o próximo passo:
 
 - Ação operacional necessária: "Quer que eu rode `/trafego-otimizar` para aplicar as ações recomendadas?"
 - Falso vencedor ou score abaixo de 50 bloqueou a escala: "Recomendo `/trafego-otimizar` antes de escalar."
-- Estrutura precisa de limpeza: "Quer rodar `/trafego-otimizar` em modo lote para consolidar?"
+- Estrutura precisa de limpeza: "Quer montar o plano de limpeza? Primeiro a `/trafego-criar-campanha` monta os conjuntos consolidados, que nascem pausados. Quando você pedir, eu ativo os consolidados com uma confirmação só para isso. Com eles no ar, a `/trafego-otimizar` pausa em lote os conjuntos fragmentados sem conversão. Mostro o plano numerado uma vez e você aprova a criação e as pausas de uma vez; a ativação pede uma confirmação separada." (seção 12 do SKILL.md)
 - Precisa de mais dados: "Aguarde {X} dias e rode o diagnóstico de novo."
-- Vencedor real confirmado com score 50 ou mais: "Campanha pronta. Quer rodar `/trafego-escalar`?"
+- Vencedor real confirmado com score 50 ou mais: "Campanha candidata a escala (com score de 50 a 74, de forma gradual). Quer rodar `/trafego-escalar`? Ela ainda confere os limites dela antes de subir verba."
 - Hipótese criativo forte: `/trafego-criativos`. Hipótese oferta/funil forte: `/trafego-oferta-funil`. Atribuição fraca: `/trafego-pixel`.
 
 ---

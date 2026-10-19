@@ -52,14 +52,14 @@ Fazer **duas chamadas separadas**, uma por campanha. Se o aluno informou nomes e
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns
   ?fields=id,name,status,objective
-  &filtering=[{\"field\":\"effective_status\",\"operator\":\"IN\",\"value\":[\"ACTIVE\",\"PAUSED\"]}]
+  &filtering=%5B%7B%22field%22%3A%22effective_status%22%2C%22operator%22%3A%22IN%22%2C%22value%22%3A%5B%22ACTIVE%22%2C%22PAUSED%22%5D%7D%5D
   &limit=100
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 Exibir lista numerada, pedir confirmação do match de nome para cada campanha, depois prosseguir com os IDs confirmados.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=campaign` para obter IDs.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "campaign"`, `filtering: [{field: "campaign.effective_status", operator: "IN", value: ["ACTIVE","PAUSED"]}]` e `limit: 1000` para obter IDs (ou reaproveitar a lista `CAMPANHAS_SESSAO` do Passo 0.6).
 
 **Chamada 10b. Insights da Campanha A**
 
@@ -73,7 +73,7 @@ curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_A_ID}/insights
     video_p75_watched_actions,video_p95_watched_actions
   &level=campaign
   &{PERIOD_PARAM}
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Chamada 10c. Insights da Campanha B** (mesma estrutura, trocando o ID)
@@ -88,12 +88,12 @@ curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_B_ID}/insights
     video_p75_watched_actions,video_p95_watched_actions
   &level=campaign
   &{PERIOD_PARAM}
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-`{PERIOD_PARAM}` = mesmo parâmetro de período já definido no Passo 3 do command principal (`date_preset=last_7d` OU `since=YYYY-MM-DD&until=YYYY-MM-DD`).
+`{PERIOD_PARAM}` = mesmo parâmetro de período já definido no Passo 3 do command principal (`date_preset=last_7d` OU, no customizado, `time_range=%7B%22since%22%3A%22YYYY-MM-DD%22%2C%22until%22%3A%22YYYY-MM-DD%22%7D`, já codificado). `since` e `until` soltos não valem no `/insights`: a Meta ignora e devolve a janela padrão.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com o `campaign_id` de cada campanha separadamente, mesmo período do Passo 3.
+**Modo MCP_CONECTOR:** reaproveitar as métricas por campanha do Passo 4 e, para o que faltar, usar `mcp__*__ads_get_ad_entities` com `level: "campaign"` e `filtering: [{field: "campaign.id", operator: "IN", value: ["{CAMPAIGN_A_ID}", "{CAMPAIGN_B_ID}"]}]`, no mesmo período do Passo 3 (`date_preset`, ou `time_range` em texto JSON no customizado), com os campos conferidos do conector (Contrato anti-erros do `SKILL.md`). A `ads_insights_performance_trend` não faz nível campanha e volta vazia aqui.
 
 ### Referência de produto
 
@@ -120,26 +120,28 @@ Calcular para cada campanha **antes** de montar a tabela. Para denominadores zer
 | Métrica derivada | Fórmula | Elemento VTSD |
 |---|---|---|
 | Hook Rate | `video_p25_watched_actions` / `impressions` | Urgência Oculta |
-| CTR (link) | `clicks` / `impressions` | Identidade do Produto |
-| Connect Rate | `landing_page_views` / `clicks` | Quadro na Parede |
+| CTR (link) | `actions[link_click]` / `impressions` | Identidade do Produto |
+| Connect Rate | `actions[landing_page_view]` / `actions[link_click]` | Quadro na Parede |
 | Hold Rate | `video_p50_watched_actions` / `video_p25_watched_actions` | Decorados |
 | Play-Through Rate | `video_p95_watched_actions` / `impressions` | Furadeira |
 | Checkout Rate | `offsite_conversion.fb_pixel_initiate_checkout` / `landing_page_views` | Oferta (só OUTCOME_SALES) |
 | Conversion Rate | `offsite_conversion.fb_pixel_purchase` / `offsite_conversion.fb_pixel_initiate_checkout` | Furadeira + Decorados (só OUTCOME_SALES) |
-| Lead Rate | `offsite_conversion.fb_pixel_lead` / `landing_page_views` | Isca Digital (só OUTCOME_LEADS) |
+| Lead Rate | `leads` / `landing_page_views` | Isca Digital (só OUTCOME_LEADS) |
 | CPA | `spend` / `offsite_conversion.fb_pixel_purchase` | (métrica-norte SALES) |
-| CPL | `spend` / `offsite_conversion.fb_pixel_lead` | (métrica-norte LEADS) |
+| CPL | `spend` / `leads` | (métrica-norte LEADS) |
 | Custo por LP View | `spend` / `landing_page_views` | Connect (custo) |
 | ROAS | `action_values[offsite_conversion.fb_pixel_purchase]` / `spend` | (só OUTCOME_SALES) |
 
 **Regra de deduplicação obrigatória:** o campo `actions` da API retorna múltiplos `action_type` que representam o mesmo evento. Usar APENAS o tipo canônico para evitar dupla contagem:
 
 - Compras: `offsite_conversion.fb_pixel_purchase`
-- Leads: `offsite_conversion.fb_pixel_lead`
+- Leads: `lead` (total da Meta, site + formulário instantâneo); sem ele, `offsite_conversion.fb_pixel_lead`; nunca a soma (regra de leads do command)
 - Checkouts iniciados: `offsite_conversion.fb_pixel_initiate_checkout`
 - Add to cart: `offsite_conversion.fb_pixel_add_to_cart`
 
-Se o tipo canônico retornar zero e outro tipo tiver valor, usar o que tiver dado e registrar qual foi usado na narrativa.
+Se o tipo canônico não vier, assumir zero (Regra prática do command): nunca trocar por outro tipo da lista de duplicatas. Exceção única: leads, que usam `lead` e, sem ele, o lead do pixel.
+
+`link_click` e `landing_page_view` vêm do array `actions`, nunca do campo de topo `clicks`: o `clicks` inclui cliques em qualquer parte do post e inflaria o CTR (link) e derrubaria o connect rate. Se `link_click` não vier, usar `clicks` só como último recurso e avisar o aluno que o connect rate sai subestimado. No modo MCP, usar direto os campos `link_click` e `landing_page_view`.
 
 **Diferença percentual entre A e B:** `abs(A - B) / max(A, B) * 100`. Usar esse cálculo para identificar a métrica com maior divergência no Bloco 3.
 
@@ -300,15 +302,19 @@ No VTSD, isso aponta para {elemento}: {ação específica para corrigir}.
 
 | Métrica | Abaixo do esperado | Saudável | Excelente |
 |---|---|---|---|
-| Hook Rate | < 15% | 15% a 30% | > 30% |
+| Hook Rate | < 15% (crítico); 15% a 25% (atenção) | 25% ou mais | sem faixa própria (25% ou mais já é saudável) |
 | CTR (link) | < 1% | 1% a 3% | > 3% |
-| Connect Rate | < 50% | 50% a 70% | > 70% |
+| Connect Rate | < 60% (crítico); 60% a 79% (atenção) | 80% ou mais | sem faixa própria (80% ou mais já é saudável) |
 | Hold Rate | < 40% | 40% a 60% | > 60% |
 | Play-Through Rate | < 5% | 5% a 15% | > 15% |
 | Checkout Rate | < 5% | 5% a 12% | > 12% |
-| Conversion Rate | < 20% | 20% a 35% | > 35% |
+| Conversion Rate (checkout → compra) | abaixo do piso da faixa do ticket | dentro da faixa | acima da faixa |
 | Lead Rate | < 5% | 5% a 15% | > 15% |
 | Frequência | > 4 (sinal de fadiga) | 2 a 4 | < 2 |
+
+**Hook Rate e Connect Rate seguem a régua única do projeto**, a mesma dos outros outputs: Hook Rate segue a régua única da `/trafego-insights` (seção 4.3) e Connect Rate a da §3.5 de `trafego-oferta-funil/SKILL.md`. Connect Rate abaixo de 70%: a primeira hipótese é técnica (página lenta, link errado, redirecionamento); conferir com `/pagina-performance` e a congruência anúncio x página com `/trafego-oferta-funil` antes de mexer no anúncio.
+
+**Conversion Rate (checkout → compra) não tem corte fixo:** a faixa sai do ticket do resumo do produto, na tabela da §3.5 de `trafego-oferta-funil/SKILL.md` (coluna "Conclusão de checkout"; ex.: até R$ 297, de 25% a 45%; acima de R$ 2.500, de 5% a 15%). Exibir junto a ressalva da §3.5: o checkout iniciado da Hotmart e da Kiwify dispara mais solto, então o número é aproximação, nunca prova de checkout quebrado.
 
 ---
 
@@ -317,7 +323,7 @@ No VTSD, isso aponta para {elemento}: {ação específica para corrigir}.
 Comparar diretamente Hook Rate e Hold Rate (criativo) versus Connect Rate (página) das duas campanhas:
 
 - Se Hook Rate ou Hold Rate de A supera B com diferença percentual maior, o problema está no **criativo** da campanha perdedora. Elemento VTSD: Urgência Oculta (hook) ou Decorados (hold).
-- Se Connect Rate de A supera B com diferença percentual maior (enquanto CTR é parecido), o problema está na **página** da campanha perdedora. Elemento VTSD: Quadro na Parede (promessa do anúncio não bate com a página).
+- Se Connect Rate de A supera B com diferença percentual maior (enquanto CTR é parecido), o problema está na **página** da campanha perdedora. Elemento VTSD: Quadro na Parede (promessa do anúncio não bate com a página). Com o Connect Rate da perdedora abaixo de 70%, conferir antes a parte técnica, como na nota dos benchmarks.
 - Se ambas as diferenças forem expressivas, nomear qual é maior e indicar a prioridade de correção.
 
 ```
@@ -463,7 +469,7 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Campanha vencedora com CPA dentro do benchmark e frequência < 3 | "trafego-escalar": candidata a escala vertical ou horizontal |
 | Campanha perdedora com gasto alto e conversões zero | "trafego-otimizar": pausar via ação em lote (filtro: gasto > X e zero conversão) |
 | Diferença principal em Hook Rate ou Hold Rate | "trafego-testes": A/B de criativo com nova Urgência Oculta ou Decorado diferente |
-| Diferença principal em Connect Rate | "feedback-pagina": headline e promessa da página não batem com o anúncio ("trafego-oferta-funil" para confirmar o gargalo) |
+| Diferença principal em Connect Rate | Connect Rate da perdedora abaixo de 70%: primeiro "pagina-performance" (velocidade, link, redirecionamento). Depois, ou com connect de 70% ou mais: "feedback-pagina" (headline e promessa da página não batem com o anúncio), com "trafego-oferta-funil" para confirmar o gargalo |
 | Diferença principal em Checkout Rate ou Conversion Rate | "feedback-pagina" ou "pagina-checkout": revisar oferta, garantia e stack de valor |
 | Diferença principal em Lead Rate | "copy-pagina": revisar isca digital e formulário de captura |
 | Frequência acima de 4 em alguma das campanhas | "trafego-publicos": criar nova audience (Lookalike ou aberto) para rodar a mesma campanha |
@@ -502,7 +508,7 @@ Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.sect
 | CTR ao longo do tempo (fadiga) | SVG linha (receita F, helper `line`) | CTR período anterior × atual por campanha (10b/10c + WoW) | `.charts-grid`, 2ª coluna: usar só os pontos que existirem (uma campanha pode não ter janela anterior) |
 | Tabela comparativa A × B | `.card` + `table` | 10b/10c (todas as métricas derivadas) | dentro da Resposta 1 |
 
-**Funil duplo (receita J via helper):** montar o spec com os 4 estágios reais de cada campanha, gravar num arquivo e rodar `{PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py dual_funnel < /tmp/spec.json` (`{PY}` = interpretador detectado na sessão, `python3` ou `py -3`). O helper devolve `a.stages[]` e `b.stages[]` com `width_pct` (largura em escala log do topo, mínimo 8) e `meta_pct` (taxa de conversão do estágio anterior). Template: `.dual-funnel-grid` com 2 `.dual-funnel-col`; em cada, um `.df-name` + os estágios como `.funnel-stage`/`.funnel-bar` (`style="width:{width_pct}%"`) + `.funnel-meta` com `{meta_pct}% do estágio anterior`. Colorir a barra de Vendas pela vencedora (verde quem converteu, neutro/vermelho quem zerou).
+**Funil duplo (receita J via helper):** montar o spec com os 4 estágios reais de cada campanha, gravar com o Write em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-dual_funnel.json` (caminho absoluto) e rodar `{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" dual_funnel < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-dual_funnel.json"` (`{PY}` = interpretador detectado na sessão, `python3` ou `py -3`; regra do spec na seção 3.2.1.2 do `_export-html.md`). O helper devolve `a.stages[]` e `b.stages[]` com `width_pct` (largura em escala log do topo, mínimo 8) e `meta_pct` (taxa de conversão do estágio anterior). Template: `.dual-funnel-grid` com 2 `.dual-funnel-col`; em cada, um `.df-name` + os estágios como `.funnel-stage`/`.funnel-bar` (`style="width:{width_pct}%"`) + `.funnel-meta` com `{meta_pct}% do estágio anterior`. Colorir a barra de Vendas pela vencedora (verde quem converteu, neutro/vermelho quem zerou).
 
 **CTR (receita F via helper):** spec com `series` de uma entrada por campanha (`values` = [CTR anterior, CTR atual]); rodar `dots:true`. Se uma campanha não tiver janela anterior (campanha nova), renderizar só o ponto atual dela e registrar na legenda "sem histórico anterior". Eixo esquerdo em % de CTR.
 

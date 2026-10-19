@@ -16,7 +16,7 @@ Consumir via `/trafego-insights`:
 - `taxa_checkout_compra` (derivada: purchases / initiate_checkout)
 - Período atual + anterior
 
-**Disponibilidade (seção 3 do SKILL.md):** no `APP`, o `initiate_checkout` vem pela Graph API (`insights?fields=actions`) e o módulo roda normal. No `MCP_CONECTOR`, conferir com `ads_get_field_context` se o campo de checkout iniciado existe no `ads_get_ad_entities`; se não existir, oferecer a leitura guiada da coluna "Finalizações de compra iniciadas" no Gerenciador de Anúncios ou a troca para o modo App. Só se o aluno não quiser nenhuma das duas, o módulo vira `indisponivel`: declarar e pular. **Nunca pular sem tentar.**
+**Disponibilidade (seção 3 do SKILL.md):** no `APP`, o `initiate_checkout` vem pela Graph API (`insights?fields=actions`) e o módulo roda normal. No `MCP_CONECTOR`, pedir no `ads_get_ad_entities` os campos conferidos `omni_initiated_checkout` (checkout iniciado) e `omni_purchase` (compra), conforme a seção 3 do SKILL.md. Se o checkout iniciado voltar `null`, oferecer a leitura guiada da coluna "Finalizações de compra iniciadas" no Gerenciador de Anúncios (sem troca de modo: o App é só para conta não liberada no conector). Só se o aluno não quiser a leitura guiada, o módulo vira `indisponivel`: declarar e pular. **Nunca pular sem tentar.**
 
 ## Os 5 diagnósticos possíveis
 
@@ -30,7 +30,7 @@ Consumir via `/trafego-insights`:
 > | até R$ 2.500 | 7–18% |
 > | acima de R$ 2.500 | 5–15% |
 >
-> Esses números são 🔴 estimativa (só a direção e o teto da faixa alta têm lastro: luxo conclui ~18-22%, Baymard). **Caveat do Hotmart:** o `initiate_checkout` pode disparar mais "solto" que o "adicionar ao carrinho" dos estudos, deixando a taxa do aluno artificialmente baixa. Tratar como aproximação, nunca como prova de checkout quebrado.
+> Esses números são 🔴 estimativa (só a direção e o teto da faixa alta têm lastro: luxo conclui ~18-22%, Baymard). **Ressalva da Hotmart e da Kiwify:** o `initiate_checkout` pode disparar mais "solto" que o "adicionar ao carrinho" dos estudos, deixando a taxa do aluno artificialmente baixa. Tratar como aproximação, nunca como prova de checkout quebrado.
 
 | Diagnóstico | Critério (relativo à faixa do ticket) | Significado |
 |-------------|----------|-------------|
@@ -59,8 +59,8 @@ Avaliar na ordem abaixo. O primeiro match é o diagnóstico final. **Os limiares
 ```
 ⚠️ Limitação do diagnóstico de checkout
 
-Esta análise usa eventos atribuídos pela Meta (initiate_checkout
-e purchase). NÃO tenho acesso ao backend de pagamento.
+Esta análise usa eventos atribuídos pela Meta (checkout iniciado
+e compra). NÃO tenho acesso ao sistema de pagamento.
 
 O que posso dizer: "há possível fricção na etapa final"
 O que NÃO posso dizer: "cartão foi recusado", "Pix não foi pago",
@@ -77,7 +77,7 @@ da página com o checkout é revisada com /pagina-checkout.
 ```
 CHECKOUT: ZONA DE ATENÇÃO ⚠️
 
-Taxa IC→Purchase: {X}% (logo abaixo do piso da faixa do ticket, seção 3.5)
+Conclusão de checkout (compras ÷ checkouts iniciados): {X}% (logo abaixo do piso da faixa do ticket, seção 3.5)
 
 O que significa: o checkout funciona, mas está abaixo do ideal.
 {Y}% das pessoas que iniciam a compra não concluem.
@@ -95,7 +95,7 @@ para a ligação da página com a plataforma; o resto, na própria plataforma).
 ```
 CHECKOUT: SAUDÁVEL ✅
 
-Taxa IC→Purchase: {X}% (dentro ou acima da faixa do ticket, seção 3.5)
+Conclusão de checkout (compras ÷ checkouts iniciados): {X}% (dentro ou acima da faixa do ticket, seção 3.5)
 
 O que significa: de cada 100 pessoas que iniciam o checkout,
 {X} completam a compra. Isso é saudável. Se o CPA está alto,
@@ -106,7 +106,7 @@ o problema está ANTES do checkout (página, oferta ou tráfego).
 ```
 CHECKOUT: FRICÇÃO PROVÁVEL ⚠️
 
-Taxa IC→Purchase: {X}% (bem abaixo do piso da faixa do ticket, seção 3.5)
+Conclusão de checkout (compras ÷ checkouts iniciados): {X}% (bem abaixo do piso da faixa do ticket, seção 3.5)
 
 O que significa: {Y} pessoas iniciaram o checkout, mas apenas
 {Z} completaram ({X}%). Algo entre "clicar em comprar" e
@@ -133,7 +133,7 @@ com fricção = mais abandono = mais dinheiro perdido.
 ```
 CHECKOUT: QUEDA ABRUPTA 🔴
 
-Taxa IC→Purchase: era {anterior}%, agora {atual}% (queda de {delta}%)
+Conclusão de checkout (compras ÷ checkouts iniciados): era {anterior}%, agora {atual}% (queda de {delta}%)
 
 O que significa: algo mudou recentemente que piorou a taxa de
 conclusão do checkout. Pode ser:
@@ -151,12 +151,12 @@ Testar uma compra manual agora.
 ```
 Evolução do checkout (7d atual vs 7d anterior):
 
-                    Anterior    Atual     Variação
-IC (volume)         45          38        -15,6%
-Purchase (volume)   18          10        -44,4%
-IC→Purchase         40,0%       26,3%     -34,3% ⚠️
-Custo por IC        R$ 55,56    R$ 65,79  +18,4%
-CPA                 R$ 138,89   R$ 250,00 +80,0%
+                               Anterior    Atual     Variação
+Checkouts iniciados            45          38        -15,6%
+Compras                        18          10        -44,4%
+Conclusão de checkout          40,0%       26,3%     -34,3% ⚠️
+Custo por checkout iniciado    R$ 55,56    R$ 65,79  +18,4%
+CPA                            R$ 138,89   R$ 250,00 +80,0%
 ```
 
 ## Output YAML

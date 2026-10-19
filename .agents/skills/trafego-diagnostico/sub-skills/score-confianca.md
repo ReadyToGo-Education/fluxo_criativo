@@ -37,13 +37,15 @@ score_geral_conta:
 ## Dados necessários
 
 Pedir à `/trafego-insights`:
-- `escopo: conta_completa`, `nivel: campaign + adset`.
+- `escopo: conta_completa`, `nivel: campaign + adset + ad` (o nível `ad` é o que dá o gasto por anúncio da variável 7).
 - 3 janelas da trilha.
 - `incluir_serie_diaria: true` para as métricas-norte (CPA ou CPL) de cada campanha e conjunto com gasto > 0 (de onde sai o CV).
 
+**Variável 7 (concentração):** gasto do anúncio que mais gasta dividido pelo gasto da entidade (campanha ou conjunto), no mesmo período das outras variáveis. Para uma entidade de nível anúncio, a variável não se aplica: passar `null` (conta 0 ponto, aparece em `variaveis_indisponiveis` e o script não sugere diversificar criativos) e dizer no relatório que, para anúncio, o score vai no máximo até 90.
+
 Complementar (leitura pura, por modo, conforme a seção 3.1 do SKILL.md):
-- `effective_status` dos conjuntos (quais estão em aprendizado).
-- Segmentação dos conjuntos, para a variável 8 (remarketing vs prospecção).
+- Fase de aprendizado dos conjuntos (`learning_stage_info`; no MCP, só se `ads_get_field_context` listar o campo, senão "aprendizado não verificado"). O `effective_status` não informa a fase de aprendizado.
+- Segmentação dos conjuntos, para a variável 8 (remarketing vs prospecção), com a regra de inclusão, exclusão e semelhante da seção 3.1 do SKILL.md.
 - Pixel e CAPI, para a variável 9 (qualidade da atribuição).
 
 ## As 10 variáveis do score
@@ -58,14 +60,14 @@ Cada variável contribui de 0 a 10 pontos para o score total (máximo 100):
 | 4 | **Consistência entre dias** | `cv_metrica_norte` | CV > 0,60 (caótico) | CV 0,30 a 0,60 | CV < 0,30 (estável) |
 | 5 | **Variação vs período anterior** | `variacao_periodo_pct` | > 40% de variação | 20% a 40% | < 20% |
 | 6 | **Frequência** | `frequencia` | > 4,0 (saturado) | 2,0 a 4,0 | < 2,0 |
-| 7 | **Concentração no anúncio que mais gasta** | `pct_gasto_top1_anuncio` | 80% ou mais do gasto | 40% a 80% | < 40% (distribuído) |
-| 8 | **Dependência de remarketing** | `pct_remarketing` | 70% ou mais do resultado é remarketing | 40% a 70% | < 40% (prospecção dominante) |
+| 7 | **Concentração no anúncio que mais gasta** | `pct_gasto_top1_anuncio` | mais de 80% do gasto | 40% a 80% | < 40% (distribuído) |
+| 8 | **Dependência de remarketing** | `pct_remarketing` | mais de 70% do resultado é remarketing | 40% a 70% | < 40% (prospecção dominante) |
 | 9 | **Qualidade da atribuição** | `qualidade_atribuicao` | `sem_pixel` | `pixel_ativo` | `pixel_capi` |
 | 10 | **Distância da meta** | `cpa_sobre_target` | > 2x a meta | 1,3x a 2x | até 1,3x |
 
 **Valores aceitos em `qualidade_atribuicao`:** `pixel_capi` (10, pixel ativo com API de Conversões confirmada), `pixel_ativo` (5, pixel ativo, CAPI não verificada), `pixel_sem_capi` (3, pixel ativo e CAPI confirmadamente ausente ou com deduplicação muito baixa), `janela_desconhecida` (2, não foi possível ler a janela de atribuição) e `sem_pixel` (0).
 
-**Percentuais entram como fração:** `variacao_periodo_pct: 0.18` significa 18%. O mesmo vale para `pct_gasto_top1_anuncio` e `pct_remarketing`. O script também aceita texto como `"18%"` e converte.
+**Percentuais entram como fração:** `variacao_periodo_pct: 0.18` significa 18%. O mesmo vale para `pct_gasto_top1_anuncio` e `pct_remarketing`. O script também aceita texto como `"18%"` e valores em reais como `"R$ 1.000"` ou `"R$ 1.234,56"`, e converte.
 
 **Regra para variáveis ausentes:** se uma variável não estiver disponível (valor `null` ou chave ausente), recebe **0 ponto** e é listada em `variaveis_indisponiveis`. Dado faltante reduz a confiança, nunca a infla. Exemplo comum no modo MCP: sem leitura de segmentação, `pct_remarketing` fica `null`.
 
@@ -75,13 +77,13 @@ Cada variável contribui de 0 a 10 pontos para o score total (máximo 100):
 
 O score é calculado pelo script `calcular_score_confianca.py` para garantir precisão aritmética. O script só faz conta: não chama a Graph API, não lê o `.env` e não usa token. O Claude passa as 10 variáveis como JSON e recebe o score com o detalhamento.
 
-Rodar da raiz do projeto com o interpretador detectado na sessão (`python3` ou `py -3`, conforme a seção "Execução de Scripts Python" do CLAUDE.md):
+Rodar com o interpretador detectado na sessão (`{PY}` = `python3` ou `py -3`, conforme a seção "Execução de Scripts Python" do CLAUDE.md) e o script por caminho absoluto (`{RAIZ_PROJETO}` = caminho absoluto da raiz do projeto; não confiar no diretório atual, que pode ter mudado com um `cd` anterior):
 
 ```bash
-echo '{"gasto": 350, "conversoes": 8, "dias": 7, "cv_metrica_norte": 0.42, "variacao_periodo_pct": 0.18, "frequencia": 2.1, "pct_gasto_top1_anuncio": 0.55, "pct_remarketing": 0.25, "qualidade_atribuicao": "pixel_ativo", "cpa_sobre_target": 1.15}' | python3 .claude/skills/trafego-diagnostico/scripts/calcular_score_confianca.py
+echo '{"gasto": 350, "conversoes": 8, "dias": 7, "cv_metrica_norte": 0.42, "variacao_periodo_pct": 0.18, "frequencia": 2.1, "pct_gasto_top1_anuncio": 0.55, "pct_remarketing": 0.25, "qualidade_atribuicao": "pixel_ativo", "cpa_sobre_target": 1.15}' | {PY} "{RAIZ_PROJETO}/.claude/skills/trafego-diagnostico/scripts/calcular_score_confianca.py"
 ```
 
-Se o interpretador da sessão for o `py -3`, trocar `python3` por `py -3`. O JSON só tem números, sem token, então o pipe não expõe segredo (a proibição do CLAUDE.md é para pipe que carrega token). Alternativa sem pipe, no mesmo espírito da "Exceção controlada" do CLAUDE.md: gravar o JSON num arquivo com a ferramenta Write (ex.: `/tmp/score-entrada.json`) e passar o caminho como argumento (`python3 .claude/skills/trafego-diagnostico/scripts/calcular_score_confianca.py /tmp/score-entrada.json`). Usar a alternativa se o Claude Code pedir confirmação para o pipe; apagar o arquivo no fim.
+O JSON só tem números, sem token, então o pipe não expõe segredo (a proibição do CLAUDE.md é para pipe que carrega token). Alternativa sem pipe, no mesmo espírito da "Exceção controlada" do CLAUDE.md: gravar o JSON com a ferramenta Write num caminho absoluto dentro do projeto, `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/score-entrada.json` (não usar `/tmp`: no Windows, a ferramenta Write e o Bash resolvem `/tmp` para pastas diferentes), e passar esse mesmo caminho como argumento (`{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-diagnostico/scripts/calcular_score_confianca.py" "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/score-entrada.json"`). Usar a alternativa se o Claude Code pedir confirmação para o pipe; apagar o arquivo no fim.
 
 **Fórmula:** soma das 10 variáveis (cada uma de 0 a 10, total de 0 a 100). Sem peso diferente entre elas.
 
@@ -93,6 +95,8 @@ Se o interpretador da sessão for o `py -3`, trocar `python3` por `py -3`. O JSO
 | `media_confianca` | 50 a 74 | Dados razoáveis. Decisão possível, mas com ressalvas. Monitorar de perto. |
 | `baixa_confianca` | 25 a 49 | Dados frágeis. Decisão arriscada. Preferir teste pequeno antes de agir. |
 | `dados_insuficientes` | 0 a 24 | Dados insuficientes. Não tomar decisão estrutural. Aguardar mais dados. |
+
+**Trava pelos dias:** com menos de 7 dias de dado, a faixa é `dados_insuficientes`, qualquer que seja o score (princípio 12 do SKILL.md). O script aplica essa trava sozinho: mantém o número do score, troca a faixa, marca o risco como `critico` e devolve o campo `aviso` com a faixa que o score daria sem a trava. No relatório, dizer isso ao aluno (ex.: "o score é 95, mas com 5 dias de dado ainda não dá para decidir; faltam 2 dias").
 
 ## Output por decisão
 
@@ -149,9 +153,10 @@ com base nesses dados é uma decisão bem fundamentada.
 Score de confiança: {score}/100 (MÉDIA)
 
 O que significa: os dados são razoáveis, mas não completos.
-Decisões de curto prazo (ajustar orçamento, pausar um criativo)
-podem ser tomadas. Decisões estruturais (escalar, pausar campanha
-inteira) devem esperar mais dados.
+Ajustes de curto prazo (ajustar orçamento, pausar um criativo)
+podem ser feitos. Escalar só se a entidade também sair como
+vencedor real no detector de falso vencedor, e de forma gradual.
+Pausar a campanha inteira deve esperar mais dados.
 
 Por que não está alta: {listar as 2 ou 3 variáveis com menor
 pontuação e explicar em linguagem simples}
@@ -172,7 +177,7 @@ baseada nesses números pode estar errada. O resultado de hoje
 pode ser completamente diferente na semana que vem.
 
 Por que está baixa: {listar variáveis problemáticas}
-Ex: "Apenas 3 conversões em 5 dias, com variação diária de
+Ex: "Apenas 3 conversões em 7 dias, com variação diária de
 58%. Teve dia bom e dia péssimo sem padrão."
 
 O que NÃO fazer: não pausar campanhas, não escalar, não
@@ -182,7 +187,7 @@ O que fazer: manter rodando mais {X} dias e reavaliar.
 Se possível, {ações do campo o_que_aumentaria_confianca}.
 ```
 
-### Dados insuficientes (0 a 24)
+### Dados insuficientes (0 a 24, ou menos de 7 dias de dado)
 ```
 Score de confiança: {score}/100 (DADOS INSUFICIENTES)
 
@@ -205,9 +210,9 @@ Recomendação: aguardar pelo menos {X} dias e acumular
 
 Quando rodado no Diagnóstico Completo (primeiro da sequência):
 
-- **Score geral da conta < 25 (`dados_insuficientes`):** todos os módulos seguintes rodam com o aviso "⚠️ Dados insuficientes. As conclusões abaixo são direcionais, não definitivas." Todas as probabilidades do diferencial recebem teto de 50%.
-- **Score geral da conta de 25 a 49 (`baixa_confianca`):** os módulos seguintes rodam com ressalva. Probabilidades do diferencial recebem teto de 70%.
-- **Score geral da conta de 50 para cima (`media` ou `alta`):** os módulos seguintes rodam normalmente, sem teto artificial.
+- **Faixa geral da conta `dados_insuficientes`** (score abaixo de 25 ou menos de 7 dias de dado, pela trava acima): todos os módulos seguintes rodam com o aviso "⚠️ Dados insuficientes. As conclusões abaixo são direcionais, não definitivas." Todas as probabilidades do diferencial recebem teto de 50%.
+- **Faixa geral da conta `baixa_confianca`** (sempre depois da trava pelos dias): os módulos seguintes rodam com ressalva. Probabilidades do diferencial recebem teto de 70%.
+- **Faixa geral da conta `media_confianca` ou `alta_confianca`** (sempre depois da trava pelos dias): os módulos seguintes rodam normalmente, sem teto artificial.
 
 O score geral da conta é a média ponderada por gasto descrita no início (campanhas ativas com gasto > 0 no período).
 

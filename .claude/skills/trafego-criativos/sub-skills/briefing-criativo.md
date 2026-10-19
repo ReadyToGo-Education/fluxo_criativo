@@ -43,7 +43,7 @@ Se rodado isoladamente (fora da completa), buscar as métricas mínimas para ger
 
 ### Tipo 1: Briefing de novo gancho
 
-Acionado quando: diagnóstico = `falha_gancho`, perfil `atencao_baixa` ou `falha_intencao` (inclui curiosidade vazia: CTR alto + visita à página baixa, onde a promessa do gancho precisa ser realinhada).
+Acionado quando: diagnóstico = `falha_gancho`, perfil `atencao_baixa` ou `falha_intencao` (inclui curiosidade vazia: CTR alto + visita à página baixa, onde a promessa do gancho precisa ser realinhada, mas só depois de descartar a causa técnica da página com `/pagina-performance` e `/trafego-oferta-funil`).
 
 ```
 BRIEFING #1: NOVO GANCHO
@@ -65,10 +65,10 @@ Variação sugerida:
 - Tipo da Mandala sugerido: {tipo que já vende na conta, segundo o DNA,
   ou um tipo ainda não testado que combine com a Urgência escolhida}
 
-Métrica principal: Hook Rate (video_3sec_views / impressions)
+Métrica principal: Hook Rate (video_p25_watched / impressions)
 Métrica secundária: Hold Rate (para garantir que o gancho novo
   não atrai curiosos que abandonam no meio)
-Critério de sucesso: Hook Rate > 25% com 5.000+ impressões em 72h
+Critério de sucesso: Hook Rate de 25% ou mais com 5.000+ impressões em 72h
 Critério de morte: Hook Rate < 15% com 5.000+ impressões
 Dados mínimos: 72h, 5.000 impressões por variação
 
@@ -87,7 +87,7 @@ Acionado quando: diagnóstico = `falha_sustentacao` ou perfil = `gancho_forte_de
 BRIEFING #2: NOVA NARRATIVA
 Prioridade: MÉDIA (o gancho funciona, mas o público abandona no meio)
 
-Problema detectado: criativos com Hook Rate > 25% mas Hold Rate < 30%.
+Problema detectado: criativos com Hook Rate de 25% ou mais, mas Hold Rate < 30%.
 O gancho prende, mas o desenvolvimento perde o público.
 
 Hipótese: o conteúdo entre o gancho e o CTA não sustenta o interesse.
@@ -119,9 +119,9 @@ Teste: /trafego-testes (A/B de criativo)
 
 ### Tipo 3: Briefing de nova oferta criativa
 
-Acionado quando: diagnóstico = `falha_qualificacao` (tráfego qualificado chega mas não compra), ou quando o Click-to-LPV Rate é bom (> 60%) mas o Purchase Rate é ruim.
+Acionado quando: diagnóstico = `falha_qualificacao` (tráfego qualificado chega mas não compra), ou quando o Click-to-LPV Rate é bom (80% ou mais) mas o Purchase Rate é ruim.
 
-**NÃO acionar para `falha_intencao` com curiosidade vazia** (CTR alto + visita à página baixa). Nesse caso, o problema é a promessa do anúncio, não a oferta: usar o Tipo 1 (novo gancho com promessa mais qualificada).
+**NÃO acionar para `falha_intencao` com curiosidade vazia** (CTR alto + visita à página baixa). Nesse caso, depois de descartar a causa técnica da página (`/pagina-performance` e `/trafego-oferta-funil`), o problema é a promessa do anúncio, não a oferta: usar o Tipo 1 (novo gancho com promessa mais qualificada).
 
 **NÃO acionar para `falha_pos_clique`** (Offer Rate abaixo de 2%): o problema é a página ou a oferta, não o criativo. Encaminhar para `/trafego-oferta-funil`.
 
@@ -129,7 +129,7 @@ Acionado quando: diagnóstico = `falha_qualificacao` (tráfego qualificado chega
 BRIEFING #3: NOVA ABORDAGEM DE OFERTA NO CRIATIVO
 Prioridade: ALTA (há tráfego qualificado, mas ele não converte)
 
-Problema detectado: CTR acima da média e Click-to-LPV Rate > 70%
+Problema detectado: CTR acima da média e Click-to-LPV Rate de 80% ou mais
 (tráfego qualificado chega), mas CPA acima da meta.
 
 Hipótese: o criativo gera interesse real, mas a ponte entre a
@@ -168,8 +168,9 @@ Prioridade dos testes criativos:
    Potencial: se o Hook subir para 25%, economia de cerca de R$ 30/dia
 
 #2 ALTO IMPACTO: gancho mais qualificado para "AD - Polêmica - 15s"
-   Gasto em curiosidade vazia: R$ 60/dia (CTR alto, visita à página baixa, CPA 2× a meta)
-   Potencial: trocar a promessa curiosa por uma promessa qualificada pode cortar o CPA em 40%
+   Gasto em provável curiosidade vazia: R$ 60/dia (CTR alto, visita à página baixa, CPA 2× a meta)
+   Antes: descartar a causa técnica da página (/pagina-performance)
+   Potencial: depois de descartar a causa técnica, trocar a promessa curiosa por uma promessa qualificada pode cortar o CPA em 40%
 
 #3 MÉDIO IMPACTO: nova narrativa para "AD - Dor - 30s"
    O gancho funciona, o Hold está baixo
@@ -183,7 +184,7 @@ Fórmula de prioridade: `impacto = gasto_diario × (1 - eficiencia_atual)`. Quan
 1. **Nunca sugerir "faça um criativo melhor".** Vago demais. Sempre especificar O QUE mudar.
 2. **Cada briefing muda UMA dimensão.** Mesmo princípio do `/trafego-testes`. Trocar gancho E CTA ao mesmo tempo não permite atribuir o resultado.
 3. **Máximo de 3 briefings por sessão.** Foco vale mais que quantidade. Se há 5 problemas, priorizar os 3 de maior impacto.
-4. **Se não há falha clara, sugerir variação do vencedor.** Expandir o que funciona (novo ângulo, novo tipo da Mandala, novo formato do mesmo vídeo).
+4. **Se não há falha clara, sugerir variação do criativo que mais vende** (só é "vencedor" se bater a régua da seção 10 do SKILL.md). Expandir o que funciona (novo ângulo, novo tipo da Mandala, novo formato do mesmo vídeo).
 5. **Cada briefing termina com a skill que produz e com o teste em `/trafego-testes`.**
 6. **O briefing não produz a peça.** Ele diz o que testar; a peça sai das skills da tabela "Quem produz".
 7. **Ancorar no produto real.** Toda hipótese cita material do `resumo-produto.md` (Urgência Oculta, Decorado, Furadeira ou objeção). Nada de dor genérica do nicho.

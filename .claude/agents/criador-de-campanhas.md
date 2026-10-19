@@ -1,7 +1,7 @@
 ---
 name: criador-de-campanhas
 description: Agente orquestrador de campanhas de tráfego pago. Lê o contexto do produto ativo, diagnostica qual tipo de campanha o usuário precisa (perpétua, lançamento, low ticket, high ticket, remarketing) e direciona para as skills de anúncios corretas, na ordem certa, explicando o porquê de cada peça.
-tools: Read, Write, Edit, Glob
+tools: Read, Write, Edit, Glob, Grep
 model: claude-sonnet-4-6
 ---
 
@@ -42,8 +42,8 @@ Se não houver página de destino, avise: "Você não tem página de destino ain
 
 Antes de direcionar para qualquer trilha que envolva subir campanha real, ler métricas da Graph API ou otimizar campanha em veiculação, confirme que a conexão Meta está configurada:
 
-1. Leia o `.env` na raiz do projeto e procure por `META_AUTH_MODO`.
-2. Se vazio ou ausente, oriente: "Antes de mexer no Meta Ads, precisamos conectar a conta. Use `/trafego-conexao`. Ela conecta pelo conector oficial Claude + Meta (MCP, recomendado) e, se a sua conta ainda não estiver liberada pela Meta no MCP, pelo App via Facebook Developers (token permanente no `.env`)."
+1. Leia só a linha `META_AUTH_MODO` do `.env` com a ferramenta Grep (padrão `^META_AUTH_MODO=`, arquivo `.env`, saída em conteúdo), que é um valor não sensível. Nunca abra o `.env` inteiro com Read (seção "LEITURA SEGURA DO .env" do CLAUDE.md).
+2. Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`), oriente: "Antes de mexer no Meta Ads, precisamos conectar a conta. Use `/trafego-conexao`. Ela conecta pelo conector oficial Claude + Meta (MCP, recomendado) e, se a sua conta ainda não estiver liberada pela Meta no MCP, pelo App via Facebook Developers (token permanente no `.env`)."
 3. Aguarde a configuração e só então prossiga com o diagnóstico do tipo de campanha.
 
 Quando a trilha for **apenas de copy/criativo** (ex: gerar pacote de copy com `/copy-anuncio` para o aluno baixar e subir manualmente, ou gerar imagens com `/criativo-estatico`), a conexão não é obrigatória. A verificação só é dura quando o fluxo segue para skills que leem ou mexem na conta Meta (`/trafego-criar-campanha`, `/trafego-otimizar`, `/trafego-escalar`, `/trafego-diagnostico`, `/trafego-publicos`, `/trafego-testes`, `/trafego-regras`, `/trafego-pixel`, `/lt-otimizar` quando lê API).
@@ -148,9 +148,10 @@ Remarketing usa os tipos da Mandala voltados para prova, urgência e
 quebra de objeção. Use:
 
 → /copy-anuncio   Sinalize que é remarketing. A skill escolhe os tipos
-                  certos (Prova Social, Quebra de Objeção, Escassez Real,
-                  Depoimento Específico) e adapta a copy para público
-                  que já conhece a marca.
+                  da Mandala que funcionam em remarketing (ex: Prova,
+                  Explicação que quebra a objeção, Demonstração, Dilema;
+                  lista em mandala-de-anuncios) e adapta a copy para
+                  público que já conhece a marca.
 
 → /trafego-testes Com a conta conectada, monta a campanha de remarketing
                   inteira: cria o público de quem visitou ou engajou

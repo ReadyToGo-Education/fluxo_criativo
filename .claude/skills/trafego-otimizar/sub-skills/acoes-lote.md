@@ -14,7 +14,7 @@ Aplica uma ação (pausar, reduzir budget) em múltiplas entidades de uma vez, f
 | Função | Descrição |
 |---|---|
 | `pausar_em_lote(filtro)` | Pausa todas as entidades que batem o filtro |
-| `reduzir_budget_em_lote(filtro, percent)` | Reduz budget % nas entidades que batem |
+| `reduzir_budget_em_lote(filtro, percent)` | Reduz budget % nas entidades que batem, no nível definido pelo §6.0 do SKILL.md (ver "Antes de reduzir orçamento em lote") |
 | `pausar_top_n_pior(metric, n)` | Pausa as N piores em uma métrica |
 | `aumentar_top_n(metric, n, percent)` | Atalho para escala (delegar para `/trafego-escalar` quando faz sentido) |
 
@@ -42,7 +42,7 @@ Ou descrição em linguagem natural que a skill traduz:
 
 `roas`, `cpa`, `cpl`, `ctr_link_unico`, `ctr_link_total`, `ctr`, `frequency`, `cpm`, `spend`, `impressions`, `purchases`, `leads`, `cpc`, `link_clicks`.
 
-> Para diagnóstico de criativo, prefira `ctr_link_unico` (`unique_inline_link_click_ctr`). `ctr_link_total` (`inline_link_click_ctr`) e `ctr` (geral) ficam disponíveis como complementares. No modo MCP esses dois campos não existem na tool `ads_get_ad_entities`: o CTR de link é calculado (`actions:link_click ÷ impressions`), como manda o §3.5.1 do SKILL.md. Nunca usar o `ctr` geral no lugar do CTR de link.
+> Para diagnóstico de criativo, prefira `ctr_link_unico` (`unique_inline_link_click_ctr`). `ctr_link_total` (`inline_link_click_ctr`) e `ctr` (geral) ficam disponíveis como complementares. No modo MCP esses dois campos não existem na tool `ads_get_ad_entities`: o CTR de link é calculado (`link_click ÷ impressions`), como manda o §3.5.1 do SKILL.md. Nunca usar o `ctr` geral no lugar do CTR de link.
 
 ### Operadores
 `less_than`, `less_than_or_equal`, `greater_than`, `greater_than_or_equal`, `equal`, `not_equal`, `between`.
@@ -74,6 +74,20 @@ Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 
 Antes de pausar por dinheiro, aplicar o filtro de lucro do SKILL.md (§3.6): entidade em zona amarela (acima da meta, mas ainda lucrativa) sai da lista com aviso, e entidade com menos de 10 compras na janela não é pausada só por CPA (§3.4).
 
+### Antes de reduzir orçamento em lote
+
+`reduzir_budget_em_lote` passa por quatro regras, entidade por entidade, antes de montar o bloco 🛡️:
+
+1. **Escopo `ad` é recusado:** anúncio não tem orçamento. Oferecer pausar em vez de reduzir.
+2. **ABO ou CBO (§6.0 do SKILL.md):** ler o `budget.tipo` da campanha de cada entidade.
+   - Escopo `adset`: em ABO, a redução cai no conjunto. Em CBO, o conjunto não tem orçamento próprio: sai da lista com aviso e a oferta do §6.4 (teto no conjunto) ou de pausa.
+   - Escopo `campaign`: em CBO, a redução cai na campanha inteira. Em ABO, a campanha não tem orçamento próprio: sai da lista com aviso e a sugestão de filtrar por conjunto.
+   - Tipo de orçamento nulo ou indisponível: a entidade sai com o motivo "tipo de orçamento não detectado".
+3. **Bloqueios do §6.2:** conjunto em fase de aprendizado, última edição há menos de 48h ou gasto do dia abaixo de 50% do orçamento diário sai da lista com o motivo. No MCP, se o campo de aprendizado não vier (`aprendizado: NAO_VERIFICADO`, contrato em `trafego-insights/SKILL.md` §10.1), o conjunto segue na lista marcado "aprendizado não conferido": o bloco 🛡️ avisa que o conector não mostra essa fase e o aluno decide no "sim".
+4. **Filtro de zona (§3.6 e §6.1):** só reduzir na zona vermelha (lucro/dia negativo). Zona amarela sai com aviso.
+
+No bloco 🛡️ da redução, cada linha mostra o nível em que a redução cai (ex.: "[Campanha CBO]", "[Conjunto ABO]") com o orçamento de antes e de depois, em reais. Logo abaixo, a lista das entidades excluídas, cada uma com o motivo.
+
 ## Implementação (pseudocódigo)
 
 O Claude aplica o filtro lendo o retorno de `/trafego-insights` como texto. Nada de script com token, heredoc Python ou `curl | python3` (regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md).
@@ -93,8 +107,10 @@ if confirmacao != "sim": return
 
 # 5. Aplicar ação (rotear por META_AUTH_MODO, ver Passo 0 do SKILL.md; não é lacuna)
 for entidade in matches:
-    # MCP: ads_update_entity (status=PAUSED, ou daily_budget pra reduzir)
-    # APP: POST /<entidade.id> { "status": "PAUSED" }   # ou daily_budget
+    # MCP: ads_update_entity (status=PAUSED, ou daily_budget no nível definido pelo §6.0)
+    # APP: POST /<entidade.id> { "status": "PAUSED" }   # ou daily_budget no nível do §6.0
+    # valor do orçamento: centavos no APP; no MCP, a unidade do schema da tool
+    # (ver "Unidade dos valores na escrita" no Passo 0 do SKILL.md); depois, reler e conferir em reais
     aplicar_acao(entidade)
     # se uma chamada falhar: parar, mostrar o que já foi aplicado e perguntar antes de continuar
 
@@ -113,7 +129,7 @@ log_acao_em_lote(matches, action, timestamp)
 | **Pausar queimadores** | `roas<1 AND spend>50 AND last_14d` | PAUSE adset |
 | **Pausar criativos mortos** | `ctr_link_unico<0.4 AND spend>50 AND last_7d` | PAUSE ad |
 | **Pausar por frequência** | `frequency>4.5 AND last_7d` | PAUSE adset |
-| **Reduzir CPA alto** | `cpa>1.5x_target AND last_7d` | budget -20% |
+| **Reduzir CPA alto** | `cpa>1.5x_target AND last_7d` | budget -20% no nível do §6.0 (conjunto em ABO, campanha em CBO) |
 | **Pausar sem conversão** | `purchases=0 AND spend>100 AND last_7d` | PAUSE adset |
 | **Pausar 5 piores ROAS** | `top_n=5 metric=roas asc` | PAUSE adset |
 

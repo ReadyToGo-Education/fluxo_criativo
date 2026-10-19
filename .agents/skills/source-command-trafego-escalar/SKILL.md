@@ -33,9 +33,9 @@ Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` no `.env`.
 
-- **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool `ads_*` do conector está disponível (descobrir pelo final do nome; o prefixo varia). Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Se a Meta responder que a conta ainda não foi liberada no conector, avisar em linguagem simples e oferecer trocar para o modo App pelo `/trafego-conexao`.
-- **Se `APP`:** confirmar com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env` (nunca exibir o valor). Se faltar algum, acionar `/trafego-conexao`.
+- **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acione `/trafego-conexao` e aguarde a conclusão. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
+- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool `ads_*` do conector está disponível (descobrir pelo final do nome; o prefixo varia). Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conferir também que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar, a opção "Validar" do `/trafego-conexao` completa. Se a Meta responder que a conta ainda não foi liberada no conector, avisar em linguagem simples e oferecer trocar para o modo App pelo `/trafego-conexao`.
+- **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem com valor no `.env` (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env`; com o ponto, linha vazia conta como ausente; nunca exibir o valor). Se faltar algum, acionar `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
 
@@ -58,7 +58,7 @@ Após a validação da conexão, decidir qual conta tocar para escalar:
    Digite o número ou aperte Enter para usar a padrão:
    ```
 
-   Para mostrar nomes amigáveis: no MCP, `ads_get_ad_accounts`; no APP, uma chamada `GET /me/adaccounts?fields=id,account_id,name&limit=100` na Graph API com o token do `.env` substituído inline (nunca exibido; se precisar mostrar o comando, `access_token=***TOKEN_MASCARADO***`). Filtrar apenas as que estão em `FB_AD_ACCOUNT_IDS`. Marcar como "padrão" a que está em `FB_AD_ACCOUNT_ID`.
+   Para mostrar nomes amigáveis: no MCP, `ads_get_ad_accounts` (nome em `ad_account_name`); no APP, uma chamada `GET /me/adaccounts?fields=id,account_id,name&limit=100` na Graph API com `access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)` dentro do próprio `curl` (o token nunca é escrito nem exibido; se precisar mostrar o comando, `access_token=***TOKEN_MASCARADO***`). Filtrar apenas as que estão em `FB_AD_ACCOUNT_IDS`. Marcar como "padrão" a que está em `FB_AD_ACCOUNT_ID`.
 
 5. Salvar a conta escolhida em variável local da execução (`AD_ACCOUNT_ID_ATUAL`). Não sobrescrever o `.env`. A escala e os freios só atuam dentro da conta escolhida.
 
@@ -74,7 +74,9 @@ Leia:
 A skill **só atua** sobre campanhas que receberam sinal explícito de prontidão. Três caminhos:
 
 ### 1.1 Sinal vindo de `/trafego-otimizar`
-Se o aluno acabou de rodar `/trafego-otimizar` e a saída tinha `sinal_para_escala.pronta: true`, usar esse bloco direto (conta, campanha, meta e margem já vêm no payload).
+Se o aluno acabou de rodar `/trafego-otimizar` e a saída tinha `sinal_para_escala.pronta: true`, usar esse bloco direto (conta, campanha, meta e margem já vêm no payload). Duas conferências valem mesmo assim (Passo 0.1 da SKILL):
+- **Cooldown:** ler `meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md`. Se a última linha com status `freio_total` estiver dentro do cooldown da trilha (7d perpétuo low/mid, 14d perpétuo high, 24h lançamento), não escalar: avisar a data em que a campanha libera e devolver para `/trafego-otimizar`.
+- **Falso vencedor:** se o detector da `/trafego-diagnostico` rodou nesta sessão e a entidade não saiu `vencedor_real` com score de confiança 50 ou mais, não escalar e explicar o motivo, mesmo com o `pronta: true`. Com `score_confianca` de 50 a 74 (do payload ou da sessão), só velocidade conservadora ou normal, nunca agressiva (2.1). Se não foi verificado, mostrar "falso vencedor não verificado" no plano do Passo 4.
 
 ### 1.2 Acionamento manual com auditoria automática
 Se o aluno pediu escala sem rodar a otimização antes, executar internamente:
@@ -95,7 +97,8 @@ Se o aluno pediu escala sem rodar a otimização antes, executar internamente:
    - Histórico mínimo da trilha cumprido
    - Sem evento sazonal perturbador
    - ≥ 2 criativos saudáveis no conjunto
-   - Cooldown ≥ 168h (7d perpétuo low/mid), ≥ 336h (14d perpétuo high) ou ≥ 24h (lançamento) desde o último handoff de descida
+   - Cooldown ≥ 168h (7d perpétuo low/mid), ≥ 336h (14d perpétuo high) ou ≥ 24h (lançamento) desde o último handoff de descida (última linha `freio_total` do histórico da campanha; sem arquivo, não houve descida)
+   - Falso vencedor: se o detector da `/trafego-diagnostico` rodou nesta sessão, a entidade saiu `vencedor_real` com score de confiança 50 ou mais (de 50 a 74, só escala gradual, sem velocidade agressiva). Se não rodou, oferecer o detector (`/trafego-diagnostico` opção [4], só leitura); se o aluno recusar, seguir com "falso vencedor não verificado" no plano do Passo 4
 
 Se **qualquer** condição reprovar:
 ```
@@ -124,6 +127,8 @@ Vou aplicar critérios relaxados de prontidão e velocidade agressiva
 Digite o número:
 ```
 
+Com score de confiança do falso vencedor de 50 a 74, a velocidade agressiva fica de fora mesmo no contexto declarado (2.1): nesse caso, a mensagem acima oferece só os critérios relaxados de prontidão, com velocidade normal ou conservadora.
+
 ---
 
 ## Passo 2. Inputs
@@ -142,7 +147,7 @@ Velocidade de escala:
 Digite o número:
 ```
 
-Se o aluno escolher agressiva e não estiver em contexto declarado, recusar. Perpétuo mid ticket respeita 72h entre ajustes mesmo na velocidade normal (§7.2 da SKILL).
+Se o aluno escolher agressiva e não estiver em contexto declarado, recusar. Recusar a agressiva também quando o detector de falso vencedor deu score de confiança de 50 a 74 (do payload da otimização ou da sessão), mesmo em contexto declarado: nessa faixa a escala é só gradual. Perpétuo mid ticket respeita 72h entre ajustes mesmo na velocidade normal (§7.2 da SKILL).
 
 ### 2.2 Modo
 Sugerir baseado nos dados (frequência, audiência, ciclo atual, anúncios vencedores espalhados), pela matriz do Passo 0.75 da SKILL. Mostrar:
@@ -163,17 +168,20 @@ Por quê: [justificativa baseada em frequência/audiência/ciclo/vencedores na c
 Digite o número:
 ```
 
-> **Lembrete Advantage:** exige no mínimo 5 anúncios vencedores no mesmo produto/funil. Abaixo disso, o algoritmo Advantage+ não tem espaço de iteração suficiente: sugerir produzir mais criativos (`/copy-anuncio` + `/criativo-estatico`) e validá-los antes via `/trafego-testes`.
+> **Lembrete Advantage:** exige no mínimo 5 anúncios vencedores no mesmo produto/funil. Vencedor segue a definição única da SKILL (Passo 0.75.1, Leitura 1): 50 conversões em low e middle ticket ou 30 em high ticket na janela média da trilha, ou `validado` num teste da `/trafego-testes`. Abaixo disso, o algoritmo Advantage+ não tem espaço de iteração suficiente: sugerir produzir mais criativos (`/copy-anuncio` + `/criativo-estatico`) e validá-los antes via `/trafego-testes`.
 
-> **Modo Carteira:** requer teto de gasto declarado. Gera plano em 2 fases: Fase 1 (handoff para `/trafego-otimizar`: cortes e realocações) + Fase 2 (escalar executa: incrementos nos vencedores). A escalar NÃO executa cortes diretamente. Como o plano atravessa duas skills, só roda com o plano completo numerado e um **"aprovar tudo"** explícito (modo lote pré-aprovado do CLAUDE.md). Ver §3.6 da SKILL.
+> **Modo Carteira:** requer teto de gasto da conta declarado pelo aluno (sem teto declarado, a Carteira não roda: pedir o teto no 2.3). Gera plano em 2 fases: Fase 1 (handoff para `/trafego-otimizar`: cortes e realocações) + Fase 2 (escalar executa: incrementos nos vencedores). A escalar NÃO executa cortes diretamente. Como o plano atravessa duas skills, só roda com o plano completo numerado e um **"aprovar tudo"** explícito (modo lote pré-aprovado do CLAUDE.md). Ver §3.6 da SKILL.
 
-### 2.3 Teto operacional (opcional)
+### 2.3 Teto de gasto da conta (opcional; obrigatório no modo Carteira)
 ```
-Tem um teto de orçamento diário operacional para essa campanha?
+Tem um teto de gasto diário para a conta inteira (somando todas as
+campanhas) que você não quer ultrapassar?
 (ex: "máximo R$ 500/dia", ou pular para sem teto)
 ```
 
-Com teto declarado (ou modo Carteira), rodar o guardião de caixa (`sub-skills/guardiao-caixa.md`, Passo 0.86 da SKILL). Se o caixa estiver crítico, não escalar: recomendar cortar vazamentos primeiro pela `/trafego-otimizar`.
+Salvar em `teto_conta_diario_brl` (sempre o teto da conta inteira, nunca de uma campanha só; ver Pergunta 5 do Passo 0.7 da SKILL).
+
+Com teto declarado (ou modo Carteira), o guardião de caixa roda no Passo 3, depois do risco (mesma ordem da SKILL: Passo 0.85 e depois 0.86).
 
 ### 2.4 Backup criativo
 Confirmar que há criativos saudáveis disponíveis:
@@ -187,6 +195,8 @@ Se faltar backup, sugerir produzir antes: copy em `/copy-anuncio`, imagem em `/c
 ---
 
 ## Passo 3. Calcular incremento e risco
+
+🔍 Próximo passo: calcular o risco de cada incremento e, com teto declarado, conferir o caixa da conta. Tempo estimado: cerca de 75 segundos.
 
 Aplicar a tabela da seção 4 da skill:
 
@@ -204,7 +214,7 @@ Calcular novo orçamento:
 
 Calcular o **score de risco** de cada incremento (`sub-skills/risco-incremento.md`, Passo 0.85 da SKILL). Risco extremo sai do plano; risco alto entra com aviso e confirmação reforçada.
 
-Verificar se algum teto operacional é violado.
+Com teto declarado (ou modo Carteira), rodar o guardião de caixa (`sub-skills/guardiao-caixa.md`, Passo 0.86 da SKILL) e verificar se o teto da conta (`teto_conta_diario_brl`) é violado. Com folga positiva menor que o incremento, reduzir o incremento até caber (guardião de caixa §5). Se o caixa estiver crítico, não escalar: recomendar cortar vazamentos primeiro pela `/trafego-otimizar`. **Exceção do modo Carteira:** a urgência é recalculada sobre o gasto projetado depois dos cortes da Fase 1, e os vazamentos que já estão na Fase 1 não contam para os "2 ou mais vazamentos". Se o caixa continuar crítico mesmo com os cortes, entregar só a Fase 1 (cortes pela `/trafego-otimizar`, no mesmo plano numerado), sem a Fase 2. O aluno nunca sai sem o plano.
 
 ---
 
@@ -228,16 +238,20 @@ O que vai mudar:
 - [Vertical] Subir orçamento do conjunto "[nome]" de R$ [atual] para
   R$ [novo] (+[X%]). Risco [score]/100.
 - [Horizontal] Duplicar conjunto "[nome]" com [nova audiência ou teste], orçamento
-  R$ [valor], nascendo pausado. Risco [score]/100.
-- [CBO] Criar nova campanha CBO consolidando os conjuntos vencedores X, Y, Z.
+  R$ [valor]/dia. Criado pausado: não gasta nada até você pedir a ativação,
+  que é uma confirmação à parte. Risco [score]/100.
+- [CBO] Criar nova campanha CBO consolidando os conjuntos vencedores X, Y, Z,
+  orçamento R$ [valor]/dia na campanha. Criada pausada, como acima. Risco [score]/100.
 - [Advantage] Criar campanha Advantage+ "[nome]" com [N] anúncios vencedores
-  do mesmo produto/funil. Conjunto único com público Advantage+, orçamento R$ [valor].
+  do mesmo produto/funil. Conjunto único com público Advantage+, orçamento R$ [valor]/dia.
+  Criada pausada, como acima. Risco [score]/100.
+[Se o falso vencedor não foi verificado: "· falso vencedor não verificado" ao lado do risco]
 
 Reset de aprendizado esperado: [não no vertical | sim nas estruturas novas]
-Reversível? [sim: voltar o orçamento para R$ X / pausar a estrutura nova]
+Reversível? [sim: voltar o orçamento para R$ X / estrutura nova fica pausada, sem gasto, até a ativação]
 
-Próxima revisão: em [N]h.
-Próxima reavaliação automática: [data/hora].
+Próxima revisão: [vertical: em [N]h | estrutura nova: [N]h depois da ativação]
+Próxima reavaliação automática: [data/hora | estrutura nova: conta a partir da ativação]
 
 1. Confirmar e aplicar tudo
 2. Ajustar valores
@@ -246,44 +260,51 @@ Próxima reavaliação automática: [data/hora].
 Digite o número:
 ```
 
-Um "sim" (opção 1) cobre o lote inteiro deste plano, inclusive todas as criações de uma estrutura nova. Nunca exibir o `curl` no chat.
+Um "sim" (opção 1) cobre o lote inteiro deste plano, inclusive todas as criações de uma estrutura nova. A ativação da estrutura nova não entra nesse "sim": é pedida depois, no Passo 6.1. Enquanto a estrutura nova estiver pausada, não há ciclo nem prazo correndo: a revisão, a maturação e o ciclo contam a partir da ativação. Nunca exibir o `curl` no chat.
 
 ---
 
 ## Passo 5. Execução
 
-🔍 Próximo passo: aplicar o incremento aprovado na conta de anúncios. Tempo estimado: cerca de 30 segundos.
+Anunciar com o tempo do modo escolhido (faixas de `.claude/rules/tempo-estimado.md`):
+- Vertical: `🔍 Próximo passo: aplicar o incremento aprovado na conta de anúncios. Tempo estimado: cerca de 30 segundos.`
+- Horizontal, CBO ou Advantage (estrutura nova): `🔍 Próximo passo: criar a estrutura nova aprovada na conta de anúncios, pausada. Tempo estimado: cerca de 90 segundos.`
 
 Conforme o modo e a conexão:
-- **Vertical:** `ads_update_entity` com `daily_budget` (MCP) ou `POST /<id>` com `daily_budget` (APP), no conjunto em ABO ou na campanha em CBO.
-- **Horizontal:** MCP: `ads_create_ad_set` com `source_adset_id`. APP: **ler → recriar** (ler a config do conjunto por GET, criar o conjunto novo trocando só a dimensão do teste e com `targeting_automation.advantage_audience`, criar os anúncios referenciando o `creative_id` existente). `POST /<adset_id>/copies` só para 1 conjunto com 1 anúncio: cópia com 2 ou mais objetos falha (ver §3.2 da SKILL).
-- **CBO:** MCP: `ads_create_campaign` (com orçamento na campanha) + `ads_create_ad_set` × N com `source_adset_id`. APP: `POST /act_{id}/campaigns` (orçamento na campanha) + `POST /act_{id}/adsets` × N (sem orçamento próprio, com `campaign_id` da nova) + anúncios referenciando `creative_id`.
-- **Advantage:** MCP: `ads_create_campaign` + 1 `ads_create_ad_set` (público Advantage+) + N `ads_create_ad` com `source_ad_id` dos vencedores (5 a 50). APP: mesma estrutura por POST, com os anúncios referenciando o `creative_id` de cada vencedor.
+- **Vertical:** `ads_update_entity` com `daily_budget` (MCP) ou `POST /<id>` com `daily_budget` (APP), no conjunto em ABO ou na campanha em CBO. Unidade: no APP, inteiro em centavos (R$ × 100); no MCP, a unidade do schema da tool, conferida antes da primeira escrita (Passo 0.0 da SKILL). Depois de gravar, ler a entidade de novo e conferir que o valor em reais bate com o bloco 🛡️; se não bater, parar, avisar e propor reverter.
+- **Horizontal:** MCP: `ads_create_ad_set` com `source_adset_id`; conferir pela leitura se os anúncios vieram junto e, se não vieram, copiar cada anúncio ativo do molde com `ads_create_ad` + `source_ad_id`; aplicar a dimensão do teste com `ads_update_entity` só se o schema aceitar mudar o campo sozinho, senão duplicação guiada no Gerenciador (§3.2 da SKILL). APP: **ler → recriar** (ler a config do conjunto por GET, criar o conjunto novo trocando só a dimensão do teste e com `targeting_automation.advantage_audience`; sob ABO, com o orçamento do plano em centavos, a `bid_strategy` do molde e, com teto de custo ou de lance, o `bid_amount` lido; criar os anúncios referenciando o `creative_id` existente). `POST /<adset_id>/copies` só para 1 conjunto com 1 anúncio: cópia com 2 ou mais objetos falha (ver §3.2 da SKILL).
+- **CBO:** MCP: `ads_create_campaign` (com orçamento na campanha) + `ads_create_ad_set` × N com `source_adset_id` (indicando a campanha nova como destino, se o schema permitir), com a mesma conferência de anúncios do Horizontal. APP: `POST /act_{id}/campaigns` (orçamento na campanha) + `POST /act_{id}/adsets` × N (sem orçamento próprio, com `campaign_id` da nova; com teto de custo ou de lance, o `bid_amount` vai em cada conjunto) + anúncios referenciando `creative_id`.
+- **Advantage:** MCP: `ads_create_campaign` + 1 `ads_create_ad_set` (público Advantage+) + N `ads_create_ad` com `source_ad_id` dos vencedores (5 a 50). APP: mesma estrutura por POST, com os anúncios referenciando o `creative_id` de cada vencedor; se a campanha ficar sem orçamento próprio (ABO), mandar `is_adset_budget_sharing_enabled: false` (§3.2 da SKILL).
 
-Estruturas novas nascem pausadas e só são ativadas no fim do lote, depois de conferir que tudo foi criado. Em caso de falha, parar, registrar e devolver o erro detalhado, perguntando antes de seguir com o restante.
+Estruturas novas nascem pausadas e **continuam pausadas no fim do lote**: nada é ativado aqui. Antes de encerrar, conferir que tudo foi criado e que cada conjunto novo tem pelo menos 1 anúncio (e, no Horizontal, a variação do teste aplicada). Em caso de falha, parar, registrar e devolver o erro detalhado, perguntando antes de seguir com o restante.
 
-✅ Concluído: incremento aplicado.
+✅ Concluído: {incremento aplicado | estrutura nova criada e pausada}.
 
 ---
 
 ## Passo 6. Apresentar resultado
 
 ```
-✅ Escala aplicada (ciclo [N]).
+[Vertical: ✅ Escala aplicada (ciclo [N]).]
+[Horizontal, CBO ou Advantage: ✅ Estrutura criada (pausada). O ciclo [N] começa
+  quando ela for ativada (6.1).]
 
 [Vertical: Conjunto "[nome]" agora com R$ [novo]/dia (+[X%])]
-[Horizontal: Novo conjunto criado: "[nome novo]" com R$ [valor]/dia,
-  audiência [descrição]]
-[CBO: Nova campanha CBO "[nome]" criada com N conjuntos consolidados]
-[Advantage: Nova campanha Advantage+ "[nome]" criada com [N] anúncios vencedores
-  do produto/funil [...]]
+[Horizontal: Novo conjunto criado e PAUSADO: "[nome novo]" com R$ [valor]/dia,
+  audiência [descrição]. Ainda não gasta nada.]
+[CBO: Nova campanha CBO "[nome]" criada e PAUSADA com N conjuntos consolidados.
+  Ainda não gasta nada.]
+[Advantage: Nova campanha Advantage+ "[nome]" criada e PAUSADA com [N] anúncios
+  vencedores do produto/funil [...]. Ainda não gasta nada.]
 
 Riscos a monitorar:
 - [frequência subindo, monitorar próximo ciclo]
 - [audiência horizontal precisa maturar antes de novo ciclo]
 - [...]
 
-Próxima revisão: [data/hora] (em [N]h).
+[Vertical: Próxima revisão: [data/hora] (em [N]h).]
+[Estrutura nova: Próxima revisão: [N]h depois da ativação. Enquanto
+  estiver pausada, não há prazo correndo.]
 
 Antes do próximo incremento, vou revalidar:
 - CPA/CPL na janela média ≤ target × 0,9
@@ -295,6 +316,7 @@ Antes do próximo incremento, vou revalidar:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔭 Próximo passo recomendado: /trafego-analise
 Após D+7 (perpétuo low/mid e lançamento) ou D+14 (perpétuo high),
+contados do incremento ou, na estrutura nova, da ativação,
 volte pra /trafego-analise pra confirmar se a escala se sustentou
 e identificar o próximo movimento.
 
@@ -306,6 +328,39 @@ Para ver dados antes do prazo: /trafego-insights.
 Para acompanhar a conta ao vivo num painel: /trafego-dashboard.
 ```
 
+### 6.1 Ativar a estrutura nova (só com pedido explícito)
+
+Quando o lote criou estrutura nova (Horizontal, CBO ou Advantage), perguntar:
+
+```
+A estrutura nova está criada e pausada. Quer ativar agora?
+
+1. Sim, quero ativar agora
+2. Não, vou revisar no Gerenciador antes (peço a ativação depois)
+
+Digite o número:
+```
+
+Se 1, mostrar um **bloco 🛡️ próprio** de ativação (§11.2 da SKILL) e aguardar o "sim":
+
+```
+🛡️ Confirmação necessária antes de tocar na conta Meta
+
+Operação: ativar estrutura nova
+Endpoint: POST /<id> com status=ACTIVE, um por objeto da lista (no conector: ads_activate_entity)
+Objeto: [campanha, conjuntos e anúncios criados neste lote, com nomes e IDs]
+O que vai mudar:
+  - status PAUSED → ACTIVE em [lista]
+  - passa a gastar R$ [valor]/dia, somado aos R$ [valor]/dia que a conta já gasta
+    (os conjuntos e anúncios originais seguem rodando)
+Reset de aprendizado esperado: não nos originais; a estrutura nova começa a fase de aprendizado quando for ativada
+Reversível? sim, pausando a estrutura nova
+
+Pode aplicar? Responda "sim" para confirmar, "não" para cancelar.
+```
+
+Ao ativar uma campanha criada pela skill, ativar também os conjuntos e anúncios dela no mesmo lote. Com teto da conta declarado, conferir antes no guardião de caixa que o gasto novo cabe. Tool: `ads_activate_entity` (ou `ads_update_entity` com `status=ACTIVE`) no MCP; `POST /<id>` com `status=ACTIVE` no APP. Depois de ativar, anexar no `historico-{campaign_id}.md` a linha da ativação, com status `incremento`, a data e hora da ativação e o mesmo número de ciclo do lote que criou a estrutura (§11.3 da SKILL): é dela que contam a próxima revisão, a maturação e o ciclo. Se 2, a estrutura fica pausada e a ativação vira esse mesmo bloco quando o aluno pedir. Se o aluno ligar a estrutura direto no Gerenciador, a data da ativação é conferida no ciclo seguinte (Passo 7).
+
 ---
 
 ## Passo 7. Tratamento de freios (em ciclos seguintes)
@@ -313,14 +368,19 @@ Para acompanhar a conta ao vivo num painel: /trafego-dashboard.
 Quando o aluno volta para um próximo incremento, antes de tudo:
 
 1. Invocar `/trafego-insights` para puxar dados frescos (sem cache).
-2. Comparar com o último ciclo (registrado no histórico da campanha):
+2. Ler **todas as linhas do último ciclo** no histórico da campanha, não só a última: num lote misto (ex.: Vertical + Horizontal), cada ação tem a sua linha, com a mesma data e hora da execução do lote, e cada ativação feita depois tem linha `incremento` própria (§11.3 da SKILL).
+   - Para cada linha `estrutura_pausada` sem ativação registrada depois, ler o status da estrutura nova. Já ativa (ligada no Gerenciador): conferir a data da ativação em `ads_account_get_activity_logs` (MCP) ou perguntar ao aluno e anexar a linha `incremento` com essa data (§11.3 da SKILL).
+   - **Nenhuma entidade do ciclo ativada** (todas as linhas são `estrutura_pausada` e as estruturas seguem pausadas): não há ciclo para avaliar; oferecer a ativação (6.1).
+   - **Parte ativada** (ex.: o incremento vertical do mesmo lote, ou uma das estruturas novas): avaliar essa parte no item 3, cada uma só depois da sua maturação (o vertical a partir do incremento, a estrutura nova a partir da ativação), e oferecer ativar o resto (6.1).
+   - **Tudo ativado:** avaliar o ciclo inteiro no item 3.
+3. Comparar com o último ciclo (registrado no histórico da campanha):
    - CPA/CPL piorou 10 a 20% janela curta vs média, ou lucro/dia caiu ≥ 30%? → **freio leve** (não incrementar, manter, reavaliar 48h)
-   - CPA/CPL piorou 20 a 30% sustentado por 48h, ou ROAS a ±10% do break-even? → **freio médio** (reverter -20%, refresh criativo, devolver pra `/trafego-otimizar`)
+   - CPA/CPL piorou 20 a 30% sustentado por 48h, ou ROAS a ±10% do break-even? → **freio médio** (voltar ao orçamento de antes do último incremento, lido do histórico; sem histórico, do log de atividades no MCP ou informado pelo aluno, nunca calculado por conta própria; se o último ciclo foi a ativação de estrutura nova, reverter é pausar essa estrutura; no lote misto, cada parte ativa que acionou o freio volta do seu jeito, no mesmo bloco 🛡️ (§6.2 da SKILL); refresh criativo; devolver pra `/trafego-otimizar`)
    - CPA/CPL piorou ≥ 30% OU 2 ciclos sem ganho líquido OU saturação estrutural OU lucro/dia negativo em 2 ciclos? → **freio total** (reverter ao último orçamento estável, emitir handoff)
    - Frequência > 4 após 2 refreshes? → **teto de audiência** (parar, expandir trilha)
    - CPM 50%+ acima do histórico por 7d sem sazonal? → **CPM ceiling**
    - 3 ciclos sem ganho de conversões? → **volume ceiling**
-   - Atingiu `teto_de_orcamento_diario_brl` declarado? → **teto operacional**
+   - A folga da conta (`teto_conta_diario_brl` declarado menos o gasto diário atual, como no guardião de caixa) é zero ou negativa? → **teto operacional**. Com folga positiva menor que o próximo incremento, não é teto: reduzir o incremento até caber na folga (guardião de caixa §5)
    - ROAS abaixo do break-even em 2+ ciclos? → **teto de margem**
 
 ### 7.1 Freio leve
@@ -340,7 +400,9 @@ Próxima reavaliação: [data/hora].
 
 CPA/CPL piorou [X%] sustentado por 48h. Vou:
 
-1. Reverter o último incremento (orçamento volta para R$ [valor]).
+1. Reverter o último incremento (orçamento volta para R$ [valor] |
+   pausar a estrutura nova "[nome]", se o último ciclo foi a ativação dela |
+   as duas coisas, no lote misto em que as duas partes acionaram o freio).
 2. Sugerir refresh criativo via /copy-anuncio + /criativo-estatico
    (com A/B contra o atual no /trafego-testes).
 3. Devolver diagnóstico para /trafego-otimizar.
@@ -410,16 +472,17 @@ Skill de escala desativada para essa campanha.
 
 1. **Relatório do ciclo** em:
    ```
-   meus-produtos/{ativo}/entregas/trafego/escala-{campanha-slug}-ciclo-{N}-{YYYY-MM-DD}.md
+   meus-produtos/{ativo}/entregas/trafego/escalar/escala-{campanha-slug}-ciclo-{N}-{YYYY-MM-DD}.md
    ```
    Conteúdo: estado atual + ação aplicada + risco + riscos a monitorar + próxima revisão.
 
-2. **Histórico da campanha** (uma linha por ciclo, usado para calcular o `ciclo_atual` na próxima vez):
+2. **Histórico da campanha** (uma linha por ação executada; num lote misto, as linhas do mesmo lote têm a mesma data e hora e o mesmo número de ciclo; o `ciclo_atual` da próxima vez conta ciclos, não linhas: as linhas do lote e as ativações das estruturas dele são um ciclo só, §11.3 e Leitura 3 da SKILL):
    ```
    meus-produtos/{ativo}/trafego/escalar/historico-{campaign_id}.md
    ```
+   Estrutura nova: na criação, linha com status `estrutura_pausada` (não conta como ciclo); na ativação (6.1), linha `incremento` com a data e hora da ativação e o mesmo número de ciclo do lote que criou a estrutura. Regra completa na §11.3 da SKILL.
 
-Mostrar o caminho absoluto como texto copiável: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\escala-{...}.md`
+Mostrar o caminho absoluto como texto copiável: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\escalar\escala-{...}.md`
 
 ---
 
@@ -437,4 +500,4 @@ Mostrar o caminho absoluto como texto copiável: `{raiz-do-projeto}\meus-produto
 10. **Cooldown de 7d/14d/24h** após handoff de descida.
 11. **Não diagnostica gargalos fora da escala.** Devolve para a otimização.
 12. **Tetos são declarados, não ignorados.** Atingir, parar, comunicar.
-13. **Gate 🛡️ antes de toda escrita.** Um "sim" por lote; Carteira só com "aprovar tudo"; nunca apaga entidade; token nunca aparece no chat.
+13. **Gate 🛡️ antes de toda escrita.** Um "sim" por lote; Carteira só com "aprovar tudo"; estrutura nova nasce e continua pausada, e ativar é operação à parte com bloco 🛡️ próprio (Passo 6.1); nunca apaga entidade; token nunca aparece no chat.

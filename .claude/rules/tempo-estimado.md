@@ -105,6 +105,7 @@
 |----------|----------------|---------|
 | Adicionar o conector da Meta no Claude | cerca de 60 segundos | segundos |
 | Validar a conexão (conector ou token do App) | cerca de 20 segundos | segundos |
+| Listar as contas de anúncios que o token enxerga (modo App) | cerca de 10 segundos | segundos |
 | Criar o App e gerar o token permanente (modo App) | 8 a 12 minutos | minutos |
 | Puxar insights e calcular as métricas derivadas | cerca de 30 segundos | segundos |
 | Validar pixel e evento de conversão | cerca de 15 segundos | segundos |
@@ -115,7 +116,7 @@
 | Montar o painel de decisão em HTML (otimizar) | cerca de 90 segundos | segundos |
 | Guardião de caixa e score de risco da escala | cerca de 75 segundos | segundos |
 | Aplicar incremento de escala (vertical) | cerca de 30 segundos | segundos |
-| Criar estrutura nova de escala (CBO ou Advantage) | cerca de 90 segundos | segundos |
+| Criar estrutura nova de escala (Horizontal, CBO ou Advantage) | cerca de 90 segundos | segundos |
 | Buscar as métricas da conta para a análise | 30 a 60 segundos | segundos |
 | Gerar a análise narrada de um output do /trafego-analise | 60 a 90 segundos | segundos |
 | Salvar a análise como dashboard HTML (gráficos + painel de entregas) | 2 a 3 minutos | minutos |

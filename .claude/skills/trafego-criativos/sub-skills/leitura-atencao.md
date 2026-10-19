@@ -41,25 +41,27 @@ Pedir à `/trafego-insights`:
 - Escopo: `conta_completa` ou campanhas específicas
 - Nível: `ad`
 - Período: definido na entrevista de entrada (Passo 0.9 do padrão da `/trafego-diagnostico`) + período anterior para comparação
-- Métricas obrigatórias de vídeo:
+- Métricas obrigatórias de vídeo (nome na Graph API, modo `APP`; no modo `MCP_CONECTOR`, a tradução está na seção 6 do SKILL.md):
   - `video_p25_watched_actions`
   - `video_p50_watched_actions`
   - `video_p75_watched_actions`
   - `video_p95_watched_actions`
   - `video_p100_watched_actions`
-  - `video_plays`
-  - `video_3_sec_views`
+  - `video_play_actions` (reproduções, rótulo `video_plays` nas fórmulas)
+  - visualizações de 3 segundos: `actions` com `action_type=video_view` (rótulo `video_3sec_views`, usado no Hold Rate e na reserva do Completion Rate)
   - `video_avg_time_watched_actions`
   - `impressions`
-  - `spend`
+  - `spend` (no MCP, `amount_spent`)
+- `video_p95_watched_actions` e `video_play_actions` não fazem parte da lista 4.1 da `/trafego-insights`: pedir como acréscimo à coleta dela. As visualizações de 3 segundos já vêm em `actions` (`video_view`) pela própria 4.1 e não entram no `fields=`. Não existem na Graph API os campos `video_plays` nem `video_3_sec_views`: são só rótulos internos. Definições de vídeo: `.claude/skills/trafego-insights/SKILL.md` §4.5.
 - Métricas complementares (para fallback de imagem):
   - `ctr`
   - `cpc`
   - `clicks`
+  - No MCP, calcular a partir dos campos conferidos: CTR de link = `link_click ÷ impressions` e CPC = `amount_spent ÷ link_click`.
 
 **Dados complementares (leitura pura, por modo):**
 - Formato do criativo (vídeo ou imagem) pelo `object_type`. `MCP_CONECTOR`: `ads_get_creatives` ou o campo de criativo do `ads_get_ad_entities` (confirmar com `ads_get_field_context`). `APP`: `curl -g` em `/{ad_id}?fields=creative{id,object_type,thumbnail_url}`.
-- No MCP, os campos de vídeo têm nomes próprios (`3_second_video_plays`, `video_p25_watched_actions` etc.): ver a seção 3.1 do SKILL.md antes da coleta.
+- No MCP, os campos de vídeo não estão na lista conferida do conector: confirmar com `ads_get_field_context` antes da coleta (seções 3.1 e 6 do SKILL.md).
 
 ---
 
@@ -69,17 +71,18 @@ Todas calculadas pela skill, não são campos nativos da API:
 
 | Métrica | Fórmula | O que mede |
 |---------|---------|-----------|
-| **Thumbstop Rate** | `video_p25_watched / impressions` | Capacidade de interromper o scroll. Quantas pessoas param para olhar. |
-| **Hook Rate** | `video_3sec_views / impressions` | Força do gancho inicial. Quantas pessoas ficam pelo menos 3 segundos. |
+| **Hook Rate** | `video_p25_watched / impressions` | Força do gancho inicial. Quantas pessoas param o scroll e seguem assistindo (o p25 é a aproximação dos 3 segundos). Mesma conta da `/trafego-insights`; Thumbstop Rate é a mesma métrica. |
 | **Hold Rate** | `video_p50_watched / video_3sec_views` | Sustentação após o gancho. Das que ficaram 3s, quantas chegam na metade. |
 | **Story Rate** | `video_p75_watched / video_p25_watched` | Força da narrativa. Do quarto inicial ao terceiro quarto, quanto retém. |
 | **Completion Rate** | `video_p95_watched / video_plays` | Quantos chegam perto do final. Força da conclusão. |
-| **Cost per Hook** | `spend / video_3sec_views` | Custo para capturar 3 segundos de atenção. |
+| **Cost per Hook** | `spend / video_p25_watched` | Custo de cada pessoa que passou do gancho. |
 | **Cost per Hold** | `spend / video_p50_watched` | Custo para sustentar atenção até o meio do vídeo. |
+
+**Faixas do Hook Rate (régua única do Severino):** crítico abaixo de 15%, atenção de 15% a 25%, saudável 25% ou mais.
 
 **Tratamento de denominador zero:** retornar `null`. Nunca dividir por zero, nunca inventar valor.
 
-**Fallback quando campo indisponível:** se `video_plays` não estiver disponível, usar `video_3sec_views` como denominador do Completion Rate e marcar como `fallback_aplicado`. Se `video_p25_watched` estiver ausente, marcar Thumbstop Rate e Story Rate como `indisponivel`.
+**Fallback quando campo indisponível** (só as reservas da `/trafego-insights` §4.5; fora delas, a métrica fica `indisponivel`): se `video_plays` não estiver disponível, usar `video_3sec_views` (ou, sem ele, `video_p25_watched`) como denominador do Completion Rate e marcar como `fallback_aplicado`. Se `video_3sec_views` não vier, o Hold Rate usa `video_p25_watched` no denominador, marcado como `fallback_aplicado`, e o relatório declara que os limiares de Hold ficam aproximados. Se `video_p25_watched` estiver ausente, marcar Hook Rate, Cost per Hook e Story Rate como `indisponivel`.
 
 ---
 
@@ -127,7 +130,7 @@ O **ponto de queda** (`ponto_de_queda`) é a transição com a **maior perda per
 
 | Critério | Limiar |
 |----------|--------|
-| Hook Rate | > 25% |
+| Hook Rate | 25% ou mais |
 | Hold Rate | < 30% |
 
 **O que significa:** o criativo para o scroll. O gancho é forte, a thumbnail atrai. Mas quem fica 3 segundos não aguenta até o meio. O desenvolvimento (argumento, história, transição) não sustenta a promessa do gancho.
@@ -140,7 +143,7 @@ O **ponto de queda** (`ponto_de_queda`) é a transição com a **maior perda per
 
 | Critério | Limiar |
 |----------|--------|
-| Hook Rate | 15% - 25% |
+| Hook Rate | de 15% a menos de 25% |
 | Hold Rate | > 50% |
 
 **O que significa:** o criativo não para o scroll de todo mundo, mas quem decide ficar, fica até o final. A qualidade do conteúdo é alta. O problema é que poucas pessoas param para descobrir isso.
@@ -179,7 +182,7 @@ O **ponto de queda** (`ponto_de_queda`) é a transição com a **maior perda per
 |----------|--------|
 | Hook Rate | < 15% |
 
-**O que significa:** o criativo não captura atenção inicial. O scroll não para. Nem o gancho funciona. Menos de 15 em cada 100 pessoas ficam 3 segundos.
+**O que significa:** o criativo não captura atenção inicial. O scroll não para. Nem o gancho funciona. Menos de 15 em cada 100 pessoas passam do gancho (chegam a 25% do vídeo).
 
 **O que fazer:** o criativo precisa de um gancho novo. Testar: abertura com uma afirmação direta que nomeia uma Urgência Oculta do resumo do produto (Light Copy: gancho sem pergunta), movimento nos primeiros frames, texto em tela nos primeiros 2 segundos, ou formato completamente diferente.
 
@@ -202,7 +205,7 @@ Ranking dos criativos por custo de atenção:
 
 | Métrica de ranking | O que compara | Melhor = |
 |--------------------|---------------|----------|
-| Cost per Hook | Custo para capturar 3s de atenção | Menor valor |
+| Cost per Hook | Custo de cada pessoa que passou do gancho | Menor valor |
 | Cost per Hold | Custo para sustentar até o meio | Menor valor |
 
 **Formato de comparação:**
@@ -210,7 +213,7 @@ Ranking dos criativos por custo de atenção:
 ```
 RANKING DE EFICIÊNCIA DE ATENÇÃO (por Cost per Hook)
 
-1. Criativo "VSL Curso v3":          R$ 0,12/hook  (o mais barato para capturar atenção)
+1. Criativo "VSL Curso v3":          R$ 0,14/hook  (o mais barato para capturar atenção)
 2. Criativo "Depoimento Maria":      R$ 0,18/hook
 3. Criativo "Carrossel benefícios":  R$ 0,25/hook
 4. Criativo "Imagem estática":       R$ 0,41/hook  (o mais caro)
@@ -232,7 +235,6 @@ Quando **nenhum anúncio** no escopo tem métricas de vídeo:
 | Completion Rate | `nao_aplicavel_formato_imagem` |
 | Cost per Hook | `nao_aplicavel_formato_imagem` |
 | Cost per Hold | `nao_aplicavel_formato_imagem` |
-| Thumbstop Rate | `nao_aplicavel_formato_imagem` |
 
 **Proxies de atenção para imagem:**
 - **CTR** como proxy de interesse visual (a imagem atraiu o suficiente para clicar)
@@ -263,7 +265,7 @@ Todo número, classificação e curva DEVE ter texto explicativo em linguagem na
 Criativo "{nome}": GANCHO FORTE, DESENVOLVIMENTO FRACO
 
 O que está acontecendo: esse criativo para o scroll de {hook_rate}%
-das pessoas (acima de 25%, excelente). Mas apenas {hold_rate}% de quem
+das pessoas (25% ou mais, saudável). Mas apenas {hold_rate}% de quem
 fica 3 segundos chega até a metade do vídeo. Algo entre o gancho e o
 meio do vídeo faz o público perder interesse.
 
@@ -323,7 +325,7 @@ precisa mudar.
 ```
 Criativo "{nome}": ATENÇÃO BAIXA ❌
 
-O que está acontecendo: apenas {hook_rate}% das pessoas ficam 3 segundos.
+O que está acontecendo: apenas {hook_rate}% das pessoas passam do gancho.
 O scroll não para. O gancho não funciona.
 
 O que isso significa na prática: o criativo não está conseguindo competir
@@ -365,12 +367,11 @@ leitura_atencao:
         video_plays: 9975
         spend: 1026.00
       derivadas:
-        thumbstop_rate: 0.250
-        hook_rate: 0.300
+        hook_rate: 0.250
         hold_rate: 0.400
         story_rate: 0.300
         completion_rate: 0.129
-        cost_per_hook: 0.12
+        cost_per_hook: 0.14
         cost_per_hold: 0.30
       curva_retencao:
         impressoes_p25_perda: 0.750
@@ -381,10 +382,10 @@ leitura_atencao:
       ponto_de_queda: "impressoes_p25"
       perfil_atencao: "gancho_forte_dev_fraco"
       comparacao_temporal:
-        hook_rate_anterior: 0.350
-        hook_rate_atual: 0.300
+        hook_rate_anterior: 0.300
+        hook_rate_atual: 0.250
         direcao: "piorando"
-        variacao_pct: -14.3
+        variacao_pct: -16.7
 
     - ad_id: "<ad_id_2>"
       ad_name: "Depoimento Maria"
@@ -410,7 +411,7 @@ leitura_atencao:
   ranking_eficiencia:
     por_cost_per_hook:
       - ad_name: "VSL Curso v3"
-        valor: 0.12
+        valor: 0.14
       - ad_name: "Depoimento Maria"
         valor: 0.18
     por_cost_per_hold:
@@ -419,7 +420,7 @@ leitura_atencao:
       - ad_name: "VSL Curso v3"
         valor: 0.30
 
-  insight_eficiencia: "VSL Curso v3 captura atenção mais barato (R$ 0,12/hook), mas Depoimento Maria sustenta com mais eficiência (R$ 0,25/hold vs R$ 0,30)."
+  insight_eficiencia: "VSL Curso v3 captura atenção mais barato (R$ 0,14/hook), mas Depoimento Maria sustenta com mais eficiência (R$ 0,25/hold vs R$ 0,30)."
 ```
 
 ---
@@ -446,7 +447,7 @@ O que as métricas dizem:
   atraem atenção mas perdem o público no meio.
 - O criativo "Depoimento Maria" é o único com retenção linear
   consistente, mas tem Hook Rate médio (19%).
-- "VSL Curso v3" tem o melhor hook da conta (30%), mas Hold Rate de
+- "VSL Curso v3" tem o melhor hook da conta (25%), mas Hold Rate de
   apenas 40%. Perde 52% do público entre p25 e p50.
 
 O que as métricas NÃO dizem:

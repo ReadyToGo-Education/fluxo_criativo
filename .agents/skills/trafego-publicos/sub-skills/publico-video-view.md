@@ -25,7 +25,10 @@ Passo 0 (produto ativo, conexão, conta) e gate: ver `SKILL.md` desta skill.
 O MCP é o caminho padrão. Se a Meta recusar pelo MCP, o aluno cria pelo Gerenciador com o passo a passo desta sub-skill.
 
 - **`MCP_CONECTOR`:**
-  1. **Descobrir o vídeo** com as tools de leitura: vídeos que rodaram em anúncios (`ads_get_ad_entities` e `ads_get_creatives`, pegando o vídeo do criativo) e vídeos da biblioteca da conta (`ads_get_ad_videos`). Reels e vídeos publicados só no perfil ou na Página, sem anúncio: o MCP não lista; seguir pelo **passo manual guiado** (o seletor de vídeos do Gerenciador mostra Reels e vídeos da Página).
+  1. **Descobrir o vídeo** com as tools de leitura (ler o schema de cada uma antes):
+     - **Reels e vídeos do Instagram profissional:** `ads_get_ig_accounts` (a conta profissional) e `ads_get_ig_media`, filtrando os tipos VIDEO e REELS. Só seguir pelo conector se o retorno trouxer o ID da mídia (o mesmo `id` que o App usa na regra); senão, passo manual guiado.
+     - **Vídeos que rodaram em anúncios:** `ads_get_ad_entities` e `ads_get_creatives`. Usar o vídeo só quando ele vier de um post publicado (o criativo traz o post de origem, `effective_object_story_id`, ou a mídia do Instagram, e o vídeo desse post). Se vier só o ID do vídeo do criativo, ver a opção 3 em "Como o aluno escolhe o vídeo".
+     - **Vídeos que estão só na Página do Facebook:** o conector não lista. Seguir pelo **passo manual guiado** (o seletor de vídeos do Gerenciador mostra os vídeos da Página). Não oferecer vídeos da biblioteca da conta (`ads_get_ad_videos`): ali ficam vídeos subidos direto como criativo, que a Meta recusa para esse público (erro 2654, abaixo).
   2. **Ler o schema da `ads_create_custom_audience`** antes de chamar e montar o pedido com o subtipo de engajamento de vídeo que o schema oferecer, o evento do percentual (`video_view_XX_percent`) e os vídeos escolhidos. Não inventar parâmetro.
   3. **Histórico:** se o schema não tiver opção equivalente ao `prefill` (que faz o público pegar quem já assistiu antes da criação), avisar o aluno antes do bloco 🛡️: "pelo conector, esse público pode juntar só quem assistir daqui para frente. Pelo Gerenciador, ele já nasce com quem assistiu nos últimos {janela} dias." e perguntar:
      ```
@@ -41,19 +44,29 @@ O MCP é o caminho padrão. Se a Meta recusar pelo MCP, o aluno cria pelo Gerenc
 
 ## Como o aluno escolhe o vídeo
 
-O aluno **nunca digita `video_id`**. A skill aceita 4 formas. Qualquer um dos tipos de ID funciona (ID de mídia do Instagram com 17 dígitos, ID de vídeo da Página com 15 ou 16 dígitos, ID de vídeo do anúncio com 16 dígitos); no modo App, o que importa é enviar `prefill=true` (ver "Endpoint").
+O aluno **nunca digita `video_id`**. A skill aceita 4 formas. Qualquer um dos tipos de ID funciona (ID de mídia do Instagram com 17 dígitos, ID de vídeo da Página com 15 ou 16 dígitos, ID de vídeo do anúncio com 16 dígitos, quando o vídeo veio de um post publicado na Página ou no Instagram; vídeo subido direto como criativo cai no erro 2654, ver a seção "Erro 2654 / 1713216"); no modo App, o que importa é enviar `prefill=true` (ver "Endpoint").
 
 1. **Reels da conta profissional do Instagram.**
    - App: `GET /<ig_business_account_id>/media?fields=id,media_type,media_url,caption,thumbnail_url,timestamp,permalink&limit=100`, filtrando `media_type` em (VIDEO, REELS), últimos 30 dias por padrão (`since`/`until` ajustáveis). Mostrar como `[R1] legenda resumida (~50 caracteres), visualizações, data`.
    - Erro `code 1, Please reduce the amount of data you're asking for`: estreitar a janela (90d → 30d → 7d). Se vier vazio mesmo com 7 dias, oferecer as outras fontes.
-   - MCP: passo manual guiado (abaixo).
+   - MCP: `ads_get_ig_accounts` (conta profissional) e `ads_get_ig_media` (ler o schema antes), filtrando VIDEO e REELS, com a mesma apresentação. O ID usado na regra é o da mídia. Se o schema não devolver esse ID ou o tipo da mídia, seguir pelo passo manual guiado (abaixo).
 2. **Vídeos da Página do Facebook.**
    - App: `GET /<page_id>/videos?fields=id,title,length,created_time&limit=100`. Mostrar como `[FB1] título, duração, data`. Cobre vídeos postados na Página e Reels compartilhados na Página.
    - Página na "Nova experiência de Páginas" pode exigir token da Página em alguns endpoints: se vier `code 1` ou `subcode 2069032`, avisar o aluno.
-   - MCP: `ads_get_ad_videos` cobre a biblioteca da conta de anúncios; vídeo só da Página vai pelo passo manual guiado.
+   - MCP: o conector não lista os vídeos da Página; seguir pelo passo manual guiado. A biblioteca da conta (`ads_get_ad_videos`) não serve aqui: ela guarda vídeos subidos direto como criativo, que a Meta recusa para esse público (erro 2654).
 3. **Vídeos que rodaram como anúncio.**
    - App: `GET -g /act_<id>/ads?fields=id,name,status,effective_status,creative{id,object_story_id,effective_object_story_id,video_id,thumbnail_url,object_type}&limit=100&effective_status=['ACTIVE','PAUSED','IN_PROCESS','WITH_ISSUES']`. Para cada criativo com vídeo, resolver o `effective_object_story_id` (`GET -g /<effective_object_story_id>?fields=attachments{media,subattachments,target,description}`) e tirar o `video_id`. Remover repetidos.
-   - MCP: `ads_get_ad_entities` (anúncios) e `ads_get_creatives` (vídeo do criativo).
+   - MCP: `ads_get_ad_entities` (anúncios) e `ads_get_creatives`. Usar o vídeo do post só quando a leitura do criativo trouxer o post de origem (`effective_object_story_id`, ou a mídia do Instagram) com o vídeo desse post. Se vier só o ID do vídeo do criativo, avisar **antes do bloco 🛡️** que a Meta pode recusar (o caso do erro 2654: vídeo subido direto como criativo, sem virar post de Página) e perguntar:
+     ```
+     Esse vídeo pode ter sido subido direto no anúncio, sem virar post da sua
+     Página ou do seu Instagram. Nesse caso, a Meta não aceita criar o público
+     com ele. Como prefere seguir?
+
+     1. Tentar pelo conector mesmo assim
+     2. Criar pelo Gerenciador com o meu passo a passo
+
+     Digite o número:
+     ```
    - Mostrar como `[VA1] nome do anúncio, campanha X, status`.
 4. **Colar link ou ID** (raro). O aluno cola o link; a skill identifica o tipo (17 dígitos = mídia do Instagram, 15 ou 16 = vídeo do Facebook; link `instagram.com/reel/...` ou `facebook.com/.../videos/...`) e confere (no App, por `GET`). Bloquear só se a Meta devolver 404 (vídeo inexistente ou sem acesso).
 
@@ -74,7 +87,7 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**.
 
    Digite o número (Enter para usar 1):
    ```
-   No modo MCP, as opções 1 e 2 levam ao passo manual guiado, a não ser que o vídeo também esteja na biblioteca da conta.
+   No modo MCP, a opção 1 lista os Reels pelo conector (`ads_get_ig_accounts` e `ads_get_ig_media`) e a opção 2 leva ao passo manual guiado.
 
    **Bloqueio:** vídeo fora de Página ou perfil ligado ao Business (404 na leitura): avisar e voltar.
 
@@ -277,8 +290,12 @@ SE existem anúncios com esse vídeo:
     # 2. somar a retenção do percentual escolhido só desses anúncios
     insights level=ad, fields=ad_id,video_pXX_watched_actions (XX = percentual),
         date_preset=last_90d, filtering=[{field:'ad.id',operator:'IN',value:[<ad_ids>]}]
-        (MCP: tool ads_insights_* com os mesmos filtros, conforme o schema;
-         App: GET /act_<id>/insights; ou /trafego-insights)
+        (MCP: ads_get_ad_entities com nível anúncio (level: "ad"), filtering
+         [{field: "ad.id", operator: "IN", value: [<ad_ids>]}] e o campo de retenção
+         conferido antes com ads_get_field_context (contrato do conector:
+         trafego-insights/SKILL.md §10.1 "Contrato do conector da Meta (MCP)").
+         Se o campo não for aceito, somar pelo /trafego-insights ou seguir na Abordagem B;
+         App: GET -g /act_<id>/insights; ou /trafego-insights)
     soma_views_pct = soma de video_pXX_watched_actions[value]
     SE mais de 3 anúncios com o mesmo vídeo:
         fator_sobreposicao = 1,5 a 2,0
@@ -370,12 +387,16 @@ Se a Meta responder erro `2654` (subcode `1713216`) com a mensagem `"isn't assoc
 
 Conferir primeiro: `ads_get_custom_audience` (MCP) ou `GET /<audience_id>?fields=data_source,delivery_status,operation_status` (App).
 
+**Antes do critério, separar como o público foi criado:**
+- **Pelo conector, sem equivalente ao `prefill`** (o aluno escolheu "1. Criar pelo conector mesmo assim" no aviso de histórico do roteamento MCP): `creation_params == "[]"` é o esperado. O público funciona e junta quem assistir daqui para frente. Não chamar de falha nem sugerir exclusão: basta `delivery_status.code == 200`. Se o aluno agora quiser o histórico, criar outro pelo passo manual guiado no Gerenciador (ele já nasce com quem assistiu dentro da janela).
+- **Nos outros casos** (App, ou conector com equivalente ao `prefill`): seguir o critério abaixo.
+
 **Critério de saúde definitivo:**
 - `data_source.creation_params == "{\"prefill\":\"true\"}"` e
 - `delivery_status.code == 200`
 - → vínculo íntegro, o público funciona nas campanhas, não importa o que a tela mostra.
 
-**`creation_params == "[]"`:** faltou `prefill=true` na criação. Alterar depois não resolve (a Meta aceita e ignora). A correção é criar de novo com `prefill=true` (e, se o aluno quiser, excluir o antigo pela opção 8, com confirmação própria).
+**`creation_params == "[]"` num público criado pelo App:** faltou `prefill=true` na criação. Alterar depois não resolve (a Meta aceita e ignora). A correção é criar de novo com `prefill=true` (e, se o aluno quiser, excluir o antigo pela opção 8, com confirmação própria).
 
 **`creation_params` certo mas o Gerenciador mostra "Selecionar vídeo (0)":** o seletor pode levar horas, dias ou NUNCA atualizar. Confirmado na prática em 4 públicos seguidos numa mesma conta, todos com regra íntegra, milhares de pessoas e quadro vazio na tela. Não bloqueia nada: é limitação de exibição do Gerenciador. Não tentar "consertar" pela tela de edição.
 

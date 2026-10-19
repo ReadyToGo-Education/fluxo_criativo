@@ -41,7 +41,7 @@ O fluxo de entrada é o **padrão compartilhado** definido em `.claude/skills/tr
 Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (gerar o resumo conforme o CLAUDE.md se não existir). Guardar sem perguntar: nome do produto, ticket (Preço), tipo, Quadro, Furadeira, público (Identidade do Consumidor), Urgências Ocultas e Decorados principais. As Urgências Ocultas e os Decorados alimentam a tradução VTSD (seção 9) e os briefings.
 
 ### Passo 0.2. Conexão Meta (gate duro)
-Ler `META_AUTH_MODO`. Vazio: `/trafego-conexao`. `MCP_CONECTOR`: confirmar tool terminada em `ads_get_ad_entities` (conta não liberada no conector: avisar e oferecer o modo App pelo `/trafego-conexao`). `APP`: confirmar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q`. Detalhes no Passo 0.2 da `/trafego-diagnostico`. Esta skill é 100% leitura: não tem lacuna em nenhum dos dois modos.
+Ler `META_AUTH_MODO` (`grep "^META_AUTH_MODO=" "{RAIZ_PROJETO}/.env" | cut -d= -f2-`, sempre pelo caminho absoluto da raiz do projeto, seção 3.3). Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar, sem adivinhar nem cair em fallback. `MCP_CONECTOR`: confirmar tool terminada em `ads_get_ad_entities` e que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." "{RAIZ_PROJETO}/.env"`; se faltar, a opção "Validar" do `/trafego-conexao` completa). Conta não liberada no conector: avisar e oferecer o modo App pelo `/trafego-conexao`. `APP`: confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor com `grep -q "^NOME=." "{RAIZ_PROJETO}/.env"` (o ponto faz a linha vazia contar como ausente). Detalhes no Passo 0.2 da `/trafego-diagnostico`. Esta skill é 100% leitura: não tem lacuna em nenhum dos dois modos.
 
 ### Passo 0.3. Selecionar conta de anúncios
 Mesma lógica da `/trafego-diagnostico`.
@@ -121,7 +121,7 @@ Qual análise criativa você quer rodar?
 
 [5]  DIAGNÓSTICO CRIATIVO        onde exatamente o criativo quebra?
 
-[6]  DNA CRIATIVO                o que os vencedores têm em comum?
+[6]  DNA CRIATIVO                o que os criativos que mais vendem têm em comum?
 
 [7]  BRIEFING CRIATIVO           que criativos testar agora?
 
@@ -154,7 +154,7 @@ Módulos rodam em ordem de funil:
 ⏳ Passo 2/7: intenção criativa.
 ⏳ Passo 3/7: conversão criativa.
 ⏳ Passo 4/7: diagnóstico por criativo.
-⏳ Passo 5/7: DNA dos vencedores.
+⏳ Passo 5/7: DNA dos criativos que mais vendem.
 ⏳ Passo 6/7: briefings dos próximos testes.
 ⏳ Passo 7/7: consolidação do relatório.
 ```
@@ -173,12 +173,14 @@ Módulos rodam em ordem de funil:
 
 | Módulo | Escopo | Nível | Dados extras |
 |--------|--------|-------|--------------|
-| Leitura de atenção | conta_completa ou campanhas específicas | `ad` | video_p25/p50/p75/p95/p100, video_plays, video_3sec, avg_watch_time |
+| Leitura de atenção | conta_completa ou campanhas específicas | `ad` | video_p25/p50/p75/p95/p100, reproduções do vídeo, visualizações de 3 segundos, avg_watch_time |
 | Intenção criativa | idem | `ad` | inline_link_clicks, landing_page_view, outbound_clicks |
 | Conversão criativa | idem | `ad` + `adset` (para segmentação e temperatura) | actions[purchase/lead/add_to_cart/initiate_checkout], action_values |
 | Diagnóstico criativo | idem | `ad` | todas as acima + serie_diaria + frequência |
 | DNA criativo | conta_completa | `ad` | todas + created_time + texto do anúncio (para o tipo da Mandala) |
 | Briefing criativo | usa os dados dos módulos anteriores | n/a | n/a |
+
+Os nomes da tabela são os da Graph API (modo `APP`). No modo `MCP_CONECTOR`, usar a tradução da seção 3.1. Os campos de vídeo `video_p95_watched_actions` e `video_play_actions` (reproduções) não estão na lista 4.1 da `/trafego-insights`: pedir como acréscimo à coleta dela. As visualizações de 3 segundos já vêm em `actions` (`action_type=video_view`) pela própria 4.1 e não entram no `fields=`. Definições de vídeo: `.claude/skills/trafego-insights/SKILL.md` §4.5.
 
 **Leituras complementares (só leitura, por modo):**
 
@@ -191,21 +193,24 @@ Módulos rodam em ordem de funil:
 
 > **Erro real observado:** a 1ª coleta falhou porque usou nomes padrão da Graph API (`inline_link_clicks`, `actions`, `video_play_actions`, `action_values`) que o `ads_get_ad_entities` do MCP **não aceita**. Perdeu-se uma chamada.
 
-No modo MCP (tool terminada em `ads_get_ad_entities`), os campos de anúncio têm nomes próprios. Os que esta skill usa, já validados:
+No modo MCP (tool terminada em `ads_get_ad_entities`), os campos de anúncio têm nomes próprios. A lista conferida na conta real fica no contrato do conector: `.claude/skills/trafego-insights/SKILL.md` §10.1 "Contrato do conector da Meta (MCP)". Os que esta skill usa:
 
-| Intenção | Campo MCP correto | Campo que NÃO existe |
+| Intenção | Campo MCP correto | Nome que o conector recusou |
 |---|---|---|
 | gasto | `amount_spent` | ~~spend~~ |
-| compras | `actions:omni_purchase` | ~~actions~~, ~~action_values~~ |
-| cliques no link | `actions:link_click` | ~~inline_link_clicks~~ |
-| ROAS / receita | `purchase_roas` (receita = roas × gasto) | ~~action_values~~ |
-| gancho (3s) | `3_second_video_plays` | ~~video_3_sec_watched_actions~~, ~~video_play_actions~~ |
-| retenção | `video_p25/p50/p75/p95/p100_watched_actions`, `video_thruplay_watched_actions` | n/a |
+| compras | `omni_purchase` | ~~actions~~, ~~action_values~~ |
+| cliques no link | `link_click` | ~~inline_link_clicks~~ |
+| visitas à página | `landing_page_view` | n/a |
+| checkout iniciado | `omni_initiated_checkout` | n/a |
+| valor das compras | `offsite_conversion_fb_pixel_purchase_values` (sem ele, receita = `purchase_roas` × `amount_spent`) | ~~action_values~~ |
+| ROAS | `purchase_roas` | n/a |
+| retenção de vídeo (não conferida) | `video_p25/p50/p75/p95/p100_watched_actions`, `video_thruplay_watched_actions`: confirmar com `ads_get_field_context` antes | n/a |
+| reproduções e 3 segundos (não conferidos) | o campo que `ads_get_field_context` indicar (para 3 segundos, `3_second_video_plays`) | ~~video_3_sec_watched_actions~~, ~~video_play_actions~~ |
 | atributos | `id, name, campaign_id, adset_id, creative_id, created_time` | ~~campaign_name~~, ~~adset_name~~ |
 
-**Regra:** se não tiver certeza do nome do campo no modo ativo, fazer **1 chamada de verificação** (`ads_get_field_context` ou uma leitura mínima) antes da coleta cheia. Nunca disparar a coleta grande com campos adivinhados.
+**Regra:** se não tiver certeza do nome do campo no modo ativo, fazer **1 chamada de verificação** (`ads_get_field_context` ou uma leitura mínima) antes da coleta cheia. Nunca disparar a coleta grande com campos adivinhados. A forma conferida é sem prefixo (`link_click`, `omni_purchase`); a forma com `actions:` só vale se o `ads_get_field_context` mostrar que o conector aceita.
 
-**`landing_page_view` costuma não vir em nível de anúncio no MCP.** Conferir com `ads_get_field_context`; se não vier, ver o fallback na seção 6.1.
+**`landing_page_view` e `omni_initiated_checkout` foram conferidos como aceitos, inclusive no nível de anúncio.** Se vierem `null`, a conta não registra o evento: ver o tratamento na seção 6.1.
 
 ### 3.2. Conta grande: coletar sem estourar o limite
 
@@ -216,6 +221,7 @@ Quando o escopo é grande (regra prática: **mais de 12 campanhas OU mais de 120
 1. Coletar em **lotes** (por bloco de campanhas ou por campanha), nunca tudo de uma vez.
 2. Quando o resultado vier salvo em arquivo (a própria tool faz isso ao estourar), **processar o arquivo fora do contexto** (script local que lê o JSON salvo, sem token, sem reimprimir o bruto no chat) e trazer só o agregado. É a "Exceção controlada" da seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md.
 3. Pedir só os campos necessários do módulo: não puxar a curva de vídeo inteira quando o módulo só precisa de gasto e compras.
+4. **No MCP, filtrar e paginar sempre** (contrato do conector, `.claude/skills/trafego-insights/SKILL.md` §10.1): na coleta por anúncio, `filtering: [{field: "ad.impressions", operator: "GREATER_THAN", value: ["0"]}]` (sem filtro, o conector devolve anúncios antigos sem entrega) e `limit: 1000`. Repetir a chamada com o `cursor` devolvido enquanto houver próxima página. Se vierem 1.000 linhas sem próxima página, avisar o aluno que a lista pode ter sido cortada.
 
 ### 3.3. Higiene operacional (caminho absoluto + versão fixa)
 
@@ -255,7 +261,7 @@ O agrupamento por conceito é uma lente **oficial** desta skill, não improviso.
 ```
 criativo_agrupado:
   creative_id: "<creative_id>"
-  nome_representativo: "AD - Dor - Vídeo 30s"
+  nome_representativo: "AD - Mito - Vídeo 30s"
   instancias: 5                          # em quantos conjuntos aparece
   conjuntos: ["AS-Aberto", "AS-Semelhante1", "AS-Semelhante2", "AS-Remarketing", "AS-Interesses"]
 
@@ -268,8 +274,8 @@ criativo_agrupado:
     link_clicks: 3600                    # soma
     landing_page_views: 2880             # soma
     purchases: 18                        # soma
-    hook_rate: 0.30                      # recalculado: 54000/180000
-    hold_rate: 0.333                     # recalculado: 18000/54000
+    hook_rate: 0.20                      # recalculado: 36000/180000 (p25 ÷ impressões)
+    hold_rate: 0.333                     # recalculado: 18000/54000 (p50 ÷ 3 segundos)
     ctr: 0.020                           # recalculado: 3600/180000
     cpa: 138.89                          # recalculado: 2500/18
 ```
@@ -279,10 +285,10 @@ criativo_agrupado:
 Mostrar o criativo agrupado (não cada instância), indicando em quantos conjuntos aparece:
 
 ```
-Criativo: "AD - Dor - Vídeo 30s"
+Criativo: "AD - Mito - Vídeo 30s"
   Aparece em 5 conjuntos | Gasto total: R$ 2.500 | 18 vendas
 
-  Hook Rate: 30% | Hold Rate: 33% | CTR: 2,0% | CPA: R$ 138,89
+  Hook Rate: 20% | Hold Rate: 33% | CTR: 2,0% | CPA: R$ 138,89
 ```
 
 Se o aluno quiser abrir por conjunto (ex: "como esse criativo performa em cold vs warm?"), a sub-skill `conversao-criativa.md` usa as instâncias individuais para separar por temperatura.
@@ -303,12 +309,12 @@ Se o aluno pedir explicitamente "quero ver por conjunto, não agrupado", respeit
 
 #### Escada de verificação da segmentação (por modo)
 
-1. **`MCP_CONECTOR`:** o `ads_get_ad_entities` costuma **não** trazer `targeting`. Confirmar com `ads_get_field_context`. Se não vier, cruzar `ads_get_ad_account_custom_audiences` (lista os públicos da conta) com `ads_get_custom_audience_adsets` (quais conjuntos usam cada público): conjunto com público personalizado que não é semelhante = remarketing (warm/HOT); com público semelhante = lookalike.
+1. **`MCP_CONECTOR`:** o `ads_get_ad_entities` costuma **não** trazer `targeting`. Confirmar com `ads_get_field_context`. Se não vier, cruzar `ads_get_ad_account_custom_audiences` (lista os públicos da conta, lida com todas as páginas: repetir a chamada com o `cursor` devolvido enquanto houver próxima página; o subtipo de cada um vem na listagem ou em `ads_get_custom_audience`) com `ads_get_custom_audience_adsets` (quais conjuntos usam cada público): conjunto com público personalizado incluído que não é semelhante = remarketing (warm/HOT); com público semelhante (subtipo `LOOKALIKE`) = frio (COLD, prospecção). Público usado como exclusão (ex.: compradores excluídos) não define temperatura. Se a leitura não disser se o público está incluído ou excluído naquele conjunto, marcar esse conjunto como **"segmentação não verificada"** e seguir para o passo 3.
 2. **`APP`:** ler pela Graph API, 1 `curl` por chamada, token inline lido do `.env` no momento da execução, `curl -g` por causa das chaves aninhadas, versão `v25.0`. Na tela, sempre mascarado:
    ```bash
-   curl -gs "https://graph.facebook.com/v25.0/<CAMPAIGN_ID>/conjuntos?fields=name,targeting{age_min,age_max,custom_audiences,flexible_spec,excluded_custom_audiences,geo_locations{countries},targeting_automation}&access_token=***TOKEN_MASCARADO***"
+   curl -gs "https://graph.facebook.com/v25.0/<CAMPAIGN_ID>/adsets?fields=name,targeting{age_min,age_max,custom_audiences,flexible_spec,excluded_custom_audiences,geo_locations{countries},targeting_automation}&access_token=***TOKEN_MASCARADO***"
    ```
-   Leitura: `custom_audiences` sem "Semelhante" no nome = quente/HOT; `custom_audiences` "Semelhante..." = lookalike/WARM; `flexible_spec` = interesses/COLD; sem nenhum dos três = aberto/Advantage+.
+   Para saber quais públicos são semelhantes, 1 leitura da lista de públicos da conta, com todas as páginas (`curl -g` em `/act_<id>/customaudiences?fields=id,name,subtype&limit=500`; se vier próxima página, repetir com `&after=` e o cursor `paging.cursors.after`, sem nunca salvar `paging.next` em disco, porque essa URL carrega o token), cruzada pelos ids com `targeting.custom_audiences`. Leitura: público em `custom_audiences` que não é semelhante = quente/HOT (remarketing); público de subtipo `LOOKALIKE` = semelhante, frio/COLD (prospecção), identificado pelo subtipo e nunca pelo nome; `flexible_spec` = interesses/COLD; sem nenhum dos três = aberto/Advantage+ (conta como frio). `excluded_custom_audiences` e `excluded_connections` não definem temperatura: público que aparece só na exclusão não esquenta o conjunto. Sem o subtipo, seguir para o passo 3.
 3. **Nada funcionou:** marcar **"segmentação não verificada"** e PERGUNTAR ao aluno (ele conhece a própria conta), com opções numeradas por bloco. Se preferir conferir sozinho, orientar: Gerenciador de Anúncios → abrir o conjunto → seção Público. Nunca inferir pelo nome.
 
 #### Amostra de verificação: declarar sempre
@@ -338,7 +344,7 @@ Ler a segmentação de **todas** as campanhas do bloco quando viável. Se ler s�
 
 **Escada de detecção (nesta ordem):**
 1. **`object_type` do criativo** (VIDEO, SHARE/PHOTO etc.): fonte de verdade. MCP: `ads_get_creatives` ou o campo de criativo do `ads_get_ad_entities`. App: `/{ad_id}?fields=creative{object_type}`.
-2. **Presença de evento de vídeo** (`3_second_video_plays > 0` ou `video_p50 > 0`): alternativa quando não leu o `object_type`.
+2. **Presença de evento de vídeo** (`video_p25_watched_actions > 0` ou `video_p50 > 0`): alternativa quando não leu o `object_type`.
 3. **Nome** (`carrossel`, `card`, `vídeo`): só como último desempate.
 
 > **Ressalva do carrossel:** carrossel **não tem evento de vídeo** e **não é imagem estática**, então os passos 2 e 3 não o distinguem com segurança: só o `object_type` separa carrossel de imagem. Se a análise não leu o `object_type`, **declarar** que a separação carrossel × imagem é aproximada (baseada no nome).
@@ -378,33 +384,45 @@ Todas calculadas pela skill (não são campos nativos da API):
 
 | Métrica | Fórmula | O que mede |
 |---------|---------|-----------|
-| **Thumbstop Rate** | video_p25_watched / impressions | Capacidade de interromper a rolagem |
-| **Hook Rate** | video_3sec_views / impressions | Força do gancho inicial |
+| **Hook Rate** | video_p25_watched / impressions | Força do gancho: quantos param a rolagem e seguem assistindo (o p25 é a aproximação dos 3 segundos) |
 | **Hold Rate** | video_p50_watched / video_3sec_views | Sustentação depois do gancho |
 | **Story Rate** | video_p75_watched / video_p25_watched | Força da narrativa ao longo do vídeo |
 | **Completion Rate** | video_p95_watched / video_plays | Percentual que chega perto do final |
-| **Cost per Hook** | spend / video_3sec_views | Custo para capturar 3s de atenção |
+| **Cost per Hook** | spend / video_p25_watched | Custo de cada pessoa que passou do gancho |
 | **Cost per Hold** | spend / video_p50_watched | Custo para sustentar a atenção até o meio |
-| **Intent Rate** | landing_page_views / video_3sec_views | Quanto da atenção vira intenção real |
+| **Intent Rate** | landing_page_views / video_p25_watched | Quanto da atenção vira intenção real |
 | **Click-to-LPV Rate** | landing_page_views / inline_link_clicks | Qualidade do clique (chegou na página?) |
 | **Offer Rate** | (leads ou initiate_checkout) / landing_page_views | Quanto da visita demonstrou interesse na oferta |
 | **Purchase Rate** | purchases / landing_page_views | Quanto do tráfego virou compra |
-| **Creative Conversion Rate** | purchases / video_3sec_views (impressions para imagem) | Eficiência de ponta a ponta do criativo |
+| **Creative Conversion Rate** | purchases / video_p25_watched (impressions para imagem) | Eficiência de ponta a ponta do criativo |
+
+**Hook Rate com uma régua só:** é a mesma conta da `/trafego-insights` e da `/trafego-analise` (`video_p25_watched_actions` ÷ `impressions`). Faixas: crítico abaixo de 15%, atenção de 15% a 25%, saudável 25% ou mais. Thumbstop Rate é a mesma conta do Hook Rate, não é outra métrica.
+
+**Definições de vídeo:** `.claude/skills/trafego-insights/SKILL.md` §4.5 (régua única). Hook, Hold e Completion Rate desta tabela são as mesmas contas de lá.
+
+**Nomes reais dos campos de vídeo** (os nomes das fórmulas são rótulos internos):
+
+| Rótulo nas fórmulas | `APP` (Graph API) | `MCP_CONECTOR` |
+|---|---|---|
+| `video_p25_watched` a `video_p100_watched` | `video_p25_watched_actions` a `video_p100_watched_actions` | os mesmos nomes, conferidos com `ads_get_field_context` antes da coleta |
+| `video_plays` (reproduções) | `video_play_actions` | o campo que `ads_get_field_context` indicar |
+| `video_3sec_views` (Hold Rate e reserva do Completion Rate) | `actions` com `action_type=video_view` (já vem pela lista 4.1 da `/trafego-insights`) | `3_second_video_plays`, conferido com `ads_get_field_context` |
+| `spend` | `spend` | `amount_spent` |
 
 **Denominador zero:** retornar `null`. Nunca dividir por zero, nunca inventar.
 
-**Fórmulas configuráveis:** se um campo não estiver disponível (conta sem video_plays, por exemplo), usar a alternativa documentada na sub-skill ou marcar `indisponivel`.
+**Campo de vídeo que não vier:** a métrica fica `indisponivel` (`null`), salvo as reservas da `/trafego-insights` §4.5, sempre marcadas `fallback_aplicado` e declaradas ao aluno: sem visualizações de 3 segundos, o Hold Rate usa `video_p25_watched` no denominador (os limiares de Hold ficam aproximados); sem `video_plays`, o Completion Rate usa `video_3sec_views` (ou, sem ele, `video_p25_watched`) no denominador. Nas métricas de vídeo não há outra alternativa; as de visita à página estão na seção 6.1.
 
 ### 6.1. Disponibilidade por modo (não prometer o que não dá para calcular)
 
-> **Erro real observado:** o dicionário promete Intent Rate, Click-to-LPV, Offer Rate e Purchase Rate, mas todas dependem de `landing_page_view`, que o `ads_get_ad_entities` do MCP costuma não expor em nível de anúncio. Foram calculadas com substituto sem declarar.
+> **Erro real observado:** o dicionário promete Intent Rate, Click-to-LPV, Offer Rate e Purchase Rate, que dependem de `landing_page_view`. Numa conta em que a visita à página não veio, elas foram calculadas com substituto sem declarar.
 
 | Métrica | Depende de | Modo APP | Modo MCP | Alternativa no MCP |
 |---|---|---|---|---|
-| Thumbstop / Hook / Hold / Story / Completion | campos de vídeo | ✅ | ✅ | n/a |
-| Cost per Hook / Hold | vídeo + gasto | ✅ | ✅ | n/a |
-| Intent Rate, Click-to-LPV, Offer Rate, Purchase Rate | `landing_page_view` | ✅ | depende | conferir com `ads_get_field_context` se o campo de visita à página veio; se não veio, usar `link_click` como substituto de intenção e **declarar** "sem visita à página; clique no link usado como substituto, não mede a chegada à página" |
-| CPA / ROAS | compras / receita | ✅ | ✅ (via `actions:omni_purchase` / `purchase_roas`) | n/a |
+| Hook / Hold / Story / Completion | campos de vídeo | ✅ | ✅ depois de conferir os campos de vídeo com `ads_get_field_context` | só as reservas da `/trafego-insights` §4.5 (Hold Rate sobre o p25; Completion Rate sobre as visualizações de 3 segundos ou o p25), declaradas |
+| Cost per Hook / Hold | vídeo + gasto | ✅ | ✅ (gasto em `amount_spent`) | n/a |
+| Intent Rate, Click-to-LPV, Offer Rate, Purchase Rate | `landing_page_view` | ✅ | ✅ (`landing_page_view`, conferido inclusive no nível de anúncio) | só se o campo voltar `null` (a conta não registra a visita): usar `link_click` como substituto de intenção e **declarar** "sem visita à página; clique no link usado como substituto, não mede a chegada à página" |
+| CPA / ROAS | compras / receita | ✅ | ✅ (via `omni_purchase` / `purchase_roas`) | n/a |
 
 **Regra:** quando a métrica depende de campo indisponível no modo ativo, marcar `indisponivel` ou usar o substituto **declarando explicitamente que é substituto**. Nunca apresentar substituto como se fosse a métrica real.
 
@@ -470,12 +488,15 @@ Depois do dado, traduzir pelo método usando o **Quadro, a Furadeira, as Urgênc
 | "CTR alto = criativo bom" | CTR alto com CPA ruim é curiosidade vazia. | Verificar CPA e Offer Rate antes de classificar. |
 | "CTR baixo = criativo ruim" | CTR baixo com CPA bom é criativo qualificado. | Nunca matar por CTR baixo se CPA/ROAS estão na meta. |
 | "Esse criativo não converte porque o gancho é fraco" | Sem ver o criativo, é hipótese, não afirmação. | "A métrica indica baixa retenção inicial, o que SUGERE gancho fraco." |
-| "CPA bom com 3 conversões = escalar" | 3 conversões é ruído. | Exigir 15 ou mais conversões e consistência em vários dias. |
+| "CPA bom com 3 conversões = escalar" | 3 conversões é ruído. | Com 15 ou mais conversões o criativo pode ser lido. Escalar só quando ele for vencedor pela régua de vencedor (abaixo) e mostrar consistência em vários dias. |
 | "Criativo antigo = criativo cansado" | Pode estar estável há meses com bom resultado. | Verificar a tendência de Hook/CTR/CPA antes de classificar fadiga. |
 | "Essa campanha é aberta/fria/personalizada" (pelo nome) | O nome não prova o público. Inferir segmentação pelo nome gera conclusão falsa. | Ler a segmentação do conjunto (seção 4.5). Sem isso, rótulo só descritivo e "não verificado". |
 | Ler criativo a criativo quando ninguém bate volume | Com 0 a 3 vendas por criativo, cada linha é ruído. | Subir a análise para conceito ou bloco automaticamente e declarar o motivo (seção 4 + regra de volume abaixo). |
 
-**Regra de volume (dura):** nenhuma decisão de matar, escalar ou coroar campeão por criativo isolado com menos de 15 vendas. Quando **nenhuma** entidade do escopo bate 15 vendas, a análise sobe de nível (conceito → bloco) por padrão, e os rankings marcam ⚠️ tudo com menos de 4 vendas.
+**Regra de volume (dura), com dois degraus que não se confundem:**
+
+- **Piso de leitura: 15 vendas por entidade.** É o mínimo para LER um criativo isolado (dado suficiente para avaliar as camadas e decidir pausar ou ajustar). Abaixo disso, nenhuma decisão de matar, escalar ou coroar campeão por criativo isolado. Quando **nenhuma** entidade do escopo bate 15 vendas, a análise sobe de nível (conceito → bloco) por padrão, e os rankings marcam ⚠️ tudo com menos de 4 vendas. Passar do piso de leitura não faz de ninguém "vencedor".
+- **Régua de vencedor: 50 conversões em low e middle ticket, 30 em high ticket** (pelo tipo do produto no resumo), contadas na janela média da trilha, **ou** ter saído `validado` num teste registrado pela `/trafego-testes`. É a régua única do Severino (a mesma da `/trafego-testes` e da definição de anúncio vencedor da `/trafego-escalar`, Passo 0.75.1). Só com ela um anúncio, uma variação ou um tipo da Mandala é chamado de "vencedor" e segue para o falso vencedor da `/trafego-diagnostico` e a `/trafego-escalar`. Entre o piso de leitura e a régua de vencedor, o criativo é lido e pode ser promissor, nunca "vencedor".
 
 ---
 
@@ -532,7 +553,8 @@ Todo número, gráfico e classificação no output DEVE ter texto explicativo em
 | Peça produzida, pronta para o A/B | `/trafego-testes` (teste A/B de criativo) |
 | Criativo com falha de gancho, sustentação ou qualificação confirmada | `/trafego-otimizar` (pausar ou ajustar) |
 | Criativo com `falha_pos_clique` (problema na página, NÃO no criativo) | NÃO pausar. `/trafego-oferta-funil` para ler a página e diagnosticar a oferta |
-| Vencedor confirmado com volume e consistência | `/trafego-diagnostico` (falso vencedor + score) e depois `/trafego-escalar` (vertical) |
+| Falso conversor criativo (vende só no remarketing) | `/trafego-testes` para isolar em público frio ([3] A/B de audiência ou [9] Duplicar com variação, mudando só o público) ou `/trafego-otimizar` para pausar o anúncio nos conjuntos frios, com o bloco 🛡️ de lá |
+| Vencedor confirmado pela régua de vencedor (seção 10) e com consistência | `/trafego-diagnostico` (falso vencedor + score) e depois `/trafego-escalar` (vertical) |
 | Tipo da Mandala ausente na conta | Lista de tipos ausentes: Gap Finder do output [3] da `/trafego-analise`; produção: `/copy-anuncio` ou `/mandala-de-anuncios` |
 
 ### De outras skills para a criativos
@@ -601,7 +623,7 @@ Ao final de qualquer módulo, oferecer o export. Reutiliza o design system da `/
 16. **Não prometer métrica indisponível no modo ativo.** Substituto só com declaração explícita (seção 6.1).
 17. **Safra nova não força tendência.** Checar a idade antes de comparar períodos (seção 7).
 18. **Formato pelo `object_type`, não pelo nome.** Suprimir métrica de vídeo em imagem (seção 5.1).
-19. **Volume manda.** Sem 15 vendas ou mais por entidade, subir de nível; o ranking marca ⚠️ abaixo de 4 vendas (seção 10).
+19. **Volume manda.** 15 vendas por entidade é o piso para ler um criativo; sem isso, subir de nível. Chamar de vencedor exige a régua de vencedor (50 conversões em low e middle ticket, 30 em high ticket, ou `validado` na `/trafego-testes`). O ranking marca ⚠️ abaixo de 4 vendas (seção 10).
 20. **Ranking por formato separado.** Top vídeos, top imagens, top carrosséis, com trava de volume (seção 5.2).
 21. **Sem amostra silenciosa.** Verificou parte do bloco? Declarar "X de N". Nunca generalizar calado (seção 4.5).
 22. **Todo corte é declarado e consistente.** Filtro de gasto, top N ou volume aparece no output e não contradiz outra seção (seção 5.2).

@@ -9,8 +9,8 @@ Passo 0 (produto ativo, conexão, conta) e gate: ver `SKILL.md` desta skill.
 ## Regras de segurança (valem em todo o fluxo)
 
 1. **A skill nunca abre, lê ou mostra o CSV.** Proibido usar `Read`, `cat`, `head`, `type`, `Get-Content` ou qualquer leitura do arquivo do aluno. Quem lê o arquivo é o script, que só imprime contagens e nomes de colunas.
-2. **Nenhum dado pessoal no chat, em log ou em arquivo do projeto.** O registro local guarda só nome do público, ID, contagens e data.
-3. **Os lotes com códigos são temporários** e ficam fora do git (`meus-produtos/` é ignorado). Depois do envio, apagar a pasta dos lotes.
+2. **Nenhum dado pessoal em claro no chat, em log ou em arquivo do projeto.** O registro local guarda só nome do público, ID, contagens e data. No modo conector (MCP), os códigos dos lotes passam pela conversa, e isso é avisado ao aluno no passo 2, antes de ele escolher o caminho.
+3. **Os lotes com códigos são temporários** e ficam fora do git (`meus-produtos/` é ignorado). Apagar a pasta dos lotes (`rm -r "meus-produtos/_global/trafego/publicos/lotes-temporarios/<pasta>"`) na hora em **qualquer saída do fluxo depois do passo 4**: depois do envio, no caminho pelo Gerenciador, no bloqueio por menos de 100 válidas, quando o aluno não quiser seguir com mais de 30% de inválidos, quando ele disser "não" no resumo ou no bloco 🛡️, quando desistir no nome, ou quando um envio falhar e ele não quiser continuar. Avisar em 1 linha: `🧹 Apaguei os arquivos temporários com os códigos.`
 4. **Sem token no script.** O script não usa internet nem lê o `.env`.
 
 ## Por que usar
@@ -63,6 +63,10 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**. O aluno nunca 
       e-mail. Ela só compara o código com o código dos perfis dela para achar quem
       é a mesma pessoa. O arquivo original não sai do seu computador e eu não abro
       nem leio o conteúdo dele.
+      {Só no modo MCP:} Pelo conector, os códigos (não os e-mails nem os telefones)
+      passam pela nossa conversa até a Meta. Se preferir que nem os códigos passem
+      por aqui, dá para subir pelo Gerenciador de Anúncios: a Meta faz o código no
+      seu navegador. Na próxima pergunta você escolhe o caminho.
 
    ⚖️ Lei de proteção de dados (LGPD)
       Mesmo em código, a lei trata esses contatos como dado pessoal. Você precisa ter
@@ -78,6 +82,18 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**. O aluno nunca 
    ```
    Se (2): cancelar com gentileza e sugerir conferir a política de privacidade e os termos da plataforma de origem antes de voltar.
 
+2b. **Caminho do envio (só no modo MCP, em mensagem própria, para qualquer tamanho de lista).**
+   ```
+   Por qual caminho você quer subir a lista?
+
+   1. Pelo conector: os códigos passam pela nossa conversa até a Meta
+   2. Pelo Gerenciador de Anúncios: você envia o CSV e a Meta faz o código no
+      seu navegador (uns 3 minutos, com o meu passo a passo)
+
+   Digite o número:
+   ```
+   Se (2): perguntar o caminho do CSV (passo 3, só para citar o nome do arquivo no passo a passo) e o nome do público (passo 5), pular o passo 4 (o script não roda e nenhum lote é gerado) e seguir pelo "Caminho pelo Gerenciador".
+
 3. **Caminho do CSV.**
    ```
    Qual o caminho do arquivo CSV no seu computador?
@@ -85,10 +101,8 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**. O aluno nunca 
    ```
    Só o caminho. A skill não abre o arquivo.
 
-4. **Preparar os lotes (roda o script).** Anunciar e rodar:
-   ```
-   ⏳ Passo 1/3: transformar a lista em códigos no seu computador.
-   ```
+4. **Preparar os lotes (roda o script).** O script leva poucos segundos, então roda sem anúncio de tempo. O 🔍 com o tempo do envio vem depois do "sim", antes de criar o público (Passo 5 do command, tabela "Anúncio de tempo por sub-fluxo"), e os passos internos do envio são o 1/2 e o 2/2 de "Roteamento por modo".
+
    Criar uma pasta temporária nova para os lotes, por exemplo `meus-produtos/_global/trafego/publicos/lotes-temporarios/{AAAAMMDD-HHMM}/`, e rodar com o interpretador detectado na sessão (`python3` ou `py -3`, conforme o CLAUDE.md), a partir da raiz do projeto:
 
    - **Modo App:**
@@ -105,8 +119,8 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**. O aluno nunca 
    O script mostra **só**: colunas usadas, linhas lidas, válidas, descartadas por campo, duplicadas e lotes gerados. Repassar ao aluno em linguagem simples. Se o script não achar a coluna de e-mail nem a de telefone, perguntar ao aluno o nome do cabeçalho (ex: "Email do Comprador") e rodar de novo com `--coluna`.
 
    **Validações (pelo que o script imprimiu):**
-   - Menos de 100 linhas válidas: bloquear e avisar (a Meta não cria).
-   - Mais de 30% de inválidos num campo de identificação (e-mail ou telefone): avisar e perguntar se quer seguir mesmo assim.
+   - Menos de 100 linhas válidas: bloquear, apagar a pasta dos lotes e avisar (a Meta não cria).
+   - Mais de 30% de inválidos num campo de identificação (e-mail ou telefone): avisar e perguntar se quer seguir mesmo assim. Se não quiser, apagar a pasta dos lotes.
 
 5. **Nome do público.** Sugerir `[WS] CustomerMatch-{descricao_curta}-{produto-slug}` (ex: `[WS] CustomerMatch-Compradores-Hotmart-curso-tarot`) e perguntar "uso esse ou prefere outro?".
 
@@ -142,9 +156,9 @@ Campo sem valor numa linha vai como texto vazio (`""`), como a Meta pede no form
 
 ### Modo MCP (`MCP_CONECTOR`)
 
-1. **Criar o público vazio:** `ads_create_custom_audience` com `subtype="CUSTOM"`, `ad_account_id` e os campos que o schema pedir (inclusive a origem da lista, `customer_file_source = USER_PROVIDED_ONLY`, quando o schema tiver esse campo).
-2. **Enviar os lotes:** para cada `lote-NNN.json`, ler o arquivo (só códigos) e chamar `ads_update_custom_audience_users` com o `schema` e o `data` do lote, no formato que o schema da tool pedir.
-   - **Antes do primeiro envio, conferir no schema como a tool recebe dado que já está em hash.** A Meta reconhece valores de 64 caracteres hexadecimais como hash. Se o schema indicar que a tool só aceita dado cru (e aplicaria hash de novo), **não usar o MCP para essa lista**: seguir pelo Gerenciador (abaixo) ou pelo modo App.
+1. **Criar o público vazio** (`⏳ Passo 1/2: criar o público vazio.`): `ads_create_custom_audience` com `subtype="CUSTOM"`, `ad_account_id` e os campos que o schema pedir (inclusive a origem da lista, `customer_file_source = USER_PROVIDED_ONLY`, quando o schema tiver esse campo).
+2. **Enviar os lotes** (`⏳ Passo 2/2: enviar os códigos em {N_lotes} parte(s).`): para cada `lote-NNN.json`, ler o arquivo (só códigos) e chamar `ads_update_custom_audience_users` com o `schema` e o `data` do lote, no formato que o schema da tool pedir.
+   - **Antes do primeiro envio, conferir no schema como a tool recebe dado que já está em hash.** A Meta reconhece valores de 64 caracteres hexadecimais como hash. Se o schema indicar que a tool só aceita dado cru (e aplicaria hash de novo), **não usar o MCP para essa lista**: seguir pelo Gerenciador (abaixo) e apagar a pasta dos lotes.
    - Conferir em cada resposta a contagem recebida e a de inválidos; somar e informar no fim.
 3. **Tamanho da lista no MCP:** os códigos passam pela conversa, então listas grandes ficam pesadas. Com até 1.000 linhas válidas, seguir pelo MCP em lotes de 200 (só e-mail e telefone). Acima disso, oferecer:
    ```
@@ -153,14 +167,13 @@ Campo sem valor numa linha vai como texto vazio (`""`), como a Meta pede no form
 
    1. Subir pelo Gerenciador de Anúncios (passo a passo abaixo, uns 3 minutos)
    2. Seguir pelo conector mesmo assim, em partes
-   3. Usar o modo App, que envia os arquivos direto do seu computador (/trafego-conexao)
 
    Digite o número:
    ```
 
 ### Modo App (`APP`)
 
-1. **Criar o público vazio:**
+1. **Criar o público vazio** (`⏳ Passo 1/2: criar o público vazio.`):
    ```
    POST /act_<id>/customaudiences
    {
@@ -172,13 +185,13 @@ Campo sem valor numa linha vai como texto vazio (`""`), como a Meta pede no form
    ```
    `customer_file_source`: `USER_PROVIDED_ONLY` (o aluno coletou direto, padrão), `PARTNER_PROVIDED_ONLY` (veio de parceiro com permissão, raro) ou `BOTH_USER_AND_PARTNER_PROVIDED`.
 
-2. **Enviar cada lote num `curl` próprio**, com o arquivo como valor do campo `payload` (o `<` faz o `curl` ler o conteúdo do arquivo, então o comando fica curto) e o token lido do `.env` na própria chamada, conforme a seção "LEITURA SEGURA DO .env" do CLAUDE.md. No chat, o comando aparece só assim:
+2. **Enviar cada lote num `curl` próprio** (`⏳ Passo 2/2: enviar os códigos em {N_lotes} parte(s).`), com o arquivo como valor do campo `payload` (o `<` faz o `curl` ler o conteúdo do arquivo, então o comando fica curto) e o token lido do `.env` na própria chamada, conforme a seção "LEITURA SEGURA DO .env" do CLAUDE.md. No chat, o comando aparece só assim:
    ```bash
    curl -s -X POST "https://graph.facebook.com/v25.0/<audience_id>/users?access_token=***TOKEN_MASCARADO***" -F "payload=<meus-produtos/_global/trafego/publicos/lotes-temporarios/<pasta>/lote-001.json"
    ```
    Um `Bash(curl ...)` por lote, nunca um script com vários `curl`. A resposta traz `num_received` e `num_invalid_entries`: somar e informar no fim.
 
-### Caminho pelo Gerenciador (lista grande no MCP, ou preferência do aluno)
+### Caminho pelo Gerenciador (escolha no passo 2b, lista grande no MCP, ou tool que não aceita dado em hash)
 
 ```
 Você sobe a lista em uns 3 minutos pelo Gerenciador:
@@ -200,7 +213,7 @@ antes de enviar.
 Me avise com "feito" que eu confiro o público pela listagem.
 ```
 
-Nesse caminho, apagar a pasta de lotes temporários na hora (não serão usados).
+Nesse caminho, se os lotes já tinham sido gerados (escolha depois do passo 4), apagar a pasta de lotes temporários na hora (não serão usados) e avisar em 1 linha. Escolhido no passo 2b, nenhum lote é gerado.
 
 ## Resumo em linguagem natural (obrigatório, antes do bloco 🛡️)
 
@@ -266,7 +279,7 @@ publico_estimado_apos_cruzamento: 360 a 720 pessoas (30% a 60% de 1198)
 tempo_de_cruzamento: cerca de 24h
 ```
 
-O "sim" vale para criar o público **e** enviar todos os lotes (um lote só). Se um envio falhar no meio, parar, informar quantos lotes foram e perguntar antes de continuar.
+O "sim" vale para criar o público **e** enviar todos os lotes (um lote só). Se um envio falhar no meio, parar, informar quantos lotes foram e perguntar antes de continuar. Se o aluno não quiser continuar, ou disser "não" no resumo ou no bloco 🛡️, apagar a pasta dos lotes na hora e avisar em 1 linha (regra 3 de segurança).
 
 ## Depois de criar
 

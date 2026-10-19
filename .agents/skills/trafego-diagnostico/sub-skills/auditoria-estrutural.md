@@ -37,9 +37,9 @@ Pedir à `/trafego-insights`:
 - `daily_budget` ou `lifetime_budget` por campanha/conjunto
 
 Complementar (leitura pura, por modo, conforme a seção 3.1 do SKILL.md):
-- Segmentação de cada conjunto ativo. `APP`: `curl -g` em `/{adset_id}?fields=targeting{...}`. `MCP_CONECTOR`: `ads_get_ad_entities` se `ads_get_field_context` confirmar o campo; para públicos personalizados, `ads_get_ad_account_custom_audiences` + `ads_get_custom_audience_adsets`.
+- Segmentação de cada conjunto ativo. `APP`: `curl -g` em `/{adset_id}?fields=targeting{...}`. `MCP_CONECTOR`: `ads_get_ad_entities` se `ads_get_field_context` confirmar o campo; para públicos personalizados, `ads_get_ad_account_custom_audiences` + `ads_get_custom_audience_adsets` (regra de inclusão, exclusão e semelhante na seção 3.1 do SKILL.md).
 - `objective` de cada campanha (já vem na insights quando incluído nos campos; no MCP, `ads_get_ad_entities`).
-- Fase de aprendizado dos conjuntos (`learning_stage_info` no App; `effective_status` como alternativa no MCP).
+- Fase de aprendizado dos conjuntos (`learning_stage_info` no App; no MCP, o mesmo campo se `ads_get_field_context` confirmar; senão, "aprendizado não verificado"). O `effective_status` não informa a fase de aprendizado.
 
 Reforços opcionais no modo MCP (seção 3.2 do SKILL.md):
 - `ads_get_opportunity_score`: recomendações e pontuação de oportunidade da própria Meta. Comparar com os 6 eixos abaixo; recomendação da Meta entra como sinal, nunca como ação automática.
@@ -67,7 +67,7 @@ Campanhas ativas com targeting sobreposto competem entre si no leilão do Meta, 
 Conjuntos que nunca saem da fase de aprendizado porque o orçamento é baixo demais para o volume de conversões necessário (Meta exige ~50 conversões em 7 dias para sair do aprendizado).
 
 **Como detectar:**
-- Para cada conjunto ativo: calcular `conversoes_por_dia = conversoes_30d / 30`
+- Para cada conjunto ativo: calcular `conversoes_por_dia = conversoes_30d / dias_rodando`, onde `dias_rodando` conta só os dias desde a criação do conjunto (`created_time`) dentro dos últimos 30, de 1 a 30 (conjunto criado há 7 dias divide por 7)
 - Se `conversoes_por_dia < 1.0`: conjunto está em aprendizado perpétuo (algoritmo cego)
 - Se `daily_budget < R$ 30`: risco de fragmentação (a menos que ticket seja muito baixo)
 - Contar quantos conjuntos estão fragmentados vs total de conjuntos ativos
@@ -111,12 +111,12 @@ Campanhas e criativos velhos que nunca foram renovados.
 Conversões por conjunto por dia: o combustível do algoritmo.
 
 **Como detectar:**
-- Para cada conjunto ativo: `densidade = conversoes_30d / 30`
+- Para cada conjunto ativo: `densidade = conversoes_30d / dias_rodando` (mesmo `dias_rodando` do eixo 2)
 - Classificar cada conjunto:
   - `aprendendo_bem`: ≥ 7 conversões/dia (50/semana, Meta recomenda)
   - `aprendendo_lento`: 1-6 conversões/dia
   - `algoritmo_cego`: < 1 conversão/dia
-- Cruzar com `effective_status`: conjuntos em `LEARNING_LIMITED` confirmam a leitura
+- Cruzar com a fase de aprendizado (`learning_stage_info.status` = `FAIL`, aprendizado limitado): esses conjuntos confirmam a leitura. Sem esse dado, registrar "aprendizado não verificado"
 
 **Classificação da conta:**
 - `densidade_alta`: > 50% dos conjuntos com ≥ 7 conv/dia
@@ -234,11 +234,21 @@ Problemas críticos (resolver ANTES de qualquer outra coisa):
 
 O que NÃO fazer enquanto a estrutura estiver assim:
 - Não escalar (vai amplificar o problema)
-- Não criar mais campanhas (vai piorar a fragmentação)
+- Não criar campanhas fora do plano de limpeza (vai piorar
+  a fragmentação)
 - Não julgar criativos (dados distorcidos pela estrutura)
 
-Próximo passo: /trafego-otimizar em modo lote para
-consolidar conjuntos e limpar o que não funciona.
+Próximo passo: plano de limpeza em 3 etapas, mostrado
+numerado uma vez só:
+1. /trafego-criar-campanha monta os conjuntos consolidados.
+   Eles nascem pausados, sem gastar.
+2. Quando você pedir, ativo os consolidados com uma
+   confirmação só para isso, com um "sim" separado.
+3. Com os consolidados no ar, /trafego-otimizar pausa em
+   lote os conjuntos fragmentados sem conversão.
+O "aprovar tudo" vale para as etapas 1 e 3. A ativação
+sempre pede o "sim" separado. Sem ativar, os conjuntos
+atuais continuam rodando.
 ```
 
 **Regra por eixo:** cada eixo mostrado no output DEVE ter uma frase explicando o que significa para quem não é técnico. Exemplos:
@@ -258,8 +268,8 @@ consolidar conjuntos e limpar o que não funciona.
 
 ```yaml
 auditoria_estrutural:
-  score_saude: 58
-  faixa: comprometida
+  score_saude: 26
+  faixa: sabotando
   total_campanhas_ativas: 12
   total_adsets_ativos: 34
   total_ads_ativos: 78
@@ -283,17 +293,17 @@ auditoria_estrutural:
       pontos: 17
     idade:
       classificacao: estrutura_envelhecida
-      pontos: 3
+      pontos: 0
       campanhas_sem_refresh_60d: 4
       ads_ativos_com_mais_de_30d_pct: 82
     densidade:
       classificacao: densidade_baixa
-      pontos: 3
+      pontos: 0
       adsets_algoritmo_cego: 19
       adsets_aprendendo_bem: 5
     nomenclatura:
       classificacao: nomenclatura_caotica
-      pontos: 5
+      pontos: 0
       exemplos_ruins: ["Campaign 1", "Copy teste", "2026-05-01"]
 
   limpezas_recomendadas:
@@ -308,7 +318,7 @@ auditoria_estrutural:
       impacto: "Leitura 3x mais rápida no Gerenciador"
 
   nao_fazer:
-    - "Não criar mais campanhas antes de consolidar as existentes"
+    - "Não criar campanhas fora do plano de consolidação"
     - "Não aumentar orçamento de conjuntos com < 1 conversão/dia (jogar dinheiro em algoritmo cego)"
 ```
 
@@ -316,7 +326,7 @@ auditoria_estrutural:
 
 Quando rodado como segundo módulo da sequência:
 - Recebe o score de confiança geral do módulo 1 (se dados frágeis, auditoria opera com ressalva)
-- Passa para o módulo 3 (falso vencedor): entidades em conjuntos fragmentados são automaticamente classificadas como `inconclusivo`
+- Passa para o módulo 3 (falso vencedor): os conjuntos em algoritmo cego (menos de 1 conversão por dia, contando só os dias desde a criação do conjunto dentro dos últimos 30, eixos 2 e 5). Os que não atingem, no período analisado, o mínimo de conversões do `vencedor_real` da trilha (15 em low e mid, 10 em high, 30 leads em lançamento) têm as entidades classificadas como `inconclusivo`; os que atingem seguem a avaliação normal, com o aviso de algoritmo cego
 - Passa para o módulo 4 (diferencial): se score de saúde < 40, "estrutura_aprendizado" é adicionada como hipótese com peso elevado
 
 ## Relatório humano

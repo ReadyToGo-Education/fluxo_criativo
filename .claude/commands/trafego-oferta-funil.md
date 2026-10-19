@@ -23,7 +23,7 @@ A especificação técnica completa está em `.claude/skills/trafego-oferta-funi
 Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (gerar conforme o CLAUDE.md se não existir). Do resumo saem, sem perguntar: ticket, tipo, Quadro, Furadeira, público, objeções principais e Urgências Ocultas. O ticket define a faixa de benchmark; o Quadro e a Furadeira são a régua da oferta.
 
 ### 0.2 Conexão Meta
-Ler `META_AUTH_MODO`. Vazio: `/trafego-conexao`. `MCP_CONECTOR`: confirmar tool terminada em `ads_get_ad_entities` (conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`). `APP`: confirmar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q`. Só leitura, sem bloco 🛡️.
+Ler `META_AUTH_MODO` (`grep "^META_AUTH_MODO=" .env | cut -d= -f2-`). Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar, sem adivinhar nem cair em fallback. `MCP_CONECTOR`: confirmar tool terminada em `ads_get_ad_entities` e que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`; se faltar, a opção "Validar" do `/trafego-conexao` completa). Conta não liberada pela Meta no conector: avisar e oferecer o modo App pelo `/trafego-conexao`. `APP`: confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor com `grep -q "^NOME=." .env`. Só leitura, sem bloco 🛡️.
 
 ### 0.3 Conta de anúncios
 Se houver mais de uma, perguntar qual (opções numeradas).
@@ -71,7 +71,7 @@ Apresentar o menu da seção 1 do SKILL.md (7 opções). Se o pedido for especí
 
 ### Opções [2] a [7]. Módulos individuais
 
-🔍 Próximo passo: {nome do módulo}. Tempo estimado: cerca de 90 segundos.
+🔍 Próximo passo: rodar o módulo {nome do módulo}. Tempo estimado: cerca de 90 segundos.
 
 Ao terminar:
 ```
@@ -93,19 +93,20 @@ Este command **não edita** o `settings.local.json` nem adiciona domínio a list
 
 ## Passo 4. Funil no modo MCP
 
-Se o modo for `MCP_CONECTOR`, descobrir com `ads_get_field_context` os campos de ação disponíveis (visita à página, carrinho, checkout iniciado) antes de declarar o funil incompleto. Se não vierem, oferecer, com opções numeradas:
+Se o modo for `MCP_CONECTOR`, pedir no `ads_get_ad_entities` os campos de funil conferidos na conta real: `link_click`, `landing_page_view`, `omni_initiated_checkout` e `omni_purchase` (gasto em `amount_spent`, não `spend`; lista completa na seção 3 do SKILL.md). Carrinho só depois de confirmar com `ads_get_field_context`. Se a visita à página ou o checkout voltarem `null`, oferecer, com opções numeradas:
 
 ```
-O conector da Meta não trouxe a visita à página e o checkout desta conta.
+O conector da Meta não trouxe {só as etapas que faltaram, entre: visita à página, checkout iniciado} desta conta.
 
 1. Te guio para ler essas colunas no Gerenciador e você me manda os números
-2. Trocar para o modo App (/trafego-conexao), que traz o funil completo
-3. Seguir sem essas etapas (uso CPA e ROAS como substitutos)
+2. Seguir sem essas etapas (uso CPA e ROAS como substitutos)
 
 Digite o número:
 ```
 
-A leitura guiada está na seção 3 do SKILL.md.
+Citar na mensagem só as etapas que voltaram `null`: nunca dizer ao aluno que faltou uma etapa que veio. A leitura guiada está na seção 3 do SKILL.md. Limitação do conector nunca vira troca para o modo App: o App é só para conta que a Meta ainda não liberou no conector (Passo 0.2).
+
+O carrinho não abre esse menu. Sem ele (não confirmado no `ads_get_field_context` ou `null`), o funil segue visita à página → checkout iniciado → compra, com uma linha dizendo ao aluno que o carrinho não veio pelo conector e que, se ele quiser, dá para ler a coluna "Adições ao carrinho" no Gerenciador.
 
 ---
 

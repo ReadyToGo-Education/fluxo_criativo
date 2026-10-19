@@ -10,11 +10,15 @@ Sub-skill compartilhada pelos 4 módulos da `/trafego-diagnostico`. Não tem op�
 
 **É PROIBIDO inventar um HTML novo.** O export SEMPRE parte do esqueleto e dos tokens do design system oficial em `.claude/skills/trafego-analise/sub-skills/_export-html.md` (só leitura: esta sub-skill não edita aquele arquivo). O design system tem **3 temas oficiais** (Escuro, Terra, Claro Neutro); a escolha do tema segue a seção 1 do `_export-html.md` da análise (pergunta com opções na primeira vez, depois `EXPORT_TEMA` do `.env`). Nunca criar paleta própria fora dos 3 temas, nunca trocar `--accent` por outra cor, nunca substituir `.topbar`/`.snap-warn` por faixa improvisada. Cores de SVG conforme a tabela CORES_GRAFICO (seção 3.2.c de lá).
 
-**É OBRIGATÓRIO renderizar os gráficos** que cada módulo declara em "Gráficos obrigatórios" abaixo. A geometria vem de `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py` (roda em qualquer modo, não toca a API, não usa token). Passar o spec por arquivo, com o interpretador detectado na sessão (`python3` ou `py -3`):
+**É OBRIGATÓRIO renderizar os gráficos** que cada módulo declara em "Gráficos obrigatórios" abaixo. A geometria vem de `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py` (roda em qualquer modo, não toca a API, não usa token). Usar sempre caminhos absolutos: `{RAIZ_PROJETO}` = caminho absoluto da raiz do projeto (não confiar no diretório atual, que pode ter mudado com um `cd` anterior) e `{PY}` = interpretador detectado na sessão (`python3` ou `py -3`).
+
+Passar o spec por arquivo: gravar com a ferramenta Write em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json` e chamar o motor pelo Bash, um gráfico por vez (gravar, rodar e só então gravar o próximo). Não usar `/tmp`: no Windows, a ferramenta Write e o Bash resolvem `/tmp` para pastas diferentes, e o motor leria um arquivo inexistente ou um spec antigo.
 
 ```bash
-python3 .claude/skills/trafego-analise/scripts/trafego_chart_geom.py <tipo> < /tmp/spec.json
+{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"
 ```
+
+Apagar os arquivos `spec-*.json` dessa pasta ao final do export.
 
 Formato dos specs usados aqui (detalhes na seção 3.2.1.2 do `_export-html.md` da análise):
 - `vbars`: `{"bars": [{"label": "...", "value": 65, "color": "#..."}]}`
@@ -54,7 +58,7 @@ echo -n "bgok="      ; grep -cE -- "--bg:(#000|#D8DDC8|#f4f6f8)" <ARQ>
 
 ### Falso Vencedor
 
-- **Tabela colorida:** uma linha por entidade avaliada, colunas: nome, classificação, score de confiança, ROAS, conversões, frequência, risco. Cor de fundo pela classificação: verde (`vencedor_real`), amarelo (`vencedor_promissor`), vermelho (`falso_vencedor_provavel`), cinza (`inconclusivo`). Tabela HTML pura.
+- **Tabela colorida:** uma linha por entidade avaliada, colunas: nome, classificação, score de confiança, ROAS, conversões, frequência, risco. Cor de fundo pela classificação: verde (`vencedor_real`), amarelo (`vencedor_promissor`), vermelho (`falso_vencedor_provavel`), cinza (`inconclusivo`). Tabela HTML pura. As entidades em `nao_candidatas` (CPA acima de 1,2 vez a meta) ficam fora da tabela, listadas abaixo dela com o motivo.
 - **Barras de confiança por entidade:** uma barra vertical por entidade com o score de 0 a 100 (necessária também para passar no checklist de SVG).
 - Geometria: `trafego_chart_geom.py vbars`.
 
@@ -102,10 +106,10 @@ Depois de salvar, registrar a linha no `meus-produtos/{ativo}/entregas/trafego/d
 Depois de salvar, abrir automaticamente com o script `scripts/abrir-html.py` da raiz do projeto (o mesmo da `/trafego-analise`). Caminho do script e do HTML **sempre absolutos** (o diretório atual do shell pode ter mudado com um `cd` anterior):
 
 ```bash
-python3 "{RAIZ_PROJETO}/scripts/abrir-html.py" "{RAIZ_PROJETO}/meus-produtos/{ativo}/entregas/trafego/diagnostico/{arquivo}.html"
+{PY} "{RAIZ_PROJETO}/scripts/abrir-html.py" "{RAIZ_PROJETO}/meus-produtos/{ativo}/entregas/trafego/diagnostico/{arquivo}.html"
 ```
 
-Trocar `python3` por `py -3` se esse for o interpretador da sessão. Se o script não conseguir abrir, ele mesmo imprime a instrução de abertura manual. Em qualquer caso, devolver no chat o caminho absoluto como texto copiável:
+`{PY}` é o interpretador da sessão (`python3` ou `py -3`). Se o script não conseguir abrir, ele mesmo imprime a instrução de abertura manual. Em qualquer caso, devolver no chat o caminho absoluto como texto copiável:
 
 ```
 ✅ Concluído: diagnóstico exportado. Caminho: {raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\diagnostico\{arquivo}.html
@@ -136,7 +140,7 @@ Trocar `python3` por `py -3` se esse for o interpretador da sessão. Se o script
 
 | Gráfico | "O que é" | "Como ler" | "O que fazer" |
 |---------|-----------|------------|---------------|
-| Gauge confiança 62 | "Score de confiança dos seus dados: quanto mais alto, mais seguro é decidir com base neles." | "62 é confiança média. Decisões de curto prazo podem ser tomadas. Para decisões grandes (escalar, pausar campanha inteira), prefira esperar mais dados." | "Para chegar a 75 ou mais: acumular mais 8 conversões e manter as campanhas rodando por mais 3 dias." |
+| Gauge confiança 62 | "Score de confiança dos seus dados: quanto mais alto, mais seguro é decidir com base neles." | "62 é confiança média. Ajustes de curto prazo podem ser feitos. Escalar só se a entidade também sair como vencedor real, e de forma gradual. Pausar a campanha inteira pede mais dados." | "Para chegar a 75 ou mais: acumular mais 8 conversões e manter as campanhas rodando por mais 3 dias." |
 | Gauge saúde 38 | "Saúde da estrutura da conta: mede se a organização das campanhas está ajudando ou atrapalhando o algoritmo do Meta." | "38 é estrutura sabotando o algoritmo. Seus resultados podem estar sendo prejudicados pela forma como a conta está organizada, não pelos criativos." | "Prioridade: consolidar conjuntos fragmentados (22 dos 34 têm menos de 1 conversão por dia). Depois: subir criativos novos nas 4 campanhas sem renovação." |
 | Barras hipóteses 65/20/15 | "Probabilidade de cada causa para o problema detectado. Funciona como diagnóstico médico: mais de uma causa é possível." | "65% de fadiga criativa significa que essa é a explicação mais provável, mas não certeza. 20% de saturação de público é uma possibilidade secundária." | "Testar a hipótese principal: subir 2 criativos novos. Se o CTR melhorar em 72h, era fadiga. Se não, investigar a segunda hipótese." |
 | Tabela falso vencedor | "Avaliação de cada campanha: verifica se os resultados que parecem bons são reais ou podem estar enganando." | "Verde = vencedor real (pode confiar). Amarelo = promissor (esperar mais dados). Vermelho = falso vencedor (cuidado). Cinza = inconclusivo." | "Campanhas em vermelho: NÃO escalar. Rodar teste em prospecção pura antes." |

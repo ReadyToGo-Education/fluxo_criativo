@@ -38,17 +38,17 @@ Necessários para calcular dias ativos e identificar campanhas longevas.
 
 **Chamada 7a. Histórico mensal de 6 meses (campanhas ativas)**
 
-Usar `date_preset=last_6_months` com `time_increment=monthly`. Retorna uma linha por campanha por mês, permitindo calcular ROAS e CPA mês a mês.
+Usar um `time_range` de 6 meses com `time_increment=monthly`: `since` = primeiro dia do mês de 5 meses atrás (`{DATA_6M_INICIO}`) e `until` = ontem (`{ONTEM}`, o último dia com dado, ancorado no retorno, regra 4 do Contrato anti-erros), calculados em chamadas `Bash(date ...)` separadas. Não existe `date_preset=last_6_months` nem `last_180d`. Retorna uma linha por campanha por mês, permitindo calcular ROAS e CPA mês a mês. As chamadas 7c e 7d usam o mesmo `time_range`.
 
 ```bash
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=campaign_id,campaign_name,spend,impressions,clicks,actions,action_values,cost_per_action_type
   &level=campaign
-  &date_preset=last_6_months
+  &time_range=%7B%22since%22%3A%22{DATA_6M_INICIO}%22%2C%22until%22%3A%22{ONTEM}%22%7D
   &time_increment=monthly
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Modo MCP_CONECTOR:** a série mensal da conta sai de `mcp__*__ads_insights_performance_trend` (granularidade mensal, últimos 6 meses). A evolução por campanha exige `mcp__*__ads_get_ad_entities` em nível campanha, uma chamada por mês com whitelist enxuta de campos, porque a tool de tendência não faz nível campanha (ver **Contrato anti-erros** no `SKILL.md`).
@@ -63,12 +63,12 @@ Necessária para identificar campanhas longevas (campo `start_time`) e campanhas
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns
   ?fields=id,name,status,effective_status,objective,daily_budget,lifetime_budget,created_time,start_time,stop_time,updated_time
-  &effective_status=['ACTIVE','PAUSED','ARCHIVED']
+  &effective_status=%5B%22ACTIVE%22%2C%22PAUSED%22%2C%22ARCHIVED%22%5D
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=campaign` e filtro de status `['ACTIVE','PAUSED','ARCHIVED']`.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "campaign"`, `filtering: [{field: "campaign.effective_status", operator: "IN", value: ["ACTIVE","PAUSED","ARCHIVED"]}]` e `limit: 1000`, seguindo o `cursor` até acabar. Os campos de data (`created_time`, `start_time`, `stop_time`, `updated_time`) não estão na lista conferida: confirmar com `ads_get_field_context` antes; se não vierem, avisar o aluno que os dias ativos não dão para calcular por aqui.
 
 ---
 
@@ -81,10 +81,10 @@ Necessária para identificar campanhas pausadas que performavam bem antes de ser
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=campaign_id,campaign_name,spend,actions,action_values,cost_per_action_type,impressions,clicks,frequency
   &level=campaign
-  &date_preset=last_6_months
+  &time_range=%7B%22since%22%3A%22{DATA_6M_INICIO}%22%2C%22until%22%3A%22{ONTEM}%22%7D
   &time_increment=1
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 > **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (Chamada 7b, listagem de campanhas): cruzar o retorno desta chamada com a 7b e manter apenas as campanhas com `effective_status` `PAUSED` ou `ARCHIVED`.
@@ -104,16 +104,16 @@ Necessária para o Bloco 4. Ordenar todos os anúncios pelos resultados históri
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=ad_id,ad_name,campaign_name,adset_name,spend,actions,action_values,cost_per_action_type,impressions,clicks
   &level=ad
-  &date_preset=last_6_months
+  &time_range=%7B%22since%22%3A%22{DATA_6M_INICIO}%22%2C%22until%22%3A%22{ONTEM}%22%7D
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 > **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. O retorno já inclui anúncios ativos, pausados e arquivados que tiveram entrega no período. O status atual de cada anúncio (coluna "Status atual" da Resposta 5) vem da etapa de listagem: cruzar com a listagem de anúncios (endpoint `/ads`, campo `effective_status`).
 
-Após receber: agrupar por `ad_id`, somar totais, ordenar por `offsite_conversion.fb_pixel_purchase` decrescente (ou `offsite_conversion.fb_pixel_lead` para funil de captação).
+Após receber: agrupar por `ad_id`, somar totais, ordenar por `offsite_conversion.fb_pixel_purchase` decrescente (ou, no funil de captação, pela contagem de leads da regra do command: `lead` e, sem ele, `offsite_conversion.fb_pixel_lead`).
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `level=ad` e filtros equivalentes.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "ad"`, o mesmo `time_range` de 6 meses em texto JSON, filtro `ad.impressions` maior que zero, `limit: 1000` e paginação por `cursor`; ordenar localmente. A `ads_insights_performance_trend` não serve para ranking (ver Contrato anti-erros no `SKILL.md`).
 
 ---
 
@@ -149,7 +149,8 @@ CPA_mês = sum(spend no mês) / sum(actions onde action_type = "offsite_conversi
 
 ### CPL mensal
 ```
-CPL_mês = sum(spend no mês) / sum(actions onde action_type = "offsite_conversion.fb_pixel_lead" no mês)
+CPL_mês = sum(spend no mês) / leads do mês
+leads = actions[lead] (total da Meta); sem ele, actions[offsite_conversion.fb_pixel_lead]; nunca a soma
 ```
 
 ### Dias ativos (campanha longeva)
@@ -393,7 +394,7 @@ Se nenhuma campanha pausada ou arquivada tiver gasto nos últimos 6 meses, exibi
 
 ### Resposta 5. "Qual foi o anúncio que mais gerou resultado na história da conta?"
 
-Usar dados da Chamada 7d. Ordenar por total de `offsite_conversion.fb_pixel_purchase` (Template A) ou `offsite_conversion.fb_pixel_lead` (Template B) no período de 6 meses.
+Usar dados da Chamada 7d. Ordenar por total de `offsite_conversion.fb_pixel_purchase` (Template A) ou, no Template B, pela contagem de leads da regra do command (`lead` e, sem ele, `offsite_conversion.fb_pixel_lead`; nunca a soma) no período de 6 meses.
 
 #### Template A. Venda direta
 
@@ -528,8 +529,8 @@ Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.sect
 
 | Gráfico | Componente / receita | Fonte de dado | Posição |
 |---|---|---|---|
-| Tendência mensal de CPA/CPL (6 meses) | SVG linha (receita F via helper `line`) | Chamada 7a (`time_increment=monthly`, `last_180d`/`last_6_months`), série de CPA (venda direta) ou CPL (captação) agregada por mês | `.chart-card` full-width, topo da "Visão visual" |
+| Tendência mensal de CPA/CPL (6 meses) | SVG linha (receita F via helper `line`) | Chamada 7a (`time_increment=monthly`, `time_range` de 6 meses), série de CPA (venda direta) ou CPL (captação) agregada por mês | `.chart-card` full-width, topo da "Visão visual" |
 | Campanhas longevas: saúde vs. degradação | barras horizontais `.hbar-row` (receita D) | Chamadas 7a + 7b: degradação% = (CPA_mês_atual − CPA_1º_mês)/CPA_1º_mês por campanha longeva | `.chart-card` full-width, junto da Resposta 1 |
-| Top 5 anúncios por venda (6 meses) | SVG barras verticais (receita G via helper `vbars`) | Chamada 7d (`level=ad`, `last_6_months`), top 5 por `offsite_conversion.fb_pixel_purchase` (ou `_lead`) | `.charts-grid`, junto da Resposta 5 |
+| Top 5 anúncios por venda (6 meses) | SVG barras verticais (receita G via helper `vbars`) | Chamada 7d (`level=ad`, `time_range` de 6 meses), top 5 por `offsite_conversion.fb_pixel_purchase` (ou leads, pela regra do command) | `.charts-grid`, junto da Resposta 5 |
 
-**Regras dos gráficos:** na linha de tendência mensal, CPA/CPL é "quanto menor melhor": usar uma única série (cor `--accent`), `dots:true`, e narrar a tendência no `.funnel-meta` abaixo (melhora/estável/deterioração com a variação acumulada mês 0 vs. mês -5). Excluir do gráfico os meses com `spend < R$ 200` (marcar como sem dados na narrativa). Nas barras horizontais de campanhas longevas, usar `.hbar-fill.win` (verde) para CPA estável ou melhora e `.hbar-fill.burn` (vermelho) para degradação > 30% ou freq > 5; largura proporcional ao gasto da campanha no período. Nas vbars de top anúncios, ordenar por vendas decrescente, colorir verde o líder e accent os demais; truncar nomes longos. Usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`).
+**Regras dos gráficos:** na linha de tendência mensal, CPA/CPL é "quanto menor melhor": usar uma única série (cor `--accent`), `dots:true`, e narrar a tendência no `.funnel-meta` abaixo (melhora/estável/deterioração com a variação acumulada mês 0 vs. mês -5). Excluir do gráfico os meses com `spend < R$ 200` (marcar como sem dados na narrativa). Mês com `spend` de R$ 200 ou mais e zero conversão não tem CPA: mandar `null` no spec (nunca 0, que o faria parecer o melhor mês), o helper pula o ponto e avisa em `avisos`, e citar o mês na narrativa como "sem conversão". Nas barras horizontais de campanhas longevas, usar `.hbar-fill.win` (verde) para CPA estável ou melhora e `.hbar-fill.burn` (vermelho) para degradação > 30% ou freq > 5; largura proporcional ao gasto da campanha no período. Nas vbars de top anúncios, ordenar por vendas decrescente, colorir verde o líder e accent os demais; truncar nomes longos. Usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`).

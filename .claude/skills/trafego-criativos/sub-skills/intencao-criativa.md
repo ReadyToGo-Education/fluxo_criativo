@@ -42,7 +42,7 @@ Pedir à `/trafego-insights`:
 - Escopo: `conta_completa` ou campanhas específicas
 - Nível: `ad`
 - Período: definido na entrevista de entrada (Passo 0.9 do padrão da `/trafego-diagnostico`) + período anterior para comparação
-- Métricas obrigatórias:
+- Métricas obrigatórias (nomes da Graph API, modo `APP`; no MCP, tradução na seção 3.1 do SKILL.md):
   - `inline_link_clicks`
   - `unique_inline_link_clicks`
   - `actions` (filtrar `landing_page_view`)
@@ -51,14 +51,13 @@ Pedir à `/trafego-insights`:
   - `cpc`
   - `impressions`
   - `spend`
-- Métricas de atenção (vindas do módulo 1 ou calculadas aqui se rodando isolado):
-  - `video_3_sec_views` (para Intent Rate com denominador de atenção)
-  - `video_p25_watched_actions`
+- Métrica de atenção (vinda do módulo 1 ou calculada aqui se rodando isolado):
+  - `video_p25_watched_actions` (denominador do Intent Rate, a mesma base do Hook Rate)
 
 **Dados complementares (leitura pura, por modo):**
 - Formato do criativo pelo `object_type`. `MCP_CONECTOR`: `ads_get_creatives` ou o campo de criativo do `ads_get_ad_entities`. `APP`: `curl -g` em `/{ad_id}?fields=creative{id,object_type}`.
 
-**Disponibilidade no MCP (seção 6.1 do SKILL.md):** no `ads_get_ad_entities`, o clique no link vem como `actions:link_click` e a visita à página (`landing_page_view`) costuma não vir em nível de anúncio. Conferir com `ads_get_field_context` antes da coleta. Sem visita à página, Click-to-LPV e Intent Rate ficam `indisponivel` ou usam substituto declarado.
+**Disponibilidade no MCP (seção 6.1 do SKILL.md):** no `ads_get_ad_entities`, o clique no link vem como `link_click`, a visita à página como `landing_page_view` e o gasto como `amount_spent` (conferidos na conta real, inclusive no nível de anúncio; contrato do conector na `.claude/skills/trafego-insights/SKILL.md` §10.1). CTR de link e CPC saem da conta: `link_click ÷ impressions` e `amount_spent ÷ link_click`. Cliques de saída e os campos de vídeo não estão na lista conferida: confirmar com `ads_get_field_context` antes da coleta. Se a visita à página vier `null`, a conta não registra o evento: Click-to-LPV e Intent Rate ficam `indisponivel` ou usam substituto declarado.
 
 ---
 
@@ -66,7 +65,7 @@ Pedir à `/trafego-insights`:
 
 | Métrica | Fórmula | O que mede |
 |---------|---------|-----------|
-| **Intent Rate** | `landing_page_views / video_3sec_views` | Quanto da atenção vira intenção real de visitar a página. Para imagens: `landing_page_views / impressions`. |
+| **Intent Rate** | `landing_page_views / video_p25_watched` | Quanto da atenção (quem passou do gancho) vira intenção real de visitar a página. Para imagens: `landing_page_views / impressions`. |
 | **Click-to-LPV Rate** | `landing_page_views / inline_link_clicks` | Qualidade do clique. Do total que clicou, quantos realmente chegaram na página. |
 | **Cost per LPV** | `spend / landing_page_views` | Custo para gerar uma visita qualificada à página. |
 
@@ -74,7 +73,7 @@ Pedir à `/trafego-insights`:
 
 **Quando `landing_page_view` não está disponível:** usar `outbound_clicks` como fallback e declarar: "Visitas à página (landing page views) indisponíveis. Usando os cliques de saída (outbound clicks) como substituto. A medição é menos precisa."
 
-**Para imagens (sem `video_3sec_views`):** o Intent Rate usa `impressions` no denominador. Declarar a mudança de base: "Intent Rate calculado com impressões (não 3sec views). Valor será naturalmente menor."
+**Para imagens (sem `video_p25_watched`):** o Intent Rate usa `impressions` no denominador. Declarar a mudança de base: "Intent Rate calculado com impressões (não com quem passou do gancho do vídeo). Valor será naturalmente menor."
 
 ---
 
@@ -87,7 +86,7 @@ Classificação do clique em 3 categorias:
 | Critério | Limiar |
 |----------|--------|
 | CTR | Acima do benchmark da conta (ou > 1.0% como fallback) |
-| Click-to-LPV Rate | > 70% |
+| Click-to-LPV Rate | 80% ou mais |
 
 **O que significa:** a pessoa clicou E chegou na página. A intenção é real. O criativo atraiu alguém genuinamente interessado na oferta.
 
@@ -98,11 +97,11 @@ Classificação do clique em 3 categorias:
 | Critério | Limiar |
 |----------|--------|
 | CTR | Acima do benchmark |
-| Click-to-LPV Rate | < 50% |
+| Click-to-LPV Rate | < 60% |
 
 **O que significa:** a pessoa clicou mas não chegou na página (ou saiu antes de carregar). Duas causas prováveis: (1) página lenta ou com erro técnico, (2) o criativo prometeu algo que a página não entrega, e o visitante fecha ao ver o conteúdo.
 
-**Distinção crítica:** Click-to-LPV Rate entre 50% e 70% é zona cinza. Classificar como `clique_misto` e investigar se o problema é técnico (página lenta) ou de alinhamento (promessa vs entrega).
+**Distinção crítica:** Click-to-LPV Rate entre 60% e 79% é zona cinza. Classificar como `clique_misto` e investigar se o problema é técnico (página lenta) ou de alinhamento (promessa vs entrega). Abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento): conferir com `/pagina-performance` e a congruência com `/trafego-oferta-funil` antes de mexer no anúncio. Régua única do Severino para a visita à página: saudável 80% ou mais, atenção de 60% a 79%, crítico abaixo de 60%.
 
 ### Baixa intenção
 
@@ -123,7 +122,7 @@ Padrão explícito que esta sub-skill rastreia: **CTR alto + CPA ruim**.
 | Sinal | Direção | Peso |
 |-------|---------|------|
 | CTR acima do benchmark | confirma | alto |
-| Click-to-LPV Rate < 50% | confirma | alto |
+| Click-to-LPV Rate < 60% | confirma | alto |
 | CPA acima de 1.5× a meta | confirma | alto |
 | CPC baixo (clicks baratos mas inúteis) | confirma | médio |
 | Outbound clicks muito menor que inline_link_clicks | confirma | médio |
@@ -188,7 +187,7 @@ Classificação de cada criativo pelo tipo de intenção que gera:
 | Critério | Limiar |
 |----------|--------|
 | CTR | Acima do benchmark |
-| Click-to-LPV Rate | < 50% |
+| Click-to-LPV Rate | < 60% |
 
 **O que significa:** o criativo gera cliques, mas as pessoas não chegam na página ou não ficam. O clique é de curiosidade, não de intenção real.
 
@@ -203,7 +202,7 @@ Classificação de cada criativo pelo tipo de intenção que gera:
 | Critério | Limiar |
 |----------|--------|
 | CTR | Acima do benchmark |
-| Click-to-LPV Rate | > 70% |
+| Click-to-LPV Rate | 80% ou mais |
 
 **O que significa:** o criativo gera cliques E as pessoas chegam na página. A intenção é qualificada. O tráfego que este criativo envia para a página é de boa qualidade.
 
@@ -335,12 +334,12 @@ intencao_criativa:
         impressions: 28500
         inline_link_clicks: 399
         landing_page_views: 342
-        video_3sec_views: 8550
+        video_p25_watched: 7125
         ctr: 1.40
         cpc: 2.57
         spend: 1026.00
       derivadas:
-        intent_rate: 0.040
+        intent_rate: 0.048
         click_to_lpv_rate: 0.857
         cost_per_lpv: 3.00
       qualidade_clique: qualificado
@@ -360,7 +359,7 @@ intencao_criativa:
         impressions: 22000
         inline_link_clicks: 550
         landing_page_views: 198
-        video_3sec_views: 7700
+        video_p25_watched: 7700
         ctr: 2.50
         cpc: 1.45
         spend: 798.00
@@ -386,7 +385,7 @@ intencao_criativa:
         impressions: 12000
         inline_link_clicks: 84
         landing_page_views: 72
-        video_3sec_views: 3600
+        video_p25_watched: 3600
         ctr: 0.70
         cpc: 4.76
         spend: 400.00
@@ -487,7 +486,7 @@ NÃO fazer:
 - Não usar CTR como métrica de decisão isolada
 
 Fazer SOMENTE SE:
-- Se a página estiver rápida (< 3s) E o LPV Rate continuar < 50%, o
+- Se a página estiver rápida (< 3s) E o LPV Rate continuar < 60%, o
   "Hook Polêmico" precisa de nova versão com promessa mais alinhada
 - Se o "Depoimento técnico" acumular 10+ compras mantendo taxa > 3%,
   considerar duplicar o formato com variações

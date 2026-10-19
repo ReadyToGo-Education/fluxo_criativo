@@ -25,7 +25,7 @@ Qual teste você quer ler?
 Digite o número ou o nome:
 ```
 
-Sem testes registrados: "Não encontrei testes registrados. Você criou o teste pela `/trafego-testes`? Se sim, o arquivo deveria estar em `meus-produtos/{ativo}/entregas/trafego/testes/`." Se o teste foi feito como teste A/B oficial da Meta e não tem arquivo, no MCP dá para achá-lo com `ads_experiment_list_tests`.
+Sem testes registrados: "Não encontrei testes registrados. Você criou o teste pela `/trafego-testes`? Se sim, o arquivo deveria estar em `meus-produtos/{ativo}/entregas/trafego/testes/`." Se o teste foi feito como teste A/B oficial da Meta e não tem arquivo, no MCP dá para achá-lo com `ads_experiment_list_tests`. No App (teste oficial criado no Gerenciador, sem tool para listar), oferecer registrar o teste agora: pedir o nome da campanha molde e a data de início, gravar o arquivo com `modelo: ab_oficial_meta` e os critérios da `SKILL.md` (mínimo de conversões por lado conforme o tipo do produto e janela de 7 dias), e seguir a leitura.
 
 ### Passo 2. Contaminação (antes de julgar)
 
@@ -65,7 +65,9 @@ Puxar as métricas pela `/trafego-insights`:
 - Período: do início do teste até hoje
 - Métricas: gasto, impressões, frequência, CTR, CPC, CPA, ROAS, conversões, métricas de vídeo (se for vídeo)
 
-**Teste A/B oficial da Meta** (`modelo: ab_oficial_meta`): no MCP, ler o resultado com `ads_experiment_abtest_get_test` (traz a vencedora e a confiança calculadas pela Meta) e completar com a `/trafego-insights` para as métricas secundárias.
+**Teste A/B oficial da Meta** (`modelo: ab_oficial_meta`):
+- **MCP:** ler o resultado com `ads_experiment_abtest_get_test` (traz a vencedora e a confiança calculadas pela Meta) e completar com a `/trafego-insights` para as métricas secundárias.
+- **App** (o teste foi criado no Gerenciador): pedir ao aluno o que o relatório do Teste A/B do Gerenciador mostra (variação vencedora e confiança), uma pergunta por mensagem. Para as métricas, pedir o nome das campanhas ou conjuntos do teste e ler pela `/trafego-insights` buscando por esse nome, sem pedir ID ao aluno.
 
 ### Passo 4. Classificar
 
@@ -73,14 +75,14 @@ Puxar as métricas pela `/trafego-insights`:
 
 | Classificação | Critério | Significado |
 |---|---|---|
-| `validado` | Variação venceu na métrica principal + volume mínimo atingido + diferença acima do limite | Vencedora confirmada. Pode escalar ou aplicar. |
-| `invalidado` | Variação perdeu na métrica principal + volume mínimo atingido | Hipótese descartada. Aprendizado: essa abordagem não funciona. |
+| `validado` | Variação venceu na métrica principal + volume mínimo atingido + diferença que atinge o "Critério de vitória" do arquivo do teste (padrão: CPA da vencedora ≤ 90% do da perdedora, ou seja, 10% ou mais) | Vencedora confirmada. Pode escalar ou aplicar. |
+| `invalidado` | Variação perdeu na métrica principal + volume mínimo atingido + diferença que atinge o "Critério de vitória" a favor do controle | Hipótese descartada. Aprendizado: essa abordagem não funciona. |
 | `promissor` | Sinais bons, mas volume abaixo do mínimo | Manter rodando. Reavaliar em mais 7 dias. |
-| `inconclusivo` | Volume muito baixo ou diferença menor que 5% entre A e B | Dado insuficiente. Estender a janela ou subir o orçamento do teste. |
+| `inconclusivo` | Volume muito baixo, ou volume atingido com diferença abaixo do "Critério de vitória" do arquivo do teste (com o critério padrão de 10%, qualquer diferença menor que 10%) | Dado insuficiente. Estender a janela ou subir o orçamento do teste. |
 | `contaminado` | Mudanças durante o teste (Passo 2) | Resultado não confiável. Refazer. |
 | `repetir_com_ajuste` | Resultado misto: a principal melhorou, a secundária piorou | Ex: taxa de gancho subiu, mas o CPA piorou. Ajustar o desenho e testar de novo. |
 
-O mínimo de conversões vem do arquivo do teste (50 por lado em low e middle ticket, 30 em high ticket, conforme o tipo no resumo do produto).
+O mínimo de conversões vem do arquivo do teste (50 por lado em low e middle ticket, 30 em high ticket, conforme o tipo no resumo do produto). O limite de diferença vem do "Critério de vitória" do mesmo arquivo (10% se o arquivo não trouxer).
 
 ### Passo 5. Efeitos colaterais
 

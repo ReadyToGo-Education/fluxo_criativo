@@ -30,6 +30,8 @@ Nenhum campo adicional é necessário na chamada base. Todas as análises deste 
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
+`{PERIOD_PARAM}` é o parâmetro de período da tabela do Passo 3 do command (`date_preset=last_Nd` ou, no customizado, o `time_range` já codificado). As três chamadas são no nível da conta, nos dois modos (`level=account` no App, `level: "ad_account"` no conector), e esse nível não aceita filtro de campanha. Com `ESCOPO_FILTRO` diferente de `conta_completa`, avisar o aluno que idade, gênero, região e país são da conta inteira, não do grupo escolhido. No conector, dá para tentar o recorte só do grupo com `level: "campaign"` e `filtering: [{field: "campaign.id", operator: "IN", value: [ids do escopo]}]` quando o schema da tool aceitar quebra nesse nível; se não aceitar, seguir com a conta inteira e o aviso.
+
 **Chamada 4a. Demográfica (idade + gênero)**
 
 ```bash
@@ -38,12 +40,12 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights\
 ?fields=spend,impressions,clicks,actions,action_values,cost_per_action_type\
 &breakdowns=age,gender\
 &level=account\
-&date_preset={PERIOD_DO_ALUNO}\
+&{PERIOD_PARAM}\
 &limit=500\
-&access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `breakdown=["age","gender"]` e demais parâmetros equivalentes.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "ad_account"`, `breakdowns: ["age","gender"]`, o mesmo período (`date_preset` ou `time_range` em texto JSON), os campos `amount_spent`, `impressions`, `link_click`, `omni_purchase`, `offsite_conversion_fb_pixel_purchase_values` (ou `purchase_roas`) e `results` (leads), e `limit: 1000`. Antes, conferir que o recorte existe (no schema da tool ou em `ads_get_field_context`, como no contrato do conector, `trafego-insights/SKILL.md` §10.1). Se a tool recusar o recorte, avisar o aluno e seguir sem ele; nunca inventar.
 
 ---
 
@@ -55,12 +57,12 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights\
 ?fields=spend,impressions,clicks,actions,action_values,cost_per_action_type\
 &breakdowns=region\
 &level=account\
-&date_preset={PERIOD_DO_ALUNO}\
+&{PERIOD_PARAM}\
 &limit=500\
-&access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `breakdown=["region"]` e demais parâmetros equivalentes.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "ad_account"`, `breakdowns: ["region"]`, o mesmo período (`date_preset` ou `time_range` em texto JSON), os campos `amount_spent`, `impressions`, `link_click`, `omni_purchase`, `offsite_conversion_fb_pixel_purchase_values` (ou `purchase_roas`) e `results` (leads), e `limit: 1000`. Antes, conferir que o recorte existe (no schema da tool ou em `ads_get_field_context`, como no contrato do conector, `trafego-insights/SKILL.md` §10.1). Se a tool recusar o recorte, avisar o aluno e seguir sem ele; nunca inventar.
 
 ---
 
@@ -74,12 +76,12 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights\
 ?fields=spend,impressions,clicks,actions,action_values,cost_per_action_type\
 &breakdowns=country\
 &level=account\
-&date_preset={PERIOD_DO_ALUNO}\
+&{PERIOD_PARAM}\
 &limit=500\
-&access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `breakdown=["country"]` e demais parâmetros equivalentes.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "ad_account"`, `breakdowns: ["country"]`, o mesmo período (`date_preset` ou `time_range` em texto JSON), os campos `amount_spent`, `impressions`, `link_click`, `omni_purchase`, `offsite_conversion_fb_pixel_purchase_values` (ou `purchase_roas`) e `results` (leads), e `limit: 1000`. Antes, conferir que o recorte existe (no schema da tool ou em `ads_get_field_context`, como no contrato do conector, `trafego-insights/SKILL.md` §10.1). Se a tool recusar o recorte, avisar o aluno e seguir sem ele; nunca inventar.
 
 ---
 
@@ -103,7 +105,7 @@ Aplicar por linha de cada breakdown:
 | Métrica | Fórmula | Tipo canônico |
 |---|---|---|
 | CPA | `spend` / `purchases` | `offsite_conversion.fb_pixel_purchase` |
-| CPL | `spend` / `leads` | `offsite_conversion.fb_pixel_lead` |
+| CPL | `spend` / `leads` | `lead` (total); sem ele, `offsite_conversion.fb_pixel_lead`; nunca a soma (regra de leads do command) |
 | ROAS | `action_values[offsite_conversion.fb_pixel_purchase]` / `spend` | `offsite_conversion.fb_pixel_purchase` |
 | CTR | `clicks` / `impressions` | - |
 
@@ -504,4 +506,4 @@ Renderizar todos os gráficos abaixo que tiverem dado real, logo após o `.stats
 | Investimento por estado · eficiência de clique | `.hbar-row` (receita D) | Chamada 4b (`region`): top estados por spend; cor = custo por `link_click` abaixo (`.win`) ou acima (`.burn`) da mediana | `.chart-card` full-width |
 | Estados: venderam vs. queimaram (SÓ se 4b trouxer compras) | `.hbar-row` (receita D) | Chamada 4b: `.win` para estados que converteram, `.burn` para spend alto sem venda | substitui o gráfico de eficiência quando o dado de venda existir |
 
-Regras dos gráficos: usar só cores da paleta. **CPA por faixa etária (receita G, helper `vbars`):** gravar o spec `{"bars":[{"label":"25-34","value":<CPA>,"color":<verde ≤ R$ X · amarelo · vermelho>}]}` num arquivo e rodar `{PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py vbars < /tmp/spec.json` (`{PY}` = interpretador detectado na sessão); colar `bars[]` como `<rect>` + `<text>`; faixa sem conversão (CPA `∞`) é omitida. **Gênero (receita C):** par masculino × feminino; menor CPA / maior ROAS recebe `.good` (verde). **Estados (receita D):** largura proporcional ao spend; cor pela eficiência de clique (mediana) quando não houver venda por região, ou por conversão (`.win`/`.burn`) quando houver. Sempre que a leitura geográfica for por clique e não por venda, deixar isso explícito num `.funnel-meta`.
+Regras dos gráficos: usar só cores da paleta. **CPA por faixa etária (receita G, helper `vbars`):** gravar o spec `{"bars":[{"label":"25-34","value":<CPA>,"color":<verde ≤ R$ X · amarelo · vermelho>}]}` com o Write em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-vbars.json` (caminho absoluto) e rodar `{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" vbars < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-vbars.json"` (`{PY}` = interpretador detectado na sessão; regra do spec na seção 3.2.1.2 do `_export-html.md`); colar `bars[]` como `<rect>` + `<text>`; faixa sem conversão (CPA `∞`) é omitida. **Gênero (receita C):** par masculino × feminino; menor CPA / maior ROAS recebe `.good` (verde). **Estados (receita D):** largura proporcional ao spend; cor pela eficiência de clique (mediana) quando não houver venda por região, ou por conversão (`.win`/`.burn`) quando houver. Sempre que a leitura geográfica for por clique e não por venda, deixar isso explícito num `.funnel-meta`.

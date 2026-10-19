@@ -10,10 +10,12 @@ Sub-skill acionada **opcionalmente ao final** do diagnóstico da `/trafego-otimi
 
 **É PROIBIDO inventar um HTML novo.** O export SEMPRE parte do esqueleto da §3.1 + tokens da §3.2 do `_export-html.md` da análise (design system oficial com **3 temas**: Escuro, Terra e Claro Neutro, §3.2.a de lá; semânticas verde/amarelo/vermelho em todos). A escolha do tema segue a seção 1 do `_export-html.md` da análise (pergunta com opções na primeira vez, depois `EXPORT_TEMA` do `.env`). Nunca criar paleta própria fora dos 3 temas, nunca trocar a topbar/banner por improviso. Cores de SVG conforme a tabela CORES_GRAFICO (§3.2.c de lá).
 
-**É OBRIGATÓRIO renderizar os 3 gráficos** desta sub-skill (§4), com geometria vinda do motor da análise. `{PY}` é o interpretador Python detectado na sessão (`python3` ou `py -3`, conforme o CLAUDE.md):
+**É OBRIGATÓRIO renderizar os 3 gráficos** desta sub-skill (§4), com geometria vinda do motor da análise. `{PY}` é o interpretador Python detectado na sessão (`python3` ou `py -3`, conforme o CLAUDE.md). Spec e motor sempre por **caminho absoluto** (não usar `/tmp`: no Windows, o Write e o Bash resolvem `/tmp` para pastas diferentes; e não confiar no `cwd`):
 ```
-{PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py <tipo> < /tmp/spec.json
+{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"
 ```
+Gravar o spec com o Write nesse mesmo caminho absoluto (um arquivo por gráfico) e chamar o motor pelo Bash. Apagar os specs no fim do painel. Alternativa: quando o HTML for montado por script Python (§0.1), importar o motor (`sys.path.insert(0, "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts")` e `G.geom_scatter(spec)` etc.), sem arquivo intermediário.
+
 O motor roda nos dois modos (`APP` e `MCP_CONECTOR`), não toca a API e não usa token. Os números vêm do **diagnóstico já calculado na sessão**, sem refazer fetch.
 
 **Checklist de conformidade: rodar ANTES de declarar o painel pronto.** Substituir `<ARQ>`:
@@ -49,9 +51,14 @@ Ao gerar o HTML por script Python (script gravado antes com Write, sem token, le
 
 ## 1. Quando rodar
 
-Após a entrega do diagnóstico narrado + YAML (Parte 1 e 2 da §13 da SKILL), oferecer o export **seguindo a seção 1 do `_export-html.md` da análise** (mesma mecânica de tema):
+Após a entrega do diagnóstico narrado (Parte 1 da §13 da SKILL; a Parte 2 vai para o arquivo do diagnóstico), oferecer o export **seguindo a seção 1 do `_export-html.md` da análise** (mesma mecânica de tema).
 
-- **`EXPORT_TEMA` ausente no `.env` (primeira vez):** pergunta numerada com os 3 temas + "Não" (1. Sim, tema Escuro / 2. Sim, tema Terra / 3. Sim, tema Claro Neutro / 4. Não), adaptando o enunciado: "Quer salvar esse diagnóstico como um painel visual (HTML)?". Se 1/2/3: gravar `EXPORT_TEMA` no `.env` (variável não sensível), confirmar em 1 linha e rodar esta sub-skill.
+**Só em trilha de perpétuo.** O painel é feito de lucro e das 3 zonas, que dependem de compra.
+- `trilha` = `perpetuo_*`: oferecer normalmente.
+- `trilha` = `lancamento_*`: não oferecer. Dizer em 1 linha: "O painel de decisão usa lucro e as 3 zonas, que dependem de compra. Na captação, a leitura é pelo CPL, que já está no diagnóstico acima."
+- Conta completa com objetivos misturados: o painel entra só com as campanhas de perpétuo e avisa no topo quais campanhas de captação ficaram de fora.
+
+- **`EXPORT_TEMA` ausente no `.env` (primeira vez):** pergunta numerada com os 3 temas + "Não" (1. Sim, tema Escuro / 2. Sim, tema Terra / 3. Sim, tema Claro Neutro / 4. Não), adaptando o enunciado: "Quer salvar esse diagnóstico como um painel visual (HTML)?". Se 1/2/3: gravar `EXPORT_TEMA` no `.env` sem abrir o arquivo (nunca Read, Edit ou Write no `.env`, que mostrariam o token), com um único comando Bash que apaga a linha antiga, garante a quebra de linha no fim do arquivo e acrescenta a nova (item 4 da seção "LEITURA SEGURA DO .env" do `CLAUDE.md`): `touch .env && sed -i '/^EXPORT_TEMA=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; } && printf 'EXPORT_TEMA=%s\n' "<tema>" >> .env` (valor `escuro`, `terra` ou `claro`; no Mac, `sed -i ''` no lugar de `sed -i`). Só confirmar depois que o comando terminar sem erro; se falhar, avisar o aluno que o tema não foi salvo e seguir com o tema escolhido só nesta geração. Confirmar em 1 linha e rodar esta sub-skill.
 - **`EXPORT_TEMA` já configurado:** "Quer salvar esse diagnóstico como um painel visual (HTML) no tema {Nome}? (s/n)" com a dica de tema pontual ("sim, terra" usa o tema só desta vez, sem alterar o `.env`).
 
 Em ambos os casos, manter o aviso de snapshot:
@@ -82,8 +89,8 @@ meus-produtos/{ativo}/entregas/trafego/otimizar/painel-decisao-{YYYY-MM-DD-HHMM}
 ## 3. Layout do painel (de cima pra baixo)
 
 1. **Topbar + banner de snapshot** (esqueleto §3.1 da análise): conta mascarada, janela, escopo, horário.
-2. **Premissa carimbada** logo abaixo do banner: `Lucro estimado · margem de contribuição {margem}% · ROAS de break-even {1÷margem}`.
-3. **Faixa de KPIs** (`stat-card`): Lucro de contribuição no período · Lucro/dia · ROAS vs break-even · CPA médio vs meta · Confiabilidade do dado · nº de campanhas por zona. **Pelo menos um `stat-card` recebe a classe extra `kpi-lucro`** (exigido no gate).
+2. **Premissa carimbada** logo abaixo do banner: `Lucro estimado · margem de contribuição {margem}% · ROAS de ponto de equilíbrio {1÷margem}`. No modo faixa: `margem 60 a 80% · ROAS de ponto de equilíbrio 1,25 a 1,67`.
+3. **Faixa de KPIs** (`stat-card`): Lucro de contribuição no período · Lucro/dia · ROAS vs ponto de equilíbrio · CPA médio vs meta · Confiabilidade do dado · nº de campanhas por zona. **Pelo menos um `stat-card` recebe a classe extra `kpi-lucro`** (exigido no gate).
 4. **Seção 1. Mapa das 3 zonas** (`scatter`) + bloco `zona-legenda` (verde/amarela/vermelha explicadas).
 5. **Seção 2. Lucro/dia por campanha** (`divbars`) + tabela de duas lentes (Campanha | CPA | vs meta | ROAS | Lucro/dia | Zona | Veredito).
 6. **Seção 3. Confiabilidade do dado** (`gauge`) + a conciliação (gasto/compras soma vs total da conta).
@@ -95,7 +102,7 @@ Cabeçalhos de tabela em português (mapa da §13.1 da SKILL). Token de cor por 
 
 ## 4. Os 3 gráficos obrigatórios (spec + chamada do motor)
 
-Cada gráfico: montar o spec JSON, salvar em `/tmp/spec.json`, chamar o motor, receber a geometria, embrulhar no SVG dentro de um `.chart-card`.
+Cada gráfico: montar o spec JSON, salvar em `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json` (caminho absoluto, §0), chamar o motor, receber a geometria, embrulhar no SVG dentro de um `.chart-card`.
 
 ### 4.1 Mapa das 3 zonas (`scatter`)
 
@@ -113,7 +120,10 @@ x = CPA, y = ROAS, raio da bolha proporcional ao gasto (escalar para ~4 a 16), c
   "x_label": "CPA (R$)", "y_label": "ROAS"
 }
 ```
-Cor de cada ponto = zona (calculada na SKILL, não pelo motor): verde se CPA ≤ meta; amarela se meta < CPA ≤ break-even (ROAS ainda ≥ break-even); vermelha se ROAS < break-even. `tipo = scatter`.
+Cor de cada ponto = campo `zona` do YAML do diagnóstico (calculada na SKILL, §3.6, não pelo motor nem por regra própria), testada nesta ordem: vermelha se ROAS < break-even (lucro/dia negativo); verde se CPA ≤ meta; amarela no resto (CPA acima da meta, mas ROAS ainda ≥ break-even). `tipo = scatter`.
+
+- **Campanha com gasto e zero venda** (CPA nulo): nunca entra em `points` (o motor descarta ponto sem x e a campanha sumiria do mapa sem destaque). Vai numa linha à parte dentro do mesmo chart-card, marcada como zona vermelha: "Sem venda no período: {campanha} · R$ {gasto}". Se nenhuma campanha tiver compra, vale a exceção da §0 (omitir o gráfico e avisar).
+- **Linhas de meta e break-even fora do desenho:** o motor escala os eixos só pelos pontos. Se o `x_mid_px` devolvido sair de `plot_left` a `plot_right` (ou o `y_mid_px` sair de `plot_top` a `plot_bottom`), não desenhar aquela linha e escrever no chart-card: "Meta de CPA R$ {meta} fora da escala: todas as campanhas estão do mesmo lado da meta" (ou "ROAS de ponto de equilíbrio {be} fora da escala: todas as campanhas estão do mesmo lado").
 
 ### 4.2 Lucro/dia por campanha (`divbars`)
 
@@ -154,6 +164,11 @@ Barras divergentes, ordenadas do maior lucro ao maior prejuízo. Verde pra quem 
 
 - **Snapshot:** banner padrão "fotografia do momento, não atualiza sozinho".
 - **Premissa de margem sempre visível** no topo (item 2 do layout). Se `margem_fonte = faixa`, escrever "lucro em faixa (margem 60 a 80%)" e mostrar os lucros como intervalo.
+- **Modo faixa nos gráficos** (o `divbars` e o `scatter` só aceitam um número), mesmo critério conservador da SKILL (§12, margem 60%):
+  1. Os gráficos usam a margem conservadora de 60%: no `scatter`, o `y_mid` é o ROAS de ponto de equilíbrio 1,67; no `divbars`, o lucro/dia é calculado com margem 60%.
+  2. Cada chart-card desses dois gráficos traz a legenda "gráfico na margem conservadora de 60%".
+  3. O intervalo de 60 a 80% vai para a tabela de duas lentes e para os KPIs de lucro.
+  4. Campanha de borda (ROAS entre 1,25 e 1,67) recebe o rótulo "depende da margem" no ponto e na barra, em vez de uma cor de zona cravada.
 - **Confiabilidade baixa/média:** destacar o aviso e marcar os números de lucro como estimativa frouxa (não cravar).
 - **Lucro de contribuição é diferente de lucro líquido da empresa.** Se houver a visão empresa (custo fixo), separar em card próprio, rotulado.
 - **Gráfico sem dado:** omitir só aquele, nunca inventar (regra do contrato §0).
@@ -165,7 +180,7 @@ Barras divergentes, ordenadas do maior lucro ao maior prejuízo. Verde pra quem 
 
 Mesma mecânica da `/trafego-analise`: depois do gate (§0) passar, **abrir no navegador automaticamente** com o script cross-platform do projeto. Roda em duas fases.
 
-**FASE 1. Salvar + gate.** Gravar o HTML (UTF-8, sem BOM) e rodar o checklist da §0. **Não abrir o navegador nem anunciar "salvo" enquanto o gate não passar.**
+**FASE 1. Salvar + gate.** Gravar o HTML (UTF-8, sem BOM) e rodar o checklist da §0. **Não abrir o navegador nem anunciar "salvo" enquanto o gate não passar.** Com o gate aprovado, apagar os specs de `{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-*.json`.
 
 **FASE 2. Abrir no navegador.**
 1. Construir o caminho **absoluto** do painel: `{RAIZ_PROJETO}/meus-produtos/{ativo}/entregas/trafego/otimizar/painel-decisao-{horario}.html`.

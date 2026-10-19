@@ -52,11 +52,13 @@ daily_budget,lifetime_budget
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/adsets
   ?fields=id,name,status,effective_status,delivery_info,issues_info,
-          daily_budget,lifetime_budget,bid_amount,campaign_id,targeting
+          daily_budget,lifetime_budget,bid_amount,campaign_id,targeting,learning_stage_info
   &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
+
+Nas URLs de `curl` desta sub-skill, `{STATUS_FILTRO}` é o valor da coluna "já codificado" da tabela do Passo 0.55 do `SKILL.md` (ex.: `%5B%22ACTIVE%22%2C%22PAUSED%22%2C%22WITH_ISSUES%22%5D`), nunca a lista com colchetes e aspas crus. Aprendizado limitado sai de `learning_stage_info` (`status` igual a `FAIL`), não do `effective_status`. Se a resposta trouxer `paging.next`, buscar a próxima página repetindo o mesmo `curl` com `&after=<valor de paging.cursors.after>` e o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`), até a resposta não trazer mais `paging.next`. Nunca copiar, reaproveitar, exibir nem salvar a URL de `paging.next` ou `paging.previous`: ela traz o token (regra de paginação da `trafego-insights/SKILL.md` §10.2.1).
 
 **Chamada 8b. Insights de ad sets no período (para identificar gasto zero e zero conversão)**
 
@@ -68,7 +70,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &level=adset
   &date_preset={PRESET_PERIODO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 > **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (Chamada 8a, listagem de ad sets): cruzar o retorno desta chamada com a 8a e manter apenas os ad sets com o status desejado.
@@ -77,7 +79,7 @@ Usar `date_preset` equivalente ao período escolhido pelo aluno no Passo 3:
 - 7 dias → `last_7d`
 - 14 dias → `last_14d`
 - 30 dias → `last_30d`
-- Customizado → `since={YYYY-MM-DD}&until={YYYY-MM-DD}` (substituir `date_preset`)
+- Customizado → `time_range=%7B%22since%22%3A%22{YYYY-MM-DD}%22%2C%22until%22%3A%22{YYYY-MM-DD}%22%7D` (substituir `date_preset`; `since` e `until` soltos são ignorados pelo `/insights`)
 
 **Chamada 8c. Listagem de anúncios com status e motivo de rejeição**
 
@@ -87,7 +89,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/ads
   ?fields=id,name,status,effective_status,review_feedback,adset_id,campaign_id
   &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Chamada 8d. Insights de anúncios no período (impressões vs cliques)**
@@ -100,7 +102,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &level=ad
   &date_preset={PRESET_PERIODO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 > **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (Chamada 8c, listagem de anúncios): cruzar o retorno desta chamada com a 8c e manter apenas os anúncios com o status desejado.
@@ -113,7 +115,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/customaudien
   ?fields=id,name,subtype,approximate_count_lower_bound,
           approximate_count_upper_bound,time_updated,data_source
   &limit=200
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 `approximate_count_lower_bound` e `approximate_count_upper_bound` são os campos corretos para tamanho de audience. O campo legado `approximate_count` foi descontinuado na versão 17.0. Se os dois bounds retornarem `-1`, a audience tem menos de 1.000 pessoas e o Meta não expõe o número exato por privacidade.
@@ -125,18 +127,18 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/customaudien
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/adspixels
   ?fields=id,name,last_fired_time,is_unavailable
   &limit=50
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 `last_fired_time` indica o último disparo de qualquer evento. Para ver breakdown por evento nos últimos 7 dias, usar `trafego-pixel` (diagnóstico aprofundado). Aqui só verificar se o pixel disparou nas últimas 24h.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=adset` para 8a; `mcp__*__ads_insights_performance_trend` para 8b e 8d; `mcp__*__ads_get_ad_entities` com `entity_type=ad` para 8c; para 8f (pixels e `last_fired_time`) usar `mcp__*__ads_get_datasets`. Para audiences (8e), **usar `mcp__*__ads_get_ad_account_custom_audiences`** (lista subtype + faixa de tamanho via `approximate_count_lower_bound`/`_upper_bound`). No MCP **nunca usar `access_token`** (não existe nesse modo). Se a tool não retornar `time_updated`/`data_source` (necessários para a Resposta 7, remarketing secando), reportar o que a tool entrega e, se o aluno precisar do histórico de atualização, explicar que o modo App traz esses campos e que a troca é feita pelo `/trafego-conexao`. Para descobrir a tool, usar o **final do nome** (ex: `ads_get_ad_account_custom_audiences`), não o prefixo.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "adset"` e `filtering: [{field: "adset.effective_status", operator: "IN", value: STATUS_FILTRO}]` para 8a; `ads_get_ad_entities` com `level: "adset"` (8b) e `level: "ad"` (8d) no período do Passo 3 para o gasto e as conversões por entidade (a `ads_insights_performance_trend` não faz ranking nem total por entidade); `ads_get_ad_entities` com `level: "ad"` e `filtering: [{field: "ad.effective_status", operator: "IN", value: STATUS_FILTRO}]` para 8c. Em todas, `limit: 1000` e paginação por `cursor`; para achar gasto zero, cruzar 8b e 8d com as listagens 8a e 8c, sem filtrar `impressions` maior que zero; para 8f (pixels e `last_fired_time`) usar `mcp__*__ads_get_datasets`. Para audiences (8e), **usar `mcp__*__ads_get_ad_account_custom_audiences`** (lista subtype + faixa de tamanho via `approximate_count_lower_bound`/`_upper_bound`). No MCP **nunca usar `access_token`** (não existe nesse modo). Se a tool não retornar `time_updated`/`data_source` (necessários para a Resposta 7, remarketing secando), reportar o que a tool entrega, dizer ao aluno qual dado faltou e, se ele precisar da data de atualização, guiar a leitura no Gerenciador de Anúncios (Públicos, coluna de disponibilidade e data de atualização de cada público). Não sugerir trocar de modo: o App é só para conta que a Meta ainda não liberou no conector. Para descobrir a tool, usar o **final do nome** (ex: `ads_get_ad_account_custom_audiences`), não o prefixo.
 
 ### Referência de produto
 
 Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e o tipo de produto. Não perguntar de novo. Inferir tipo de funil pelo objetivo predominante das campanhas:
 - `OUTCOME_SALES` → funil de venda direta → tipo canônico de conversão: `offsite_conversion.fb_pixel_purchase`
-- `OUTCOME_LEADS` → funil de captação → tipo canônico de conversão: `offsite_conversion.fb_pixel_lead`
+- `OUTCOME_LEADS` → funil de captação → conversão = contagem de leads da regra do command: `lead` (total da Meta, site + formulário instantâneo) e, sem ele, `offsite_conversion.fb_pixel_lead`; nunca a soma
 
 ---
 
@@ -183,7 +185,8 @@ conversao_zero_sales = sum(actions onde action_type = "offsite_conversion.fb_pix
 **Template B. Captação de leads (OUTCOME_LEADS):**
 
 ```
-conversao_zero_leads = sum(actions onde action_type = "offsite_conversion.fb_pixel_lead") == 0
+conversao_zero_leads = leads == 0
+  (leads = actions[lead]; sem ele, actions[offsite_conversion.fb_pixel_lead]; nunca a soma)
   E adset.spend > 50 no período (Chamada 8b)
   E adset.effective_status == "ACTIVE" (Chamada 8a)
 ```
@@ -400,7 +403,7 @@ Classificação por `last_fired_time`:
 
 Cruzar Chamada 8e com foco em audiences de remarketing (subtipo `CUSTOM` ou `ENGAGEMENT`) que têm `time_updated` disponível. Detectar audiences que encolheram em relação ao período anterior.
 
-**Nota de limitação:** a Graph API não retorna histórico de tamanho de audience por data, só o snapshot atual via `approximate_count_lower_bound` e `approximate_count_upper_bound`. O tamanho "anterior" só está disponível se houver cache local de execução anterior desta análise salvo em `meus-produtos/{ativo}/.cache-problemas-ocultos.md`. Se não houver cache, exibir apenas o snapshot atual com `time_updated`.
+**Nota de limitação:** a Graph API não retorna histórico de tamanho de audience por data, só o snapshot atual via `approximate_count_lower_bound` e `approximate_count_upper_bound`. O tamanho "anterior" só está disponível se houver cache local de execução anterior desta análise salvo em `meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md`. Se não houver cache, exibir apenas o snapshot atual com `time_updated`.
 
 ```
 💧 REMARKETING: SNAPSHOT ATUAL  ·  (histórico disponível se houver cache anterior)
@@ -415,7 +418,7 @@ Cruzar Chamada 8e com foco em audiences de remarketing (subtipo `CUSTOM` ou `ENG
   ⚠️  Audiences não atualizadas há mais de 7 dias: {lista}
 ```
 
-Se houver cache anterior (arquivo `meus-produtos/{ativo}/.cache-problemas-ocultos.md` com data anterior):
+Se houver cache anterior (arquivo `meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md` com data anterior):
 
 ```
 💧 REMARKETING: VARIAÇÃO  ·  {data_cache_anterior} → hoje
@@ -438,7 +441,7 @@ Threshold de alerta:
 Ao finalizar a entrega deste output, salvar um resumo dos problemas identificados em:
 
 ```
-meus-produtos/{ativo}/.cache-problemas-ocultos.md
+meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md
 ```
 
 O arquivo deve conter:
@@ -544,7 +547,7 @@ Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.sect
 | Radar dos 7 problemas | SVG radar (receita A, adaptado para 7 eixos) | severidade 0–100 por problema (Respostas 1 a 7) | `.charts-grid`, 1ª coluna |
 | Atividade dos pixels (recência) | `.hbar-row` (receita D) | Chamada 8f `last_fired_time`: `.win` recente, `.burn` morto | `.charts-grid`, 2ª coluna |
 | Alocação queimando (campanhas ativas sem conversão) | `.hbar-row` (receita D) | Chamada 8b agregada por campanha (`spend` + 0 conversões) | `.chart-card` dentro da Resposta 4 |
-| Tamanho de audience ao longo do tempo (opcional) | SVG linha (receita F, helper `line`) | snapshot atual (8e) + cache anterior em `meus-produtos/{ativo}/.cache-problemas-ocultos.md` | `.chart-card` dentro da Resposta 7: **omitir** se não houver cache anterior |
+| Tamanho de audience ao longo do tempo (opcional) | SVG linha (receita F, helper `line`) | snapshot atual (8e) + cache anterior em `meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md` | `.chart-card` dentro da Resposta 7: **omitir** se não houver cache anterior |
 
 **Radar dos 7 problemas (adaptação da receita A para 7 eixos):** `viewBox="0 0 360 320"`, centro `(180,170)`, raio `R=130`. Os 7 eixos ficam em `θ_i = -90° + (360/7)°·i`. Severidade por problema (eixo): `0` = nenhum achado, escalando até `100` = crítico (ex: nº de achados normalizado, ou gasto-em-risco normalizado para Resposta 4). Vértice colorido pela faixa (`--green` 0–30, `--yellow` 31–60, `--orange` 61–80, `--red` 81–100). Ordem dos eixos = ordem das 7 respostas. **Só renderizar o radar quando houver dado real para os 7 eixos** (todas as 8 chamadas retornaram); caso contrário, omitir o radar e exibir apenas os gráficos das respostas que têm dado.
 

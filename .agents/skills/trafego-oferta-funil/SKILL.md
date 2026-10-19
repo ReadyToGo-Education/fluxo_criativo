@@ -42,7 +42,7 @@ Ler `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (gerar co
 - **Objeções principais, Urgências Ocultas, Decorados e público:** para avaliar FAQ, dor atacada, prova e para quem a página fala.
 
 ### 0.2. Conexão Meta
-Ler `META_AUTH_MODO`. Vazio: `/trafego-conexao`. `MCP_CONECTOR`: confirmar tool terminada em `ads_get_ad_entities` (conta não liberada no conector: avisar e oferecer o modo App pelo `/trafego-conexao`). `APP`: confirmar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q`. Skill 100% leitura, sem bloco 🛡️.
+Ler `META_AUTH_MODO` (`grep "^META_AUTH_MODO=" .env | cut -d= -f2-`). Vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar, sem adivinhar nem cair em fallback. `MCP_CONECTOR`: confirmar tool terminada em `ads_get_ad_entities` e que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`; se faltar, a opção "Validar" do `/trafego-conexao` completa). Conta não liberada no conector: avisar e oferecer o modo App pelo `/trafego-conexao`. `APP`: confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor com `grep -q "^NOME=." .env` (o ponto faz a linha vazia contar como ausente). Skill 100% leitura, sem bloco 🛡️.
 
 ### 0.3. Selecionar conta
 Mesma lógica das demais skills.
@@ -149,7 +149,7 @@ Digite o número:
 ```
 
 **Inteligência cruzada:**
-- Se o pós-clique mostra connect rate abaixo de 60%: a leitura da página busca sinais de problema técnico.
+- Se o pós-clique mostra connect rate abaixo de 70%: a leitura da página busca sinais de problema técnico (abaixo de 70%, a primeira hipótese é técnica; régua na seção 3.5).
 - Se a congruência é baixa: o diagnóstico de oferta recebe o alerta "desalinhamento com o anúncio".
 - Se o checkout mostra fricção: o plano prioriza o briefing de checkout.
 - Se a página tem nota alta mas as métricas são ruins: o problema pode ser preço, público ou checkout, não a página.
@@ -165,19 +165,24 @@ Consumir `funil_por_campanha()`, as métricas derivadas e a `serie_diaria`. NÃO
 | Modo (`META_AUTH_MODO`) | Como puxar o funil | Limitação real |
 |---|---|---|
 | `APP` | Graph API (`curl` em `.../insights?fields=actions`, `v25.0`, token mascarado na tela). O array `actions` traz `landing_page_view`, `add_to_cart`, `initiate_checkout`, `purchase`, `omni_landing_page_view`. **Funil 100% disponível.** | Nenhuma; só faltam os dados do gateway (cartão recusado, Pix) |
-| `MCP_CONECTOR` | O `ads_get_ad_entities` aceita uma lista própria de campos `actions:*` (validados: `actions:link_click`, `actions:omni_purchase`). Antes de declarar o funil incompleto, **descobrir na hora os campos de ação disponíveis com `ads_get_field_context`** (procurar visita à página, carrinho e checkout iniciado) e pedir os que existirem. | Se os campos de visita, carrinho ou checkout não vierem, seguir para a alternativa abaixo |
+| `MCP_CONECTOR` | Pedir no `ads_get_ad_entities` os campos de funil conferidos na conta real: `link_click`, `landing_page_view`, `omni_initiated_checkout` e `omni_purchase` (lista completa abaixo). Visita à página, checkout iniciado e compra saem direto deles. Carrinho (`add_to_cart` ou equivalente omni) só entra depois de confirmar com `ads_get_field_context`. | Métrica sem evento volta `null`: a conta não registra aquele evento. Só para a visita ou o checkout que faltar, seguir para a alternativa abaixo (o carrinho tem regra própria, logo depois dela) |
 
-**Quando o MCP não trouxer visita, carrinho ou checkout:**
+**Quando o MCP não trouxer visita ou checkout** (campo `null`):
 1. **Leitura guiada no Gerenciador de Anúncios** (sem mexer em nada da conta). Passo a passo para o aluno:
    1. Abrir o Gerenciador de Anúncios e selecionar as campanhas do escopo.
    2. Ajustar o período para o mesmo da análise.
    3. Clicar em "Colunas" → "Personalizar colunas".
    4. Marcar "Visualizações da página de destino", "Adições ao carrinho", "Finalizações de compra iniciadas" e "Compras".
    5. Aplicar e mandar os números aqui (ou um print da tabela).
-2. **Ou trocar para o modo App** pelo `/trafego-conexao`, que entrega o funil completo pela Graph API.
-3. Se o aluno preferir seguir sem esses números: usar CPA/ROAS como substitutos, **declarando** que o funil está incompleto (impressões → cliques → [lacuna] → conversões).
 
-**Nomes de campo válidos no `ads_get_ad_entities` (evita chamada perdida):** `amount_spent`, `actions:link_click`, `actions:omni_purchase`, `cost_per_action_type`, `purchase_roas`, `impressions`, `clicks`, `ctr`, `cpm`, `reach`, `frequency`. **NÃO existem** `inline_link_clicks`, `actions`, `action_values` (disparam erro de validação). Qualquer outro campo de ação: confirmar com `ads_get_field_context` antes.
+   Se a coluna de visitas à página ou de checkout iniciado também vier vazia no Gerenciador (ou a de compras, havendo venda no período na Hotmart ou na Kiwify), o pixel não registra esse evento: encaminhar para `/trafego-pixel`. Carrinho vazio é comum em checkout de plataforma (Hotmart, Kiwify) e não indica pixel com defeito.
+2. Se o aluno preferir seguir sem esses números: usar CPA/ROAS como substitutos, **declarando** que o funil está incompleto (impressões → cliques → [lacuna] → conversões).
+
+**Carrinho fora do gatilho:** carrinho não confirmado no `ads_get_field_context` (ou `null`) não abre a alternativa acima. O funil segue visita à página → checkout iniciado → compra, com uma linha dizendo ao aluno que o carrinho não veio pelo conector e que, se ele quiser, dá para ler a coluna "Adições ao carrinho" no Gerenciador.
+
+Limitação do conector nunca vira troca para o modo App: o App é só para conta que a Meta ainda não liberou no conector (Passo 0.2).
+
+**Campos no `ads_get_ad_entities` (contrato do conector: `.claude/skills/trafego-insights/SKILL.md` §10.1 "Contrato do conector da Meta (MCP)", conferido na conta real em 09/10/2026):** `amount_spent` (não `spend`), `impressions`, `reach`, `link_click`, `landing_page_view`, `omni_initiated_checkout`, `omni_purchase`, `offsite_conversion_fb_pixel_purchase_values` (sem ele, valor = `purchase_roas × amount_spent`), `purchase_roas`, `results`, `name`, `effective_status`, `campaign_id` e `adset_id`. Métrica sem evento volta `null`. CTR de link, CPM e frequência saem da conta: `link_click ÷ impressions`, `amount_spent ÷ impressions × 1000` e `impressions ÷ reach`. Não pedir `actions`, `action_values` nem `inline_link_clicks` crus: estão fora do contrato (a forma conferida é `link_click` e os campos `omni_*`). Carrinho e qualquer outro campo de ação: confirmar com `ads_get_field_context` antes.
 
 **Métricas derivadas do funil completo:** connect rate = visitas à página ÷ cliques no link; conversão da página = compras ÷ visitas; taxa de checkout = checkout iniciado ÷ visitas; conclusão de checkout = compras ÷ checkout iniciado.
 
@@ -186,6 +191,8 @@ Consumir `funil_por_campanha()`, as métricas derivadas e a `serie_diaria`. NÃO
 ## 3.5 Benchmark de conversão por faixa de ticket
 
 > Régua de mercado para dizer se a conversão está boa ou ruim. **A conversão cai conforme o ticket sobe** (lei verificada em fontes independentes: Firework, Baymard, Lucky Orange). Selecionar a faixa pelo **ticket do resumo do produto** (Passo 0.1) ou, em multi-produto, pelo ticket de cada produto. Contexto das faixas: tráfego frio de rede social, infoproduto, Brasil. Apresentar SEMPRE com a etiqueta de confiança ao lado do número. Mostrar no output final só a faixa do aluno, não as cinco.
+>
+> **Régua única do Severino para a conclusão de checkout** (compras ÷ checkouts iniciados): a `/trafego-otimizar`, a `/trafego-analise` e as demais skills apontam para esta tabela em vez de usar um limiar fixo. Crítico (fricção provável) só abaixo da metade do piso da faixa (sub-skill `diagnostico-checkout.md`).
 
 **Fases sensíveis ao preço** (a régua muda por faixa):
 
@@ -203,7 +210,7 @@ Consumir `funil_por_campanha()`, as métricas derivadas e a `serie_diaria`. NÃO
 
 **Fases NÃO sensíveis ao preço** (régua fixa, porque a pessoa ainda não viu o preço quando clica e quando a página carrega):
 - CTR no link: campanhas de venda no Meta, cerca de 1,4%; e-commerce, 1,5% a 3%.
-- Connect rate (visitas ÷ cliques no link): bom acima de 70%, alerta abaixo de 60%.
+- Connect rate (visitas à página ÷ cliques no link): saudável 80% ou mais, atenção de 60% a 79%, crítico abaixo de 60%. Abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento): conferir com `/pagina-performance` e a congruência anúncio-página antes de mexer no anúncio.
 
 **Ressalva obrigatória do checkout (sempre exibir junto do número):** o evento `initiate_checkout` da Hotmart e da Kiwify pode disparar mais "solto" que o "adicionar ao carrinho" dos estudos de e-commerce. Se conta mais gente na entrada, a conclusão de checkout do aluno fica artificialmente baixa contra o benchmark. Tratar a comparação de checkout como aproximação, nunca como prova de checkout quebrado.
 
@@ -268,7 +275,9 @@ Só roda se o aluno informou links no Passo 0.97. As páginas de upsell/downsell
 
 **Estimativa de take rate (quantos compradores aceitam a segunda oferta):**
 - Take rate = compras do upsell ÷ compras da oferta principal. Quem chega na página de upsell é exatamente quem comprou, então o denominador é o total de compras da principal.
-- **Só dá para calcular pelo Meta se o upsell tiver evento próprio distinguível:** conversão personalizada separada, ou produto/pixel separado. Procurar em `ads_get_customconversions` (MCP) ou em `/act_<id>/customconversions` (App) e no array `actions` (entradas `offsite_conversion.custom.*`).
+- **Só dá para calcular pelo Meta se o upsell tiver evento próprio distinguível:** conversão personalizada separada, ou produto/pixel separado. Como achar e contar, por modo:
+  - `APP`: listar com `GET /act_<id>/customconversions` e contar, no array `actions` dos insights, a entrada `offsite_conversion.custom.<id>` (`curl -g`, token só por substituição dentro do comando, mascarado na tela).
+  - `MCP_CONECTOR`: listar com `ads_get_customconversions`. Depois, conferir com `ads_get_field_context` se o `ads_get_ad_entities` aceita um campo de ação para essa conversão (por exemplo `actions:offsite_conversion.custom.<id>`). Nunca pedir `actions` cru (seção 3). Se o campo não existir, marcar `fonte_take_rate: "indisponivel_no_mcp"` e usar o relatório da Hotmart ou da Kiwify.
 - **Se o upsell dispara o MESMO evento `purchase` da principal, o Meta não separa as duas compras.** Nesse caso, declarar: "o take rate real só sai do relatório da plataforma (Hotmart, Kiwify); o pixel não distingue." **Nunca inventar o número.**
 
 **Benchmark de take rate (verificado em fonte, com etiqueta de confiança):**
@@ -279,7 +288,7 @@ Só roda se o aluno informou links no Passo 0.97. As páginas de upsell/downsell
 | Upsell pós-compra | página depois do pagamento | 3% a 15% (típico 3% a 8%; bem otimizado 8% a 15%) | 🟢 média a alta |
 | Downsell | depois do upsell recusado | 2% a 8% (sempre abaixo do upsell; preço 40% a 60% menor que ele) | 🟡 média |
 
-**Cuidado com os nomes (o aluno costuma misturar):** *order bump* fica no checkout (preço baixo, 1 clique, taxa alta); *upsell pós-compra* é a página que só o comprador vê depois de pagar (taxa bem menor). Os links que o aluno passa no Passo 0.97 normalmente são upsell/downsell pós-compra, não order bump. Saúde do upsell pós-compra: abaixo de 2% = algo errado; 5% a 8% = bem otimizado.
+**Cuidado com os nomes (o aluno costuma misturar):** *order bump* fica no checkout (preço baixo, 1 clique, taxa alta); *upsell pós-compra* é a página que só o comprador vê depois de pagar (taxa bem menor). Os links que o aluno passa no Passo 0.97 normalmente são upsell/downsell pós-compra, não order bump. Saúde do upsell pós-compra: abaixo de 2% = algo errado; 3% a 8% = típico; acima de 8% = bem otimizado.
 
 Fontes: Focus Digital, CartHook, Growth Suite, Hotmart (order bump), Ensinio.
 
@@ -345,8 +354,8 @@ A régua é o produto real do aluno, lido do `resumo-produto.md`, nunca um exemp
 | Página lida pelo WebFetch (HTML completo) | + confiança, com a ressalva de JavaScript |
 | Leitura falhou e o aluno colou o conteúdo | confiança média |
 | Página só com VSL (pouco texto) | confiança baixa para a oferta |
-| Funil pós-clique completo (visita + carrinho + checkout + compra) | + confiança |
-| MCP sem campos de visita, carrinho e checkout, e sem leitura guiada | confiança baixa para o funil |
+| Funil pós-clique completo (visita + checkout + compra; carrinho quando vier) | + confiança |
+| MCP sem campo de visita ou de checkout, e sem leitura guiada | confiança baixa para o funil |
 | Criativo em vídeo sem transcrição | confiança baixa para a congruência |
 | Menos de 7 dias ou menos de 100 visitas à página | confiança baixa |
 
@@ -412,8 +421,8 @@ A régua é o produto real do aluno, lido do `resumo-produto.md`, nunca um exemp
 **Inclusões obrigatórias no relatório (sincronizadas com as sub-skills):**
 - Benchmark da faixa de ticket ao lado das taxas reais, com etiqueta de confiança (seção 3.5).
 - Justificativa elemento por elemento da nota da oferta, em tabela `Elemento | Nota | Por que essa nota` (seção 12).
-- Checkout julgado pela faixa do ticket, com a ressalva da Hotmart, nunca por um limiar fixo de 30%.
-- Quando houver upsell/downsell, o take rate estimado (seção 4.5 e sub-skill `upsell-downsell.md`).
+- Checkout julgado pela faixa do ticket, com a ressalva da Hotmart e da Kiwify, nunca por um limiar fixo de 30%.
+- Quando houver upsell/downsell, o take rate (quando o upsell tem evento próprio) ou o aviso de que ele só sai do relatório da Hotmart ou da Kiwify (seção 4.5 e sub-skill `upsell-downsell.md`).
 
 ---
 
@@ -469,9 +478,9 @@ Ao final de qualquer módulo, oferecer o export. Reutiliza o design system da `/
 Sequência obrigatória depois de gravar o HTML (e depois de o checklist de conformidade passar):
 
 1. Montar o caminho absoluto: `{RAIZ_PROJETO}/meus-produtos/{ativo}/entregas/trafego/oferta-funil/{slug}-{timestamp}.html`.
-2. Abrir no navegador padrão com o script compartilhado do projeto, com o interpretador detectado na sessão (`python3` ou `py -3`):
+2. Abrir no navegador padrão com o script compartilhado do projeto, com o interpretador detectado na sessão (`{PY}` = `python3` ou `py -3`):
    ```
-   python3 "{RAIZ_PROJETO}/scripts/abrir-html.py" "{caminho-absoluto}"
+   {PY} "{RAIZ_PROJETO}/scripts/abrir-html.py" "{caminho-absoluto}"
    ```
    O próprio script tenta os comandos nativos de cada sistema e, se nada funcionar, imprime a instrução de abertura manual.
 3. **Sempre** devolver o caminho absoluto no chat, com o navegador aberto ou não.

@@ -31,6 +31,13 @@ Sem o "aprovar tudo", cada skill chamada pede o próprio bloco 🛡️ normalmen
 [2] A skill confere se o público já existe (listagem da /trafego-publicos)
     ├── Existe: usa o público existente
     └── Não existe: entra no plano criar pela /trafego-publicos
+    Com excluir_compradores ligado, na mesma listagem confere também o público
+    de compradores dos últimos 90 dias (o da exclusão)
+    ├── Existe: usa esse público na exclusão
+    └── Não existe: entra no plano, antes do conjunto, criar
+        "[WS] Purchase-90d-{produto}" pela /trafego-publicos (atalho Compradores
+        recentes); ou, se o aluno preferir, segue sem a exclusão (perguntar antes;
+        na R4 a exclusão é obrigatória)
 [3] O aluno define a oferta (criativo, headline, texto, CTA, link)
 [4] O aluno define orçamento e duração
 [5] Plano numerado e "aprovar tudo"
@@ -50,7 +57,7 @@ Sem o "aprovar tudo", cada skill chamada pede o próprio bloco 🛡️ normalmen
 | `cta` | `LEARN_MORE` | |
 | `orcamento_diario` | obrigatório | |
 | `duracao_dias` | sem fim (até pausar) | |
-| `excluir_compradores` | sim | Excluir compradores dos últimos 90 dias (boa prática) |
+| `excluir_compradores` | sim | Excluir compradores dos últimos 90 dias (boa prática; obrigatório na R4). O público de exclusão é conferido no passo [2] e, se não existir, entra no plano |
 
 ## Coleta de inputs (uma pergunta por mensagem)
 
@@ -92,7 +99,8 @@ Os tipos citados são os da Mandala de Anúncios do Severino (`.claude/skills/ma
 - CTA: LEARN_MORE
 
 ### R4. Upsell para compradores antigos
-- Público: `Purchase entre 90 e 365 dias` (compraram há mais de 90 dias)
+- Público: `Purchase 180d`, com a exclusão de `Purchase 90d` no conjunto (entra quem comprou entre 90 e 180 dias; 180 dias é o máximo de evento do pixel). Aqui a exclusão de compradores de 90 dias é obrigatória: é ela que separa quem comprou há mais tempo.
+- Para quem comprou há mais de 180 dias: usar a lista de clientes como origem (`/trafego-publicos` opção 6, com o CSV e a base legal pela LGPD). Nesse caso, o item 1 do plano numerado diz que o público vem da lista de clientes.
 - Ângulo: produto complementar ou continuação (Oportunidade)
 - CTA: SHOP_NOW
 
@@ -111,6 +119,9 @@ Depois da coleta, mostrar o resumo em linguagem natural e o plano:
 1. Criar o público "[WS] CarrinhoAbandonado-30d-curso-tarot"
    (quem adicionou ao carrinho e não comprou nos últimos 30 dias)
    → pela /trafego-publicos
+{1b. Criar o público "[WS] Purchase-90d-curso-tarot" (compradores dos últimos
+    90 dias, usado na exclusão) → pela /trafego-publicos, atalho Compradores
+    recentes (só se ele ainda não existir)}
 2. Criar a campanha "[WS-RMK] carrinho-abandonado-curso-tarot", objetivo vendas,
    PAUSADA → pela /trafego-criar-campanha
 3. Criar o conjunto com o público do item 1, excluindo "[WS] Purchase-90d-curso-tarot"
@@ -132,7 +143,7 @@ O Preview YAML abaixo vai junto, recolhido, para quem quiser o detalhe técnico.
 > Esta sub-skill **não fala com a Graph API nem com o MCP diretamente.** Ela chama a `/trafego-publicos` (listar ou criar público) e a `/trafego-criar-campanha` (campanha), que já roteiam por `META_AUTH_MODO` (tool no MCP, `curl` no App). Os endpoints abaixo são só referência do que cada uma executa.
 
 ```
-# Item 1. Conferir ou criar o público → /trafego-publicos
+# Item 1 (e 1b). Conferir ou criar o público de remarketing e o de exclusão → /trafego-publicos
 GET  /act_<id>/customaudiences            (listar)
 POST /act_<id>/customaudiences            (criar, se não existir)
 
@@ -141,6 +152,7 @@ POST /act_<id>/campaigns
 {
   "name": "[WS-RMK] {descricao}-{produto}",
   "objective": "OUTCOME_SALES",
+  "is_adset_budget_sharing_enabled": false,
   "status": "PAUSED"
 }
 
@@ -148,6 +160,7 @@ POST /act_<id>/adsets
 {
   "name": "[WS-RMK] adset-{descricao}-{produto}",
   "campaign_id": "<id>",
+  "daily_budget": <orcamento_em_centavos>,
   "targeting": {
     "custom_audiences": [<publico_remarketing>],
     "excluded_custom_audiences": [<publico_compradores_90d>],
@@ -159,7 +172,7 @@ POST /act_<id>/adsets
 POST /act_<id>/ads (com o criativo do passo 3, apontando para o creative_id quando já existe)
 ```
 
-> ⚠️ **Esta sub-skill cria estrutura nova, não copia**, então não esbarra nos erros do `/copies` (seção "Lições de campo" da `ab-generico.md`). Mas o conjunto novo exige `targeting_automation.advantage_audience` (erro 1870227): ao chamar a `/trafego-criar-campanha`, deixar claro que o conjunto é de remarketing, com público personalizado e exclusão, sem expansão Advantage+.
+> ⚠️ **Esta sub-skill cria estrutura nova, não copia**, então não esbarra nos erros do `/copies` (seção "Lições de campo" da `ab-generico.md`). Mas o conjunto novo exige `targeting_automation.advantage_audience` (erro 1870227): ao chamar a `/trafego-criar-campanha`, deixar claro que o conjunto é de remarketing, com público personalizado e exclusão, sem expansão Advantage+. A campanha é ABO (orçamento no conjunto): no App, ela leva `"is_adset_budget_sharing_enabled": false` (obrigatório desde a v24, senão erro 4834011); no MCP, o campo só vai se o schema de `ads_create_campaign` pedir.
 
 ## Preview YAML
 
@@ -176,13 +189,18 @@ publico_origem:
     inclusao: AddToCart 30d
     exclusao: Purchase 30d
 
-publico_excluir: "[WS] Purchase-90d-curso-tarot" (já existe)
+publico_excluir:
+  nome: "[WS] Purchase-90d-curso-tarot"
+  status: já existe | criar (item 1b do plano)
 
 campanha:
   objetivo: OUTCOME_SALES
   otimizacao: compra
-  orcamento_diario: 50 BRL
+  estrutura_orcamento: ABO   # sem orçamento na campanha; o valor vai no conjunto
   duracao: sem fim (até pausar)
+
+conjunto:
+  orcamento_diario: 50 BRL   # ABO, orçamento no conjunto
 
 anuncio:
   criativo: imagem (tipo Prova da Mandala)
@@ -195,6 +213,7 @@ status_inicial: PAUSED
 
 orquestracao:
   item_1: criar_publico -> /trafego-publicos
+  item_1b: criar_publico_exclusao -> /trafego-publicos   # só se o público de exclusão não existir
   itens_2_a_4: criar_campanha -> /trafego-criar-campanha
 ```
 
@@ -222,7 +241,7 @@ Registrar o plano e o resultado em `meus-produtos/{ativo}/entregas/trafego/teste
 - **Frequência alvo em remarketing:** de 3 a 6 (maior que no público frio, porque o público é menor e quente).
 - **Janela curta** = público pequeno e muito quente. **Janela longa** = público maior e mais frio.
 - **Orçamento conservador.** Público pequeno satura rápido. Começar com R$ 30 a 50/dia para público de 5 a 20 mil pessoas.
-- **Criativo diferente do usado no público frio.** Quem está no remarketing já viu o anúncio principal. Usar outro ângulo da Mandala: prova social, explicação que quebra objeção, oportunidade.
+- **Criativo diferente do usado no público frio.** Quem está no remarketing já viu o anúncio principal. Usar outro ângulo da Mandala: Prova, Explicação (quebrando a objeção que travou a compra), Oportunidade.
 
 ## Avisos
 

@@ -8,11 +8,13 @@ Sub-skill compartilhada pelos 6 módulos da `/trafego-criativos`. Acionada opcio
 
 **É PROIBIDO inventar HTML novo.** Sempre partir do esqueleto e dos tokens do design system oficial em `.claude/skills/trafego-analise/sub-skills/_export-html.md` (só leitura: esta sub-skill não edita aquele arquivo). O design system tem **3 temas oficiais** (Escuro, Terra, Claro Neutro); a escolha do tema segue a seção 1 do `_export-html.md` da análise (pergunta com opções na primeira vez, depois `EXPORT_TEMA` do `.env`). Nunca criar paleta própria fora dos 3 temas. Cores de SVG conforme a tabela CORES_GRAFICO (seção 3.2.c de lá).
 
-**É OBRIGATÓRIO renderizar os gráficos** declarados por módulo abaixo. Geometria via `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py` (sem token, em qualquer modo), com o spec passado por arquivo e o interpretador detectado na sessão (`python3` ou `py -3`):
+**É OBRIGATÓRIO renderizar os gráficos** declarados por módulo abaixo. Geometria via `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py` (sem token, em qualquer modo), com o spec passado por arquivo e o interpretador detectado na sessão (`{PY}` = `python3` ou `py -3`). Gravar o spec com o Write num caminho **absoluto** dentro do projeto, um arquivo por gráfico, e chamar o motor também por caminho absoluto. Nunca usar `/tmp`: no Windows, o Write e o Bash enxergam pastas `/tmp` diferentes, e o motor leria um arquivo inexistente ou um spec antigo de outra sessão.
 
 ```bash
-python3 .claude/skills/trafego-analise/scripts/trafego_chart_geom.py <tipo> < /tmp/spec.json
+{PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"
 ```
+
+Ao terminar o export, apagar os specs (`spec-*.json` dessa pasta `trafego/tmp/`). Quando o HTML for montado por script Python, também vale chamar o motor por import (`G.geom_scatter(spec)` etc., seção 3.2.1.2 do `_export-html.md` da análise), com o `sys.path` apontando para o caminho absoluto `{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts`, sem arquivo intermediário.
 
 O formato do spec de cada tipo (`line`, `vbars`, `gauge`, `scatter`, `radar`, `divbars`) está na seção 3.2.1.2 do `_export-html.md` da análise. As barras usam a chave `bars` (lista de `{label, value, color}`).
 
@@ -42,7 +44,7 @@ Regra de bloqueio: se `svg=0`, `chart-card=0`, `explain=0`, `topbar=0`, `tema=0`
 - **Gauge de Cost per Hook:** arco semicircular, menor é melhor (zonas invertidas: verde no começo do arco). Geometria: `trafego_chart_geom.py gauge`.
 
 ### Intenção Criativa
-- **Scatter de qualidade de intenção:** eixo X = CTR, eixo Y = Click-to-LPV Rate, linhas de quadrante no benchmark de CTR da conta e em 70% de visita. Quadrante superior direito = visita qualificada. Inferior direito = curiosidade vazia. Geometria: `trafego_chart_geom.py scatter`.
+- **Scatter de qualidade de intenção:** eixo X = CTR, eixo Y = Click-to-LPV Rate, linhas de quadrante no benchmark de CTR da conta e em 80% de visita (a faixa saudável da visita à página). Quadrante superior direito = visita qualificada. Inferior direito = curiosidade vazia. Geometria: `trafego_chart_geom.py scatter`.
 
 ### Conversão Criativa
 - **Barras cold vs warm:** para cada criativo, duas barras lado a lado com o CPA em cold e o CPA em warm (cores diferentes por temperatura). Geometria: `trafego_chart_geom.py vbars`.
@@ -88,10 +90,10 @@ Criar a pasta se não existir. `{ativo}` vem de `meus-produtos/.ativo`.
 Abrir sempre depois de salvar, com o script `scripts/abrir-html.py` da raiz do projeto. Caminhos **absolutos** do script e do HTML (o diretório atual do shell pode ter mudado com um `cd` anterior):
 
 ```bash
-python3 "{RAIZ_PROJETO}/scripts/abrir-html.py" "{RAIZ_PROJETO}/meus-produtos/{ativo}/entregas/trafego/criativos/{arquivo}.html"
+{PY} "{RAIZ_PROJETO}/scripts/abrir-html.py" "{RAIZ_PROJETO}/meus-produtos/{ativo}/entregas/trafego/criativos/{arquivo}.html"
 ```
 
-Trocar `python3` por `py -3` se esse for o interpretador da sessão. Em qualquer caso, devolver o caminho absoluto no chat como texto copiável:
+`{PY}` é o interpretador detectado na sessão (`python3` ou `py -3`). Em qualquer caso, devolver o caminho absoluto no chat como texto copiável:
 
 ```
 ✅ Concluído: análise criativa exportada. Caminho: {raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\criativos\{arquivo}.html

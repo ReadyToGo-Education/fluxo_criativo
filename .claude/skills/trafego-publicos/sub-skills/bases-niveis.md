@@ -45,7 +45,7 @@ Quando precisar de mais detalhe, ler **só** a seção indicada na tabela "Onde 
 
 A busca de interesse por nome **não existe no MCP**.
 
-- **`APP`:** a skill busca e valida os interesses sozinha por `curl` (`GET /search?type=adinterest` e afins) e estima o tamanho por `POST /act_<id>/delivery_estimate`.
+- **`APP`:** a skill busca e valida os interesses sozinha por `curl` (`GET /search?type=adinterest` e afins) e estima o tamanho por `GET /act_<id>/delivery_estimate`.
 - **`MCP_CONECTOR`:** na entrada do sub-fluxo, explicar e oferecer:
   ```
   O conector da Meta não pesquisa interesses. Hoje, a recomendação da própria Meta
@@ -56,7 +56,6 @@ A busca de interesse por nome **não existe no MCP**.
      idade e idioma, e deixo os interesses como sugestão
   2. Quero interesses específicos: te passo a lista por nível e você confere
      no Gerenciador quais existem (uns 5 minutos)
-  3. Usar o modo App, que confere os interesses sozinho (/trafego-conexao)
 
   Digite o número:
   ```
@@ -90,16 +89,21 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**.
 
 ### Ordem fixa
 
+Os passos 1, 5 e 6 rodam sempre. Os passos 2, 3 e 4 só rodam em dois casos: quando o aluno responde "ajustar" no passo 1 (e aí só o passo do item que ele quer mudar) ou quando o resumo não traz aquele dado (idade ou gênero; sem região no resumo, o padrão é Brasil inteiro e o passo 2 só roda se o aluno pedir ajuste). Com "sim" no passo 1, seguir direto para o passo 5 (Idioma).
+
 1. **Confirmar o perfil lido do resumo.**
    ```
    Vou usar o público registrado no seu produto:
 
    Produto: {nome do produto}
-   Público: {perfil resumido: gênero, idade, região}
+   Local: {região do resumo, ou Brasil inteiro se o resumo não tiver}
+   Idade: {idade_min}-{idade_max}
+   Gênero: {gênero}
 
    Está certo? (sim ou ajustar)
    ```
-   Se "ajustar": perguntar só o que mudou. Não reescrever o resumo (ajuste vale só para estas bases; para mudar o perfil do produto, `/produto-concepcao`).
+   Idade ou gênero que faltar no resumo aparece como "não informado" e é perguntado no passo correspondente, mesmo com "sim".
+   Se "ajustar": perguntar só o que mudou, pelo passo correspondente (2 local, 3 idade, 4 gênero). Não reescrever o resumo (ajuste vale só para estas bases; para mudar o perfil do produto, `/produto-concepcao`).
 
 2. **Local.**
    ```
@@ -148,7 +152,7 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**.
    2. Sim, uma lista curta de comportamentos comuns (compradores online etc.)
    ```
 
-**Proibido:** pedir `interests[].id`, `behaviors[].id`, `geo_locations` ou qualquer estrutura da Marketing API; agrupar inputs; pular para a confirmação sem os passos 1 a 6 (o 7 é opcional).
+**Proibido:** pedir `interests[].id`, `behaviors[].id`, `geo_locations` ou qualquer estrutura da Marketing API; agrupar inputs; pular para a confirmação sem os passos 1, 5 e 6 (os passos 2 a 4 só quando faltam no resumo ou o aluno pede ajuste; o 7 é opcional).
 
 ## Fluxo
 
@@ -303,8 +307,8 @@ validacao_interesses: api_search | manual_gerenciador | advantage_plus_sem_inter
 
 ## Estimativa
 
-- users_lower_bound: ~3.200.000
-- users_upper_bound: ~3.700.000
+- estimate_mau_lower_bound: ~3.200.000
+- estimate_mau_upper_bound: ~3.700.000
 - método: delivery_estimate | audience_size dos interesses | Gerenciador
 
 ## Como usar
@@ -332,15 +336,16 @@ Vou gravar 3 bases de público para o produto "{produto}":
    Pessoas de {idade_min} a {idade_max} anos, {gênero em português}, {local em português},
    com Facebook em {idioma em português}.
    Interesses: {interesse 1}, {interesse 2}... ({N} no total).
-   Tamanho estimado: ~{tamanho, ex: "18 milhões"}.
+   Tamanho estimado: {Modo App: ~{tamanho, ex: "18 milhões"} | Modo MCP: o Gerenciador
+   mostra ao montar o conjunto (o conector não estima)}.
 
 🌿 INTERMEDIÁRIOS: meio de funil
    Mesma base, com interesses mais específicos: {lista}.
-   Tamanho estimado: ~{tamanho}.
+   Tamanho estimado: {Modo App: ~{tamanho} | Modo MCP: no Gerenciador, ao montar o conjunto}.
 
 🌳 AVANÇADOS: fundo de funil
    Mesma base, com interesses bem específicos: {lista}.
-   Tamanho estimado: ~{tamanho}.
+   Tamanho estimado: {Modo App: ~{tamanho} | Modo MCP: no Gerenciador, ao montar o conjunto}.
 
 Onde vão ficar:
    Arquivos em meus-produtos/_global/trafego/publicos/ (eles NÃO aparecem no
@@ -427,14 +432,16 @@ A estimativa é feita antes de gravar:
 ### Abordagem A (preferida, modo App): `/delivery_estimate`
 
 ```
-POST /act_<id>/delivery_estimate
-{
-  "targeting_spec": { ...mesma segmentação da base... },
-  "optimization_goal": "REACH"
-}
+GET /act_<id>/delivery_estimate?optimization_goal=REACH&targeting_spec=<JSON da segmentação da base, codificado na URL>
 ```
 
-Devolve `{users_lower_bound, users_upper_bound, estimate_ready}` sem criar nada. Usar `users_lower_bound` para o alerta. (É uma leitura, mesmo sendo `POST`: não muda nada na conta e não passa pelo bloco 🛡️.)
+Um `Bash(curl ...)` só, com o token lido do `.env` na própria chamada (seção "LEITURA SEGURA DO .env" do CLAUDE.md). O `-G` com `--data-urlencode` já codifica o JSON na URL. No chat, o comando aparece só assim:
+
+```bash
+curl -sG "https://graph.facebook.com/v25.0/act_<id>/delivery_estimate" --data-urlencode 'targeting_spec={"geo_locations":{"countries":["BR"]},"age_min":25,"age_max":55,...}' -d "optimization_goal=REACH" -d "access_token=***TOKEN_MASCARADO***"
+```
+
+Devolve `data[0]` com `estimate_mau_lower_bound`, `estimate_mau_upper_bound` e `estimate_ready`, sem criar nada. Se `estimate_ready` vier `false`, tentar de novo uma vez; se continuar, usar a Abordagem B. Usar `estimate_mau_lower_bound` para o alerta. É leitura (`GET`): não muda nada na conta e não passa pelo bloco 🛡️.
 
 ### Abordagem B (reserva): tamanho dos interesses
 
@@ -446,10 +453,10 @@ Sem estimativa automática. Se o aluno quiser o número, o Gerenciador mostra o 
 
 ### Alerta
 
-Se `users_lower_bound < 1.000` em algum nível, **NÃO gravar direto** aquele nível:
+Se `estimate_mau_lower_bound < 1.000` em algum nível (ou a estimativa da Abordagem B ficar abaixo disso), **NÃO gravar direto** aquele nível:
 
 ```
-⚠️ A base "{nome}" ficou com ~{users_lower_bound} pessoas: pequena demais para o
+⚠️ A base "{nome}" ficou com ~{estimate_mau_lower_bound} pessoas: pequena demais para o
 algoritmo da Meta otimizar bem (mínimo recomendado: 1.000; ideal: 50.000 ou mais).
 
 Como você quer seguir?

@@ -15,11 +15,15 @@ python3 ou py -3, conforme o CLAUDE.md):
 
 Percentuais entram como fração: 0.18 significa 18%.
 Variável ausente (ou null) vale 0 ponto e aparece em "variaveis_indisponiveis".
+Com menos de 7 dias de dado, a faixa é dados_insuficientes, qualquer que seja
+o score (o número fica e o campo "aviso" explica a trava).
 
 Só biblioteca padrão. Sem dependência externa.
 """
 
 import json
+import math
+import re
 import sys
 
 
@@ -30,12 +34,17 @@ def _numero(valor):
     if isinstance(valor, (int, float)):
         return float(valor)
     if isinstance(valor, str):
+        monetario = "R$" in valor
         texto = valor.strip().replace("R$", "").replace(" ", "")
         percentual = texto.endswith("%")
         texto = texto.rstrip("%")
         if "," in texto:
             # Formato brasileiro: 1.234,56
             texto = texto.replace(".", "").replace(",", ".")
+        elif monetario and re.fullmatch(r"\d{1,3}(\.\d{3})+", texto):
+            # Valor em reais sem centavos: "R$ 1.000" é mil, não 1,0.
+            # Só para texto com "R$": em fração ("0.300") o ponto é decimal.
+            texto = texto.replace(".", "")
         try:
             numero = float(texto)
         except ValueError:
@@ -120,7 +129,7 @@ def pontuar_frequencia(valor):
 
 def pontuar_concentracao(valor):
     """Fração do gasto concentrada no anúncio que mais gasta.
-    0 pts: 80% ou mais | 5 pts: 40% a 80% | 10 pts: <40%"""
+    0 pts: >80% | 5 pts: 40% a 80% | 10 pts: <40%"""
     valor = _numero(valor)
     if valor is None or valor < 0:
         return 0
@@ -133,7 +142,7 @@ def pontuar_concentracao(valor):
 
 def pontuar_remarketing(valor):
     """Fração do resultado que vem de remarketing.
-    0 pts: 70% ou mais | 5 pts: 40% a 70% | 10 pts: <40%"""
+    0 pts: >70% | 5 pts: 40% a 70% | 10 pts: <40%"""
     valor = _numero(valor)
     if valor is None or valor < 0:
         return 0
@@ -192,12 +201,17 @@ def sugestoes(dados, variaveis_pontuadas):
             sug.append(f"+{faltam} conversões (para amostra mais confiável)")
     if variaveis_pontuadas["dias_analisados"]["pontos"] < 10:
         atual = _numero(dados.get("dias")) or 0
-        faltam = int(7 - atual)
+        faltam = math.ceil(7 - atual)
         if faltam > 0:
-            sug.append(f"+{faltam} dias de dados")
+            sug.append(f"+{faltam} {'dia' if faltam == 1 else 'dias'} de dados")
     if variaveis_pontuadas["consistencia_cv"]["pontos"] < 5:
         sug.append("Reduzir a variação diária (estabilizar criativos e orçamento)")
-    if variaveis_pontuadas["concentracao_top1"]["pontos"] < 5:
+    # Sem valor (ex.: entidade de nível anúncio, em que a variável não se aplica),
+    # não sugerir diversificar: a variável só aparece em variaveis_indisponiveis.
+    if (
+        dados.get("pct_gasto_top1_anuncio") is not None
+        and variaveis_pontuadas["concentracao_top1"]["pontos"] < 5
+    ):
         sug.append("Diversificar criativos para reduzir a concentração de gasto")
     if variaveis_pontuadas["dependencia_remarketing"]["pontos"] < 5:
         sug.append("Aumentar a proporção de prospecção em relação ao remarketing")
@@ -233,6 +247,17 @@ def calcular(dados):
     score = sum(v["pontos"] for v in variaveis_pontuadas.values())
     faixa = classificar_faixa(score)
 
+    # Trava pelos dias (princípio 12 do SKILL.md): com menos de 7 dias de dado,
+    # a faixa é dados_insuficientes, qualquer que seja o score. O número fica.
+    aviso = None
+    dias = _numero(dados.get("dias"))
+    if dias is not None and dias < 7 and faixa != "dados_insuficientes":
+        aviso = (
+            f"Menos de 7 dias de dado ({dias:g}): faixa travada em dados_insuficientes. "
+            f"Sem a trava, o score {score} daria {faixa}."
+        )
+        faixa = "dados_insuficientes"
+
     risco = "baixo"
     if faixa == "dados_insuficientes":
         risco = "critico"
@@ -241,7 +266,7 @@ def calcular(dados):
     elif faixa == "media_confianca":
         risco = "medio"
 
-    return {
+    resultado = {
         "score": score,
         "faixa": faixa,
         "risco_da_decisao": risco,
@@ -249,6 +274,9 @@ def calcular(dados):
         "variaveis_indisponiveis": indisponiveis,
         "o_que_aumentaria_confianca": sugestoes(dados, variaveis_pontuadas),
     }
+    if aviso:
+        resultado["aviso"] = aviso
+    return resultado
 
 
 def _ler_entrada():

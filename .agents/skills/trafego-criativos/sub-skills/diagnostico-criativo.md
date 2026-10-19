@@ -26,14 +26,16 @@ Para cada criativo, avaliar 4 camadas em sequência:
 
 | Camada | O que avalia | Métricas | OK se... | FAIL se... |
 |--------|-------------|----------|----------|-----------|
-| 1. Atenção | Captura e sustenta? | Hook Rate, Hold Rate | Hook ≥ 20% E Hold ≥ 35% | Hook < 15% OU Hold < 30% |
-| 2. Intenção | Gera ação? | CTR, Click-to-LPV Rate | CTR ≥ benchmark E LPV Rate ≥ 65% | CTR < benchmark × 0.7 OU LPV Rate < 50% |
+| 1. Atenção | Captura e sustenta? | Hook Rate, Hold Rate | Hook ≥ 25% E Hold ≥ 35% | Hook < 15% OU Hold < 30% |
+| 2. Intenção | Gera ação? | CTR, Click-to-LPV Rate | CTR ≥ benchmark E LPV Rate ≥ 80% | CTR < benchmark × 0.7 OU LPV Rate < 60% |
 | 3. Conversão | Gera venda/lead? | CPA, ROAS, Purchase Rate | CPA ≤ target × 1.3 | CPA > target × 1.5 |
 | 4. Consistência | Sustenta no tempo? | CV diário, tendência, frequência | CV < 0.40 E freq < 3.0 E tendência estável | CV > 0.60 OU freq > 4.0 OU tendência piorando |
 
-**Nota sobre zona cinza:** valores entre OK e FAIL (ex: Hold 30-34%, LPV 50-64%) são `zona_cinza`. Não diagnosticar como FAIL nem como OK. Marcar a camada como "atenção" com ressalva.
+**Nota sobre zona cinza:** valores entre OK e FAIL (ex: Hook 15-24%, Hold 30-34%, LPV 60-79%) são `zona_cinza`. Não diagnosticar como FAIL nem como OK. Marcar a camada como "atenção" com ressalva.
 
-**Referência de thresholds:** esses limiares são os de diagnóstico. Os perfis da `leitura-atencao.md` usam limiares de classificação (mais granulares). A `dna-criativo.md` deriva thresholds dos dados reais da conta (podem ser mais altos ou mais baixos). Os do diagnóstico são o padrão geral.
+**Visita à página baixa começa pela página:** o LPV Rate (Click-to-LPV) é a mesma conta do connect rate (visitas à página ÷ cliques no link). Abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento): conferir com `/pagina-performance` e a congruência com `/trafego-oferta-funil` antes de mexer no anúncio. Só depois de descartar a causa técnica, ler como curiosidade vazia do criativo.
+
+**Referência de thresholds:** esses limiares são os de diagnóstico. As faixas do Hook Rate (crítico abaixo de 15%, atenção de 15% a 25%, saudável 25% ou mais) e do LPV Rate (saudável 80% ou mais, atenção de 60% a 79%, crítico abaixo de 60%) são as mesmas de todas as skills de tráfego do Severino. Os perfis da `leitura-atencao.md` usam limiares de classificação (mais granulares). A `dna-criativo.md` deriva thresholds dos dados reais da conta (podem ser mais altos ou mais baixos). Os do diagnóstico são o padrão geral.
 
 **Zona cinza** (entre OK e FAIL): marcar como `atencao` e incluir ressalva.
 
@@ -43,7 +45,7 @@ Para cada criativo, avaliar 4 camadas em sequência:
 |------------|--------|------------|------|
 | `falha_gancho` | Camada 1 FAIL no hook (Hook Rate < 15%) | Primeiros segundos | Testar novo gancho. Manter corpo e CTA. |
 | `falha_sustentacao` | Camada 1 FAIL no hold (Hook OK, Hold < 30%) | Meio do vídeo | Reescrever desenvolvimento. Gancho funciona. |
-| `falha_intencao` | Camadas 1 OK, Camada 2 FAIL (CTR baixo ou LPV baixo) | Transição atenção → clique | Se CTR baixo: fortalecer CTA e urgência. Se CTR alto + LPV baixo: curiosidade vazia, alinhar promessa com destino. |
+| `falha_intencao` | Camadas 1 OK, Camada 2 FAIL (CTR baixo ou LPV baixo) | Transição atenção → clique | Se CTR baixo: fortalecer CTA e urgência. Se CTR alto + LPV baixo: primeiro conferir a causa técnica (página lenta, link errado, redirecionamento) com `/pagina-performance` e a congruência com `/trafego-oferta-funil`, sem mexer no anúncio; descartada a causa técnica, é curiosidade vazia: alinhar promessa com destino em `/copy-anuncio`. |
 | `falha_qualificacao` | Camadas 1-2 OK, Camada 3 FAIL com CTR e LPV bons | Tráfego qualificado chega mas não compra | Problema pode ser oferta, preço, prova ou checkout. Testar CTA mais direto ou âncora de preço no criativo. |
 | `falha_pos_clique` | Camadas 1-2 OK, Camada 3 FAIL com Offer Rate muito baixo (< 2%) | Página/checkout, NÃO o criativo | NÃO pausar criativo. Rodar `/trafego-oferta-funil` para ler a página e diagnosticar a oferta. |
 | `criativo_equilibrado` | 4 camadas OK | Nenhuma (candidato a escala) | Criar variações. Para escalar: `/trafego-diagnostico` (falso vencedor e score) e depois `/trafego-escalar`. |
@@ -56,7 +58,7 @@ Quando múltiplas camadas falham simultaneamente, aplicar esta ordem de priorida
 1. **`dados_insuficientes`**: sempre prevalece. Se não há dados, não diagnosticar.
 2. **`falha_gancho`**: se Camada 1 FAIL no hook, parar aqui. Sem atenção, avaliar intenção e conversão é irrelevante.
 3. **`falha_sustentacao`**: se hook OK mas hold FAIL, parar. O público não chega ao CTA.
-4. **`falha_intencao`**: se atenção OK mas Camada 2 FAIL (CTR ou LPV baixos). Inclui curiosidade vazia (CTR alto + LPV baixo).
+4. **`falha_intencao`**: se atenção OK mas Camada 2 FAIL (CTR ou LPV baixos). Inclui curiosidade vazia (CTR alto + LPV baixo), que só vale depois de descartar a causa técnica da página (LPV abaixo de 70%: `/pagina-performance` e `/trafego-oferta-funil` primeiro).
 5. **`falha_pos_clique`**: se atenção e intenção OK, conversão FAIL **e** Offer Rate < 2% (problema fora do criativo: página, checkout, oferta). Prevalece sobre falha_qualificacao quando Offer Rate é muito baixo.
 6. **`falha_qualificacao`**: se atenção e intenção OK, conversão FAIL com tráfego qualificado (LPV bom) **e** Offer Rate ≥ 2% (o tráfego chega e demonstra algum interesse, mas não fecha).
 7. **`criativo_equilibrado`**: só quando TODAS as 4 camadas estão OK.
@@ -84,28 +86,33 @@ Score = soma (0 a 50). Faixas: alta (40+), média (25-39), baixa (10-24), insufi
 Cada diagnóstico DEVE ter explicação completa:
 
 ```
-AD "Polêmica - 15s": FALHA DE INTENÇÃO (curiosidade vazia) ⚠️
+AD "Polêmica - 15s": FALHA DE INTENÇÃO (visita à página baixa) ⚠️
 
 O que está acontecendo: esse criativo captura atenção (Hook 35%)
 e gera muitos cliques (CTR 2.8%), mas o Click-to-LPV Rate é
 apenas 38%: a maioria dos cliques não chega na página. E quem
 chega não compra (CPA R$ 280, quase 2× a meta).
 
-Onde quebra: na qualidade da intenção. O clique é de curiosidade,
-não de interesse real. A promessa do anúncio não prepara o
-público para o que vai encontrar na página.
+Onde quebra: entre o clique e a chegada à página. Com 38% de
+visita (abaixo de 70%), a primeira hipótese é técnica: página
+lenta, link errado ou redirecionamento.
 
-Por que provavelmente é isso: a promessa "descubra o segredo"
-atrai curiosos, não compradores. O clique é de "quero saber",
-não de "quero comprar".
+Por que provavelmente é isso: primeiro, a causa técnica. Se a
+página estiver em ordem, a leitura passa a ser curiosidade
+vazia: a promessa "descubra o segredo" atrai curiosos, não
+compradores. O clique é de "quero saber", não de "quero comprar".
 
 O que NÃO fazer: não escalar pelo CTR alto. Não pausar sem
 testar variação (o gancho é forte).
 
-O que fazer: testar variação da promessa mais conectada ao
-Quadro do produto. Em vez de "descubra o segredo", uma premissa
-concreta com resultado e prazo reais (nada inventado), escrita
-em /copy-anuncio.
+O que fazer: primeiro, descartar a causa técnica. Com 38% de
+visita, conferir se a página carrega rápido e se o link e o
+redirecionamento estão certos (/pagina-performance) e se a página
+continua a promessa do anúncio (/trafego-oferta-funil), sem mexer
+no anúncio. Com a página em ordem, testar variação da promessa
+mais conectada ao Quadro do produto. Em vez de "descubra o
+segredo", uma premissa concreta com resultado e prazo reais
+(nada inventado), escrita em /copy-anuncio.
 
 Confiança: 38/50 (média). Para subir: +5 conversões e +3 dias.
 ```
@@ -144,6 +151,8 @@ Quando o criativo é imagem estática:
 
 Veredictos possíveis para imagem: `falha_intencao`, `falha_qualificacao`, `falha_pos_clique`, `criativo_equilibrado`, `dados_insuficientes`. Os veredictos `falha_gancho` e `falha_sustentacao` são exclusivos de vídeo (dependem de Hook/Hold).
 
+**Imagem com atenção reprovada:** em imagem, camada 1 FAIL (CTR < benchmark × 0.5) entra na posição 2 da árvore (no lugar de `falha_gancho`) e vira `falha_intencao` com o texto "a imagem não para a rolagem: CTR {X}%, menos da metade do benchmark". Ação: nova peça em `/criativo-estatico`, mantendo a oferta. Nesse caso, não usar a frase "captura atenção" do template (variante de imagem no template de `falha_intencao`).
+
 ## Templates de explicação por veredicto
 
 Cada veredicto DEVE usar o template correspondente:
@@ -153,7 +162,8 @@ Cada veredicto DEVE usar o template correspondente:
 {nome}: FALHA NO GANCHO
 
 O que está acontecendo: o público não para de scrollar nos
-primeiros 3 segundos. Hook Rate de {X}% (benchmark: 20%+).
+primeiros 3 segundos. Hook Rate de {X}% (saudável: 25% ou mais;
+abaixo de 15% é crítico).
 
 Por que importa: sem capturar atenção, nada mais funciona.
 O público nem sabe que seu anúncio existe.
@@ -186,11 +196,27 @@ O que NÃO fazer: não trocar o gancho (funciona).
 
 O que está acontecendo: o criativo captura atenção mas não gera
 ação. {Se CTR baixo: "Poucos clicam."} {Se CTR alto + LPV baixo:
-"Muitos clicam por curiosidade mas não chegam na página."}
+"Muitos clicam, mas não chegam na página."}
 
 O que fazer: {Se CTR baixo: fortalecer CTA e urgência.}
-{Se curiosidade vazia: alinhar promessa com destino.}
+{Se CTR alto + LPV baixo: primeiro conferir a página (velocidade,
+link, redirecionamento) com /pagina-performance e a continuidade
+da promessa com /trafego-oferta-funil, sem mexer no anúncio. Com a
+página em ordem, é curiosidade vazia: alinhar promessa com destino
+em /copy-anuncio.}
 O que NÃO fazer: não escalar pelo Hook Rate alto.
+```
+
+Variante para imagem com atenção reprovada (camada 1 FAIL em imagem):
+```
+{nome}: FALHA DE INTENÇÃO (a imagem não para a rolagem)
+
+O que está acontecendo: a imagem não para a rolagem: CTR {X}%,
+menos da metade do benchmark da conta ({benchmark}%).
+
+O que fazer: nova peça em /criativo-estatico, mantendo a oferta.
+O que NÃO fazer: não mexer na página nem na oferta por causa
+deste criativo (o problema começa antes do clique).
 ```
 
 ### falha_qualificacao
@@ -268,7 +294,8 @@ e consistência. 2 criativos sem dados suficientes.
 
 2. DIAGNÓSTICO REAL
 Os dados dizem: 2 criativos com falha de gancho (Hook < 15%),
-1 com falha de intenção (curiosidade vazia), 1 com falha
+1 com falha de intenção (provável curiosidade vazia, depois de
+conferir a página), 1 com falha
 pós-clique, 1 equilibrado, 1 dados insuficientes.
 Os dados NÃO dizem: por que o gancho falha (sem acesso ao vídeo).
 Erro a evitar: pausar o criativo com falha pós-clique (problema
@@ -279,8 +306,9 @@ O principal gargalo criativo desta conta é atenção: 2 dos 6
 criativos com dados perdem o público nos primeiros 3 segundos.
 
 5. RISCOS E ARMADILHAS
-O criativo "Polêmica - 15s" tem CTR 2.8% mas é curiosidade
-vazia. Escalar vai desperdiçar orçamento.
+O criativo "Polêmica - 15s" tem CTR 2.8% e só 38% de visita:
+conferir a página antes; se ela estiver em ordem, é curiosidade
+vazia e escalar vai desperdiçar orçamento.
 
 7. DECISÃO RECOMENDADA
 Fazer agora: novos ganchos para os 2 criativos com falha.

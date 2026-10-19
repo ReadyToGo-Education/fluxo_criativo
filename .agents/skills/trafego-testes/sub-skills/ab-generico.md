@@ -18,17 +18,18 @@ Passo 0 e gate: ver `SKILL.md` desta skill.
 | **3858504** | "O criativo não deve incluir aprimoramentos padrão" | `deep_copy=true` no conjunto, ao **recriar** o criativo (os aprimoramentos padrão foram descontinuados). |
 | **2446347** | "Falta o sinalizador use_existing_post" | `deep_copy=true` no conjunto cujo anúncio usa **post existente**. |
 | **1870227** | "A sinalização de público Advantage é obrigatória" | criar ou copiar conjunto **sem** `targeting_automation.advantage_audience` (0 ou 1). |
+| **4834011** | "Must specify True or False in is_adset_budget_sharing_enabled field" | criar campanha **sem orçamento na campanha** (ABO) sem o campo `is_adset_budget_sharing_enabled` (obrigatório desde a v24). |
 
 ### Padrão correto por modo
 
 **Modo App: ler e recriar.**
 
 1. **Ler a configuração do molde por `GET`** na Graph API:
-   - `GET /<campaign_id>?fields=objective,buying_type,daily_budget,bid_strategy,special_ad_categories`
-   - `GET -g /<adset_id>?fields=name,optimization_goal,billing_event,promoted_object,attribution_spec,destination_type,is_dynamic_creative,targeting`
+   - `GET /<campaign_id>?fields=objective,buying_type,daily_budget,lifetime_budget,bid_strategy,special_ad_categories`
+   - `GET -g /<adset_id>?fields=name,optimization_goal,billing_event,promoted_object,attribution_spec,destination_type,is_dynamic_creative,targeting,bid_strategy,bid_amount,daily_budget`
    - `GET -g /<ad_id>?fields=name,creative{id}`
-2. **Criar a campanha casca** (`POST /campaigns`) com o objetivo, o orçamento e a categoria lidos. Em CBO, o orçamento vai na campanha; os conjuntos **não** levam orçamento.
-3. **Recriar cada conjunto** (`POST /adsets`) com o `targeting` lido (trocando só a dimensão testada) **e `targeting_automation: {advantage_audience: 0}`** (obrigatório). Em CBO, não mandar `daily_budget` nem `bid_strategy` no conjunto.
+2. **Criar a campanha casca** (`POST /campaigns`) com o objetivo, o orçamento e a categoria lidos. Em CBO, o orçamento vai na campanha; os conjuntos **não** levam orçamento. Em ABO (sem `daily_budget` nem `lifetime_budget` na campanha), mandar `"is_adset_budget_sharing_enabled": false` na campanha (obrigatório desde a v24, senão erro 4834011; `false` também mantém o orçamento de cada conjunto separado, como o teste precisa). Em CBO, não mandar o campo.
+3. **Recriar cada conjunto** (`POST /adsets`) com o `targeting` lido (trocando só a dimensão testada) **e `targeting_automation: {advantage_audience: 0}`** (obrigatório). Em CBO, não mandar `daily_budget` nem `bid_strategy` no conjunto; quando a estratégia tem limite (`COST_CAP` ou `LOWEST_COST_WITH_BID_CAP`), o `bid_amount` lido do molde vai em cada conjunto (o campo não existe na campanha). Em ABO, o conjunto leva o próprio `daily_budget`, a `bid_strategy` e, quando há limite, o `bid_amount`.
 4. **Recriar cada anúncio apontando para o criativo existente:** `creative={"creative_id":<id_lido>}`. **Nunca** copiar o anúncio com `deep_copy`: apontar pelo ID pula a revalidação que quebra (3858504 e 2446347).
 5. `POST /<id>/copies` só serve para **1 conjunto com 1 anúncio** (menos de 3 objetos).
 
@@ -36,7 +37,7 @@ Passo 0 e gate: ver `SKILL.md` desta skill.
 
 O `ads_get_ad_entities` **não devolve a segmentação do conjunto** (`targeting`, `age_min`, `age_max`, `promoted_object` respondem `Unsupported field(s)`). Por isso o "ler e recriar" acima **só funciona no App**. No MCP:
 
-1. **Tentar copiar pelo conector:** `ads_create_ad_set` com `source_adset_id` (copiar conjunto) e `ads_create_ad` com `source_ad_id` (copiar anúncio), conforme o schema das tools. Para a campanha inteira, criar a campanha casca com `ads_create_campaign` e copiar os conjuntos um a um para dentro dela (se o schema permitir indicar a campanha de destino).
+1. **Tentar copiar pelo conector:** `ads_create_ad_set` com `source_adset_id` (copiar conjunto) e `ads_create_ad` com `source_ad_id` (copiar anúncio), conforme o schema das tools. Para a campanha inteira, criar a campanha casca com `ads_create_campaign` e copiar os conjuntos um a um para dentro dela (se o schema permitir indicar a campanha de destino). Campanha casca ABO: preencher `is_adset_budget_sharing_enabled` com `false` só se o schema da tool pedir o campo.
 2. **Aplicar a variação** com `ads_update_entity`. Em dimensão que mexe na segmentação (audiência, faixa etária, posicionamento), só se o schema aceitar mudar o campo sozinho, sem reenviar a segmentação inteira (que o conector não lê). Se exigir a segmentação completa, a variação vai pelo passo guiado do item 3.
 3. **Se a cópia falhar (ou a variação não puder ir pelo conector): duplicação guiada no Gerenciador.** O aluno duplica e muda a dimensão; a skill confere pela leitura (nome, status, orçamento) e registra:
    ```
@@ -96,13 +97,13 @@ Toda opção de [1] a [8] do menu da `/trafego-testes` cai aqui:
 | `faixa_etaria` | conjunto | `adsets_separados` (obrigatório) | `targeting.age_min`, `targeting.age_max` (o resto igual) | CPA | 50 |
 | `posicionamento` | conjunto | `adsets_separados` (obrigatório) | `targeting.publisher_platforms`, `targeting.facebook_positions`, `targeting.instagram_positions` | CPA | 50 |
 | `lance` | conjunto | `adsets_separados` (obrigatório) | `bid_strategy`, `bid_amount` | CPA + variação dia a dia | 50 |
-| `estrutura` | campanha | `campanhas_separadas` (obrigatório) | `smart_promotion_type` (Advantage+) ou `objective` + `buying_type` | CPA + volume | 50 (janela de 14 dias) |
+| `estrutura` | campanha | `campanhas_separadas` (obrigatório) | público e posicionamento Advantage+ no conjunto (`targeting_automation.advantage_audience: 1`, sem `publisher_platforms`) e orçamento na campanha, contra o manual (`advantage_audience: 0`, orçamento no conjunto) | CPA + volume | 50 (janela de 14 dias) |
 | `cta` | anúncio | `ads_mesmo_adset` (preferido) ou `adsets_separados` | `creative.object_story_spec.link_data.call_to_action.type` | CTR + taxa de conversão do anúncio | 50 |
 
 **Regra de modelo:**
 - `ads_mesmo_adset` só vale para variar algo dentro do criativo (headline, texto, CTA, imagem). Público define o leilão e exige conjunto próprio.
 - `adsets_separados` é o padrão para qualquer outra dimensão.
-- `campanhas_separadas` só para `estrutura` (Advantage+ é propriedade da campanha).
+- `campanhas_separadas` para `estrutura` (cada estrutura precisa da própria campanha, com o próprio jeito de distribuir o orçamento) e para o escopo 2 (campanha inteira).
 
 ---
 
@@ -173,14 +174,14 @@ Pares com sentido VTSD: público quente vs frio, Intermediário vs Avançado (ba
 |---|---|---|
 | `bid_strategy_a` | `LOWEST_COST_WITHOUT_CAP` (padrão) | Estratégia A |
 | `bid_strategy_b` | `COST_CAP` ou `LOWEST_COST_WITH_BID_CAP` | Estratégia B |
-| `valor_limite` | obrigatório se B tem limite | Em reais (a skill converte para centavos no `bid_amount`) |
+| `valor_limite` | obrigatório se B tem limite | Em reais. No App, a skill converte para centavos no `bid_amount`; no MCP, confere no schema da tool a unidade aceita antes de gravar |
 | O resto | igual | |
 
 ### `estrutura`
 | Input | Obrigatório | Descrição |
 |---|---|---|
 | `estrutura_a` | `MANUAL_ABO` (padrão) | Estrutura da campanha A |
-| `estrutura_b` | `ADVANTAGE_PLUS_SHOPPING` (padrão) | Estrutura da campanha B |
+| `estrutura_b` | `ADVANTAGE_PLUS` (padrão) | Estrutura da campanha B: campanha Advantage+ (orçamento na campanha e 1 conjunto com público e posicionamento Advantage+) |
 | `criativos` | mínimo 4 se B é Advantage+ | O Advantage+ precisa de vários criativos |
 | `objective` | `OUTCOME_SALES` ou `OUTCOME_LEADS` | Igual nas 2 |
 | `pixel`, `evento_otimizado` | iguais | |
@@ -438,7 +439,9 @@ A coleta parte de uma **campanha molde**: o aluno escolhe uma campanha existente
 
 3. **Conjunto base.** *Só no escopo 1.* Campanha com mais de 1 conjunto ativo: lista numerada com nome, CPA de 7 dias e gasto de 7 dias. Com 1 conjunto: usar direto.
 
-4. **Onde criar os conjuntos do teste.** *Só no escopo 1.* Padrão 2:
+4. **Onde criar os conjuntos do teste.** *Só no escopo 1.* Antes de perguntar, ver se o molde é CBO: a campanha tem orçamento próprio, diário ou total (MCP: `daily_budget` em `ads_get_ad_entities` e, para o orçamento total, o campo que `ads_get_field_context` indicar; App: `GET /<campaign_id>?fields=daily_budget,lifetime_budget`).
+   - **Molde CBO:** não mostrar a pergunta. Ir direto para a opção 2 e avisar em uma linha: "Sua campanha distribui o orçamento entre os conjuntos. Para os 2 lados terem o mesmo orçamento, separado dos conjuntos que já estão no ar, vou criar uma campanha nova [WS-AB] só para o teste." Se o aluno insistir em ficar dentro do molde, avisar que o orçamento não fica igual nos 2 lados nem separado da produção e que o A/B de lance não funciona ali (em CBO a estratégia de lance é da campanha, a mesma para todos os conjuntos).
+   - **Molde ABO:** perguntar. Padrão 2:
    ```
    Onde coloco os 2 conjuntos novos do teste?
 
@@ -447,8 +450,10 @@ A coleta parte de uma **campanha molde**: o aluno escolhe uma campanha existente
 
    Digite o número (Enter para usar 2):
    ```
-   (1): os conjuntos novos entram na campanha do molde.
+   (1): os conjuntos novos entram na campanha do molde, cada um com o próprio orçamento.
    (2): criar campanha nova repetindo objetivo, pixel e categoria especial do molde, com nome `[WS-AB] {dimensao}-{slug}`. Os 2 conjuntos vão para ela.
+
+   A campanha [WS-AB] nasce **ABO**: sem orçamento na campanha, com o mesmo orçamento em cada um dos 2 conjuntos e, no App, `"is_adset_budget_sharing_enabled": false` (no MCP, só se o schema pedir o campo). Com molde CBO, cada conjunto leva também a estratégia de lance da campanha molde e, se ela tiver limite, o `bid_amount` (ver `adsets_separados` em "Endpoints por modelo"). No MCP, informar o `daily_budget` de cada conjunto na cópia por `source_adset_id` (o conjunto de molde CBO não tem orçamento próprio) e conferir no schema se a cópia leva o lance; se não aceitar, duplicação guiada no Gerenciador.
 
 5. **Confirmar o que vem do molde:**
    - Escopo 1: "Vou aproveitar do conjunto '{nome}': criativo, público, posicionamento e lance. Vou mudar só **{dimensão}**. Confirma?".
@@ -459,7 +464,7 @@ A coleta parte de uma **campanha molde**: o aluno escolhe uma campanha existente
 6. **Valor novo da dimensão**, na ordem de "Inputs por dimensão" (ex: `faixa_etaria`: "Qual a faixa A?" e depois "Qual a faixa B?", uma por mensagem).
 
 7. **Orçamento diário** (R$/dia, igual nos N lados).
-   - Escopo 1: por conjunto. Sugerir o orçamento do conjunto molde.
+   - Escopo 1: por conjunto. Sugerir o orçamento do conjunto molde. Com molde CBO, o conjunto não tem orçamento próprio: sugerir o `daily_budget` da campanha molde dividido pelo número de conjuntos ativos dela (ex.: R$ 150/dia com 3 conjuntos ativos dá R$ 50/dia por conjunto).
    - Escopo 2: por campanha. Sugerir o orçamento total do molde (`daily_budget` da campanha em CBO, ou a soma dos conjuntos em ABO).
 
 8. **Hipótese** ("X performa Y% melhor que Z porque ___").
@@ -506,7 +511,7 @@ Digite o número:
 **Comportamento:**
 - **(1):** seguir para "Montagem" + resumo + bloco 🛡️. O viés fica registrado em "Observações" do arquivo de hipótese.
 - **(2), MCP:** conferir a elegibilidade com `ads_experiment_check_eligibility`; se a campanha puder, montar o teste com `ads_experiment_abtest_create_test` (parâmetros pelo schema da tool, sem inventar), com resumo e bloco 🛡️ como qualquer escrita. Registrar com `modelo: ab_oficial_meta`; a leitura do 7º dia usa `ads_experiment_abtest_get_test`. Se não for elegível, explicar o motivo devolvido e oferecer a opção 1.
-- **(2), App:** encerrar sem criar nada e mostrar:
+- **(2), App:** não criar nada na conta. Antes de encerrar, gravar o arquivo de hipótese e a linha no `INDEX.md` (gravação local, fora do gate): `modelo: ab_oficial_meta`, a hipótese já coletada, a campanha molde, a dimensão, os critérios (mínimo de conversões por lado e janela) e a data de leitura; em "Entidades criadas", "criadas no Gerenciador". Depois, mostrar:
   ```
   Para criar o teste A/B oficial no Gerenciador:
   1. Abra business.facebook.com → Gerenciador de Anúncios
@@ -516,6 +521,7 @@ Digite o número:
   5. Crie as variações, defina a janela (recomendo {janela_dias} dias) e publique
 
   A Meta calcula a significância sozinha. Resultado em cerca de {janela_dias} dias.
+  Já deixei o teste anotado em meus-produtos/{ativo}/entregas/trafego/testes/.
   Depois, rode /trafego-testes opção [11] que eu registro o aprendizado.
   ```
 
@@ -584,7 +590,7 @@ Está certo? (sim segue, não cancela aqui)
 | `video_id` | nome do vídeo |
 | `custom_audiences: [<id>]` | nome do público (ex: "semelhante 1% de compradores") |
 | `daily_budget: 5000` (centavos) | "R$ 50/dia" |
-| `smart_promotion_type: AUTOMATED_SHOPPING_ADS` | "Advantage+" |
+| `targeting_automation.advantage_audience: 1` + posicionamento automático | "público e posicionamento Advantage+ (a Meta escolhe quem vê e onde)" |
 
 **Proibido no resumo:** IDs, hashes, códigos da API, nomes de campos, valores em centavos, inglês técnico.
 
@@ -620,8 +626,10 @@ Está certo? (sim segue, não cancela aqui)
      a. Nome: [WS-AB-{slug}] {dimensao}-{variacao_slug}-{produto_slug}
      b. Montar a entidade pelo padrão da seção "Lições de campo":
         - App: a partir da configuração LIDA por GET
-          (conjunto com targeting_automation.advantage_audience; sem orçamento e lance
-           sob CBO; promoted_object e attribution_spec iguais ao molde;
+          (conjunto com targeting_automation.advantage_audience; sob CBO, sem
+           daily_budget nem bid_strategy no conjunto; quando a estratégia tem limite,
+           o bid_amount lido do molde vai em cada conjunto (o campo não existe na
+           campanha); promoted_object e attribution_spec iguais ao molde;
            anúncio apontando para creative_id existente)
         - MCP: cópia por source_adset_id / source_ad_id e variação por
           ads_update_entity; se falhar, duplicação guiada no Gerenciador
@@ -677,12 +685,15 @@ POST /act_<id>/adsets (xN)
   "promoted_object": { "...": "o do molde, inteiro" },
   "attribution_spec": [ "...o do molde..." ],
   "bid_strategy": "...",
+  "bid_amount": <limite_em_centavos, só no lado com limite de custo>,
   "status": "PAUSED"
 }
 ```
 
 - `targeting_automation.advantage_audience` é **obrigatório** (senão, erro 1870227).
-- Sob campanha CBO, **não mandar** `daily_budget` nem `bid_strategy` (vêm da campanha).
+- Sob campanha CBO, **não mandar** `daily_budget` nem `bid_strategy` no conjunto (vêm da campanha). O `bid_amount`, quando a campanha usa limite de custo, vai em cada conjunto (o campo não existe na campanha).
+- Sob campanha ABO (inclusive a [WS-AB] do escopo 1, que nasce ABO mesmo com molde CBO), o conjunto leva `daily_budget`, a `bid_strategy` do molde (lida da campanha, se o molde for CBO; no A/B de lance, a de cada lado) e o `bid_amount` sempre que a estratégia tiver limite (o lido do molde; no A/B de lance, o `valor_limite` do lado com limite). Conjunto com estratégia de limite e sem `bid_amount` é recusado pela Meta.
+- **MCP:** conferir no schema se a cópia por `source_adset_id` leva o limite e se a tool aceita `bid_strategy` e `bid_amount` no conjunto. Se não aceitar, duplicação guiada no Gerenciador.
 - `promoted_object` pode ter `custom_conversion_id` ou `pixel_rule`: copiar inteiro.
 
 Anúncio: apontar para o criativo existente, **nunca** recriar ou copiar com `deep_copy` (erros 3858504 e 2446347):
@@ -692,22 +703,48 @@ POST /act_<id>/ads (1 por conjunto)
 ```
 
 ### `campanhas_separadas` (estrutura)
+
+Os 2 lados são campanhas comuns, e a Meta não cria conjunto nem anúncio sozinha: a skill cria a campanha, o conjunto e os anúncios **dos dois lados**, no mesmo lote.
+
 ```
-POST /act_<id>/campaigns (xN)
+# Variação A: manual (ABO)
+POST /act_<id>/campaigns
 {
-  "name": "[WS-AB-{slug}] campaign-{estrutura}-{produto}",
+  "name": "[WS-AB-A] campaign-manual-{produto}",
   "objective": "OUTCOME_SALES",
   "buying_type": "AUCTION",
-  "smart_promotion_type": "AUTOMATED_SHOPPING_ADS",
+  "special_ad_categories": [],
+  "is_adset_budget_sharing_enabled": false,
+  "status": "PAUSED"
+}
+POST /act_<id>/adsets   (segmentação lida do molde, "targeting_automation": {"advantage_audience": 0},
+                         "daily_budget" no conjunto, mesmo "promoted_object" do molde, PAUSED)
+POST /act_<id>/ads      (anúncios apontando para "creative_id" existente, PAUSED)
+
+# Variação B: Advantage+ (orçamento na campanha)
+POST /act_<id>/campaigns
+{
+  "name": "[WS-AB-B] campaign-advantage-{produto}",
+  "objective": "OUTCOME_SALES",
+  "buying_type": "AUCTION",
+  "daily_budget": <orcamento_em_centavos>,
   "special_ad_categories": [],
   "status": "PAUSED"
 }
-
-POST /act_<id>/adsets ...   (conjuntos da variação manual; o Advantage+ cria os dele)
-POST /act_<id>/ads ...
+POST /act_<id>/adsets   (1 conjunto: região do molde, "targeting_automation": {"advantage_audience": 1},
+                         sem "publisher_platforms" (posicionamento automático), sem orçamento no conjunto,
+                         mesmo "promoted_object" do molde, PAUSED)
+POST /act_<id>/ads      (no mínimo 4 anúncios, apontando para "creative_id" existente, PAUSED)
 ```
 
-(`smart_promotion_type` só na campanha Advantage+.)
+- O lado Advantage+ é montado como a campanha Advantage da `/trafego-escalar` (§3.5): campanha comum com 1 conjunto de público e posicionamento Advantage+. **Não usar `smart_promotion_type`** (caminho antigo do Advantage+ Shopping), que também não cria conjunto nem anúncio sozinho.
+- Mesmo orçamento total nos 2 lados: o diário da campanha B igual à soma dos conjuntos de A.
+- **MCP:** o conector não lê a região nem o `promoted_object` do molde (seção "Lições de campo"). Por isso os 2 lados nascem da cópia do conjunto do molde por `ads_create_ad_set` com `source_adset_id`, que mantém a segmentação e o evento de otimização; os anúncios vêm por `source_ad_id` ou pelo criativo existente, e as campanhas por `ads_create_campaign` (`is_adset_budget_sharing_enabled` só se o schema pedir).
+  - **Lado A (manual, ABO):** informar o `daily_budget` do teste no conjunto, na própria `ads_create_ad_set` ou logo depois por `ads_update_entity` (o conjunto de molde CBO não tem orçamento próprio). Se o molde estiver com `advantage_audience` 1, trocar para 0 pela mesma via.
+  - **Lado B (Advantage+):** conjunto sem orçamento (o orçamento fica na campanha B), com `advantage_audience` 1 e posicionamento automático aplicados por `ads_update_entity`, só se o schema aceitar mudar esses campos sozinhos, sem reenviar a segmentação inteira.
+  - Se a cópia ou a troca não for aceita, seguir a duplicação guiada no Gerenciador (seção "Lições de campo"): na cópia B, o aluno liga "Público Advantage+" e "Posicionamentos Advantage+" e deixa o orçamento na campanha B. **Nunca preencher região ou evento de otimização por suposição.**
+
+No escopo 2 (campanha inteira, qualquer dimensão), as 2 campanhas seguem a seção "Lições de campo" (ler e recriar no App, cópia por `source_adset_id` no MCP), com `is_adset_budget_sharing_enabled: false` quando o molde é ABO.
 
 ---
 
@@ -787,13 +824,16 @@ O bloco 🛡️ diz: operação "criar teste A/B (N entidades pausadas)", reset 
 - Audience Network e Messenger baixam o CPA médio, mas convertem pior. Para Feed vs Reels limpo, tirar a Audience Network.
 
 ### `lance`
+- **Molde CBO:** no CBO a estratégia de lance é da campanha, igual para todos os conjuntos.
+  - Escopo 1: o teste vai obrigatoriamente na campanha [WS-AB] ABO (passo 4), com `bid_strategy` e `bid_amount` em cada conjunto.
+  - Escopo 2: a estratégia vai no `bid_strategy` de cada campanha nova e o valor do limite (`bid_amount`) em cada conjunto dela (o campo não existe na campanha), todos no mesmo lote.
 - Limite de lance muito baixo (menos de 70% do CPA alvo da trilha) faz o conjunto não entregar. A skill avisa.
 - Limite de custo em low ticket costuma não compensar: o algoritmo precisa de margem.
 - Mudar o lance de um conjunto existente reseta o aprendizado. Para teste limpo, conjuntos novos.
 
 ### `estrutura`
 - Advantage+ precisa de no mínimo 4 anúncios variados. A skill bloqueia com menos.
-- Advantage+ não permite exclusões finas (ex: excluir compradores). Funciona melhor em topo de funil novo.
+- No público Advantage+, idade, interesses e semelhantes viram só sugestão: a Meta amplia o público por conta própria. Funciona melhor em topo de funil novo.
 - 7 dias podem não bastar para o Advantage+. Janela padrão: 14 dias.
 - Mover orçamento entre as 2 estruturas reseta o aprendizado. Não desligar o "perdedor" cedo demais.
 

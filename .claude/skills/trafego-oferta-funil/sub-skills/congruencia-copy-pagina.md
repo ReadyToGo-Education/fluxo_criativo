@@ -115,7 +115,7 @@ congruencia_copy_pagina:
   dimensoes:
     promessa: { pontos: 0, ad: "...", pagina: "...", problema: "..." }
     tom: { pontos: 10, ad: "urgente", pagina: "educativa" }
-    especificidade: { pontos: 0, ad: "ultra-especifico", pagina: "generica" }
+    especificidade: { pontos: 0, ad: "ultra-específico", pagina: "genérica" }
     cta: { pontos: 10, ad: "Saiba Mais", pagina: "Quero Começar" }
     publico: { pontos: 20, ad: "empreendedor digital", pagina: "empreendedor digital" }
 

@@ -23,8 +23,8 @@ Leia `meus-produtos/.ativo`. Se existir, leia também `meus-produtos/{ativo}/res
 Leia só a linha `META_AUTH_MODO` do `.env` (`grep "^META_AUTH_MODO=" .env | cut -d= -f2-`).
 
 - **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive valor legado de versão antiga): acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que existe tool do conector da Meta, procurando pelo final do nome (`ads_get_ad_accounts`, `ads_insights_performance_trend`), como manda a seção 5.1 da skill `trafego-conexao`. Se nenhuma estiver disponível, pedir ao aluno para reabrir o Claude (conector recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conta não liberada no conector (`is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out"): avisar e oferecer o modo App pelo `/trafego-conexao`.
-- **Se `APP`:** confirmar com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env` (seção "LEITURA SEGURA DO .env" do CLAUDE.md). Se faltar algum, acionar `/trafego-conexao`.
+- **Se `MCP_CONECTOR`:** confirmar que existe tool do conector da Meta, procurando pelo final do nome (`ads_get_ad_accounts`, `ads_get_ad_entities`), como manda a seção 5.1 da skill `trafego-conexao`. Se nenhuma estiver disponível, pedir ao aluno para reabrir o Claude (conector recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conferir também que `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`): as tools exigem a conta. Se faltar (conexão feita por uma versão antiga, que não gravava a conta no modo MCP), acionar `/trafego-conexao` na opção "Validar a conexão atual", que lista as contas pela seção 5.1.1 e grava `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS`; depois voltar a este command. Conta não liberada no conector (`is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out"): avisar e oferecer o modo App pelo `/trafego-conexao`.
+- **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env` (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env`, com o ponto: linha vazia conta como ausente; seção "LEITURA SEGURA DO .env" do CLAUDE.md). Se faltar algum, acionar `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
 
@@ -33,7 +33,7 @@ A skill nunca prossegue sem essa validação passar.
 Após a validação da conexão, decidir qual conta usar:
 
 1. Ler `FB_AD_ACCOUNT_IDS` no `.env`. Lista de IDs separados por vírgula.
-2. Se `FB_AD_ACCOUNT_IDS` não existe ou está vazio, usar `FB_AD_ACCOUNT_ID` direto.
+2. Se `FB_AD_ACCOUNT_IDS` não existe ou está vazio, usar `FB_AD_ACCOUNT_ID` direto (o Passo 0.2 já garantiu que ele tem valor). Se nem `FB_AD_ACCOUNT_ID` tiver valor, nunca seguir com conta vazia nem escolher sozinho uma conta da listagem: voltar ao `/trafego-conexao` (opção "Validar a conexão atual", seção 5.1.1 no modo MCP).
 3. Se `FB_AD_ACCOUNT_IDS` tem **1 conta**, usar `FB_AD_ACCOUNT_ID` direto sem perguntar.
 4. Se `FB_AD_ACCOUNT_IDS` tem **2 ou mais contas**, perguntar:
 
@@ -280,8 +280,9 @@ Próximos passos:
 - Para análise narrada com terminologia VTSD (Mandala, Furadeira,
   Identidades): /trafego-analise
 - Para acompanhar a conta num painel: /trafego-dashboard
-- Para puxar os mesmos dados em outra janela: roda /trafego-insights
-  de novo (cache de 5 min, então repete sem custo)
+- Para puxar os dados em outra janela: roda /trafego-insights de novo
+  com o período novo (o cache só reaproveita a leitura com o mesmo
+  período e os mesmos filtros)
 ```
 
 ---
@@ -301,18 +302,18 @@ Digite o número:
 
 Se sim, salvar em:
 ```
-meus-produtos/{ativo}/entregas/trafego/insights-{campanha-ou-conta}-{YYYY-MM-DD}.md
+meus-produtos/{ativo}/entregas/trafego/insights/insights-{campanha-ou-conta}-{YYYY-MM-DD}.md
 ```
 
 Conteúdo: a apresentação do Passo 5 em markdown puro.
 
-Caminho absoluto a exibir: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\insights-{...}.md`
+Caminho absoluto a exibir: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\trafego\insights\insights-{...}.md`
 
 ---
 
 ## Cache e reexecução
 
-A skill mantém cache de 5 minutos em memória e cache em arquivo `.md` em `meus-produtos/{ativo}/trafego/insights/` (regras em `.claude/skills/trafego-insights/sub-skills/cache.md`). Se o aluno rodar `/trafego-insights` na mesma campanha duas vezes em menos de 5 min, retorna do cache.
+A skill mantém cache de 5 minutos em memória e cache em arquivo `.md` em `meus-produtos/{ativo}/trafego/insights/` (regras em `.claude/skills/trafego-insights/sub-skills/cache.md`). Se o aluno rodar `/trafego-insights` na mesma campanha, com o mesmo período e os mesmos filtros, duas vezes em menos de 5 min, retorna do cache.
 
 Para forçar dado fresco, o aluno pode dizer "puxa de novo sem cache" ou "atualiza dados". Se outro command `/trafego-*` editou a campanha (pausa, ajuste de budget, duplicação), o cache é invalidado automaticamente.
 

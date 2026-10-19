@@ -31,7 +31,7 @@ Passo 0 e gate: ver `SKILL.md` desta skill. Este sub-fluxo **roda pelo MCP** (`a
 | Situação | O que fazer |
 |---|---|
 | Conjunto (ABO) com orçamento total e data de fim | Segue direto |
-| Campanha com orçamento de campanha (CBO) | Quem precisa ter orçamento total é a **campanha**, não o conjunto. Se a campanha tem orçamento total, segue. Se tem orçamento diário, mesma conversa da linha abaixo, no nível da campanha |
+| Campanha com orçamento de campanha (CBO) | Quem precisa ter orçamento total é a **campanha**, não o conjunto (em CBO, o orçamento é conferido na campanha, não em cada conjunto). Se a campanha tem orçamento total, segue. Se tem orçamento diário, ver a seção "Campanha CBO com orçamento diário" abaixo |
 | Conjunto com orçamento diário | Explicar e oferecer as saídas abaixo |
 
 ### Conjunto com orçamento diário: explicar antes
@@ -64,6 +64,41 @@ Digite o número:
 **Opção 2 (tentar converter):**
 - Pedir a data de fim (orçamento total exige `end_time`) e calcular `lifetime_budget = daily_budget × dias`.
 - Bloco 🛡️ com a conversão e a programação no mesmo lote (conversão primeiro). MCP: `ads_update_entity` com `lifetime_budget` e `end_time`, depois `adset_schedule` + `pacing_type`. App: `POST /<adset_id>`.
+- Se a Meta recusar a troca, parar, mostrar o motivo em linguagem simples e oferecer a opção 1.
+
+### Campanha CBO com orçamento diário
+
+Em CBO, o conjunto não pode ter orçamento próprio, então as opções acima (conjunto novo ou conversão do conjunto) não servem. A conversa é no nível da campanha. Mostrar:
+
+```
+⚠️ A campanha "{nome}" distribui um orçamento diário (R$ {X}/dia) entre os conjuntos.
+A programação por horário só funciona com orçamento TOTAL (um valor para o período
+inteiro, com data de fim), e nessa campanha quem tem o orçamento é a campanha.
+Numa campanha que já foi publicada, a Meta costuma recusar essa troca.
+
+Como prefere seguir?
+
+1. Criar uma campanha nova, igual a esta, já com orçamento total e com a programação
+   nos conjuntos (nasce pausada; a original continua como está até você decidir)
+2. Tentar converter esta campanha mesmo assim (se a Meta recusar, eu te aviso e
+   voltamos para a opção 1)
+3. Deixar como está (cancelo a programação)
+
+Digite o número:
+```
+
+**Opção 1 (campanha nova com orçamento total):**
+- Pedir a data de fim e calcular `lifetime_budget = daily_budget da campanha × dias até a data de fim`.
+- A campanha nova leva o orçamento total. Cada conjunto leva a data de fim (`end_time`), a `adset_schedule` e o `pacing_type`. Os anúncios apontam para o `creative_id` existente. Tudo nasce pausado.
+- Copiar a campanha pela receita de "Duplicar campanha inteira" da tabela do gate da `.claude/skills/trafego-testes/SKILL.md` e da seção "Lições de campo" da `.claude/skills/trafego-testes/sub-skills/ab-generico.md`:
+  - **MCP:** campanha nova por `ads_create_campaign` e conjuntos copiados um a um por `ads_create_ad_set` com `source_adset_id` (anúncios por `source_ad_id`), com os campos novos que o schema aceitar. Só se o schema permitir indicar a campanha nova como destino; se não permitir, duplicação guiada no Gerenciador (sem destino, a cópia cairia na campanha original, que segue com orçamento diário).
+  - **App:** "ler e recriar" (nunca `/copies` com `deep_copy`).
+  - Se a cópia falhar: duplicação guiada no Gerenciador (o aluno duplica a campanha, define o orçamento total, a data de fim e a "Programação de veiculação", deixa pausada, e a skill confere pela leitura).
+- Tudo num bloco 🛡️ só (um lote). Pausar a campanha original fica a critério do aluno, em outra confirmação.
+
+**Opção 2 (tentar converter a campanha):**
+- Pedir a data de fim e calcular `lifetime_budget = daily_budget × dias`.
+- Bloco 🛡️ com a conversão e a programação no mesmo lote (conversão primeiro). A campanha não tem `end_time`: em CBO com orçamento total, a data de fim vai em cada conjunto. MCP: `ads_update_entity` na campanha com `lifetime_budget`; depois, em cada conjunto, `end_time`, `adset_schedule` e `pacing_type`, conforme o schema. App: `POST /<campaign_id>` com `lifetime_budget` e depois `POST /<adset_id>` em cada conjunto com `end_time`, `adset_schedule` e `pacing_type`.
 - Se a Meta recusar a troca, parar, mostrar o motivo em linguagem simples e oferecer a opção 1.
 
 ## Endpoint
@@ -143,7 +178,7 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**.
 
    **O aluno nunca digita ID sem ter sido pedido.**
 
-2. **Conferir o orçamento** (sem pergunta, ver "Pré-requisito crítico"). Se for orçamento diário, mostrar as 3 saídas agora, antes de coletar o resto: não adianta montar a programação se o aluno vai cancelar.
+2. **Conferir o orçamento** (sem pergunta, ver "Pré-requisito crítico"; em CBO, o da campanha). Se for orçamento diário, mostrar as 3 saídas agora (do conjunto em ABO, ou da seção "Campanha CBO com orçamento diário" em CBO), antes de coletar o resto: não adianta montar a programação se o aluno vai cancelar.
 
 3. **Receita.** Mostrar as 5 receitas numeradas.
 
@@ -162,7 +197,7 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**.
 
    Digite o número:
    ```
-   Nas opções 2 e 3, conferir o orçamento de cada conjunto. Os que tiverem orçamento diário ficam de fora, com aviso e as mesmas saídas.
+   Nas opções 2 e 3, conferir o orçamento de cada conjunto (em CBO, o da campanha dele). Os que tiverem orçamento diário (no conjunto, ou na campanha em CBO) ficam de fora, com aviso e as mesmas saídas.
 
 **Proibido:** pedir `start_minute`, `end_minute`, `pacing_type` ou qualquer chave da Marketing API (sempre converter HH:MM internamente); agrupar inputs; pular para o resumo sem os passos 1 a 6.
 
@@ -186,6 +221,11 @@ Cobertura: {N} horas por semana de entrega, de 168 possíveis ({%}% do tempo).
 de R$ {Y} até {data de fim}, já com essa programação, pausado.
 {Opção 2:} Antes, vou tentar trocar o orçamento de R$ {X}/dia para R$ {Y} no total
 até {data de fim}. A Meta pode recusar.
+{CBO, opção 1:} Antes, vou criar uma campanha nova igual à "{nome da campanha}", com
+orçamento total de R$ {Y} até {data de fim} e essa programação em todos os conjuntos,
+pausada.
+{CBO, opção 2:} Antes, vou tentar trocar o orçamento da campanha "{nome da campanha}"
+de R$ {X}/dia para R$ {Y} no total até {data de fim}. A Meta pode recusar.
 
 Efeito colateral: isso reseta o aprendizado do conjunto. Evite se a campanha está em
 fase de aprendizado, a não ser que a perda de dado compense.
@@ -218,7 +258,7 @@ sub_fluxo: liga_pausa_schedule
 modo: MCP_CONECTOR | APP
 conjunto: "[Conjunto] LAL1pct 25-44"
 orcamento_atual: total de R$ 5.000
-acao_orcamento: nenhuma | conjunto_novo_com_orcamento_total | tentar_conversao
+acao_orcamento: nenhuma | conjunto_novo_com_orcamento_total | tentar_conversao | campanha_nova_com_orcamento_total | tentar_conversao_campanha
 
 programacao:
   dias: [1, 2, 3, 4, 5]                # segunda a sexta
@@ -254,7 +294,7 @@ Para ver a entrega ao longo do dia depois de 7 dias:
 
 ## Vários conjuntos de uma vez
 
-A mesma programação pode ir para vários conjuntos (passo 6). Todos entram num único bloco 🛡️ (um lote). Conjuntos com orçamento diário ficam de fora com aviso.
+A mesma programação pode ir para vários conjuntos (passo 6). Todos entram num único bloco 🛡️ (um lote). Conjuntos com orçamento diário (ou em campanha CBO com orçamento diário) ficam de fora com aviso.
 
 ## Avisos
 
@@ -263,4 +303,4 @@ A mesma programação pode ir para vários conjuntos (passo 6). Todos entram num
 - **Orçamento total exige data de fim.** Sem ela, a skill pergunta ou não aplica.
 - **Trocar orçamento diário por total num conjunto publicado costuma ser recusado.** A skill confere antes e oferece o conjunto novo.
 - **A entrega não começa no minuto exato.** Pode levar até 30 min depois do início (leilão).
-- **Campanha com orçamento de campanha (CBO):** o orçamento total precisa estar na campanha. Conferir a campanha, não o conjunto.
+- **Campanha com orçamento de campanha (CBO):** o orçamento total precisa estar na campanha. Conferir a campanha, não o conjunto. Com orçamento diário na campanha, as saídas são as da seção "Campanha CBO com orçamento diário".

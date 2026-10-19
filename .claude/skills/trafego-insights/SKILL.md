@@ -97,6 +97,8 @@ Se o gestor pedir janela explícita (`data_inicio` + `data_fim`), puxar essa jan
 ### 4.1 Métricas nativas da Graph API
 Endpoint: `GET /{object_id}/insights`
 
+Os nomes desta seção são os da Graph API (modo `APP`). No modo `MCP_CONECTOR`, o conector usa outros nomes e não aceita `actions` nem `action_values` crus: usar a tradução da seção 10.1 (Contrato do conector da Meta).
+
 Campos obrigatórios na requisição:
 ```
 spend, impressions, reach, frequency, clicks, cpc, cpm, ctr,
@@ -111,22 +113,23 @@ date_start, date_stop, account_currency
 
 Em `actions`, extrair específico:
 - `purchase` (compra)
-- `lead` (lead)
+- `lead` (lead, total da Meta: site + formulário instantâneo)
+- `offsite_conversion.fb_pixel_lead` (lead do pixel, só como reserva quando `lead` não vier, ver 4.4)
 - `complete_registration`
 - `add_to_cart`
 - `initiate_checkout`
 - `landing_page_view` (LP View)
 - `link_click`
-- `video_view`
+- `video_view` (visualização de 3 segundos do vídeo)
 
 ### 4.2 Métricas-norte (decide a ação principal)
 - **Perpétuo:** `cpa` = `cost_per_action_type[purchase]`.
-- **Lançamento:** `cpl` = `cost_per_action_type[lead]`.
+- **Lançamento:** `cpl` = `spend ÷ leads`, com `leads` contado pela régua da seção 4.4 (a mesma contagem vale para CPL e para as taxas de lead).
 
 ### 4.3 Métricas leading
 - `ctr_link_unico` (`unique_inline_link_click_ctr`). **Métrica leading primária.** Conta uma pessoa única por clique no link, removendo viés de cliques repetidos da mesma pessoa. Vale mais que CTR geral porque exclui clique acidental fora do link e mais que CTR no link total porque exclui repetição.
 - `ctr_link_total` (`inline_link_click_ctr`). Métrica complementar. Conta todos os cliques no link (com repetição da mesma pessoa). Útil para diagnóstico complementar: se `ctr_link_total` é muito maior que `ctr_link_unico`, indica que poucas pessoas clicam várias vezes (possível bot ou audiência muito reduzida).
-- `hook_rate` = `video_p25_watched_actions` ÷ `impressions` (proxy para 3s. Meta deprecou alguns campos antigos de vídeo).
+- `hook_rate` = `video_p25_watched_actions` ÷ `impressions` (proxy para 3s. Meta deprecou alguns campos antigos de vídeo). Faixas: crítico abaixo de 15%, atenção de 15% a 25%, saudável 25% ou mais. Thumbstop, quando aparecer em outra skill, é esta mesma conta.
 - `frequencia` (`frequency`).
 - `cpm`.
 
@@ -136,7 +139,21 @@ Em `actions`, extrair específico:
 - `add_to_cart` (`actions[add_to_cart]`)
 - `initiate_checkout` (`actions[initiate_checkout]`)
 - `purchases` (`actions[purchase]`)
-- `leads` (`actions[lead]`)
+- `leads`: `actions[lead]` (total da Meta, site + formulário instantâneo) quando vier; sem ele, `actions[offsite_conversion.fb_pixel_lead]`. **Nunca somar os dois** (o `lead` já inclui o lead do pixel). No conector: `results` quando o objetivo da campanha é leads; senão, o campo que `ads_get_field_context` indicar (seção 10.1).
+
+### 4.5 Métricas de vídeo (régua única do projeto)
+Toda skill de tráfego que usa métrica de vídeo (ex.: `/trafego-criativos`) segue estas definições.
+
+| Métrica | Campo na Graph API (modo `APP`) | Conta |
+|---|---|---|
+| `video_plays` (reproduções) | `video_play_actions` | n/a |
+| `video_3s` (visualização de 3 segundos) | `actions[video_view]` | n/a |
+| `video_p25` a `video_p100` (retenção) | `video_p25_watched_actions`, `video_p50_watched_actions`, `video_p75_watched_actions`, `video_p95_watched_actions`, `video_p100_watched_actions` | n/a |
+| `hook_rate` | `video_p25_watched_actions` e `impressions` | `video_p25 ÷ impressions` (faixas na 4.3) |
+| `hold_rate` | `video_p50_watched_actions` e `actions[video_view]` | `video_p50 ÷ video_3s` (das pessoas que ficaram 3 segundos, quantas chegam à metade) |
+| `completion_rate` | `video_p95_watched_actions` e `video_play_actions` | `video_p95 ÷ video_plays` |
+
+`video_p95_watched_actions` e `video_play_actions` não fazem parte da lista padrão da 4.1: entram como acréscimo à coleta quando a skill que consome pede (ex.: leitura de atenção da `/trafego-criativos`). No modo `MCP_CONECTOR`, os campos de vídeo não estão na lista conferida: conferir os nomes com `ads_get_field_context` antes da coleta (seção 10.1). Campo que não vier deixa a métrica `null` (`indisponível neste nível`). Reservas permitidas (marcadas `fallback_aplicado` e declaradas ao aluno): sem visualizações de 3 segundos, o `hold_rate` usa `video_p25` no denominador; sem `video_play_actions`, o `completion_rate` usa `video_3s` (ou, sem ele, `video_p25`) no denominador.
 
 ---
 
@@ -220,11 +237,13 @@ ads:
     metricas_janela_media:
       spend: ...
       impressions: ...
-      ctr_link_unico: ...
+      link_clicks: ...                  # inline_link_clicks; no conector, link_click
+      ctr_link_unico: ...               # unique_inline_link_click_ctr; no conector fica null (salvo se ads_get_field_context devolver o campo único, seção 10.1)
+      ctr_link_total: ...               # inline_link_click_ctr; no conector, link_click ÷ impressions (calculado). Com ctr_link_unico null, quem consome usa este e declara a troca
       purchases_ou_leads: ...
       cpa_ou_cpl: ...
       conversoes: ...
-    classificacao_vencedor: true | false           # CTR único saudável + ≥ 50 conversões
+    classificacao_vencedor: true | false           # definição única de anúncio vencedor da /trafego-escalar (Passo 0.75.1): CTR único saudável (no conector, o ctr_link_total) + 50 conversões em low e middle ticket ou 30 em high ticket, pelo tipo do produto no resumo (não pela trilha da 3.1), na janela média da trilha; o "validado" da /trafego-testes é somado pela skill que consome
 ```
 
 **Limite de proteção a rate limit:** máximo 200 ads por execução. Acima disso, paginar com cursor.
@@ -236,16 +255,17 @@ ads:
 A skill mantém dois níveis de cache, complementares:
 
 ### 7.1 Cache em memória (curto prazo)
-- Chave: hash de (`object_id`, `nivel`, `janelas`, `janela_atribuicao`, `breakdowns`).
+- Chave: os mesmos parâmetros do cache em arquivo (`sub-skills/cache.md` seção 5): conta (`ad_account_id`), período (`janelas` ou `data_inicio`/`data_fim`), `janela_atribuicao`, quebras (`breakdowns`) e `hash_filtros`. O `hash_filtros` cobre só o filtro de escopo (`campaign_id` ou `conta_completa`, e `nivel`) e o de status (`incluir_pausadas`, `incluir_arquivadas`). Mudou qualquer um desses, é cache miss.
 - TTL: **5 minutos**.
 - Escopo: por sessão de conversa. Não persiste entre conversas.
 - Camada mais rápida, evita refetch dentro da mesma chamada.
 
 ### 7.2 Cache em arquivo .md (médio prazo, entre sessões)
 - Localização: `meus-produtos/{ativo}/trafego/insights/` (sem produto ativo: `meus-produtos/_global/trafego/insights/`).
-- TTL adaptativo: 1h (today), 6h (7-14d), 24h (30d), 7d (períodos fechados).
+- TTL adaptativo: 1h (today), 6h (7-14d); 30d e períodos fechados valem até o fim do dia. O cache só vale no mesmo dia (fuso America/Sao_Paulo) e para os mesmos parâmetros da chave da 7.1 (conta, período, janela de atribuição, quebras e `hash_filtros`, que cobre escopo e status): mudou o dia, busca de novo.
+- Resposta com erro, ou leitura em que a chamada principal falhou, nunca vira cache.
 - Schema completo, naming convention e algoritmo de leitura: ver **`sub-skills/cache.md`**.
-- Permite que outras skills (`/trafego-analise`, `/trafego-otimizar`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`) compartilhem leituras dentro da mesma sessão e entre sessões próximas, evitando bater na Graph API repetidas vezes pelo mesmo período.
+- Permite que outras skills (`/trafego-otimizar`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`, e a `/trafego-analise` nas quebras que as sub-skills pedem) compartilhem leituras dentro do mesmo dia, evitando bater na Graph API repetidas vezes pelo mesmo período. A busca base da `/trafego-analise` (Passo 4 dela) é própria e não passa por este cache.
 
 ### 7.3 Ordem de consulta
 1. Memória → se hit válido, retorna.
@@ -310,7 +330,7 @@ campanha:
   created_time: "2026-03-15T10:30:00-0300"
   budget:
     tipo: ABO | CBO
-    valor_diario_brl: 200.00
+    valor_diario_brl: 200.00        # sempre na unidade da moeda (reais), nunca em centavos (seção 10.1)
   metricas_por_janela:
     curta:                                # ex: 1d
       janela: "1d"
@@ -318,7 +338,7 @@ campanha:
       impressions: 12450
       reach: 8920
       frequency: 1.4
-      ctr_link_unico: 0.0118       # unique_inline_link_click_ctr, primária
+      ctr_link_unico: 0.0118       # unique_inline_link_click_ctr, primária (no conector, null salvo a exceção da seção 10.1)
       ctr_link_total: 0.0142       # inline_link_click_ctr, complementar
       hook_rate: 0.27
       cpm: 15.95
@@ -354,10 +374,10 @@ conjuntos:
   - id: "120203456789001"
     nome: "AS - Lookalike compradores 1%"
     status: ACTIVE
-    effective_status: ACTIVE | LEARNING | LEARNING_LIMITED | CAMPAIGN_PAUSED | WITH_ISSUES
+    effective_status: ACTIVE | PAUSED | CAMPAIGN_PAUSED | IN_PROCESS | WITH_ISSUES | ARCHIVED   # não informa a fase de aprendizado
     created_time: "2026-03-15T10:35:00-0300"
-    budget_diario_brl: 100.00
-    aprendizado: ATIVO | EM_APRENDIZADO | APRENDIZADO_LIMITADO
+    budget_diario_brl: 100.00       # sempre na unidade da moeda (reais), nunca em centavos (seção 10.1)
+    aprendizado: ATIVO | EM_APRENDIZADO | APRENDIZADO_LIMITADO | NAO_VERIFICADO   # de learning_stage_info.status: SUCCESS | LEARNING | FAIL; no conector, só se ads_get_field_context listar o campo (senão NAO_VERIFICADO)
     metricas_por_janela:
       curta: { ... }
       media: { ... }
@@ -365,7 +385,7 @@ conjuntos:
 
 anuncios:
   - id: "120203456789999"
-    nome: "AD - Dor - Vídeo 30s"
+    nome: "AD - Mito - Vídeo 30s"
     status: ACTIVE
     effective_status: ACTIVE
     created_time: "2026-03-15T11:00:00-0300"
@@ -444,39 +464,91 @@ detalhes_tecnicos:
 
 ## 10. Como puxar os dados (rota por META_AUTH_MODO)
 
-A skill respeita a preferência de conexão definida em `META_AUTH_MODO` no `.env` (ver `/trafego-conexao`). Só existem dois modos: `MCP_CONECTOR` e `APP`. Esta skill é **100% leitura**, então **não tem lacuna** em nenhum modo: toda leitura tem tool no conector. Não há gate (não escreve na conta).
+A skill respeita a preferência de conexão definida em `META_AUTH_MODO` no `.env` (ver `/trafego-conexao`). Só existem dois modos: `MCP_CONECTOR` e `APP`. Valor vazio, ausente ou diferente desses dois (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` antes de ler (Passo 0.2 do command). Esta skill é **100% leitura**, então **não tem lacuna** em nenhum modo: toda leitura tem tool no conector. Não há gate (não escreve na conta).
 
-### 10.1 Modo `MCP_CONECTOR`
-Usar as tools de leitura do conector da Meta. **Descobrir a tool pelo final do nome, nunca pelo prefixo**: o prefixo varia por ambiente (pode ser `mcp__Meta_Ads__...` ou um UUID como `mcp__9dc3edbb-...__ads_insights_performance_trend`). Procurar pelo final estável `ads_insights_performance_trend`, `ads_get_ad_entities` ou `ads_get_ad_accounts` (ver `trafego-conexao` §5.1). Nesse modo não se usa token, mesmo que exista um `FB_ACCESS_TOKEN_PERMANENTE` antigo no `.env`.
+### 10.1 Contrato do conector da Meta (MCP)
 
-Mapeamento direto (sufixo da tool):
-- `list_campaigns` → `ads_get_ad_entities` com filtro de tipo `campaign`
-- `get_insights` → `ads_insights_performance_trend` (e demais `ads_insights_*`)
-- `get_ad_account_info` → `ads_get_ad_accounts`
-- detecção de atribuição / datasets → `ads_get_ad_accounts` / `ads_get_datasets` conforme o campo
+Regras do modo `MCP_CONECTOR`. Fonte: seção 4.3 do `.claude/skills/trafego-dashboard/SKILL.md`, conferida no conector oficial da Meta em 09/10/2026. As outras skills de tráfego apontam para esta seção em vez de manter listas próprias de campos.
 
-O `ad_account_id` exigido pelas tools vem de `FB_AD_ACCOUNT_ID` do `.env` (ou da conta escolhida no Passo 0.3 do command).
+Usar as tools de leitura do conector da Meta. **Descobrir a tool pelo final do nome, nunca pelo prefixo**: o prefixo varia por ambiente (pode ser `mcp__Meta_Ads__...` ou um UUID como `mcp__9dc3edbb-...__ads_get_ad_entities`). Procurar pelo final estável `ads_get_ad_entities` ou `ads_get_ad_accounts` (ver `trafego-conexao` §5.1). Nesse modo não se usa token, mesmo que exista um `FB_ACCESS_TOKEN_PERMANENTE` antigo no `.env`.
+
+**Ferramentas (sufixo da tool, a partir da camada lógica da 10.3):**
+- `get_ad_account_info` → `ads_get_ad_accounts` (nome, `currency`, `account_status`, `is_ads_mcp_enabled`).
+- `list_campaigns`, `get_campaign`, `list_adsets`, `get_adset`, `list_ads`, `get_ad` e `get_insights` (métricas de qualquer nível) → `ads_get_ad_entities` com `level`: `ad_account`, `campaign`, `adset` ou `ad`. Os dados da entidade e as métricas vêm na mesma chamada, com a lista de campos da tabela abaixo.
+- Série dia a dia (`incluir_serie_diaria`, seção 12.5) → `ads_get_ad_entities` no `level` da entidade, com `time_increment: "1"`.
+- `ads_insights_performance_trend` → só a tendência da conta, de um conjunto ou de um anúncio, quando pedida. **Não faz nível campanha** (volta vazio) e nunca serve para métricas por campanha, ranking, funil, comparativo ou série por campanha.
+- Detecção de atribuição / datasets → `ads_get_ad_accounts` / `ads_get_datasets` conforme o campo. Se a atribuição não vier, usar o fallback da seção 2.2 e declarar.
+
+**Tradução dos campos (Graph API da seção 4 → conector):** campos conferidos com `ads_get_field_context` para o `ads_get_ad_entities`.
+
+| Graph API (modo `APP`) | Conector (`ads_get_ad_entities`) |
+|---|---|
+| `spend` | `amount_spent` |
+| `inline_link_clicks` / `actions[link_click]` | `link_click` |
+| `actions[landing_page_view]` | `landing_page_view` |
+| `actions[purchase]` (`offsite_conversion.fb_pixel_purchase`) | `omni_purchase` |
+| `actions[initiate_checkout]` | `omni_initiated_checkout` |
+| valor das compras (`action_values[purchase]`) | `offsite_conversion_fb_pixel_purchase_values` (sem ele: `purchase_roas × amount_spent`) |
+| `purchase_roas`, `impressions`, `reach`, `name`, `effective_status`, `campaign_id`, `adset_id` | iguais |
+| `daily_budget` (número em centavos) | `daily_budget` (objeto com moeda e valor em reais) |
+| resultado do objetivo da campanha | `results` (objeto com `indicator` e `values`) |
+
+Métrica sem evento volta `null`: conta sem pixel de compra mostra compras e faturamento vazios, e isso é dado, não erro.
+
+**Campos sem tradução conferida** (frequência, CPM, CTR, cliques totais, `unique_inline_link_click_ctr`, `cost_per_action_type`, carrinho, leads por evento, métricas de vídeo, demografia):
+- Calcular a partir dos conferidos quando der e declarar no output que o número foi calculado: frequência = `impressions ÷ reach`; CPM = `amount_spent ÷ impressions × 1000`; CTR de link (total) = `link_click ÷ impressions`, gravado em `ctr_link_total`; custo por etapa = `amount_spent ÷` evento. O `ctr_link_unico` só é preenchido se `ads_get_field_context` devolver `unique_inline_link_click_ctr` ou os cliques únicos no link; sem esse campo, `ctr_link_unico` fica `null`, com registro em `erros[]`, e quem consome usa o `ctr_link_total` e declara a troca.
+- Para o resto, chamar `ads_get_field_context` antes da coleta e pedir só o que ele devolver. Se o campo não existir, marcar a métrica como `indisponível neste nível`, registrar em `erros[]` e seguir sem ela (quando ajudar, guiar o aluno a ler a coluna no Gerenciador). Nunca inventar o número.
+- Nunca pedir `actions` ou `action_values` crus ao conector (voltam `Unsupported field`). Nunca afirmar que um campo "não existe no conector" se ele está na tabela acima.
+- Leads: `results` quando o objetivo da campanha é leads; senão, o campo que `ads_get_field_context` indicar. Mesma régua da seção 4.4 (nunca somar duas contagens de lead).
+- Fase de aprendizado: o `effective_status` não informa aprendizado. Usar o campo que `ads_get_field_context` indicar (`learning_stage_info`); sem esse campo, `aprendizado: NAO_VERIFICADO` e avisar que o conector não mostra essa fase.
+
+**Formatos que o conector exige:**
+- `time_range` vai como **texto JSON**: `'{"since":"AAAA-MM-DD","until":"AAAA-MM-DD"}'`, por exemplo `"{\"since\":\"2026-10-01\",\"until\":\"2026-10-07\"}"`. Nunca como objeto nem com `since` e `until` soltos.
+- `date_preset` só com os valores válidos da Meta: `today`, `yesterday`, `last_3d`, `last_7d`, `last_14d`, `last_28d`, `last_30d`, `last_90d`, `this_month`, `last_month`, `this_quarter`, `last_quarter`, `this_year`, `last_year`, `maximum` (os mesmos valem na Graph API). Não existem `last_180d`, `last_6_months` nem `last_365d`: para períodos assim, usar `time_range` com as datas calculadas.
+- Série por dia: `time_increment: "1"`. Cada linha traz `date_start`; agregar por ele.
+- Próxima página em `cursor`. Pedir `limit: 1000` (o máximo). O conector pode cortar a resposta no `limit` sem devolver a próxima página: quando uma consulta chegar ao limite, avisar o aluno e registrar em `erros[]`.
+- Filtro: `filtering: [{field: "{nível}.campo", operator, value: [...]}]`. O nível `ad_account` não aceita `sort` nem `filtering`.
+- Sem filtro, o conector devolve também entidades antigas sem entrega (uma conta teve mais de 2.000 conjuntos). Quando a pergunta é sobre o que está rodando: em campanha e anúncio, filtrar `impressions` maior que zero (`{field: "campaign.impressions", operator: "GREATER_THAN", value: ["0"]}`, com `ad.` no nível anúncio); em conjunto, `{field: "adset.effective_status", operator: "IN", value: ["ACTIVE"]}`. Para uma entidade específica, filtrar pelo id no mesmo formato (`{field: "campaign.id", operator: "IN", value: ["<id>"]}`).
+- Quebras (`breakdowns`): ler os valores aceitos no schema da tool ou em `ads_get_field_context`. Por hora é `hourly_stats_aggregated_by_advertiser_time_zone`, só no nível da conta. Se a quebra pedida não existir, dizer ao aluno e seguir sem ela.
+- Orçamento: `daily_budget` em objeto com moeda já está em reais (usar como veio); número puro está em centavos (padrão da Graph API, dividir por 100). O payload sempre entrega `valor_diario_brl` e `budget_diario_brl` na unidade da moeda (reais), nunca em centavos; as outras skills usam esses campos e citam esta regra. Para escrita, cada skill de escrita confere a unidade no schema da tool.
+- Moeda: cada conta tem a sua (`currency` em `ads_get_ad_accounts`), que vai no campo `moeda` do output. Nunca somar moedas diferentes: em leitura de várias contas, separar os totais por moeda.
+- Conta grande: lista enxuta de campos e `limit` explícito. Se o retorno for salvo em arquivo pela ferramenta, processar o arquivo (ele não tem token) em vez de reler tudo.
+
+O `ad_account_id` exigido pelas tools vem de `FB_AD_ACCOUNT_ID` do `.env` (ou da conta escolhida no Passo 0.3 do command). Se `FB_AD_ACCOUNT_ID` estiver vazio ou ausente (conexão feita por uma versão antiga, que não gravava a conta no modo MCP), nunca seguir com conta vazia nem escolher sozinho uma conta da listagem: acionar `/trafego-conexao` na opção "Validar a conexão atual", que lista as contas pela seção 5.1.1 e grava `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS`.
 
 **Conta não liberada no conector** (`is_ads_mcp_enabled: false` ou erro "Ads MCP is gradually being rolled out"): parar, avisar o aluno em linguagem simples e oferecer o modo App pelo `/trafego-conexao` (seção 5.1.2 da skill `trafego-conexao`). Uma tool específica em liberação gradual ("This tool is new and is being gradually rolled out") não trava a leitura: usar outra tool de leitura do conector que traga o mesmo dado (conferindo o schema) ou registrar em `erros[]` qual dado ficou de fora.
 
 Ferramentas de leitura que podem complementar a análise quando o aluno pedir: `ads_insights_anomaly_signal` (anomalias), `ads_insights_industry_benchmark` e `ads_insights_auction_ranking_benchmarks` (comparação com o mercado), `ads_account_get_activity_logs` (o que mudou na conta). Os parâmetros vêm do schema da tool na hora.
 
 ### 10.2 Modo `APP`
-Conferir `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q` e chamar a Graph API direto via `curl`, uma chamada por `Bash`, com o token por substituição dentro do próprio comando (seções "LEITURA SEGURA DO .env" e "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md). Usar `curl -g` quando o `fields=` tiver campos aninhados (ex.: `adsets{name}`). Nunca exibir o token.
+Conferir que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env`, com o ponto: linha vazia conta como ausente) e chamar a Graph API direto via `curl`, uma chamada por `Bash`, com o token por substituição dentro do próprio comando: `$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)` (seções "LEITURA SEGURA DO .env" e "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md). Usar `curl -g` sempre que a URL tiver `{}` ou `[]` (ex.: campos aninhados no `fields=`, como `adsets{name}`). `effective_status`, `time_range`, `filtering` e `action_attribution_windows` levam aspas e vão sempre URL-codificados (10.2.1): só o `-g` não basta para eles. Nunca exibir o token.
 
 Endpoint base: `https://graph.facebook.com/v25.0/`
 
+Fase de aprendizado do conjunto: pedir `learning_stage_info` no `fields=` do conjunto (`status`: `LEARNING`, `SUCCESS` ou `FAIL`, que viram `EM_APRENDIZADO`, `ATIVO` e `APRENDIZADO_LIMITADO` no campo `aprendizado`). O `effective_status` não informa aprendizado.
+
 ### 10.2.1 Boas práticas obrigatórias no Modo APP
 
-**URL encoding:** parâmetros que contêm colchetes `[]` DEVEM ser URL-encoded antes de montar a URL do curl. O bash interpreta colchetes literais como globbing e o curl falha silenciosamente (exit code 3). Sempre usar a forma encoded:
-- `effective_status=['ACTIVE']` → `effective_status=%5B%22ACTIVE%22%5D`
-- `time_range={"since":"..."}` → `time_range=%7B%22since%22%3A%22...%22%7D`
+**URL encoding:** o `curl` trata colchetes `[]` e chaves `{}` crus na URL como padrão de expansão: colchete dá erro "bad range" (exit code 3) e chave com vírgula vira duas requisições (o `time_range` quebra ao meio). Parâmetros com colchetes, chaves ou aspas (`effective_status`, `time_range`, `filtering`, `action_attribution_windows`) vão URL-encoded, com aspas duplas no JSON antes de codificar. Só pôr `-g` não basta quando o valor tem aspas duplas dentro de uma URL entre aspas duplas. Exemplos:
+- `effective_status=["ACTIVE"]` → `effective_status=%5B%22ACTIVE%22%5D`
+- `effective_status=["ACTIVE","PAUSED"]` → `effective_status=%5B%22ACTIVE%22%2C%22PAUSED%22%5D`
+- `time_range={"since":"2026-10-01","until":"2026-10-07"}` → `time_range=%7B%22since%22%3A%222026-10-01%22%2C%22until%22%3A%222026-10-07%22%7D`
+- `filtering=[{"field":"campaign.id","operator":"IN","value":["{ID}"]}]` → `filtering=%5B%7B%22field%22%3A%22campaign.id%22%2C%22operator%22%3A%22IN%22%2C%22value%22%3A%5B%22{ID}%22%5D%7D%5D` (trocar `{ID}` pelo número antes de rodar)
+- `action_attribution_windows=["7d_click"]` → `action_attribution_windows=%5B%227d_click%22%5D`
+
+`since` e `until` soltos não valem em `/insights`: usar sempre `time_range`.
+
+**Paginação sem expor o token:** a resposta traz `paging.next` e `paging.previous` com a URL completa da próxima página, que inclui o `access_token`. Nunca copiar, reaproveitar nem exibir essas URLs. Para a próxima página, montar um novo `curl` com `after=<cursor>` (o valor de `paging.cursors.after`; no processamento em Python abaixo, tirado da saída do script) e o token por substituição na hora.
 
 **Cadência entre chamadas (rate limit):** o Meta aplica limite de uso por token. Em modo conta completa, nunca encadear mais de 3 chamadas sem pausa. Aguardar 3 segundos entre cada chamada à Graph API. Em Python, usar `time.sleep(3)` antes de cada request. Se a resposta vier com `"code": 4` (rate limit), aplicar backoff: aguardar 30s antes de retentar. Máximo 2 retries.
 
-**Paths de arquivo:** NUNCA salvar arquivos temporários em `/tmp` ou depender de variáveis de ambiente de sessões bash anteriores (`$TEMP`, `$TMPDIR`). Cada chamada bash tem sessão isolada. Salvar sempre em `meus-produtos/{ativo}/trafego/insights/` com path absoluto derivado do diretório de trabalho atual. Para arquivos intermediários de processamento, usar o mesmo diretório do produto.
+**Paths de arquivo:** NUNCA salvar arquivos temporários em `/tmp` ou depender de variáveis de ambiente de sessões bash anteriores (`$TEMP`, `$TMPDIR`). Cada chamada bash tem sessão isolada. Salvar sempre em `meus-produtos/{ativo}/trafego/insights/` com path absoluto derivado do diretório de trabalho atual. Arquivos intermediários (JSONs brutos da API) ficam só na subpasta temporária `meus-produtos/{ativo}/trafego/insights/tmp/`, separada dos caches.
 
-**Processamento em Python (exceção controlada do CLAUDE.md):** só quando o volume não der para processar lendo os JSONs direto. Salvar os JSONs com `curl ... > arquivo.json` na pasta acima, escrever o script com `Write` (sem token dentro dele) e rodar com o interpretador detectado na sessão (`python3` ou `py -3`). Nunca heredoc nem `curl | python3` com token.
+**Processamento em Python (exceção controlada do CLAUDE.md):** só quando o volume não der para processar lendo os JSONs direto. A resposta bruta traz `paging.next` e `paging.previous` com o `access_token`, então ela só existe em disco entre o `curl` que a gravou e a limpeza logo em seguida: nunca fica guardada até o fim nem vai para a pasta dos caches. Ordem:
+1. Antes da primeira chamada: apagar sobras de `tmp/*.json` de execuções interrompidas (rate limit, erro ou aluno que parou no meio) e escrever com `Write` o script de limpeza (sem token dentro dele). Ele regrava o JSON bruto sem o bloco `paging` (guarda só `data`; se a resposta for erro, guarda só o bloco `error`), imprime só o cursor `after` (se houver) ou, em resposta de erro, só o código e a mensagem do erro, e nunca imprime nem regrava `paging`.
+2. Para cada chamada ou página, nesta ordem: (a) `curl ... > arquivo.json` na subpasta `tmp/` acima; (b) logo em seguida, antes do próximo `curl`, rodar o script de limpeza nesse arquivo. O cursor `after` da próxima página vem da saída do script, nunca da leitura do JSON bruto. Se a saída trouxer um erro, seguir a cadência acima (código 4) e a seção 8 antes de continuar. Resposta com erro não entra no processamento nem no cache.
+3. Com todas as respostas já limpas, rodar o processamento (no mesmo script ou em outro, também escrito com `Write`). Sempre com o interpretador detectado na sessão (`python3` ou `py -3`). Nunca heredoc nem `curl | python3` com token.
+4. Ao final, apagar os `.json` da subpasta `tmp/`. No cache `.md` (seção 7.2) só entra o payload já processado, sem `paging`.
 
 **Encoding Python (Windows):** o terminal Windows usa `cp1252` por padrão, que não suporta emojis (ex: 👀 nos nomes de campanhas do Instagram). Todo script Python que imprime nomes de campanhas DEVE começar com:
 ```python
@@ -584,10 +656,10 @@ Retorna o funil completo (impressões → cliques → LP views → leads/checkou
 funil:
   impressions: 186000
   link_clicks: 3348           ; ctr: 1.8%
-  lp_views: 2578              ; lpvr: 77%
+  lp_views: 2578              ; connect_rate: 77% (lp_views/cliques)
   leads: 51                   ; opt_in: 2.0%
   initiate_checkout: 89       ; offer_rate: 3.4%
-  purchases: 22               ; connect_rate: 43% (compras/leads)
+  purchases: 22               ; lead_para_compra: 43% (compras/leads)
   conversao_geral: 0.66%      ; (compras/cliques)
 ```
 
@@ -637,7 +709,11 @@ serie_diaria:
   dias_sem_conversao: 0
 ```
 
-**Implementação:** chamada Graph API com `time_increment=1` no período da janela. Cacheada normalmente (memória + arquivo). Quando a janela tem menos de 3 dias, retorna a série mas marca `coeficiente_variacao: null` (amostra insuficiente para variação significativa).
+**Implementação, por modo:**
+- **`APP`:** chamada Graph API em `/{object_id}/insights` com `time_increment=1` no período da janela (`time_range` codificado, seção 10.2.1).
+- **`MCP_CONECTOR`:** `ads_get_ad_entities` no `level` da entidade (`campaign`, `adset` ou `ad`), com `time_increment: "1"`, o período em `date_preset` ou em `time_range` como texto JSON, o filtro pelo id da entidade (ou `impressions` maior que zero) e os campos da tradução da seção 10.1 (`amount_spent`, `impressions`, `link_click`, `omni_purchase` ou `results`). Agregar por `date_start`. Nunca usar `ads_insights_performance_trend` para campanha (volta vazio). Frequência por dia: conferir `frequency` com `ads_get_field_context`; se não vier, calcular `impressions ÷ reach` da mesma janela e declarar que foi calculada.
+
+Cacheada normalmente (memória + arquivo). Quando a janela tem menos de 3 dias, retorna a série mas marca `coeficiente_variacao: null` (amostra insuficiente para variação significativa).
 
 **Campo `_cv` no output principal:** quando a `serie_diaria` estiver disponível para uma métrica (janela >= 3d), o campo `{metrica}_cv` é calculado automaticamente e inserido no bloco `metricas_por_janela`. Fórmula: `desvio_padrao / media`. Quanto mais alto, mais instável o resultado.
 

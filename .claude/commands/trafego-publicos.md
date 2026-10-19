@@ -21,9 +21,9 @@ Leia `meus-produtos/.ativo`. Leia `meus-produtos/{ativo}/resumo-produto.md` (se 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
 Leia `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
 
-- **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback.
-- **Se `MCP_CONECTOR`:** confirme que existe uma tool cujo nome termina em `ads_get_ad_accounts` (o começo do nome varia de instalação para instalação). Se nenhuma estiver disponível, peça ao aluno para reabrir o Claude Code; se persistir, volte ao `/trafego-conexao`. Se a conta vier como não liberada no MCP, explique e ofereça o modo App pelo `/trafego-conexao`.
-- **Se `APP`:** confirme com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`. Se faltar algum, acione `/trafego-conexao`.
+- **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acione `/trafego-conexao` e aguarde a conclusão. Não tente adivinhar, não caia em fallback, não peça credenciais avulsas.
+- **Se `MCP_CONECTOR`:** confirme que existe uma tool cujo nome termina em `ads_get_ad_accounts` (o começo do nome varia de instalação para instalação). Se nenhuma estiver disponível, peça ao aluno para reabrir o Claude Code; se persistir, volte ao `/trafego-conexao`. Se a conta vier como não liberada no MCP, explique e ofereça o modo App pelo `/trafego-conexao`. Confira também `FB_AD_ACCOUNT_ID` com `grep -q "^FB_AD_ACCOUNT_ID=." .env`; se faltar, a opção "Validar" do `/trafego-conexao` completa.
+- **Se `APP`:** confirme com `grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env` e `grep -q "^FB_AD_ACCOUNT_ID=." .env` que as duas variáveis existem com valor (o ponto faz a linha vazia contar como ausente). Se faltar alguma, acione `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
 
@@ -47,8 +47,8 @@ A skill nunca prossegue sem essa validação passar.
     PageView, ViewContent, AddToCart, InitiateCheckout, Purchase, Lead etc.
 
 [2] Público por evento personalizado
-    Evento próprio do pixel (clique em botão, página visitada, UTM),
-    com conversão personalizada opcional
+    Clique em botão (evento próprio do pixel), página visitada, link com UTM
+    ou parâmetro de evento, com conversão personalizada opcional
 
 [3] Público de quem viu vídeo
     Quem viu 25%, 50%, 75% ou 100% do vídeo
@@ -92,10 +92,22 @@ Se a Meta recusar um subtipo pelo MCP, a sub-skill explica e conduz o aluno por 
 
 Cada sub-skill define seus inputs. Padrão geral, sempre uma pergunta por mensagem:
 - Nome: gerado pela skill na convenção `[WS] tipo-descricao-janela-produto` e confirmado com o aluno.
-- Janela: padrão 30 dias (até 180 para evento do pixel, até 365 para vídeo e engajamento).
+- Janela: padrão 30 dias (até 180 para evento do pixel; vídeo e engajamento: até 365 dias, formulário de cadastro: até 90).
 - Tamanho mínimo da origem: só no público semelhante (100 pessoas).
 
-🔍 Próximo passo: validar os dados e calcular o tamanho estimado do público (3 passos). Tempo estimado: cerca de 30 segundos.
+### Anúncio de tempo por sub-fluxo
+
+Antes da parte longa de cada sub-fluxo, anunciar com a faixa calibrada de `.claude/rules/tempo-estimado.md`. As sub-skills não repetem o 🔍: só marcam os passos internos com ⏳.
+
+| Sub-fluxo | Quando anunciar | Anúncio |
+|---|---|---|
+| [1], [2], [3], [5] e [7] | Passo 5, depois do "sim" e antes de criar | `🔍 Próximo passo: criar o público na sua conta e conferir a regra gravada (2 passos). Tempo estimado: cerca de 30 segundos.` |
+| [6] Lista de clientes, modo App | Passo 5, depois do "sim" e antes de criar o público | `🔍 Próximo passo: criar o público e enviar os códigos para a Meta (2 passos). Tempo estimado: cerca de 60 segundos.` |
+| [6] Lista de clientes, modo MCP (pelo conector) | Passo 5, depois do "sim" e antes de criar o público | `🔍 Próximo passo: criar o público e enviar os códigos para a Meta (2 passos). Tempo estimado: 2 a 3 minutos.` |
+| [4] Bases por nível, modo App | antes de conferir os interesses (passo 6 da sub-skill) | `🔍 Próximo passo: conferir os interesses na Meta e estimar o tamanho das 3 bases (3 passos). Tempo estimado: 2 a 3 minutos.` |
+| [8] Listar públicos | antes de ler a conta | `🔍 Próximo passo: listar os públicos da conta com os alertas. Tempo estimado: cerca de 30 segundos.` |
+
+Caminhos feitos pelo aluno no Gerenciador (passo manual guiado) não levam esse anúncio: a própria sub-skill diz quanto leva.
 
 ---
 
@@ -108,6 +120,8 @@ Cada sub-skill define seus inputs. Padrão geral, sempre uma pergunta por mensag
 ---
 
 ## Passo 5. Criação
+
+Antes de criar, anunciar com o tempo do sub-fluxo (tabela "Anúncio de tempo por sub-fluxo", no Passo 3). Na opção [1], [2], [3], [5] ou [7]: `🔍 Próximo passo: criar o público na sua conta e conferir a regra gravada (2 passos). Tempo estimado: cerca de 30 segundos.` Na opção [6], o anúncio da linha do modo (App ou MCP) da mesma tabela.
 
 Se confirmado:
 - Cria pelo MCP ou pelo `curl` (nunca exibido com token).
@@ -140,5 +154,5 @@ Próximos passos:
 3. **Convenção de nome `[WS]`.**
 4. **Público nasce disponível** (não existe "pausado" para público).
 5. **Não liga público a conjunto.** Só cria.
-6. **Lista de clientes nunca aparece no chat.** A skill não abre o CSV: o script local transforma os dados em código e mostra só contagens.
+6. **Lista de clientes nunca aparece no chat em claro.** A skill não abre o CSV: o script local transforma os dados em código e mostra só contagens. No modo MCP, os códigos passam pela conversa e o aluno é avisado antes (ver `customer-match.md`, passo 2).
 7. **Não cria evento padrão fora de contexto.** Só a opção [2] mexe com evento personalizado, e só para alimentar um público da mesma sessão.
