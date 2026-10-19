@@ -1,4 +1,4 @@
-# Output [9] — Orçamento & Projeção
+# Output [9]. Orçamento & Projeção
 
 Visão de para onde o dinheiro vai, quanto ainda vai gastar até o fim do mês e como redistribuir para maximizar resultado sem aumentar o gasto total.
 
@@ -25,20 +25,18 @@ Período: conforme escolha do aluno no Passo 3. Não perguntar novamente.
 
 ### Campos adicionais a acrescentar na chamada principal deste output
 
-```
-landing_page_views
-```
+Nenhum campo adicional no parâmetro `fields`.
 
-Necessário para calcular connect rate e identificar gargalos de funil nos candidatos a escala.
+> **Nota de API:** `landing_page_views` é inválido no parâmetro `fields` da Insights API (erro 400). O valor de visualizações da página de destino vem do array `actions` (action_type = `landing_page_view`), já retornado nos campos base. Usar esse valor para calcular connect rate e identificar gargalos de funil nos candidatos a escala.
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
-**Chamada 9b — Orçamentos e gasto de hoje**
+**Chamada 9a. Orçamentos e gasto de hoje**
 
 Retorna `daily_budget`, `lifetime_budget`, `budget_remaining` por campanha ativa, e o gasto acumulado de hoje para cruzar com o orçamento diário.
 
 ```bash
-# Modo APP — orçamentos das campanhas
+# Modo APP: orçamentos das campanhas
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns
   ?fields=id,name,status,daily_budget,lifetime_budget,budget_remaining,start_time,stop_time
   &effective_status={STATUS_FILTRO}
@@ -47,17 +45,18 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns
 ```
 
 ```bash
-# Modo APP — gasto de hoje (para calcular ritmo diário do mês corrente)
+# Modo APP: gasto de hoje (para calcular ritmo diário do mês corrente)
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=campaign_id,campaign_name,spend
   &level=campaign
   &date_preset=today
-  &effective_status={STATUS_FILTRO}
   &limit=500
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-**Chamada 9c — Gasto do mês corrente até hoje**
+> **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (listagem de campanhas desta mesma chamada): cruzar o retorno com a listagem e manter apenas as campanhas com o status desejado.
+
+**Chamada 9b. Gasto do mês corrente até hoje**
 
 ```bash
 # Modo APP
@@ -70,7 +69,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-**Chamada 9d — Gasto do mês anterior (para comparativo)**
+**Chamada 9c. Gasto do mês anterior (para comparativo)**
 
 ```bash
 # Modo APP
@@ -83,22 +82,22 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
 ```
 
 **Notas sobre orçamentos na API:**
-- `budget_remaining` só é populado pela API para campanhas com **lifetime budget**. Para campanhas com **daily budget**, o campo retorna nulo — calcular restante manualmente: `restante = daily_budget − spend_hoje`.
+- `budget_remaining` só é populado pela API para campanhas com **lifetime budget**. Para campanhas com **daily budget**, o campo retorna nulo. Calcular o restante manualmente: `restante = daily_budget − spend_hoje`.
 - `daily_budget` e `lifetime_budget` são retornados em centavos (inteiros). Dividir por 100 para obter valor em reais.
 - Campanhas CBO: o orçamento fica no nível de campanha. Campanhas ABO: o orçamento está no nível de adset. Para ABO, usar chamada adicional ao nível de adsets se necessário.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=campaign` para 9b; `mcp__*__ads_insights_performance_trend` com `date_preset=this_month` para 9c e com o mês anterior para 9d.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=campaign` para 9a; `mcp__*__ads_insights_performance_trend` com `date_preset=this_month` para 9b e com o mês anterior para 9c.
 
 ### Referência de produto (benchmarks)
 
-Ler do `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas.
+Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e o tipo de produto. Não perguntar de novo. Inferir tipo de funil pelo objetivo predominante das campanhas.
 
 | Tipo de funil | Ticket | ROAS mínimo saudável | CPA máximo saudável | Candidato a escala |
 |---|---|---|---|---|
-| Venda direta — low ticket | ≤ R$ 97 | 2.5x | ticket × 0.40 | ROAS ≥ 3.0x + freq ≤ 3.5 |
-| Venda direta — ticket médio | R$ 98 a R$ 497 | 3.0x | ticket × 0.30 | ROAS ≥ 3.5x + freq ≤ 3.0 |
-| Venda direta — high ticket | > R$ 497 | 4.0x | ticket × 0.25 | ROAS ≥ 4.5x + freq ≤ 2.5 |
-| Captação de leads | qualquer | — | CPL-alvo do resumo (ou perguntar) | CPL ≤ 70% do benchmark + freq ≤ 3.5 |
+| Venda direta: low ticket | ≤ R$ 97 | 2.5x | ticket × 0.40 | ROAS ≥ 3.0x + freq ≤ 3.5 |
+| Venda direta: ticket médio | R$ 98 a R$ 497 | 3.0x | ticket × 0.30 | ROAS ≥ 3.5x + freq ≤ 3.0 |
+| Venda direta: high ticket | > R$ 497 | 4.0x | ticket × 0.25 | ROAS ≥ 4.5x + freq ≤ 2.5 |
+| Captação de leads | qualquer | - | CPL-alvo do resumo (ou perguntar) | CPL ≤ 70% do benchmark + freq ≤ 3.5 |
 
 ---
 
@@ -159,7 +158,7 @@ CPL_medio = sum(spend) / sum(leads de todas as campanhas)
 
 Mostrar dois sub-blocos separados conforme o tipo de funil predominante.
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 💰 PROJEÇÃO DO MÊS  ·  {nome_conta}  ·  {mês/ano}
@@ -170,14 +169,14 @@ Orçamento diário total ativo:  R$ {B}
 ─────────────────────────────────────────
 Projeção até o fim do mês:     R$ {A + (Z × B)}
 
-Mês anterior — gasto total:    R$ {C}
+Mês anterior (gasto total):    R$ {C}
 Variação projetada:            {+/-D%}  {🟢 | 🟡 | 🔴}
 
 ROAS médio no mês até hoje:    {X.X}x
 CPA médio no mês até hoje:     R$ {Y}
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 💰 PROJEÇÃO DO MÊS  ·  {nome_conta}  ·  {mês/ano}
@@ -188,7 +187,7 @@ Orçamento diário total ativo:  R$ {B}
 ─────────────────────────────────────────
 Projeção até o fim do mês:     R$ {A + (Z × B)}
 
-Mês anterior — gasto total:    R$ {C}
+Mês anterior (gasto total):    R$ {C}
 Variação projetada:            {+/-D%}  {🟢 | 🟡 | 🔴}
 
 CPL médio no mês até hoje:     R$ {X}   (benchmark: R$ {Y})
@@ -204,9 +203,9 @@ Projeção de leads até o fim:   ~{N + (Z × N/X)}
 | Crescimento > 20% com ROAS/CPL melhor ou estável | 🟢 Escala saudável |
 | Crescimento > 20% com ROAS/CPL piorando | 🟡 Crescendo com ineficiência |
 | Estável (±20%) | 🟡 Manter |
-| Queda > 20% | 🔴 Orçamento retraindo — verificar se foi intencional |
+| Queda > 20% | 🔴 Orçamento retraindo: verificar se foi intencional |
 
-Se a Chamada 9d não retornar (conta sem histórico de mês anterior): suprimir a linha "Mês anterior" e exibir apenas os valores do mês corrente.
+Se a Chamada 9c não retornar (conta sem histórico de mês anterior): suprimir a linha "Mês anterior" e exibir apenas os valores do mês corrente.
 
 ---
 
@@ -214,7 +213,7 @@ Se a Chamada 9d não retornar (conta sem histórico de mês anterior): suprimir 
 
 Filtrar as campanhas com melhor performance e calcular o headroom estimado para cada candidata a escala. Ordenar por ROAS decrescente (venda direta) ou CPL crescente (captação).
 
-**Headroom:** estimativa de quanto o orçamento pode crescer antes de o algoritmo começar a degradar performance. Basear em dois sinais: frequência atual (quanto mais baixa, mais espaço) e tamanho do público (não disponível aqui — usar frequência como proxy).
+**Headroom:** estimativa de quanto o orçamento pode crescer antes de o algoritmo começar a degradar performance. Basear em dois sinais: frequência atual (quanto mais baixa, mais espaço) e tamanho do público (não disponível aqui, usar frequência como proxy).
 
 ```
 🚀 CANDIDATOS A ESCALA  ·  {mês/ano}
@@ -234,21 +233,21 @@ Filtrar as campanhas com melhor performance e calcular o headroom estimado para 
 | 1.5 a 2.4 | até +50% | vertical |
 | 2.5 a 3.0 | até +30% | vertical com cautela ou horizontal |
 | 3.1 a 3.5 | até +20% | horizontal (duplicar adset ou nova audience) |
-| > 3.5 | não escalar — público saturando | investigar primeiro |
+| > 3.5 | não escalar: público saturando | investigar primeiro |
 
-**Atenção:** se só uma campanha for candidata a escala e ela já concentrar > 70% do orçamento total, alertar: "Dependência excessiva de um único winner. Escalar aumenta risco de ruptura. Criar campanha paralela duplicando entidade no Gerenciador (variando 1 dimensão) (duplicar-variando) antes de aumentar o orçamento desta."
+**Atenção:** se só uma campanha for candidata a escala e ela já concentrar > 70% do orçamento total, alertar: "Dependência excessiva de um único winner. Escalar aumenta risco de ruptura. Criar campanha paralela via 'trafego-testes' (duplicar-variando) antes de aumentar o orçamento desta."
 
 ---
 
 ### Resposta 3. "Redistribui meu orçamento: tira de quem performa mal e joga pra quem performa bem"
 
-Mostrar como realocar o orçamento dos perdedores nos winners, sem mudar o total diário da conta. Esta resposta depende da classificação de veredicto por campanha (feita na Análise adicional abaixo) — executar a classificação antes de montar os templates desta seção.
+Mostrar como realocar o orçamento dos perdedores nos winners, sem mudar o total diário da conta. Esta resposta depende da classificação de veredicto por campanha (feita na Análise adicional abaixo): executar a classificação antes de montar os templates desta seção.
 
 #### Verificação de modo orçamentário (executar antes de montar os templates)
 
 Antes de apresentar a redistribuição, identificar se a conta opera em modo CBO ou ABO:
 
-- **CBO (Campaign Budget Optimization):** o campo `daily_budget` está presente nas campanhas (retornado pela Chamada 9b). O orçamento é controlado no nível de campanha. Usar os templates A e B abaixo normalmente.
+- **CBO (Campaign Budget Optimization):** o campo `daily_budget` está presente nas campanhas (retornado pela Chamada 9a). O orçamento é controlado no nível de campanha. Usar os templates A e B abaixo normalmente.
 - **ABO (Adset Budget Optimization):** o campo `daily_budget` está ausente ou nulo nas campanhas, mas presente nos adsets. Nesse caso, a redistribuição deve operar no nível de conjunto de anúncios, não de campanha. Adaptar os templates substituindo "Campanha" por "Conjunto de anúncios" e usando os `daily_budget` dos adsets como referência.
 
 Se o modo ABO for detectado, exibir a seguinte nota no topo desta seção:
@@ -261,18 +260,18 @@ Para verificar os orçamentos em modo ABO, executar chamada adicional ao nível 
 
 ---
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 🔀 REDISTRIBUIÇÃO PROPOSTA  ·  gasto total mantido em R$ {total}/dia
 
   Tirar:
-  ─ {nome}  -R$ {X}/dia  (pausar — ROAS {Y}x, abaixo do mínimo)
-  ─ {nome}  -R$ {X}/dia  (reduzir de R$ {A} para R$ {B}/dia — revisar mas manter rodando)
+  ─ {nome}  -R$ {X}/dia  (pausar: ROAS {Y}x, abaixo do mínimo)
+  ─ {nome}  -R$ {X}/dia  (reduzir de R$ {A} para R$ {B}/dia: revisar mas manter rodando)
 
   Colocar:
-  + {nome}  +R$ {X}/dia  (winner principal — ROAS {Y}x, headroom até +{Z}%)
-  + {nome}  +R$ {X}/dia  (winner secundário — ROAS {Y}x)
+  + {nome}  +R$ {X}/dia  (winner principal: ROAS {Y}x, headroom até +{Z}%)
+  + {nome}  +R$ {X}/dia  (winner secundário: ROAS {Y}x)
 
   ─────────────────────────────────────────────────────────────────────
   Antes:   ROAS médio {A}x  ·  CPA médio R$ {B}  ·  Budget/dia R$ {C}
@@ -280,18 +279,18 @@ Para verificar os orçamentos em modo ABO, executar chamada adicional ao nível 
   Ganho estimado de eficiência: {+F%} no ROAS
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 🔀 REDISTRIBUIÇÃO PROPOSTA  ·  gasto total mantido em R$ {total}/dia
 
   Tirar:
-  ─ {nome}  -R$ {X}/dia  (pausar — CPL R$ {Y}, acima do benchmark)
-  ─ {nome}  -R$ {X}/dia  (reduzir — CPL aceitável mas frequência alta)
+  ─ {nome}  -R$ {X}/dia  (pausar: CPL R$ {Y}, acima do benchmark)
+  ─ {nome}  -R$ {X}/dia  (reduzir: CPL aceitável mas frequência alta)
 
   Colocar:
-  + {nome}  +R$ {X}/dia  (winner — CPL R$ {Y}, {Z%} abaixo do benchmark)
-  + {nome}  +R$ {X}/dia  (testar nova audience no Gerenciador de Audiences)
+  + {nome}  +R$ {X}/dia  (winner: CPL R$ {Y}, {Z%} abaixo do benchmark)
+  + {nome}  +R$ {X}/dia  (testar nova audience via "trafego-publicos")
 
   ─────────────────────────────────────────────────────────────────────
   Antes:   CPL médio R$ {A}  ·  Leads/dia ~{B}  ·  Budget/dia R$ {C}
@@ -299,7 +298,7 @@ Para verificar os orçamentos em modo ABO, executar chamada adicional ao nível 
   Ganho estimado: {+F%} mais leads com o mesmo gasto
 ```
 
-**Regra de cautela:** nunca propor aumento de mais de 50% em um único passo em campanhas com histórico < 7 dias. Nesse caso, sinalizar: "Campanha com histórico curto — aumentar no máximo 20% e aguardar 3 dias para reavaliar."
+**Regra de cautela:** nunca propor aumento de mais de 50% em um único passo em campanhas com histórico < 7 dias. Nesse caso, sinalizar: "Campanha com histórico curto, aumentar no máximo 20% e aguardar 3 dias para reavaliar."
 
 ---
 
@@ -308,7 +307,7 @@ Para verificar os orçamentos em modo ABO, executar chamada adicional ao nível 
 Calcular a liberação diária e mensal ao pausar as campanhas com veredicto 🔴. Usar as fórmulas de liberação potencial definidas em "Fórmulas de cálculo".
 
 ```
-💡 LIBERAÇÃO POTENCIAL — PAUSAR OS PERDEDORES
+💡 LIBERAÇÃO POTENCIAL: PAUSAR OS PERDEDORES
 
   Campanhas candidatas a pausar:
   ─────────────────────────────────────────────────────────────────────
@@ -324,11 +323,11 @@ Calcular a liberação diária e mensal ao pausar as campanhas com veredicto �
 
 ---
 
-### Análise adicional — Distribuição atual de orçamento
+### Análise adicional. Distribuição atual de orçamento
 
-Mostrar onde o orçamento está alocado e emitir veredicto por campanha. Esta tabela alimenta as Respostas 3 e 4 acima — deve ser executada antes de montar os templates de redistribuição e liberação. Ordenar por `daily_budget` decrescente.
+Mostrar onde o orçamento está alocado e emitir veredicto por campanha. Esta tabela alimenta as Respostas 3 e 4 acima: deve ser executada antes de montar os templates de redistribuição e liberação. Ordenar por `daily_budget` decrescente.
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 🥧 ONDE SEU DINHEIRO ESTÁ HOJE
@@ -340,14 +339,14 @@ Mostrar onde o orçamento está alocado e emitir veredicto por campanha. Esta ta
   {nome}                R$ {X}         {Y%}      {Z.Z}x       R$ {W}       🟠 revisar
   {nome}                R$ {X}         {Y%}      {Z.Z}x       R$ {W}       🔴 pausar
   ─────────────────────────────────────────────────────────────────────────────────
-  TOTAL                 R$ {sum}       100%      {ROAS_medio}x R$ {CPA_med}  —
+  TOTAL                 R$ {sum}       100%      {ROAS_medio}x R$ {CPA_med}  -
 
   Ineficiência detectada:
   {lista das campanhas 🔴 com cálculo} queimam R$ {X}/dia (R$ {X × Z}/mês restante).
   Pausar libera R$ {liberacao_mensal} até o dia {Y} do mês.
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 🥧 ONDE SEU DINHEIRO ESTÁ HOJE
@@ -359,7 +358,7 @@ Mostrar onde o orçamento está alocado e emitir veredicto por campanha. Esta ta
   {nome}                R$ {X}         {Y%}      R$ {Z}       {N}          🟠 revisar
   {nome}                R$ {X}         {Y%}      R$ {Z}       {N}          🔴 pausar
   ─────────────────────────────────────────────────────────────────────────────────
-  TOTAL                 R$ {sum}       100%      R$ {CPL_med}  {total_leads}  —
+  TOTAL                 R$ {sum}       100%      R$ {CPL_med}  {total_leads}  -
 
   Ineficiência detectada:
   {lista 🔴} geram CPL {X%} acima do benchmark ({R$ benchmark}).
@@ -368,7 +367,7 @@ Mostrar onde o orçamento está alocado e emitir veredicto por campanha. Esta ta
 
 **Critérios de veredicto:**
 
-| Veredicto | Critério — Venda direta | Critério — Captação |
+| Veredicto | Critério (venda direta) | Critério (captação) |
 |---|---|---|
 | 🟢 escalar | ROAS ≥ mínimo da faixa × 1.2 E freq ≤ 3.5 | CPL ≤ 70% do benchmark E freq ≤ 3.5 |
 | 🟡 manter | ROAS entre mínimo e mínimo × 1.2 | CPL entre 70% e 100% do benchmark |
@@ -387,7 +386,7 @@ Só após cobrir todas as perguntas obrigatórias, incluir blocos adicionais de 
 
 ---
 
-### Passo 0 — Checklist antes de montar qualquer bloco
+### Passo 0. Checklist antes de montar qualquer bloco
 
 Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar cobertura:
 
@@ -411,10 +410,10 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 ## Protocolo padrão
 
-1. **Diagnóstico** — projeção do mês, distribuição atual com veredictos, campanhas candidatas a escala e candidatas a pausar.
-2. **Causa provável** — desbalanceamento da alocação: por que o orçamento está concentrado em campanhas ineficientes. Ex: "Campanha D era winner há 60 dias e nunca foi revisada. O algoritmo aprendeu a gastar o budget dela mesmo sem resultado."
-3. **No VTSD, isso significa…** — "Funil perpétuo saudável exige no mínimo 70% do budget no winner do momento. Você está em {X%}. O restante está pulverizado em campanhas que já deram o que podiam. Concentrar é mais importante que criar campanhas novas agora." Ou, para leads: "CPL subindo enquanto volume cai é sinal clássico de público esgotando. Antes de redistribuir, criar nova audience no Gerenciador de Audiences para abrir espaço."
-4. **Ação recomendada** — 1 a 3 ações concretas com handoff para skill executora. Priorizar a ação de maior impacto imediato (pausar perdedor > escalar winner > testar nova campanha).
+1. **Diagnóstico**: projeção do mês, distribuição atual com veredictos, campanhas candidatas a escala e candidatas a pausar.
+2. **Causa provável**: desbalanceamento da alocação: por que o orçamento está concentrado em campanhas ineficientes. Ex: "Campanha D era winner há 60 dias e nunca foi revisada. O algoritmo aprendeu a gastar o budget dela mesmo sem resultado."
+3. **No VTSD, isso significa…**: "Funil perpétuo saudável exige no mínimo 70% do budget no winner do momento. Você está em {X%}. O restante está pulverizado em campanhas que já deram o que podiam. Concentrar é mais importante que criar campanhas novas agora." Ou, para leads: "CPL subindo enquanto volume cai é sinal clássico de público esgotando. Antes de redistribuir, criar nova audience via 'trafego-publicos' para abrir espaço."
+4. **Ação recomendada**: 1 a 3 ações concretas com handoff para skill executora. Priorizar a ação de maior impacto imediato (pausar perdedor > escalar winner > testar nova campanha).
 
 ---
 
@@ -422,32 +421,60 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Candidato claro a escala (venda direta) com ROAS acima do mínimo e freq < 3.0 | "trafego-escalar" — modo vertical, velocidade gradual |
-| Candidato claro a escala (captação de leads) com CPL abaixo do benchmark e freq < 3.0 | "trafego-escalar" — modo vertical, velocidade gradual |
-| Candidato a escala (venda direta) com freq entre 3.0 e 3.5 | "trafego-escalar" — modo horizontal (nova audience ou novo adset) |
-| Candidato a escala (captação de leads) com freq entre 3.0 e 3.5 | "trafego-escalar" — modo horizontal (nova audience ou novo adset) |
-| Perdedor com gasto significativo (venda direta) | "trafego-otimizar" — atalho "pausar com filtro" (ROAS < 1 OU gasto > X + zero conversão) |
-| Perdedor com gasto significativo (captação de leads) | "trafego-otimizar" — atalho "pausar com filtro" (CPL > 150% do benchmark OU gasto > X + zero leads) |
-| Pulverização — nenhuma campanha > 25% do budget | "trafego-otimizar" — consolidar manualmente: pausar os menores e redirecionar |
-| Top 1 concentra > 70% do budget | Duplicar entidade no Gerenciador (variando 1 dimensão) — duplicar variando criativo ou audience para criar redundância |
-| Projeção do mês > 20% acima do mês anterior com piora de ROAS/CPL | "trafego-otimizar" — diagnóstico de ineficiência antes de continuar investindo |
-| Budget esgotando antes do horário nobre (estimativa de hoje) | Gerenciador (Regras automáticas) — criar regra automática de alerta por budget diário |
+| Candidato claro a escala (venda direta) com ROAS acima do mínimo e freq < 3.0 | "trafego-escalar": modo vertical, velocidade gradual |
+| Candidato claro a escala (captação de leads) com CPL abaixo do benchmark e freq < 3.0 | "trafego-escalar": modo vertical, velocidade gradual |
+| Candidato a escala (venda direta) com freq entre 3.0 e 3.5 | "trafego-escalar": modo horizontal (nova audience ou novo adset) |
+| Candidato a escala (captação de leads) com freq entre 3.0 e 3.5 | "trafego-escalar": modo horizontal (nova audience ou novo adset) |
+| Perdedor com gasto significativo (venda direta) | "trafego-otimizar": atalho "pausar com filtro" (ROAS < 1 OU gasto > X + zero conversão) |
+| Perdedor com gasto significativo (captação de leads) | "trafego-otimizar": atalho "pausar com filtro" (CPL > 150% do benchmark OU gasto > X + zero leads) |
+| Pulverização: nenhuma campanha > 25% do budget | "trafego-otimizar", consolidar manualmente: pausar os menores e redirecionar |
+| Top 1 concentra > 70% do budget | "trafego-testes": duplicar variando criativo ou audience para criar redundância |
+| Projeção do mês > 20% acima do mês anterior com piora de ROAS/CPL | "trafego-otimizar": diagnóstico de ineficiência antes de continuar investindo |
+| Budget esgotando antes do horário nobre (estimativa de hoje) | "trafego-regras": criar regra automática de alerta por budget diário |
 
 ---
 
 ## Mapeamento HTML (export via `_export-html.md`)
 
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** O vocabulário antigo (`.table`, `.metric`, `.regra`, `.kpi`, `.kpi-grid`, `.callout`, `.pitch-box`, `.up`, `.down`, `--neon`, `--rust`) foi descontinuado e NÃO existe no CSS embutido: usá-lo gera seção sem estilo.
+
 | Bloco do output narrado | Componente do design system |
 |---|---|
-| Projeção do mês — gasto, ritmo e estimativa (Bloco 1) | `.kpi-grid` com 4 a 5 `.kpi` — `.up` ou `.down` na variação vs. mês anterior |
-| Comparativo mês atual vs. anterior | `.kpi` duplo lado a lado com `.up`/`.down` |
-| Tabela de distribuição de orçamento por campanha (Bloco 2) | `.table` com colunas — `.up` na linha 🟢, `.down` na linha 🔴 |
-| Alerta de ineficiência (campanha queimando) | `.regra.alerta` (um por campanha 🔴) |
-| Tabela de candidatos a escala (Bloco 3) | `.table` com colunas — `--neon` na linha #1 |
-| Alerta de dependência excessiva de winner | `.regra.alerta` |
-| Cálculo de liberação potencial (Bloco 4) | `.metric` (número grande em `--neon`) para o valor total liberado |
-| Redistribuição proposta — tirar/colocar (Bloco 5) | `.callout` (um para tirar, um para colocar) |
-| Comparativo antes/depois da redistribuição | `.kpi` duplo com `.up` no "depois" |
-| Frase "No VTSD isso significa..." | `.callout` |
-| Ação recomendada | `.pitch-box` |
-| Handoffs para skills executoras | `.term.next` dentro de `.terms` no rodapé |
+| KPIs globais (gasto acumulado, projeção fim do mês, orçamento diário total, ROAS/CPL médio) | `.stats-grid` com um `.stat-card` por métrica (`.value.green/.yellow/.red` conforme semântica) |
+| Cada "Resposta N" obrigatória | `.section` com `.section-header` (`.section-num` + `.section-title` + `.section-question`) |
+| Resposta 1. Projeção do mês (gasto, ritmo, estimativa) | `.card` + `table`; variação vs. mês anterior colorida com `style="color:var(--green)"` / `var(--red)` |
+| Comparativo mês atual vs. anterior | `table` padrão dentro do `.card`, coluna de variação colorida |
+| Resposta 2. Candidatos a escala (tabela) | `.card` + `table` com `.rank`, `.num`; linha #1 com nome em `.ad-name` e ROAS em `style="color:var(--green)"` |
+| Alerta de dependência excessiva de winner | `.diag-box.yellow` |
+| Resposta 3. Redistribuição proposta (tirar/colocar) | `.action-box` com lista `<ol>`/`<ul>` (um bloco "tirar", um "colocar") |
+| Comparativo antes/depois da redistribuição | `table` padrão; coluna "depois" com `style="color:var(--green)"` |
+| Resposta 4. Liberação potencial ao pausar perdedores | `.stat-card` (`.value.green`) com o total liberado + `.card` + `table` das campanhas candidatas a pausar |
+| Análise adicional. Distribuição atual (tabela com veredictos) | `.card` + `table`; veredicto 🟢/🟡/🟠/🔴 → coluna com `style="color:var(--green/--yellow/--orange/--red)"` |
+| Diagnóstico / "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Ação recomendada | `.action-box` |
+| Handoffs para skills executoras | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas nas seções **3.2.1** e **3.2.1.1** do `_export-html.md`). Gerar cada gráfico SOMENTE com dado real; se a chamada falhar, omitir o gráfico (nunca inventar valor).
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Mês corrente × mês anterior (gasto / vendas / ROAS / CPA) | `.wow-chart` (receita C) | Chamada 9b (`this_month`) × 9c (`last_month`) | `.chart-card` full-width, topo da "Visão visual" |
+| Alocação de verba: convertendo vs. queimando | `.hbar-row` (receita D) | cache do [1]: `ranking_spend` (vendeu, `.win`) + `sinais.queima` (zerou, `.burn`) | `.charts-grid`, 1ª coluna |
+| Headroom de escala do candidato principal | SVG gauge (receita I, helper `gauge`) | candidato #1 da Resposta 2 (ROAS + frequência reais) | `.charts-grid`, 2ª coluna |
+| KPI de projeção do mês | `.stat-card` (gasto acumulado + projeção fim do mês) | Chamada 9b + orçamento diário total ativo (9a) | dentro do `.stats-grid` de KPIs |
+
+**Fórmula do headroom de escala (determinística, documentada):** combina dois sinais reais do candidato principal num índice 0–100.
+
+```
+roas_factor = min(1, ROAS / roas_benchmark)        # benchmark da faixa de ticket (high=4.0, mid=3.0, low=2.5)
+freq_factor = clamp((freq_max - frequencia) / freq_max, 0, 1)   # freq_max = 4.0
+headroom    = round( 100 × (0.6 × roas_factor + 0.4 × freq_factor) )
+```
+
+Spec do helper `gauge`: `{"value":headroom,"max":100,"label":"Headroom","unit":"%","zones":[{"upto":0.4,"color":"#ef4444"},{"upto":0.7,"color":"#f59e0b"},{"upto":1.0,"color":"#10b981"}]}`. Zonas: vermelho < 40 (escala arriscada, público quente ou ROAS no limite), amarelo 40–70 (escala cautelosa, +15 a +20%), verde ≥ 70 (escala folgada, até +50%). O texto central do gauge mostra `{headroom}%` e, abaixo, o nome do candidato.
+
+**Mês corrente × anterior (receita C):** quando as Chamadas 9b/9c (mês civil) não estiverem disponíveis, é aceitável usar o comparativo de janela móvel (últimos 30 dias × 30 anteriores) que já vem do cache do [1] (`wow`), **rotulando claramente** o eixo como "últimos 30 dias vs. 30 anteriores": nunca apresentar janela móvel como se fosse mês civil.
+
+Regras dos gráficos: usar só cores da paleta; truncar nomes longos; gauge sempre via helper `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py gauge`; barra atual `.good` (verde) quando evoluiu na direção desejada (Vendas/ROAS ↑, CPA ↓), `.bad` (vermelho) quando piorou, neutra (accent) para gasto.

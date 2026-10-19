@@ -225,14 +225,22 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/lt-otimizar`. Analisa planilha do Gerenciador e otimiza campanhas low ticket.
 
 ### Tráfego Pago (Meta Ads via API ou MCP oficial)
-- `/trafego-conexao`. Configura conexão com Meta Ads. Pergunta se quer usar o **conector oficial Claude + Meta (MCP via OAuth)** ou o caminho do **App Facebook Developers (token permanente no `.env`)**. Salva preferência em `META_AUTH_MODO`. Toda skill de tráfego depende dessa variável e aciona `/trafego-conexao` se ela não existir (Passo 0 obrigatório).
-- `/trafego-insights`. Leitura de métricas (campanha única ou conta completa com ranking de urgência) com cálculo automático de derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate).
-- `/trafego-criar-campanha`. Cria campanha via Marketing API. PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo. Cobre objetivos OUTCOME_SALES (perpétuo) e OUTCOME_LEADS (lançamento).
-- `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh) e emite sinal de prontidão para escala. Inclui sub-skill `acoes-lote` (em massa por filtro).
-- `/trafego-analise`. Análise narrada VTSD em 9 outputs (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B).
+- `/trafego-conexao`. Configura conexão com Meta Ads. O caminho recomendado é o **conector oficial Claude + Meta (MCP via OAuth)**. O **App Facebook Developers (token permanente no `.env`)** fica de reserva para quem tem a conta de anúncios ainda não liberada pela Meta no MCP. Salva preferência em `META_AUTH_MODO`. Toda skill de tráfego depende dessa variável e aciona `/trafego-conexao` se ela não existir (Passo 0 obrigatório).
+- `/trafego-insights`. Leitura de métricas (campanha única ou conta completa com ranking de urgência) com cálculo automático de derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate) e série diária.
+- `/trafego-criar-campanha`. Cria campanha pela Marketing API ou pelo MCP. PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo. Cobre objetivos OUTCOME_SALES (perpétuo) e OUTCOME_LEADS (lançamento).
+- `/trafego-otimizar`. Confere se o dado é confiável e faz o diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high), calcula lucro e ponto de equilíbrio, propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh, realocar verba, cost cap) e emite sinal de prontidão para escala. Inclui sub-skills `acoes-lote` (em massa por filtro), `atalhos-compostos` e painel de decisão em HTML.
+- `/trafego-escalar`. Escala com score de risco de 0 a 100, guardião de caixa e freios escalonados. Também é acionada pelo `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
+- `/trafego-analise`. Análise narrada VTSD com gráficos e 3 temas no HTML (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B).
+- `/trafego-diagnostico`. Investiga antes de agir: 3 hipóteses com peso, auditoria da estrutura da conta, falso vencedor e score de confiança de 0 a 100. Apenas leitura.
+- `/trafego-criativos`. Atenção, intenção e conversão dos criativos, DNA dos que vencem ligado à Mandala e briefing do próximo teste. Apenas leitura.
+- `/trafego-oferta-funil`. Funil depois do clique (visita, carrinho, checkout, compra), congruência anúncio x página, nota da oferta e plano de correção. Apenas leitura.
+- `/trafego-pixel`. Diagnóstico de pixels da conta (status, último disparo, eventos rastreados, pixels parados). Apenas leitura.
+- `/trafego-publicos`. Cria públicos (evento do pixel, visualização de vídeo, engajamento, semelhante, lista de clientes com hash feito no computador do aluno, bases por nível a partir do produto ativo). Toda criação passa por preview e confirmação.
+- `/trafego-regras`. Desenha regras automáticas (no MCP, criadas à mão no Gerenciador com o roteiro da skill) e programa liga e pausa por horário. Toda regra nasce desativada.
+- `/trafego-testes`. Testes A/B disciplinados, duplicação variando uma coisa só, campanha de remarketing e leitura do resultado no 7º dia.
 - `/trafego-dashboard`. Dashboard da conta de anúncios publicado como artefato do Claude conectado ao MCP da Meta, montado a partir de um modelo pronto (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia). Com credenciais da Hotmart ou da Kiwify no `.env`, inclui as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link (salvo em `meus-produtos/dashboard-trafego.md`); se não tem, cria. Sem MCP, monta o dashboard estático (legado).
 
-Skill interna acionada automaticamente: `trafego-escalar` (5 modos de escala, 3 velocidades, freios escalonados, tetos), invocada por `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
+Onde salvam: relatórios em `meus-produtos/{ativo}/entregas/trafego/`, dados de trabalho do produto em `meus-produtos/{ativo}/trafego/` e o que é da conta de anúncios (públicos, regras, pixel) em `meus-produtos/_global/trafego/`.
 
 ### Estratégia
 `/estrategia-funil`, `/estrategia-lancamento`
@@ -331,12 +339,19 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 
 **Tráfego pago (Meta Ads)**
 - `trafego-pago/`. Base geral (pixel, métricas, campanhas, regras).
-- `trafego-conexao/`. Setup de conexão (MCP oficial ou App Facebook Developers).
-- `trafego-insights/`. Fonte única de leitura da Graph API com cálculo de derivadas.
+- `trafego-conexao/`. Setup de conexão (MCP oficial recomendado, App Facebook Developers de reserva).
+- `trafego-insights/`. Fonte única de leitura (Graph API ou MCP) com cálculo de derivadas.
 - `trafego-criar-campanha/`. Fluxo de criação com preview YAML.
-- `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + sub-skill acoes-lote.
-- `trafego-escalar/`. 5 modos de escala (vertical, horizontal, vertical+horizontal, consolidação CBO, Advantage).
-- `trafego-analise/`. 9 outputs narrativos VTSD.
+- `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + camada de lucro + sub-skills acoes-lote, atalhos-compostos e painel de decisão.
+- `trafego-escalar/`. Modos de escala (vertical, horizontal, consolidação CBO, Advantage, Carteira), score de risco e guardião de caixa.
+- `trafego-analise/`. Outputs narrativos VTSD, scripts de busca, processamento e gráficos.
+- `trafego-diagnostico/`. Diagnóstico diferencial, auditoria estrutural, falso vencedor e score de confiança.
+- `trafego-criativos/`. Atenção, intenção, conversão, DNA e briefing de criativos.
+- `trafego-oferta-funil/`. Funil depois do clique, página, oferta, checkout, upsell e downsell.
+- `trafego-pixel/`. Diagnóstico de pixels (leitura).
+- `trafego-publicos/`. Públicos personalizados, semelhantes, engajamento, lista de clientes e bases por nível.
+- `trafego-regras/`. Regras automáticas e liga e pausa por horário.
+- `trafego-testes/`. Testes A/B disciplinados, duplicação e remarketing.
 - `trafego-dashboard/`. Modelo do dashboard (`assets/dashboard.html`), scripts de montagem e de vendas da Hotmart e da Kiwify e o roteiro do dashboard estático legado.
 
 **Pesquisa e dados**
@@ -461,11 +476,13 @@ Configuradas via `.env` (veja `.env.example`). Token sempre lido do `.env`, nunc
 
 ### Tráfego Pago (Meta Ads)
 1. `/trafego-conexao` (uma vez, define MCP ou App, salva `META_AUTH_MODO`)
-2. `/trafego-criar-campanha` (PAUSED por padrão)
-3. `/trafego-insights` (após 48h rodando)
-4. `/trafego-otimizar` (diagnóstico em 2 camadas + 6 trilhas)
-5. `/trafego-analise` (análise narrada VTSD em 9 outputs)
-6. Escala automática (`/trafego-otimizar` → `trafego-escalar` quando `sinal_para_escala.pronta: true`)
+2. `/trafego-pixel` (confere se o pixel está disparando)
+3. `/trafego-publicos` (públicos base: evento, engajamento, semelhante)
+4. `/trafego-criar-campanha` (PAUSED por padrão)
+5. `/trafego-insights` (após 48h rodando)
+6. `/trafego-diagnostico` ou `/trafego-otimizar` (investigar e otimizar)
+7. `/trafego-analise`, `/trafego-criativos` e `/trafego-oferta-funil` (leituras aprofundadas)
+8. `/trafego-testes` ou escala (`/trafego-otimizar` → `trafego-escalar` quando `sinal_para_escala.pronta: true`)
 
 ### High Ticket C10X
 Use o agente `estrategista-ht` ou invoque diretamente as skills globais do plugin C10X. Fluxo típico:

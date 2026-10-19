@@ -2,7 +2,9 @@
 name: trafego-pago
 description: >
   Base de conhecimento para tráfego pago. estrutura de campanhas Meta Ads e Google Ads,
-  métricas, pixel, API de conversão e otimização. Usado pelos commands /copy-anuncio e /estrategia-lancamento.
+  métricas, métricas derivadas de criativo, pixel, API de conversão, otimização e mapa das skills
+  de tráfego do projeto. Usado pelos commands /copy-anuncio e /estrategia-lancamento e consultado
+  pelas skills /trafego-* quando precisam de referência de estrutura, métricas e boas práticas.
   Inclui segurança e boas práticas de investimento em mídia paga.
 user-invocable: false
 ---
@@ -52,12 +54,32 @@ user-invocable: false
 | Taxa de Conversão (LP) | Cadastros/visitantes | 25-45% (captura) |
 | Taxa de Conversão (Vendas) | Vendas/visitantes | 1-3% |
 
+## Métricas Derivadas de Inteligência Criativa
+
+Métricas calculadas pelas skills do projeto (não são campos nativos da API):
+
+| Métrica | Fórmula | Skill que calcula |
+|---------|---------|-------------------|
+| Hook Rate | video_3sec_views / impressions | `/trafego-criativos`, `/trafego-analise` [3] |
+| Hold Rate | video_p50_watched / video_3sec_views | `/trafego-criativos`, `/trafego-analise` [3] |
+| Story Rate | video_p75_watched / video_p25_watched | `/trafego-criativos` |
+| Completion Rate | video_p95_watched / video_plays | `/trafego-criativos` |
+| Cost per Hook | spend / video_3sec_views | `/trafego-criativos` |
+| Cost per Hold | spend / video_p50_watched | `/trafego-criativos` |
+| Intent Rate | landing_page_views / video_3sec_views | `/trafego-criativos` |
+| Click-to-LPV Rate | landing_page_views / inline_link_clicks | `/trafego-criativos` |
+| Offer Rate | (leads ou initiate_checkout) / landing_page_views | `/trafego-criativos` |
+| Purchase Rate | purchases / landing_page_views | `/trafego-criativos` |
+| Creative Conversion Rate | purchases / video_3sec_views | `/trafego-criativos` |
+| Connect Rate | lp_views / link_clicks | `/trafego-insights` |
+
 ## Pixel e API de Conversão
 
 **Pixel do Facebook:**
-- Instalar na página de captura, vendas e obrigado
+- Instalar na página de captura, vendas e obrigado (páginas feitas no projeto: `/pagina-pixel`)
 - Eventos: PageView, Lead, Purchase, AddToCart
 - Usar domínio verificado
+- Diagnóstico de pixel e eventos na conta: `/trafego-pixel`
 
 **API de Conversão (CAPI):**
 - Complementa o Pixel (dados server-side)
@@ -77,5 +99,27 @@ user-invocable: false
 
 1. **Criativo não converte?** Teste novo gancho (primeiros 3 segundos)
 2. **CTR baixo?** Problema no criativo ou segmentação
-3. **CTR alto mas CPA alto?** Problema na landing page
-4. **CPA subindo?** Fadiga de criativo. criar novos
+3. **CTR alto mas CPA alto?** Possível curiosidade vazia: o anúncio atrai clique de quem não compra. Verificar Click-to-LPV Rate e Offer Rate antes de culpar a página
+4. **CPA subindo?** Fadiga de criativo. Criar novos (`/copy-anuncio`, `/criativo-estatico`)
+5. **CTR baixo mas CPA bom?** Criativo qualificado: filtra o público antes do clique. Não cortar por CTR baixo
+
+## Mapa das Skills de Tráfego do Projeto
+
+| Skill | Função |
+|-------|--------|
+| `/trafego-conexao` | Conectar a conta Meta ao Claude (conector MCP recomendado, App de reserva) |
+| `/trafego-criar-campanha` | Subir campanha Sales/Leads, sempre pausada e com preview |
+| `/trafego-insights` | Fonte única de dados e métricas derivadas |
+| `/trafego-analise` | Análise narrada VTSD com menu de outputs |
+| `/trafego-dashboard` | Painel da conta de anúncios, com vendas do checkout quando configurado |
+| `/trafego-otimizar` | Diagnóstico operacional e ajustes da campanha |
+| `/trafego-escalar` | Escala controlada (acionada pelo otimizar quando a campanha está pronta) |
+| `/trafego-diagnostico` | Investigação estratégica: hipóteses, falso vencedor, auditoria estrutural, score de confiança |
+| `/trafego-criativos` | Inteligência criativa: atenção, intenção e conversão, briefing de testes |
+| `/trafego-oferta-funil` | Diagnóstico pós-clique: página, congruência copy e página, oferta e checkout |
+| `/trafego-publicos` | Criar e gerenciar públicos (inclui lookalike) |
+| `/trafego-regras` | Automações e agendamento |
+| `/trafego-testes` | Testes A/B disciplinados |
+| `/trafego-pixel` | Diagnóstico de pixels e eventos |
+
+Low ticket com planilha do Gerenciador: `/lt-otimizar`. Relatório diário por WhatsApp ou Telegram: `/ads-relatorio`.

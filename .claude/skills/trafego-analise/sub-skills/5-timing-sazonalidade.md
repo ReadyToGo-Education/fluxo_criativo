@@ -1,4 +1,4 @@
-# Output [5] — Timing & Sazonalidade
+# Output [5]. Timing & Sazonalidade
 
 Quando os anúncios performam melhor: dia da semana, horário do dia, efeito salário, tendência mensal e impacto de datas comemorativas e feriados nacionais.
 
@@ -45,9 +45,9 @@ Nenhum campo adicional além dos que já vêm do Passo 4. Os detalhamentos de ti
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
-**Chamada 5a — Horário do dia (breakdown por hora)**
+**Chamada 5a. Horário do dia (breakdown por hora)**
 
-Usa `since` / `until` derivados do período do aluno. O breakdown `hourly_stats_aggregated_by_advertiser_time_zone` retorna 24 linhas agregando todo o período — uma linha por hora (0 a 23) no fuso da conta do anunciante.
+Usa `since` / `until` derivados do período do aluno. O breakdown `hourly_stats_aggregated_by_advertiser_time_zone` retorna 24 linhas agregando todo o período: uma linha por hora (0 a 23) no fuso da conta do anunciante.
 
 Nota técnica: este breakdown não é compatível com `date_preset`. Converter o período do aluno para `since` / `until` antes de montar a URL.
 
@@ -63,15 +63,15 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `breakdown=hourly_stats_aggregated_by_advertiser_time_zone` e as datas convertidas.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `breakdown=hourly_stats_aggregated_by_advertiser_time_zone` e as datas convertidas. Conferir os parâmetros pelo schema da tool; se ela não aceitar o recorte por hora, avisar o aluno e omitir a análise por horário (nunca inventar a distribuição).
 
 ---
 
-**Chamada 5b — Diária (padrão por dia da semana e efeito salário)**
+**Chamada 5b. Diária (padrão por dia da semana e efeito salário)**
 
 Retorna uma linha por dia calendário (formato `YYYY-MM-DD`). A partir dessas datas:
 - Agrupar por dia da semana: extrair `weekday()` de cada data (0 = segunda, 6 = domingo) e calcular média por dia.
-- Agrupar por dekada do mês: dias 1-10 / 11-20 / 21-31 — para identificar efeito salário.
+- Agrupar por decêndio do mês: dias 1-10 / 11-20 / 21-31, para identificar efeito salário.
 - Cruzar datas com calendário de comemorativas e feriados (Bloco 4).
 
 ```bash
@@ -81,16 +81,17 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &level=account
   &date_preset={PERIOD_DO_ALUNO}
   &time_increment=1
-  &effective_status={STATUS_FILTRO}
   &limit=500
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
+
+Nota: o parâmetro `effective_status` NÃO é aceito no endpoint `/insights` (vale apenas nos endpoints de listagem `/campaigns`, `/adsets` e `/ads`). Se o filtro por status for necessário, a filtragem é feita na etapa anterior, na listagem de campanhas.
 
 **Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `time_increment=1` e os parâmetros de período equivalentes.
 
 ---
 
-**Chamada 5c — Mensal (tendência de 6 meses — sempre fixa, independente do período principal)**
+**Chamada 5c. Mensal (tendência de 6 meses: sempre fixa, independente do período principal)**
 
 Retorna uma linha por mês calendário. Usar sempre `last_180d` com `time_increment=monthly` para garantir 6 meses de histórico independente do que o aluno escolheu no Passo 3.
 
@@ -101,16 +102,17 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &level=account
   &date_preset=last_180d
   &time_increment=monthly
-  &effective_status={STATUS_FILTRO}
   &limit=500
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
+
+Sem filtro de status: `effective_status` não vale em `/insights` (ver nota da Chamada 5b). Se necessário, a filtragem é feita na etapa de listagem de campanhas.
 
 **Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `time_increment=monthly` e `date_preset=last_180d`.
 
 ### Referência de produto
 
-Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco` — para classificar CPA/CPL como saudável ou problemático nos comparativos de timing. Inferir tipo de funil pelo objetivo predominante das campanhas: `OUTCOME_SALES` → métrica-norte ROAS + CPA; `OUTCOME_LEADS` → métrica-norte CPL.
+Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e o tipo de produto. Não perguntar de novo. O preço serve para classificar CPA/CPL como saudável ou problemático nos comparativos de timing. Inferir tipo de funil pelo objetivo predominante das campanhas: `OUTCOME_SALES` → métrica-norte ROAS + CPA; `OUTCOME_LEADS` → métrica-norte CPL.
 
 ---
 
@@ -121,7 +123,7 @@ Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco` — para class
 | CPA | `spend` / `purchases` | `offsite_conversion.fb_pixel_purchase` |
 | CPL | `spend` / `leads` | `offsite_conversion.fb_pixel_lead` |
 | ROAS | `sum(action_values onde action_type = "offsite_conversion.fb_pixel_purchase")` / `spend` | `offsite_conversion.fb_pixel_purchase` |
-| CPM | (`spend` / `impressions`) × 1000 | — |
+| CPM | (`spend` / `impressions`) × 1000 | - |
 
 **Métrica-norte por tipo de funil:**
 - `OUTCOME_SALES`: CPA e ROAS em todos os blocos.
@@ -146,7 +148,7 @@ Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco` — para class
 
 Usar dados da Chamada 5b agrupados por `weekday()`. Calcular a média de cada métrica por dia: total acumulado do dia ÷ número de ocorrências daquele dia no período.
 
-**Template A — Venda direta (OUTCOME_SALES):**
+**Template A. Venda direta (OUTCOME_SALES):**
 
 ```
 📅 DIA DA SEMANA  ·  {período}  ·  média por dia
@@ -166,7 +168,7 @@ Usar dados da Chamada 5b agrupados por `weekday()`. Calcular a média de cada m�
   Fim de semana vs. semana:      CPA {X%} {melhor | pior} nos fins de semana
 ```
 
-**Template B — Captação de leads (OUTCOME_LEADS):**
+**Template B. Captação de leads (OUTCOME_LEADS):**
 
 ```
 📅 DIA DA SEMANA  ·  {período}  ·  média por dia
@@ -198,9 +200,9 @@ Usar a mesma tabela gerada na Resposta 1. Destacar a linha de resumo comparativo
 - Fim de semana (sábado e domingo): CPA/CPL médio R$ {X}, volume {N} conversões.
 - Diferença: CPA/CPL {X%} {melhor | pior} nos fins de semana vs. dias úteis.
 
-Se a diferença for ≥ 20%: recomendar ajuste de budget por dia da semana no Gerenciador (Regras automáticas) (delivery schedule ou regra automática).
+Se a diferença for ≥ 20%: recomendar ajuste de budget por dia da semana via `trafego-regras` (delivery schedule ou regra automática).
 
-Se a diferença for < 20%: informar "Distribuição uniforme entre dias úteis e fim de semana — sem padrão que justifique dayparting por dia da semana no momento."
+Se a diferença for < 20%: informar "Distribuição uniforme entre dias úteis e fim de semana, sem padrão que justifique dayparting por dia da semana no momento."
 
 ---
 
@@ -216,7 +218,7 @@ Agregar os dias da Chamada 5b em três grupos e comparar CPA/CPL médio de cada 
   Padrão: {início | meio | fim} do mês converte mais barato ({X%} abaixo da média)
 ```
 
-Se diferença < 15%: informar "Efeito salário não detectado neste período — distribuição de conversões uniforme ao longo do mês."
+Se diferença < 15%: informar "Efeito salário não detectado neste período, distribuição de conversões uniforme ao longo do mês."
 
 ---
 
@@ -224,7 +226,7 @@ Se diferença < 15%: informar "Efeito salário não detectado neste período —
 
 Usar dados da Chamada 5a (24 linhas, uma por hora). Agrupar em 4 faixas para visualização inicial, depois detalhar a hora exata de melhor e pior desempenho.
 
-**Template A — Venda direta (OUTCOME_SALES):**
+**Template A. Venda direta (OUTCOME_SALES):**
 
 ```
 🕐 HORÁRIO  ·  {período}  ·  totais agregados do período
@@ -241,7 +243,7 @@ Usar dados da Chamada 5a (24 linhas, uma por hora). Agrupar em 4 faixas para vis
   Vale (CPA alto):    {hora exata}h  ·  CPA R$ {X} ({Y%} acima da média) → candidato a dayparting
 ```
 
-**Template B — Captação de leads (OUTCOME_LEADS):**
+**Template B. Captação de leads (OUTCOME_LEADS):**
 
 ```
 🕐 HORÁRIO  ·  {período}  ·  totais agregados do período
@@ -258,9 +260,9 @@ Usar dados da Chamada 5a (24 linhas, uma por hora). Agrupar em 4 faixas para vis
   Vale (CPL alto):    {hora exata}h  ·  CPL R$ {X} ({Y%} acima da média) → candidato a dayparting
 ```
 
-Threshold para candidato prioritário a dayparting: faixa horária com CPA/CPL ≥ 50% acima da média da conta E spend da faixa > 10% do total. Sinalizar como `⚠️ programar pausa no Gerenciador (Regras automáticas)`.
+Threshold para candidato prioritário a dayparting: faixa horária com CPA/CPL ≥ 50% acima da média da conta E spend da faixa > 10% do total. Sinalizar como `⚠️ programar pausa via "trafego-regras"`.
 
-Se `actions` retornar zero em todas as horas (pixel sem conversão configurada): exibir somente CPM e CTR por faixa e alertar: "Conversões não rastreadas por hora — configure o evento de compra/lead no pixel no Gerenciador de Eventos para análise completa."
+Se `actions` retornar zero em todas as horas (pixel sem conversão configurada): exibir somente CPM e CTR por faixa e alertar: "Conversões não rastreadas por hora. Configure o evento de compra/lead no pixel via 'trafego-pixel' para análise completa."
 
 ---
 
@@ -287,7 +289,7 @@ Datas que concentram volume de anúncios concorrentes e encarecem o leilão de f
 
   Data / Evento            Tipo            CPM no período    vs. média    Impacto no CPA/CPL
   ──────────────────────────────────────────────────────────────────────────────────────────
-  {data} — {evento}        Comemorativa    R$ {X}            +{Y%}        CPA {+/-Z%}
+  {data}: {evento}        Comemorativa    R$ {X}            +{Y%}        CPA {+/-Z%}
 
   Legenda: Comemorativa = data de alto volume comercial (Dia das Mães, Dia dos Namorados,
   Black Friday etc.). Leilão tende a encarecer porque concorrentes aumentam budget.
@@ -295,8 +297,8 @@ Datas que concentram volume de anúncios concorrentes e encarecem o leilão de f
 
   Estratégia para próxima ocorrência:
   - CPM alto + CPA piorou:    reduzir budget ou pausar na semana do evento
-  - CPM alto + CPA manteve:   leilão caro mas produto resistiu — manter com orçamento controlado
-  - CPM alto + CPA melhorou:  público em modo de compra — considerar aumentar budget
+  - CPM alto + CPA manteve:   leilão caro mas produto resistiu, manter com orçamento controlado
+  - CPM alto + CPA melhorou:  público em modo de compra, considerar aumentar budget
 ```
 
 Threshold de detecção: CPM do período de 3 dias em torno da data ≥ 30% acima do CPM médio do mês calculado via Chamada 5b.
@@ -307,16 +309,16 @@ Se nenhuma data comemorativa for identificada no período: informar "Nenhuma dat
 
 ### Resposta 6. "Feriado atrapalha ou melhora meus resultados?"
 
-Cruzar os dados diários da Chamada 5b com o calendário de feriados nacionais brasileiros. Feriados alteram o comportamento de consumo, mas não necessariamente encarecem o leilão — às vezes o CPM cai porque concorrentes pausam.
+Cruzar os dados diários da Chamada 5b com o calendário de feriados nacionais brasileiros. Feriados alteram o comportamento de consumo, mas não necessariamente encarecem o leilão: às vezes o CPM cai porque concorrentes pausam.
 
 | Feriado | Data fixa ou referência |
 |---|---|
 | Ano Novo | 01/01 |
-| Carnaval | Calculado (móvel — 47 dias antes da Páscoa) |
-| Sexta-Feira Santa | Calculado (móvel — véspera da Páscoa) |
+| Carnaval | Calculado (móvel: 47 dias antes da Páscoa) |
+| Sexta-Feira Santa | Calculado (móvel: véspera da Páscoa) |
 | Tiradentes | 21/04 |
 | Dia do Trabalho | 01/05 |
-| Corpus Christi | Calculado (móvel — 60 dias após Páscoa) |
+| Corpus Christi | Calculado (móvel: 60 dias após Páscoa) |
 | Independência do Brasil | 07/09 |
 | Nossa Senhora Aparecida | 12/10 |
 | Finados | 02/11 |
@@ -330,31 +332,31 @@ Cruzar os dados diários da Chamada 5b com o calendário de feriados nacionais b
 
   Data / Evento            Tipo      CPM no período    vs. média    Impacto no CPA/CPL
   ──────────────────────────────────────────────────────────────────────────────────────
-  {data} — {evento}        Feriado   R$ {X}            +{Y%}        CPA {+/-Z%}
+  {data}: {evento}        Feriado   R$ {X}            +{Y%}        CPA {+/-Z%}
 
   Legenda: Feriado = dia sem trabalho (Tiradentes, Corpus Christi, etc.). Comportamento do
   público muda, mas o leilão pode cair se concorrentes pausarem. Verificar CPM real antes
   de interpretar.
 
-  Nota condicional — Feriado + CPM baixo:
+  Nota condicional. Feriado + CPM baixo:
   Se Tipo = Feriado E variação de CPM < -10%: marcar como "oportunidade"
   (leilão esvaziou porque concorrentes pausaram; CPA tende a ser melhor mesmo com volume menor).
   Ação sugerida: aumentar budget moderadamente (+20%) e monitorar CPA nas primeiras 4 horas.
 
   Estratégia para próxima ocorrência:
-  - CPM caiu + CPA manteve:   concorrentes pausaram — oportunidade de escalar com CPM baixo
-  - CPM caiu + CPA piorou:    público distraído pelo feriado — produto sensível a contexto emocional
+  - CPM caiu + CPA manteve:   concorrentes pausaram, oportunidade de escalar com CPM baixo
+  - CPM caiu + CPA piorou:    público distraído pelo feriado, produto sensível a contexto emocional
 ```
 
 Se nenhum feriado for identificado no período: informar "Nenhum feriado nacional detectado no período selecionado."
 
 ---
 
-### Análise adicional — Tendência mensal (últimos 6 meses)
+### Análise adicional. Tendência mensal (últimos 6 meses)
 
 Usar dados da Chamada 5c. Exibir sempre os 6 meses independente do período principal escolhido pelo aluno no Passo 3. Esta seção fornece contexto histórico e complementa as respostas acima.
 
-**Template A — Venda direta (OUTCOME_SALES):**
+**Template A. Venda direta (OUTCOME_SALES):**
 
 ```
 📈 TENDÊNCIA MENSAL  ·  últimos 6 meses
@@ -374,7 +376,7 @@ Usar dados da Chamada 5c. Exibir sempre os 6 meses independente do período prin
   Mês de CPM mais caro: {mês}  ·  hipótese: {sazonalidade / Black Friday / concorrência}
 ```
 
-**Template B — Captação de leads (OUTCOME_LEADS):**
+**Template B. Captação de leads (OUTCOME_LEADS):**
 
 ```
 📈 TENDÊNCIA MENSAL  ·  últimos 6 meses
@@ -399,7 +401,7 @@ Regra de interpretação de tendência de CPM:
 | Variação do CPM (6 meses) | Interpretação | Hipótese prioritária |
 |---|---|---|
 | Subindo > 30% | 🔴 Leilão encarecendo | Saturação de público ou concorrência crescente no nicho |
-| Subindo 10% a 30% | 🟡 Atenção | Pode ser sazonalidade — cruzar com datas do calendário |
+| Subindo 10% a 30% | 🟡 Atenção | Pode ser sazonalidade: cruzar com datas do calendário |
 | Estável (±10%) | 🟢 Leilão saudável | Nenhuma ação necessária |
 | Caindo > 10% | 🟢 Leilão melhorando | Novo criativo, novo público ou saída de concorrentes |
 
@@ -415,7 +417,7 @@ Só após cobrir todas as perguntas obrigatórias, incluir blocos adicionais de 
 
 ---
 
-### Passo 0 — Checklist antes de montar qualquer bloco
+### Passo 0. Checklist antes de montar qualquer bloco
 
 Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar cobertura:
 
@@ -427,7 +429,7 @@ Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar 
     → coberto? Se não: calcular médias de CPA e CTR separadas por dias úteis vs. sábado-domingo
 
 [ ] Resultados mudam no começo vs. final do mês? (efeito salário)
-    → coberto? Se não: dividir dias em primeira quinzena (1-15) vs. segunda quinzena (16-fim) e comparar CPA
+    → coberto? Se não: dividir os dias em três decêndios (1-10, 11-20 e 21-31) e comparar o CPA de cada um
 
 [ ] Qual horário do dia os anúncios performam melhor?
     → coberto? Se não: usar breakdown hourly_stats e identificar janelas de menor CPA e maior CTR
@@ -445,10 +447,10 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 ## Protocolo padrão
 
-1. **Diagnóstico** — melhor dia da semana (com CPA/CPL), melhor faixa horária, tendência dos últimos 6 meses (CPA/CPL e CPM) e datas/feriados detectados no período.
-2. **Causa provável** — explicação por sazonalidade, comportamento do público ou competição no leilão. Ex: "CPA sobe às segundas porque o público retoma o trabalho e a atenção cai. Fim de semana converte mais barato porque a decisão é tomada no momento de lazer, sem pressão de agenda."
-3. **No VTSD, isso significa…** — qual elemento do método está em jogo. Ex: "Pico de conversão às 21h = horário de cama, estado emocional de baixa guarda. Urgência Oculta de conforto e desejo funciona melhor que argumento racional nesse horário." Ou: "Conversões concentradas nos dias 1 a 5 do mês = público compra com salário fresco. Aumentar budget nessa janela e reduzir no final do mês, onde o CPA dobra, sem mudar uma linha de copy."
-4. **Ação recomendada** — 1 a 3 ações concretas com handoff para skill executora.
+1. **Diagnóstico**: melhor dia da semana (com CPA/CPL), melhor faixa horária, tendência dos últimos 6 meses (CPA/CPL e CPM) e datas/feriados detectados no período.
+2. **Causa provável**: explicação por sazonalidade, comportamento do público ou competição no leilão. Ex: "CPA sobe às segundas porque o público retoma o trabalho e a atenção cai. Fim de semana converte mais barato porque a decisão é tomada no momento de lazer, sem pressão de agenda."
+3. **No VTSD, isso significa…**: qual elemento do método está em jogo. Ex: "Pico de conversão às 21h = horário de cama, estado emocional de baixa guarda. Urgência Oculta de conforto e desejo funciona melhor que argumento racional nesse horário." Ou: "Conversões concentradas nos dias 1 a 5 do mês = público compra com salário fresco. Aumentar budget nessa janela e reduzir no final do mês, onde o CPA dobra, sem mudar uma linha de copy."
+4. **Ação recomendada**: 1 a 3 ações concretas com handoff para skill executora.
 
 ---
 
@@ -456,25 +458,47 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Vale horário claro (CPA/CPL ≥ 50% acima da média em faixa específica com gasto > 10%) | Gerenciador (Regras automáticas) — programação liga/pausa (delivery schedule) |
-| Dia da semana crítico (CPA/CPL ≥ 40% acima da média) | Gerenciador (Regras automáticas) — regra automática para reduzir budget no dia problemático |
-| Data comemorativa com CPM alto confirmado | Gerenciador (Regras automáticas) — regra automática para reduzir budget na semana do evento |
-| Efeito salário detectado (dias 1-10 mais baratos ≥ 15%) | Gerenciador (Regras automáticas) — regra: aumentar budget +20% nos dias 1-10 do mês |
-| Feriado com CPM baixo + CPA manteve | "trafego-escalar" — oportunidade de escalar quando concorrentes pausam |
-| Mês com CPA/CPL melhor identificado (hipótese clara) | Duplicar entidade no Gerenciador (variando 1 dimensão) — reproduzir condições do mês vencedor (criativo, público, orçamento) |
-| Tendência de CPM subindo por 3 ou mais meses | Gerenciador de Audiences — explorar audiências novas antes que o CPM torne inviável |
+| Vale horário claro (CPA/CPL ≥ 50% acima da média em faixa específica com gasto > 10%) | "trafego-regras": programação liga/pausa (delivery schedule) |
+| Dia da semana crítico (CPA/CPL ≥ 40% acima da média) | "trafego-regras": regra automática para reduzir budget no dia problemático |
+| Data comemorativa com CPM alto confirmado | "trafego-regras": regra automática para reduzir budget na semana do evento |
+| Efeito salário detectado (dias 1-10 mais baratos ≥ 15%) | "trafego-regras", regra: aumentar budget +20% nos dias 1-10 do mês |
+| Feriado com CPM baixo + CPA manteve | "trafego-escalar": oportunidade de escalar quando concorrentes pausam |
+| Mês com CPA/CPL melhor identificado (hipótese clara) | "trafego-testes": reproduzir condições do mês vencedor (criativo, público, orçamento) |
+| Tendência de CPM subindo por 3 ou mais meses | "trafego-publicos": explorar audiências novas antes que o CPM torne inviável |
 
 ---
 
 ## Mapeamento HTML (export via `_export-html.md`)
 
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** O vocabulário antigo (`.table`, `.kpi-grid`, `.kpi`, `.regra`, `.callout`, `.pitch-box`, `.bar-row`, `.up`, `.down`, `--neon`) foi descontinuado e NÃO existe no CSS embutido: usá-lo gera seção sem estilo.
+
 | Bloco do output narrado | Componente do design system |
 |---|---|
-| Tabela por dia da semana | `.table` — coluna "Índice vs. média": `.up` (verde) para dias abaixo do CPA/CPL médio, `.down` (rust) para dias acima |
-| Efeito salário (3 dekadas) | `.kpi-grid` com 3 `.kpi` lado a lado (um por período: dias 1-10, 11-20, 21-31) |
-| Tabela por faixa horária | `.table` — linha do vale em `.down`, linha do pico de conversão em `.up` |
-| Tendência mensal (6 meses) | `.table` com colunas — linha do melhor mês destacada em `--neon` |
-| Cada data/feriado detectado | `.regra` (um elemento por data, com tipo comemorativa/feriado e estratégia) |
-| Frase "No VTSD isso significa..." | `.callout` |
-| Ação recomendada | `.pitch-box` |
-| Handoffs para skills executoras | `.term.next` dentro de `.terms` no rodapé |
+| KPIs globais (gasto, CPA/CPL, ROAS, CPM médio, melhor dia, melhor faixa horária) | `.stats-grid` com um `.stat-card` por métrica (`.value.green/.yellow/.red` conforme semântica) |
+| Cada "Resposta N" obrigatória | `.section` com `.section-header` (`.section-num` + `.section-title` + `.section-question`, texto exato da pergunta) |
+| Tabela por dia da semana | `.card` + `table`; coluna "Índice vs. média" colorida com `style="color:var(--green)"` (dia abaixo do CPA/CPL médio) ou `var(--red)` (acima); `.num` nas colunas numéricas |
+| Tabela por faixa horária | `.card` + `table`; linha do vale com `var(--red)`, linha do pico de conversão com `var(--green)` |
+| Efeito salário (3 decêndios) | `.card` + `.card-grid-3` com um bloco por período (dias 1-10, 11-20, 21-31) OU os 3 decêndios como `.funnel-item` numa `.funnel-row` |
+| Tendência mensal (6 meses) | `.card` + `table`; melhor mês com célula em `var(--green)` |
+| Cada data comemorativa / feriado detectado | `.diag-box` (`.yellow` se CPM inflacionou, `.green` se virou oportunidade): um por data |
+| Frase "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Ação recomendada | `.action-box` |
+| Handoffs para skills executoras | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas detalhadas nas seções **3.2.1** e **3.2.1.1** do `_export-html.md`). Gráficos com muitos pontos ou geometria não trivial usam o helper `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py` (matemática pura, sem token, sem Graph API).
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Heatmap hora × dia da semana de CPA | SVG heatmap (receita H via helper `heatmap`, `scale:"good_low"`) | matriz hora×dia cruzando Chamada 5a com 5b: **ver regra abaixo** | `.chart-card` full-width, topo da "Visão visual" |
+| CPA por faixa horária (4 buckets) | SVG barras verticais (receita G via helper `vbars`) | Chamada 5a agregada em 0-5h / 6-11h / 12-17h / 18-23h | `.charts-grid`, junto da Resposta 4 |
+| Tendência mensal de CPM (6 meses) | SVG linha (receita F via helper `line`) | Chamada 5c (`time_increment=monthly`, `last_180d`), série de CPM | `.chart-card` full-width, junto da Análise adicional (tendência mensal) |
+
+**Regra do heatmap hora × dia da semana (limitação real da API):** o breakdown `hourly_stats_aggregated_by_advertiser_time_zone` (Chamada 5a) entrega **24 valores agregados sobre todo o período**, NÃO cruzados com o dia da semana. A Meta **não oferece** breakdown combinado hora×dia em uma única chamada de insights de conta. Caminhos, em ordem de preferência:
+
+1. **Matriz real:** disparar a Chamada 5a uma vez por dia da semana, restringindo `since`/`until` a cada conjunto de datas do mesmo weekday no período (7 chamadas). Montar a matriz 7×24 (ou 7×4 faixas) e renderizar o heatmap com `scale:"good_low"` (CPA baixo = verde, alto = vermelho). Custa 7 chamadas extras e exige período ≥ 4 semanas para amostragem confiável por célula.
+2. **Degradar para vbars:** se as 7 chamadas estourarem rate limit ou o período for curto, renderizar apenas o gráfico de **CPA por faixa horária** (vbars, 4 buckets, agregado do período) e **omitir o heatmap**, documentando no chat que o cruzamento hora×dia exige período longo.
+3. **Nunca inventar a matriz** a partir dos 24 valores agregados: isso fabricaria um cruzamento que o dado não contém.
+
+Regras dos gráficos: usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`); CPA/CPL é "quanto menor melhor" → no heatmap usar `scale:"good_low"`, nas vbars colorir verde a faixa de menor CPA e vermelho a de maior; rótulos de mês saem como `YYYY-MM` ou abreviados; se a Chamada 5c retornar menos de 3 meses com `spend > R$ 200`, omitir a linha de tendência de CPM.

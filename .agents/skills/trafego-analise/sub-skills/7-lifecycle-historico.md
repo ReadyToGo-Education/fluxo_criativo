@@ -1,4 +1,4 @@
-# Output [7] — Lifecycle & Histórico
+# Output [7]. Lifecycle & Histórico
 
 Memória da conta. O que aconteceu nos últimos 6 meses, quais campanhas estão envelhecendo, qual foi o melhor período de todos e quais anúncios pausados ainda têm valor para reativar.
 
@@ -36,7 +36,7 @@ Necessários para calcular dias ativos e identificar campanhas longevas.
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
-**Chamada 7a — Histórico mensal de 6 meses (campanhas ativas)**
+**Chamada 7a. Histórico mensal de 6 meses (campanhas ativas)**
 
 Usar `date_preset=last_6_months` com `time_increment=monthly`. Retorna uma linha por campanha por mês, permitindo calcular ROAS e CPA mês a mês.
 
@@ -51,11 +51,11 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` com `time_increment=monthly` e `date_preset=last_6_months`.
+**Modo MCP_CONECTOR:** a série mensal da conta sai de `mcp__*__ads_insights_performance_trend` (granularidade mensal, últimos 6 meses). A evolução por campanha exige `mcp__*__ads_get_ad_entities` em nível campanha, uma chamada por mês com whitelist enxuta de campos, porque a tool de tendência não faz nível campanha (ver **Contrato anti-erros** no `SKILL.md`).
 
 ---
 
-**Chamada 7b — Listagem completa de campanhas (ativas + pausadas + arquivadas)**
+**Chamada 7b. Listagem completa de campanhas (ativas + pausadas + arquivadas)**
 
 Necessária para identificar campanhas longevas (campo `start_time`) e campanhas pausadas com histórico de performance.
 
@@ -72,7 +72,7 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/campaigns
 
 ---
 
-**Chamada 7c — Performance das campanhas pausadas e arquivadas (últimos 6 meses)**
+**Chamada 7c. Performance das campanhas pausadas e arquivadas (últimos 6 meses)**
 
 Necessária para identificar campanhas pausadas que performavam bem antes de serem desligadas.
 
@@ -83,18 +83,19 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   &level=campaign
   &date_preset=last_6_months
   &time_increment=1
-  &effective_status=['PAUSED','ARCHIVED']
   &limit=500
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
+> **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (Chamada 7b, listagem de campanhas): cruzar o retorno desta chamada com a 7b e manter apenas as campanhas com `effective_status` `PAUSED` ou `ARCHIVED`.
+
 Agregar por `campaign_id` após receber: somar `spend`, `actions` (compras ou leads), `action_values`. Calcular CPA/ROAS médio histórico por campanha pausada.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` filtrando por `effective_status=['PAUSED','ARCHIVED']`.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` em nível campanha com o período de 6 meses e aplicar o mesmo filtro de status cruzando com a listagem da Chamada 7b (manter apenas `PAUSED` e `ARCHIVED`).
 
 ---
 
-**Chamada 7d — Top anúncios históricos (level=ad, incluindo pausados)**
+**Chamada 7d. Top anúncios históricos (level=ad, incluindo pausados)**
 
 Necessária para o Bloco 4. Ordenar todos os anúncios pelos resultados históricos totais.
 
@@ -104,10 +105,11 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
   ?fields=ad_id,ad_name,campaign_name,adset_name,spend,actions,action_values,cost_per_action_type,impressions,clicks
   &level=ad
   &date_preset=last_6_months
-  &effective_status=['ACTIVE','PAUSED','ARCHIVED']
   &limit=500
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
+
+> **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. O retorno já inclui anúncios ativos, pausados e arquivados que tiveram entrega no período. O status atual de cada anúncio (coluna "Status atual" da Resposta 5) vem da etapa de listagem: cruzar com a listagem de anúncios (endpoint `/ads`, campo `effective_status`).
 
 Após receber: agrupar por `ad_id`, somar totais, ordenar por `offsite_conversion.fb_pixel_purchase` decrescente (ou `offsite_conversion.fb_pixel_lead` para funil de captação).
 
@@ -115,7 +117,7 @@ Após receber: agrupar por `ad_id`, somar totais, ordenar por `offsite_conversio
 
 ---
 
-**Chamada 7e — Data do primeiro gasto de cada campanha ativa (para cálculo de dias ativos)**
+**Chamada 7e. Data do primeiro gasto de cada campanha ativa (para cálculo de dias ativos)**
 
 Calcular quantos dias cada campanha ativa está rodando sem pausa longa: cruzar `start_time` (Chamada 7b) com a data atual. Se `start_time` for anterior a 60 dias e o `effective_status` for `ACTIVE` hoje, a campanha é candidata ao Bloco 1.
 
@@ -125,7 +127,7 @@ Não é necessária uma chamada extra: usar os campos `start_time` e `effective_
 
 ### Referência de produto
 
-Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
+Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e o tipo de produto. Não perguntar de novo. Inferir tipo de funil pelo objetivo predominante das campanhas:
 - `OUTCOME_SALES` → funil de venda direta → métrica-norte = **ROAS** e **CPA**
 - `OUTCOME_LEADS` → funil de captação → métrica-norte = **CPL** e **total de leads**
 
@@ -172,7 +174,7 @@ Usar dados mensais da Chamada 7a. "Primeiro mês" = primeiro mês com `spend > R
 
 Calcular `dias_ativos` para cada campanha com `effective_status = ACTIVE`. Listar apenas as com `dias_ativos > 60`.
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 🔄 CAMPANHAS LONGEVAS  ·  Ativas ininterruptas > 60 dias
@@ -194,7 +196,7 @@ Calcular `dias_ativos` para cada campanha com `effective_status = ACTIVE`. Lista
   • Nenhum criativo novo adicionado nos últimos 30 dias (verificar via output [3])
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 🔄 CAMPANHAS LONGEVAS  ·  Ativas ininterruptas > 60 dias
@@ -218,10 +220,10 @@ Se nenhuma campanha ativa tiver mais de 60 dias, exibir: "Nenhuma campanha longe
 
 Construir a série a partir da Chamada 7a, agregando todas as campanhas por mês.
 
-#### Template A — Venda direta (ROAS e CPA)
+#### Template A. Venda direta (ROAS e CPA)
 
 ```
-📈 EVOLUÇÃO 6 MESES — Conta: {nome_conta}
+📈 EVOLUÇÃO 6 MESES. Conta: {nome_conta}
 
   Métrica principal: CPA  (funil de venda direta)
 
@@ -238,10 +240,10 @@ Construir a série a partir da Chamada 7a, agregando todas as campanhas por mês
   Variação acumulada (mês 0 vs. mês -5): {+/-Z%} de CPA
 ```
 
-#### Template B — Captação de leads (CPL e volume de leads)
+#### Template B. Captação de leads (CPL e volume de leads)
 
 ```
-📈 EVOLUÇÃO 6 MESES — Conta: {nome_conta}
+📈 EVOLUÇÃO 6 MESES. Conta: {nome_conta}
 
   Métrica principal: CPL  (funil de captação)
 
@@ -262,8 +264,8 @@ Construir a série a partir da Chamada 7a, agregando todas as campanhas por mês
 |---|---|
 | Melhora ≥ 15% (CPA/CPL caiu) | 🟢 Conta evoluindo |
 | Estável (variação entre −14% e +14%) | 🟡 Conta estável |
-| Deterioração +15% a +30% | 🟠 Atenção — investigar causa |
-| Deterioração > +30% | 🔴 Degradação grave — output [6] Investigação Profunda |
+| Deterioração +15% a +30% | 🟠 Atenção: investigar causa |
+| Deterioração > +30% | 🔴 Degradação grave: output [6] Investigação Profunda |
 
 Se em algum mês `spend < R$ 200`, marcar como "(mês sem dados suficientes)" e excluir do cálculo de tendência.
 
@@ -273,7 +275,7 @@ Se em algum mês `spend < R$ 200`, marcar como "(mês sem dados suficientes)" e 
 
 Identificar na série da Chamada 7a o mês com melhor ROAS (Template A) ou menor CPL (Template B), considerando apenas meses com `spend > R$ 500` (evitar meses de teste com volume insuficiente).
 
-#### Template A — Venda direta
+#### Template A. Venda direta
 
 ```
 🏆 MELHOR MÊS HISTÓRICO  ·  {nome_conta}
@@ -287,11 +289,11 @@ Identificar na série da Chamada 7a o mês com melhor ROAS (Template A) ou menor
   O que estava diferente nesse mês vs. hoje:
   ─────────────────────────────────────────────────────────────────────
   Campanhas ativas então, pausadas hoje:
-    • "{nome_campanha}" — pausada em {data} (identificada via Chamada 7b: stop_time)
-    • "{nome_campanha}" — arquivada
+    • "{nome_campanha}": pausada em {data} (identificada via Chamada 7b: stop_time)
+    • "{nome_campanha}": arquivada
 
   Campanhas ativas hoje que não existiam então:
-    • "{nome_campanha}" — criada em {data} (start_time após o mês do pico)
+    • "{nome_campanha}": criada em {data} (start_time após o mês do pico)
 
   Spend nesse mês vs. spend atual:
     • Então: R$ {X} / Hoje: R$ {Y} / Variação: {+/-Z%}
@@ -301,7 +303,7 @@ Identificar na série da Chamada 7a o mês com melhor ROAS (Template A) ou menor
      Reativar ou replicar o padrão dessa campanha é o caminho mais direto."}
 ```
 
-#### Template B — Captação de leads
+#### Template B. Captação de leads
 
 ```
 🏆 MELHOR MÊS HISTÓRICO  ·  {nome_conta}
@@ -314,7 +316,7 @@ Identificar na série da Chamada 7a o mês com melhor ROAS (Template A) ou menor
   O que estava diferente nesse mês vs. hoje:
   ─────────────────────────────────────────────────────────────────────
   Campanhas ativas então, pausadas hoje:
-    • "{nome_campanha}" — pausada em {data}
+    • "{nome_campanha}": pausada em {data}
   ...
   Hipótese mais provável: {hipótese específica}
 ```
@@ -325,7 +327,7 @@ Identificar na série da Chamada 7a o mês com melhor ROAS (Template A) ou menor
 
 Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivadas) cruzados com os campos `created_time`, `updated_time` e `effective_status` da Chamada 7b. Exibir apenas campanhas com `spend > 0` no período de 6 meses.
 
-**Regra de veredicto (aplicar na ordem abaixo — a primeira que bater define o veredicto):**
+**Regra de veredicto (aplicar na ordem abaixo: a primeira que bater define o veredicto):**
 
 | Condição | Veredicto |
 |---|---|
@@ -334,7 +336,7 @@ Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivad
 | ROAS < 1 (ou CPL > meta × 1,5) | Pausada com razão |
 | Demais casos | Avaliar contexto |
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 ⏸ CAMPANHAS PAUSADAS / ARQUIVADAS  ·  Últimos 6 meses  ·  Métrica: ROAS
@@ -347,19 +349,19 @@ Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivad
   ...
 
   Legenda:
-  🟢 Candidata a reativar  — ROAS > 2. Vale testar novamente com budget controlado.
-  🟡 Avaliar contexto      — ROAS entre 1 e 2. Reativar só se criativo foi renovado.
-  🔴 Pausada com razão     — ROAS < 1. Não reativar sem reformular oferta e criativo.
-  ⚪ Teste incompleto      — Spend < R$ 100. Sem dados suficientes para veredicto.
+  🟢 Candidata a reativar · ROAS > 2. Vale testar novamente com budget controlado.
+  🟡 Avaliar contexto     · ROAS entre 1 e 2. Reativar só se criativo foi renovado.
+  🔴 Pausada com razão    · ROAS < 1. Não reativar sem reformular oferta e criativo.
+  ⚪ Teste incompleto     · Spend < R$ 100. Sem dados suficientes para veredicto.
 
   Ação recomendada por grupo:
   • Candidatas a reativar: reativar com budget mínimo de R$ 30/dia via "trafego-otimizar"
-    OU duplicar variando uma dimensão duplicando entidade no Gerenciador (variando 1 dimensão) antes de reativar.
+    OU duplicar variando uma dimensão via "trafego-testes" antes de reativar.
   • Testes incompletos: avaliar se o objetivo ainda é relevante antes de continuar.
   • Pausadas com razão: reformular oferta/criativo via "copy-anuncio" antes de qualquer reativação.
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 ⏸ CAMPANHAS PAUSADAS / ARQUIVADAS  ·  Últimos 6 meses  ·  Métrica: CPL
@@ -372,10 +374,10 @@ Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivad
   ...
 
   Legenda:
-  🟢 Candidata a reativar  — CPL < meta × 0,8. Eficiência acima da meta histórica.
-  🟡 Avaliar contexto      — CPL entre meta × 0,8 e meta × 1,5. Decisão depende do contexto.
-  🔴 Pausada com razão     — CPL > meta × 1,5. Custo inviável sem reformulação.
-  ⚪ Teste incompleto      — Spend < R$ 100. Sem dados suficientes para veredicto.
+  🟢 Candidata a reativar · CPL < meta × 0,8. Eficiência acima da meta histórica.
+  🟡 Avaliar contexto     · CPL entre meta × 0,8 e meta × 1,5. Decisão depende do contexto.
+  🔴 Pausada com razão    · CPL > meta × 1,5. Custo inviável sem reformulação.
+  ⚪ Teste incompleto     · Spend < R$ 100. Sem dados suficientes para veredicto.
 
   Ação recomendada por grupo:
   • Candidatas a reativar: reativar com budget mínimo de R$ 20/dia via "trafego-otimizar".
@@ -385,7 +387,7 @@ Usar dados da Chamada 7c (performance histórica das campanhas pausadas/arquivad
 
 Se nenhuma campanha pausada ou arquivada tiver gasto nos últimos 6 meses, exibir: "Nenhuma campanha pausada com histórico de gasto identificada no período. Conta sem oportunidades óbvias de reativação."
 
-> **Nota de cálculo:** para funil de venda direta, usar `meta de ROAS = receita_total / spend_total` do período ativo (Chamada 7a) como referência quando o resumo-produto.md não informar meta explícita. Para funil de captação, usar CPL médio do período ativo como meta de referência.
+> **Nota de cálculo:** para funil de venda direta, usar `meta de ROAS = receita_total / spend_total` do período ativo (Chamada 7a) como referência quando o `resumo-produto.md` não informar meta explícita (e o aluno não tiver dito outra nesta sessão). Para funil de captação, usar CPL médio do período ativo como meta de referência.
 
 ---
 
@@ -393,7 +395,7 @@ Se nenhuma campanha pausada ou arquivada tiver gasto nos últimos 6 meses, exibi
 
 Usar dados da Chamada 7d. Ordenar por total de `offsite_conversion.fb_pixel_purchase` (Template A) ou `offsite_conversion.fb_pixel_lead` (Template B) no período de 6 meses.
 
-#### Template A — Venda direta
+#### Template A. Venda direta
 
 ```
 🥇 TOP 5 ANÚNCIOS HISTÓRICOS  ·  Últimos 6 meses  ·  Métrica: compras
@@ -407,14 +409,14 @@ Usar dados da Chamada 7d. Ordenar por total de `offsite_conversion.fb_pixel_purc
   5.  {nome}                    ACTIVE         {nome_campanha}   74        R$ 94       hoje
 
   Candidatos a reativar (PAUSED com histórico forte):
-  • {nome} — pausado há {X dias}, gerou {N} compras com CPA R$ {Y}. CPA abaixo da média atual.
-    Ação: reativar diretamente OU duplicar variando headline duplicando entidade no Gerenciador (variando 1 dimensão).
+  • {nome}: pausado há {X dias}, gerou {N} compras com CPA R$ {Y}. CPA abaixo da média atual.
+    Ação: reativar diretamente OU duplicar variando headline via "trafego-testes".
 
   Nota: anúncios ARCHIVED não podem ser reativados diretamente. Recriar com os mesmos criativos
   e copy via "copy-anuncio" usando o histórico como referência.
 ```
 
-#### Template B — Captação de leads
+#### Template B. Captação de leads
 
 ```
 🥇 TOP 5 ANÚNCIOS HISTÓRICOS  ·  Últimos 6 meses  ·  Métrica: leads
@@ -425,7 +427,7 @@ Usar dados da Chamada 7d. Ordenar por total de `offsite_conversion.fb_pixel_purc
   2.  {nome}                    ACTIVE         {nome_campanha}   980       R$ 5,20     hoje
   ...
 
-  Candidatos a reativar: {nome} — pausado há {X dias}, gerou {N} leads com CPL R$ {Y}.
+  Candidatos a reativar: {nome}, pausado há {X dias}, gerou {N} leads com CPL R$ {Y}.
 ```
 
 ---
@@ -440,7 +442,7 @@ Só após cobrir todas as perguntas obrigatórias, incluir blocos adicionais de 
 
 ---
 
-### Passo 0 — Checklist antes de montar qualquer bloco
+### Passo 0. Checklist antes de montar qualquer bloco
 
 Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar cobertura:
 
@@ -467,13 +469,13 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 ## Protocolo padrão
 
-1. **Diagnóstico** — informar: (a) quantas campanhas longevas foram encontradas e quantas precisam de refresh; (b) tendência dos 6 meses (melhora, estável, deterioração); (c) qual foi o melhor mês e se está longe ou próximo da performance atual; (d) quantos dos top 5 anúncios estão pausados.
+1. **Diagnóstico**: informar: (a) quantas campanhas longevas foram encontradas e quantas precisam de refresh; (b) tendência dos 6 meses (melhora, estável, deterioração); (c) qual foi o melhor mês e se está longe ou próximo da performance atual; (d) quantos dos top 5 anúncios estão pausados.
 
-2. **Causa provável** — relacionar os dados em conjunto. Exemplos:
+2. **Causa provável**: relacionar os dados em conjunto. Exemplos:
    - "CPA degradou 40% em 3 meses e as 2 campanhas com melhor histórico foram pausadas nesse mesmo intervalo. A degradação provavelmente veio da perda desses criativos, não de mudança de público."
-   - "Melhor mês teve spend 30% menor que hoje — o crescimento de investimento não veio acompanhado de criativos novos, diluindo a performance média."
+   - "Melhor mês teve spend 30% menor que hoje: o crescimento de investimento não veio acompanhado de criativos novos, diluindo a performance média."
 
-3. **No VTSD, isso significa…** — interpretar o dado histórico pelo método. Usar a tabela abaixo como guia:
+3. **No VTSD, isso significa…**: interpretar o dado histórico pelo método. Usar a tabela abaixo como guia:
 
    | Padrão histórico identificado | Elemento VTSD | Interpretação |
    |---|---|---|
@@ -483,7 +485,7 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
    | Volume de leads caiu sem mudança de CPL | Isca Digital | A oferta de captura ficou velha para o público novo que está chegando. Atualizar o Decorado da isca |
    | Melhor mês coincide com sazonalidade (ex: jan, set) | Timing | A Urgência Quente estava naturalmente alta naquele período. Replicar em próxima janela sazonal equivalente |
 
-4. **Ação recomendada** — 1 a 3 ações concretas priorizadas por impacto esperado, com handoff para a skill executora.
+4. **Ação recomendada**: 1 a 3 ações concretas priorizadas por impacto esperado, com handoff para a skill executora.
 
 ---
 
@@ -491,27 +493,43 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Campanha longeva com CPA/CPL degradado > 30% | Duplicar entidade no Gerenciador (variando 1 dimensão) (A/B de criativo novo) ou "trafego-otimizar" (refresh defensivo com pausa parcial) |
-| Anúncio pausado com histórico forte (top 5) | Sugerir reativar manualmente OU duplicar variando uma dimensão duplicando entidade no Gerenciador (variando 1 dimensão) |
+| Campanha longeva com CPA/CPL degradado > 30% | "trafego-testes" (A/B de criativo novo) ou "trafego-otimizar" (refresh defensivo com pausa parcial) |
+| Anúncio pausado com histórico forte (top 5) | Sugerir reativar manualmente OU duplicar variando uma dimensão via "trafego-testes" |
 | Anúncio arquivado com histórico forte | "copy-anuncio" para recriar no mesmo estilo + "trafego-criar-campanha" para subir novamente |
 | Tendência de deterioração > +30% em 3 meses | output [6] Investigação Profunda para isolar a causa raiz |
 | Melhor mês distante da performance atual | output [2] Performance & Funil para mapear onde o funil piorou desde então |
-| Público/audience do melhor mês não em uso | Gerenciador de Audiences (recriar Lookalike a partir da base do período pico) |
+| Público/audience do melhor mês não em uso | "trafego-publicos" (recriar Lookalike a partir da base do período pico) |
 | Campanha do melhor mês pausada e elegível | "trafego-otimizar" para reativar em modo controlado (budget pequeno + monitoramento) |
 
 ---
 
 ## Mapeamento HTML (export via `_export-html.md`)
 
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** O vocabulário antigo (`.table`, `.kpi-grid`, `.kpi`, `.regra`, `.regra.alerta`, `.callout`, `.pitch-box`, `.bar-row`, `.up`, `.down`, `--neon`) foi descontinuado e NÃO existe no CSS embutido: usá-lo gera seção sem estilo.
+
 | Bloco do output narrado | Componente do design system |
 |---|---|
-| Tabela de campanhas longevas (Bloco 1) | `.table` com colunas mono — `.down` (rust) nas linhas com degradação > 30% ou freq > 5 |
-| Status de cada campanha longeva (🟢/🟡/🔴) | `.kpi` com classe `.up` ou `.down` conforme classificação |
-| Gráfico de barras da evolução mensal (Bloco 2) | série de `.bar-row` — largura proporcional ao CPA/CPL, cor conforme tendência do mês |
-| KPIs do melhor mês histórico (Bloco 3) | `.kpi-grid` com 4 `.kpi` (mês, ROAS/CPL, spend, compras/leads) |
-| Lista do que estava diferente no melhor mês | `.callout` (um por diferença identificada) |
-| Tabela top 5 anúncios históricos (Bloco 4) | `.table` com `--neon` na linha #1 e `.down` em anúncios ARCHIVED |
-| Candidatos a reativar | `.regra.alerta` (um elemento por candidato identificado) |
-| Frase "No VTSD isso significa..." | `.callout` |
-| Ação recomendada | `.pitch-box` |
-| Handoffs para skills executoras | `.term.next` dentro de `.terms` no rodapé |
+| KPIs globais (gasto 6m, melhor mês ROAS/CPL, CPA/CPL atual vs. 1º mês, nº campanhas longevas) | `.stats-grid` com um `.stat-card` por métrica (`.value.green/.yellow/.red` conforme semântica) |
+| Cada "Resposta N" obrigatória | `.section` com `.section-header` (`.section-num` + `.section-title` + `.section-question`, texto exato da pergunta) |
+| Tabela de campanhas longevas (Resposta 1) | `.card` + `table`; coluna de degradação em `var(--red)` quando > 30% ou freq > 5, `var(--green)` quando estável/melhora |
+| Status de cada campanha longeva (🟢/🟡/🔴) | célula de status na própria `table` com cor semântica inline (`var(--green)`/`var(--yellow)`/`var(--red)`) |
+| KPIs do melhor mês histórico (Resposta 3) | `.card` + `.funnel-row` com 4 `.funnel-item` (mês, ROAS/CPL, spend, compras/leads) |
+| Lista do que estava diferente no melhor mês | `.diag-box` (um por diferença identificada) |
+| Tabela de campanhas pausadas / veredicto (Resposta 4) | `.card` + `table`; veredicto colorido (candidata = `var(--green)`, pausada com razão = `var(--red)`, avaliar = `var(--yellow)`); badges `.tier-s/.tier-a/.tier-c/.tier-d` opcionais |
+| Tabela top 5 anúncios históricos (Resposta 5) | `.card` + `table`; `.rank` na posição, `.ad-name` no nome, linha de anúncio ARCHIVED com nome em `var(--text-muted)`; tag de status (`.tag-video`/`.tag-imagem` reaproveitáveis para badges) |
+| Candidatos a reativar | `.action-box` (ou `.diag-box.green`) |
+| Frase "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Ação recomendada | `.action-box` |
+| Handoffs para skills executoras | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas detalhadas nas seções **3.2.1** e **3.2.1.1** do `_export-html.md`). Gráficos com muitos pontos ou geometria não trivial usam o helper `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py` (matemática pura, sem token, sem Graph API).
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Tendência mensal de CPA/CPL (6 meses) | SVG linha (receita F via helper `line`) | Chamada 7a (`time_increment=monthly`, `last_180d`/`last_6_months`), série de CPA (venda direta) ou CPL (captação) agregada por mês | `.chart-card` full-width, topo da "Visão visual" |
+| Campanhas longevas: saúde vs. degradação | barras horizontais `.hbar-row` (receita D) | Chamadas 7a + 7b: degradação% = (CPA_mês_atual − CPA_1º_mês)/CPA_1º_mês por campanha longeva | `.chart-card` full-width, junto da Resposta 1 |
+| Top 5 anúncios por venda (6 meses) | SVG barras verticais (receita G via helper `vbars`) | Chamada 7d (`level=ad`, `last_6_months`), top 5 por `offsite_conversion.fb_pixel_purchase` (ou `_lead`) | `.charts-grid`, junto da Resposta 5 |
+
+**Regras dos gráficos:** na linha de tendência mensal, CPA/CPL é "quanto menor melhor": usar uma única série (cor `--accent`), `dots:true`, e narrar a tendência no `.funnel-meta` abaixo (melhora/estável/deterioração com a variação acumulada mês 0 vs. mês -5). Excluir do gráfico os meses com `spend < R$ 200` (marcar como sem dados na narrativa). Nas barras horizontais de campanhas longevas, usar `.hbar-fill.win` (verde) para CPA estável ou melhora e `.hbar-fill.burn` (vermelho) para degradação > 30% ou freq > 5; largura proporcional ao gasto da campanha no período. Nas vbars de top anúncios, ordenar por vendas decrescente, colorir verde o líder e accent os demais; truncar nomes longos. Usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`).

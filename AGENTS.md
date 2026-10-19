@@ -678,11 +678,19 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 
 ### Tráfego Pago
 
-- `/trafego-conexao`: configurar conexão com Meta Ads.
+- `/trafego-conexao`: configurar conexão com Meta Ads (MCP recomendado, App de reserva).
 - `/trafego-insights`: ler métricas e derivadas.
-- `/trafego-criar-campanha`: criar campanha via Marketing API.
-- `/trafego-otimizar`: diagnosticar e otimizar campanhas.
+- `/trafego-criar-campanha`: criar campanha via Marketing API ou MCP.
+- `/trafego-otimizar`: diagnosticar e otimizar campanhas, com camada de lucro.
+- `/trafego-escalar`: escalar campanha validada com score de risco e guardião de caixa.
 - `/trafego-analise`: análise narrada VTSD em outputs.
+- `/trafego-diagnostico`: investigar antes de agir (hipóteses, auditoria, falso vencedor, score de confiança).
+- `/trafego-criativos`: atenção, intenção e conversão dos criativos, DNA e briefing do próximo teste.
+- `/trafego-oferta-funil`: funil depois do clique, congruência anúncio x página, oferta e checkout.
+- `/trafego-pixel`: diagnosticar pixels e eventos (apenas leitura).
+- `/trafego-publicos`: criar e gerenciar públicos.
+- `/trafego-regras`: regras automáticas e liga e pausa por horário.
+- `/trafego-testes`: testes A/B disciplinados e remarketing.
 - `/trafego-dashboard`: abrir ou criar o dashboard de tráfego. O ao vivo é um artefato do Claude e não roda no Codex; aqui, siga o dashboard estático (legado) do command.
 
 ### Dados e Automações
@@ -901,10 +909,10 @@ Toda tarefa `/trafego-*` ou qualquer operação que toque Meta Ads deve começar
 
 Passo 0 de tráfego:
 
-1. Ler `META_AUTH_MODO` no `.env`.
+1. Ler `META_AUTH_MODO` no `.env` (só dois modos: `MCP_CONECTOR`, o padrão, e `APP`, a reserva para conta ainda não liberada pela Meta no MCP; não existe modo híbrido).
 2. Se ausente, seguir `/trafego-conexao`.
-3. Se for `MCP_CONECTOR`, verificar se a ferramenta MCP de ads está disponível no ambiente. Se não estiver, orientar reconexão ou voltar ao command de conexão.
-4. Se for `APP`, verificar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID`. Para criação de campanha, verificar também `FB_PAGE_ID`.
+3. Se for `MCP_CONECTOR`, verificar se a ferramenta MCP de ads está disponível no ambiente. Se não estiver, orientar reconexão ou voltar ao command de conexão. No MCP, subir vídeo novo, buscar interesse por nome, criar regra automática e apagar campanha, conjunto ou anúncio ainda não têm ferramenta: conduzir o passo a passo no Gerenciador.
+4. Se for `APP`, verificar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q`, sem imprimir o valor (nunca `cat .env`). Para criação de campanha, verificar também `FB_PAGE_ID`.
 5. Não prosseguir sem conexão validada.
 
 Skills que herdam essa regra:
@@ -912,8 +920,18 @@ Skills que herdam essa regra:
 - `/trafego-insights`.
 - `/trafego-criar-campanha`.
 - `/trafego-otimizar`.
+- `/trafego-escalar`.
 - `/trafego-analise`.
+- `/trafego-diagnostico`.
+- `/trafego-criativos`.
+- `/trafego-oferta-funil`.
+- `/trafego-pixel`.
+- `/trafego-publicos`.
+- `/trafego-regras`.
+- `/trafego-testes`.
 - `/trafego-dashboard`.
+
+Onde salvam: relatórios em `meus-produtos/{ativo}/entregas/trafego/`; dados de trabalho do produto em `meus-produtos/{ativo}/trafego/`; públicos, regras, pixel e dados da conta em `meus-produtos/_global/trafego/`.
 
 Commands legados como `/ads-relatorio`, `/enviar-relatorio-ads` e `/lt-otimizar` podem usar variáveis próprias. Leia o command antes de assumir o padrão novo.
 
@@ -942,7 +960,10 @@ Regras:
 
 - Sem "sim", "aprovo", "pode" ou equivalente claro, não executar.
 - Nunca exibir o `curl` completo no chat.
-- Se for lote, listar todos os objetos afetados. Se forem muitos, mostrar resumo e lista completa abaixo.
+- Vale também para as ferramentas de escrita do MCP da Meta (`ads_create_*`, `ads_update_*`, `ads_activate_entity`, `ads_delete_custom_audience`).
+- Um "sim" por lote, nunca por objeto: um fluxo da mesma skill (ex: campanha + conjuntos + anúncios) vai num bloco só e num "sim" só. Listar todos os objetos afetados; se forem muitos, mostrar resumo e lista completa abaixo. Só perguntar de novo se uma chamada falhar, o plano mudar ou surgir escrita fora do lote.
+- Exclusão é sempre à parte: nunca entra no "sim" do lote, ganha bloco e "sim" próprios e vai pelo MCP quando houver ferramenta (`ads_delete_custom_audience`). Sem ferramenta, não rodar `curl -X DELETE` direto: oferecer pausar ou arquivar, mostrar o comando mascarado para o usuário rodar ou guiar a exclusão no Gerenciador.
+- Fluxos que atravessam várias skills (atalhos compostos, modo Carteira do escalar, remarketing) só encadeiam sem novo gate no modo lote pré-aprovado.
 - Se o usuário cancelar, não chamar a API.
 - Após aprovação, executar e resumir resultado sem ecoar token.
 - Não usar heredoc Python nem `curl | python` com token.

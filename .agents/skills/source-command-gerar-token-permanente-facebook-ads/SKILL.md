@@ -315,11 +315,10 @@ Apos salvar, confirmar com o usuario EXATAMENTE com o bloco abaixo, nada mais:
 
 Tudo pronto. As skills /trafego-* já conseguem acessar o Meta Ads.
 
-Você pode trocar a conta padrão depois com /meta-conta-trocar.
-Você pode adicionar mais contas com /meta-conta-adicionar.
+Você pode trocar a conta padrão depois com /trafego-conexao.
 ```
 
-> **Regra dura — não expandir esta saída.** Não acrescentar lista de "Próximas skills disponíveis", não categorizar em "Tráfego pago", "Operacional do Meta", "Relatórios e otimização atalho" nem variantes parecidas, não citar `/trafego-insights`, `/trafego-criar-campanha`, `/trafego-otimizar`, `/trafego-escalar`, `/trafego-analise`, `/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar` ou qualquer outra skill aqui. Recomendação de "próximo passo" é responsabilidade exclusiva de `/trafego-conexao` (que é o ponto de entrada e tem o bloco `🔭 Próximo passo recomendado`). Esta skill é só infraestrutura técnica de geração de token; encerra com a confirmação acima e ponto.
+> **Regra dura: não expandir esta saída.** Não acrescentar lista de "Próximas skills disponíveis", não categorizar em "Tráfego pago", "Operacional do Meta", "Relatórios e otimização atalho" nem variantes parecidas, não citar `/trafego-insights`, `/trafego-criar-campanha`, `/trafego-otimizar`, `/trafego-escalar`, `/trafego-analise`, `/trafego-diagnostico`, `/trafego-criativos`, `/trafego-oferta-funil`, `/trafego-pixel`, `/trafego-publicos`, `/trafego-regras`, `/trafego-testes`, `/trafego-dashboard`, `/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar` ou qualquer outra skill aqui. Recomendação de "próximo passo" é responsabilidade exclusiva de `/trafego-conexao` (que é o ponto de entrada e tem o bloco `🔭 Próximo passo recomendado`). Esta skill é só infraestrutura técnica de geração de token; encerra com a confirmação acima e ponto.
 
 ---
 

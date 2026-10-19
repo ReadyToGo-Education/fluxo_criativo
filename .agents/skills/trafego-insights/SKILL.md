@@ -4,7 +4,7 @@ description: >
   Base de conhecimento e fonte única de leitura de métricas Meta Ads (Facebook + Instagram).
   Puxa dados nativos da Graph API, calcula métricas derivadas (connect rate, taxa de conversão da
   página, taxa de conversão do anúncio, taxas de checkout) e entrega payload pronto para diagnóstico.
-  É a base de dados que /trafego-otimizar, /trafego-escalar e /trafego-analise consomem.
+  É a base de dados que /trafego-otimizar, /trafego-escalar, /trafego-analise e /trafego-diagnostico consomem.
   Consultada também pelo command /trafego-insights quando o aluno quer ver números de uma campanha.
   Use sempre que precisar puxar performance, listar campanhas, calcular CPA/CPL/ROAS ou comparar
   janelas temporais.
@@ -13,7 +13,7 @@ user-invocable: false
 
 # Tráfego Insights. Leitura de Métricas Meta Ads
 
-Você é a fonte única de verdade sobre dados de performance do Meta Ads. Seu papel é puxar dados nativos da Graph API, calcular métricas derivadas, e entregar payload estruturado que outras skills (/trafego-otimizar, /trafego-escalar, /trafego-analise) consomem para tomar decisão. Você **não toma decisão** — apenas entrega dado bem formatado e bem atribuído.
+Você é a fonte única de verdade sobre dados de performance do Meta Ads. Seu papel é puxar dados nativos da Graph API, calcular métricas derivadas, e entregar payload estruturado que outras skills (/trafego-otimizar, /trafego-escalar, /trafego-analise, /trafego-diagnostico) consomem para tomar decisão. Você **não toma decisão**: apenas entrega dado bem formatado e bem atribuído.
 
 **Princípios que guiam toda chamada:**
 - Janela de atribuição é declarada explicitamente em todo output. Sem janela declarada, dado não tem significado.
@@ -43,6 +43,7 @@ Você é a fonte única de verdade sobre dados de performance do Meta Ads. Seu p
 | `incluir_arquivadas` | `false` | Se `true`, inclui `status: ARCHIVED` e `DELETED`. |
 | `usar_cache` | `true` | Cache de 5 min em memória + cache em arquivo .md. Sempre `false` após uma ação de edição na mesma conversa. |
 | `breakdowns` | `[]` | Lista de breakdowns da Graph API (ex: `["age", "gender"]`, `["publisher_platform"]`, `["hourly_stats_aggregated_by_advertiser_time_zone"]`). Cada breakdown gera 1 chamada e 1 arquivo de cache. Ver `sub-skills/breakdowns.md`. |
+| `incluir_serie_diaria` | `false` | Se `true`, calcula `serie_diaria` (valores dia a dia) das métricas-norte (CPA/CPL) e leading (CTR, CPM) para cada entidade. Adiciona campos `{metrica}_cv` (coeficiente de variação) ao output. Requer janela >= 3d. Consumido por `/trafego-diagnostico` (score de confiança, falso vencedor). |
 
 ---
 
@@ -124,7 +125,7 @@ Em `actions`, extrair específico:
 
 ### 4.3 Métricas leading
 - `ctr_link_unico` (`unique_inline_link_click_ctr`). **Métrica leading primária.** Conta uma pessoa única por clique no link, removendo viés de cliques repetidos da mesma pessoa. Vale mais que CTR geral porque exclui clique acidental fora do link e mais que CTR no link total porque exclui repetição.
-- `ctr_link_total` (`inline_link_click_ctr`). Métrica complementar. Conta todos os cliques no link (com repetição da mesma pessoa). Útil para diagnóstico complementar — se `ctr_link_total` é muito maior que `ctr_link_unico`, indica que poucas pessoas clicam várias vezes (possível bot ou audiência muito reduzida).
+- `ctr_link_total` (`inline_link_click_ctr`). Métrica complementar. Conta todos os cliques no link (com repetição da mesma pessoa). Útil para diagnóstico complementar: se `ctr_link_total` é muito maior que `ctr_link_unico`, indica que poucas pessoas clicam várias vezes (possível bot ou audiência muito reduzida).
 - `hook_rate` = `video_p25_watched_actions` ÷ `impressions` (proxy para 3s. Meta deprecou alguns campos antigos de vídeo).
 - `frequencia` (`frequency`).
 - `cpm`.
@@ -175,7 +176,7 @@ Se denominador for menor que 50 (ex: 30 link clicks), calcular mas marcar `confi
 Quando `escopo: conta_completa`, a skill executa em duas fases:
 
 ### 6.1 Fase de listagem
-1. `GET /act_{id}/campaigns?fields=id,name,status,objective,daily_budget,lifetime_budget&limit=200&effective_status=%5B%22ACTIVE%22%5D`
+1. `GET /act_{id}/campaigns?fields=id,name,status,effective_status,created_time,objective,daily_budget,lifetime_budget&limit=200&effective_status=%5B%22ACTIVE%22%5D`
 2. Para cada campanha ativa, puxar insights da janela média da trilha (ex: 7d para perpétuo low).
 3. Calcular métrica-norte (CPA ou CPL) por campanha.
 4. Ranquear por urgência:
@@ -241,10 +242,10 @@ A skill mantém dois níveis de cache, complementares:
 - Camada mais rápida, evita refetch dentro da mesma chamada.
 
 ### 7.2 Cache em arquivo .md (médio prazo, entre sessões)
-- Localização: `meus-produtos/{ativo}/trafego/insights/`.
+- Localização: `meus-produtos/{ativo}/trafego/insights/` (sem produto ativo: `meus-produtos/_global/trafego/insights/`).
 - TTL adaptativo: 1h (today), 6h (7-14d), 24h (30d), 7d (períodos fechados).
 - Schema completo, naming convention e algoritmo de leitura: ver **`sub-skills/cache.md`**.
-- Permite que outras skills (analise, otimizar, regras, publicos, testes) compartilhem leituras dentro da mesma sessão e entre sessões próximas, evitando bater na Graph API repetidas vezes pelo mesmo período.
+- Permite que outras skills (`/trafego-analise`, `/trafego-otimizar`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`) compartilhem leituras dentro da mesma sessão e entre sessões próximas, evitando bater na Graph API repetidas vezes pelo mesmo período.
 
 ### 7.3 Ordem de consulta
 1. Memória → se hit válido, retorna.
@@ -253,7 +254,7 @@ A skill mantém dois níveis de cache, complementares:
 
 ### 7.4 Invalidação automática
 Ambos os caches da `ad_account_id` (memória + todos os arquivos da pasta) são invalidados **imediatamente** quando:
-- Qualquer skill de edição executa write (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-criar-campanha`, Gerenciador (Regras automáticas), Gerenciador de Audiences, Duplicar entidade no Gerenciador (variando 1 dimensão)).
+- Qualquer skill de edição executa write (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-criar-campanha`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`).
 - Gestor pede explicitamente "atualizar dados" ou "puxar de novo sem cache".
 - TTL expirou.
 
@@ -305,6 +306,8 @@ campanha:
   nome: "Perpétuo - Curso X - 2026"
   objetivo: OUTCOME_SALES
   status: ACTIVE
+  effective_status: ACTIVE
+  created_time: "2026-03-15T10:30:00-0300"
   budget:
     tipo: ABO | CBO
     valor_diario_brl: 200.00
@@ -315,11 +318,13 @@ campanha:
       impressions: 12450
       reach: 8920
       frequency: 1.4
-      ctr_link_unico: 0.0118       # unique_inline_link_click_ctr — primária
-      ctr_link_total: 0.0142       # inline_link_click_ctr — complementar
+      ctr_link_unico: 0.0118       # unique_inline_link_click_ctr, primária
+      ctr_link_total: 0.0142       # inline_link_click_ctr, complementar
       hook_rate: 0.27
       cpm: 15.95
+      cpm_cv: null                    # coeficiente de variação diária do CPM
       cpa: 198.50
+      cpa_cv: null                    # coeficiente de variação diária (desvio padrão / média). null quando janela < 3d
       cpl: null
       eventos:
         link_clicks: 177
@@ -349,6 +354,8 @@ conjuntos:
   - id: "120203456789001"
     nome: "AS - Lookalike compradores 1%"
     status: ACTIVE
+    effective_status: ACTIVE | LEARNING | LEARNING_LIMITED | CAMPAIGN_PAUSED | WITH_ISSUES
+    created_time: "2026-03-15T10:35:00-0300"
     budget_diario_brl: 100.00
     aprendizado: ATIVO | EM_APRENDIZADO | APRENDIZADO_LIMITADO
     metricas_por_janela:
@@ -360,6 +367,8 @@ anuncios:
   - id: "120203456789999"
     nome: "AD - Dor - Vídeo 30s"
     status: ACTIVE
+    effective_status: ACTIVE
+    created_time: "2026-03-15T11:00:00-0300"
     adset_id: "120203456789001"
     metricas_por_janela:
       curta: { ... }
@@ -435,18 +444,25 @@ detalhes_tecnicos:
 
 ## 10. Como puxar os dados (rota por META_AUTH_MODO)
 
-A skill respeita a preferência de conexão definida em `META_AUTH_MODO` no `.env` (ver `/trafego-conexao`).
+A skill respeita a preferência de conexão definida em `META_AUTH_MODO` no `.env` (ver `/trafego-conexao`). Só existem dois modos: `MCP_CONECTOR` e `APP`. Esta skill é **100% leitura**, então **não tem lacuna** em nenhum modo: toda leitura tem tool no conector. Não há gate (não escreve na conta).
 
 ### 10.1 Modo `MCP_CONECTOR`
-Usar as tools do MCP da Meta que o aluno adicionou como conector personalizado. Localizar tools com prefixo `mcp__*` cujo sufixo seja relacionado a Meta Ads (ex: `mcp__Meta_Ads__ads_get_ad_entities`, `mcp__Meta_Ads__ads_insights_*`, `mcp__Meta_Ads__ads_get_ad_accounts`).
+Usar as tools de leitura do conector da Meta. **Descobrir a tool pelo final do nome, nunca pelo prefixo**: o prefixo varia por ambiente (pode ser `mcp__Meta_Ads__...` ou um UUID como `mcp__9dc3edbb-...__ads_insights_performance_trend`). Procurar pelo final estável `ads_insights_performance_trend`, `ads_get_ad_entities` ou `ads_get_ad_accounts` (ver `trafego-conexao` §5.1). Nesse modo não se usa token, mesmo que exista um `FB_ACCESS_TOKEN_PERMANENTE` antigo no `.env`.
 
-Mapeamento direto:
-- `list_campaigns` → `mcp__*__ads_get_ad_entities` com filtro de tipo `campaign`
-- `get_insights` → `mcp__*__ads_insights_*`
-- `get_ad_account_info` → `mcp__*__ads_get_ad_accounts`
+Mapeamento direto (sufixo da tool):
+- `list_campaigns` → `ads_get_ad_entities` com filtro de tipo `campaign`
+- `get_insights` → `ads_insights_performance_trend` (e demais `ads_insights_*`)
+- `get_ad_account_info` → `ads_get_ad_accounts`
+- detecção de atribuição / datasets → `ads_get_ad_accounts` / `ads_get_datasets` conforme o campo
+
+O `ad_account_id` exigido pelas tools vem de `FB_AD_ACCOUNT_ID` do `.env` (ou da conta escolhida no Passo 0.3 do command).
+
+**Conta não liberada no conector** (`is_ads_mcp_enabled: false` ou erro "Ads MCP is gradually being rolled out"): parar, avisar o aluno em linguagem simples e oferecer o modo App pelo `/trafego-conexao` (seção 5.1.2 da skill `trafego-conexao`). Uma tool específica em liberação gradual ("This tool is new and is being gradually rolled out") não trava a leitura: usar outra tool de leitura do conector que traga o mesmo dado (conferindo o schema) ou registrar em `erros[]` qual dado ficou de fora.
+
+Ferramentas de leitura que podem complementar a análise quando o aluno pedir: `ads_insights_anomaly_signal` (anomalias), `ads_insights_industry_benchmark` e `ads_insights_auction_ranking_benchmarks` (comparação com o mercado), `ads_account_get_activity_logs` (o que mudou na conta). Os parâmetros vêm do schema da tool na hora.
 
 ### 10.2 Modo `APP`
-Ler `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` do `.env`. Chamar a Graph API direto via `curl` ou via CLI Python (se a CLI `meta` estiver instalada).
+Conferir `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` com `grep -q` e chamar a Graph API direto via `curl`, uma chamada por `Bash`, com o token por substituição dentro do próprio comando (seções "LEITURA SEGURA DO .env" e "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md). Usar `curl -g` quando o `fields=` tiver campos aninhados (ex.: `adsets{name}`). Nunca exibir o token.
 
 Endpoint base: `https://graph.facebook.com/v25.0/`
 
@@ -459,6 +475,8 @@ Endpoint base: `https://graph.facebook.com/v25.0/`
 **Cadência entre chamadas (rate limit):** o Meta aplica limite de uso por token. Em modo conta completa, nunca encadear mais de 3 chamadas sem pausa. Aguardar 3 segundos entre cada chamada à Graph API. Em Python, usar `time.sleep(3)` antes de cada request. Se a resposta vier com `"code": 4` (rate limit), aplicar backoff: aguardar 30s antes de retentar. Máximo 2 retries.
 
 **Paths de arquivo:** NUNCA salvar arquivos temporários em `/tmp` ou depender de variáveis de ambiente de sessões bash anteriores (`$TEMP`, `$TMPDIR`). Cada chamada bash tem sessão isolada. Salvar sempre em `meus-produtos/{ativo}/trafego/insights/` com path absoluto derivado do diretório de trabalho atual. Para arquivos intermediários de processamento, usar o mesmo diretório do produto.
+
+**Processamento em Python (exceção controlada do CLAUDE.md):** só quando o volume não der para processar lendo os JSONs direto. Salvar os JSONs com `curl ... > arquivo.json` na pasta acima, escrever o script com `Write` (sem token dentro dele) e rodar com o interpretador detectado na sessão (`python3` ou `py -3`). Nunca heredoc nem `curl | python3` com token.
 
 **Encoding Python (Windows):** o terminal Windows usa `cp1252` por padrão, que não suporta emojis (ex: 👀 nos nomes de campanhas do Instagram). Todo script Python que imprime nomes de campanhas DEVE começar com:
 ```python
@@ -503,16 +521,16 @@ A skill suporta os breakdowns abaixo da Graph API. Cada breakdown gera 1 chamada
 
 | Breakdown | Valor exemplo | Output que consome |
 |---|---|---|
-| `age` | "25-34" | analise [4] Geo & Demografia |
-| `gender` | "female" | analise [4] |
-| `country` | "BR" | analise [4] |
-| `region` | "São Paulo" | analise [4] |
-| `dma` | "Sao Paulo" | analise [4] (capital vs interior) |
-| `publisher_platform` | "instagram" | analise [2] Performance, [6] Investigação |
-| `platform_position` | "reels" | analise [2], [6] |
-| `device_platform` | "mobile" | analise [6] |
-| `impression_device` | "iphone" | analise [6] (não distingue Wi-Fi vs móvel — ver limitação) |
-| `hourly_stats_aggregated_by_advertiser_time_zone` | "20:00-20:59" | analise [5] Timing |
+| `age` | "25-34" | análise [4] Geo & Demografia |
+| `gender` | "female" | análise [4] |
+| `country` | "BR" | análise [4] |
+| `region` | "São Paulo" | análise [4] |
+| `dma` | "Sao Paulo" | análise [4] (pouco útil no Brasil) |
+| `publisher_platform` | "instagram" | análise [2] Performance, [6] Investigação |
+| `platform_position` | "reels" | análise [2], [6] |
+| `device_platform` | "mobile" | análise [6] |
+| `impression_device` | "iphone" | análise [6] (não distingue Wi-Fi de dados móveis, ver limitação) |
+| `hourly_stats_aggregated_by_advertiser_time_zone` | "20:00-20:59" | análise [5] Timing |
 
 Combinações comuns: `age+gender`, `country+region`, `publisher_platform+platform_position`. Máximo 2 breakdowns por chamada (regra da Graph API). Para 3+, fazer chamadas separadas e cruzar no payload.
 
@@ -589,11 +607,46 @@ historico:
     ...
 ```
 
-### 12.5 Quem usa
-- `comparar_periodos`: outputs [1], [5], [7] da analise
+### 12.5 `serie_diaria(metric, object_id, janela)`
+Retorna valores dia a dia de uma métrica para um objeto (campanha, adset ou ad) em uma janela. Permite calcular variação diária, consistência temporal e coeficiente de variação.
+
+```yaml
+serie_diaria:
+  metric: cpa
+  object_id: "120203456789"
+  janela: "7d"
+  dias:
+    - data: "2026-05-25"
+      valor: 42.00
+    - data: "2026-05-26"
+      valor: 68.00
+    - data: "2026-05-27"
+      valor: 35.00
+    - data: "2026-05-28"
+      valor: 51.00
+    - data: "2026-05-29"
+      valor: 44.00
+    - data: "2026-05-30"
+      valor: 39.00
+    - data: "2026-05-31"
+      valor: 59.00
+  media: 48.29
+  desvio_padrao: 11.63
+  coeficiente_variacao: 0.241
+  dias_com_dado: 7
+  dias_sem_conversao: 0
+```
+
+**Implementação:** chamada Graph API com `time_increment=1` no período da janela. Cacheada normalmente (memória + arquivo). Quando a janela tem menos de 3 dias, retorna a série mas marca `coeficiente_variacao: null` (amostra insuficiente para variação significativa).
+
+**Campo `_cv` no output principal:** quando a `serie_diaria` estiver disponível para uma métrica (janela >= 3d), o campo `{metrica}_cv` é calculado automaticamente e inserido no bloco `metricas_por_janela`. Fórmula: `desvio_padrao / media`. Quanto mais alto, mais instável o resultado.
+
+### 12.6 Quem usa
+- `comparar_periodos`: outputs [1], [5], [7] da análise
 - `ranking_top_n`: output [2] (best/worst) e `/trafego-otimizar` (atalho `aumentar_top_n`)
 - `funil_por_campanha`: output [2]
 - `historico_mensal`: output [7]
+- `serie_diaria`: `/trafego-diagnostico` (score de confiança, falso vencedor), output [5] da análise (timing), `/trafego-otimizar` (refinamento de tendência)
 
 Estas funções consultam o cache antes de chamar a Graph API, igual ao restante da skill.
 
@@ -604,7 +657,7 @@ Estas funções consultam o cache antes de chamar a Graph API, igual ao restante
 1. **Janela de atribuição declarada em todo output.** Sem isso, número não tem significado.
 2. **Métricas derivadas sempre calculadas.** Fazem parte do payload obrigatório, não são opcionais.
 3. **Sempre puxar 3 janelas da trilha** quando o tipo de funil e ticket são conhecidos. Sem isso, diagnóstico de tendência das outras skills cai pela metade.
-4. **Não tomar decisão.** Apenas entregar dado bem formatado. Diagnóstico é responsabilidade de `/trafego-otimizar`. Crescimento é de `/trafego-escalar`.
+4. **Não tomar decisão.** Apenas entregar dado bem formatado. Diagnóstico operacional é responsabilidade de `/trafego-otimizar`. Diagnóstico estratégico é de `/trafego-diagnostico`. Crescimento é de `/trafego-escalar`.
 5. **Cache invalida em qualquer edição.** Dados pós-ação devem ser frescos, sempre.
 6. **Falha parcial não quebra relatório** em modo conta completa. Uma campanha problemática não pode esconder as outras 13.
 7. **Denominador zero retorna `null`, não erro.** Outras skills sabem interpretar.

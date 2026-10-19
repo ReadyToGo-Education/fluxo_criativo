@@ -7,7 +7,7 @@ Uso:
     python fetch-ad-insights.py [filtro_campanha] [periodo] [saida.json]
 
 Exemplos:
-    python fetch-ad-insights.py "VTSD - CV" last_30d vtsd_cv_30d.json
+    python fetch-ad-insights.py "CURSO X" last_30d curso_x_30d.json
     python fetch-ad-insights.py "" last_7d conta_completa_7d.json
 
 Saídas:
@@ -15,7 +15,7 @@ Saídas:
     - Stdout: apenas resumo compacto, seguro para Claude Code
 
 Erros corrigidos vs. tentativas anteriores:
-    1. effective_status REMOVIDO do /insights (causa 403 — só válido em /ads, /campaigns)
+    1. effective_status REMOVIDO do /insights (causa 403; só é válido em /ads e /campaigns)
     2. limit=100 fixo (limit>=200 com campos pesados causa 403 por complexidade da query)
     3. Campos divididos em 2 chamadas + merge por ad_id (evita query overly complex)
     4. JSON salvo em arquivo DENTRO do script, nunca impresso no stdout (evita truncamento)
@@ -112,8 +112,12 @@ def api_get(url, label="chamada"):
                 msg = corpo[:300]
             print(f"  HTTP {e.code} em {label} (pagina {pagina}): {msg}")
             break
+        except urllib.error.URLError as e:
+            print(f"  Falha de rede em {label} (página {pagina}): {e.reason}")
+            break
         except Exception as e:
-            print(f"  Erro em {label} (pagina {pagina}): {e}")
+            # Algumas exceções repetem a URL inteira (com o token). Mostrar só o tipo.
+            print(f"  Erro em {label} (página {pagina}): {type(e).__name__}")
             break
     return resultados
 
@@ -149,7 +153,7 @@ params_a = urllib.parse.urlencode({
     'limit':       100,         # NUNCA usar >100 com este volume de campos
     'access_token': TOKEN,
 })
-url_a = f'https://graph.facebook.com/v21.0/act_{ACCOUNT}/insights?{params_a}'
+url_a = f'https://graph.facebook.com/v25.0/act_{ACCOUNT}/insights?{params_a}'
 
 print(f"Buscando metricas de performance (chamada A)...")
 registros_a = api_get(url_a, "chamada A - performance")
@@ -171,7 +175,7 @@ params_b = urllib.parse.urlencode({
     'limit':       100,
     'access_token': TOKEN,
 })
-url_b = f'https://graph.facebook.com/v21.0/act_{ACCOUNT}/insights?{params_b}'
+url_b = f'https://graph.facebook.com/v25.0/act_{ACCOUNT}/insights?{params_b}'
 
 print(f"Buscando rankings de leilao (chamada B)...")
 registros_b = api_get(url_b, "chamada B - rankings")

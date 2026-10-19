@@ -1,14 +1,14 @@
 ---
 name: workshop-marketing:trafego-insights
-description: Lê métricas de campanhas Meta Ads (Facebook + Instagram) com cálculo automático de métricas derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate). Modo campanha única ou conta completa com ranking de urgência. É a fonte única de leitura que /trafego-otimizar, /trafego-escalar e /trafego-analise consomem. Use quando o aluno pedir "como está performando", "me mostra os números", "qual o CPA", "quanto gastei", "puxar relatório", "quais campanhas estão ativas".
+description: Lê métricas de campanhas Meta Ads (Facebook + Instagram) com cálculo automático de métricas derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate). Modo campanha única ou conta completa com ranking de urgência. É a fonte única de leitura que /trafego-otimizar, /trafego-escalar, /trafego-analise e /trafego-diagnostico consomem. Use quando o aluno pedir "como está performando", "me mostra os números", "qual o CPA", "quanto gastei", "puxar relatório", "quais campanhas estão ativas".
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 user-invocable: false
 ---
 
-# Trafego Insights. Leitura de Métricas Meta Ads
+# Tráfego Insights. Leitura de Métricas Meta Ads
 
-Lê dados de campanhas, conjuntos e anúncios do Meta Ads e calcula métricas derivadas que diferenciam diagnóstico raso de diagnóstico sênior. Não toma decisão. Apenas entrega dado bem formatado para o aluno olhar ou para outras skills (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-analise`) consumirem.
+Lê dados de campanhas, conjuntos e anúncios do Meta Ads e calcula métricas derivadas que diferenciam diagnóstico raso de diagnóstico sênior. Não toma decisão. Apenas entrega dado bem formatado para o aluno olhar ou para outras skills (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-analise`, `/trafego-diagnostico`) consumirem.
 
 A especificação técnica completa está em `.claude/skills/trafego-insights/SKILL.md`. Este command é o orquestrador que pede o contexto necessário, valida a conexão e invoca a skill.
 
@@ -17,45 +17,47 @@ A especificação técnica completa está em `.claude/skills/trafego-insights/SK
 ## Passo 0. Contexto e validação
 
 ### 0.1 Produto ativo
-Leia `meus-produtos/.ativo`. Se existir, leia também `meus-produtos/{ativo}/resumo-produto.md` (se o resumo não existir, gere conforme o CLAUDE.md) para inferir `ticket_brl` e `tipo_funil` quando o aluno não declarar.
+Leia `meus-produtos/.ativo`. Se existir, leia também `meus-produtos/{ativo}/resumo-produto.md` (se o resumo não existir, gere conforme a seção "Contexto Persistente do Negócio" do CLAUDE.md) para inferir `ticket_brl` (preço, seção Produto) e `tipo_funil` (tipo do produto) quando o aluno não declarar.
 
 ### 0.2 Conexão Meta (gate duro, passo zero obrigatório)
-Leia `META_AUTH_MODO` no `.env`.
+Leia só a linha `META_AUTH_MODO` do `.env` (`grep "^META_AUTH_MODO=" .env | cut -d= -f2-`).
 
-- **Se vazio ou ausente:** acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
-- **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool com prefixo `mcp__*__ads_*` está disponível. Se nenhuma estiver, pedir ao aluno para reabrir o Claude Code (MCP recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar.
-- **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env`. Se faltar algum, acionar `/trafego-conexao`.
+- **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive valor legado de versão antiga): acione `/trafego-conexao` antes de prosseguir. Não tente adivinhar nem cair em fallback. Esta verificação é o passo zero de toda skill `/trafego-*`.
+- **Se `MCP_CONECTOR`:** confirmar que existe tool do conector da Meta, procurando pelo final do nome (`ads_get_ad_accounts`, `ads_insights_performance_trend`), como manda a seção 5.1 da skill `trafego-conexao`. Se nenhuma estiver disponível, pedir ao aluno para reabrir o Claude (conector recém-adicionado às vezes precisa de reload). Se persistir, voltar a `/trafego-conexao` para diagnosticar. Conta não liberada no conector (`is_ads_mcp_enabled: false` ou "Ads MCP is gradually being rolled out"): avisar e oferecer o modo App pelo `/trafego-conexao`.
+- **Se `APP`:** confirmar com `grep -q` que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` existem no `.env` (seção "LEITURA SEGURA DO .env" do CLAUDE.md). Se faltar algum, acionar `/trafego-conexao`.
 
 A skill nunca prossegue sem essa validação passar.
 
-### 0.3 Selecao de conta de anuncio (multi-conta)
+### 0.3 Seleção de conta de anúncio (multi-conta)
 
-Apos a validacao da conexao, decidir qual conta usar:
+Após a validação da conexão, decidir qual conta usar:
 
-1. Ler `FB_AD_ACCOUNT_IDS` no `.env`. Lista de IDs separados por virgula.
-2. Se `FB_AD_ACCOUNT_IDS` nao existe ou esta vazio, usar `FB_AD_ACCOUNT_ID` direto.
+1. Ler `FB_AD_ACCOUNT_IDS` no `.env`. Lista de IDs separados por vírgula.
+2. Se `FB_AD_ACCOUNT_IDS` não existe ou está vazio, usar `FB_AD_ACCOUNT_ID` direto.
 3. Se `FB_AD_ACCOUNT_IDS` tem **1 conta**, usar `FB_AD_ACCOUNT_ID` direto sem perguntar.
 4. Se `FB_AD_ACCOUNT_IDS` tem **2 ou mais contas**, perguntar:
 
    ```
-   Qual conta de anuncio voce quer usar?
+   Qual conta de anúncio você quer usar?
 
-   1. {nome_conta_1} ({id_1})  ← padrao
+   1. {nome_conta_1} ({id_1})  ← padrão
    2. {nome_conta_2} ({id_2})
    3. {nome_conta_3} ({id_3})
 
-   Digite o numero ou aperte Enter para usar a padrao:
+   Digite o número ou aperte Enter para usar a padrão:
    ```
 
-   Para mostrar os nomes amigaveis das contas, fazer 1 chamada na Graph API:
-   ```bash
-   curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,name&limit=100&access_token=TOKEN"
-   ```
-   Filtrar apenas as que estao em `FB_AD_ACCOUNT_IDS`. Marcar como "padrao" a que esta em `FB_AD_ACCOUNT_ID`.
+   Para mostrar os nomes amigáveis das contas, fazer 1 leitura:
+   - **MCP:** tool `ads_get_ad_accounts`.
+   - **APP:**
+     ```bash
+     curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,name&limit=100&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
+     ```
+   Filtrar apenas as que estão em `FB_AD_ACCOUNT_IDS`. Marcar como "padrão" a que está em `FB_AD_ACCOUNT_ID`.
 
-5. Salvar a conta escolhida em variavel local da execucao (`AD_ACCOUNT_ID_ATUAL`). Nao sobrescrever o `.env`.
+5. Salvar a conta escolhida em variável local da execução (`AD_ACCOUNT_ID_ATUAL`). Não sobrescrever o `.env`.
 
-### 0.3 Ler especificação da skill
+### 0.4 Ler especificação da skill
 Leia `.claude/skills/trafego-insights/SKILL.md` para carregar a lógica completa de cálculo de métricas, janelas por trilha, métricas derivadas e formato de output. Esta skill é a fonte de verdade.
 
 ---
@@ -76,7 +78,7 @@ Digite o número:
 
 - **Opção 1:** ir para Passo 2A.
 - **Opção 2:** ir para Passo 2B.
-- **Opção 3:** repetir Passo 2A duas vezes e gerar comparativo no Passo 4.
+- **Opção 3:** repetir Passo 2A duas vezes e gerar comparativo no Passo 5.
 
 ---
 
@@ -89,9 +91,9 @@ Me passa o ID ou o nome da campanha.
 a lista, eu listo as campanhas ativas da conta primeiro.)
 ```
 
-- **Se aluno colar ID** (numérico, ~17 dígitos): seguir.
+- **Se aluno colar ID** (numérico, cerca de 17 dígitos): seguir.
 - **Se aluno colar nome:** chamar a skill em modo `escopo: conta_completa` apenas para listar campanhas e pedir confirmação do match.
-- **Se aluno pedir lista:** chamar listagem rápida (Fase de listagem do modo conta completa, sem drill-down) e mostrar com IDs.
+- **Se aluno pedir lista:** chamar listagem rápida (fase de listagem do modo conta completa, sem drill-down) e mostrar com IDs.
 
 ---
 
@@ -103,7 +105,7 @@ Pergunte:
 Quer drill-down nas campanhas críticas?
 
 1. Sim (puxa as 3 janelas e detalha conjuntos e anúncios das top 5
-   piores. Mais demorado mas mais útil)
+   piores. Mais demorado, mas mais útil)
 2. Não (só ranking de urgência, mais rápido)
 
 Digite o número:
@@ -117,8 +119,8 @@ Antes de chamar a skill, preencha os inputs:
 
 ### 3.1 `ticket_brl`
 1. Se o aluno declarou explicitamente, usar.
-2. Se não, tentar inferir do `resumo-produto.md` do produto ativo.
-3. Se não conseguir inferir, perguntar:
+2. Se não, inferir do preço na seção Produto do `resumo-produto.md`.
+3. Se não conseguir inferir (ou a campanha vende outra oferta), perguntar:
    ```
    Qual o ticket do produto que essa campanha vende?
    (ex: R$47, R$497, R$1.997)
@@ -150,13 +152,13 @@ Antes de chamar a skill, preencha os inputs:
 
 ## Passo 4. Execução
 
-🔍 Próximo passo: puxar dados da Graph API e calcular métricas derivadas. Tempo estimado: cerca de 30 segundos.
+🔍 Próximo passo: puxar os dados da conta e calcular as métricas derivadas. Tempo estimado: cerca de 30 segundos.
 
 Aplicar a especificação da skill `.claude/skills/trafego-insights/SKILL.md`:
 
 1. Detectar atribuição da conta.
 2. Puxar as 3 janelas da trilha (em paralelo quando possível).
-3. Calcular métricas derivadas (connect rate, taxa de conversão da página, taxa de conversão do anúncio, taxas de carrinho/checkout, custo por etapa).
+3. Calcular métricas derivadas (connect rate, taxa de conversão da página, taxa de conversão do anúncio, taxas de carrinho e checkout, custo por etapa).
 4. Marcar `confiabilidade` (baixa/media/alta) por janela com base no volume de eventos.
 5. Tratar denominadores zero como `null`.
 6. Se modo conta completa, ranquear por urgência e fazer drill-down nas top 5.
@@ -176,7 +178,8 @@ Apresentar em formato legível (não YAML cru). Estrutura sugerida:
 
 Trilha: [perpetuo_low | perpetuo_mid | perpetuo_high | lancamento_*]
 Janela de atribuição: [7d_click | 1d_click | ...]
-Status: [ACTIVE | PAUSED]
+Status: [ACTIVE | PAUSED] (efetivo: [effective_status])
+Criada em: [created_time]
 Budget diário: R$ [valor]
 
 ═══════════════════════════════════════
@@ -224,19 +227,19 @@ Anúncios: [N] ativos
 ### 5.2 Modo conta completa
 
 ```
-📊 Conta inteira. [N] campanhas ativas, [N] drill-down
+📊 Conta inteira. [N] campanhas ativas, [N] com drill-down
 
 Janela de atribuição: [valor]
 Total gasto no período: R$ [valor]
 
-🔴 CRÍTICAS ([N]) — CPA/CPL ≥ 1,7× target
+🔴 CRÍTICAS ([N]): CPA/CPL ≥ 1,7× target
 1. [Nome]   CPA R$ [valor] (target R$ [valor], +[X]%)
 2. ...
 
-🟡 ATENÇÃO ([N]) — CPA/CPL 1,3 a 1,7× target
+🟡 ATENÇÃO ([N]): CPA/CPL de 1,3 a 1,7× target
 1. [Nome]   ...
 
-🟢 SAUDÁVEIS ([N]) — CPA/CPL ≤ target
+🟢 SAUDÁVEIS ([N]): CPA/CPL ≤ target
 1. [Nome]   ...
 
 [Se drill-down: detalhar top 5 piores em sequência]
@@ -271,9 +274,12 @@ Após mostrar os dados, sugira:
 Próximos passos:
 
 - Para diagnosticar e propor ajustes: /trafego-otimizar
+- Para investigar a causa de um resultado (falso vencedor, hipóteses,
+  auditoria da estrutura): /trafego-diagnostico
 - Para escalar uma campanha que está performando: /trafego-escalar
 - Para análise narrada com terminologia VTSD (Mandala, Furadeira,
   Identidades): /trafego-analise
+- Para acompanhar a conta num painel: /trafego-dashboard
 - Para puxar os mesmos dados em outra janela: roda /trafego-insights
   de novo (cache de 5 min, então repete sem custo)
 ```
@@ -304,20 +310,21 @@ Caminho absoluto a exibir: `{raiz-do-projeto}\meus-produtos\{ativo}\entregas\tra
 
 ---
 
-## Cache e re-execução
+## Cache e reexecução
 
-A skill mantém cache de 5 minutos por campanha (chave: `object_id` + `nivel` + `janelas` + `janela_atribuicao`). Se o aluno rodar `/trafego-insights` na mesma campanha duas vezes em menos de 5 min, retorna do cache.
+A skill mantém cache de 5 minutos em memória e cache em arquivo `.md` em `meus-produtos/{ativo}/trafego/insights/` (regras em `.claude/skills/trafego-insights/sub-skills/cache.md`). Se o aluno rodar `/trafego-insights` na mesma campanha duas vezes em menos de 5 min, retorna do cache.
 
-Para forçar dado fresco, o aluno pode dizer "puxa de novo sem cache" ou "atualiza dados". Se outro command `/trafego-*` editou a campanha (pause, update budget, duplicate), o cache é invalidado automaticamente.
+Para forçar dado fresco, o aluno pode dizer "puxa de novo sem cache" ou "atualiza dados". Se outro command `/trafego-*` editou a campanha (pausa, ajuste de budget, duplicação), o cache é invalidado automaticamente.
 
 ---
 
 ## Princípios que este command nunca viola
 
 1. **Nunca seguir sem `META_AUTH_MODO` configurado.** Aciona `/trafego-conexao` antes.
-2. **Nunca tomar decisão.** Só entrega dado. Diagnóstico mora em `/trafego-otimizar`.
+2. **Nunca tomar decisão.** Só entrega dado. Diagnóstico mora em `/trafego-otimizar` e `/trafego-diagnostico`.
 3. **Sempre declarar a janela de atribuição** no output. Sem isso, dado não tem significado.
 4. **Sempre cruzar 3 janelas da trilha** quando o tipo de funil e ticket são conhecidos.
 5. **Nunca chamar tool de edição.** Leitura é leitura.
-6. **Nunca inventar métricas.** Se a Graph API não retornou, marcar `null` ou `dados_disponiveis: false`.
+6. **Nunca inventar métricas.** Se a API não retornou, marcar `null` ou `dados_disponiveis: false`.
 7. **Em modo conta completa, falha parcial preserva o relatório das outras campanhas.**
+8. **Nunca exibir o token nem o conteúdo do `.env`.** Presença com `grep -q`, uso por substituição dentro do `curl`.

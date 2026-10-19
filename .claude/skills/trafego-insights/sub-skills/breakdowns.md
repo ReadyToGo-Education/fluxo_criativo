@@ -8,16 +8,16 @@ Esta sub-skill mapeia os breakdowns disponíveis na Graph API que o `/trafego-in
 
 | Breakdown (param Graph API) | Valor exemplo | Output que consome | Limitação |
 |---|---|---|---|
-| `age` | "25-34" | analise [4] Geo & Demografia | Combinável com `gender` |
-| `gender` | "female" \| "male" \| "unknown" | analise [4] Geo & Demografia | Combinável com `age` |
-| `country` | "BR" | analise [4] Geo (capital vs interior parcial) | Top-level |
-| `region` | "São Paulo" | analise [4] Geo (estado) | Combinável com `country` |
-| `dma` | "Sao Paulo" (Designated Market Area) | analise [4] Geo (capital vs interior fino) | Apenas para mercados com DMA mapeado |
-| `publisher_platform` | "facebook" \| "instagram" \| "audience_network" \| "messenger" | analise [2] Performance, [6] Investigação | — |
-| `platform_position` | "feed" \| "story" \| "reels" \| "marketplace" \| "instream_video" | analise [2], [6] | Combinável com `publisher_platform` |
-| `device_platform` | "mobile" \| "desktop" | analise [6] Investigação | — |
-| `impression_device` | "iphone" \| "android_smartphone" \| "desktop" \| "tablet" | analise [6] Investigação | NÃO distingue Wi-Fi vs dados móveis. Marcar como limitação. |
-| `hourly_stats_aggregated_by_advertiser_time_zone` | "00:00:00 - 00:59:59" | analise [5] Timing (horário) | Combinável com data range |
+| `age` | "25-34" | análise [4] Geo & Demografia | Combinável com `gender` |
+| `gender` | "female" \| "male" \| "unknown" | análise [4] Geo & Demografia | Combinável com `age` |
+| `country` | "BR" | análise [4] Geo (nível país) | Top-level |
+| `region` | "São Paulo" | análise [4] Geo (estado) | Combinável com `country` |
+| `dma` | "Sao Paulo" (Designated Market Area) | análise [4] Geo (pouco útil no Brasil) | Apenas para mercados com DMA mapeado |
+| `publisher_platform` | "facebook" \| "instagram" \| "audience_network" \| "messenger" | análise [2] Performance, [6] Investigação | Combinável com `platform_position` |
+| `platform_position` | "feed" \| "story" \| "reels" \| "marketplace" \| "instream_video" | análise [2], [6] | Combinável com `publisher_platform` |
+| `device_platform` | "mobile" \| "desktop" | análise [6] Investigação | Combinável com `age` |
+| `impression_device` | "iphone" \| "android_smartphone" \| "desktop" \| "tablet" | análise [6] Investigação | NÃO distingue Wi-Fi vs dados móveis. Marcar como limitação. |
+| `hourly_stats_aggregated_by_advertiser_time_zone` | "00:00:00 - 00:59:59" | análise [5] Timing (horário) | Combinável com data range |
 
 ---
 
@@ -25,10 +25,10 @@ Esta sub-skill mapeia os breakdowns disponíveis na Graph API que o `/trafego-in
 
 A Graph API aceita até 2 breakdowns na mesma chamada (com restrições). Combinações comuns:
 
-- `age, gender` — split demográfico completo
-- `country, region` — geografia hierárquica
-- `publisher_platform, platform_position` — onde aparece e em qual posição
-- `age, device_platform` — quem usa cada dispositivo
+- `age, gender`: split demográfico completo
+- `country, region`: geografia hierárquica
+- `publisher_platform, platform_position`: onde aparece e em qual posição
+- `age, device_platform`: quem usa cada dispositivo
 
 **Combinações proibidas pela API:**
 - `hourly_stats` + qualquer outro breakdown em ATIVO (só funciona em períodos fechados)
@@ -41,9 +41,9 @@ Quando o aluno pedir uma combinação proibida, fazer 2 chamadas separadas e cru
 
 ## 3. Mapa output → breakdowns necessários
 
-| Output da analise | Breakdowns que pede |
+| Output da análise | Breakdowns que pede |
 |---|---|
-| [1] Diagnóstico Rápido | `base` (sem breakdown) — só métricas agregadas |
+| [1] Diagnóstico Rápido | `base` (sem breakdown), só métricas agregadas |
 | [2] Performance & Funil | `publisher_platform`, `platform_position` (uma chamada cada) |
 | [3] Criativos & Copy | `base` + `publisher_platform` (qual posicionamento performa cada criativo) |
 | [4] Geo & Demografia | `age, gender`, `country`, `region`, `dma` (4 chamadas cacheadas) |
@@ -112,7 +112,7 @@ campanha:
       ...
 ```
 
-A skill `/trafego-analise` consome esse array e narra (ex: "mulheres 25-34 convertem por R$ 12 — 60% mais barato que a média da conta").
+A skill `/trafego-analise` consome esse array e narra (ex: "mulheres 25-34 convertem por R$ 12, 60% mais barato que a média da conta").
 
 ---
 
@@ -135,7 +135,7 @@ Próxima vez que o aluno pedir o output [4] no mesmo período, a skill lê os 4 
 
 1. **Wi-Fi vs dados móveis:** a Meta não expõe esse breakdown via API pública. `impression_device` distingue dispositivo (iPhone, Android, desktop), mas não tipo de conexão. Quando o aluno perguntar, responder com a limitação e usar `impression_device` como proxy parcial.
 
-2. **DMA fora dos EUA:** `dma` é menos rico no Brasil. Para split capital vs interior brasileiro, usar `region` (estados) e cruzar manualmente com lista de capitais.
+2. **DMA fora dos EUA:** `dma` é menos rico no Brasil. No Brasil, usar `region` (estados): a API não entrega granularidade de cidade, então a análise geográfica fica no nível de estado e região do país.
 
 3. **Breakdown + ad ativo:** alguns breakdowns só funcionam em períodos fechados (ex: `hourly_stats` em campanhas pausadas). Se a campanha está ativa hoje e o aluno pediu hoje, alertar e usar período de ontem.
 

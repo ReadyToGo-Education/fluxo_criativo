@@ -3,7 +3,7 @@ name: trafego-analise/comparativo
 description: Confronta duas campanhas Meta Ads lado a lado, calculando métricas derivadas VTSD (connect rate, hook rate, hold rate, play-through rate, CPA/CPL, custo por etapa do funil) e entregando diagnóstico de qual vence em cada dimensão, qual gargalo a perdedora tem e qual das duas escalar.
 ---
 
-# Output [10] — Comparativo A x B
+# Output [10]. Comparativo A x B
 
 Confronta duas campanhas do mesmo período, calculando métricas derivadas para cada uma e identificando qual vence em cada dimensão do funil VTSD. Útil para decidir qual escalar, qual pausar e entender qual elemento do método está fazendo a diferença.
 
@@ -36,15 +36,17 @@ Período: conforme escolha do aluno no Passo 3. Não perguntar novamente.
 Acrescentar na chamada de cada campanha:
 
 ```
-landing_page_views,outbound_clicks,
+outbound_clicks,
 unique_clicks,unique_link_clicks_ctr
 ```
+
+> **Nota de API:** `landing_page_views` é inválido no parâmetro `fields` da Insights API (erro 400). O valor de visualizações da página de destino vem do array `actions` (action_type = `landing_page_view`), já retornado nos campos base. Usar esse valor nas fórmulas que citam `landing_page_views` (Connect Rate, Lead Rate, Custo por LP View etc.).
 
 ### Chamadas adicionais (curl exato)
 
 Fazer **duas chamadas separadas**, uma por campanha. Se o aluno informou nomes em vez de IDs, fazer primeiro a chamada de listagem abaixo para resolver os IDs.
 
-**Chamada 10a — Listagem de campanhas (só se o aluno informou nomes)**
+**Chamada 10a. Listagem de campanhas (só se o aluno informou nomes)**
 
 ```bash
 # Modo APP
@@ -59,13 +61,13 @@ Exibir lista numerada, pedir confirmação do match de nome para cada campanha, 
 
 **Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=campaign` para obter IDs.
 
-**Chamada 10b — Insights da Campanha A**
+**Chamada 10b. Insights da Campanha A**
 
 ```bash
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_A_ID}/insights
   ?fields=campaign_id,campaign_name,spend,impressions,reach,frequency,clicks,ctr,cpm,cpc,
-    outbound_clicks,landing_page_views,unique_clicks,unique_link_clicks_ctr,
+    outbound_clicks,unique_clicks,unique_link_clicks_ctr,
     actions,action_values,cost_per_action_type,
     video_p25_watched_actions,video_p50_watched_actions,
     video_p75_watched_actions,video_p95_watched_actions
@@ -74,13 +76,13 @@ curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_A_ID}/insights
   &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
 ```
 
-**Chamada 10c — Insights da Campanha B** (mesma estrutura, trocando o ID)
+**Chamada 10c. Insights da Campanha B** (mesma estrutura, trocando o ID)
 
 ```bash
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_B_ID}/insights
   ?fields=campaign_id,campaign_name,spend,impressions,reach,frequency,clicks,ctr,cpm,cpc,
-    outbound_clicks,landing_page_views,unique_clicks,unique_link_clicks_ctr,
+    outbound_clicks,unique_clicks,unique_link_clicks_ctr,
     actions,action_values,cost_per_action_type,
     video_p25_watched_actions,video_p50_watched_actions,
     video_p75_watched_actions,video_p95_watched_actions
@@ -95,7 +97,7 @@ curl -s "https://graph.facebook.com/v25.0/{CAMPAIGN_B_ID}/insights
 
 ### Referência de produto
 
-Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo das campanhas informadas:
+Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e o tipo de produto. Não perguntar de novo. Inferir tipo de funil pelo objetivo das campanhas informadas:
 
 - `OUTCOME_SALES` → funil de venda direta → métrica-norte = **CPA** (e ROAS se pixel de compra ativo)
 - `OUTCOME_LEADS` → funil de captação → métrica-norte = **CPL**
@@ -104,16 +106,16 @@ Se as duas campanhas tiverem objetivos diferentes, alertar que comparação dire
 
 | Tipo de funil | Ticket | CPA máximo saudável | ROAS mínimo saudável |
 |---|---|---|---|
-| Venda direta — low ticket | até R$ 97 | ticket x 0,40 | 2,5x |
-| Venda direta — ticket médio | R$ 98 a R$ 497 | ticket x 0,30 | 3,0x |
-| Venda direta — high ticket | acima de R$ 497 | ticket x 0,25 | 4,0x |
-| Captação de leads | qualquer | CPL-alvo: ler do resumo ou perguntar | — |
+| Venda direta: low ticket | até R$ 97 | ticket x 0,40 | 2,5x |
+| Venda direta: ticket médio | R$ 98 a R$ 497 | ticket x 0,30 | 3,0x |
+| Venda direta: high ticket | acima de R$ 497 | ticket x 0,25 | 4,0x |
+| Captação de leads | qualquer | CPL-alvo: ler do resumo ou perguntar | - |
 
 ---
 
 ## Fórmulas de cálculo
 
-Calcular para cada campanha **antes** de montar a tabela. Para denominadores zero ou campos ausentes: marcar `—` na tabela (nunca inventar).
+Calcular para cada campanha **antes** de montar a tabela. Para denominadores zero ou campos ausentes: marcar `-` na tabela (nunca inventar).
 
 | Métrica derivada | Fórmula | Elemento VTSD |
 |---|---|---|
@@ -167,7 +169,7 @@ Se os objetivos das duas campanhas forem diferentes, alertar aqui antes de pross
 
 Calcular todas as métricas derivadas antes de montar a tabela. Mostrar o vencedor em cada linha conforme a regra: menor é melhor em custo (CPA, CPL, CPM, Custo por LP View), maior é melhor nas demais.
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 COMPARATIVO A x B
@@ -210,7 +212,7 @@ VENCEDORA NA MÉTRICA-NORTE: {A | B}
    ROAS: {melhor}x vs {pior}x
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 COMPARATIVO A x B
@@ -251,7 +253,7 @@ VENCEDORA NA MÉTRICA-NORTE: {A | B}
 
 **Marcação de vencedora:** `<- A` ou `<- B` na coluna da direita. Se a diferença for menor que 5%, marcar `aprox.` (empate técnico).
 
-**Linhas de LP View:** omitir Connect Rate, Checkout Rate e Lead Rate se `landing_page_views` não retornar para nenhuma das campanhas. Alertar: "LP views não rastreado. Conecte o evento no pixel no Gerenciador de Eventos para ver o funil completo."
+**Linhas de LP View:** omitir Connect Rate, Checkout Rate e Lead Rate se `landing_page_views` não retornar para nenhuma das campanhas. Alertar: "LP views não rastreado. Conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
 
 ---
 
@@ -276,10 +278,10 @@ mais alinhado ao público. {Explicação em 2 linhas do que isso significa na pr
 | Checkout Rate | Oferta | Preço, garantia ou stack de valor não convencem quem chegou na página |
 | Conversion Rate | Furadeira + Decorados | O checkout não reforça o método e os benefícios o suficiente |
 | Lead Rate | Isca Digital | A oferta de captura não é suficientemente atraente |
-| CPM | Leilão | Uma das campanhas está pagando mais caro por atenção — pode ser criativo fadigado ou público mais concorrido |
+| CPM | Leilão | Uma das campanhas está pagando mais caro por atenção: pode ser criativo fadigado ou público mais concorrido |
 | Frequência | Fadiga | Uma das campanhas está saturando o mesmo público |
 
-Complementar com a relação entre as métricas do funil para precisar onde o volume é perdido (ex: "A venceu em CTR mas B venceu em Connect Rate — o criativo de A atrai mais cliques, mas a página de B converte melhor quem chega"). Indicar o elemento VTSD em jogo.
+Complementar com a relação entre as métricas do funil para precisar onde o volume é perdido (ex: "A venceu em CTR mas B venceu em Connect Rate: o criativo de A atrai mais cliques, mas a página de B converte melhor quem chega"). Indicar o elemento VTSD em jogo.
 
 ---
 
@@ -319,14 +321,14 @@ Comparar diretamente Hook Rate e Hold Rate (criativo) versus Connect Rate (pági
 - Se ambas as diferenças forem expressivas, nomear qual é maior e indicar a prioridade de correção.
 
 ```
-Criativo (Hook Rate): A em {X%} vs B em {X%} — diferença de {N%}
-Criativo (Hold Rate): A em {X%} vs B em {X%} — diferença de {N%}
-Página (Connect Rate): A em {X%} vs B em {X%} — diferença de {N%}
+Criativo (Hook Rate): A em {X%} vs B em {X%}, diferença de {N%}
+Criativo (Hold Rate): A em {X%} vs B em {X%}, diferença de {N%}
+Página (Connect Rate): A em {X%} vs B em {X%}, diferença de {N%}
 
 O fator dominante é {criativo | página}: {explicação em 1 linha do que fazer}.
 ```
 
-**Linhas de vídeo:** omitir Hook Rate e Hold Rate se nenhuma das campanhas tiver vídeo. Registrar na narrativa: "Sem criativo de vídeo — métricas de retenção não disponíveis. Usar CTR como proxy de atenção do criativo."
+**Linhas de vídeo:** omitir Hook Rate e Hold Rate se nenhuma das campanhas tiver vídeo. Registrar na narrativa: "Sem criativo de vídeo, métricas de retenção não disponíveis. Usar CTR como proxy de atenção do criativo."
 
 **Formatos assimétricos (vídeo vs. estático):** se apenas uma das campanhas tiver `video_p25_watched_actions > 0`, omitir a comparação de Hook Rate e Hold Rate e adicionar:
 
@@ -349,7 +351,7 @@ Recomendação:
 - {campanha_perdedora}: {pausar | revisar criativo | revisar página} via "trafego-otimizar"
 ```
 
-Se as campanhas tiverem eficiência muito próxima (diferença < 10% no CPA/CPL), declarar empate técnico e recomendar um A/B formal duplicando entidade no Gerenciador (variando 1 dimensão) antes de decidir escala.
+Se as campanhas tiverem eficiência muito próxima (diferença < 10% no CPA/CPL), declarar empate técnico e recomendar um A/B formal via "trafego-testes" antes de decidir escala.
 
 Incluir o handoff correspondente conforme o achado (ver tabela de handoffs abaixo).
 
@@ -373,7 +375,7 @@ MÉTRICAS DE VÍDEO
 
 Para cada métrica, nomear o elemento VTSD em jogo (Hook Rate = Urgência Oculta, Hold Rate = Decorados, Play-Through = Furadeira) e indicar se o valor está abaixo do benchmark saudável.
 
-Se nenhuma das campanhas tiver vídeo (`video_p25_watched_actions` ausente ou zero em ambas), substituir o bloco por: "Sem criativo de vídeo — métricas de retenção não disponíveis para este comparativo."
+Se nenhuma das campanhas tiver vídeo (`video_p25_watched_actions` ausente ou zero em ambas), substituir o bloco por: "Sem criativo de vídeo, métricas de retenção não disponíveis para este comparativo."
 
 Se os formatos forem assimétricos (uma tem vídeo, a outra não), omitir a tabela de vídeo e registrar: "Formatos diferentes entre A e B. Comparação de métricas de vídeo não é válida neste caso."
 
@@ -389,16 +391,16 @@ Verificar os sinais de fadiga em cada campanha:
 ```
 Fadiga detectada?
 
-Campanha A — Frequência: {X,X} | CTR: {X,XX%}
-→ {Sem sinal de fadiga | ALERTA: frequência acima de {N} — público saturado | ALERTA: CTR abaixo de 1% — criativo possivelmente cansado}
+Campanha A. Frequência: {X,X} | CTR: {X,XX%}
+→ {Sem sinal de fadiga | ALERTA: frequência acima de {N}, público saturado | ALERTA: CTR abaixo de 1%, criativo possivelmente cansado}
 
-Campanha B — Frequência: {X,X} | CTR: {X,XX%}
-→ {Sem sinal de fadiga | ALERTA: frequência acima de {N} — público saturado | ALERTA: CTR abaixo de 1% — criativo possivelmente cansado}
+Campanha B. Frequência: {X,X} | CTR: {X,XX%}
+→ {Sem sinal de fadiga | ALERTA: frequência acima de {N}, público saturado | ALERTA: CTR abaixo de 1%, criativo possivelmente cansado}
 ```
 
 **Limitação de tendência de CTR:** este output trabalha com dados agregados do período e não detecta se o CTR está caindo ao longo do tempo. Para detectar queda gradual de CTR (fadiga progressiva), usar o output [5] (Timing e Sazonalidade, chamada 5b), que fornece a série diária com `time_increment=1`.
 
-Se houver fadiga em alguma campanha, incluir handoff para Gerenciador de Audiences para criar nova audiência (Lookalike ou aberto) e rodar o mesmo criativo com público fresco.
+Se houver fadiga em alguma campanha, incluir handoff para "trafego-publicos" para criar nova audiência (Lookalike ou aberto) e rodar o mesmo criativo com público fresco.
 
 ---
 
@@ -412,7 +414,7 @@ Só após cobrir todas as perguntas obrigatórias, incluir blocos adicionais de 
 
 ---
 
-### Passo 0 — Checklist antes de montar qualquer bloco
+### Passo 0. Checklist antes de montar qualquer bloco
 
 Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar cobertura:
 
@@ -445,12 +447,12 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 ## Protocolo padrão
 
-1. **Diagnóstico** — apresentar Bloco 1 (confirmação das campanhas) e Bloco 2 (tabela com vencedora por linha). Informar quantas dimensões cada campanha venceu.
-2. **Causa provável** — relacionar as métricas. Ex: "A venceu em CTR mas B venceu em Connect Rate — o criativo de A atrai mais cliques, mas a página de B converte melhor quem chega. O problema de A está na promessa da página, não no anúncio." Ou: "Frequência de B acima de 4 e CTR médio abaixo do período anterior — sinal de fadiga, não é problema de público ou de página."
+1. **Diagnóstico**: apresentar a confirmação das campanhas comparadas e a tabela comparativa com vencedora por linha (ambas na Resposta 1). Informar quantas dimensões cada campanha venceu.
+2. **Causa provável**: relacionar as métricas. Ex: "A venceu em CTR mas B venceu em Connect Rate: o criativo de A atrai mais cliques, mas a página de B converte melhor quem chega. O problema de A está na promessa da página, não no anúncio." Ou: "Frequência de B acima de 4 e CTR médio abaixo do período anterior: sinal de fadiga, não é problema de público ou de página."
 
    **Limitação de tendência de CTR:** este output trabalha com dados agregados do período e não consegue responder se o CTR está caindo ao longo do tempo. Para detectar tendência de CTR (queda gradual, sazonalidade, fadiga por data), use o output [5] (Timing & Sazonalidade, chamada 5b), que fornece a série diária com `time_increment=1`. Este output mostra apenas a média do período completo.
-3. **No VTSD, isso significa...** — qual elemento do método está em jogo na diferença principal e no gargalo identificado. Ex: "Connect Rate 40% abaixo em B = Quadro na Parede quebrado. O anúncio de B está prometendo uma coisa e a página entregando outra. Reescrever a headline da página para espelhar o gancho do anúncio."
-4. **Ação recomendada** — 1 a 3 ações concretas com handoff para a skill executora correspondente.
+3. **No VTSD, isso significa...**: qual elemento do método está em jogo na diferença principal e no gargalo identificado. Ex: "Connect Rate 40% abaixo em B = Quadro na Parede quebrado. O anúncio de B está prometendo uma coisa e a página entregando outra. Reescrever a headline da página para espelhar o gancho do anúncio."
+4. **Ação recomendada**: 1 a 3 ações concretas com handoff para a skill executora correspondente.
 
 ---
 
@@ -458,27 +460,50 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Campanha vencedora com CPA dentro do benchmark e frequência < 3 | "trafego-escalar" — candidata a escala vertical ou horizontal |
-| Campanha perdedora com gasto alto e conversões zero | "trafego-otimizar" — pausar via ação em lote (filtro: gasto > X e zero conversão) |
-| Diferença principal em Hook Rate ou Hold Rate | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B de criativo com nova Urgência Oculta ou Decorado diferente |
-| Diferença principal em Connect Rate | "feedback-pagina" — headline e promessa da página não batem com o anúncio |
-| Diferença principal em Checkout Rate ou Conversion Rate | "feedback-pagina" ou "pagina-checkout" — revisar oferta, garantia e stack de valor |
-| Diferença principal em Lead Rate | "copy-pagina" — revisar isca digital e formulário de captura |
-| Frequência acima de 4 em alguma das campanhas | Gerenciador de Audiences — criar nova audience (Lookalike ou aberto) para rodar a mesma campanha |
-| Campanhas com eficiência próxima (diferença < 10% no CPA/CPL) | Duplicar entidade no Gerenciador (variando 1 dimensão) — A/B formal antes de decidir qual escalar |
-| Objetivos diferentes entre A e B (SALES vs. LEADS) | Não comparar CPA vs. CPL — avaliar cada uma contra seu benchmark individual |
+| Campanha vencedora com CPA dentro do benchmark e frequência < 3 | "trafego-escalar": candidata a escala vertical ou horizontal |
+| Campanha perdedora com gasto alto e conversões zero | "trafego-otimizar": pausar via ação em lote (filtro: gasto > X e zero conversão) |
+| Diferença principal em Hook Rate ou Hold Rate | "trafego-testes": A/B de criativo com nova Urgência Oculta ou Decorado diferente |
+| Diferença principal em Connect Rate | "feedback-pagina": headline e promessa da página não batem com o anúncio ("trafego-oferta-funil" para confirmar o gargalo) |
+| Diferença principal em Checkout Rate ou Conversion Rate | "feedback-pagina" ou "pagina-checkout": revisar oferta, garantia e stack de valor |
+| Diferença principal em Lead Rate | "copy-pagina": revisar isca digital e formulário de captura |
+| Frequência acima de 4 em alguma das campanhas | "trafego-publicos": criar nova audience (Lookalike ou aberto) para rodar a mesma campanha |
+| Campanhas com eficiência próxima (diferença < 10% no CPA/CPL) | "trafego-testes": A/B formal antes de decidir qual escalar |
+| Objetivos diferentes entre A e B (SALES vs. LEADS) | Não comparar CPA vs. CPL: avaliar cada uma contra seu benchmark individual |
 
 ---
 
 ## Mapeamento HTML (export via `_export-html.md`)
 
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** O vocabulário antigo (`.table`, `.kpi`, `.kpi-grid`, `.callout`, `.pitch-box`, `.regra`, `.up`, `.down`, `--neon`, `--rust`) foi descontinuado e NÃO existe no CSS embutido: usá-lo gera seção sem estilo.
+
 | Bloco do output narrado | Componente do design system |
 |---|---|
-| Confirmação das campanhas comparadas (Bloco 1) | `.callout` com nomes, IDs e período |
-| Tabela comparativa lado a lado (Bloco 2, todas as métricas) | `.table` com colunas: métrica / valor A / valor B / vencedora — classe `.up` na vencedora, `.down` na perdedora por linha |
-| Linha de totais (CPA, CPL ou ROAS final) | `.kpi-grid` com 2 `.kpi` lado a lado, `.up` no melhor e `.down` no pior |
-| Frase "A maior diferença está em..." (Parte 1 do Bloco 3) | `.callout` com destaque na métrica divergente |
-| Gargalo da campanha perdedora (Parte 2 do Bloco 3) | `.regra.alerta` com benchmark de referência |
-| Frase "No VTSD isso significa..." | `.callout` |
-| Veredicto e recomendação final (Parte 3) | `.pitch-box` |
-| Handoffs para skills executoras | `.term.next` dentro de `.terms` no rodapé |
+| KPIs globais (métrica-norte A, métrica-norte B, vencedora, nº de dimensões vencidas) | `.stats-grid` com `.stat-card` (`.value.green` na vencedora, `.value.red` na perdedora) |
+| Confirmação das campanhas comparadas (Resposta 1, cabeçalho) | `.diag-box` com nomes (IDs mascarados nos últimos 4 dígitos) e período |
+| Tabela comparativa lado a lado (Resposta 1, todas as métricas) | `.card` + `table` com colunas métrica / A / B / vencedora; valor vencedor por linha em `style="color:var(--green)"` |
+| Totais finais (CPA, CPL ou ROAS) | `.stats-grid` com 2 `.stat-card` lado a lado (`.value.green` no melhor, `.value.red` no pior) |
+| Cada "Resposta N" (2 a 7) | `.section` com `.section-header` (`.section-num` + `.section-title` + `.section-question`) |
+| "A maior diferença está em..." (Resposta 2) | `.diag-box` com destaque na métrica divergente |
+| Gargalo da campanha perdedora (Resposta 3) | `.diag-box.red` com a faixa de benchmark de referência |
+| Métricas de vídeo lado a lado (Resposta 6) | `.card` + `.fmt-compare` com um `.fmt-box` por campanha (Hook / Hold / Play-Through) |
+| Fadiga em A e B (Resposta 7) | `.card` + `.fmt-compare` (Frequência + CTR por campanha); alerta em `.diag-box.yellow` |
+| Diagnóstico / "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Veredicto e recomendação final (Resposta 5) | `.action-box` |
+| Handoffs para skills executoras | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas nas seções **3.2.1** e **3.2.1.1** do `_export-html.md`). Gerar cada gráfico SOMENTE com dado real; se um campo não retornar (ex: campanha sem vídeo), omitir o gráfico correspondente (nunca inventar).
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Funil duplo A × B (Impressões → Cliques → LPV → Vendas) | SVG funil duplo (receita J, helper `dual_funnel`) | Chamadas 10b/10c por campanha | `.chart-card` full-width, topo da "Visão visual" |
+| Retenção de vídeo A × B | `.fmt-compare` (ou vbars G via helper) | `video_p25/p50/p75/p95_watched_actions` de 10b/10c | `.charts-grid`, 1ª coluna: **omitir** se nenhuma campanha tiver vídeo ou se os formatos forem assimétricos |
+| CTR ao longo do tempo (fadiga) | SVG linha (receita F, helper `line`) | CTR período anterior × atual por campanha (10b/10c + WoW) | `.charts-grid`, 2ª coluna: usar só os pontos que existirem (uma campanha pode não ter janela anterior) |
+| Tabela comparativa A × B | `.card` + `table` | 10b/10c (todas as métricas derivadas) | dentro da Resposta 1 |
+
+**Funil duplo (receita J via helper):** montar o spec com os 4 estágios reais de cada campanha, gravar num arquivo e rodar `{PY} .claude/skills/trafego-analise/scripts/trafego_chart_geom.py dual_funnel < /tmp/spec.json` (`{PY}` = interpretador detectado na sessão, `python3` ou `py -3`). O helper devolve `a.stages[]` e `b.stages[]` com `width_pct` (largura em escala log do topo, mínimo 8) e `meta_pct` (taxa de conversão do estágio anterior). Template: `.dual-funnel-grid` com 2 `.dual-funnel-col`; em cada, um `.df-name` + os estágios como `.funnel-stage`/`.funnel-bar` (`style="width:{width_pct}%"`) + `.funnel-meta` com `{meta_pct}% do estágio anterior`. Colorir a barra de Vendas pela vencedora (verde quem converteu, neutro/vermelho quem zerou).
+
+**CTR (receita F via helper):** spec com `series` de uma entrada por campanha (`values` = [CTR anterior, CTR atual]); rodar `dots:true`. Se uma campanha não tiver janela anterior (campanha nova), renderizar só o ponto atual dela e registrar na legenda "sem histórico anterior". Eixo esquerdo em % de CTR.
+
+Regras dos gráficos: usar só cores da paleta; truncar nomes longos; funil duplo sempre via helper `.claude/skills/trafego-analise/scripts/trafego_chart_geom.py dual_funnel`; as métricas de vídeo só entram com `video_p25_watched_actions > 0` real em AMBAS as campanhas.

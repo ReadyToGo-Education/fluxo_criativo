@@ -17,7 +17,7 @@ Esta skill foi renomeada. Toda a lógica de conexão com o Meta Ads vive agora e
 
 ## O que fazer
 
-Acionar imediatamente a skill `/trafego-conexao` repassando os argumentos recebidos. Não duplicar lógica aqui — todo o fluxo (Passo 0 a Passo 4 + saída final + princípios) está mantido em `.claude/commands/trafego-conexao.md`.
+Acionar imediatamente a skill `/trafego-conexao` repassando os argumentos recebidos. Não duplicar lógica aqui: o fluxo é orquestrado por `.claude/commands/trafego-conexao.md` e a especificação completa está em `.claude/skills/trafego-conexao/SKILL.md`.
 
 ## Por que este arquivo existe
 

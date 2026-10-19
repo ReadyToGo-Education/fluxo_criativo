@@ -1,12 +1,12 @@
 # Cache Local de Insights em Arquivo .md
 
-Esta sub-skill define o sistema de cache em arquivo do `/trafego-insights`, complementar ao cache em memória de 5 minutos. Serve para evitar requisições redundantes à Graph API quando várias skills (analise, otimizar, escalar, regras, publicos, testes) precisam dos mesmos dados no mesmo período dentro da mesma sessão ou entre sessões próximas.
+Esta sub-skill define o sistema de cache em arquivo do `/trafego-insights`, complementar ao cache em memória de 5 minutos. Serve para evitar requisições redundantes à Graph API quando várias skills (`/trafego-analise`, `/trafego-otimizar`, `/trafego-escalar`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`) precisam dos mesmos dados no mesmo período dentro da mesma sessão ou entre sessões próximas.
 
 ---
 
 ## 1. Por que cache em arquivo
 
-O cache em memória da seção 7 do SKILL.md vive apenas dentro de uma chamada da skill. Se o aluno roda `/trafego-analise` e depois Gerenciador (Regras automáticas) segundos depois, ambos pedem os mesmos dados de período. Sem cache de arquivo, são duas requisições à Graph API. Com cache de arquivo, a segunda lê do disco.
+O cache em memória da seção 7 do SKILL.md vive apenas dentro de uma chamada da skill. Se o aluno roda `/trafego-analise` e depois `/trafego-regras` segundos depois, ambos pedem os mesmos dados de período. Sem cache de arquivo, são duas requisições à Graph API. Com cache de arquivo, a segunda lê do disco.
 
 ---
 
@@ -97,7 +97,7 @@ O bloco `## Payload` contém o output completo do `/trafego-insights` em JSON, i
 | `30d` (terminam hoje) | 24 horas |
 | Período histórico fechado (não inclui hoje) | 7 dias |
 
-Após o TTL, marcar status como `expired` e tratar como cache miss. Não deletar — apenas ignorar. (Histórico fica útil para auditoria.)
+Após o TTL, marcar status como `expired` e tratar como cache miss. Não deletar, apenas ignorar. (Histórico fica útil para auditoria.)
 
 ---
 
@@ -110,9 +110,9 @@ Skills que disparam invalidação:
 - `/trafego-otimizar` (pausa, ajuste de budget)
 - `/trafego-escalar` (aumento de budget, duplicação)
 - `/trafego-criar-campanha` (criação de campanha)
-- Gerenciador (Regras automáticas) (criação ou ativação de regra)
-- Gerenciador de Audiences (criação de audience — não muda métricas existentes mas pode invalidar lookalike sources)
-- Duplicar entidade no Gerenciador (variando 1 dimensão) (criação de adset/ad de teste)
+- `/trafego-regras` (criação ou ativação de regra)
+- `/trafego-publicos` (criação de audience: não muda métricas existentes, mas pode invalidar lookalike sources)
+- `/trafego-testes` (criação de adset/ad de teste)
 
 ### 6.2 Invalidação manual
 - Aluno pede explicitamente "atualizar dados" ou "puxar de novo": deletar arquivo `*.stale.md` correspondente.
@@ -149,7 +149,7 @@ def ler_insights(escopo, periodo, breakdowns, force_refresh=False):
 Arquivo opcional mas recomendado para inspeção humana. Listagem cronológica:
 
 ```markdown
-# Cache Index — Tráfego Insights
+# Cache Index. Tráfego Insights
 
 Última atualização: 2026-05-04 14:35
 
@@ -174,10 +174,10 @@ Toda skill de tráfego que precisa de métrica deve passar por `/trafego-insight
 | `/trafego-analise` | Lê para narrar os 9 outputs |
 | `/trafego-otimizar` | Lê para diagnóstico em 2 camadas. Após edição, invalida. |
 | `/trafego-escalar` | Lê para validar gatilhos. Após escalar, invalida. |
-| Gerenciador (Regras automáticas) | Lê para construir condições baseadas em valores atuais (ex: "CPA atual"). Após criar regra ativa, invalida. |
-| Gerenciador de Audiences | Lê para identificar audiences source mais valiosas (ex: lookalike de quem). Após criar audience, invalida. |
-| Gerenciador de Eventos | Não usa cache de insights (usa endpoint próprio do pixel) |
-| Duplicar entidade no Gerenciador (variando 1 dimensão) | Lê para identificar best-performer a duplicar. Após criar teste, invalida. |
+| `/trafego-regras` | Lê para construir condições baseadas em valores atuais (ex: "CPA atual"). Após criar regra ativa, invalida. |
+| `/trafego-publicos` | Lê para identificar audiences source mais valiosas (ex: lookalike de quem). Após criar audience, invalida. |
+| `/trafego-pixel` | Não usa cache de insights (usa endpoint próprio do pixel) |
+| `/trafego-testes` | Lê para identificar best-performer a duplicar. Após criar teste, invalida. |
 
 ---
 

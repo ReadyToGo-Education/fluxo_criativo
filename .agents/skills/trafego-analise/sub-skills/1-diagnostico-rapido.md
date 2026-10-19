@@ -1,6 +1,6 @@
-# Output [1] — Diagnóstico Rápido (60 segundos)
+# Output [1]. Diagnóstico Rápido (60 segundos)
 
-Visão geral pragmática que cabe numa olhada. Para o aluno que abre o Workshop e quer saber: "está tudo bem com minhas campanhas hoje?".
+Visão geral pragmática que cabe numa olhada. Para o aluno que abre o projeto e quer saber: "está tudo bem com minhas campanhas hoje?".
 
 ---
 
@@ -38,60 +38,69 @@ lpv = sum(
 )
 ```
 
-O `trafego_processar.py` faz isso automaticamente ao processar o cache do `trafego_fetch.py`. Não adicionar `landing_page_views` como campo separado na chamada — a API retorna HTTP 400.
+O `trafego_processar.py` faz isso automaticamente ao processar o cache do `trafego_fetch.py`. Não adicionar `landing_page_views` como campo separado na chamada: a API retorna HTTP 400.
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
-**IMPORTANTE — regras da Graph API que causaram erros reais:**
-- `effective_status` é parâmetro válido SOMENTE no endpoint `/campaigns`. **Nunca usar no endpoint `/insights`** — a API ignora silenciosamente ou retorna resultado vazio.
+**IMPORTANTE: regras da Graph API que causaram erros reais:**
+- `effective_status` é parâmetro válido SOMENTE no endpoint `/campaigns`. **Nunca usar no endpoint `/insights`**: a API ignora silenciosamente ou retorna resultado vazio.
 - Não usar `curl` com arrays JSON (`["ACTIVE"]`) no shell. O quoting varia entre Windows e Mac e causa "unexpected token". Usar sempre o `trafego_fetch.py` via Python.
 
 **Uso padrão (modo APP):**
 
-Todas as chamadas 1a, 1b, 1c e 1d são feitas por um único script Python que salva em cache local. Isso evita rate limit, encoding issues e problemas de shell cross-platform:
+Todas as chamadas 1a, 1b, 1c, 1d e 1e são feitas por um único script Python que salva em cache local. Isso evita rate limit, encoding issues e problemas de shell cross-platform:
 
 ```bash
-python3 .claude/skills/trafego-analise/scripts/trafego_fetch.py \
-  --account {CONTA_ATIVA_ID} \
-  --filtro "VTSD - CV" \
+{PY} .claude/skills/trafego-analise/scripts/trafego_fetch.py \
+  --account {AD_ACCOUNT_ID_ATUAL} \
+  --filtro "{ESCOPO_FILTRO_TEXTO}" \
   --periodo last_30d \
+  --status "{STATUS_FILTRO_LISTA}" \
   --output diagnostico \
   --project-root . \
   --cache-dir skill-analise/cache
 ```
 
-O script faz as 4 chamadas em sequência com retry em rate limit e salva o resultado em `skill-analise/cache/{account}_{periodo}_{filtro}_{output}.json`.
+`{PY}` é o interpretador detectado na sessão (`python3` ou `py -3`). `{STATUS_FILTRO_LISTA}` vem do Passo 0.55 do `SKILL.md` (ex: `ACTIVE,PAUSED,WITH_ISSUES`). Depois, rodar o `trafego_processar.py` com os mesmos argumentos (inclusive `--status`) e `--ticket` com o preço do `resumo-produto.md` (Passo 4 do `SKILL.md`).
 
-**Chamada 1b — Comparativo WoW (dentro do fetch):**
+O script faz a Chamada 0 (lista as campanhas com o status escolhido) e as 5 chamadas abaixo em sequência, com retry em rate limit, e salva o resultado em `skill-analise/cache/{account}_{periodo}_{filtro}_{status}_{output}.json`.
 
-Usa `date_preset` expandido com `time_increment` automático conforme o período principal:
+**Chamada 1b. Comparativo WoW (dentro do fetch):**
 
-| Período principal | Comparativo 1b | time_increment |
-|---|---|---|
-| `last_7d` | `last_14d` | 7 |
-| `last_14d` | `last_28d` | 14 |
-| `last_30d` | `last_60d` | 30 |
+Busca a janela imediatamente **anterior**, do mesmo tamanho do período principal, via `time_range` fechado (uma linha agregada por campanha: **sem** `time_increment`). A janela termina 1 dia antes do início do período principal:
 
-**Chamada 1c — Orçamentos** (endpoint `/campaigns`, único que aceita `effective_status`):
+| Período principal (1a) | Janela anterior (1b) |
+|---|---|
+| `last_7d` → `[hoje-7, hoje-1]` | `[hoje-14, hoje-8]` |
+| `last_14d` → `[hoje-14, hoje-1]` | `[hoje-28, hoje-15]` |
+| `last_30d` → `[hoje-30, hoje-1]` | `[hoje-60, hoje-31]` |
 
-`budget_remaining` só é populado para campanhas com **lifetime budget**. Para **daily budget**, cruzar `spend_hoje` (Chamada 1d) com `daily_budget` manualmente. A API retorna valores em centavos — dividir por 100 para obter reais.
+O `trafego_processar.py` compara o **agregado inteiro de 1a (atual) contra o agregado inteiro de 1b (anterior)**. Nunca fatiar 1b ao meio: todas as linhas de 1b têm a mesma `date_start`, então o split geraria dois pedaços da mesma semana anterior (comparativo falso). A contagem de campanhas pode diferir entre 1a e 1b (campanhas ligadas/pausadas entre as semanas): isso é esperado num WoW de grupo.
 
-**Chamada 1d — Gasto de hoje** (endpoint `/insights`, sem `effective_status`):
+**Chamada 1c. Orçamentos** (endpoint `/campaigns`, único que aceita `effective_status`; o fetch reaproveita a lista da Chamada 0):
 
-`date_preset=today` no endpoint de insights. O parâmetro `effective_status` **não existe** em insights — o filtro de campanhas ativas é feito no pós-processamento comparando os IDs das campanhas da chamada 1c.
+`budget_remaining` só é populado para campanhas com **lifetime budget**. Para **daily budget**, cruzar `spend_hoje` (Chamada 1d) com `daily_budget` manualmente. A API retorna valores em centavos: dividir por 100 para obter reais.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_insights_performance_trend` para 1b e 1d; `mcp__*__ads_get_ad_entities` com `entity_type=campaign` para 1c.
+**Chamada 1d. Gasto de hoje** (endpoint `/insights`, sem `effective_status`):
+
+`date_preset=today` no endpoint de insights. O parâmetro `effective_status` **não existe** em insights: o filtro de status é feito no pós-processamento comparando os IDs das campanhas da Chamada 0 (as mesmas da 1c).
+
+**Chamada 1e. Série diária** (endpoint `/insights`, nível campanha + `time_increment=1`):
+
+Puxa uma linha por campanha por dia no período principal, com o mesmo filtro de nome e status do 1a. O `trafego_processar.py` agrupa por `date_start` e entrega `serie_diaria` (lista por dia) + `serie_diaria_svg` (geometria pronta do gráfico de linha). A soma diária fecha com o agregado do 1a (mesma janela, mesmo filtro). Usado só para o gráfico de tendência do HTML: não entra em nenhuma das 5 respostas narradas.
+
+**Modo MCP_CONECTOR:** sem scripts e sem token. Usar `mcp__*__ads_get_ad_entities` em nível campanha para 1a (período atual), 1b (janela anterior do mesmo tamanho), 1c (orçamentos) e 1d (gasto de hoje), com a whitelist de campos do dicionário do MCP (ver **Contrato anti-erros** no `SKILL.md`). `mcp__*__ads_insights_performance_trend` só serve para a série diária da conta (1e), que alimenta o gráfico de tendência: ela não faz nível campanha. Aplicar o filtro de status cruzando com a lista de campanhas do Passo 0.6 do `SKILL.md`.
 
 ### Referência de produto (benchmarks)
 
-Ler do `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas (`OUTCOME_LEADS` = captação; `OUTCOME_SALES` = venda direta).
+Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`): preço e tipo de produto. Não perguntar de novo. Inferir tipo de funil pelo objetivo predominante das campanhas (`OUTCOME_LEADS` = captação; `OUTCOME_SALES` = venda direta).
 
 | Tipo de funil | Ticket | ROAS mínimo saudável | CPA máximo saudável |
 |---|---|---|---|
-| Venda direta — low ticket | ≤ R$ 97 | 2.5x | ticket × 0.40 |
-| Venda direta — ticket médio | R$ 98 a R$ 497 | 3.0x | ticket × 0.30 |
-| Venda direta — high ticket | > R$ 497 | 4.0x | ticket × 0.25 |
-| Captação de leads | qualquer | — | CPL-alvo: perguntar ao aluno se não estiver no resumo |
+| Venda direta: low ticket | ≤ R$ 97 | 2.5x | ticket × 0.40 |
+| Venda direta: ticket médio | R$ 98 a R$ 497 | 3.0x | ticket × 0.30 |
+| Venda direta: high ticket | > R$ 497 | 4.0x | ticket × 0.25 |
+| Captação de leads | qualquer | - | CPL-alvo: perguntar ao aluno se não estiver no resumo |
 
 ---
 
@@ -108,8 +117,8 @@ Montar ranking das top 3 campanhas por gasto com zero resultado:
 ```
 🚨 [QUEIMA]  {nome_campanha}
    Gasto: R$ {X} em {N} dias  ·  Conversões: 0
-   CPA implícito: infinito — cada real investido aqui está sendo descartado
-   Ação: pausar via "trafego-otimizar" — atalho "pausar com filtro" (gasto > X + zero conversão)
+   CPA implícito: infinito, cada real investido aqui está sendo descartado
+   Ação: pausar via "trafego-otimizar", atalho "pausar com filtro" (gasto > X + zero conversão)
 ```
 
 Se nenhuma campanha se enquadrar no critério, responder explicitamente: "Nenhuma campanha com gasto significativo e zero conversão identificada no período."
@@ -140,8 +149,8 @@ Critério: campanha com objetivo de tráfego frio (`OUTCOME_SALES` ou `LINK_CLIC
 ```
 🚨 [SATURAÇÃO]  {nome_campanha}
    Frequência: {X.X}  ·  CPM: R$ {Y}  ·  CTR: {Z%}
-   Mesmo público viu o criativo {X} vezes — leilão encarecendo, resposta caindo
-   Ação: criar nova audience no Gerenciador de Audiences (Lookalike ou público aberto) ou expandir targeting
+   Mesmo público viu o criativo {X} vezes: leilão encarecendo, resposta caindo
+   Ação: criar nova audience via "trafego-publicos" (Lookalike ou público aberto) ou expandir targeting
 ```
 
 **Below average rankings**
@@ -167,7 +176,7 @@ Gasto total              R$ {X}            R$ {Y}              {+/-Z%}
 Compras / Leads          {N}               {M}                 {+/-Z%}
 ROAS médio               {X.X}x            {Y.Y}x              {+/-Z%}
 CPA / CPL médio          R$ {X}            R$ {Y}              {+/-Z%}
-Campanhas ativas         {N}               —                   —
+Campanhas ativas         {N}               -                   -
 ```
 
 Se a Chamada 1b não retornar dados comparativos (ex: período customizado muito antigo), suprimir a coluna "Período anterior" e mostrar só os valores atuais, informando o motivo.
@@ -185,7 +194,7 @@ Para campanhas com **lifetime budget**: usar `budget_remaining` da Chamada 1c di
 🚨 [BUDGET]  {nome_campanha}
    Gasto hoje: R$ {X}  ·  Budget diário: R$ {Y}  ·  Restante estimado: R$ {Z}
    Risco: orçamento pode esgotar antes do horário nobre (18h-22h), pausando a veiculação
-   Ação: aumentar budget via "trafego-escalar" OU criar regra de alerta no Gerenciador (Regras automáticas)
+   Ação: aumentar budget via "trafego-escalar" OU criar regra de alerta via "trafego-regras"
 ```
 
 Se restante = 0 E campanha ainda ativa → sinal crítico imediato, listar no topo independente da ordem.
@@ -202,7 +211,7 @@ Calculado inteiramente a partir dos dados disponíveis nas chamadas 1a, 1b, 1c, 
 Score = (D1 × 0.20) + (D2 × 0.20) + (D3 × 0.25) + (D4 × 0.25) + (D5 × 0.10)
 ```
 
-#### Dimensão 1 — Diversidade criativa (peso 20%)
+#### Dimensão 1. Diversidade criativa (peso 20%)
 
 Proxy: número de campanhas ativas com `spend` > R$ 10 no período. A contagem real da Mandala (18 tipos) só é verificável no output [3].
 
@@ -215,7 +224,7 @@ Proxy: número de campanhas ativas com `spend` > R$ 10 no período. A contagem r
 | 1 | 15 |
 | 0 | 0 |
 
-#### Dimensão 2 — Saúde de públicos (peso 20%)
+#### Dimensão 2. Saúde de públicos (peso 20%)
 
 Percentual de campanhas ativas com `frequency` ≤ 3.
 
@@ -229,7 +238,7 @@ Percentual de campanhas ativas com `frequency` ≤ 3.
 
 Penalidade: se qualquer campanha tiver `frequency` > 6, subtrair 10 pontos desta dimensão (mínimo 0).
 
-#### Dimensão 3 — Eficiência de funil (peso 25%)
+#### Dimensão 3. Eficiência de funil (peso 25%)
 
 Connect rate = `landing_page_view` (do array `actions`) / `link_click` (do array `actions`), somando todas as campanhas.
 
@@ -255,7 +264,7 @@ Se `landing_page_view` não retornar para nenhuma campanha (pixel sem evento de 
 | 1% a 1.99% | 55 |
 | < 1% | 25 |
 
-#### Dimensão 4 — Performance financeira (peso 25%)
+#### Dimensão 4. Performance financeira (peso 25%)
 
 Para funil de **venda direta**: ROAS médio ponderado por spend (soma de `action_values` / soma de `spend`, usando tipo canônico de compra).
 
@@ -280,7 +289,7 @@ Para funil de **captação de leads**: CPL médio vs. benchmark do produto (calc
 
 Se conversões = 0 em todas as campanhas (pixel não rastreando): atribuir 0 pontos e alertar o aluno separadamente.
 
-#### Dimensão 5 — Consistência temporal (peso 10%)
+#### Dimensão 5. Consistência temporal (peso 10%)
 
 Requer Chamada 1b. Calcular variação de CPA (ou CPL) semana atual vs. semana anterior.
 
@@ -306,14 +315,14 @@ HEALTH SCORE: {XX}/100  {emoji}
 
 | Score final | Classificação | O que significa |
 |---|---|---|
-| 85 a 100 | 🟢 Excelente | Conta saudável — foco em escala |
-| 70 a 84 | 🟡 Boa | Funcionando bem — otimizações pontuais |
+| 85 a 100 | 🟢 Excelente | Conta saudável: foco em escala |
+| 70 a 84 | 🟡 Boa | Funcionando bem: otimizações pontuais |
 | 50 a 69 | 🟠 Regular | Problemas específicos a resolver antes de escalar |
-| 0 a 49 | 🔴 Crítica | Parar escalada — diagnóstico profundo urgente |
+| 0 a 49 | 🔴 Crítica | Parar escalada: diagnóstico profundo urgente |
 
 ---
 
-### Análise adicional — Próximo passo VTSD
+### Análise adicional. Próximo passo VTSD
 
 Indicar em 1 linha qual output rodar a seguir, conforme o sintoma dominante identificado nas respostas acima:
 
@@ -338,7 +347,7 @@ Só após cobrir todas as perguntas obrigatórias, incluir blocos adicionais de 
 
 ---
 
-### Passo 0 — Checklist antes de montar qualquer bloco
+### Passo 0. Checklist antes de montar qualquer bloco
 
 Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar cobertura:
 
@@ -347,7 +356,7 @@ Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar 
     → coberto? Se não: calcular CPR e rankear campanhas por gasto/resultado, identificando a maior queimadora
 
 [ ] Tem algum anúncio com frequência alta e CTR caindo? (fadiga de criativo)
-    → coberto? Se não: verificar frequência >= 3 e queda de CTR WoW em cada anúncio ativo
+    → coberto? Se não: verificar frequência >= 4 e queda de CTR WoW em cada anúncio ativo
 
 [ ] Quanto gastei no total essa semana vs. semana passada?
     → coberto? Se não: comparar total de spend do período atual com o WoW e calcular delta percentual
@@ -365,10 +374,10 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 ## Protocolo padrão (obrigatório)
 
-1. **Diagnóstico** — apresentar Bloco 1 (números com WoW) e informar quantos sinais críticos foram identificados.
-2. **Causa provável** — o que os sinais do Bloco 2 sugerem em conjunto. Ex: "dois sinais de fadiga + frequência alta = criativo esgotado, não é problema de público"; "queima de dinheiro sem conversão = pixel provavelmente misconfigured ou página quebrando".
-3. **No VTSD, isso significa…** — ex: "Score 92 + ROAS subindo = Identidade do Consumidor bem calibrada, Quadro na Parede chegando ao público certo. Hora de escalar." Ou: "Frequência > 4 em 3 campanhas = o mesmo criativo atingiu as mesmas pessoas muitas vezes. A Urgência Oculta esgotou. Precisamos de novos ângulos pela Mandala."
-4. **Ação recomendada** — 1 a 3 ações concretas com handoff para a skill executora.
+1. **Diagnóstico**: apresentar Bloco 1 (números com WoW) e informar quantos sinais críticos foram identificados.
+2. **Causa provável**: o que os sinais do Bloco 2 sugerem em conjunto. Ex: "dois sinais de fadiga + frequência alta = criativo esgotado, não é problema de público"; "queima de dinheiro sem conversão = pixel provavelmente misconfigured ou página quebrando".
+3. **No VTSD, isso significa…**: ex: "Score 92 + ROAS subindo = Identidade do Consumidor bem calibrada, Quadro na Parede chegando ao público certo. Hora de escalar." Ou: "Frequência > 4 em 3 campanhas = o mesmo criativo atingiu as mesmas pessoas muitas vezes. A Urgência Oculta esgotou. Precisamos de novos ângulos pela Mandala."
+4. **Ação recomendada**: 1 a 3 ações concretas com handoff para a skill executora.
 
 ---
 
@@ -376,25 +385,45 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Sinal predominante | Para onde mandar |
 |---|---|
-| Queima de dinheiro | "trafego-otimizar" — ações em lote: pausar campanhas com gasto > X e zero conversão |
-| Fadiga de criativo | Duplicar entidade no Gerenciador (variando 1 dimensão) (A/B de criativo novo) ou Gerenciador de Audiences (nova audience) |
-| Conta saudável + ROAS alto | "trafego-escalar" — aumentar budget das campanhas vencedoras |
-| Budget estourando | Gerenciador (Regras automáticas) — criar regra automática de freio por budget diário |
-| Connect Rate baixo | "feedback-pagina" ou "pagina-performance" — gargalo está na página, não no anúncio |
-| Pixel sem conversão | Gerenciador de Eventos — diagnóstico aprofundado do rastreamento |
+| Queima de dinheiro | "trafego-otimizar": ações em lote: pausar campanhas com gasto > X e zero conversão |
+| Fadiga de criativo | "trafego-testes" (A/B de criativo novo) ou "trafego-publicos" (nova audience) |
+| Conta saudável + ROAS alto | "trafego-escalar": aumentar budget das campanhas vencedoras |
+| Budget estourando | "trafego-regras": criar regra automática de freio por budget diário |
+| Connect Rate baixo | "trafego-oferta-funil" para confirmar o gargalo; correção em "pagina-performance" (velocidade, URL/redirect) ou "feedback-pagina" (promessa da página). O gargalo está na página, não no anúncio |
+| Pixel sem conversão | "trafego-pixel": diagnóstico aprofundado do rastreamento (reinstalar o pixel na página: "pagina-pixel") |
+| Anomalia sem padrão claro (múltiplos sinais conflitantes) | "trafego-diagnostico": diagnóstico diferencial com 3 hipóteses competitivas |
+| Dúvida se o "vencedor" é real | "trafego-diagnostico" opção [4]: detector de falso vencedor |
 
 ---
 
 ## Mapeamento HTML (export via `_export-html.md`)
 
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** O vocabulário antigo (`.kpi-grid`, `.regra`, `.metric`, `.callout`, `.pitch-box`, `.bar-row`) foi descontinuado e NÃO existe no CSS embutido: usá-lo gera seção sem estilo.
+
 | Bloco do output narrado | Componente do design system |
 |---|---|
-| Métricas do Bloco 1 (gasto, conversões, ROAS, CPA) | `.kpi-grid` com 4 a 6 `.kpi` — classe `.up` ou `.down` conforme WoW |
-| Tabela comparativa período atual vs. anterior | `.table` com colunas `.up`/`.down` |
-| Cada sinal crítico do Bloco 2 | `.regra.alerta` (um elemento por sinal identificado) |
-| Ranking de queima de dinheiro (top 3) | `.table` com colunas: campanha / gasto / conversões / CPA implícito |
-| Health Score total + emoji de classificação | `.metric` (número grande em `--neon`) |
-| Detalhamento das 5 dimensões | série de `.bar-row` (uma por dimensão, largura proporcional ao score parcial) |
-| Frase "No VTSD isso significa..." | `.callout` |
-| Ação recomendada | `.pitch-box` |
-| Próximo output recomendado | `.term.next` dentro de `.terms` no rodapé |
+| KPIs globais (gasto, vendas, receita, ROAS, CPA, Health Score) | `.stats-grid` com um `.stat-card` por métrica (`.value.green/.yellow/.red` conforme semântica) |
+| Cada "Resposta N" obrigatória | `.section` com `.section-header` (`.section-num` + `.section-title` + `.section-question`) |
+| Tabela comparativa atual vs. anterior | `table` padrão; variação colorida com `style="color:var(--green)"` ou `var(--red)` |
+| Ranking de queima / demais rankings | `.card` + `table` com `.num` nas colunas numéricas e `.rank` na posição |
+| Health Score total + classificação | `.stat-card` (valor grande, cor por faixa) |
+| Detalhamento das 5 dimensões | `.dim-row` (`.dim-label` + `.dim-track`/`.dim-fill` + `.dim-score`), largura do fill proporcional ao score; cor do fill pela faixa do Health Score (verde ≥ 85, amarelo 70–84, laranja 50–69, vermelho < 50): a MESMA cor do vértice correspondente no radar |
+| Diagnóstico / "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Ação recomendada | `.action-box` |
+| Próximo output recomendado / handoffs | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar SEMPRE os 5 gráficos abaixo, logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas detalhadas na seção **3.2.1** do `_export-html.md`).
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Tendência diária (gasto + vendas) | SVG linha eixo duplo (receita E) | `serie_diaria_svg` (pré-calculado) | `.chart-card` full-width, topo da "Visão visual" |
+| Radar das 5 dimensões | SVG radar (receita A) | `health.dimensoes` | `.charts-grid`, 1ª coluna |
+| Funil VTSD | `.funnel` (receita B) | `agregado`: impressions → link_clicks → lpv → purchases | `.charts-grid`, 2ª coluna |
+| Barras atual vs. anterior | `.wow-chart` (receita C) | `wow` | `.chart-card` full-width sob o `.charts-grid` |
+| Alocação: convertendo vs. queimando | `.hbar-row` (receita D) | `ranking_spend` (vendeu) + `sinais.queima` (zerou) | `.chart-card` dentro da Resposta 1 |
+
+A série diária vem da **Chamada 1E** do `trafego_fetch.py` (nível campanha + `time_increment=1`, mesmo filtro do 1a) e é agregada por dia no `trafego_processar.py`, que já entrega a geometria SVG pronta em `serie_diaria_svg`. Caches antigos sem `1e` retornam `serie_diaria_svg=null`: nesse caso o gráfico de tendência é omitido e os outros 4 continuam.
+
+Regras dos gráficos: usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`); truncar nomes longos de campanha; o radar colore cada vértice pela mesma faixa da classificação do Health Score (verde ≥ 85, amarelo 70–84, laranja 50–69, vermelho < 50), igual à cor da barra `.dim-fill` da dimensão correspondente na Resposta 5; o funil usa largura em escala logarítmica mas exibe os números reais e a taxa de conversão entre etapas.

@@ -11,26 +11,62 @@ Le o cache gerado pelo trafego_fetch.py e calcula todos os KPIs:
 
 Uso:
     python3 trafego_processar.py \
-        --cache-file skill-analise/cache/<AD_ACCOUNT_ID>_last_30d_vtsdcv_diagnostico.json \
+        --cache-file skill-analise/cache/1234567890123456_last_30d_curso_x_apw_diagnostico.json \
         --ticket 497 \
         --output diagnostico
 
-Ou informando os mesmos args do fetch (o script monta o caminho do cache):
+Ou informando os mesmos args do fetch, inclusive --status (o script monta o
+caminho do cache com a mesma regra do trafego_fetch.py):
     python3 trafego_processar.py \
-        --account <AD_ACCOUNT_ID> \
-        --filtro "VTSD - CV" \
+        --account 1234567890123456 \
+        --filtro "CURSO X" \
         --periodo last_30d \
+        --status ACTIVE,PAUSED,WITH_ISSUES \
         --output diagnostico \
         --cache-dir skill-analise/cache
 
-Saida: JSON estruturado com metricas, sinais e health score.
+Saída: JSON estruturado com métricas, sinais e health score.
 """
 
 import sys
 import os
+import re
 import json
 import argparse
 from pathlib import Path
+
+STATUS_VALIDOS = ("ACTIVE", "PAUSED", "WITH_ISSUES", "ARCHIVED", "DELETED")
+STATUS_PADRAO = "ACTIVE,PAUSED,WITH_ISSUES"
+
+
+# ── Nome do cache (cópia fiel da regra do trafego_fetch.py) ────────────────────
+
+def parse_status(texto):
+    """Converte "ACTIVE,PAUSED" em lista válida, sem repetição, na ordem informada."""
+    lista = []
+    for s in (texto or "").split(","):
+        s = s.strip().upper()
+        if s in STATUS_VALIDOS and s not in lista:
+            lista.append(s)
+    return lista
+
+
+def slug_filtro(filtro):
+    """Slug do filtro de nome para o arquivo de cache (seguro no Windows)."""
+    s = (filtro or "").replace(" ", "_").replace("-", "").lower()
+    s = re.sub(r"[^\w]", "", s)
+    return s or "all"
+
+
+def slug_status(status_list):
+    """Slug curto do status (ex: ACTIVE,PAUSED,WITH_ISSUES -> apw)."""
+    return "".join(s[0].lower() for s in status_list) or "all"
+
+
+def nome_cache(account, periodo, filtro, status_list, output):
+    return "{}_{}_{}_{}_{}.json".format(
+        account, periodo, slug_filtro(filtro), slug_status(status_list), output
+    )
 
 
 def write_out(data):
@@ -60,6 +96,18 @@ def get_action(actions, action_type, default=0.0):
         if a.get("action_type") == action_type:
             return float(a.get("value", 0))
     return default
+
+
+def get_leads(actions):
+    """Leads sem dupla contagem.
+
+    O tipo canônico é o lead do pixel. O tipo "lead" da API é o total de leads
+    (pixel + formulário instantâneo), então somar os dois conta o lead do pixel
+    duas vezes. Usa o lead do pixel e só cai no "lead" quando o pixel não tem
+    nenhum (campanha de formulário instantâneo).
+    """
+    pixel = get_action(actions, "offsite_conversion.fb_pixel_lead")
+    return pixel if pixel > 0 else get_action(actions, "lead")
 
 
 def get_action_value(action_values, action_type, default=0.0):
@@ -129,13 +177,12 @@ def agregar_campanhas(camps):
         total_purchase_value += get_action_value(action_values, "offsite_conversion.fb_pixel_purchase")
 
         # Leads
-        total_leads += get_action(actions, "offsite_conversion.fb_pixel_lead")
-        total_leads += get_action(actions, "lead")  # formato alternativo
+        total_leads += get_leads(actions)
 
-        # Link clicks (outbound) — diferente de clicks total
+        # Link clicks (outbound): diferente de clicks total
         total_link_clicks += get_action(actions, "link_click")
 
-        # Landing page views — campo dentro de actions (nao campo topo nivel!)
+        # Landing page views: campo dentro de actions (nao campo topo nivel!)
         total_lpv += get_action(actions, "landing_page_view")
 
     return {
@@ -216,7 +263,7 @@ def processar_campanha(c):
 
     purchases = get_action(actions, "offsite_conversion.fb_pixel_purchase")
     purchase_value = get_action_value(action_values, "offsite_conversion.fb_pixel_purchase")
-    leads = get_action(actions, "offsite_conversion.fb_pixel_lead") + get_action(actions, "lead")
+    leads = get_leads(actions)
     link_clicks = get_action(actions, "link_click")
     lpv = get_action(actions, "landing_page_view")
 
@@ -235,7 +282,9 @@ def processar_campanha(c):
         "impressions": impressions,
         "clicks": clicks,
         "frequency": round(freq, 2),
-        "ctr": round(ctr_raw * 100, 3) if ctr_raw < 1 else round(ctr_raw, 3),
+        # O campo ctr da Graph API já vem em porcentagem (ex: 0.85 = 0,85%).
+        # Não multiplicar por 100 quando for menor que 1: CTR abaixo de 1% é comum.
+        "ctr": round(ctr_raw, 3),
         "purchases": round(purchases, 1),
         "purchase_value": round(purchase_value, 2),
         "leads": round(leads, 1),
@@ -251,7 +300,7 @@ def processar_campanha(c):
 # ── Sinais ────────────────────────────────────────────────────────────────────
 
 def detectar_queima(camps_1a, limite_spend=50.0):
-    """Campanhas com gasto > limite e zero conversoes — queima de dinheiro."""
+    """Campanhas com gasto > limite e zero conversoes: queima de dinheiro."""
     queimadoras = []
     for c in camps_1a:
         proc = processar_campanha(c)
@@ -267,10 +316,8 @@ def detectar_fadiga(camps_1a, camps_1b, freq_minima=4.0, queda_ctr_pct=15.0):
     ctr_anterior = {}
     for c in camps_1b:
         cid = c.get("campaign_id", "")
+        # ctr da Graph API já vem em porcentagem; sem normalização (ver processar_campanha).
         ctr_val = float(c.get("ctr", 0) or 0)
-        # Normalizar: API pode retornar 0-1 ou 0-100
-        if ctr_val < 1:
-            ctr_val *= 100
         if cid not in ctr_anterior or c.get("date_start", "") > ctr_anterior[cid].get("date_start", ""):
             ctr_anterior[cid] = {"ctr": ctr_val, "date_start": c.get("date_start", "")}
 
@@ -279,8 +326,6 @@ def detectar_fadiga(camps_1a, camps_1b, freq_minima=4.0, queda_ctr_pct=15.0):
         proc = processar_campanha(c)
         freq = proc["frequency"]
         ctr_atual = proc["ctr"]
-        if ctr_atual < 1:
-            ctr_atual *= 100  # normalizar
 
         if freq < freq_minima:
             continue
@@ -297,7 +342,7 @@ def detectar_fadiga(camps_1a, camps_1b, freq_minima=4.0, queda_ctr_pct=15.0):
                         "queda_ctr_pct": round(queda, 1),
                     })
         else:
-            # Sem dado anterior mas freq alta — considerar risco
+            # Sem dado anterior mas freq alta: considerar risco
             if freq >= 5.0:
                 fadigadas.append({
                     **proc,
@@ -329,6 +374,10 @@ def detectar_budget(camps_1c, camps_1d, pct_alerta=0.90):
 
     alertas = []
     for c in camps_1c:
+        # 1c reaproveita a lista da Chamada 0 do fetch, que segue o --status escolhido
+        # e pode trazer campanhas pausadas. Alerta de orçamento só vale para as ativas.
+        if c.get("effective_status") not in (None, "ACTIVE"):
+            continue
         cid = c.get("id", "")
         nome = c.get("name", "")
         daily_budget = c.get("daily_budget")
@@ -384,7 +433,7 @@ def calcular_health_score(camps_1a, camps_1b, agg, kpis, ticket_tipo):
     """
     detalhes = {}
 
-    # Dimensao 1 — Diversidade criativa
+    # Dimensao 1. Diversidade criativa
     camps_com_gasto = [c for c in camps_1a if float(c.get("spend", 0) or 0) > 10]
     n_ativas = len(camps_com_gasto)
     if n_ativas >= 10:
@@ -401,7 +450,7 @@ def calcular_health_score(camps_1a, camps_1b, agg, kpis, ticket_tipo):
         d1 = 0
     detalhes["d1"] = {"score": d1, "camps_com_gasto": n_ativas, "descricao": "Diversidade criativa"}
 
-    # Dimensao 2 — Saude de publicos
+    # Dimensao 2. Saude de publicos
     total_camps = len(camps_1a)
     if total_camps == 0:
         d2 = 0
@@ -429,7 +478,7 @@ def calcular_health_score(camps_1a, camps_1b, agg, kpis, ticket_tipo):
             "descricao": "Saude de publicos",
         }
 
-    # Dimensao 3 — Eficiencia de funil (connect rate)
+    # Dimensao 3. Eficiencia de funil (connect rate)
     connect_rate = kpis.get("connect_rate")
     if connect_rate is not None:
         if connect_rate >= 70:
@@ -454,7 +503,7 @@ def calcular_health_score(camps_1a, camps_1b, agg, kpis, ticket_tipo):
             d3 = 25
         detalhes["d3"] = {"score": d3, "ctr_fallback": ctr, "metodo": "ctr_fallback", "descricao": "Eficiencia de funil (fallback CTR)"}
 
-    # Dimensao 4 — Performance financeira
+    # Dimensao 4. Performance financeira
     roas = kpis.get("roas", 0)
     _, roas_min, _ = classificar_funil(None)
     if ticket_tipo == "high_ticket":
@@ -495,53 +544,51 @@ def calcular_health_score(camps_1a, camps_1b, agg, kpis, ticket_tipo):
         "descricao": "Performance financeira",
     }
 
-    # Dimensao 5 — Consistencia temporal (WoW CPA)
+    # Dimensao 5. Consistencia temporal (WoW CPA)
+    # Compara o CPA do periodo principal (1a) com o da janela anterior (1b).
+    # 1b ja e a janela anterior fechada: agregar inteiro, sem fatiar ao meio.
     d5 = 50  # neutro por padrao (sem dados comparativos)
     if camps_1b:
-        # Calcular CPA periodo atual vs anterior com os dados 1b
-        # camps_1b tem time_increment, entao tem date_start/date_stop
-        # Separar em periodo mais recente e anterior
-        todos_com_data = sorted(camps_1b, key=lambda x: x.get("date_start", ""))
-        if todos_com_data:
-            # Metade mais recente vs metade mais antiga
-            meio = len(todos_com_data) // 2
-            recentes = todos_com_data[meio:]
-            anteriores = todos_com_data[:meio]
+        def cpa_periodo(lista):
+            spend_t = sum(float(c.get("spend", 0) or 0) for c in lista)
+            # Mesma definicao de conversao do resto do diagnostico (agregar_campanhas
+            # e WoW): compras de verdade. Leads so entram como fallback quando NAO ha
+            # nenhuma compra na janela (funil de captacao). Misturar compras + leads
+            # inflava o denominador em contas de venda que disparam eventos de lead
+            # ruido, gerando um CPA falsamente baixo e uma variacao WoW absurda.
+            purchases_t = sum(
+                get_action(c.get("actions", []), "offsite_conversion.fb_pixel_purchase")
+                for c in lista
+            )
+            leads_t = sum(
+                get_leads(c.get("actions", []))
+                for c in lista
+            )
+            conv_t = purchases_t or leads_t
+            return spend_t / conv_t if conv_t > 0 else None
 
-            def cpa_periodo(lista):
-                spend_t = sum(float(c.get("spend", 0) or 0) for c in lista)
-                conv_t = sum(
-                    get_action(c.get("actions", []), "offsite_conversion.fb_pixel_purchase") +
-                    get_action(c.get("actions", []), "offsite_conversion.fb_pixel_lead") +
-                    get_action(c.get("actions", []), "lead")
-                    for c in lista
-                )
-                return spend_t / conv_t if conv_t > 0 else None
+        cpa_rec = cpa_periodo(camps_1a)   # periodo principal (atual)
+        cpa_ant = cpa_periodo(camps_1b)   # janela anterior
 
-            cpa_rec = cpa_periodo(recentes)
-            cpa_ant = cpa_periodo(anteriores)
-
-            if cpa_rec is not None and cpa_ant is not None and cpa_ant > 0:
-                variacao_wow = ((cpa_rec - cpa_ant) / cpa_ant) * 100
-                if variacao_wow <= 20:
-                    d5 = 100
-                elif variacao_wow <= 30:
-                    d5 = 70
-                elif variacao_wow <= 50:
-                    d5 = 40
-                else:
-                    d5 = 10
-                detalhes["d5"] = {
-                    "score": d5,
-                    "cpa_recente": round(cpa_rec, 2),
-                    "cpa_anterior": round(cpa_ant, 2),
-                    "variacao_wow_pct": round(variacao_wow, 1),
-                    "descricao": "Consistencia temporal",
-                }
+        if cpa_rec is not None and cpa_ant is not None and cpa_ant > 0:
+            variacao_wow = ((cpa_rec - cpa_ant) / cpa_ant) * 100
+            if variacao_wow <= 20:
+                d5 = 100
+            elif variacao_wow <= 30:
+                d5 = 70
+            elif variacao_wow <= 50:
+                d5 = 40
             else:
-                detalhes["d5"] = {"score": d5, "descricao": "Consistencia temporal (sem dados suficientes)"}
+                d5 = 10
+            detalhes["d5"] = {
+                "score": d5,
+                "cpa_recente": round(cpa_rec, 2),
+                "cpa_anterior": round(cpa_ant, 2),
+                "variacao_wow_pct": round(variacao_wow, 1),
+                "descricao": "Consistencia temporal",
+            }
         else:
-            detalhes["d5"] = {"score": d5, "descricao": "Consistencia temporal (sem dados 1b)"}
+            detalhes["d5"] = {"score": d5, "descricao": "Consistencia temporal (sem dados suficientes)"}
     else:
         detalhes["d5"] = {"score": d5, "descricao": "Consistencia temporal (sem comparativo WoW)"}
 
@@ -570,10 +617,104 @@ def calcular_health_score(camps_1a, camps_1b, agg, kpis, ticket_tipo):
     }
 
 
+# ── Serie diaria (tendencia) ────────────────────────────────────────────────────
+
+def serie_diaria(camps_1e):
+    """Agrupa as linhas diarias (1e) por data, somando metricas-chave.
+
+    1e vem do fetch como level=campaign + time_increment=1: uma linha por
+    campanha por dia, já filtrada pelos mesmos IDs do 1a (nome + status). Agrupamos por date_start para a
+    serie de tendencia. Soma diaria fecha com o agregado filtrado do dashboard
+    (mesma janela, mesmo filtro).
+    """
+    por_dia = {}
+    for c in camps_1e:
+        dia = c.get("date_start", "")
+        if not dia:
+            continue
+        d = por_dia.setdefault(dia, {"spend": 0.0, "impressions": 0, "vendas": 0.0, "receita": 0.0, "leads": 0.0})
+        d["spend"] += float(c.get("spend", 0) or 0)
+        d["impressions"] += int(c.get("impressions", 0) or 0)
+        actions = c.get("actions", [])
+        action_values = c.get("action_values", [])
+        d["vendas"] += get_action(actions, "offsite_conversion.fb_pixel_purchase")
+        d["receita"] += get_action_value(action_values, "offsite_conversion.fb_pixel_purchase")
+        d["leads"] += get_leads(actions)
+
+    serie = []
+    for dia in sorted(por_dia.keys()):
+        d = por_dia[dia]
+        serie.append({
+            "data": dia,
+            "spend": round(d["spend"], 2),
+            "impressions": d["impressions"],
+            "vendas": round(d["vendas"], 1),
+            "receita": round(d["receita"], 2),
+            "leads": round(d["leads"], 1),
+        })
+    return serie
+
+
+def serie_diaria_svg(serie, vb_w=720, vb_h=240, pad_l=54, pad_r=44, pad_t=16, pad_b=30):
+    """Pre-calcula a geometria SVG da linha de tendencia para o template HTML.
+
+    Emite os 'points' das polylines de gasto e vendas + a area de gasto + os
+    labels de data do eixo X, prontos para injetar no SVG. Mantem o grafico
+    100% deterministico: o gerador do HTML so cola as strings, sem plotar
+    ~30 pontos a mao (fonte de erro). Eixo duplo: gasto na escala esquerda,
+    vendas na escala direita.
+    """
+    if not serie:
+        return None
+    n = len(serie)
+    plot_w = vb_w - pad_l - pad_r
+    plot_h = vb_h - pad_t - pad_b
+    base_y = pad_t + plot_h
+    max_spend = max((d["spend"] for d in serie), default=0.0) or 1.0
+    max_vendas = max((d["vendas"] for d in serie), default=0.0) or 1.0
+
+    def px(i):
+        return pad_l + (plot_w * i / (n - 1)) if n > 1 else pad_l + plot_w / 2.0
+
+    def py_spend(v):
+        return pad_t + plot_h * (1 - v / max_spend)
+
+    def py_vendas(v):
+        return pad_t + plot_h * (1 - v / max_vendas)
+
+    spend_pts = " ".join("{},{}".format(round(px(i), 1), round(py_spend(d["spend"]), 1)) for i, d in enumerate(serie))
+    vendas_pts = " ".join("{},{}".format(round(px(i), 1), round(py_vendas(d["vendas"]), 1)) for i, d in enumerate(serie))
+    area_pts = "{},{} {} {},{}".format(round(pad_l, 1), round(base_y, 1), spend_pts, round(pad_l + plot_w, 1), round(base_y, 1))
+
+    vendas_dots = [{"cx": round(px(i), 1), "cy": round(py_vendas(d["vendas"]), 1), "v": d["vendas"]} for i, d in enumerate(serie)]
+
+    n_labels = min(6, n)
+    x_labels = []
+    for k in range(n_labels):
+        i = round(k * (n - 1) / (n_labels - 1)) if n_labels > 1 else 0
+        dia = serie[i]["data"]  # YYYY-MM-DD
+        x_labels.append({"x": round(px(i), 1), "label": dia[8:10] + "/" + dia[5:7]})
+
+    return {
+        "viewbox": "0 0 {} {}".format(vb_w, vb_h),
+        "area_points": area_pts,
+        "spend_points": spend_pts,
+        "vendas_points": vendas_pts,
+        "vendas_dots": vendas_dots,
+        "x_labels": x_labels,
+        "baseline_y": round(base_y, 1),
+        "plot_left": round(pad_l, 1),
+        "plot_right": round(pad_l + plot_w, 1),
+        "max_spend": round(max_spend, 2),
+        "max_vendas": round(max_vendas, 1),
+        "dias": n,
+    }
+
+
 # ── Proxima acao recomendada ───────────────────────────────────────────────────
 
 def recomendar_proximo(health, sinais):
-    """Indica o proximo output a rodar conforme o sintoma dominante."""
+    """Indica o próximo output a rodar conforme o sintoma dominante."""
     score = health["score"]
     n_sinais = len(sinais.get("queima", [])) + len(sinais.get("fadiga", [])) + len(sinais.get("budget", []))
 
@@ -583,18 +724,18 @@ def recomendar_proximo(health, sinais):
     connect_rate = health["dimensoes"].get("d3", {}).get("connect_rate")
 
     if score < 50 or n_sinais >= 2:
-        return {"output": 8, "label": "Problemas Ocultos", "motivo": "Score critico ou multiplos sinais simultaneos"}
+        return {"output": 8, "label": "Problemas Ocultos", "motivo": "Score crítico ou múltiplos sinais simultâneos"}
     if sinais.get("fadiga") or sinais.get("saturacao"):
-        return {"output": 3, "label": "Criativos & Copy", "motivo": "Fadiga ou saturacao de publico detectada"}
+        return {"output": 3, "label": "Criativos & Copy", "motivo": "Fadiga ou saturação de público detectada"}
     if queima_total > 300:
-        return {"output": 2, "label": "Performance & Funil", "motivo": f"Queima de R$ {round(queima_total, 0)} sem conversao"}
+        return {"output": 2, "label": "Performance & Funil", "motivo": f"Queima de R$ {round(queima_total, 0)} sem conversão"}
     if sinais.get("budget"):
-        return {"output": 9, "label": "Orcamento & Projecao", "motivo": "Budget estourando antes do horario nobre"}
+        return {"output": 9, "label": "Orçamento & Projeção", "motivo": "Budget estourando antes do horário nobre"}
     if connect_rate is not None and connect_rate < 40:
-        return {"output": 2, "label": "Performance & Funil", "motivo": f"Connect Rate baixo ({connect_rate}%) — gargalo na pagina"}
+        return {"output": 2, "label": "Performance & Funil", "motivo": f"Connect Rate baixo ({connect_rate}%): gargalo na página"}
     if score >= 85:
-        return {"output": 9, "label": "Orcamento & Projecao", "motivo": "Conta saudavel — hora de escalar"}
-    return {"output": 2, "label": "Performance & Funil", "motivo": "Verificar distribuicao de gasto e ROAS por campanha"}
+        return {"output": 9, "label": "Orçamento & Projeção", "motivo": "Conta saudável: hora de escalar"}
+    return {"output": 2, "label": "Performance & Funil", "motivo": "Verificar distribuição de gasto e ROAS por campanha"}
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -605,26 +746,37 @@ def main():
     parser.add_argument("--account", help="ID da conta (para montar o caminho do cache)")
     parser.add_argument("--filtro", default="", help="Filtro de campanhas (mesmo do fetch)")
     parser.add_argument("--periodo", default="last_30d")
+    parser.add_argument("--status", default=STATUS_PADRAO,
+                        help="Mesmo --status usado no trafego_fetch.py (entra no nome do cache)")
     parser.add_argument("--output", default="diagnostico")
     parser.add_argument("--cache-dir", default="skill-analise/cache")
     parser.add_argument("--project-root", default=".")
-    parser.add_argument("--ticket", type=float, default=None, help="Preco do ticket para benchmarks")
+    parser.add_argument("--ticket", type=float, default=None, help="Preço do ticket para benchmarks")
     args = parser.parse_args()
 
     # Descobrir o arquivo de cache
     if args.cache_file:
         cache_file = Path(args.cache_file)
     elif args.account:
+        status_list = parse_status(args.status)
+        if not status_list:
+            err(f"--status inválido: {args.status}. Use ACTIVE, PAUSED, WITH_ISSUES, ARCHIVED ou DELETED.")
+            write_out({"error": "status_invalido"})
+            return
+        account = args.account.strip()
+        if account.lower().startswith("act_"):
+            account = account[4:]
         project_root = Path(args.project_root).resolve()
-        filtro_slug = args.filtro.replace(" ", "_").replace("-", "").lower() or "all"
-        cache_file = project_root / args.cache_dir / f"{args.account}_{args.periodo}_{filtro_slug}_{args.output}.json"
+        cache_file = project_root / args.cache_dir / nome_cache(
+            account, args.periodo, args.filtro, status_list, args.output
+        )
     else:
         err("Informe --cache-file ou --account para localizar o cache.")
         write_out({"error": "args_missing"})
         return
 
     if not cache_file.exists():
-        err(f"Cache nao encontrado: {cache_file}")
+        err(f"Cache não encontrado: {cache_file}")
         err("Rode trafego_fetch.py primeiro para gerar o cache.")
         write_out({"error": "cache_not_found", "path": str(cache_file)})
         return
@@ -636,15 +788,16 @@ def main():
     camps_1b = raw.get("1b", [])
     camps_1c = raw.get("1c", [])
     camps_1d = raw.get("1d", [])
+    camps_1e = raw.get("1e", [])
     meta = raw.get("_meta", {})
 
     info(f"Cache carregado: {cache_file.name}")
-    info(f"1a: {len(camps_1a)} | 1b: {len(camps_1b)} | 1c: {len(camps_1c)} | 1d: {len(camps_1d)}")
+    info(f"1a: {len(camps_1a)} | 1b: {len(camps_1b)} | 1c: {len(camps_1c)} | 1d: {len(camps_1d)} | 1e: {len(camps_1e)}")
 
     if not camps_1a:
         write_out({
             "error": "sem_dados",
-            "mensagem": "Nenhuma campanha encontrada no cache 1a. Verifique o filtro e o periodo.",
+            "mensagem": "Nenhuma campanha encontrada no cache 1a. Verifique o filtro, o status e o período.",
             "_meta": meta,
         })
         return
@@ -657,43 +810,39 @@ def main():
     agg = agregar_campanhas(camps_1a)
     kpis = calcular_kpis(agg, ticket)
 
-    # Metricas WoW (periodo anterior para comparacao)
+    # Metricas WoW (periodo principal 1a vs janela anterior 1b)
+    # 1a = janela principal (ex: last_7d). 1b = janela imediatamente anterior,
+    # do mesmo tamanho, ja entregue pelo fetch como time_range fechado (uma linha
+    # por campanha). Comparar os dois agregados direto. NUNCA fatiar 1b ao meio:
+    # todas as linhas de 1b tem a mesma date_start, entao o split gera dois
+    # pedacos da MESMA semana anterior (comparativo sem sentido).
     wow = None
     if camps_1b:
-        # camps_1b tem time_increment — separar os dois periodos
-        # O mais recente e o periodo principal, o mais antigo e o comparativo
-        sorted_1b = sorted(camps_1b, key=lambda x: x.get("date_start", ""))
-        if sorted_1b:
-            meio = len(sorted_1b) // 2
-            camps_periodo_recente = sorted_1b[meio:]
-            camps_periodo_anterior = sorted_1b[:meio]
-            agg_recente = agregar_campanhas(camps_periodo_recente)
-            agg_anterior = agregar_campanhas(camps_periodo_anterior)
-            kpis_recente = calcular_kpis(agg_recente, ticket)
-            kpis_anterior = calcular_kpis(agg_anterior, ticket)
+        agg_anterior = agregar_campanhas(camps_1b)
+        kpis_anterior = calcular_kpis(agg_anterior, ticket)
 
-            def variacao(atual, anterior):
-                if anterior and anterior > 0:
-                    return round(((atual - anterior) / anterior) * 100, 1)
-                return None
+        def variacao(atual, anterior):
+            if anterior and anterior > 0:
+                return round(((atual - anterior) / anterior) * 100, 1)
+            return None
 
-            wow = {
-                "spend_atual": agg_recente["spend"],
-                "spend_anterior": agg_anterior["spend"],
-                "spend_variacao_pct": variacao(agg_recente["spend"], agg_anterior["spend"]),
-                "conversoes_atual": agg_recente["purchases"] or agg_recente["leads"],
-                "conversoes_anterior": agg_anterior["purchases"] or agg_anterior["leads"],
-                "conversoes_variacao_pct": variacao(
-                    agg_recente["purchases"] or agg_recente["leads"],
-                    agg_anterior["purchases"] or agg_anterior["leads"]
-                ),
-                "roas_atual": kpis_recente["roas"],
-                "roas_anterior": kpis_anterior["roas"],
-                "roas_variacao_pct": variacao(kpis_recente["roas"], kpis_anterior["roas"]),
-                "cpa_atual": kpis_recente["cpa"],
-                "cpa_anterior": kpis_anterior["cpa"],
-                "cpa_variacao_pct": variacao(kpis_recente["cpa"] or 0, kpis_anterior["cpa"] or 0),
-            }
+        conv_atual = agg["purchases"] or agg["leads"]
+        conv_anterior = agg_anterior["purchases"] or agg_anterior["leads"]
+
+        wow = {
+            "spend_atual": agg["spend"],
+            "spend_anterior": agg_anterior["spend"],
+            "spend_variacao_pct": variacao(agg["spend"], agg_anterior["spend"]),
+            "conversoes_atual": conv_atual,
+            "conversoes_anterior": conv_anterior,
+            "conversoes_variacao_pct": variacao(conv_atual, conv_anterior),
+            "roas_atual": kpis["roas"],
+            "roas_anterior": kpis_anterior["roas"],
+            "roas_variacao_pct": variacao(kpis["roas"], kpis_anterior["roas"]),
+            "cpa_atual": kpis["cpa"],
+            "cpa_anterior": kpis_anterior["cpa"],
+            "cpa_variacao_pct": variacao(kpis["cpa"] or 0, kpis_anterior["cpa"] or 0),
+        }
 
     # Sinais criticos
     sinais = {
@@ -716,6 +865,10 @@ def main():
         reverse=True
     )[:10]
 
+    # Serie diaria (tendencia) + geometria SVG pre-calculada
+    serie = serie_diaria(camps_1e)
+    serie_svg = serie_diaria_svg(serie)
+
     result = {
         "_meta": {
             **meta,
@@ -731,6 +884,8 @@ def main():
         "health": health,
         "proximo": proximo,
         "ranking_spend": ranking_spend,
+        "serie_diaria": serie,
+        "serie_diaria_svg": serie_svg,
     }
 
     write_out(result)
