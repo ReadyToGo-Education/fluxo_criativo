@@ -895,6 +895,15 @@ Para páginas de vendas, captura, obrigado e low ticket:
 7. Checar placeholders.
 8. Checar se a copy aprovada foi respeitada.
 
+### Checklist de Segurança
+
+Para toda entrega que grava dado, tem login ou chama API de terceiro (quiz, app no Lovable, função `api/*.js` na Vercel, formulário que manda lead para planilha, webhook ou CRM):
+
+- Carregar `.claude/rules/seguranca/checklist-seguranca.md` antes de gerar.
+- Copiar literal o bloco de segurança do tipo de entrega (funil sem login ou app com login) para o prompt do Lovable.
+- Conferir a entrega contra os 10 itens antes de mostrar ao usuário.
+- Página HTML estática só precisa do item 1 (nenhuma chave no navegador).
+
 ## Meta Ads, Conexão e Graph API
 
 Toda tarefa `/trafego-*` ou qualquer operação que toque Meta Ads deve começar pelo Passo 0.

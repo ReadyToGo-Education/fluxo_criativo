@@ -79,7 +79,7 @@ A API do ActiveCampaign exige que a API Key vá no header, o que significa que *
 Pedir pro aluno criar um formulário dentro do ActiveCampaign (Site > Forms), associar à lista certa e aplicar a tag. Depois, pegar o código embed do formulário e inserir no lugar do `<form>` da página. Essa é a opção mais segura, sem vazamento de chave, e é o caminho oficial.
 
 **Opção B. Endpoint intermediário (Serverless Function).**
-Criar uma função serverless no Vercel (`meus-produtos/{ativo}/entregas/paginas/api/active-sync.js`) que recebe `{email, first_name, list, tag}` do front, chama a API do ActiveCampaign pelo servidor (com a chave como variável de ambiente na Vercel, nunca no HTML) e devolve sucesso/erro. O `<form>` da página faz `fetch('/api/active-sync', {...})`.
+Criar uma função serverless no Vercel (`meus-produtos/{ativo}/entregas/paginas/api/active-sync.js`) que recebe só `{email, first_name, website}` do front, chama a API do ActiveCampaign pelo servidor (com a chave como variável de ambiente na Vercel, nunca no HTML) e devolve sucesso ou erro genérico. A lista e a tag ficam fixas em variáveis de ambiente da Vercel, nunca vêm do navegador: se viessem, qualquer pessoa poderia chamar a função e aplicar qualquer tag, inclusive uma que dispara automação de entrega ou de acesso. O `<form>` da página faz `fetch('/api/active-sync', {...})`.
 
 Pergunte qual modo preferir. Padrão: Opção A (mais simples e segura).
 
@@ -91,10 +91,17 @@ Pergunte qual modo preferir. Padrão: Opção A (mais simples e segura).
 3. Ajuste o redirect no painel do ActiveCampaign (Forms > Options > Thank You Page URL) pra URL informada.
 
 **Modo B (serverless):**
-1. Gere o arquivo `meus-produtos/{ativo}/entregas/paginas/api/active-sync.js` com o código Node.js que usa `fetch` pra chamar `POST /api/3/contact/sync`, `POST /api/3/contactLists` e `POST /api/3/contactTags` do ActiveCampaign.
-2. Injete no HTML da página um `<script>` que intercepta o submit do form, faz `fetch('/api/active-sync', { method: 'POST', body: JSON.stringify({...}) })`, e em sucesso redireciona pra página de obrigado.
-3. Salve a página modificada como `meus-produtos/{ativo}/entregas/paginas/{nome-original}-active.html`.
-4. Instrua o aluno a adicionar `ACTIVE_API_URL` e `ACTIVE_API_KEY` nas Environment Variables do projeto na Vercel (mostrar caminho exato no painel da Vercel).
+0. Carregue `.claude/rules/seguranca/checklist-seguranca.md` e siga a seção "Função no servidor (Vercel, `api/*.js`)".
+1. Descubra o id da tag com `GET {ACTIVE_API_URL}/api/3/tags?search={tag}`. Se a tag ainda não existir, pergunte ao aluno se pode criar (`POST /api/3/tags`) antes de criar.
+2. Gere o arquivo `meus-produtos/{ativo}/entregas/paginas/api/active-sync.js` com o código Node.js que:
+   - aceita só POST e valida `email` (formato válido, até 254 caracteres) e `first_name` (até 100 caracteres);
+   - se o campo `website` vier preenchido, responde sucesso e não chama o ActiveCampaign (é robô);
+   - lê `ACTIVE_API_URL`, `ACTIVE_API_KEY`, `ACTIVE_LIST_ID` e `ACTIVE_TAG_ID` de `process.env` e ignora qualquer lista ou tag enviada pelo navegador;
+   - usa `fetch` pra chamar `POST /api/3/contact/sync`, `POST /api/3/contactLists` e `POST /api/3/contactTags` do ActiveCampaign;
+   - em erro, registra o detalhe no log e devolve só `{ "ok": false, "mensagem": "Não foi possível enviar agora. Tente de novo em instantes." }`.
+3. Injete no HTML da página o campo escondido `website` (honeypot: fora da tela por CSS, `tabindex="-1"`, `autocomplete="off"`, `aria-hidden="true"`) e um `<script>` que intercepta o submit do form, faz `fetch('/api/active-sync', { method: 'POST', body: JSON.stringify({ email, first_name, website }) })`, em sucesso redireciona pra página de obrigado e em erro mostra só a mensagem genérica.
+4. Salve a página modificada como `meus-produtos/{ativo}/entregas/paginas/{nome-original}-active.html`.
+5. Instrua o aluno a adicionar `ACTIVE_API_URL`, `ACTIVE_API_KEY`, `ACTIVE_LIST_ID` e `ACTIVE_TAG_ID` nas Environment Variables do projeto na Vercel (mostrar caminho exato no painel da Vercel) e a criar no firewall do projeto uma regra de limite de envios por IP para `/api/active-sync` (ex: 5 por minuto).
 
 ### 4. Teste e entrega
 
@@ -117,6 +124,8 @@ Próximo passo:
 ## Regras
 
 - Nunca colocar a API Key direto no HTML final. Se for Opção B, a chave só vai na Vercel como variável de ambiente.
+- Na Opção B, lista e tag sempre fixas no servidor (`ACTIVE_LIST_ID` e `ACTIVE_TAG_ID`), nunca vindas do navegador.
+- Nunca chamar a API do ActiveCampaign direto do navegador, nem com a chave em header: qualquer chave que chega ao navegador fica visível para todo visitante.
 - Sempre confirmar antes de modificar a página. Salvar versão nova, não sobrescrever original.
 - Se a API do ActiveCampaign retornar 401 ou 403, avisar que a chave tá inválida e pedir nova.
 - Validar que `.env` está no `.gitignore` antes de salvar credenciais.

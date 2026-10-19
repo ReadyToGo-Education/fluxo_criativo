@@ -19,17 +19,18 @@ Acione a skill `pagina-precheckout` do plugin `workshop-marketing` e siga o rote
 
 1. Ler `meus-produtos/.ativo`. Se não houver produto, oriente a usar `/produto-novo`.
 2. Coletar (uma pergunta por vez): URL do checkout real, qual oferta (nome + preço), se quer capturar WhatsApp opcional ou obrigatório, cor principal da página (pega do `/copy-pagina` se já existir).
-3. Gerar uma página HTML minimalista com logo, título da oferta, formulário (Nome, Email, WhatsApp) e botão "Ir para o pagamento seguro".
-4. No submit do formulário: salvar o contato em `meus-produtos/{ativo}/entregas/crm/leads.json` (array local), disparar `fbq('track', 'InitiateCheckout')` se houver Pixel configurado, redirecionar pro checkout real com UTMs preservadas.
-5. Criar um endpoint simples via `fetch` pra um arquivo PHP opcional ou usar localStorage como fallback (explicar que se a página for pública sem backend, o CRM vira apenas localStorage do navegador). Para uso real, instruir a hospedar no Vercel com uma Serverless Function básica (incluir código pronto).
+3. Gerar uma página HTML minimalista com logo, título da oferta, formulário (Nome, Email, WhatsApp, mais o campo escondido `website` que pega robô) e botão "Ir para o pagamento seguro".
+4. No submit do formulário: salvar o contato no modo escolhido pelo aluno (localStorage só para teste, ou função na Vercel para uso real), disparar `fbq('track', 'InitiateCheckout')` se houver Pixel configurado, redirecionar pro checkout real com UTMs preservadas.
+5. Para uso real, gerar a Serverless Function `api/lead.js` seguindo o checklist de segurança (`.claude/rules/seguranca/checklist-seguranca.md`): valida de novo no servidor, ignora envio com o campo `website` preenchido, lê o destino do lead de variável de ambiente e devolve erro genérico. Explicar que, sem a função, o CRM vira apenas o localStorage do navegador de cada visitante.
 6. Salvar a página em `meus-produtos/{ativo}/entregas/paginas/precheckout-{nome}.html` e a serverless function em `meus-produtos/{ativo}/entregas/paginas/api/lead.js`.
-7. Oferecer publicar com `/pagina-vercel`.
+7. Oferecer publicar com `/pagina-vercel` e orientar a regra de limite de envios no firewall do projeto na Vercel.
 
 ## Regras Resumidas
 
 - A página precisa ser rápida (menos de 50kb sem imagens).
-- Validar email e WhatsApp no front (regex simples).
+- Validar email e WhatsApp no navegador (regex simples) e de novo na função do servidor.
+- Nenhuma chave, URL de webhook ou URL de Apps Script no HTML.
 - WhatsApp deve virar link clicável depois, formato `55DDDNÚMERO`.
 - Sempre pedir confirmação antes de gerar.
-- O CRM é um JSON local simples, não substitui ferramenta paga. Deixar claro pro aluno.
+- O CRM é simples, não substitui ferramenta paga. Deixar claro pro aluno.
 - Não usar travessão em nenhum texto exibido.
