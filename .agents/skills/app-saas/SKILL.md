@@ -309,7 +309,7 @@ Especificar stack: React + Tailwind + Supabase.
 
 **Bloco 2. Autenticação (incluir sempre este texto literal)**
 
-> "IMPORTANTE sobre autenticação: use Supabase Auth com `signInWithPassword` e `signUp` SEM verificação de email. No painel do Supabase, desative 'Confirm email' em Authentication > Providers > Email. O usuário deve conseguir cadastrar e logar imediatamente, sem nenhum email intermediário. Não implemente magic link. Não implemente 'esqueci minha senha' por email na v1 — use reset manual depois, se necessário.
+> "IMPORTANTE sobre autenticação: use Supabase Auth com `signInWithPassword` e `signUp` SEM verificação de email. Ligue o auto-confirm de e-mail nas configurações de autenticação do projeto (no Lovable Cloud: Users > Auth settings > Email). O usuário deve conseguir cadastrar e logar imediatamente, sem nenhum email intermediário. Não implemente magic link. Não implemente 'esqueci minha senha' por email na v1. Use reset manual depois, se necessário.
 >
 > IMPORTANTE sobre senha: o aluno escolhe a senha que quiser, sem regra de complexidade. Não valide força de senha, não exija maiúscula, número ou caractere especial, não mostre 'medidor de força'. A única regra é o mínimo de 6 caracteres, que já é o padrão do Supabase: não diminua esse mínimo. No frontend, valide só 'campo obrigatório' e 'mínimo de 6 caracteres'. Se o aluno quiser usar '123456', ele pode."
 
@@ -494,9 +494,9 @@ Próximos passos:
 2. Clique em "New Project"
 3. Cole o conteúdo da seção "Prompt para o Lovable.dev"
 4. Aguarde a geração (normalmente menos de 2 minutos)
-5. No painel do Supabase do projeto criado, vá em Authentication > Providers > Email e desative "Confirm email"
+5. Confira se a confirmação de e-mail ficou desligada: no Lovable, More > Cloud > Users > Auth settings > Email, com "Auto-confirm email" ligado. Na mesma tela, ligue "Password HIBP check", que recusa senhas que já vazaram na internet. Se preferir, peça as duas coisas no chat do Lovable
 6. Crie sua conta no app e peça no chat do Lovable: "Mude o role do usuário com e-mail SEU_EMAIL para admin". Faça isso antes de divulgar o link
-7. Se qualquer pessoa puder se cadastrar no app, peça também no chat do Lovable: "Ative captcha no login e no cadastro"
+7. Antes de publicar, o Lovable mostra uma verificação rápida de segurança. Se aparecer alerta, peça no chat para corrigir
 8. Ajuste o que precisar pedindo em linguagem natural dentro do Lovable
 9. Quando publicar, volte aqui para conectar com /pagina-vercel se quiser domínio próprio
 ```

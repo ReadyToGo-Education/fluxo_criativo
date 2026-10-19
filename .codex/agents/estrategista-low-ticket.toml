@@ -265,9 +265,9 @@ Siga o fluxo completo conforme a skill `/lt-quiz`:
    ```
 
 **Fase 2. Prompt técnico (após aprovação da Fase 1):**
-6. Gere o prompt técnico completo para o Lovable.dev com base no produto do aluno: perguntas do quiz (com prompts de imagem, tipos de pergunta e valores de banco), lógica de redirecionamento e estrutura de funil
+6. Gere o prompt técnico completo para o Lovable.dev com base no produto do aluno, nas 9 seções do Passo 5 da skill, inclusive a Seção 2 (Segurança) copiada do checklist `.claude/rules/seguranca/checklist-seguranca.md`: perguntas do quiz (com prompts de imagem, tipos de pergunta e valores de banco), lógica de redirecionamento e estrutura de funil
 7. Salve em `meus-produtos/{ativo}/entregas/quiz/quiz-[produto].md`
-9. Informe ao aluno: "Arquivo salvo. Abra, copie todo o conteúdo e cole no Lovable.dev para construir o funil completo."
+8. Entregue ao aluno as instruções do Passo 6.1 da skill, inclusive o passo de criar a conta em /admin e pedir no chat do Lovable para liberar o painel. Sem esse passo, o painel do quiz não mostra os leads.
 
 ---
 

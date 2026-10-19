@@ -603,8 +603,9 @@ Logo depois de salvar o prompt, e antes do Passo 6.1, rode em silêncio `python3
 1. Abra https://lovable.dev em uma aba nova
 2. Copie todo o conteúdo do prompt: no painel de entregas, aba Low Ticket, clique em "Abrir prompt"
 3. Cole no chat do Lovable e aguarde gerar
-4. Entre em /admin no seu quiz, crie sua conta e peça no chat do Lovable: "Libere o painel do quiz para o usuário com e-mail SEU_EMAIL (adicione na tabela admins)". Só quem você liberar enxerga os leads.
-5. Quando terminar, volte aqui e me mande o link do quiz publicado
+4. Entre em /admin no seu quiz e crie sua conta (se chegar um e-mail de confirmação, confirme). Depois peça no chat do Lovable: "Libere o painel do quiz para o usuário com e-mail SEU_EMAIL (adicione na tabela admins)". Só quem você liberar enxerga os leads.
+5. Ao publicar, o Lovable mostra uma verificação rápida de segurança. Um alerta dizendo que visitantes sem login conseguem gravar respostas é esperado, porque o quiz é público. Os outros alertas, peça no chat para corrigir.
+6. Quando terminar, volte aqui e me mande o link do quiz publicado
 ```
 
 **Passo 6.2. Pedir o link do quiz publicado:**

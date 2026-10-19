@@ -81,6 +81,8 @@ Pedir pro aluno criar um formulário dentro do ActiveCampaign (Site > Forms), as
 **Opção B. Endpoint intermediário (Serverless Function).**
 Criar uma função serverless no Vercel (`meus-produtos/{ativo}/entregas/paginas/api/active-sync.js`) que recebe só `{email, first_name, website}` do front, chama a API do ActiveCampaign pelo servidor (com a chave como variável de ambiente na Vercel, nunca no HTML) e devolve sucesso ou erro genérico. A lista e a tag ficam fixas em variáveis de ambiente da Vercel, nunca vêm do navegador: se viessem, qualquer pessoa poderia chamar a função e aplicar qualquer tag, inclusive uma que dispara automação de entrega ou de acesso. O `<form>` da página faz `fetch('/api/active-sync', {...})`.
 
+A Opção B só funciona se a página for publicada pelo `/pagina-vercel`, que sobe a página e a função juntas. Página publicada em outro lugar (Lovable, WordPress, página da Hotmart) usa a Opção A.
+
 Pergunte qual modo preferir. Padrão: Opção A (mais simples e segura).
 
 ### 3. Aplicar a integração
@@ -101,7 +103,8 @@ Pergunte qual modo preferir. Padrão: Opção A (mais simples e segura).
    - em erro, registra o detalhe no log e devolve só `{ "ok": false, "mensagem": "Não foi possível enviar agora. Tente de novo em instantes." }`.
 3. Injete no HTML da página o campo escondido `website` (honeypot: fora da tela por CSS, `tabindex="-1"`, `autocomplete="off"`, `aria-hidden="true"`) e um `<script>` que intercepta o submit do form, faz `fetch('/api/active-sync', { method: 'POST', body: JSON.stringify({ email, first_name, website }) })`, em sucesso redireciona pra página de obrigado e em erro mostra só a mensagem genérica.
 4. Salve a página modificada como `meus-produtos/{ativo}/entregas/paginas/{nome-original}-active.html`.
-5. Instrua o aluno a adicionar `ACTIVE_API_URL`, `ACTIVE_API_KEY`, `ACTIVE_LIST_ID` e `ACTIVE_TAG_ID` nas Environment Variables do projeto na Vercel (mostrar caminho exato no painel da Vercel) e a criar no firewall do projeto uma regra de limite de envios por IP para `/api/active-sync` (ex: 5 por minuto).
+5. Salve `ACTIVE_LIST_ID` e `ACTIVE_TAG_ID` no `.env`, ao lado de `ACTIVE_API_URL` e `ACTIVE_API_KEY`. Na publicação, o `/pagina-vercel` sobe a página e a função juntas, cadastra as quatro variáveis no projeto da Vercel (com a confirmação do aluno), publica de novo e orienta a regra de limite de envios no firewall.
+6. No envio com erro, a página mostra a mensagem genérica e deixa o visitante tentar de novo. Na captura, o lead é o objetivo da página, então ela não redireciona sem confirmar o cadastro.
 
 ### 4. Teste e entrega
 

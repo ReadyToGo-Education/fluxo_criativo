@@ -43,6 +43,8 @@ Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o
 1. LocalStorage do navegador (só pra teste, cada visitante só vê o próprio)
 2. Serverless Function na Vercel (recomendado, a função confere o lead e manda para sua planilha, CRM ou automação)
 
+O Modo 2 só funciona se a página for publicada pelo `/pagina-vercel`, que sobe a página e a função juntas. Se o aluno escolher o 2, confirme: "A página vai ser publicada pelo /pagina-vercel?". Se for ficar em outro lugar (Lovable, WordPress, página da Hotmart), avise que a função não roda lá e que o caminho nesse caso é o formulário nativo da ferramenta de e-mail do aluno.
+
 ### 2. Gerar a página HTML
 
 Estrutura mínima:
@@ -55,7 +57,7 @@ Estrutura mínima:
   - Preservar UTMs da URL atual e anexar no redirect final.
   - Validar email (regex) e WhatsApp (apenas números, 10 ou 11 dígitos com DDD). Essa validação é para a experiência do visitante; no Modo 2 a função do servidor valida de novo.
   - No submit: salvar lead, disparar `fbq('track', 'InitiateCheckout')` se existir `fbq` global, redirecionar pro checkout com UTMs.
-  - Se o envio falhar, mostrar só "Não foi possível enviar agora. Tente de novo em instantes.", nunca o texto do erro.
+  - No Modo 2, espere a resposta da função por no máximo 3 segundos. Se ela falhar ou demorar, siga para o checkout mesmo assim: a venda vale mais que o lead. Nunca mostre texto de erro técnico ao comprador.
 
 ### 3. Modo de persistência
 
@@ -77,13 +79,13 @@ Gerar `meus-produtos/{ativo}/entregas/paginas/api/lead.js` com handler Node.js q
 - Adiciona timestamp
 - Repassa o lead para o destino escolhido, com o endereço do destino lido de variável de ambiente (`LEAD_DESTINO_URL`), nunca escrito no HTML
 - Em erro, registra o detalhe no log e devolve só a mensagem genérica
-- Pergunta ao aluno qual destino: webhook do Zapier/Make, ActiveCampaign/Brevo ou Google Sheets
+- Pergunta ao aluno qual destino: webhook do Zapier ou do Make (que repassa para qualquer CRM, inclusive ActiveCampaign e Brevo) ou Google Sheets
 
 Pra simplificar, padrão sugerido: webhook do Zapier/Make, se o aluno tiver.
 
-Se o aluno não souber nenhuma dessas opções, use a opção "Google Sheets via Apps Script" com tutorial de 4 passos (criar planilha, adicionar Apps Script com `doPost`, publicar como web app, colar a URL nas variáveis de ambiente da Vercel como `LEAD_DESTINO_URL`). O `doPost` também confere os campos e ignora envio com `website` preenchido.
+Se o aluno não souber nenhuma dessas opções, use a opção "Google Sheets via Apps Script" com tutorial de 4 passos (criar planilha, adicionar Apps Script com `doPost`, publicar como app da web com acesso "Qualquer pessoa", colar a URL no chat). O `doPost` também confere os campos e ignora envio com `website` preenchido. Sem o acesso "Qualquer pessoa", o lead não é gravado.
 
-Depois de publicar com `/pagina-vercel`, oriente o aluno a criar no firewall do projeto na Vercel uma regra de limite de envios por IP para a rota `/api/lead` (ex: 5 por minuto). Se a conta dele não tiver essa opção, o honeypot segura o robô comum.
+O endereço do destino fica no `.env` como `LEAD_DESTINO_URL`. Na publicação, o `/pagina-vercel` sobe a página e a função juntas, cadastra a variável no projeto da Vercel (com a confirmação do aluno), publica de novo e orienta a regra de limite de envios no firewall.
 
 ### 4. Salvar arquivos
 
@@ -104,10 +106,8 @@ Destino:     {url do checkout}
 Próximos passos:
 - Rode /pagina-performance pra auditar
 - Rode /pagina-pixel pra instalar o Pixel
-- Rode /pagina-vercel pra publicar
-- Cadastre o endereço do destino como LEAD_DESTINO_URL nas variáveis de ambiente do projeto na Vercel (modo serverless)
-- Crie a regra de limite de envios para /api/lead no firewall do projeto na Vercel (modo serverless)
-- Teste o fluxo completo em modo anônimo
+- Rode /pagina-vercel pra publicar (no modo serverless, ele sobe a página e a função juntas e cuida da variável do destino e do limite de envios)
+- Teste o fluxo completo em modo anônimo e confira se o lead chegou ao destino
 ```
 
 ## Regras

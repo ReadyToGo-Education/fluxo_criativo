@@ -30,7 +30,7 @@ paths:
 | 6 | Injeção de prompt | App que manda texto do usuário para uma IA | Instruções do sistema separadas do texto do usuário. A IA nunca recebe chave nem dados de outros usuários. Resposta da IA não dispara sozinha ação que apaga, envia, cobra ou muda permissão. |
 | 7 | XSS (script malicioso rodando na página) | Tela que mostra texto digitado por alguém | Mostrar texto como texto. No React, nunca `dangerouslySetInnerHTML` com conteúdo vindo de usuário ou lead. Em HTML puro, `textContent` no lugar de `innerHTML`. |
 | 8 | SSRF (servidor buscando um endereço escolhido pelo usuário) | Função que busca um link colado pelo usuário | Aceitar só domínios de uma lista fechada (ex: `instagram.com`) e recusar endereço interno (`localhost`, `127.0.0.1`, `10.*`, `192.168.*`, `169.254.*`). Se o app não busca link do usuário, não se aplica. |
-| 9 | Abuso de envios (robô, spam, derrubar o app) | Formulário público, login, cadastro, função do servidor | Honeypot: campo escondido que só robô preenche; se vier preenchido, responder sucesso sem gravar. Limite de envios por IP na função ou no firewall da hospedagem. Captcha invisível (Cloudflare Turnstile) no login e no cadastro de app aberto ao público. |
+| 9 | Abuso de envios (robô, spam, derrubar o app) | Formulário público, login, cadastro, função do servidor | Honeypot: campo escondido que só robô preenche; se vier preenchido, responder sucesso sem gravar. Limite de envios por IP na função ou no firewall da hospedagem. No login e no cadastro: o Supabase Auth já limita tentativas; ligar a verificação de senha vazada (Password HIBP check). O Lovable Cloud não tem captcha nativo, então não prometa captcha ao aluno. |
 | 10 | Mensagem de erro que vaza informação | Toda tela e função com servidor | O visitante vê mensagem genérica ("Não foi possível enviar agora. Tente de novo em instantes."). Detalhe técnico só no log do servidor. Login responde "E-mail ou senha incorretos" nos dois casos, sem dizer se o e-mail existe: assim ninguém descobre quem é cliente testando e-mails. |
 
 **Senha:** quem guarda é o Supabase Auth, que já grava com hash. Nunca criar tabela própria de senha nem guardar senha em texto.
@@ -45,7 +45,7 @@ Colar no prompt técnico, na seção de segurança:
 >
 > 1. Ativar Row Level Security (RLS) em todas as tabelas. Nenhuma política pode permitir que o visitante anônimo leia, edite ou apague linhas de `leads` ou `funnel_events`.
 >
-> 2. Cada resposta e cada avanço de etapa do visitante é gravado em `funnel_events` (`session_id`, `etapa`, `resposta`, `created_at`), somente com INSERT. A política de INSERT para anônimo existe só nessa tabela. Restrições no banco: `etapa` dentro da lista fechada de etapas do funil, `session_id` com até 64 caracteres, `resposta` com até 200 caracteres. Nenhum dado pessoal nessa tabela.
+> 2. Cada resposta e cada avanço de etapa do visitante é gravado em `funnel_events` (`session_id`, `etapa`, `resposta`, `created_at`), somente com INSERT. A política de INSERT para anônimo existe só nessa tabela e confere os limites no próprio `WITH CHECK` (nunca `WITH CHECK (true)`): `etapa` dentro da lista fechada de etapas do funil, `session_id` com até 64 caracteres, `resposta` com até 200 caracteres. As mesmas regras também ficam como restrições da tabela. Nenhum dado pessoal nessa tabela.
 >
 > 3. A linha em `leads` nasce uma única vez, no envio do modal de pré-checkout, por uma Supabase Edge Function chamada `registrar-lead`. O navegador nunca grava direto em `leads`, e a tabela não tem política de INSERT para anônimo. A função:
 >    a. valida cada campo no servidor: nome com até 100 caracteres, e-mail em formato válido com até 254 caracteres, telefone só com números e 10 ou 11 dígitos;
@@ -100,12 +100,19 @@ Colar no prompt técnico, no bloco de segurança:
 
 Toda função que o Severino gera para receber formulário (`api/lead.js`, `api/active-sync.js` e futuras) segue estes pontos:
 
+0. **Onde ela funciona.** A função só existe se for publicada pelo `/pagina-vercel`, no mesmo projeto e no mesmo deploy da página que a chama. Página publicada em outro lugar (Lovable, WordPress, página da Hotmart) não tem `/api/` e o formulário não envia. Confirme com o aluno onde a página vai ficar antes de escolher o modo com função.
+   - Formato: arquivo `.js` com `export default async function handler(req, res)`. Esse formato roda na Vercel sem `package.json` e sem configuração extra. Sem dependências de npm: use o `fetch` que já vem no Node.
+   - Leia `req.body` dentro de `try/catch`: corpo malformado gera erro na leitura.
+   - IP do visitante: header `x-forwarded-for` (a Vercel sobrescreve esse header, então ele é confiável).
+
 1. Aceita só `POST`. Outro método responde `405`.
 2. Valida cada campo do corpo: tipo, tamanho e formato. Campo inválido responde `400` com mensagem genérica.
 3. Honeypot: se o campo `website` vier preenchido, responde `200` e não grava nada.
 4. Valores que decidem destino (lista, tag, planilha, webhook, preço) vêm de `process.env`, nunca do corpo do pedido.
 5. Chaves e URLs privadas (webhook, Apps Script, API de CRM) só em `process.env`. A página chama a função; a função chama o destino. A URL do destino nunca aparece no HTML.
 6. Tudo dentro de `try/catch`. No erro: `console.error` com o detalhe e resposta `500` com `{ "ok": false, "mensagem": "Não foi possível enviar agora. Tente de novo em instantes." }`.
-7. Limite de envios: orientar o aluno a criar, no firewall do projeto na Vercel, uma regra de limite por IP para a rota da função (ex: 5 envios por minuto). Se a conta dele não tiver essa opção, o honeypot segura o robô comum.
+7. Variáveis de ambiente: o `/pagina-vercel` cadastra no projeto da Vercel, com a confirmação do aluno, e publica de novo. A Vercel só entrega a variável à função depois de um novo deploy.
+8. Limite de envios: regra no firewall do projeto na Vercel (o `/pagina-vercel` orienta), por IP, para Request Path começando com `/api/`, 5 envios por minuto. O plano grátis da Vercel permite uma regra de limite por projeto, por isso a regra cobre todas as funções de uma vez. A regra vale na hora, sem novo deploy.
+9. Destino Google Sheets: o Apps Script precisa estar publicado como app da web com acesso "Qualquer pessoa". Sem isso, a chamada cai numa tela de login e o lead não é gravado, mesmo parecendo que deu certo.
 
 No HTML que chama a função: mostrar ao visitante só a mensagem genérica, nunca o texto do erro devolvido.
