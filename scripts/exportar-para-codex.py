@@ -11,9 +11,17 @@ agentes que seguem o padrão aberto .agents/skills) consegue ler:
     .claude/agents/{nome}.md          -> .codex/agents/{nome}.toml
     hooks de .claude/settings.json    -> .codex/hooks.json  (aponta para .claude/hooks/)
 
-O texto não é alterado. As referências a CLAUDE.md e a .claude/ continuam
-valendo no Codex, porque o AGENTS.md manda consultar esses arquivos, e é no
-CLAUDE.md que estão as regras globais (gate da Meta, abertura de sessão etc.).
+O que vale só no Codex fica em codex-extras/, fora de .claude/:
+
+    codex-extras/skills/{nome}/          -> .agents/skills/{nome}/  (skills que só existem no Codex)
+    codex-extras/acrescimos/{caminho}    -> colado no começo de .agents/skills/{caminho}
+
+O texto de .claude/ não é alterado. A única exceção são os acréscimos: trechos
+curtos que só valem no Codex (ex.: gerar a imagem com a ferramenta do próprio
+Codex no lugar do prompt para colar no ChatGPT), colados logo depois do
+cabeçalho do arquivo exportado. As referências a CLAUDE.md e a .claude/
+continuam valendo no Codex, porque o AGENTS.md manda consultar esses arquivos,
+e é no CLAUDE.md que estão as regras globais (gate da Meta, abertura de sessão etc.).
 
 As demais subpastas de .claude/commands (criativo-estatico/, references/ etc.)
 não viram skills: os commands leem esses arquivos pelo caminho em .claude/.
@@ -23,7 +31,8 @@ Uso:
     python3 scripts/exportar-para-codex.py --verificar  só confere; sai com código 1
                                                          se algo estiver desatualizado
 
-Nunca edite .agents/ nem .codex/ à mão: edite .claude/ e rode o script de novo.
+Nunca edite .agents/ nem .codex/ à mão: edite .claude/ (ou codex-extras/, para o
+que vale só no Codex) e rode o script de novo.
 """
 
 from __future__ import annotations
@@ -44,6 +53,8 @@ ORIGEM_SKILLS = RAIZ / ".claude" / "skills"
 ORIGEM_COMMANDS = RAIZ / ".claude" / "commands"
 ORIGEM_AGENTES = RAIZ / ".claude" / "agents"
 ORIGEM_SETTINGS = RAIZ / ".claude" / "settings.json"
+ORIGEM_EXTRAS_SKILLS = RAIZ / "codex-extras" / "skills"
+ORIGEM_ACRESCIMOS = RAIZ / "codex-extras" / "acrescimos"
 
 DESTINO_SKILLS = RAIZ / ".agents" / "skills"
 DESTINO_AGENTES = RAIZ / ".codex" / "agents"
@@ -114,6 +125,13 @@ def tirar_aspas(valor: str) -> str:
     return valor
 
 
+def fim_do_frontmatter(linhas: list[str]) -> int | None:
+    """Índice da linha --- que fecha o cabeçalho YAML, ou None se não houver cabeçalho."""
+    if not linhas or linhas[0].strip() != "---":
+        return None
+    return next((i for i in range(1, len(linhas)) if linhas[i].strip() == "---"), None)
+
+
 def separar_frontmatter(texto: str) -> tuple[dict[str, str], str]:
     """Separa o cabeçalho YAML (entre as linhas ---) do corpo do arquivo.
 
@@ -121,9 +139,7 @@ def separar_frontmatter(texto: str) -> tuple[dict[str, str], str]:
     "chave: >" com as linhas seguintes recuadas.
     """
     linhas = texto.split("\n")
-    if not linhas or linhas[0].strip() != "---":
-        return {}, texto
-    fim = next((i for i in range(1, len(linhas)) if linhas[i].strip() == "---"), None)
+    fim = fim_do_frontmatter(linhas)
     if fim is None:
         return {}, texto
 
@@ -163,6 +179,29 @@ def skill_de_command(arquivo: Path) -> bytes:
         corpo.strip("\n"),
         "",
     ]
+    return "\n".join(linhas).encode("utf-8")
+
+
+def acrescentar(conteudo: bytes, arquivo_acrescimo: Path) -> bytes:
+    """Cola um trecho que só vale no Codex logo depois do cabeçalho YAML do arquivo exportado.
+
+    Sem cabeçalho, o trecho entra no começo do arquivo.
+    """
+    origem = arquivo_acrescimo.relative_to(RAIZ).as_posix()
+    trecho = [
+        f"<!-- Acréscimo só do Codex, gerado por {SCRIPT} a partir de {origem}. -->",
+        *ler_texto(arquivo_acrescimo).strip("\n").split("\n"),
+        "",
+    ]
+    linhas = conteudo.decode("utf-8-sig").replace("\r\n", "\n").split("\n")
+    fim = fim_do_frontmatter(linhas)
+    if fim is None:
+        linhas = trecho + linhas
+    else:
+        resto = linhas[fim + 1:]
+        while resto and not resto[0].strip():
+            resto.pop(0)
+        linhas = linhas[:fim + 1] + [""] + trecho + resto
     return "\n".join(linhas).encode("utf-8")
 
 
@@ -250,7 +289,7 @@ def montar_esperado(avisos: list[str]) -> tuple[dict[Path, tuple[bytes, Path | N
     (para copiar também a permissão de execução).
     """
     esperado: dict[Path, tuple[bytes, Path | None]] = {}
-    contagem = {"skills": 0, "commands": 0, "agentes": 0, "hooks": 0}
+    contagem = {"skills": 0, "commands": 0, "agentes": 0, "hooks": 0, "skills_codex": 0, "acrescimos": 0}
 
     skills = set()
     for arquivo in listar_arquivos(ORIGEM_SKILLS):
@@ -272,7 +311,32 @@ def montar_esperado(avisos: list[str]) -> tuple[dict[Path, tuple[bytes, Path | N
         if pasta in skills:
             raise SystemExit(f"Conflito de nome: já existe a skill .claude/skills/{pasta}.")
         esperado[DESTINO_SKILLS / pasta / "SKILL.md"] = (skill_de_command(arquivo), None)
+        skills.add(pasta)
         contagem["commands"] += 1
+
+    # Skills que só existem no Codex (codex-extras/skills).
+    skills_codex = set()
+    for arquivo in listar_arquivos(ORIGEM_EXTRAS_SKILLS) if ORIGEM_EXTRAS_SKILLS.exists() else []:
+        dentro = arquivo.relative_to(ORIGEM_EXTRAS_SKILLS)
+        nome = dentro.parts[0]
+        if nome in skills:
+            raise SystemExit(f"Conflito de nome: a skill {nome} de codex-extras/skills já existe na exportação de .claude/.")
+        skills_codex.add(nome)
+        esperado[DESTINO_SKILLS / dentro] = (arquivo.read_bytes(), arquivo)
+    contagem["skills_codex"] = len(skills_codex)
+
+    # Trechos que só valem no Codex, colados em arquivos já exportados (codex-extras/acrescimos).
+    for arquivo in listar_arquivos(ORIGEM_ACRESCIMOS) if ORIGEM_ACRESCIMOS.exists() else []:
+        alvo = DESTINO_SKILLS / arquivo.relative_to(ORIGEM_ACRESCIMOS)
+        if alvo not in esperado:
+            raise SystemExit(
+                f"O acréscimo {arquivo.relative_to(RAIZ).as_posix()} não tem arquivo correspondente em "
+                f"{alvo.relative_to(RAIZ).as_posix()}. O caminho dentro de codex-extras/acrescimos/ "
+                "precisa repetir o caminho do arquivo exportado em .agents/skills/."
+            )
+        conteudo, origem = esperado[alvo]
+        esperado[alvo] = (acrescentar(conteudo, arquivo), origem)
+        contagem["acrescimos"] += 1
 
     for arquivo in sorted(ORIGEM_AGENTES.glob("*.md")):
         esperado[DESTINO_AGENTES / f"{arquivo.stem}.toml"] = (toml_de_agente(arquivo), None)
@@ -325,10 +389,12 @@ def escondidos_pelo_gitignore(caminhos: list[Path]) -> list[Path]:
 
 
 def main() -> int:
-    try:
-        sys.stdout.reconfigure(encoding="utf-8")
-    except (AttributeError, ValueError):
-        pass
+    # Saída de erro também em UTF-8: as mensagens do SystemExit vão por ela.
+    for fluxo in (sys.stdout, sys.stderr):
+        try:
+            fluxo.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
 
     parser = argparse.ArgumentParser(description="Gera .agents/ e .codex/ a partir de .claude/.")
     parser.add_argument("--verificar", action="store_true",
@@ -361,7 +427,7 @@ def main() -> int:
             + [("sobrando", p) for p in sobrando] + [("ignorado pelo git", p) for p in escondidos]
         )
         if not pendencias:
-            print("Tudo em dia: .agents/ e .codex/ batem com .claude/.")
+            print("Tudo em dia: .agents/ e .codex/ batem com .claude/ e codex-extras/.")
             return 0
         print(f"{len(pendencias)} arquivo(s) desatualizado(s) em .agents/ ou .codex/:")
         for tipo, caminho in pendencias[:20]:
@@ -385,6 +451,10 @@ def main() -> int:
     print(
         f"Exportação concluída: {contagem['skills']} skills, {contagem['commands']} commands, "
         f"{contagem['agentes']} agentes e {contagem['hooks']} hooks."
+    )
+    print(
+        f"Só do Codex (codex-extras/): {contagem['skills_codex']} skill(s) e "
+        f"{contagem['acrescimos']} acréscimo(s)."
     )
     print(f"Arquivos criados: {len(novos)}. Alterados: {len(alterados)}. Removidos: {len(sobrando)}.")
     return 0

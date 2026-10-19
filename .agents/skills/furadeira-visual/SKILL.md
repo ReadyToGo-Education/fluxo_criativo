@@ -3,6 +3,9 @@ name: furadeira-visual
 description: Apoio tecnico para o command /furadeira-visual. Le a Furadeira ja gerada no perfil.md, decide automaticamente o layout visual mais adequado (mecanica + nicho), e monta um prompt em ingles rico em descricao textual para o aluno colar no ChatGPT e gerar a imagem PNG. Sem entrevista.
 ---
 
+<!-- Acréscimo só do Codex, gerado por scripts/exportar-para-codex.py a partir de codex-extras/acrescimos/furadeira-visual/SKILL.md. -->
+> **No Codex, a imagem da Furadeira é gerada aqui mesmo.** As partes "Recepção da imagem" e a conferência depois dela mudam: siga a seção "/furadeira-visual" de `.agents/skills/imagem-no-codex/SKILL.md`. O mapeamento de layout, a paleta e a estrutura do prompt continuam valendo.
+
 # Skill. Furadeira Visual (Prompt para Imagem)
 
 Apoio técnico do command `/furadeira-visual`. A skill lê a Furadeira já existente no `perfil.md` (gerada por `/gerar-furadeira`), decide o layout visual sozinha com base na mecânica e no nicho, monta o prompt em inglês e o entrega ao aluno para colar no ChatGPT. Depois recebe o PNG de volta e salva no projeto.

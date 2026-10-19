@@ -1,0 +1,1 @@
+> **No Codex, a imagem da Furadeira é gerada aqui mesmo.** No bloco "Gerar Representação Visual", execute o `/furadeira-visual` pelo roteiro de `.agents/skills/source-command-furadeira-visual/SKILL.md` e siga a seção "/produto-concepcao (imagem da Furadeira)" de `.agents/skills/imagem-no-codex/SKILL.md`, no lugar de "Aguardar imagem ou opção de pular".
