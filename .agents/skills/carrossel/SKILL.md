@@ -5,6 +5,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch, Skill
 model: sonnet
 ---
 
+<!-- Acréscimo só do Codex, gerado por scripts/exportar-para-codex.py a partir de codex-extras/acrescimos/carrossel/SKILL.md. -->
+> **No Codex, as imagens do carrossel são geradas aqui mesmo, sem perguntar.** No passo de gerar as imagens (`references/passo-output-triplo.md`), siga a seção "/carrossel" de `.agents/skills/imagem-no-codex/SKILL.md`: as imagens são geradas direto, sem o menu de caminhos (Manual, Chrome, API).
+
 # Carrossel de Instagram
 
 Gera carrossel viral em 1 dos 9 estilos do workshop, com texto + prompts visuais + legenda. O aluno escolhe o estilo, a skill conduz a entrevista guiada e entrega tudo pronto para postar.

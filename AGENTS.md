@@ -195,6 +195,19 @@ Responder em português com caminho e próximo passo
 
 Se o Codex não leu o command, skill ou agente relevante, ele ainda não tem contexto suficiente para executar o fluxo do workshop com fidelidade.
 
+### Geração de Imagem no Codex
+
+O Claude Code não gera imagem. Por isso vários fluxos do workshop terminam num prompt para o aluno colar no ChatGPT ou no Gemini, ou num script que paga o OpenRouter. No Codex é diferente: a ferramenta de imagem do próprio Codex gera a arte aqui mesmo, pelo plano do ChatGPT do aluno, sem chave de API.
+
+No Codex, antes de executar qualquer passo que gere imagem, leia `.agents/skills/imagem-no-codex/SKILL.md` e siga o que ela diz para aquele fluxo. Vale para:
+
+- `/criativo-estatico` (os 29 formatos);
+- `/furadeira-visual`, inclusive quando é chamado de dentro do `/produto-concepcao`;
+- `/carrossel`;
+- qualquer outro passo que mande o aluno colar um prompt de imagem no ChatGPT ou no Gemini, ou que rode um script de imagem pelo OpenRouter.
+
+Os arquivos em `.claude/` continuam descrevendo o fluxo do Claude Code, com o prompt para colar. Não os altere para o Codex: o que vale só no Codex fica em `codex-extras/`.
+
 ## Abertura de Sessão no Codex
 
 Em uma conversa normal de uso do workshop, se o usuário começar com saudação, pedido genérico ou intenção de criar produto, leia `.claude/commands/produto-novo.md` e siga o fluxo de produto novo.

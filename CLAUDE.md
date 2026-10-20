@@ -897,6 +897,8 @@ python3 scripts/exportar-para-codex.py
 
 Para só conferir se as pastas estão em dia, sem gravar nada, acrescente `--verificar` ao comando.
 
+O que vale só no Codex (por exemplo, gerar a imagem com a ferramenta do próprio Codex no lugar do prompt para colar no ChatGPT) fica em `codex-extras/`, nunca em `.claude/`. O mesmo script junta essa pasta na exportação. Detalhes em `codex-extras/README.md`.
+
 ---
 
 ## Fluxo Padrão de Todo Comando (6 Passos)

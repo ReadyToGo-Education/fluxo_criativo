@@ -3,6 +3,9 @@ name: "source-command-produto-concepcao"
 description: "Cadastrar produto/negócio do aluno com Quadro, Furadeira, Decorados e 3 Identidades da metodologia VTSD."
 ---
 
+<!-- Acréscimo só do Codex, gerado por scripts/exportar-para-codex.py a partir de codex-extras/acrescimos/source-command-produto-concepcao/SKILL.md. -->
+> **No Codex, a imagem da Furadeira é gerada aqui mesmo.** No bloco "Gerar Representação Visual", execute o `/furadeira-visual` pelo roteiro de `.agents/skills/source-command-furadeira-visual/SKILL.md` e siga a seção "/produto-concepcao (imagem da Furadeira)" de `.agents/skills/imagem-no-codex/SKILL.md`, no lugar de "Aguardar imagem ou opção de pular".
+
 # source-command-produto-concepcao
 
 Use esta skill quando o usuário pedir o comando `/produto-concepcao` do workshop (ou `produto-concepcao`, sem a barra).

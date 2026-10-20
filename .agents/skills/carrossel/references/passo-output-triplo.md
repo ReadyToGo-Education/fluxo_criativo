@@ -1,3 +1,6 @@
+<!-- Acréscimo só do Codex, gerado por scripts/exportar-para-codex.py a partir de codex-extras/acrescimos/carrossel/references/passo-output-triplo.md. -->
+> **No Codex, as imagens são geradas aqui mesmo, sem menu.** Pule as seções 3.3 a 3.5 e siga a seção "/carrossel" de `.agents/skills/imagem-no-codex/SKILL.md`. A regra dura de sempre exibir o menu não vale no Codex. Os caminhos Manual e API só entram se o aluno pedir ou se não der para gerar aqui.
+
 # Passo de Output Triplo (compartilhado)
 
 > Passo 4 do fluxo de geração da skill `/carrossel`. Roda depois que os 6 slides de texto foram aprovados pelo aluno no Passo 3.

@@ -3,6 +3,9 @@ name: "source-command-furadeira-visual"
 description: "Gerar a imagem PNG da Furadeira do produto ativo. Le a Furadeira ja escrita no perfil.md (gerada por /gerar-furadeira), decide o layout visual conforme mecanica + nicho, monta um prompt em ingles para o aluno colar no ChatGPT, recebe a imagem de volta e salva no projeto + painel de entregas."
 ---
 
+<!-- Acréscimo só do Codex, gerado por scripts/exportar-para-codex.py a partir de codex-extras/acrescimos/source-command-furadeira-visual/SKILL.md. -->
+> **No Codex, a imagem da Furadeira é gerada aqui mesmo.** Os passos 8 e 9 abaixo (colar o prompt no ChatGPT e esperar a imagem) mudam: siga a seção "/furadeira-visual" de `.agents/skills/imagem-no-codex/SKILL.md`. Os outros passos continuam iguais.
+
 # source-command-furadeira-visual
 
 Use esta skill quando o usuário pedir o comando `/furadeira-visual` do workshop (ou `furadeira-visual`, sem a barra).
