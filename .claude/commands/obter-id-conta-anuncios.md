@@ -10,6 +10,8 @@ user-invocable: false
 
 Localiza o ID da conta de anúncios e salva no `.env` como `FB_AD_ACCOUNT_ID`. Esse ID é necessário para validar o token do Meta Ads, gerar relatórios e fazer chamadas à Graph API.
 
+É o último recurso. Quando a listagem automática das contas está disponível (Passo 5 do `/gerar-token-permanente-facebook-ads` ou seção 4.3 da SKILL `trafego-conexao`), a conta sai dela e o ID não é pedido ao aluno. No caminho do App da `/trafego-conexao`, esta skill só entra se a conta padrão continuar faltando depois dessa listagem (seção 4.2 da SKILL `trafego-conexao`).
+
 ---
 
 ## Passo 1. Localizar o ID
@@ -40,10 +42,15 @@ O ID deve ser uma sequência numérica de 13 a 16 dígitos (sem o prefixo `act_`
 
 ## Passo 3. Salvar no .env
 
-Leia o `.env`.
+Gravar sem abrir o `.env` (nunca Read, Edit ou Write nele, porque a leitura traz o token e as outras chaves para a conversa), com o comando de uma linha do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md. Ele apaga a linha antiga (inclusive a vazia, vinda do `.env.example`) e acrescenta a nova:
 
-- Se a linha `FB_AD_ACCOUNT_ID` já existir: atualize o valor com `Edit` cirúrgico.
-- Se não existir: adicione `FB_AD_ACCOUNT_ID={valor}` ao final do arquivo.
+```bash
+touch .env && sed -i '/^FB_AD_ACCOUNT_ID=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; } && printf 'FB_AD_ACCOUNT_ID=%s\n' "<id>" >> .env
+```
+
+No Mac, trocar `sed -i` por `sed -i ''`.
+
+O ID padrão precisa aparecer também em `FB_AD_ACCOUNT_IDS` (seção 6.4 da SKILL `trafego-conexao`). Ler a lista com `grep "^FB_AD_ACCOUNT_IDS=" .env | cut -d= -f2-` (não é segredo). Se vier vazia, gravar `FB_AD_ACCOUNT_IDS` com o mesmo ID; se tiver outras contas e não tiver esta, gravar a lista antiga com `,<id>` no fim. Usar o mesmo comando acima, trocando o nome da variável.
 
 O nome padrão obrigatório é `FB_AD_ACCOUNT_ID` (sem o prefixo `act_` no valor). Não usar variação diferente desse nome. Não sobrescrever outras variáveis do `.env`.
 
@@ -60,5 +67,4 @@ Confirme ao aluno:
 Retorne à skill que chamou esta e siga o próximo passo. Exemplos de fluxo:
 
 - Se chamada por `/trafego-conexao` (modo APP): voltar para o Passo 3 (validação) da skill `trafego-conexao`.
-- Se chamada por `/gerar-token-permanente-facebook-ads`: voltar e seguir para a próxima skill do fluxo (geralmente `/trafego-conexao` ou `/ads-relatorio`).
 - Se chamada por `/ads-relatorio`: voltar e continuar a configuração do relatório.

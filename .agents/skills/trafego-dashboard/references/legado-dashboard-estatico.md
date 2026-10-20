@@ -1,6 +1,6 @@
 # Legado. Dashboard Estático (sem MCP)
 
-Caminho antigo do dashboard de tráfego, mantido para quem não usa o conector MCP da Meta. Ele continua funcionando igual a antes: o dashboard é a **fotografia de uma análise** do `/trafego-analise`, gravada em HTML no computador do aluno.
+Caminho antigo do dashboard de tráfego, mantido para quem não usa o conector MCP da Meta. O dashboard é a **fotografia de uma análise** do `/trafego-analise`, gravada em HTML no computador do aluno. Ele segue o `_export-html.md` atual da análise: gráficos de verdade e um dos 3 temas de cor (escuro, terra ou claro), perguntado na primeira vez e guardado em `EXPORT_TEMA` no `.env`.
 
 O `/trafego-dashboard` só chega aqui em dois casos:
 
@@ -41,7 +41,7 @@ O `_export-html.md` cuida de tudo o que já fazia: salva em `meus-produtos/{ativ
 
 ## 3. Regras do legado
 
-1. **Nada muda nos arquivos antigos.** O `_export-html.md`, o `painel-trafego.py` e a pasta `trafego/analise/` seguem como estão.
+1. **O legado não tem regra própria de HTML.** Quem monta a fotografia é o `_export-html.md` da análise, com o tema e os gráficos dele; o `painel-trafego.py` e a pasta `trafego/analise/` seguem como estão.
 2. **Não gravar nada em `meus-produtos/dashboard-trafego.md`.** Esse registro é só do dashboard ao vivo.
 3. **Sempre deixar claro que é fotografia**, com a data e a hora no topo (o `_export-html.md` já faz isso).
 4. **Sempre lembrar que existe o ao vivo**, uma única vez por conversa, sem insistir.

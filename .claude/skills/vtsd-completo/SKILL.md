@@ -332,6 +332,8 @@ Identifique e quebre as principais objeções do público.
 
 ### Os 18 Tipos de Anúncios
 
+Lista oficial, com descrições, exemplos e os 3 extras (Pesquisa Científica, Atualidades e Atualidades Trend): `.claude/skills/mandala-de-anuncios/SKILL.md`.
+
 1. **Comparação**. Compare duas situações mostrando qual é melhor
 2. **Apelo Emocional**. Histórias que tocam sentimentos
 3. **Certo vs Errado**. Erros comuns vs forma correta

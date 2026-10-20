@@ -1,4 +1,4 @@
-# Output [3] — Criativos & Copy
+# Output [3]. Criativos & Copy
 
 Análise completa dos criativos ativos: formato, retenção de vídeo, CTA, fadiga e engajamento de texto. Responde as 5 perguntas obrigatórias em sequência e traz Tier Ranking e DNA dos Winners como seções extras.
 
@@ -6,11 +6,11 @@ Análise completa dos criativos ativos: formato, retenção de vídeo, CTA, fadi
 
 ## Perguntas que cobre
 
-1. "Qual formato performa melhor? Imagem, vídeo ou carrossel — quem ganha em ROAS, CTR e CPA?"
-2. "Os vídeos estão sendo assistidos até o final? (Thumbstop, Hook Rate, Hold Rate, Play-Through)"
-3. "Qual CTA converte mais? Saiba Mais, Compre Agora, Cadastre-se — quem tem melhor CTR e CPA?"
+1. "Qual formato performa melhor? Imagem, vídeo ou carrossel: quem ganha em ROAS, CTR e CPA?"
+2. "Os vídeos estão sendo assistidos até o final? (Hook Rate ou Thumbstop, Hold Rate, Play-Through)"
+3. "Qual CTA converte mais? Saiba Mais, Compre Agora, Cadastre-se: quem tem melhor CTR e CPA?"
 4. "Tem criativo acima de 50.000 impressões que pode estar saturado? (Fadiga Map)"
-5. "Quais textos têm melhor taxa de engajamento? (ranking por CTR — spend acima de R$ 100)"
+5. "Quais textos têm melhor taxa de engajamento? (ranking por CTR: spend acima de R$ 100)"
 
 ---
 
@@ -25,14 +25,15 @@ Análise completa dos criativos ativos: formato, retenção de vídeo, CTA, fadi
 ## Dados necessários
 
 Pedir ao `/trafego-insights`:
-- **Escopo: usar `ESCOPO_FILTRO` definido no Passo 0.6 do command principal.** Não forçar `conta_completa`. Se o aluno escolheu um grupo (ex: "VTSD"), só puxar criativos das campanhas desse grupo.
+- **Escopo: usar `ESCOPO_FILTRO` definido no Passo 0.6 do `SKILL.md`.** Não forçar `conta_completa`. Se o aluno escolheu um grupo (ex: "CURSO X"), só puxar criativos das campanhas desse grupo.
 - **Status: usar `STATUS_FILTRO` definido no Passo 0.55** (ACTIVE, PAUSED+WITH_ISSUES, ambos, ou histórico completo). Não assumir só ACTIVE.
-- Período: usar período definido no Passo 3. Não perguntar de novo.
+- Período: usar o período definido no Passo 3. Não perguntar de novo.
 - Breakdown `publisher_platform` para split vídeo x imagem x carrossel
-- Métricas de vídeo por ad: `video_avg_time_watched_actions`, `video_p25_watched_actions` (Thumbstop), `video_thruplay_watched_actions` (Hook Rate 25%), `video_p50_watched_actions` (Hold Rate), `video_p100_watched_actions` (Play-Through)
+- Métricas de vídeo por ad: `video_avg_time_watched_actions`, `video_p25_watched_actions` (Hook Rate, que é o mesmo número do Thumbstop), `video_thruplay_watched_actions` (ThruPlay), `video_p50_watched_actions` (Hold Rate), `video_p100_watched_actions` (Play-Through)
 - Métricas por anúncio: `inline_link_clicks`, `link_clicks`, `cost_per_inline_link_click`, `actions[purchase]`, `spend`, `impressions`, `frequency`, `quality_ranking`, `engagement_rate_ranking`, `conversion_rate_ranking`
 - Para Fadiga Map: filtrar anúncios com `impressions > 50000` (status já filtrado pelo `STATUS_FILTRO` acima)
 - Para ranking de CTR: filtrar anúncios com `spend > 100` no período
+- Para o Gap Finder: nome e texto de cada anúncio (corpo e título), mesma fonte da `trafego-criativos/sub-skills/dna-criativo.md` (seção "Dados necessários")
 
 ---
 
@@ -41,7 +42,7 @@ Pedir ao `/trafego-insights`:
 ### Bloco 1. Comparativo de formato (Q1)
 
 ```
-📐 FORMATO — últimos Xd
+📐 FORMATO: últimos Xd
 
 ┌─────────────────────────────────────────────────┐
 │  VÍDEO              │  IMAGEM              │
@@ -51,7 +52,7 @@ Pedir ao `/trafego-insights`:
 │  N anúncios         │  N anúncios          │
 └─────────────────────────────────────────────────┘
 
-Vencedor: {formato} — CPA X% mais barato, CTR X× maior
+Vencedor: {formato}, CPA X% mais barato, CTR X× maior
 Se carrossel existir: incluir coluna adicional
 ```
 
@@ -64,26 +65,27 @@ Critério de decisão: formato com menor CPA E maior CTR é o recomendado para p
 Só para anúncios de vídeo. Se não houver vídeos ativos, informar e pular.
 
 ```
-🎬 RETENÇÃO DE VÍDEO — {N} vídeos ativos
+🎬 RETENÇÃO DE VÍDEO: {N} vídeos ativos
 
-Thumbstop (25% assistido):  X%   benchmark > 70%
-Hook Rate  (3s / impressões): X%   benchmark > 25%
+Hook Rate (Thumbstop):       X%   saudável 25% ou mais
 Hold Rate  (50% / 3s):       X%   benchmark > 40%
 Play-Through (100%):          X%   esperado 1-5%
 
 Top 5 por Hold Rate:
-# | Anúncio | Thumbstop | Hook | Hold | Play-Through
+# | Anúncio | Hook | Hold | Play-Through
 ```
 
-Leitura obrigatória após a tabela: identificar qual etapa do funil é o gargalo principal (ex: Thumbstop ok + Hook baixo = hook não ativa Urgência Oculta nos primeiros 3 segundos).
+**Hook Rate e Thumbstop são o mesmo número:** `video_p25_watched_actions ÷ impressions` (aproximação dos 3 segundos), com a régua única da `/trafego-insights` (seção 4.3): crítico abaixo de 15%, atenção de 15% a 25%, saudável 25% ou mais. Nunca calcular o Thumbstop à parte.
 
-Para imagens (`object_type = PHOTO`, `LINK` ou `CAROUSEL`): calcular apenas CTR e CPA/CPL. Thumbstop, Hook, Hold e Play-Through marcados como `—`.
+Leitura obrigatória após a tabela: identificar qual etapa do funil é o gargalo principal (ex: Hook ok + Hold baixo = a abertura prende, mas os Decorados não seguram a pessoa até a metade do vídeo; Hook baixo = a abertura não ativa a Urgência Oculta nos primeiros 3 segundos).
+
+Para imagens (`object_type = PHOTO`, `LINK` ou `CAROUSEL`): calcular apenas CTR e CPA/CPL. Hook, Hold e Play-Through marcados como `-`.
 
 ### Bloco 3. CTAs por conversão (Q3)
 
 Se dados de CTA estiverem disponíveis na API:
 ```
-🖱️ CTA — performance comparada
+🖱️ CTA: performance comparada
 
 | CTA             | Impressões | CTR   | ILC   | CPA     |
 |-----------------|-----------|-------|-------|---------|
@@ -91,18 +93,18 @@ Se dados de CTA estiverem disponíveis na API:
 | Compre Agora    | ...       | ...   | ...   | ...     |
 | Cadastre-se     | ...       | ...   | ...   | ...     |
 
-Vencedor: {CTA} — CPA R$ X, ILC X%
+Vencedor: {CTA}, CPA R$ X, ILC X%
 ```
 
 Se dados de CTA não estiverem disponíveis (limite de requisições ou breakdowns não suportados):
-- Informar claramente e sugerir ação concreta: "Duplicar o winner atual trocando apenas o CTA duplicando entidade no Gerenciador (variando 1 dimensão)" com o CTA alternativo recomendado.
+- Informar claramente e sugerir ação concreta: "Duplicar o winner atual trocando apenas o CTA via /trafego-testes" com o CTA alternativo recomendado.
 - Nunca deixar o bloco vazio sem a sugestão de ação.
 
-Benchmark CPA: inferir do `resumo-produto.md` conforme tabela de output [1] (low/mid/high ticket).
+Benchmark CPA: inferir do preço e do tipo de produto no `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`), conforme tabela de output [1] (low/mid/high ticket). Não perguntar de novo.
 
 ### Bloco 4. Fadiga Map (Q4)
 
-Filtrar anúncios com `impressions > 50.000` e status ACTIVE. Score de fadiga 0 a 5:
+Filtrar anúncios com `impressions > 50.000` dentro do `STATUS_FILTRO`. Fadiga se mede melhor nos anúncios ativos: se o filtro incluir pausados, mostrar o status de cada anúncio na tabela. Score de fadiga 0 a 5:
 
 | Sinal | Peso |
 |---|---|
@@ -115,7 +117,7 @@ Filtrar anúncios com `impressions > 50.000` e status ACTIVE. Score de fadiga 0 
 Veredicto: `0` saudável / `1-2` monitorar / `3-4` substituir em breve / `5` pausar agora.
 
 ```
-🔥 FADIGA MAP — criativos com +50k impressões
+🔥 FADIGA MAP: criativos com +50k impressões
 
 | Veredicto | Score | Anúncio | Freq | Impressões | CPA | Below Avg |
 ```
@@ -127,7 +129,7 @@ Veredicto: `0` saudável / `1-2` monitorar / `3-4` substituir em breve / `5` pau
 Filtrar anúncios com `spend > R$ 100` no período, ordenar por CTR decrescente.
 
 ```
-✍️ TOP TEXTOS POR CTR — spend > R$ 100
+✍️ TOP TEXTOS POR CTR: spend > R$ 100
 
 # | Anúncio | CTR | ILC | CPA | Tier
 ```
@@ -141,15 +143,16 @@ Leitura: identificar se CTR alto está convertendo (ILC alto + CPA real) ou apen
 Aplicar fórmula de score composto da Análise 3.2 em todos os anúncios ativos:
 
 **Para vídeos (peso dos componentes):**
-- Hook Rate: 30% — (valor / 25%) × 30, máx 30
-- Hold Rate: 20% — (valor / 40%) × 20, máx 20
-- CTR: 25% — (valor / 1,5%) × 25, máx 25
-- CPR invertido: 25% — (benchmark / valor) × 25, máx 25
+- Hook Rate: 30%, (valor / 25%) × 30, máx 30
+- Hold Rate: 20%, (valor / 40%) × 20, máx 20
+- CTR: 25%, (valor / 1,5%) × 25, máx 25
+- CPR invertido: 25%, (benchmark / valor) × 25, máx 25
 
 **Para imagens (sem métricas de vídeo):**
-- CTR: 40%
-- CPR invertido: 35%
-- Thumbstop: 25%
+- CTR: 53%
+- CPR invertido: 47%
+
+Imagem não tem métrica de vídeo (o Thumbstop é o próprio Hook Rate, ver Bloco 2): os 25% que a fórmula antiga dava ao Thumbstop foram redistribuídos proporcionalmente entre CTR e CPR invertido, na razão original 40:35, resultando em 53% e 47%.
 
 | Tier | Score | Diagnóstico | Ação |
 |---|---|---|---|
@@ -168,25 +171,25 @@ Entregar: distribuição numérica (N por tier) + gasto total em cada tier + ale
 Para os top 3 por volume de conversões (com CPA real disponível):
 
 ```
-🧬 DNA DOS WINNERS — top 3 por conversão
+🧬 DNA DOS WINNERS: top 3 por conversão
 
 Tier | Formato | Anúncio | Spend | Compras | CPA | ROAS | Hook
 ```
 
-Extrair o padrão comum: formato, estrutura do título, presença de número, tipo de promessa. Gerar briefing para próxima rodada criativa baseado na gramática vencedora.
+Extrair o padrão comum: formato, estrutura do título, presença de número, tipo de promessa. Gerar briefing para próxima rodada criativa baseado na gramática vencedora. Se o briefing trouxer texto de anúncio (gancho, headline, CTA), aplicar a regra "AUTO-REVISÃO OBRIGATÓRIA DE COPY" do CLAUDE.md antes de mostrar. Para produzir as peças, encaminhar para `/copy-anuncio`, `/criativo-estatico` ou `/mandala-de-anuncios`.
 
 ---
 
 ## Protocolo padrão (obrigatório)
 
-1. **Diagnóstico** — números brutos dos 5 blocos.
-2. **Causa provável** — qual elemento VTSD está falhando ou performando bem (Hook Rate baixo = Urgência Oculta fraca no hook / Hold Rate alto = Decorados percebidos / CTR alto sem ILC = promessa do ad não alinhada com a página).
-3. **No VTSD, isso significa…** — conexão explícita com o método:
+1. **Diagnóstico**: números brutos dos 5 blocos.
+2. **Causa provável**: qual elemento VTSD está falhando ou performando bem (Hook Rate baixo = Urgência Oculta fraca no hook / Hold Rate alto = Decorados percebidos / CTR alto sem ILC = promessa do ad não alinhada com a página).
+3. **No VTSD, isso significa…**: conexão explícita com o método:
    - Hook Rate < 25% = Urgência Oculta não está no primeiro segundo
    - Hold Rate < 40% = Decorados e Furadeira não estão sendo percebidos
    - CTR alto + ILC baixo = Identidade do Produto não está clara na página de destino
    - Tier C > 30% do budget = diversidade criativa baixa, só um perfil de Identidade do Consumidor sendo atingido
-4. **Ação recomendada** — handoffs específicos.
+4. **Ação recomendada**: handoffs específicos.
 
 ---
 
@@ -194,7 +197,7 @@ Extrair o padrão comum: formato, estrutura do título, presença de número, ti
 
 Após identificar tipos de criativos ativos, listar os ausentes e sugerir ângulo concreto para cada tipo faltante.
 
-### Resposta 1. "Qual formato performa melhor: imagem estática, vídeo ou carrossel?"
+Nomes e ordem: os 18 tipos principais de `.claude/skills/mandala-de-anuncios/SKILL.md` (seção "Os 21 tipos de anúncio", itens 1 a 18). Os 3 extras (Pesquisa Científica, Atualidades, Atualidades Trend) contam como presentes quando aparecem, mas não entram na lista de ausentes: a conta de ausentes é sempre sobre os 18. Nunca usar nomes fora dessa lista. Para descobrir o tipo de cada criativo, seguir "Como descobrir o tipo de cada criativo" em `.claude/skills/trafego-criativos/sub-skills/dna-criativo.md`. Se mais da metade do gasto ficar sem tipo identificado, declarar a lista de ausentes como parcial.
 
 Gap Finder: tipos ausentes = portas fechadas para perfis diferentes de Identidade do Consumidor.
 
@@ -205,8 +208,45 @@ Gap Finder: tipos ausentes = portas fechadas para perfis diferentes de Identidad
 | Achado | Para onde |
 |---|---|
 | Formato perdedor com gasto significativo | `/trafego-otimizar` (reduzir budget do formato) |
-| Hook Rate < 25% | Duplicar entidade no Gerenciador (variando 1 dimensão) (ab-criativo: mesmo vídeo, hooks diferentes) + `/copy-anuncio` (reescrever abertura com Urgência Oculta mais forte) |
+| Hook Rate < 25% | `/trafego-testes` (ab-criativo: mesmo vídeo, hooks diferentes) + `/copy-anuncio` (reescrever abertura com Urgência Oculta mais forte) |
 | Criativo Tier D ou Fadiga score >= 4 | `/trafego-otimizar` (pausar) |
-| Winner com ROAS > 3x e freq < 3 | `/trafego-escalar` (vertical) + Duplicar entidade no Gerenciador (variando 1 dimensão) (duplicar variando CTA ou público) |
-| Gap na Mandala (tipo ausente) | `/copy-anuncio` (criar anúncio no tipo faltante) |
+| Winner com ROAS > 3x e freq < 3 | `/trafego-escalar` (vertical) + `/trafego-testes` (duplicar variando CTA ou público) |
+| Gap na Mandala (tipo ausente) | `/copy-anuncio` ou `/mandala-de-anuncios` (criar anúncio no tipo faltante) + `/criativo-estatico` (peça em imagem) |
 | Budget > 30% em Tier C | `/trafego-otimizar` (redistribuição) |
+| Hook Rate < 15% em qualquer criativo | `/trafego-criativos` leitura de atenção (onde exatamente a atenção se perde) |
+| CTR alto + CPA ruim (curiosidade vazia) | `/trafego-criativos` intenção criativa (qualidade do clique, mapa de intenção) |
+| CPA ruim com CTR e LPV bons | `/trafego-criativos` conversão criativa (cold vs warm, falso conversor) |
+| "Por que esse criativo não vende?" | `/trafego-criativos` diagnóstico criativo (4 camadas, onde quebra) |
+| "O que os meus melhores criativos têm em comum?" | `/trafego-criativos` DNA criativo (perfis, fórmula vencedora) |
+| "Que criativo devo testar agora?" | `/trafego-criativos` briefing criativo (próximos testes priorizados) |
+
+---
+
+## Mapeamento HTML (export via `_export-html.md`)
+
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** Não existe `.kpi-grid`, `.table`, `.bar-row`, `.callout` nem `.pitch-box` no CSS embutido: usá-los gera seção sem estilo.
+
+| Bloco do output narrado | Componente do design system |
+|---|---|
+| KPIs globais (gasto, anúncios ativos, ROAS, CPA, % budget em Tier C/D) | `.stats-grid` com `.stat-card` por métrica (`.value.green/.yellow/.red`) |
+| Bloco 1. Comparativo de formato (vídeo × imagem × carrossel) | `.card` + `.fmt-compare` com um `.fmt-box` por formato (`.fmt-tipo` + `.fmt-metric` com `.ml`/`.mv`); tag `.tag-video`/`.tag-imagem` |
+| Bloco 2. Funil de retenção de vídeo (números brutos) | `.card` + `.funnel-row` com `.funnel-item` (`.fi-label` / `.fi-value` / `.fi-sub`) |
+| Bloco 2. Top 5 por Hold Rate / Bloco 5. Top textos por CTR | `.card` + `table`; `.rank`, `.num`, `.ad-name`, badge de tier |
+| Bloco 3. CTAs por conversão | `.card` + `table`; vencedor com `style="color:var(--green)"` |
+| Bloco 4. Fadiga Map | `.card` + `table`; coluna Veredicto com `.tier-c`/`.tier-d` para "substituir"/"pausar" |
+| Extra A. Distribuição por Tier S/A/B/C/D | `.card` + `table` com badges `.tier-s`/`.tier-a`/`.tier-b`/`.tier-c`/`.tier-d` |
+| "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Ação recomendada | `.action-box` |
+| Handoffs para skills executoras | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar todos os gráficos abaixo que tiverem dado real, logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas na seção **3.2.1** e **3.2.1.1** do `_export-html.md`). Se a conta não tiver vídeos ativos (sem `video_p25/p50/p100_watched_actions`), **omitir o funil de retenção** e seguir com os demais: nunca inventar número.
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Funil de retenção de vídeo | `.funnel` (receita B) | Impressões → p25 (Hook Rate) → p50 (Hold) → p100 (Play-Through), somando `video_p25/p50/p100_watched_actions` dos vídeos ativos | `.chart-card` full-width, topo da "Visão visual" |
+| Fadiga: tiers fortes vs. fracos | `.hbar-row` (receita D) | Tier ranking (Extra A): tiers S/A em `.win` (verde) vs. tiers C/D em `.burn` (vermelho); largura = gasto do tier | `.chart-card` dentro do Bloco 4 (Fadiga Map) |
+| Formato: vídeo × imagem | `.wow-chart` (receita C) | Bloco 1: ROAS (ou CTR / CPA) de vídeo × imagem como par | `.chart-card` dentro do Bloco 1 |
+
+Regras dos gráficos: usar só cores da paleta. **Funil (receita B):** largura em escala log do topo (`log10(valor)/log10(impressões)·100`); no `.funnel-meta` de cada etapa, a taxa real em relação à etapa anterior (Hook Rate %, Hold %, Play-Through %). **Barras horizontais de fadiga (receita D):** somar o gasto de cada tier; `.win` (verde) para S/A, `.burn` (vermelho) para C/D; largura proporcional ao maior gasto do conjunto; alerta visual se C+D > 30% do budget. **Barras pareadas de formato (receita C):** par vídeo × imagem por métrica-norte; a barra do formato vencedor recebe `.good` (verde); altura normalizada ao maior do par; quando a métrica é CPA (menor é melhor), inverter a leitura de cor. Se houver carrossel com gasto relevante, o `.wow-chart` aceita um terceiro grupo.

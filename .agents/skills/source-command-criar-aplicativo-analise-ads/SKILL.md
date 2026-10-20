@@ -76,7 +76,7 @@ Acesse developers.facebook.com e faca login com a conta de admin do negocio. Cli
 
 Execute a skill `gerar-token-permanente-facebook-ads`. Ela guia o usuario pelo processo completo de criacao do Usuario do Sistema, atribuicao de ativos (conta de anuncios, App, Pagina, Instagram), geracao do token permanente e validacao com 3 testes na Graph API.
 
-Ao final, ela ja encadeia em `obter-id-conta-anuncios` para localizar e salvar o ID da conta de anuncios em `FB_AD_ACCOUNT_ID` no `.env`.
+Ao final, ela lista as contas de anúncios que o token enxerga e grava `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS` no `.env`. O `/obter-id-conta-anuncios` só entra se a conta padrão continuar faltando depois dessa listagem (seção 4.2 da SKILL `trafego-conexao`).
 
 ---
 

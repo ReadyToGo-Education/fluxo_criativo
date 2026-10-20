@@ -1,4 +1,4 @@
-# Output [8] — Problemas Ocultos
+# Output [8]. Problemas Ocultos
 
 Achados que normalmente passam despercebidos: ad sets com configuração quebrada, anúncios sem clique, audiências micro, desaprovados silenciosos, pixel sem atividade e públicos de remarketing secando.
 
@@ -46,19 +46,21 @@ daily_budget,lifetime_budget
 
 ### Chamadas adicionais (executar antes de montar os blocos)
 
-**Chamada 8a — Listagem de ad sets com status detalhado e entrega**
+**Chamada 8a. Listagem de ad sets com status detalhado e entrega**
 
 ```bash
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/adsets
   ?fields=id,name,status,effective_status,delivery_info,issues_info,
-          daily_budget,lifetime_budget,bid_amount,campaign_id,targeting
+          daily_budget,lifetime_budget,bid_amount,campaign_id,targeting,learning_stage_info
   &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Chamada 8b — Insights de ad sets no período (para identificar gasto zero e zero conversão)**
+Nas URLs de `curl` desta sub-skill, `{STATUS_FILTRO}` é o valor da coluna "já codificado" da tabela do Passo 0.55 do `SKILL.md` (ex.: `%5B%22ACTIVE%22%2C%22PAUSED%22%2C%22WITH_ISSUES%22%5D`), nunca a lista com colchetes e aspas crus. Aprendizado limitado sai de `learning_stage_info` (`status` igual a `FAIL`), não do `effective_status`. Se a resposta trouxer `paging.next`, buscar a próxima página repetindo o mesmo `curl` com `&after=<valor de paging.cursors.after>` e o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`), até a resposta não trazer mais `paging.next`. Nunca copiar, reaproveitar, exibir nem salvar a URL de `paging.next` ou `paging.previous`: ela traz o token (regra de paginação da `trafego-insights/SKILL.md` §10.2.1).
+
+**Chamada 8b. Insights de ad sets no período (para identificar gasto zero e zero conversão)**
 
 ```bash
 # Modo APP
@@ -67,18 +69,19 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
           spend,impressions,clicks,ctr,actions,cost_per_action_type
   &level=adset
   &date_preset={PRESET_PERIODO}
-  &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
+
+> **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (Chamada 8a, listagem de ad sets): cruzar o retorno desta chamada com a 8a e manter apenas os ad sets com o status desejado.
 
 Usar `date_preset` equivalente ao período escolhido pelo aluno no Passo 3:
 - 7 dias → `last_7d`
 - 14 dias → `last_14d`
 - 30 dias → `last_30d`
-- Customizado → `since={YYYY-MM-DD}&until={YYYY-MM-DD}` (substituir `date_preset`)
+- Customizado → `time_range=%7B%22since%22%3A%22{YYYY-MM-DD}%22%2C%22until%22%3A%22{YYYY-MM-DD}%22%7D` (substituir `date_preset`; `since` e `until` soltos são ignorados pelo `/insights`)
 
-**Chamada 8c — Listagem de anúncios com status e motivo de rejeição**
+**Chamada 8c. Listagem de anúncios com status e motivo de rejeição**
 
 ```bash
 # Modo APP
@@ -86,10 +89,10 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/ads
   ?fields=id,name,status,effective_status,review_feedback,adset_id,campaign_id
   &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Chamada 8d — Insights de anúncios no período (impressões vs cliques)**
+**Chamada 8d. Insights de anúncios no período (impressões vs cliques)**
 
 ```bash
 # Modo APP
@@ -98,12 +101,13 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/insights
           spend,impressions,clicks,ctr
   &level=ad
   &date_preset={PRESET_PERIODO}
-  &effective_status={STATUS_FILTRO}
   &limit=500
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-**Chamada 8e — Custom Audiences (remarketing) com tamanho estimado**
+> **Nota de API:** o parâmetro `effective_status` não é aceito no endpoint `/insights`. A filtragem por status é feita na etapa anterior (Chamada 8c, listagem de anúncios): cruzar o retorno desta chamada com a 8c e manter apenas os anúncios com o status desejado.
+
+**Chamada 8e. Custom Audiences (remarketing) com tamanho estimado**
 
 ```bash
 # Modo APP
@@ -111,30 +115,30 @@ curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/customaudien
   ?fields=id,name,subtype,approximate_count_lower_bound,
           approximate_count_upper_bound,time_updated,data_source
   &limit=200
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 `approximate_count_lower_bound` e `approximate_count_upper_bound` são os campos corretos para tamanho de audience. O campo legado `approximate_count` foi descontinuado na versão 17.0. Se os dois bounds retornarem `-1`, a audience tem menos de 1.000 pessoas e o Meta não expõe o número exato por privacidade.
 
-**Chamada 8f — Pixels da conta (resumo de atividade)**
+**Chamada 8f. Pixels da conta (resumo de atividade)**
 
 ```bash
 # Modo APP
 curl -s "https://graph.facebook.com/v25.0/act_{AD_ACCOUNT_ID_ATUAL}/adspixels
   ?fields=id,name,last_fired_time,is_unavailable
   &limit=50
-  &access_token={FB_ACCESS_TOKEN_PERMANENTE}"
+  &access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
-`last_fired_time` indica o último disparo de qualquer evento. Para ver breakdown por evento nos últimos 7 dias, usar Gerenciador de Eventos (diagnóstico aprofundado). Aqui só verificar se o pixel disparou nas últimas 24h.
+`last_fired_time` indica o último disparo de qualquer evento. Para ver breakdown por evento nos últimos 7 dias, usar `trafego-pixel` (diagnóstico aprofundado). Aqui só verificar se o pixel disparou nas últimas 24h.
 
-**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `entity_type=adset` para 8a; `mcp__*__ads_insights_performance_trend` para 8b e 8d; `mcp__*__ads_get_ad_entities` com `entity_type=ad` para 8c; `mcp__*__ads_get_dataset_stats` para 8f. Para audiences (8e), não há tool MCP equivalente — fazer chamada REST direta via `access_token`.
+**Modo MCP_CONECTOR:** usar `mcp__*__ads_get_ad_entities` com `level: "adset"` e `filtering: [{field: "adset.effective_status", operator: "IN", value: STATUS_FILTRO}]` para 8a; `ads_get_ad_entities` com `level: "adset"` (8b) e `level: "ad"` (8d) no período do Passo 3 para o gasto e as conversões por entidade (a `ads_insights_performance_trend` não faz ranking nem total por entidade); `ads_get_ad_entities` com `level: "ad"` e `filtering: [{field: "ad.effective_status", operator: "IN", value: STATUS_FILTRO}]` para 8c. Em todas, `limit: 1000` e paginação por `cursor`; para achar gasto zero, cruzar 8b e 8d com as listagens 8a e 8c, sem filtrar `impressions` maior que zero; para 8f (pixels e `last_fired_time`) usar `mcp__*__ads_get_datasets`. Para audiences (8e), **usar `mcp__*__ads_get_ad_account_custom_audiences`** (lista subtype + faixa de tamanho via `approximate_count_lower_bound`/`_upper_bound`). No MCP **nunca usar `access_token`** (não existe nesse modo). Se a tool não retornar `time_updated`/`data_source` (necessários para a Resposta 7, remarketing secando), reportar o que a tool entrega, dizer ao aluno qual dado faltou e, se ele precisar da data de atualização, guiar a leitura no Gerenciador de Anúncios (Públicos, coluna de disponibilidade e data de atualização de cada público). Não sugerir trocar de modo: o App é só para conta que a Meta ainda não liberou no conector. Para descobrir a tool, usar o **final do nome** (ex: `ads_get_ad_account_custom_audiences`), não o prefixo.
 
 ### Referência de produto
 
-Ler `resumo-produto.md` (já carregado no Passo 0): campo `preco`. Inferir tipo de funil pelo objetivo predominante das campanhas:
+Ler do `resumo-produto.md` (já carregado no Passo 0.1 do `SKILL.md`) o preço e o tipo de produto. Não perguntar de novo. Inferir tipo de funil pelo objetivo predominante das campanhas:
 - `OUTCOME_SALES` → funil de venda direta → tipo canônico de conversão: `offsite_conversion.fb_pixel_purchase`
-- `OUTCOME_LEADS` → funil de captação → tipo canônico de conversão: `offsite_conversion.fb_pixel_lead`
+- `OUTCOME_LEADS` → funil de captação → conversão = contagem de leads da regra do command: `lead` (total da Meta, site + formulário instantâneo) e, sem ele, `offsite_conversion.fb_pixel_lead`; nunca a soma
 
 ---
 
@@ -170,7 +174,7 @@ Bounds retornando `-1` significam menos de 1.000 pessoas (limite de privacidade 
 
 ### Identificação de conversão zero no período
 
-**Template A — Venda direta (OUTCOME_SALES):**
+**Template A. Venda direta (OUTCOME_SALES):**
 
 ```
 conversao_zero_sales = sum(actions onde action_type = "offsite_conversion.fb_pixel_purchase") == 0
@@ -178,10 +182,11 @@ conversao_zero_sales = sum(actions onde action_type = "offsite_conversion.fb_pix
   E adset.effective_status == "ACTIVE" (Chamada 8a)
 ```
 
-**Template B — Captação de leads (OUTCOME_LEADS):**
+**Template B. Captação de leads (OUTCOME_LEADS):**
 
 ```
-conversao_zero_leads = sum(actions onde action_type = "offsite_conversion.fb_pixel_lead") == 0
+conversao_zero_leads = leads == 0
+  (leads = actions[lead]; sem ele, actions[offsite_conversion.fb_pixel_lead]; nunca a soma)
   E adset.spend > 50 no período (Chamada 8b)
   E adset.effective_status == "ACTIVE" (Chamada 8a)
 ```
@@ -213,7 +218,7 @@ Cruzar Chamada 8a (ad sets ACTIVE) com Chamada 8b (insights). Ad sets presentes 
 | `ADS_PAUSED` | todos os anúncios dentro do ad set estão pausados |
 | `CAMPAIGN_PAUSED` | a campanha-pai está pausada (ad set herdou) |
 | `PENDING_REVIEW` | em revisão |
-| Ausente ou nulo | causa desconhecida — verificar manualmente |
+| Ausente ou nulo | causa desconhecida: verificar manualmente |
 
 ```
 🔌 AD SETS ATIVOS SEM GASTO  ·  {período}
@@ -222,7 +227,7 @@ Cruzar Chamada 8a (ad sets ACTIVE) com Chamada 8b (insights). Ad sets presentes 
   ──────────────────────────────────────────────────────────────────────────────────────────────
   1.  {nome}                    {nome_campanha}        AD_SET_NOT_DELIVERING    público muito restrito
   2.  {nome}                    {nome_campanha}        ADS_PAUSED               todos os anúncios pausados
-  3.  {nome}                    {nome_campanha}        —                        verificar manualmente
+  3.  {nome}                    {nome_campanha}        -                        verificar manualmente
 
   Total: {N} ad sets ativos sem nenhum gasto no período.
 ```
@@ -249,7 +254,7 @@ Cruzar Chamada 8d. Filtrar `impressions >= 5.000 AND clicks == 0` no período.
 
 Causa provável por combinação de campos:
 - Alto `spend` + CTR 0%: criativo não comunica o que é clicável, ou a audiência é completamente errada para o ângulo.
-- `spend = 0` + impressões altas: anúncio está sendo entregue por tráfego de alcance (objetivo `OUTCOME_AWARENESS`) — sem CTA de clique, comportamento esperado. Não é problema nesse caso, apenas documentar.
+- `spend = 0` + impressões altas: anúncio está sendo entregue por tráfego de alcance (objetivo `OUTCOME_AWARENESS`), sem CTA de clique, comportamento esperado. Não é problema nesse caso, apenas documentar.
 
 Se nenhum anúncio atender ao critério: "Nenhum anúncio com 5.000+ impressões e zero clique no período."
 
@@ -291,7 +296,7 @@ Se nenhuma audience for micro: "Nenhuma audience com tamanho abaixo de 1.000 pes
 
 Cruzar Chamada 8b com tipo canônico conforme tipo de funil. **Agrupar por campanha:** somar gasto e conversões de todos os adsets de uma mesma campanha (`campaign_id`). O template exibe uma linha por campanha, com o número de adsets com zero conversão dentro dela.
 
-#### Template A — Venda direta (OUTCOME_SALES)
+#### Template A. Venda direta (OUTCOME_SALES)
 
 ```
 💸 CAMPANHAS ATIVAS SEM COMPRA  ·  {período}  ·  Threshold: gasto > R$ 50 + zero compras
@@ -305,7 +310,7 @@ Cruzar Chamada 8b com tipo canônico conforme tipo de funil. **Agrupar por campa
   Gasto total nessas campanhas: R$ {soma}
 ```
 
-#### Template B — Captação de leads (OUTCOME_LEADS)
+#### Template B. Captação de leads (OUTCOME_LEADS)
 
 ```
 💸 CAMPANHAS ATIVAS SEM LEAD  ·  {período}  ·  Threshold: gasto > R$ 50 + zero leads
@@ -354,7 +359,7 @@ Cruzar motivo com categorias comuns de rejeição do Meta:
 
 | Categoria de motivo | Como identificar no `review_feedback` | Ação recomendada |
 |---|---|---|
-| Promessa de resultado de saúde | "health", "cure", "heal", "medical" | Revisar copy — remover promessas de resultado médico |
+| Promessa de resultado de saúde | "health", "cure", "heal", "medical" | Revisar copy: remover promessas de resultado médico |
 | Conteúdo financeiro sensível | "financial", "investment", "income" | Remover promessas de retorno financeiro específico |
 | Imagem enganosa | "misleading", "before and after" | Substituir imagem |
 | Política de publicidade | "policy", "prohibited content" | Ler política de anúncios do Meta e refazer |
@@ -388,9 +393,9 @@ Classificação por `last_fired_time`:
 | Não disparou há mais de 72h | 🔴 sem atividade | Pixel provavelmente quebrado ou script removido |
 | `last_fired_time` ausente | 🔴 sem registro | Pixel nunca disparou ou foi recriado recentemente |
 
-**Limitação importante:** este bloco mostra apenas se o pixel disparou algum evento recente. Para ver breakdown por tipo de evento (Purchase, Lead, ViewContent etc.) e detectar quais eventos pararam de disparar, usar o diagnóstico completo no Gerenciador de Eventos.
+**Limitação importante:** este bloco mostra apenas se o pixel disparou algum evento recente. Para ver breakdown por tipo de evento (Purchase, Lead, ViewContent etc.) e detectar quais eventos pararam de disparar, usar o diagnóstico completo via `trafego-pixel`.
 
-**Atenção — falso positivo:** `last_fired_time` indica o último disparo de qualquer evento, não necessariamente o evento de conversão configurado na campanha. Um pixel que dispara `PageView` continuamente mas não dispara `Purchase` vai aparecer como "ativo" (🟢) neste bloco, mesmo sem conversões rastreadas. Para verificar se o evento específico da campanha está sendo disparado, cruzar com os dados de `event_stats` do dataset (Chamada 8f aprofundada ou Gerenciador de Eventos).
+**Atenção, falso positivo:** `last_fired_time` indica o último disparo de qualquer evento, não necessariamente o evento de conversão configurado na campanha. Um pixel que dispara `PageView` continuamente mas não dispara `Purchase` vai aparecer como "ativo" (🟢) neste bloco, mesmo sem conversões rastreadas. Para verificar se o evento específico da campanha está sendo disparado, cruzar com os dados de `event_stats` do dataset (Chamada 8f aprofundada ou `/trafego-pixel`).
 
 ---
 
@@ -398,10 +403,10 @@ Classificação por `last_fired_time`:
 
 Cruzar Chamada 8e com foco em audiences de remarketing (subtipo `CUSTOM` ou `ENGAGEMENT`) que têm `time_updated` disponível. Detectar audiences que encolheram em relação ao período anterior.
 
-**Nota de limitação:** a Graph API não retorna histórico de tamanho de audience por data — só o snapshot atual via `approximate_count_lower_bound` e `approximate_count_upper_bound`. O tamanho "anterior" só está disponível se houver cache local de execução anterior desta análise salvo em `meus-produtos/{ativo}/trafego/insights/`. Se não houver cache, exibir apenas o snapshot atual com `time_updated`.
+**Nota de limitação:** a Graph API não retorna histórico de tamanho de audience por data, só o snapshot atual via `approximate_count_lower_bound` e `approximate_count_upper_bound`. O tamanho "anterior" só está disponível se houver cache local de execução anterior desta análise salvo em `meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md`. Se não houver cache, exibir apenas o snapshot atual com `time_updated`.
 
 ```
-💧 REMARKETING — SNAPSHOT ATUAL  ·  (histórico disponível se houver cache anterior)
+💧 REMARKETING: SNAPSHOT ATUAL  ·  (histórico disponível se houver cache anterior)
 
   #   Audience                   Subtipo        Tamanho estimado        Atualizada em
   ──────────────────────────────────────────────────────────────────────────────────────
@@ -413,10 +418,10 @@ Cruzar Chamada 8e com foco em audiences de remarketing (subtipo `CUSTOM` ou `ENG
   ⚠️  Audiences não atualizadas há mais de 7 dias: {lista}
 ```
 
-Se houver cache anterior (arquivo de insights salvo com data anterior):
+Se houver cache anterior (arquivo `meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md` com data anterior):
 
 ```
-💧 REMARKETING — VARIAÇÃO  ·  {data_cache_anterior} → hoje
+💧 REMARKETING: VARIAÇÃO  ·  {data_cache_anterior} → hoje
 
   #   Audience                   Subtipo        Tamanho anterior   Tamanho atual   Variação
   ────────────────────────────────────────────────────────────────────────────────────────────
@@ -431,12 +436,12 @@ Threshold de alerta:
 - Audience não atualizada (`time_updated`) há mais de 14 dias: evento de pixel pode ter parado de alimentar a audience.
 - Variação negativa > 20% entre snapshots: funil de topo esfriando ou evento quebrado.
 
-**Instrução de cache — obrigatória ao concluir o output [8]:**
+**Instrução de cache (obrigatória ao concluir o output [8]):**
 
 Ao finalizar a entrega deste output, salvar um resumo dos problemas identificados em:
 
 ```
-meus-produtos/{ativo}/.cache-problemas-ocultos.md
+meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md
 ```
 
 O arquivo deve conter:
@@ -458,7 +463,7 @@ Só após cobrir todas as perguntas obrigatórias, incluir blocos adicionais de 
 
 ---
 
-### Passo 0 — Checklist antes de montar qualquer bloco
+### Passo 0. Checklist antes de montar qualquer bloco
 
 Antes de escrever qualquer bloco, mapear cada pergunta obrigatória e confirmar cobertura:
 
@@ -491,10 +496,10 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 ## Protocolo padrão
 
-1. **Diagnóstico** — lista priorizada dos problemas ocultos identificados, do mais crítico (impacto financeiro imediato) ao menos crítico (risco futuro).
-2. **Causa provável** — o que os sinais sugerem em conjunto. Exemplos: "3 ad sets ativos sem gasto + pixel sem atividade há 5 dias = provável que o pixel parou de rastrear, o Meta perdeu o sinal de conversão e pausou automaticamente os ad sets por não encontrar padrão para otimizar"; "audience de remarketing com 800 pessoas + event de Purchase com volume baixo = funil de topo pequeno demais para sustentar o remarketing".
-3. **No VTSD, isso significa…** — qual elemento do método está sendo afetado. Exemplos: "Audience de carrinho abandonado caiu 33% e pixel está sem atividade. Provável: evento `InitiateCheckout` parou de disparar. Sem esse evento, a Furadeira vaza antes do checkout — o aluno não retorna, a Urgência Oculta morre sem reforço."; "Anúncio com 12.000 impressões e 0 cliques = Identidade do Produto não está sendo comunicada. O criativo aparece, mas não convida à ação.".
-4. **Ação recomendada** — handoffs específicos por categoria de problema (ver tabela abaixo). Ordenar pelas ações de maior impacto primeiro.
+1. **Diagnóstico**: lista priorizada dos problemas ocultos identificados, do mais crítico (impacto financeiro imediato) ao menos crítico (risco futuro).
+2. **Causa provável**: o que os sinais sugerem em conjunto. Exemplos: "3 ad sets ativos sem gasto + pixel sem atividade há 5 dias = provável que o pixel parou de rastrear, o Meta perdeu o sinal de conversão e pausou automaticamente os ad sets por não encontrar padrão para otimizar"; "audience de remarketing com 800 pessoas + event de Purchase com volume baixo = funil de topo pequeno demais para sustentar o remarketing".
+3. **No VTSD, isso significa…**: qual elemento do método está sendo afetado. Exemplos: "Audience de carrinho abandonado caiu 33% e pixel está sem atividade. Provável: evento `InitiateCheckout` parou de disparar. Sem esse evento, a Furadeira vaza antes do checkout: o aluno não retorna, a Urgência Oculta morre sem reforço."; "Anúncio com 12.000 impressões e 0 cliques = Identidade do Produto não está sendo comunicada. O criativo aparece, mas não convida à ação.".
+4. **Ação recomendada**: handoffs específicos por categoria de problema (ver tabela abaixo). Ordenar pelas ações de maior impacto primeiro.
 
 ---
 
@@ -502,29 +507,48 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 
 | Achado | Para onde mandar |
 |---|---|
-| Ad set ativo sem gasto por problema de público micro | Gerenciador de Audiences — recriar audience com critérios mais amplos ou usar Advantage+ Audience |
+| Ad set ativo sem gasto por problema de público micro | "trafego-publicos": recriar audience com critérios mais amplos ou usar Advantage+ Audience |
 | Ad set ativo sem gasto por anúncios pausados | Verificar manualmente no Gerenciador e reativar os anúncios |
-| Anúncio com impressão alta e zero clique | "trafego-otimizar" (pausar) seguido de Duplicar entidade no Gerenciador (variando 1 dimensão) (novo criativo com CTA mais claro) |
-| Audiência micro em campanha ativa | Gerenciador de Audiences — recriar com janela maior, evento de mais volume ou Lookalike |
-| Ad set com zero conversão e gasto > R$ 50 | "trafego-otimizar" — atalho pausar com filtro: conversoes=0 E spend>50 |
-| Anúncio desaprovado | "copy-anuncio" (refazer copy respeitando política) e recurso manual no Meta se copy estiver correta |
-| Pixel sem atividade | Gerenciador de Eventos (diagnóstico completo de eventos) — pode exigir "pagina-pixel" para reinstalar script |
-| Remarketing secando por pixel quebrado | Gerenciador de Eventos (verificar evento que alimenta a audience) seguido de Gerenciador de Audiences (recriar audience com critério maior enquanto corrige o evento) |
+| Anúncio com impressão alta e zero clique | "trafego-otimizar" (pausar) seguido de "trafego-testes" (novo criativo com CTA mais claro) |
+| Audiência micro em campanha ativa | "trafego-publicos": recriar com janela maior, evento de mais volume ou Lookalike |
+| Ad set com zero conversão e gasto > R$ 50 | "trafego-otimizar", atalho "pausar com filtro": conversoes=0 E spend>50 |
+| Anúncio desaprovado | "copy-anuncio" (refazer copy respeitando a política) e recurso manual no Meta se a copy estiver correta |
+| Pixel sem atividade | "trafego-pixel" (diagnóstico completo de eventos): pode exigir "pagina-pixel" para reinstalar o script na página |
+| Remarketing secando por pixel quebrado | "trafego-pixel" (verificar evento que alimenta a audience) seguido de "trafego-publicos" (recriar audience com critério maior enquanto corrige o evento) |
 
 ---
 
 ## Mapeamento HTML (export via `_export-html.md`)
 
+Componentes definidos na seção 3.2 do `_export-html.md`. **Usar exatamente estes nomes de classe.** O vocabulário antigo (`.table`, `.metric`, `.regra`, `.kpi-grid`, `.callout`, `.pitch-box`, `.up`, `.down`, `--neon`, `--rust`) foi descontinuado e NÃO existe no CSS embutido: usá-lo gera seção sem estilo.
+
 | Bloco do output narrado | Componente do design system |
 |---|---|
-| Bloco 1 — Ad sets sem gasto (tabela) | `.table` com colunas: ad set / campanha / status / causa — linha com causa desconhecida recebe `.down` |
-| Bloco 2 — Impressões sem clique (tabela) | `.table` com colunas: anúncio / ad set / impressões / cliques / CTR — coluna CTR recebe `.down` (rust) |
-| Bloco 3 — Audiências micro (tabela) | `.table` com colunas: audience / tipo / tamanho / criada em — linhas com `-1` recebem `.down` |
-| Bloco 4 — Zero conversão (tabela) | `.table` com coluna "CPA implícito" exibindo "infinito" em `.down` (rust) |
-| Total de gasto em campanhas sem resultado | `.metric` (número grande em `--accent`) com rótulo "em risco" |
-| Bloco 5 — Desaprovados (tabela) | `.regra.alerta` por anúncio — um elemento por linha de rejeição |
-| Bloco 6 — Pixels (tabela de status) | `.kpi-grid` com um `.kpi` por pixel: `--neon` para 🟢, `--accent` para 🟡, `--rust` para 🔴 |
-| Bloco 7 — Remarketing secando (tabela) | `.table` com coluna de variação: `.up` para positivo, `.down` para negativo — destacar linhas com variação < -20% |
-| Frase "No VTSD isso significa..." | `.callout` |
-| Ação recomendada | `.pitch-box` |
-| Handoffs para skills executoras | `.term.next` dentro de `.terms` no rodapé |
+| KPIs globais (gasto em risco, nº de problemas, campanhas sem conversão, pixels ativos) | `.stats-grid` com um `.stat-card` por métrica (`.value.green/.yellow/.red` conforme severidade) |
+| Cada "Resposta N" obrigatória | `.section` com `.section-header` (`.section-num` + `.section-title` + `.section-question`) |
+| Resposta 1. Ad sets ativos sem gasto (tabela) | `.card` + `table` com `.rank` na posição, `.num` nas colunas numéricas; nome em `.ad-name` |
+| Resposta 2. Impressões sem clique (tabela) | `.card` + `table` com `.num` nas colunas; CTR 0% destacado com `style="color:var(--red)"` |
+| Resposta 3. Audiências micro (tabela) | `.card` + `table`; tamanho `< 1.000` ou `-1` destacado com `style="color:var(--red)"` |
+| Resposta 4. Campanhas ativas sem conversão (tabela) | `.card` + `table` com `.num`; coluna "CPA implícito" exibe "∞" com `style="color:var(--red)"` |
+| Total de gasto em campanhas sem resultado | `.stat-card` (valor grande, `.value.red`) com rótulo "em risco" |
+| Resposta 5. Anúncios desaprovados (tabela) | `.card` + `table`; cada motivo de rejeição em uma linha; alerta-resumo em `.diag-box.red` |
+| Resposta 6. Pixels (status) | `.card` + `table`; status 🟢/🟡/🔴 → célula com `style="color:var(--green/--yellow/--red)"` |
+| Resposta 7. Remarketing secando (tabela) | `.card` + `table` com coluna de variação: `style="color:var(--green)"` (positivo) / `var(--red)` (negativo, < -20%) |
+| Diagnóstico / "No VTSD isso significa..." | `.diag-box` (+ `.green/.yellow/.red` conforme o sinal) |
+| Ação recomendada | `.action-box` |
+| Handoffs para skills executoras | `.term.next` dentro de `.terms` no `.page-foot` |
+
+### Gráficos obrigatórios deste output
+
+Renderizar os gráficos abaixo logo após o `.stats-grid` de KPIs, sob um `.section-h` "Visão visual". Todos em SVG/CSS inline, sem dependência (receitas na seção **3.2.1** e **3.2.1.1** do `_export-html.md`). Gerar cada gráfico SOMENTE quando a chamada de dados correspondente retornar dado real; se a chamada falhar ou vier vazia, **omitir o gráfico** (nunca inventar severidade ou contagem).
+
+| Gráfico | Componente / receita | Fonte de dado | Posição |
+|---|---|---|---|
+| Radar dos 7 problemas | SVG radar (receita A, adaptado para 7 eixos) | severidade 0–100 por problema (Respostas 1 a 7) | `.charts-grid`, 1ª coluna |
+| Atividade dos pixels (recência) | `.hbar-row` (receita D) | Chamada 8f `last_fired_time`: `.win` recente, `.burn` morto | `.charts-grid`, 2ª coluna |
+| Alocação queimando (campanhas ativas sem conversão) | `.hbar-row` (receita D) | Chamada 8b agregada por campanha (`spend` + 0 conversões) | `.chart-card` dentro da Resposta 4 |
+| Tamanho de audience ao longo do tempo (opcional) | SVG linha (receita F, helper `line`) | snapshot atual (8e) + cache anterior em `meus-produtos/{ativo}/trafego/analise/.cache-problemas-ocultos.md` | `.chart-card` dentro da Resposta 7: **omitir** se não houver cache anterior |
+
+**Radar dos 7 problemas (adaptação da receita A para 7 eixos):** `viewBox="0 0 360 320"`, centro `(180,170)`, raio `R=130`. Os 7 eixos ficam em `θ_i = -90° + (360/7)°·i`. Severidade por problema (eixo): `0` = nenhum achado, escalando até `100` = crítico (ex: nº de achados normalizado, ou gasto-em-risco normalizado para Resposta 4). Vértice colorido pela faixa (`--green` 0–30, `--yellow` 31–60, `--orange` 61–80, `--red` 81–100). Ordem dos eixos = ordem das 7 respostas. **Só renderizar o radar quando houver dado real para os 7 eixos** (todas as 8 chamadas retornaram); caso contrário, omitir o radar e exibir apenas os gráficos das respostas que têm dado.
+
+Regras dos gráficos: usar só cores da paleta (`--green/--yellow/--orange/--red/--accent`); truncar nomes longos; gauge e funil duplo (não usados neste output) sempre via helper; a linha de audience usa o helper `line` (≥3 pontos) e só aparece com cache histórico real.

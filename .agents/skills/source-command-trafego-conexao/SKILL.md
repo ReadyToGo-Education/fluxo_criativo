@@ -1,6 +1,6 @@
 ---
 name: "source-command-trafego-conexao"
-description: "Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Pergunta se o aluno quer usar o conector oficial Claude + Meta (recomendado, MCP via OAuth) ou criar um App via Facebook Developers (token permanente no .env). Salva o modo escolhido em META_AUTH_MODO no .env, para que as skills de tráfego saibam qual caminho usar. Skill reutilizável, deve ser chamada por qualquer skill de Meta Ads quando a variável META_AUTH_MODO ainda não está configurada."
+description: "Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Confere os pré-requisitos no Meta, conecta sempre primeiro pelo conector oficial da Meta no Claude (MCP via OAuth, sem token) e testa; só se a conta ainda não estiver liberada no conector (ou o conector não responder) configura o App via Facebook Developers (token permanente no .env). Valida a conexão e salva o modo em META_AUTH_MODO e a conta padrão em FB_AD_ACCOUNT_ID. Skill reutilizável, chamada por qualquer skill de Meta Ads quando META_AUTH_MODO ainda não está configurada ou tem valor antigo."
 ---
 
 # source-command-trafego-conexao
@@ -11,276 +11,110 @@ Use esta skill quando o usuário pedir o comando `/trafego-conexao` do workshop 
 
 ## Roteiro do comando
 
-# Tráfego Conexão. Estabelecer Conexão com o Meta Ads
+# Tráfego Conexão. Conectar o Projeto com o Meta Ads
 
-Esta skill é o ponto único de entrada para conectar o projeto com o Meta Ads. Ela pergunta o modo de conexão preferido, executa o caminho correto e salva a preferência em `META_AUTH_MODO` no `.env`. Skills de tráfego como `/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar` e qualquer skill futura de análise de campanhas vão ler essa variável para saber qual caminho usar.
+Orquestrador da conexão. Conduz sempre pelo conector da Meta, testa, e só passa para o App quando o teste mostra que o conector não serve para a conta do aluno. Valida e salva a preferência em `META_AUTH_MODO` no `.env`. As skills `/trafego-*` e os commands `/ads-relatorio` e `/enviar-relatorio-ads` leem essa variável para saber qual caminho usar.
 
-Os dois modos suportados são:
+A especificação técnica completa está em `.claude/skills/trafego-conexao/SKILL.md`. Leia esse arquivo antes do Passo 0: ele é a fonte de verdade de cada passo abaixo.
 
-- **`MCP_CONECTOR`** — Conector oficial Claude + Meta. Login via OAuth direto na conta Claude. Sem token permanente, sem App no Facebook Developers, sem instalar nada na máquina.
-- **`APP`** — App via Facebook Developers. Token permanente gerado pelo Usuário do Sistema, salvo no `.env`. Caminho técnico tradicional, portável entre máquinas e planos.
+Os dois modos:
+
+- **`MCP_CONECTOR`** (sempre o primeiro caminho). Conector oficial da Meta adicionado no Claude. Login pelo Facebook, sem token, sem App, sem instalar nada.
+- **`APP`** (reserva). App no Facebook Developers com token permanente no `.env`. Só entra depois do teste do conector: conta ainda não liberada pela Meta no conector, ou conector sem resposta depois das conferências.
+
+O aluno não escolhe o modo no início. Se ele pedir o App antes de testar, explicar em 2 linhas que o conector é mais simples e propor o teste; só seguir direto para o App se ele insistir.
+
+---
+
+## Pré-requisitos no Meta (antes do Passo 0)
+
+Aplicar a seção **0. Pré-requisitos no Meta** da SKILL. Se o aluno não tiver certeza de que já tem Business Manager, Página, Conta de Anúncios, forma de pagamento e pixel, perguntar. Faltando algo, mostrar o mapa de onde criar cada item, encerrar e pedir para rodar `/trafego-conexao` de novo quando terminar.
 
 ---
 
 ## Passo 0. Verificar estado atual
 
-Leia o arquivo `.env` na raiz do projeto.
+Aplicar a seção **1. Passo 0** da SKILL, lendo só a linha `META_AUTH_MODO` do `.env`:
 
-**Caso 1. Linha `META_AUTH_MODO` já existe com valor `MCP_CONECTOR` ou `APP`:**
-
-Pergunte:
-
-```
-Já existe uma conexão configurada com o Meta Ads.
-
-Modo ativo: {valor encontrado}
-
-O que você quer fazer?
-
-1. Manter como está
-2. Trocar de modo
-3. Validar a conexão atual
-
-Digite o número:
-```
-
-- Opção 1: encerrar com mensagem de confirmação ("Conexão atual mantida. Modo ativo: {valor}.").
-- Opção 2: seguir para o Passo 1 e refazer a configuração. As variáveis do modo anterior (ex: `FB_ACCESS_TOKEN_PERMANENTE`, `FB_AD_ACCOUNT_ID`) ficam no `.env` por segurança, caso o aluno queira voltar para o modo anterior depois.
-- Opção 3: pular direto para o Passo 3 (validação) usando o modo registrado no `.env`. A skill precisa ler `META_AUTH_MODO` de novo no Passo 3 para escolher o ramo certo de validação.
-
-**Caso 2. Linha `META_AUTH_MODO` existe mas o valor é inválido** (qualquer coisa que não seja `MCP_CONECTOR` nem `APP`):
-
-Avisar o aluno:
-
-```
-Encontrei a variável META_AUTH_MODO no .env, mas o valor "{valor}" não é
-reconhecido (esperado MCP_CONECTOR ou APP). Vou tratar como se a conexão
-não estivesse configurada.
-```
-
-Em seguida, ir direto para o Passo 1.
-
-**Caso 3. Linha `META_AUTH_MODO` não existe ou está vazia:** ir direto para o Passo 1, sem aviso.
+- **`MCP_CONECTOR` ou `APP`:** antes do menu, conferir o que falta. No `APP`, se `FB_ACCESS_TOKEN_PERMANENTE` estiver sem valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env`), avisar em 1 linha que o token não está salvo e acionar direto o `/gerar-token-permanente-facebook-ads` para gerar um token novo do App que já existe (o modo `APP` só é gravado depois que um token do App passa nos testes), sem o menu e sem o `/criar-aplicativo-analise-ads`. Só criar App (seção 4.2 da SKILL desde o passo 1) se o aluno disser que não tem mais o App. Nos dois modos, conferir se `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar, avisar em 1 linha que falta escolher a conta padrão e ir direto para a validação ("Validar a conexão atual" da SKILL), que completa a conta. Com tudo presente, mostrar o menu da SKILL: no conector, manter, validar ou trocar a conta padrão (sem opção de trocar para o App); no App, manter, passar para o conector (recomendado), validar ou trocar a conta padrão.
+- **`HIBRIDO` (valor legado de versão antiga):** avisar que agora a conexão é pelo conector, testar o conector e gravar `MCP_CONECTOR` se passar; se a conta não estiver liberada, validar o token que já existe e gravar `APP`. O token salvo continua no `.env`.
+- **Valor não reconhecido:** avisar e seguir para o Passo 1.
+- **Ausente ou vazio:** seguir para o Passo 1 sem aviso.
 
 ---
 
-## Passo 1. Escolher o modo de conexão
+## Passo 1. Conectar pelo conector da Meta
 
-Pergunte exatamente neste formato:
-
-```
-Como você quer conectar com o Meta Ads?
-
-1. MCP da Meta via Claude (recomendado)
-   Adiciona o servidor MCP oficial da Meta como conector personalizado
-   no seu Claude (ainda não está na lista oficial, mas leva 1 minuto
-   para registrar) e autoriza via OAuth do Facebook. Sem instalar
-   nada na máquina, sem token permanente, sem App no Facebook
-   Developers. A conexão fica vinculada à sua conta Anthropic.
-   Funciona em qualquer máquina onde você estiver logado na mesma
-   conta.
-
-2. App via Facebook Developers
-   Cria um App no developers.facebook.com, gera um token permanente
-   via Usuário do Sistema e salva no .env. Caminho técnico
-   tradicional. Funciona em qualquer plano do Claude. O token fica
-   na sua máquina, então é portável e não depende da Anthropic.
-
-Digite o número:
-```
-
-- Opção 1 → seguir para o Passo 2A.
-- Opção 2 → seguir para o Passo 2B.
+Aplicar a seção **2. Passo 1** da SKILL: sem perguntar o modo, explicar em poucas linhas que a conexão vai pelo conector oficial da Meta (cerca de 1 minuto, sem token) e que, depois de conectar, a conta é testada. Seguir para o Passo 2A.
 
 ---
 
-## Passo 2A. Adicionar o MCP da Meta como conector personalizado
+## Passo 2A. Caminho MCP (adicionar o conector)
 
-> **Atenção.** O MCP da Meta ainda não está na lista oficial de conectores do Claude, então precisa ser adicionado como **MCP personalizado**. É rápido, só leva 1 minuto.
+🔍 Próximo passo: adicionar o conector da Meta no Claude Desktop. Tempo estimado: cerca de 60 segundos.
 
-Instrua o aluno na seguinte ordem, esperando confirmação ao final:
+Aplicar a seção **3.1** da SKILL: o aluno adiciona o conector personalizado (URL `https://mcp.facebook.com/ads`, nome "Meta Ads"), autoriza no Facebook e avisa "conectei". Depois, Passo 3.
 
-```
-Para adicionar o MCP da Meta na sua conta Claude:
-
-1. Abra o aplicativo do Claude Desktop (não vale o site
-   https://claude.com/settings/connectors, esse caminho não
-   tem mais a opção de adicionar MCP personalizado).
-
-2. Clique em "Customize" (Personalizar) e depois em
-   "Connectors" (Conectores).
-
-3. Dentro de Conectores, clique no símbolo de "+" e escolha
-   "Adicionar conector personalizado" (Add custom connector).
-
-4. Preencha os campos do conector personalizado:
-   - URL do servidor: https://mcp.facebook.com/ads
-   - Nome da conexão: Meta Ads
-     (pode usar outro nome se quiser, mas "Meta Ads" deixa fácil
-     de identificar depois)
-
-5. Clique em "Adicionar" / "Salvar" para registrar o MCP.
-
-6. Vai abrir uma aba do Facebook pedindo autorização. Faça assim:
-   - Entre com a conta de admin do Business Manager que tem a
-     conta de anúncios que você quer usar
-   - Selecione a Página do Facebook e o perfil do Instagram que
-     quer autorizar
-   - Confirme as permissões pedidas
-
-7. Quando voltar ao Claude e o status do MCP "Meta Ads" estiver
-   "Conectado", me avisa aqui ("conectei", "feito" ou similar) que
-   continuo a validação.
-```
-
-Aguardar a resposta do aluno.
-
-> **Atenção, conector é por conta Anthropic, não por máquina.** Se o aluno usar o Claude em outra máquina logada na mesma conta, o MCP Meta Ads segue ativo lá também. Não precisa adicionar de novo.
-
-Quando o aluno confirmar, seguir para o Passo 3 (validação MCP).
+Este passo também é usado pelo `/trafego-dashboard` quando o aluno ainda não tem o conector: nesse caso, depois do "conectei", voltar para o `/trafego-dashboard`.
 
 ---
 
-## Passo 2B. Criar App via Facebook Developers
+## Passo 2B. Caminho App (só depois do teste do conector)
 
-Acione a skill `/criar-aplicativo-analise-ads`. Ela é o ponto de entrada do caminho técnico e encadeia automaticamente nas duas skills seguintes.
+Só chega aqui quando o Passo 3 mostrou que a conta não foi liberada no conector (seção 5.1.2 da SKILL) ou que o conector não responde depois das conferências da seção 5.1, quando o modo `APP` já estava ativo, ou quando o aluno insistiu no App.
 
-Sequência completa do encadeamento:
+🔍 Próximo passo: criar o App no Facebook Developers e gerar o token permanente. Tempo estimado: 8 a 12 minutos.
 
-1. **`/criar-aplicativo-analise-ads`** — criar o App no developers.facebook.com com o caso de uso "Mensurar dados de desempenho do anúncio com a API de Marketing", adicionar política de privacidade e publicar.
-2. **`/gerar-token-permanente-facebook-ads`** (encadeada pela primeira) — criar Usuário do Sistema, atribuir Conta de Anúncios + App + Página + Instagram, gerar token permanente, validar com 3 testes na Graph API e salvar `FB_ACCESS_TOKEN_PERMANENTE` no `.env`.
-3. **`/obter-id-conta-anuncios`** (encadeada pela segunda) — localizar o ID da conta de anúncios e salvar como `FB_AD_ACCOUNT_ID` no `.env`.
+Aplicar a seção **4** da SKILL:
 
-Ao final do encadeamento, o `.env` deve ter as duas variáveis:
+1. **4.1. Checar se já existe token** com `grep -q`. Se existir, oferecer usar o token atual (só valida) ou gerar um novo. Nunca mostrar o passo a passo de criação para quem já tem o App.
+2. **4.2. Encadeamento das skills do App**, quando não há token:
+   - `/criar-aplicativo-analise-ads` (cria e publica o App)
+   - `/gerar-token-permanente-facebook-ads` (Usuário do Sistema, ativos, token, 3 testes, `FB_ACCESS_TOKEN_PERMANENTE`, `META_AUTH_MODO=APP` e conta padrão pela listagem automática)
+   - `/obter-id-conta-anuncios`, só se a conta padrão continuar faltando depois da listagem automática
+3. **4.3. Listagem automática das contas** quando a conta padrão não estiver gravada. O ID da conta nunca é pedido ao aluno quando a listagem está disponível.
 
-```
-FB_ACCESS_TOKEN_PERMANENTE={token}
-FB_AD_ACCOUNT_ID={id}
-```
-
-Quando o encadeamento terminar, retornar aqui e seguir para o Passo 3 (validação APP).
+Depois, Passo 3.
 
 ---
 
 ## Passo 3. Validar a conexão
 
-**Se o modo escolhido foi `MCP_CONECTOR`:**
+Aplicar a seção **5** da SKILL, conforme o modo:
 
-🔍 Próximo passo: validar o MCP da Meta. Tempo estimado: cerca de 15 segundos.
+- **MCP:** seção 5.1 (descobrir a tool pelo final do nome `ads_get_ad_accounts` e chamar) e 5.1.1 (conta padrão com a coluna do conector, por `is_ads_mcp_enabled` e `is_queryable`). Conta não liberada no conector: seção 5.1.2, que explica e recomenda o App (Passo 2B). Conector sem resposta: as conferências da 5.1 primeiro; só se a segunda tentativa falhar, oferecer o App.
+- **APP:** seção 5.2 (3 testes, cada um numa chamada `Bash` própria) e, em caso de erro, o mapa de erros da seção 5.3.
 
-Identifique a tool de listagem de contas de anúncio disponibilizada pelo MCP da Meta. O nome exato depende do nome que o aluno deu ao conector personalizado no Passo 2A. Estratégia de busca, em ordem:
-
-1. **Listar tools MCP disponíveis no momento.** Procure tools com prefixo `mcp__` cujo sufixo trate de Meta Ads (ex: `mcp__Meta_Ads__ads_get_ad_accounts`, `mcp__metaads__list_ad_accounts`, `mcp__meta__get_ad_accounts`).
-2. **Se a busca não for conclusiva**, perguntar ao aluno: *"Qual nome você deu ao MCP da Meta no Passo 2A? Vou usar pra localizar a tool certa."*
-3. Tentar chamar a tool encontrada sem parâmetros.
-
-- **Se retornar uma lista de contas de anúncios:** conexão validada. Seguir para o Passo 4.
-- **Se nenhuma tool com prefixo MCP relacionada ao Meta estiver disponível** (erro "tool not found" ou similar): o conector ainda não está ativo na conta. Avisar o aluno:
-
-  ```
-  Não consegui acessar nenhuma tool do MCP da Meta. Confirme:
-
-  - Você está logado no Claude com a mesma conta onde adicionou o
-    MCP personalizado?
-  - Em https://claude.com/settings/connectors o MCP que você
-    adicionou (ex: "Meta Ads") aparece como "Conectado" (verde)?
-  - Você precisa reiniciar o Claude Code para o MCP recém-adicionado
-    aparecer? (saia do CLI e abra de novo)
-
-  Quando estiver tudo certo, me avisa que tento de novo.
-  ```
-
-  Aguardar e tentar de novo. Se o aluno desistir, oferecer trocar para o modo `APP` (voltar ao Passo 1).
-
-- **Se a tool retornar erro de permissão:** o MCP está conectado mas o aluno não autorizou nenhuma conta de anúncios na hora do OAuth. Pedir para refazer o passo 5 do Passo 2A no Facebook (o passo de seleção da Página e do perfil do Instagram).
-
-**Se o modo escolhido foi `APP`:**
-
-🔍 Próximo passo: validar o token permanente com 3 testes na Graph API. Tempo estimado: cerca de 20 segundos.
-
-Leia `FB_ACCESS_TOKEN_PERMANENTE` e o ID da conta no `.env`. Rode os 3 testes definidos no Passo 4 do `/gerar-token-permanente-facebook-ads`:
-
-```bash
-curl "https://graph.facebook.com/v25.0/me?access_token=TOKEN"
-curl "https://graph.facebook.com/v25.0/me/adaccounts?access_token=TOKEN"
-curl "https://graph.facebook.com/v25.0/act_AD_ACCOUNT_ID/campaigns?limit=1&access_token=TOKEN"
-```
-
-- **Se os 3 passarem:** conexão validada. Seguir para o Passo 4.
-- **Se algum falhar:** consultar o "Mapa de erros comuns" do `/gerar-token-permanente-facebook-ads`. Não salvar `META_AUTH_MODO` enquanto a validação não passar.
+Nunca salvar `META_AUTH_MODO` antes da validação passar.
 
 ✅ Concluído: conexão validada.
 
 ---
 
-## Passo 4. Salvar a preferência no .env
+## Passo 4. Salvar no `.env`
 
-Leia o `.env`.
+Aplicar a seção **6** da SKILL:
 
-**Se a linha `META_AUTH_MODO` já existir:** atualize o valor com `Edit` cirúrgico (substituir só essa linha).
+- **MCP:** `META_AUTH_MODO=MCP_CONECTOR`, `FB_AD_ACCOUNT_ID` e `FB_AD_ACCOUNT_IDS` (as tools de escrita do conector exigem a conta). Nenhum token.
+- **APP:** conferir com `grep -q` o que o `/gerar-token-permanente-facebook-ads` já gravou e completar o que faltar.
+- **Os dois modos:** tentar descobrir e gravar `FB_PAGE_ID` e `FB_INSTAGRAM_USER_ID` (seção 6.3). Se não der, seguir sem travar.
 
-**Se não existir:** adicione no final do arquivo:
-
-```
-META_AUTH_MODO=MCP_CONECTOR
-```
-
-ou
-
-```
-META_AUTH_MODO=APP
-```
-
-conforme o modo escolhido. Não sobrescrever outras variáveis. Não tocar na linha `RELATORIO_AUTH_MODO=CLI` se ela existir, ela é legada e vai ser tratada na próxima rodada de refatoração do `/ads-relatorio` e `/enviar-relatorio-ads`.
+Gravar cada variável com o comando de uma linha da seção "LEITURA SEGURA DO .env" do CLAUDE.md (item 4), sem abrir o `.env` com Read, Edit ou Write. Não sobrescrever outras variáveis. Não tocar em `RELATORIO_AUTH_MODO`.
 
 ---
 
-## Saída final
+## Passo 5. Saída final
 
-Mostre ao aluno:
-
-```
-✅ Conexão com Meta Ads configurada.
-
-Modo ativo: {MCP_CONECTOR | APP}
-
-Variável salva no .env: META_AUTH_MODO={valor}
-
-As próximas skills de tráfego vão ler essa preferência e usar o
-caminho certo automaticamente. Você não precisa configurar de novo.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔭 Próximo passo recomendado: /trafego-criar-campanha
-Agora que sua conta está conectada, suba sua primeira campanha
-(perpétuo de venda direta ou lançamento de captação).
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Outras skills de tráfego pago ficam disponíveis no menu / pra
-quem já tem campanha rodando.
-
-Para trocar o modo no futuro, é só rodar /trafego-conexao de novo.
-```
+Aplicar a seção **7** da SKILL: confirmar o modo e a conta padrão, lembrar do pixel (`/pagina-pixel` para instalar, `/trafego-pixel` para conferir) e recomendar `/trafego-criar-campanha` como próximo passo.
 
 ---
 
-## Como outras skills devem usar esta variável
+## Princípios que este command nunca viola
 
-Toda skill de tráfego que precise se conectar ao Meta deve, no início:
+Respeitar os princípios da seção **9** da SKILL. Em especial:
 
-1. Ler `META_AUTH_MODO` do `.env`.
-2. **Se a variável estiver vazia ou ausente:** chamar `/trafego-conexao` para o aluno escolher o modo. Não tentar adivinhar nem cair em fallback.
-3. **Se o valor for `MCP_CONECTOR`:** usar as tools do MCP da Meta que o aluno adicionou como conector personalizado. O prefixo das tools depende do nome que o aluno deu ao MCP (ex: `mcp__Meta_Ads__*`, `mcp__metaads__*`). Localize na lista de tools disponíveis as que começam com `mcp__` e tratam de Meta Ads.
-4. **Se o valor for `APP`:** ler `FB_ACCESS_TOKEN_PERMANENTE` (e demais variáveis salvas pelo caminho do App) e fazer as chamadas via `curl`/CLI Python como faz hoje.
-
-Esta skill é idempotente, pode ser chamada várias vezes sem efeito colateral.
-
----
-
-## Princípios que esta skill nunca viola
-
-1. **Nunca salvar `META_AUTH_MODO` antes da validação passar.** Se o conector ou o token falham na hora de validar, a variável não entra no `.env`. Evita estado inconsistente em que a skill diz "conectado" mas as skills downstream falham.
-2. **Nunca pular a pergunta de modo na primeira execução.** Mesmo que o aluno já tenha `FB_ACCESS_TOKEN_PERMANENTE` no `.env` por ter rodado o caminho técnico antes, perguntar e deixar ele escolher conscientemente.
-3. **Nunca pedir token completo no chat no caminho MCP.** Token e auth ficam todos na conta Anthropic, a skill nem vê.
-4. **Nunca tocar em `RELATORIO_AUTH_MODO`.** Variável legada, deixa intacta. A migração das skills antigas é assunto separado.
-5. **Nunca recomendar o caminho do App sem aviso.** Sempre apresentar o conector como recomendado primeiro, deixar o aluno escolher consciente.
-6. **Sempre validar antes de declarar conexão pronta.** Para MCP, chamar uma tool de leitura. Para APP, rodar os 3 testes da Graph API.
+1. Nunca salvar `META_AUTH_MODO` antes da validação passar, e nunca gravar valor diferente de `MCP_CONECTOR` ou `APP`.
+2. Nunca exibir o token nem o conteúdo do `.env` no chat. Presença com `grep -q`, uso por substituição dentro do `curl`, exibição com `***TOKEN_MASCARADO***` ou só "salvo".
+3. Cada `curl` à Graph API é uma chamada `Bash` independente. Nunca `python3 << 'EOF'` nem `curl | python3 -c` com o token.
+4. Nunca tocar em `RELATORIO_AUTH_MODO`.
+5. Idempotente: pode ser chamado várias vezes sem efeito colateral.

@@ -1,12 +1,12 @@
 # Cache Local de Insights em Arquivo .md
 
-Esta sub-skill define o sistema de cache em arquivo do `/trafego-insights`, complementar ao cache em memória de 5 minutos. Serve para evitar requisições redundantes à Graph API quando várias skills (analise, otimizar, escalar, regras, publicos, testes) precisam dos mesmos dados no mesmo período dentro da mesma sessão ou entre sessões próximas.
+Esta sub-skill define o sistema de cache em arquivo do `/trafego-insights`, complementar ao cache em memória de 5 minutos. Serve para evitar requisições redundantes à Graph API quando várias skills (`/trafego-otimizar`, `/trafego-escalar`, `/trafego-regras`, `/trafego-publicos`, `/trafego-testes`, e a `/trafego-analise` nas quebras que as sub-skills pedem) precisam dos mesmos dados no mesmo período dentro do mesmo dia.
 
 ---
 
 ## 1. Por que cache em arquivo
 
-O cache em memória da seção 7 do SKILL.md vive apenas dentro de uma chamada da skill. Se o aluno roda `/trafego-analise` e depois Gerenciador (Regras automáticas) segundos depois, ambos pedem os mesmos dados de período. Sem cache de arquivo, são duas requisições à Graph API. Com cache de arquivo, a segunda lê do disco.
+O cache em memória da seção 7 do SKILL.md vive apenas dentro de uma chamada da skill. Se o aluno roda `/trafego-otimizar` e depois `/trafego-regras` segundos depois, ambos pedem os mesmos dados de período. Sem cache de arquivo, são duas requisições à Graph API. Com cache de arquivo, a segunda lê do disco.
 
 ---
 
@@ -65,7 +65,7 @@ moeda: BRL
 timestamp_leitura: 2026-05-04T14:30:00-03:00
 ttl_segundos: 21600                           # 6h para janela 7-14d
 status: fresh                                  # fresh | stale | expired
-hash_filtros: a3f1c8                          # hash dos filtros para invalidação seletiva
+hash_filtros: a3f1c8                          # hash só do filtro de escopo (campaign_id ou conta_completa, e nivel) e de status (incluir_pausadas, incluir_arquivadas)
 ---
 
 # Cache: {escopo} {periodo}
@@ -94,10 +94,14 @@ O bloco `## Payload` contém o output completo do `/trafego-insights` em JSON, i
 |---|---|
 | `today` (período inclui hoje) | 1 hora |
 | `7d`, `14d` (terminam hoje) | 6 horas |
-| `30d` (terminam hoje) | 24 horas |
-| Período histórico fechado (não inclui hoje) | 7 dias |
+| `30d` (terminam hoje) | até o fim do dia |
+| Período histórico fechado (não inclui hoje) | até o fim do dia |
 
-Após o TTL, marcar status como `expired` e tratar como cache miss. Não deletar — apenas ignorar. (Histórico fica útil para auditoria.)
+Para "até o fim do dia", gravar em `ttl_segundos` os segundos que faltam até 23:59:59 (America/Sao_Paulo).
+
+**Regra geral (vale acima de qualquer TTL):** o cache só vale no mesmo dia (fuso America/Sao_Paulo) e para os mesmos parâmetros: conta (`ad_account_id`), período, filtro de escopo e de status (`hash_filtros`), janela de atribuição e quebras. É a mesma chave do cache em memória (SKILL.md seção 7.1). Mudou o dia, busca de novo. Resposta com erro, ou leitura em que a chamada principal falhou, nunca vira cache: o aluno vê o erro em linguagem simples.
+
+Após o TTL, marcar status como `expired` e tratar como cache miss. Não deletar, apenas ignorar. (Histórico fica útil para auditoria.)
 
 ---
 
@@ -110,9 +114,9 @@ Skills que disparam invalidação:
 - `/trafego-otimizar` (pausa, ajuste de budget)
 - `/trafego-escalar` (aumento de budget, duplicação)
 - `/trafego-criar-campanha` (criação de campanha)
-- Gerenciador (Regras automáticas) (criação ou ativação de regra)
-- Gerenciador de Audiences (criação de audience — não muda métricas existentes mas pode invalidar lookalike sources)
-- Duplicar entidade no Gerenciador (variando 1 dimensão) (criação de adset/ad de teste)
+- `/trafego-regras` (criação ou ativação de regra)
+- `/trafego-publicos` (criação de audience: não muda métricas existentes, mas pode invalidar lookalike sources)
+- `/trafego-testes` (criação de adset/ad de teste)
 
 ### 6.2 Invalidação manual
 - Aluno pede explicitamente "atualizar dados" ou "puxar de novo": deletar arquivo `*.stale.md` correspondente.
@@ -126,18 +130,23 @@ Sugestão: hook ou comando manual que limpa arquivos com mais de 30 dias na past
 ## 7. Algoritmo de leitura (pseudo-código)
 
 ```
-def ler_insights(escopo, periodo, breakdowns, force_refresh=False):
+def ler_insights(conta, escopo, periodo, breakdowns, hash_filtros, janela_atribuicao, force_refresh=False):
     nome_arquivo = montar_nome(escopo, periodo, breakdowns)
     caminho = f"meus-produtos/{ativo}/trafego/insights/{nome_arquivo}"
 
     if not force_refresh and arquivo_existe(caminho):
         cache = ler_md(caminho)
-        if cache.status == "fresh" and not expirou(cache.timestamp, cache.ttl_segundos):
+        if (cache.status == "fresh"
+                and not expirou(cache.timestamp_leitura, cache.ttl_segundos)
+                and mesmo_dia_sao_paulo(cache.timestamp_leitura, agora())
+                and mesmos_parametros(cache, conta, hash_filtros, janela_atribuicao)):
             return cache.payload  # CACHE HIT
 
     # CACHE MISS ou stale ou refresh forçado
     payload = chamar_graph_api(escopo, periodo, breakdowns)
-    salvar_md(caminho, payload, escopo, periodo, breakdowns)
+    if payload.status == "erro_fatal" or chamada_principal_falhou(payload):
+        return payload  # erro nunca vira cache
+    salvar_md(caminho, payload, escopo, periodo, breakdowns)  # payload processado, sem paging
     atualizar_index()
     return payload
 ```
@@ -149,7 +158,7 @@ def ler_insights(escopo, periodo, breakdowns, force_refresh=False):
 Arquivo opcional mas recomendado para inspeção humana. Listagem cronológica:
 
 ```markdown
-# Cache Index — Tráfego Insights
+# Cache Index. Tráfego Insights
 
 Última atualização: 2026-05-04 14:35
 
@@ -167,17 +176,17 @@ Atualizar o INDEX a cada novo cache salvo, marcação de stale ou refresh.
 
 ## 9. Quem lê o cache
 
-Toda skill de tráfego que precisa de métrica deve passar por `/trafego-insights`, que internamente checa o cache antes de chamar a API:
+As skills de tráfego que leem métricas pela `/trafego-insights` passam pelo cache, que é checado antes de chamar a API:
 
 | Skill | Como usa |
 |---|---|
-| `/trafego-analise` | Lê para narrar os 9 outputs |
+| `/trafego-analise` | Só as quebras (idade e gênero, posicionamento, horário etc.) que as sub-skills pedem passam por aqui. A busca base de métricas da análise é própria (Passo 4 dela, com cache próprio) e não lê este cache. |
 | `/trafego-otimizar` | Lê para diagnóstico em 2 camadas. Após edição, invalida. |
 | `/trafego-escalar` | Lê para validar gatilhos. Após escalar, invalida. |
-| Gerenciador (Regras automáticas) | Lê para construir condições baseadas em valores atuais (ex: "CPA atual"). Após criar regra ativa, invalida. |
-| Gerenciador de Audiences | Lê para identificar audiences source mais valiosas (ex: lookalike de quem). Após criar audience, invalida. |
-| Gerenciador de Eventos | Não usa cache de insights (usa endpoint próprio do pixel) |
-| Duplicar entidade no Gerenciador (variando 1 dimensão) | Lê para identificar best-performer a duplicar. Após criar teste, invalida. |
+| `/trafego-regras` | Lê para construir condições baseadas em valores atuais (ex: "CPA atual"). Após criar regra ativa, invalida. |
+| `/trafego-publicos` | Lê para identificar audiences source mais valiosas (ex: lookalike de quem). Após criar audience, invalida. |
+| `/trafego-pixel` | Não usa cache de insights (usa endpoint próprio do pixel) |
+| `/trafego-testes` | Lê para identificar best-performer a duplicar. Após criar teste, invalida. |
 
 ---
 

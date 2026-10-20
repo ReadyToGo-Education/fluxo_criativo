@@ -15,7 +15,9 @@ Use esta skill quando o usuário pedir o comando `/gerar-token-permanente-facebo
 
 Token via Usuario do Sistema. Nao expira. Nao precisa renovar.
 
-Prerequisito: ter o App criado conforme a skill `criar-aplicativo-analise-ads`.
+Pré-requisito: ter o App criado conforme a skill `criar-aplicativo-analise-ads`.
+
+Quando o App e o Usuário do Sistema já existem (o `/trafego-conexao` aciona este command assim para gerar um token novo, por exemplo no modo `APP` com o token ausente), começar direto pelo Passo 3. Os Passos 1 e 2 só entram se o aluno disser que não tem mais o Usuário do Sistema ou se um teste der erro de permissão.
 
 ---
 
@@ -115,22 +117,42 @@ Não precisa identificar um por um. É só marcar a opção "Selecionar tudo" no
 
 ## Passo 4. Validar o token (3 testes)
 
+**Antes dos testes, gravar só o token no `.env`**, sem abrir o arquivo, com o padrão do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md, em duas chamadas `Bash`. O token antigo não é apagado agora: ele fica guardado como `FB_ACCESS_TOKEN_ANTERIOR` até os 3 testes passarem. Assim, quem já tinha um token funcionando (troca de higiene a cada 6 meses ou opção "Gerar um token novo" do `/trafego-conexao`) não fica sem acesso se colar o novo pela metade ou desistir no meio.
+
+A primeira chamada, sem o token, garante a quebra de linha, guarda a linha antiga com o outro nome (só se ainda não houver cópia guardada, para uma nova tentativa não trocar o token bom pelo que falhou) e apaga a linha do token. Na primeira vez, quando o `.env` não tem nenhuma linha `FB_ACCESS_TOKEN_PERMANENTE`, não há o que guardar: a chamada grava `FB_ACCESS_TOKEN_ANTERIOR=` vazia, só como marca de que não havia token antes (a linha vazia que vem do `.env.example` vira a mesma marca). Assim, numa nova tentativa, o token que falhou também não vira cópia:
+
+```bash
+touch .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; } && { grep -q "^FB_ACCESS_TOKEN_ANTERIOR=" .env || sed -i 's/^FB_ACCESS_TOKEN_PERMANENTE=/FB_ACCESS_TOKEN_ANTERIOR=/' .env; } && { grep -q "^FB_ACCESS_TOKEN_ANTERIOR=" .env || echo "FB_ACCESS_TOKEN_ANTERIOR=" >> .env; } && sed -i '/^FB_ACCESS_TOKEN_PERMANENTE=/d' .env
+```
+
+A segunda só acrescenta o token colado pelo aluno. É a única chamada em que o valor aparece no texto de um comando (exceção do item 4 do CLAUDE.md): nada mais vai nela, e o valor nunca é repetido na resposta.
+
+```bash
+printf 'FB_ACCESS_TOKEN_PERMANENTE=%s\n' "<token colado pelo aluno>" >> .env
+```
+
+No Mac, trocar `sed -i` por `sed -i ''`. Confirmar só com "token salvo", sem repetir o valor. `META_AUTH_MODO=APP` só é gravado depois que os 3 testes passarem. Depois dos testes:
+
+- **Os três passaram:** apagar a cópia com `sed -i '/^FB_ACCESS_TOKEN_ANTERIOR=/d' .env` (seção "Após validar o token").
+- **Algum falhou e o aluno vai gerar outro token:** gravar de novo com as mesmas duas chamadas. A cópia guardada continua intacta.
+- **O aluno desistiu:** antes, conferir se havia token com `grep -q "^FB_ACCESS_TOKEN_ANTERIOR=[^[:space:]]" .env && echo "havia" || echo "primeira vez"`. Depois, apagar o token novo, apagar a marca vazia (primeira vez) e devolver o token de antes, se havia um: `sed -i '/^FB_ACCESS_TOKEN_PERMANENTE=/d' .env && sed -i '/^FB_ACCESS_TOKEN_ANTERIOR=[[:space:]]*$/d' .env && sed -i 's/^FB_ACCESS_TOKEN_ANTERIOR=/FB_ACCESS_TOKEN_PERMANENTE=/' .env`. Avisar em 1 linha: se havia, que o token anterior voltou a valer; se era a primeira vez, que o token novo foi apagado e nada mais mudou no `.env`.
+
 Execute os três testes abaixo, **um por vez, em chamadas Bash separadas**. Os três precisam passar. Se qualquer um falhar, consulte o **Mapa de erros** logo abaixo antes de pedir ajuda.
 
 > ### ⚙️ Como executar (regra dura para a skill)
 >
-> **Cada teste é uma chamada `Bash` independente.** Substituir `TOKEN` pelo valor literal **inline na URL** do `curl`. NÃO empacotar os 3 testes num script multi-linha com `TOKEN="..."` no início + `echo` + múltiplos `curl`. Esse formato (script bash com variável shell) **não casa** com os padrões `Bash(curl -s "https://graph.facebook.com/*)` autorizados no `.claude/settings.local.json` e dispara o pop-up nativo de permissão — que exibe o token completo na tela.
+> **Cada teste é uma chamada `Bash` independente, com o token entrando por substituição dentro do próprio `curl`** (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`), lido do `.env` gravado logo acima. Nunca colar o valor do token na URL. NÃO empacotar os 3 testes num script multi-linha com `TOKEN="..."` no início + `echo` + múltiplos `curl`: esse formato dispara o pop-up nativo de permissão, que exibe o token completo na tela.
 >
-> Formato CORRETO (3 chamadas Bash independentes, cada uma um único `curl` com token inline):
+> Formato CORRETO (3 chamadas Bash independentes, cada uma um único `curl` com o token por substituição):
 >
 > ```
-> curl -s "https://graph.facebook.com/v25.0/me?access_token=<TOKEN_DO_ENV>"
+> curl -s "https://graph.facebook.com/v25.0/me?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 > ```
 > ```
-> curl -s "https://graph.facebook.com/v25.0/me/adaccounts?access_token=<TOKEN_DO_ENV>"
+> curl -s "https://graph.facebook.com/v25.0/me/adaccounts?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 > ```
 > ```
-> curl -s "https://graph.facebook.com/v25.0/act_<id>/campaigns?limit=1&access_token=<TOKEN_DO_ENV>"
+> curl -s "https://graph.facebook.com/v25.0/act_<id>/campaigns?limit=1&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 > ```
 >
 > Formato ERRADO (script multi-linha, dispara pop-up com token visível):
@@ -144,16 +166,16 @@ Execute os três testes abaixo, **um por vez, em chamadas Bash separadas**. Os t
 > curl -s "https://graph.facebook.com/v25.0/me/adaccounts?access_token=${TOKEN}"
 > ```
 >
-> A diferença pro aluno: o formato CORRETO roda direto sem balão de permissão. O formato ERRADO exibe o token na tela e exige clique manual.
+> A diferença para o aluno: nos testes, no formato CORRETO, o token nunca aparece no texto do comando, nem quando o Claude pede permissão para rodar. O formato ERRADO exibe o token na tela e exige clique manual.
 >
 > Após cada chamada, mostrar a resposta resumida ao aluno (sucesso/erro), seguindo a regra de mascaramento de tokens do CLAUDE.md (não ecoar a URL completa com o token na resposta — descrever em linguagem natural: "Teste 1 passou: token responde como `relatorio-ads` em /me").
 
-Substitua `TOKEN` pelo token copiado e `SEU_AD_ACCOUNT_ID` pelo número da conta de anúncios (só os números, sem o prefixo `act_`).
+No Teste 3, substitua `SEU_AD_ACCOUNT_ID` pelo número de uma conta que apareceu no Teste 2 (só os números, sem o prefixo `act_`).
 
 **Teste 1. Token está válido**
 
 ```bash
-curl "https://graph.facebook.com/v25.0/me?access_token=TOKEN"
+curl -s "https://graph.facebook.com/v25.0/me?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 Esperado: `{"id":"...","name":"relatorio-ads"}` (ou o nome que deu ao usuário do sistema). Se vier erro, o token foi copiado errado ou já está revogado.
@@ -161,7 +183,7 @@ Esperado: `{"id":"...","name":"relatorio-ads"}` (ou o nome que deu ao usuário d
 **Teste 2. Usuário do sistema enxerga a conta de anúncios**
 
 ```bash
-curl "https://graph.facebook.com/v25.0/me/adaccounts?access_token=TOKEN"
+curl -s "https://graph.facebook.com/v25.0/me/adaccounts?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 Esperado: lista contendo `act_<seu_ad_account_id>`. Se vier vazio ou sem a conta esperada, a atribuição da conta no Passo 2 não foi feita corretamente, refaça aquele passo.
@@ -169,7 +191,7 @@ Esperado: lista contendo `act_<seu_ad_account_id>`. Se vier vazio ou sem a conta
 **Teste 3. Permissão de leitura na conta funciona de verdade**
 
 ```bash
-curl "https://graph.facebook.com/v25.0/act_SEU_AD_ACCOUNT_ID/campaigns?limit=1&access_token=TOKEN"
+curl -s "https://graph.facebook.com/v25.0/act_SEU_AD_ACCOUNT_ID/campaigns?limit=1&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 Esperado: um objeto `data` com 1 campanha (se a conta tiver), ou `data: []` (se a conta for nova). Em ambos os casos, sem mensagem de erro.
@@ -196,16 +218,15 @@ Se a tela do Business Manager não bater com este roteiro, descreva o que está 
 
 ---
 
-## Apos validar o token
+## Após validar o token
 
-Salve o token no `.env` com os nomes exatos:
+O token já foi gravado antes dos testes. Primeiro, apague a cópia do token anterior (`sed -i '/^FB_ACCESS_TOKEN_ANTERIOR=/d' .env`). Depois, grave o modo no `.env`:
 
 ```
-FB_ACCESS_TOKEN_PERMANENTE=seu_token_aqui
 META_AUTH_MODO=APP
 ```
 
-Use `Edit` cirurgico para adicionar ou atualizar essas linhas no `.env`. Nao sobrescreva outras variaveis.
+Use o comando de uma linha do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md, sem abrir o `.env` com Read, Edit ou Write. Não sobrescreva outras variáveis.
 
 > **Por que `META_AUTH_MODO=APP`:** as skills `/trafego-*` leem essa variavel no Passo 0 para decidir como se conectar com o Meta Ads. Sem ela, qualquer skill de trafego para no gate e manda o aluno rodar `/trafego-conexao` mesmo com o token e ad account ja configurados. Salvar `APP` aqui evita esse desvio.
 
@@ -213,12 +234,12 @@ Use `Edit` cirurgico para adicionar ou atualizar essas linhas no `.env`. Nao sob
 
 ## Passo 5. Buscar contas de anuncio automaticamente (OBRIGATORIO)
 
-> Esta etapa NUNCA deve ser pulada. Logo apos salvar o token no `.env`, faca a requisicao abaixo SEM perguntar ao usuario, listando todas as contas que o token enxerga.
+> Esta etapa NUNCA deve ser pulada. Logo depois que os 3 testes passarem e o modo for gravado, faça a requisição abaixo SEM perguntar ao usuário, listando todas as contas que o token enxerga.
 
-Execute via Bash com curl, substituindo `TOKEN_AQUI` pelo token recem-salvo:
+Execute via Bash com curl, com o token entrando por substituição, lido do `.env` (mesmo padrão dos testes e da seção 4.3 da SKILL `trafego-conexao`):
 
 ```bash
-curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,name,account_status,currency,business_name&limit=100&access_token=TOKEN_AQUI"
+curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,name,account_status,currency,business_name&limit=100&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"
 ```
 
 **Mapeamento de status (`account_status`):**
@@ -239,17 +260,17 @@ curl -s "https://graph.facebook.com/v25.0/me/adaccounts?fields=id,account_id,nam
 
 ### Caso A. Token retorna 1 conta
 
-Salvar direto, sem perguntar nada ao usuario. No `.env`, usar `Edit` cirurgico para adicionar ou atualizar:
+Salvar direto, sem perguntar nada ao usuário. No `.env`, gravar cada variável com o comando de uma linha do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md, sem abrir o arquivo:
 
 ```
 FB_AD_ACCOUNT_ID={apenas_numeros}
 FB_AD_ACCOUNT_IDS={apenas_numeros}
 ```
 
-Avisar o usuario:
+Avisar o usuário:
 
 ```
-Conta unica detectada: {nome} ({id}). Salva como padrao.
+Conta única detectada: {nome} ({id}). Salva como padrão.
 ```
 
 ---
@@ -288,7 +309,7 @@ Aguardar resposta. O numero precisa estar dentro das contas salvas no passo ante
 
 **Salvar no `.env`:**
 
-Usar `Edit` cirurgico para adicionar ou atualizar as duas variaveis:
+Gravar as duas variáveis com o comando de uma linha do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md (um comando por variável), sem abrir o arquivo:
 
 ```
 FB_AD_ACCOUNT_ID={id_da_conta_default}
@@ -315,11 +336,10 @@ Apos salvar, confirmar com o usuario EXATAMENTE com o bloco abaixo, nada mais:
 
 Tudo pronto. As skills /trafego-* já conseguem acessar o Meta Ads.
 
-Você pode trocar a conta padrão depois com /meta-conta-trocar.
-Você pode adicionar mais contas com /meta-conta-adicionar.
+Você pode trocar a conta padrão depois com /trafego-conexao.
 ```
 
-> **Regra dura — não expandir esta saída.** Não acrescentar lista de "Próximas skills disponíveis", não categorizar em "Tráfego pago", "Operacional do Meta", "Relatórios e otimização atalho" nem variantes parecidas, não citar `/trafego-insights`, `/trafego-criar-campanha`, `/trafego-otimizar`, `/trafego-escalar`, `/trafego-analise`, `/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar` ou qualquer outra skill aqui. Recomendação de "próximo passo" é responsabilidade exclusiva de `/trafego-conexao` (que é o ponto de entrada e tem o bloco `🔭 Próximo passo recomendado`). Esta skill é só infraestrutura técnica de geração de token; encerra com a confirmação acima e ponto.
+> **Regra dura: não expandir esta saída.** Não acrescentar lista de "Próximas skills disponíveis", não categorizar em "Tráfego pago", "Operacional do Meta", "Relatórios e otimização atalho" nem variantes parecidas, não citar `/trafego-insights`, `/trafego-criar-campanha`, `/trafego-otimizar`, `/trafego-escalar`, `/trafego-analise`, `/trafego-diagnostico`, `/trafego-criativos`, `/trafego-oferta-funil`, `/trafego-pixel`, `/trafego-publicos`, `/trafego-regras`, `/trafego-testes`, `/trafego-dashboard`, `/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar` ou qualquer outra skill aqui. Recomendação de "próximo passo" é responsabilidade exclusiva de `/trafego-conexao` (que é o ponto de entrada e tem o bloco `🔭 Próximo passo recomendado`). Esta skill é só infraestrutura técnica de geração de token; encerra com a confirmação acima e ponto.
 
 ---
 

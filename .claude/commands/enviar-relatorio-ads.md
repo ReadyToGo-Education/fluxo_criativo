@@ -18,7 +18,7 @@ Detecta `RELATORIO_AUTH_MODO` no `.env` e usa o script correto:
 
 Antes de qualquer coisa, leia `META_AUTH_MODO` no `.env` para decidir o caminho.
 
-- **Vazia ou ausente:** chame a skill `/trafego-conexao` para o aluno escolher o modo. Quando ela terminar e gravar `META_AUTH_MODO`, retorne aqui.
+- **Vazia ou ausente:** chame a skill `/trafego-conexao` para conectar a conta (ela conecta pelo conector da Meta e testa; o App só entra se a conta não estiver liberada no conector). Quando ela terminar e gravar `META_AUTH_MODO`, retorne aqui.
 - **`META_AUTH_MODO=MCP_CONECTOR`:** o Passo 1.1 (credenciais Facebook) é pulado por completo. A conexão Meta foi validada via conector personalizado em `/trafego-conexao` e não usa token no `.env`. Vá direto para o Passo 1.2 (canal de envio).
 - **`META_AUTH_MODO=APP`:** executar normalmente o Passo 1.1 e o Passo 1.2.
 

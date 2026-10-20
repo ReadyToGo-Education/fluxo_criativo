@@ -14,7 +14,7 @@ Aplica uma ação (pausar, reduzir budget) em múltiplas entidades de uma vez, f
 | Função | Descrição |
 |---|---|
 | `pausar_em_lote(filtro)` | Pausa todas as entidades que batem o filtro |
-| `reduzir_budget_em_lote(filtro, percent)` | Reduz budget % nas entidades que batem |
+| `reduzir_budget_em_lote(filtro, percent)` | Reduz budget % nas entidades que batem, no nível definido pelo §6.0 do SKILL.md (ver "Antes de reduzir orçamento em lote") |
 | `pausar_top_n_pior(metric, n)` | Pausa as N piores em uma métrica |
 | `aumentar_top_n(metric, n, percent)` | Atalho para escala (delegar para `/trafego-escalar` quando faz sentido) |
 
@@ -36,65 +36,90 @@ combinacao: AND                          # AND padrão; OR aceito
 ```
 
 Ou descrição em linguagem natural que a skill traduz:
-- "pausa tudo com ROAS < 1 últimas 2 semanas e gasto > R$ 50" → filtro acima
+- "pausa tudo com ROAS < 1 últimas 2 semanas e gasto > R$ 50" vira o filtro acima
 
 ### Métricas suportadas no filtro
 
 `roas`, `cpa`, `cpl`, `ctr_link_unico`, `ctr_link_total`, `ctr`, `frequency`, `cpm`, `spend`, `impressions`, `purchases`, `leads`, `cpc`, `link_clicks`.
 
-> Para diagnóstico de criativo, prefira `ctr_link_unico` (`unique_inline_link_click_ctr`). `ctr_link_total` (`inline_link_click_ctr`) e `ctr` (geral) ficam disponíveis como complementares.
+> Para diagnóstico de criativo, prefira `ctr_link_unico` (`unique_inline_link_click_ctr`). `ctr_link_total` (`inline_link_click_ctr`) e `ctr` (geral) ficam disponíveis como complementares. No modo MCP esses dois campos não existem na tool `ads_get_ad_entities`: o CTR de link é calculado (`link_click ÷ impressions`), como manda o §3.5.1 do SKILL.md. Nunca usar o `ctr` geral no lugar do CTR de link.
 
 ### Operadores
 `less_than`, `less_than_or_equal`, `greater_than`, `greater_than_or_equal`, `equal`, `not_equal`, `between`.
 
-## Validação antes de aplicar
+## Validação antes de aplicar (gate 🛡️ do lote)
 
-A skill **sempre lista** o que vai acontecer antes de executar:
+A skill **sempre lista** o que vai acontecer antes de executar, no formato do bloco 🛡️ do CLAUDE.md. O lote inteiro é **um bloco e um "sim"**. Com mais de 5 entidades, mostrar as 5 primeiras + "e mais N itens, lista completa abaixo" + a lista completa recolhida.
 
 ```
-🔎 Filtro:
-   roas < 1.0 AND spend > R$ 50 AND período = last_14d
+🛡️ Confirmação necessária antes de tocar na conta Meta
 
-📋 Vai aplicar PAUSE em 7 entidades:
+Operação: pausar em lote
+Filtro: roas < 1.0 AND spend > R$ 50 AND período = last_14d
+Objeto: 7 entidades
 
-   ❌ Pausará:
+O que vai mudar (status ACTIVE → PAUSED):
    1. [Adset] Tarot LAL1pct        ROAS 0.42, gasto R$ 380, conversões: 3
    2. [Adset] Tarot Broad-25-44    ROAS 0.78, gasto R$ 240, conversões: 5
    3. [Ad]    Tarot-criativo-A1    ROAS 0.65, gasto R$ 120, conversões: 2
    4. [Ad]    Tarot-criativo-B2    ROAS 0.50, gasto R$ 180, conversões: 3
    5. [Adset] Tarot Interesse-1    ROAS 0.91, gasto R$ 220, conversões: 6
-   6. [Ad]    Tarot-criativo-C1    ROAS 0.70, gasto R$ 95,  conversões: 1
-   7. [Adset] Tarot Saved-Iniciantes ROAS 0.88, gasto R$ 310, conversões: 4
+   e mais 2 itens, lista completa abaixo
 
-⚠️ Vai disparar reset de aprendizado em 4 adsets ativos.
+Reset de aprendizado esperado: sim, em 4 adsets ativos que estão em aprendizado
+Reversível? sim, reativando cada entidade (ads_activate_entity no MCP, status=ACTIVE no APP)
 
-   Confirma pausar todos? (digite SIM)
+Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 ```
 
-## Implementação
+Antes de pausar por dinheiro, aplicar o filtro de lucro do SKILL.md (§3.6): entidade em zona amarela (acima da meta, mas ainda lucrativa) sai da lista com aviso, e entidade com menos de 10 compras na janela não é pausada só por CPA (§3.4).
 
-```python
+### Antes de reduzir orçamento em lote
+
+`reduzir_budget_em_lote` passa por quatro regras, entidade por entidade, antes de montar o bloco 🛡️:
+
+1. **Escopo `ad` é recusado:** anúncio não tem orçamento. Oferecer pausar em vez de reduzir.
+2. **ABO ou CBO (§6.0 do SKILL.md):** ler o `budget.tipo` da campanha de cada entidade.
+   - Escopo `adset`: em ABO, a redução cai no conjunto. Em CBO, o conjunto não tem orçamento próprio: sai da lista com aviso e a oferta do §6.4 (teto no conjunto) ou de pausa.
+   - Escopo `campaign`: em CBO, a redução cai na campanha inteira. Em ABO, a campanha não tem orçamento próprio: sai da lista com aviso e a sugestão de filtrar por conjunto.
+   - Tipo de orçamento nulo ou indisponível: a entidade sai com o motivo "tipo de orçamento não detectado".
+3. **Bloqueios do §6.2:** conjunto em fase de aprendizado, última edição há menos de 48h ou gasto do dia abaixo de 50% do orçamento diário sai da lista com o motivo. No MCP, se o campo de aprendizado não vier (`aprendizado: NAO_VERIFICADO`, contrato em `trafego-insights/SKILL.md` §10.1), o conjunto segue na lista marcado "aprendizado não conferido": o bloco 🛡️ avisa que o conector não mostra essa fase e o aluno decide no "sim".
+4. **Filtro de zona (§3.6 e §6.1):** só reduzir na zona vermelha (lucro/dia negativo). Zona amarela sai com aviso.
+
+No bloco 🛡️ da redução, cada linha mostra o nível em que a redução cai (ex.: "[Campanha CBO]", "[Conjunto ABO]") com o orçamento de antes e de depois, em reais. Logo abaixo, a lista das entidades excluídas, cada uma com o motivo.
+
+## Implementação (pseudocódigo)
+
+O Claude aplica o filtro lendo o retorno de `/trafego-insights` como texto. Nada de script com token, heredoc Python ou `curl | python3` (regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md).
+
+```
 # 1. Puxar dados via /trafego-insights (escopo conta_completa, breakdowns conforme filtro)
 data = trafego_insights(escopo='conta_completa', periodo=filtro.periodo, nivel='auto')
 
 # 2. Aplicar filtro
 matches = [e for e in data if matches_filter(e, filtro)]
 
-# 3. Listar matches em preview
+# 3. Listar matches no bloco 🛡️ do lote
 print_preview(matches)
 
-# 4. Confirmação SIM
-if confirmacao != "SIM": return
+# 4. Confirmação: um "sim" para o lote inteiro
+if confirmacao != "sim": return
 
-# 5. Aplicar ação
+# 5. Aplicar ação (rotear por META_AUTH_MODO, ver Passo 0 do SKILL.md; não é lacuna)
 for entidade in matches:
-    POST /<entidade.id> { "status": "PAUSED" }      # ou update_budget
+    # MCP: ads_update_entity (status=PAUSED, ou daily_budget no nível definido pelo §6.0)
+    # APP: POST /<entidade.id> { "status": "PAUSED" }   # ou daily_budget no nível do §6.0
+    # valor do orçamento: centavos no APP; no MCP, a unidade do schema da tool
+    # (ver "Unidade dos valores na escrita" no Passo 0 do SKILL.md); depois, reler e conferir em reais
+    aplicar_acao(entidade)
+    # se uma chamada falhar: parar, mostrar o que já foi aplicado e perguntar antes de continuar
 
 # 6. Invalidar cache do /trafego-insights
 invalidate_cache(account_id)
 
 # 7. Salvar log da operação
 log_acao_em_lote(matches, action, timestamp)
+#    em meus-produtos/{ativo}/entregas/trafego/otimizar/lote-{YYYY-MM-DD-HHMM}.md
 ```
 
 ## Atalhos comuns (receitas)
@@ -104,7 +129,7 @@ log_acao_em_lote(matches, action, timestamp)
 | **Pausar queimadores** | `roas<1 AND spend>50 AND last_14d` | PAUSE adset |
 | **Pausar criativos mortos** | `ctr_link_unico<0.4 AND spend>50 AND last_7d` | PAUSE ad |
 | **Pausar por frequência** | `frequency>4.5 AND last_7d` | PAUSE adset |
-| **Reduzir CPA alto** | `cpa>1.5x_target AND last_7d` | budget -20% |
+| **Reduzir CPA alto** | `cpa>1.5x_target AND last_7d` | budget -20% no nível do §6.0 (conjunto em ABO, campanha em CBO) |
 | **Pausar sem conversão** | `purchases=0 AND spend>100 AND last_7d` | PAUSE adset |
 | **Pausar 5 piores ROAS** | `top_n=5 metric=roas asc` | PAUSE adset |
 
@@ -122,20 +147,21 @@ aplicado: 7 ✅
 falhou: 0
 
 entidades_afetadas:
-  - { id: ..., tipo: adset, nome: "...", metrica_no_momento: "ROAS=0.42, spend=380", acao: paused }
+  - { id: <id>, tipo: adset, nome: "...", metrica_no_momento: "ROAS=0.42, spend=380", acao: paused }
   - ...
 
 resets_aprendizado_disparados: 4
 
-rollback:
-  - DELETE-or-reactivate /6111111
-  - DELETE-or-reactivate /6222222
+rollback:                                   # reverter = reativar (nunca apagar)
+  - reativar <id_1>   # MCP: ads_activate_entity | APP: POST /<id_1> status=ACTIVE (com gate)
+  - reativar <id_2>
   - ...
 ```
 
 ## Avisos
 
-- **Pausar com filtro disparou reset de aprendizado** se o adset estava em learning. Confirmação extra para essas entidades.
-- **Limite de segurança**: a skill bloqueia ações que afetam > 50% dos adsets ativos da conta sem confirmação tripla.
-- **Não combinar com `/trafego-otimizar` padrão na mesma conversa.** Se otimização individual já pausou, ações em lote vão sobrescrever sem ganho.
+- **Pausar com filtro dispara reset de aprendizado** se o adset estava em learning. Destacar essas entidades no bloco 🛡️.
+- **Limite de segurança**: a skill bloqueia ações que afetam mais de 50% dos adsets ativos da conta sem confirmação tripla.
+- **Não combinar com `/trafego-otimizar` padrão na mesma conversa.** Se a otimização individual já pausou, ações em lote vão sobrescrever sem ganho.
 - **Não usar para escala.** Para "aumentar 20% nas top 3", encaminhar para `/trafego-escalar`. Aqui apenas atalho.
+- **Lote não apaga.** Esta sub-skill só pausa ou reduz. Apagar entidade nunca entra no lote (regra de DELETE do CLAUDE.md).

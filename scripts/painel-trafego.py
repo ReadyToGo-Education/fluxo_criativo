@@ -45,6 +45,7 @@ SLUGS_NOMES = {
     "lifecycle-historico":  "Lifecycle & Histórico",
     "problemas-ocultos":    "Problemas Ocultos",
     "orcamento-projecao":   "Orçamento & Projeção",
+    "comparativo-ab":       "Comparativo A x B",
 }
 
 # Regex para extrair slug e timestamp do nome do arquivo
