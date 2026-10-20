@@ -30,6 +30,7 @@ Acione a skill `app-saas` do plugin `workshop-marketing` e siga o roteiro:
 - Nunca gerar o PRD sem o usuário ter escolhido uma ideia.
 - Schema simples, máximo 5 tabelas.
 - Nunca entregar código. Apenas especificação + prompt.
+- Carregar `.claude/rules/seguranca/checklist-seguranca.md` antes de gerar o prompt e conferir o PRD contra os 10 itens antes de mostrar.
 - Prompt para o Lovable sempre em português do Brasil, direto e sem markdown interno.
 - Identidade visual sempre puxada do `resumo-produto.md`.
 - Não usar travessão em nenhum texto exibido.

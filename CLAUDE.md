@@ -607,7 +607,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/pagina-performance`. Auditar e corrigir performance da página HTML
 - `/pagina-pixel`. Instalar Meta Pixel na página
 - `/pagina-checkout`. Conectar a página ao checkout (Hotmart, Kiwify, etc.)
-- `/pagina-lovable`. Publicar a página direto no Lovable
+- `/pagina-lovable`. Levar a página para o Lovable e publicar (pelo conector do Lovable no Claude, ou com prompt pronto para colar)
 
 **Feedback:**
 - `/feedback-pagina`. Corrigir e otimizar página de vendas existente

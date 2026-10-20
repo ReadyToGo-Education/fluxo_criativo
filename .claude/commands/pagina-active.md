@@ -21,14 +21,15 @@ Acione a skill `pagina-active` do plugin `workshop-marketing` e siga o roteiro:
 2. Verificar `ACTIVE_API_URL` e `ACTIVE_API_KEY` no `.env`. Se não existirem, mostrar setup guiado (login no ActiveCampaign, Settings > Developer, copiar URL e Key, colar no chat). Salvar no `.env` silenciosamente.
 3. Coletar (uma pergunta por vez): qual página de captura, ID da lista, tag do lead, URL da página de obrigado.
 4. Testar a API buscando as listas disponíveis. Se o usuário não souber o ID da lista, mostrar a lista numerada e pedir pra escolher.
-5. Injetar um `<script>` no final da página HTML com a função `fetch()` que envia `email` e `first_name` pro endpoint `POST /api/3/contact/sync` do ActiveCampaign, adiciona na lista via `POST /api/3/contactLists`, adiciona tag via `POST /api/3/contactTags` e redireciona pra página de obrigado.
+5. Aplicar a integração no modo escolhido pelo aluno. Modo A (recomendado): trocar o `<form>` da página pelo formulário nativo do ActiveCampaign. Modo B: gerar a função `api/active-sync.js` na Vercel, que recebe só `email` e `first_name`, chama o ActiveCampaign pelo servidor com lista e tag fixas em variáveis de ambiente, e injetar na página o `<script>` que envia o formulário para essa função e redireciona pra página de obrigado. O Modo B segue o checklist de segurança (`.claude/rules/seguranca/checklist-seguranca.md`).
 6. Salvar página modificada como `{nome}-active.html` na mesma pasta.
 7. Oferecer rodar `/pagina-vercel` pra publicar.
 
 ## Regras Resumidas
 
 - Nunca pedir login/senha do ActiveCampaign. Só URL + Key da API.
-- A chave nunca aparece no HTML final. Use um endpoint intermediário do próprio ActiveCampaign (CORS habilitado com a key no header) ou instrua o aluno a criar um formulário nativo do ActiveCampaign e embutir via iframe.
+- A chave nunca aparece no HTML final nem em chamada feita pelo navegador. A página nunca chama a API do ActiveCampaign direto: ou usa o formulário nativo do ActiveCampaign (Modo A), ou passa pela função na Vercel (Modo B).
+- No Modo B, lista e tag ficam fixas no servidor. O navegador manda só e-mail e nome.
 - Confirmar antes de modificar a página. Salvar como arquivo novo, nunca sobrescrever a original.
 - Validar que `.env` está no `.gitignore`.
 - Não usar travessão em nenhum texto exibido.

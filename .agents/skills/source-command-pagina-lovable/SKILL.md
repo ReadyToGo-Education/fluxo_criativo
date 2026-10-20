@@ -1,6 +1,6 @@
 ---
 name: "source-command-pagina-lovable"
-description: "Publicar uma página HTML do projeto direto no Lovable via API e devolver o link público. Inclui setup guiado da chave da API. Skill de infraestrutura, última etapa do fluxo de página, depois de copy + performance + pixel + checkout."
+description: "Levar uma página HTML do projeto para o Lovable e devolver o link público. Com o conector do Lovable ligado no Claude, cria o projeto, confere e publica sozinho; sem o conector, entrega um prompt pronto para colar no Lovable. Skill de infraestrutura, última etapa do fluxo de página, depois de copy + performance + pixel + checkout."
 ---
 
 # source-command-pagina-lovable
@@ -11,9 +11,9 @@ Use esta skill quando o usuário pedir o comando `/pagina-lovable` do workshop (
 
 ## Roteiro do comando
 
-# Página Lovable. Publicação via API
+# Página Lovable. Publicação pelo conector do Lovable
 
-Publica uma página HTML local diretamente no Lovable e devolve o link público pronto pra usar em anúncios, bio e emails. Sem upload manual.
+Leva uma página HTML local para o Lovable e devolve o link público pronto pra usar em anúncios, bio e emails.
 
 ## Usage
 
@@ -26,24 +26,19 @@ Publica uma página HTML local diretamente no Lovable e devolve o link público 
 Acione a skill `pagina-lovable` do plugin `workshop-marketing` e siga o roteiro:
 
 1. Ler `meus-produtos/.ativo`. Se não houver produto, oriente a usar `/produto-novo`.
-2. Verificar `LOVABLE_API_KEY` no `.env`. Se não existir, mostrar setup guiado (cadastro em lovable.dev > Settings > API Keys, colar a chave no chat). O assistente salva no `.env` automaticamente, nunca pede pro usuário abrir o arquivo.
-3. Coletar (uma pergunta por vez): qual página, nome no Lovable, subdomínio (auto ou escolhido), modo (nova ou atualizar página existente).
-4. Se já existe `meus-produtos/{ativo}/entregas/.lovable` com `project_id`, oferecer atualizar a versão anterior.
-5. Mostrar resumo e pedir confirmação:
-   ```
-   1. Publicar
-   2. Cancelar
-   ```
-6. Publicar via `curl` POST/PATCH na API do Lovable. Usar arquivo de payload temporário pra evitar problema de tamanho. Apagar depois.
-7. Tratar erros de API (até 3 tentativas com ajuste). Se persistir, mostrar erro completo e perguntar como prosseguir.
+2. Se a página chama `fetch('/api/...')` (pre-checkout ou captura com função no servidor), parar e oferecer o `/pagina-vercel`: a função só roda lá.
+3. Verificar se o conector do Lovable está ligado no Claude (ferramentas `create_project` e `deploy_project`). Se não estiver, mostrar como conectar (no Claude: + > Conectores > Procurar conectores > Lovable > Conectar) e oferecer as alternativas: prompt pronto para colar no Lovable ou `/pagina-vercel`.
+4. Coletar (uma pergunta por vez): qual página, nome no Lovable, nova página ou atualização.
+5. Mostrar resumo com conta e saldo de créditos e pedir confirmação. Avisar que o Lovable recria a página com a IA dele e que isso gasta créditos.
+6. Com o conector: subir o HTML como anexo, criar o projeto (ou mandar a atualização), conferir pela imagem da tela que o conector devolve e, com a aprovação do aluno, publicar e pegar o endereço `.lovable.app`.
+7. Sem o conector: montar o prompt pronto (até 50.000 caracteres), salvar em `entregas/paginas/{nome}-prompt-lovable.md` e guiar o aluno a colar no Lovable e publicar.
 8. Salvar histórico em `meus-produtos/{ativo}/entregas/.lovable` e atualizar `meus-produtos/{ativo}/entregas/paginas/.lovable-link.md` com o link público.
-9. Mostrar resumo final com URL pública e sugerir próximos passos: usar o link no `/copy-anuncio` para tráfego pago.
+9. Mostrar resumo final com URL pública e sugerir próximos passos: conferir no celular e usar o link no `/copy-anuncio` para tráfego pago.
 
 ## Regras Resumidas
 
-- Nunca pedir login/senha do Lovable. Só a API key, colada no chat.
-- Nunca expor a chave em mensagens, logs ou arquivos fora do `.env`.
-- `.env` deve estar no `.gitignore` (validar antes de salvar).
-- Sempre confirmar antes de publicar.
-- A documentação oficial do Lovable é fonte de verdade. Se a chamada falhar, ler o erro e adaptar (endpoint, header, payload). Não tentar adivinhar mais de 3 vezes.
+- O Lovable não publica HTML pronto: ele recria a página com IA. Para cópia idêntica, o caminho é o `/pagina-vercel`.
+- Não usar chave de API do Lovable: a API pública só republica projeto existente e exige plano Business ou Enterprise.
+- Nunca pedir login/senha do Lovable no chat. O login acontece na tela do Lovable, ao conectar.
+- Sempre confirmar antes de criar o projeto (gasta créditos) e antes de publicar.
 - Não usar travessão em nenhum texto exibido.

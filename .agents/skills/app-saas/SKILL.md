@@ -102,7 +102,7 @@ Todo app gerado por esta skill tem 2 perfis de acesso:
 - O criador do produto (infoprodutor) e quem ele autorizar.
 - Acesso total ao app, mais a área administrativa em `/admin/*`.
 - Pode ver todos os usuários, todos os dados, métricas gerais e fazer ações de gestão (ativar, desativar, promover, excluir).
-- Primeiro usuário cadastrado vira admin automaticamente (ou definido via SQL no Supabase).
+- Ninguém vira admin sozinho no cadastro: o criador cria a própria conta e se promove pelo chat do Lovable (ver Etapa 6).
 
 ### Perfil `user`
 - Aluno, cliente ou consumidor que usa a ferramenta.
@@ -309,9 +309,9 @@ Especificar stack: React + Tailwind + Supabase.
 
 **Bloco 2. Autenticação (incluir sempre este texto literal)**
 
-> "IMPORTANTE sobre autenticação: use Supabase Auth com `signInWithPassword` e `signUp` SEM verificação de email. No painel do Supabase, desative 'Confirm email' em Authentication > Providers > Email. O usuário deve conseguir cadastrar e logar imediatamente, sem nenhum email intermediário. Não implemente magic link. Não implemente 'esqueci minha senha' por email na v1 — use reset manual depois, se necessário.
+> "IMPORTANTE sobre autenticação: use Supabase Auth com `signInWithPassword` e `signUp` SEM verificação de email. Ligue o auto-confirm de e-mail nas configurações de autenticação do projeto (no Lovable Cloud: Users > Auth settings > Email). O usuário deve conseguir cadastrar e logar imediatamente, sem nenhum email intermediário. Não implemente magic link. Não implemente 'esqueci minha senha' por email na v1. Use reset manual depois, se necessário.
 >
-> IMPORTANTE sobre senha: o aluno escolhe a senha que quiser, sem restrição de complexidade. Não valide força de senha, não exija maiúscula, número ou caractere especial, não mostre 'medidor de força'. No painel do Supabase, vá em Authentication > Providers > Email e defina 'Minimum password length' como 1. No frontend, remova qualquer validação de senha além de 'campo obrigatório'. Se o aluno quiser usar '123', ele pode."
+> IMPORTANTE sobre senha: o aluno escolhe a senha que quiser, sem regra de complexidade. Não valide força de senha, não exija maiúscula, número ou caractere especial, não mostre 'medidor de força'. A única regra é o mínimo de 6 caracteres, que já é o padrão do Supabase: não diminua esse mínimo. No frontend, valide só 'campo obrigatório' e 'mínimo de 6 caracteres'. Se o aluno quiser usar '123456', ele pode."
 
 **Bloco 3. Configuração de rotas (incluir sempre este texto literal)**
 
@@ -324,23 +324,9 @@ Especificar stack: React + Tailwind + Supabase.
 > 6. Para rotas protegidas (após login), criar um componente `<ProtectedRoute>` que redireciona para `/login` se não autenticado, em vez de dar 404.
 > 7. Rotas do app: [listar aqui todas as rotas do Mapa de rotas preenchido no PRD, com path, componente e tipo pública/protegida]"
 
-**Bloco 4. Segurança (incluir sempre este texto literal)**
+**Bloco 4. Segurança (incluir sempre, texto literal)**
 
-> "Regras de segurança obrigatórias:
->
-> 1. Nenhuma chave secreta, token de API de terceiros ou credencial pode aparecer no código do frontend. Tudo que exige autenticação com serviço externo vai em Supabase Edge Functions, nunca em componente React.
->
-> 2. Ativar Row Level Security (RLS) em TODAS as tabelas do Supabase. Nenhuma tabela pode ficar com RLS desativado em produção. Cada tabela deve ter políticas explícitas definindo quem pode SELECT, INSERT, UPDATE e DELETE — por padrão, negar tudo e liberar apenas o necessário.
->
-> 3. O frontend nunca faz requisição direta a APIs de terceiros que retornam dados sensíveis (dados de alunos, dados de pagamento, dados pessoais). Essas chamadas ficam em Edge Functions no Supabase, que o frontend chama via `supabase.functions.invoke()`.
->
-> 4. Nunca expor o `service_role` key do Supabase no frontend. Usar apenas a `anon` key pública. Operações que precisam de privilégio elevado ficam em Edge Functions com a `service_role` key no ambiente seguro do servidor.
->
-> 5. Dados de um usuário nunca podem ser acessados por outro usuário. As políticas de RLS devem usar `auth.uid()` para garantir isolamento. Exemplo de política correta: `USING (user_id = auth.uid())`.
->
-> 6. Inputs do usuário nunca são concatenados diretamente em queries. Usar sempre queries parametrizadas do Supabase client (`.eq()`, `.filter()`, `.match()` etc.) — nunca interpolação de string em SQL.
->
-> 7. Não armazenar senhas, tokens ou dados sensíveis em `localStorage` ou `sessionStorage`. Usar apenas os cookies httpOnly gerenciados pelo Supabase Auth."
+Carregar `.claude/rules/seguranca/checklist-seguranca.md` e copiar literal o bloco "Prompt do Lovable para app com login". Ele cobre chave fora do navegador (inclusive variáveis `VITE_`), RLS, validação no banco, consultas seguras, XSS, mensagens de erro genéricas, login que não revela quem tem conta, IA e links externos.
 
 **Bloco 5. Perfis de usuário (admin + usuário comum) — incluir sempre este texto literal**
 
@@ -363,14 +349,14 @@ Especificar stack: React + Tailwind + Supabase.
 >      values (new.id, new.email, coalesce(new.raw_user_meta_data->>'nome', ''), 'user');
 >      return new;
 >    end;
->    $$ language plpgsql security definer;
+>    $$ language plpgsql security definer set search_path = public;
 >
 >    create trigger on_auth_user_created
 >      after insert on auth.users
 >      for each row execute procedure public.handle_new_user();
 >    ```
 >
-> 3. Lógica de primeiro admin: o primeiro usuário cadastrado no app vira admin automaticamente. Implementar isso na função `handle_new_user` checando se já existe algum admin antes de inserir o role.
+> 3. Ninguém vira admin automaticamente. O trigger cria todo perfil com `role = 'user'`, inclusive o primeiro. O primeiro admin é promovido depois pelo próprio criador do app, que pede neste chat para mudar o `role` da conta dele para `'admin'`. Os admins seguintes são promovidos pelo painel administrativo.
 >
 > 4. Após o login, buscar o `role` do usuário em `profiles` e armazenar em um Context global (`AuthContext`) acessível por toda a aplicação. Esse role decide:
 >    - Quais rotas o usuário pode acessar
@@ -391,17 +377,56 @@ Especificar stack: React + Tailwind + Supabase.
 >    - Lista de usuários: tabela com nome, email, role, status (ativo/inativo), data de cadastro. Busca por nome/email, filtro por role, paginação (20 por página). Ações por linha: promover a admin, rebaixar para usuário, ativar/desativar, excluir.
 >    - Detalhe do usuário: dados completos, atividade no app, histórico de ações. Botões para editar role, ativar/desativar e excluir.
 >
-> 8. Políticas de RLS (Row Level Security) refletem os 2 perfis. Em todas as tabelas:
->    - Admin tem acesso total. Política exemplo: `USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'))`.
+> 8. Políticas de RLS (Row Level Security) refletem os 2 perfis. Para não haver recursão (uma política de `profiles` consultando a própria `profiles` dá erro no Postgres), criar a função abaixo e usá-la em todas as políticas de admin:
+>    ```
+>    create or replace function public.is_admin()
+>    returns boolean
+>    language sql
+>    stable
+>    security definer
+>    set search_path = public
+>    as $$
+>      select exists (
+>        select 1 from public.profiles
+>        where id = auth.uid() and role = 'admin' and ativo
+>      );
+>    $$;
+>    ```
+>    Em todas as tabelas:
+>    - Admin tem acesso total. Política exemplo: `USING (public.is_admin())`.
 >    - Usuário comum acessa apenas registros próprios. Política exemplo: `USING (user_id = auth.uid())`.
->    - A tabela `profiles` tem RLS específica: usuário comum lê apenas o próprio perfil; admin lê e edita todos.
+>    - A tabela `profiles` tem RLS específica: usuário comum lê apenas o próprio perfil (e, se houver tela de editar perfil, altera só o próprio nome); admin lê e edita todos.
+>    - Usuário comum nunca muda o próprio `role` nem o próprio `ativo`. Garantir no banco, além da interface:
+>    ```
+>    create or replace function public.proteger_role()
+>    returns trigger
+>    language plpgsql
+>    security definer
+>    set search_path = public
+>    as $$
+>    begin
+>      if (new.role is distinct from old.role or new.ativo is distinct from old.ativo)
+>         and auth.uid() is not null
+>         and not public.is_admin() then
+>        raise exception 'Sem permissão para alterar o perfil de acesso';
+>      end if;
+>      return new;
+>    end;
+>    $$;
+>
+>    create trigger proteger_role_profiles
+>      before update on public.profiles
+>      for each row execute procedure public.proteger_role();
+>    ```
 >
 > 9. Diferenciação visual da área admin:
 >    - Quando o usuário com role admin estiver logado, exibir um badge 'Admin' no header (ao lado do nome ou avatar).
 >    - O menu lateral tem uma seção 'Administração' separada, que só aparece para admins, com link para `/admin`.
 >    - Dentro de `/admin/*`, mudar a cor de destaque do header ou da sidebar para indicar visualmente que está em modo admin (ex: faixa superior com cor secundária do design system).
 >
-> 10. Cadastro: na tela de cadastro pública, NUNCA permitir o usuário escolher o role. O role é sempre `'user'` por default e só muda via promoção feita por outro admin no painel."
+> 10. Cadastro: na tela de cadastro pública, NUNCA permitir o usuário escolher o role. O role é sempre `'user'` por default e só muda via promoção feita por outro admin no painel.
+>
+> 11. Excluir usuário apaga a conta em `auth.users`, o que exige a `service_role` key. Fazer essa ação numa Edge Function `admin-excluir-usuario`, que confere `public.is_admin()` de quem chamou antes de agir. Nenhuma ação administrativa depende só de esconder botão na interface."
 
 **Bloco 6. Direção de design (incluir antes das telas)**
 
@@ -469,9 +494,11 @@ Próximos passos:
 2. Clique em "New Project"
 3. Cole o conteúdo da seção "Prompt para o Lovable.dev"
 4. Aguarde a geração (normalmente menos de 2 minutos)
-5. No painel do Supabase do projeto criado, vá em Authentication > Providers > Email e desative "Confirm email"
-6. Ajuste o que precisar pedindo em linguagem natural dentro do Lovable
-7. Quando publicar, volte aqui para conectar com /pagina-vercel se quiser domínio próprio
+5. Confira se a confirmação de e-mail ficou desligada: no Lovable, More > Cloud > Users > Auth settings > Email, com "Auto-confirm email" ligado. Na mesma tela, ligue "Password HIBP check", que recusa senhas que já vazaram na internet. Se preferir, peça as duas coisas no chat do Lovable
+6. Crie sua conta no app e peça no chat do Lovable: "Mude o role do usuário com e-mail SEU_EMAIL para admin". Faça isso antes de divulgar o link
+7. Antes de publicar, o Lovable mostra uma verificação rápida de segurança. Se aparecer alerta, peça no chat para corrigir
+8. Ajuste o que precisar pedindo em linguagem natural dentro do Lovable
+9. Quando publicar, volte aqui para conectar com /pagina-vercel se quiser domínio próprio
 ```
 
 ## Regras
@@ -481,7 +508,8 @@ Próximos passos:
 - Todo PRD obrigatoriamente entrega 2 perfis: `admin` (criador do produto) e `user` (aluno ou consumidor). Nunca gerar app com perfil único, mesmo que a ideia pareça simples. O perfil admin sempre tem dashboard administrativo, lista de usuários e gestão básica.
 - A tabela `profiles` é sempre incluída no schema, com campos `id`, `email`, `nome`, `role`, `ativo`, `created_at`. Nunca substituir essa estrutura por algo diferente.
 - Mapa de rotas sempre inclui o bloco `/admin/*` com pelo menos `/admin`, `/admin/usuarios` e `/admin/usuarios/:id`. Marcar essas rotas como `protegida (admin)`.
-- Prompt do Lovable sempre contém o Bloco 5 (Perfis de usuário) literal, com a estrutura de `profiles`, trigger de signup, primeiro admin automático, componentes `<ProtectedRoute>` e `<AdminRoute>`, e políticas de RLS para os 2 perfis.
+- Prompt do Lovable sempre contém o Bloco 5 (Perfis de usuário) literal, com a estrutura de `profiles`, trigger de signup, promoção do primeiro admin pelo criador, função `is_admin()`, trigger que protege o `role`, componentes `<ProtectedRoute>` e `<AdminRoute>`, e políticas de RLS para os 2 perfis.
+- Prompt do Lovable sempre contém o Bloco 4 copiado literal do checklist de segurança (`.claude/rules/seguranca/checklist-seguranca.md`). Antes de mostrar o PRD, conferir o PRD e o prompt contra os 10 itens desse checklist e corrigir o que faltar.
 - Nunca entregar código. Código é responsabilidade do Lovable. A skill entrega especificação + prompt.
 - Prompt para o Lovable sempre em português, direto, sem markdown interno (usar listas numeradas e marcadores comuns).
 - Todo PRD deve ter a seção "Mapa de rotas" preenchida com todos os paths reais antes de avançar para a Etapa 5.

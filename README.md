@@ -88,8 +88,8 @@ Checklists completos (Light Copy + Design HTML) estão no topo do `CLAUDE.md` e 
 | **Commands** | `.claude/commands/*.md` | Slash commands interativos (`/copy-pagina`, `/lt-funil`, etc.) |
 | **Agents** | `.claude/agents/*.md` | Subprocessos autônomos (orquestradores e especialistas) |
 | **Skills** | `.claude/skills/` | Base de conhecimento consultada por commands e agents |
-| **Rules** | `.claude/rules/` | Regras compartilhadas (checklist Light Copy, tempos calibrados, etc.) |
-| **Hooks** | `.claude/hooks/` | Scripts disparados por eventos (acentuação pt_BR, status de agentes para a Sala) |
+| **Rules** | `.claude/rules/` | Regras compartilhadas (checklist Light Copy, checklist de segurança, tempos calibrados, etc.) |
+| **Hooks** | `.claude/hooks/` | Scripts disparados por eventos (acentuação pt_BR, bloqueio de token fora do `.env`, status de agentes para a Sala) |
 
 **Fluxo típico:**
 ```
@@ -121,7 +121,7 @@ workshop_inteligente/
 │   ├── commands/                Slash commands (80+ arquivos .md)
 │   ├── agents/                  Agentes orquestradores e especialistas
 │   ├── skills/                  Base de conhecimento (50+ pastas)
-│   ├── rules/                   Regras compartilhadas (Light Copy, tempos estimados)
+│   ├── rules/                   Regras compartilhadas (Light Copy, segurança, tempos estimados)
 │   ├── hooks/                   Hooks de sessão (verificar-acentuacao, agent-status-writer)
 │   ├── settings.json            Permissões
 │   └── settings.local.json      Permissões locais (não sobe, contém allow patterns)
