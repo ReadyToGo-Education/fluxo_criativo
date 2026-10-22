@@ -30,9 +30,9 @@ Qualquer outro valor é tratado no Passo 0 (seção 1). O valor `HIBRIDO`, que a
 
 ## Lacunas do MCP (referência para todas as skills de tráfego)
 
-No modo `MCP_CONECTOR` quase tudo tem ferramenta no conector. Pela lista oficial da Meta (outubro de 2026), quatro operações ainda não têm. Nelas, a skill **não troca de modo e não pede token**: conduz o aluno por um passo a passo manual curto no Gerenciador de Anúncios (passos numerados, em português) e depois segue o fluxo pelo conector.
+No modo `MCP_CONECTOR` quase tudo tem ferramenta no conector. Pela lista oficial da Meta (outubro de 2026), cinco operações ainda não têm. Nelas, a skill **não troca de modo**: conduz o aluno por um passo a passo manual curto no Gerenciador de Anúncios (passos numerados, em português) e depois segue o fluxo pelo conector. A única lacuna com reserva por token é a L5 (imagem do computador), e o token serve só para subir a mídia.
 
-No modo `APP` as quatro rodam por `curl` na Graph API, sem passo manual (a exclusão continua com as regras de segurança da L4).
+No modo `APP` as cinco rodam por `curl` na Graph API, sem passo manual (a exclusão continua com as regras de segurança da L4).
 
 ### L1. Subir vídeo novo
 
@@ -51,7 +51,7 @@ O conector da Meta ainda não sobe vídeo novo. Faça assim, leva 2 minutos:
 
 Depois do "subi", a skill chama `ads_get_ad_videos`, localiza o vídeo pelo nome, confirma com o aluno (`Nome (ID)`) e segue usando o `video_id` da biblioteca. Se a tela do Gerenciador estiver diferente, pedir ao aluno que descreva o que vê e adaptar os passos.
 
-Imagem não é lacuna: o criativo do conector aceita imagem por URL pública (`image_url`). Imagem que está só no computador segue o caminho da Fase 7.1 do `/trafego-criar-campanha`.
+Imagem que já está numa URL pública não é lacuna: o criativo do conector aceita `image_url`. Imagem que está só no computador é a lacuna L5.
 
 ### L2. Buscar interesse por nome
 
@@ -95,6 +95,65 @@ O conector só apaga público (`ads_delete_custom_audience`). Para campanha, con
 2. **Se o aluno quiser excluir de verdade**, guiar a exclusão manual: no Gerenciador, marcar a caixa da linha, clicar em "Excluir" e confirmar.
 
 Toda exclusão (inclusive de público pelo conector) tem bloco 🛡️ e "sim" próprios: **nunca entra no "sim" de um lote**. No modo `APP` a regra é a mesma: não rodar `curl -X DELETE` inline. Oferecer pausar ou arquivar, ou mostrar o comando com `***TOKEN_MASCARADO***` para o aluno rodar manualmente.
+
+### L5. Subir imagem que está só no computador
+
+O criativo do conector aceita imagem por URL pública (`image_url`), mas não recebe arquivo do computador. Quando as imagens estão só no computador (o caso comum em lote: Black, lançamento, vários criativos), seguir nesta ordem.
+
+**Caminho 1 (padrão). Biblioteca de mídia, todas as imagens de uma vez.**
+
+```
+O conector da Meta ainda não sobe imagem do seu computador. Faça assim,
+leva 2 minutos e vale para todas as imagens de uma vez:
+
+1. Abra o Gerenciador de Anúncios (adsmanager.facebook.com) na conta
+   de anúncios certa.
+2. No menu de ferramentas, entre em "Biblioteca de mídia".
+3. Clique em "Carregar" e selecione todas as imagens de uma vez
+   (segure Ctrl, ou Cmd no Mac, para marcar várias).
+4. Espere todas aparecerem na lista.
+5. Me avise aqui ("subi").
+```
+
+Depois do "subi", procurar entre as tools do conector uma que liste as imagens da conta com o hash (pelo final do nome, como as demais; nome exato e parâmetros vêm do schema, nunca de memória). Se existir: localizar cada imagem pelo nome do arquivo, mostrar a lista `Nome (hash)` para o aluno confirmar e usar o `image_hash` no criativo (conferir no schema da tool de criativo que ela aceita `image_hash`). Se o conector não listar imagens, ou não trouxer o hash, seguir para o caminho 2. Se a tela do Gerenciador estiver diferente, pedir ao aluno que descreva o que vê e adaptar os passos.
+
+**Caminho 2 (reserva). Token só para subir a mídia.**
+
+Exceção controlada à regra "nunca `curl` com token no modo MCP". Não muda o modo: `META_AUTH_MODO` continua `MCP_CONECTOR`, nunca vira `HIBRIDO`, e campanha, conjuntos, criativos e anúncios continuam pelo conector. O token serve **só** para `POST /act_<id>/adimages` (e, se o aluno preferir não passar pelo Gerenciador no vídeo da L1, para `POST` no host `graph-video` em `/advideos`, com as regras de vídeo da Fase 7.1 do `/trafego-criar-campanha`).
+
+1. **Token.** Se `FB_ACCESS_TOKEN_PERMANENTE` tiver valor (`grep -q "^FB_ACCESS_TOKEN_PERMANENTE=." .env`), usar ele. Se não, pedir um token temporário:
+
+   ```
+   Para subir as imagens do seu computador, preciso de um token
+   temporário da Meta. Ele vale por cerca de 1 hora e só vai ser usado
+   para enviar as imagens:
+
+   1. Abra developers.facebook.com/tools/explorer (Explorador da Graph API).
+   2. Em "Meta App", escolha um app seu. Se não aparecer nenhum, me avise.
+   3. Em "Permissions", adicione ads_management.
+   4. Clique em "Generate Access Token" e autorize com a conta que
+      administra a conta de anúncios.
+   5. Copie o token e cole aqui na conversa. Eu salvo no .env com o nome
+      certo, você não precisa abrir o arquivo.
+   ```
+
+   Sem nenhum app: oferecer criar um pelo `/criar-aplicativo-analise-ads` ou voltar para a imagem por URL pública. Se a tela do Explorador estiver diferente, pedir ao aluno que descreva o que vê.
+
+2. **Gravar o token colado** com as duas chamadas do item 4 da seção "LEITURA SEGURA DO .env" do CLAUDE.md, com o nome exato `FB_TOKEN_MIDIA`: a primeira apaga a linha antiga e garante a quebra de linha (`touch .env && sed -i '/^FB_TOKEN_MIDIA=/d' .env && { [ -z "$(tail -c1 .env)" ] || echo >> .env; }`); a segunda só acrescenta (`printf 'FB_TOKEN_MIDIA=%s\n' "<valor colado>" >> .env`). Conferir o nome com `grep -q "^FB_TOKEN_MIDIA=." .env` e responder só "salvo". O aluno nunca edita o `.env` à mão: abrir o arquivo costuma travar o aluno, e na edição manual o nome da variável sai errado.
+
+3. **Subir todas as imagens numa chamada só** (o `/adimages` aceita vários arquivos por chamada, um `-F` por arquivo), com o token por substituição dentro do próprio comando:
+
+   ```bash
+   curl -sS -X POST "https://graph.facebook.com/v25.0/act_<FB_AD_ACCOUNT_ID>/adimages?access_token=$(grep ^FB_TOKEN_MIDIA= .env | cut -d= -f2-)" -F "img1=@/caminho/absoluto/imagem1.jpg" -F "img2=@/caminho/absoluto/imagem2.jpg"
+   ```
+
+   Com o token permanente, trocar `FB_TOKEN_MIDIA` por `FB_ACCESS_TOKEN_PERMANENTE`. A resposta traz o `hash` de cada arquivo: guardar no preview salvo do `/trafego-criar-campanha`.
+
+4. **Nenhuma leitura com esse token.** Não rodar `GET /adimages` (nem outro GET) para "conferir" a biblioteca: a resposta traz `paging.next` com o token inteiro na URL, e é assim que o token vaza no chat. A conferência é pelo hash que o upload devolve.
+
+5. **Ao terminar o lote, apagar o token temporário:** `sed -i '/^FB_TOKEN_MIDIA=/d' .env` (no Mac, `sed -i ''`). O token permanente, quando foi ele o usado, fica.
+
+O upload é escrita na conta: entra no bloco 🛡️ do lote que vai usar as imagens (uma linha "N imagens enviadas para a biblioteca da conta").
 
 ### Deixou de ser lacuna
 
@@ -665,7 +724,7 @@ Toda skill que fala com o Meta Ads, no Passo 0 (depois de ler o produto ativo e 
 
 1. Ler `META_AUTH_MODO` com `grep "^META_AUTH_MODO=" .env | cut -d= -f2-`.
 2. **Vazio, ausente ou valor não reconhecido** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar. Não adivinhar, não cair em fallback, não pedir credencial avulsa.
-3. **`MCP_CONECTOR`:** usar as tools do conector, descobertas pelo final do nome (seção 5.1). O `ad_account_id` vem de `FB_AD_ACCOUNT_ID`: conferir antes se ele tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar (conexão feita por uma versão antiga, que no MCP não gravava a conta), acionar `/trafego-conexao`, que vai direto à opção "Validar a conexão atual" do Caso 1 (seção 1) e completa a conta pela 5.1.1: lista com `ads_get_ad_accounts`, grava sem perguntar quando há 1 conta liberada e pergunta quando há mais. Depois, voltar à skill. Nunca chamar o conector com a conta vazia. Nunca montar `curl` com token nesse modo, mesmo que exista um token antigo no `.env`. Nas 4 lacunas, seguir o passo manual guiado (seção "Lacunas do MCP").
+3. **`MCP_CONECTOR`:** usar as tools do conector, descobertas pelo final do nome (seção 5.1). O `ad_account_id` vem de `FB_AD_ACCOUNT_ID`: conferir antes se ele tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`). Se faltar (conexão feita por uma versão antiga, que no MCP não gravava a conta), acionar `/trafego-conexao`, que vai direto à opção "Validar a conexão atual" do Caso 1 (seção 1) e completa a conta pela 5.1.1: lista com `ads_get_ad_accounts`, grava sem perguntar quando há 1 conta liberada e pergunta quando há mais. Depois, voltar à skill. Nunca chamar o conector com a conta vazia. Nunca montar `curl` com token nesse modo, mesmo que exista um token antigo no `.env`; a única exceção é o upload de mídia do caminho 2 da L5. Nas 5 lacunas, seguir o passo manual guiado (seção "Lacunas do MCP").
 4. **`APP`:** conferir se `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor, com o padrão da seção "LEITURA SEGURA DO .env" do CLAUDE.md (linha vazia conta como ausente). Se faltar algum, acionar `/trafego-conexao`. Chamadas por `curl`, uma por `Bash`, com o token por substituição dentro do próprio comando e `curl -g` quando o `fields=` tiver campos aninhados (regras do CLAUDE.md).
 5. **Escrita na conta, nos dois modos:** bloco 🛡️ do CLAUDE.md antes de executar, um "sim" por lote dentro do mesmo fluxo, e exclusão sempre com bloco e "sim" próprios (L4).
 
@@ -678,10 +737,10 @@ Esta skill é idempotente: pode ser chamada várias vezes sem efeito colateral.
 1. **Nunca salvar `META_AUTH_MODO` antes da validação passar.** Evita o estado em que a conexão parece pronta e as outras skills falham.
 2. **Conector sempre primeiro, sem perguntar o modo.** Mesmo com `FB_ACCESS_TOKEN_PERMANENTE` antigo no `.env`, a primeira conexão vai pelo conector e é testada.
 3. **App só depois do teste.** Ele é oferecido quando a conta não foi liberada no conector (5.1.2) ou o conector não responde depois das conferências da 5.1. Nunca como opção inicial.
-4. **Nunca pedir token no caminho MCP.** A autenticação fica na conta do Claude.
+4. **Nunca pedir token no caminho MCP.** A autenticação fica na conta do Claude. A única exceção é o token só de mídia da L5 (caminho 2), usado apenas para subir imagem ou vídeo do computador e apagado no fim do lote quando é temporário.
 5. **Sempre validar antes de declarar pronto.** MCP: uma chamada de leitura. APP: os 3 testes.
 6. **Nunca exibir o token nem o conteúdo do `.env`.** Usar `grep -q` para presença, substituição dentro do `curl` para uso e `***TOKEN_MASCARADO***` ou "salvo" na exibição.
 7. **Nunca usar `python3 << 'EOF'` nem `curl | python3 -c` com o token.** Cada `curl` é uma chamada `Bash` independente.
 8. **Nunca tocar em `RELATORIO_AUTH_MODO`.**
-9. **Nunca gravar `HIBRIDO`.** Só existem `MCP_CONECTOR` e `APP`. Lacuna do conector se resolve com passo manual guiado, não com troca de modo.
+9. **Nunca gravar `HIBRIDO`.** Só existem `MCP_CONECTOR` e `APP`. Lacuna do conector se resolve com passo manual guiado, não com troca de modo. O token só de mídia da L5 não muda o modo.
 10. **Nunca pedir o ID da conta ao aluno** quando a listagem automática está disponível.

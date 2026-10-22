@@ -75,13 +75,13 @@ Caso contrário, **modo guia**: começar pela Fase 1 da skill.
 
 Aplicar as Fases 1 a 9 da skill, uma pergunta por mensagem:
 
-1. **Objetivo**. Sales ou Leads.
+1. **Objetivo**. Sales ou Leads. Black Friday, data comemorativa ou evento com data: registrar a sazonalidade (Fase 1 da skill).
 2. **Produto e ticket**. Lidos do `resumo-produto.md` e confirmados em uma linha. Só pergunta se a campanha vender outra oferta.
-3. **Estrutura**. 1-X-1, 1-1-X ou X-1-1.
-4. **Orçamento**. ABO ou CBO + valor diário.
+3. **Estrutura**. 1-X-1, 1-1-X ou X-1-1. Contar 1 anúncio por criativo (feed + Stories = 1, carrossel = 1, cada legenda = 1). Várias campanhas no mesmo pedido sobem uma por vez (Fase 3 da skill).
+4. **Orçamento**. ABO ou CBO + valor. Com data marcada, período (início e fim) e orçamento por dia ou total do período (Fase 4.3).
 5. **Tracking** (gate duro). Validar pixel ativo + evento recebendo dados.
-6. **Público**. Advantage+ (recomendado), Advantage+ com interesses (termos tirados do resumo) ou personalizado. Lookalike novo é criado pelo `/trafego-publicos`. No modo MCP, interesse por nome é lacuna: a skill recomenda Advantage+ ou conduz o passo manual guiado.
-7. **Criativos**. Arquivos em `meus-produtos/{ativo}/entregas/criativos/`, biblioteca da conta ou pendentes (pendentes: o lote cria só a campanha e os conjuntos, sem anúncios; os anúncios entram depois pela seção 7.8 da skill). Para gerar copy, sugerir `/copy-anuncio`. Para imagem, `/criativo-estatico` ou `/img-anuncio`. Para vídeo, `/video-heygen`, `/video-remotion` ou `/video-editar`. No modo MCP, vídeo novo é lacuna: o aluno sobe pelo Gerenciador antes do preview e a skill usa o vídeo da biblioteca.
+6. **Público**. Advantage+ (recomendado), Advantage+ com interesses (termos tirados do resumo) ou personalizado. Lookalike novo é criado pelo `/trafego-publicos`. No modo MCP, interesse por nome é lacuna: a skill recomenda Advantage+ ou conduz o passo manual guiado. Com público personalizado ou semelhante, perguntar se a Meta pode expandir para fora dele (Fase 6.3.6).
+7. **Criativos**. Arquivos em `meus-produtos/{ativo}/entregas/criativos/`, biblioteca da conta ou pendentes (pendentes: o lote cria só a campanha e os conjuntos, sem anúncios; os anúncios entram depois pela seção 7.8 da skill). Para gerar copy, sugerir `/copy-anuncio`. Para imagem, `/criativo-estatico` ou `/img-anuncio`. Para vídeo, `/video-heygen`, `/video-remotion` ou `/video-editar`. No modo MCP, vídeo novo e imagem do computador são lacunas (L1 e L5): o aluno sobe tudo pela Biblioteca de mídia do Gerenciador antes do preview e a skill usa o que está lá; para imagem, a reserva é o token só de mídia. Uma legenda por anúncio, descrição obrigatória e o formato da Fase 7.6 (o que publica).
 8. **Posicionamentos**. Advantage+ Placements (default) ou manual.
 9. **Nome da campanha**. Padrão automático, aluno pode editar.
 
@@ -142,6 +142,7 @@ O que vai mudar:
   - 1 campanha nova "{nome}", status PAUSED{, orçamento de R$ X/dia se CBO}
   - {N} conjunto(s), status PAUSED: {nomes e orçamento diário em reais}
   - {N} anúncio(s) com {N} criativo(s), status PAUSED {ou: 0 anúncios (criativos pendentes)}
+    {com piloto: 1 anúncio piloto agora; os outros {N} só depois que o piloto publicar, com outro bloco de confirmação}
   - {N} upload(s) de imagem/vídeo (se houver)
 Reset de aprendizado esperado: não (campanha nova)
 Reversível? sim (tudo nasce pausado; dá para arquivar depois)
@@ -161,10 +162,14 @@ Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 
 Aplicar a ordem da seção 4 da skill, roteando por `META_AUTH_MODO` (tools `ads_create_*` no MCP, `curl` no APP). Orçamento na chamada: inteiro em centavos no APP (R$ × 100); no MCP, na unidade que o schema da tool pedir (seção 4 da skill).
 
-0. Mídia, só se houver arquivo novo ou vídeo: subir imagens e vídeos (APP), esperar cada vídeo ficar pronto e pegar a miniatura; no MCP, confirmar o vídeo na biblioteca e pegar a miniatura dele. Tudo antes de criar a campanha.
+0. Mídia, só se houver arquivo novo ou vídeo: subir imagens e vídeos (APP), esperar cada vídeo ficar pronto e pegar a miniatura; no MCP, confirmar o vídeo na biblioteca e pegar a miniatura dele, e, na reserva da L5, subir todas as imagens num único `POST /adimages` com o token só de mídia (apagado do `.env` no fim do lote, quando temporário). Tudo antes de criar a campanha.
 1. Campanha (status PAUSED; em ABO no modo APP, com `is_adset_budget_sharing_enabled=false`, senão erro 4834011)
-2. Conjuntos (sempre com `advantage_audience` 0 ou 1, senão erro 1870227)
-3. Para cada anúncio que não está pendente: criativo e anúncio (vídeo sempre com miniatura, senão erro 1443226)
+2. Conjuntos (sempre com `advantage_audience` 0 ou 1, senão erro 1870227; com público personalizado, `targeting_relaxation_types` explícito, como combinado)
+3. Para cada anúncio que não está pendente: criativo e anúncio no formato da Fase 7.6 da skill (uma legenda, descrição preenchida, melhorias automáticas desligadas; vídeo sempre com miniatura, senão erro 1443226, e só `image_url` ou só `image_hash` na miniatura)
+
+**Lote com piloto** (mais de 3 anúncios, várias campanhas ou formato novo na conta, seção 4.1 da skill): este passo cria só a campanha, os conjuntos e 1 anúncio piloto por formato. O aluno confere e publica o piloto no Gerenciador; a réplica dos demais vem depois, pela seção 7.8 da skill, com bloco 🛡️ próprio. Várias campanhas: uma por vez.
+
+**Rascunho no conector** (seção 4.2 da skill): se o conector criar os anúncios como rascunho, dizer isso ao aluno. O rascunho não roda nem gasta até ser publicado no Gerenciador, e "VALIDATED" não garante que publica.
 
 Anunciar progresso por nível (sem o passo 0, quando não há arquivo novo nem vídeo, são 3 passos):
 ```
@@ -182,7 +187,9 @@ Em caso de falha:
 - **Falha num conjunto:** parar e não apagar nada automaticamente. A campanha fica PAUSED e sem conjunto não gasta. Oferecer corrigir e tentar de novo, arquivar a campanha (bloco 🛡️ próprio) ou excluir à mão pelo Gerenciador.
 - **Falha num anúncio:** preservar o que já subiu, marcar no preview salvo como pendentes (`pendente: true`) o anúncio que falhou e os que não chegaram a ser criados, listar quais falharam, perguntar se quer tentar de novo depois (seção 7.8 da skill).
 
-Depois, conduzir os passos manuais pendentes, se houver (interesses no modo MCP, anúncio com imagem a criar pelo Gerenciador), com os passos numerados da skill. O vídeo novo do modo MCP já foi para a biblioteca antes do preview.
+Depois, conduzir os passos manuais pendentes, se houver (interesses no modo MCP, anúncio com imagem a criar pelo Gerenciador, expansão de público a desligar), com os passos numerados da skill. O vídeo novo e as imagens da Biblioteca de mídia do modo MCP já foram resolvidos antes do preview.
+
+Se o Claude Code barrar a escrita no conector pelo modo automático ("Safety Bypass", "Auto-Mode Bypass"), não insistir pelo chat: seguir a seção 4.3 da skill (plano do lote aprovado no Plan Mode, tools liberadas nas permissões ou modo automático desligado).
 
 ✅ Concluído: campanha criada com status PAUSED.
 
@@ -219,14 +226,39 @@ Falhas:
 Acessar no Gerenciador:
 https://business.facebook.com/adsmanager/manage/campaigns?act=[id]&selected_campaign_ids=[campaign_id]
 
+[Se o conector criou os anúncios como rascunho:]
+Os anúncios estão como rascunho no Gerenciador. Rascunho não roda
+nem gasta: depois da conferência abaixo, é você quem publica.
+
+Conferência no Gerenciador (o conector não controla tudo):
+1. Legenda, título e descrição em cada anúncio, iguais ao aprovado.
+2. Botão certo (ex.: "Saiba mais", e não "Ver detalhes").
+3. Identidade: Página e Instagram marcados. O Threads vem
+   desmarcado: marque à mão se quiser aparecer lá (dá para editar
+   vários anúncios de uma vez).
+4. Complementos para navegador: deixe em "Nenhum" (o Gerenciador
+   pode sugerir "Formulário instantâneo" sozinho).
+5. Sem mídias extras ("várias mídias" ou "mídias relacionadas"
+   desligadas).
+6. Expansão de públicos personalizados como combinamos.
+7. Datas e orçamento como no preview.
+
+[Com piloto:]
+Confira e publique o anúncio piloto primeiro. Se ele publicar sem
+erro, me avise ("publicou") que eu crio os outros [N] anúncios com
+o mesmo molde.
+
 Próximos passos:
 
-1. Abrir no Gerenciador (link acima) e revisar visualmente cada
-   anúncio (preview, copy, criativo). Se quiser, eu mostro a prévia
-   de qualquer anúncio por aqui.
+1. Abrir no Gerenciador (link acima) e fazer a conferência acima.
+   Se quiser, eu mostro a prévia de qualquer anúncio por aqui.
 2. Quando estiver tudo certo, ativar no Gerenciador (a campanha,
    os conjuntos e os anúncios, porque todos nasceram pausados) OU
    me peça "ativa a campanha [nome]" que eu ativo tudo de uma vez.
+[Com sazonalidade:]
+3. Quando for otimizar, marque a mesma sazonalidade no
+   /trafego-otimizar (ex.: Black Friday) e declare a janela no
+   /trafego-escalar.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔭 Próximo passo recomendado: /trafego-analise
@@ -263,7 +295,9 @@ Se o aluno disser depois "ativa a campanha [nome|id]", seguir a seção 7.6 da s
 
 ## Anúncios adicionados depois
 
-Se o aluno disser "adiciona os anúncios na campanha [nome]" (criativos pendentes ou anúncios que falharam), seguir a seção 7.8 da skill: criativos e copy, preview atualizado, bloco 🛡️ próprio e criação dos anúncios com `status: PAUSED`. A ativação continua sendo a de cima.
+Se o aluno disser "adiciona os anúncios na campanha [nome]" (criativos pendentes, anúncios que falharam ou a réplica depois do piloto), seguir a seção 7.8 da skill: criativos e copy, preview atualizado, bloco 🛡️ próprio e criação dos anúncios com `status: PAUSED`, no mesmo molde do piloto quando houver. A ativação continua sendo a de cima.
+
+Na ativação, objeto que ainda é rascunho não ativa pela skill: o aluno publica no Gerenciador primeiro (seção 7.6 da skill).
 
 ---
 
@@ -278,4 +312,7 @@ Se o aluno disser "adiciona os anúncios na campanha [nome]" (criativos pendente
 7. **Nunca chama edição.** Edição mora em `/trafego-otimizar` e `/trafego-escalar`. Adicionar os anúncios pendentes numa campanha criada aqui é criação (seção 7.8 da skill).
 8. **Falha parcial preserva.** Não faz rollback automático.
 9. **Geração de copy via `/copy-anuncio`.** Não gera copy aqui.
-10. **Nunca exibe o token.** Nem no chat, nem em comando mostrado ao aluno.
+10. **Nunca exibe o token.** Nem no chat, nem em comando mostrado ao aluno. O token só de mídia do modo MCP (reserva da L5) é gravado sem o aluno abrir o `.env`, usado só no upload e apagado no fim quando temporário.
+11. **Uma legenda por anúncio.** Várias legendas viram vários anúncios, sempre no formato da Fase 7.6 da skill.
+12. **Piloto antes de replicar e uma campanha por vez** em lote grande.
+13. **Conferência no Gerenciador faz parte da entrega.** O que o conector não controla vai para a lista do Passo 6.
