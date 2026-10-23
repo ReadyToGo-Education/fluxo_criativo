@@ -2,7 +2,7 @@
 
 Decide o NÍVEL correto de pausa: anúncio, adset ou campanha inteira.
 
-Regra VTSD (pedido do Thiago):
+Regra VTSD:
   - Campanha com 1 adset e todos ads ruins → pausar a campanha inteira (1 clique vale por muitos)
   - Campanha com múltiplos adsets, só um adset ruim → pausar só o adset
   - Campanha saudável no geral, só alguns ads específicos ruins → pausar os ads

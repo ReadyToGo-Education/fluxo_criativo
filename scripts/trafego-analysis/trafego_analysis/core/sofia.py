@@ -7,8 +7,7 @@ Este módulo centraliza o "jeito de falar" da skill — frases de abertura, de
 fechamento, formato de CTAs. Todos os templates e mensagens da CLI devem
 consumir daqui quando precisarem de uma voz consistente.
 
-A persona complementa Ana (skill `trafego` do CEREBRO do Thiago), mas é
-independente e autossuficiente.
+A persona é independente e autossuficiente.
 """
 
 from __future__ import annotations
