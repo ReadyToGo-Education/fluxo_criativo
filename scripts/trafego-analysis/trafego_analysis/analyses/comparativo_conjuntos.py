@@ -8,7 +8,7 @@ heurística de nome + objetivo, e compara performance:
   - Detecção de anomalia: HOT mais caro que COLD (problema na lista quente)
   - Oportunidade: SUPERCOLD com CPA aceitável (escala via público aberto)
 
-Atua em **nível de conjunto (adset)**, não campanha — conforme pedido Thiago.
+Atua em **nível de conjunto (adset)**, não campanha.
 
 No VTSD: o mix HOT/COLD/SUPERCOLD depende da fase:
   - Pico: 40/40/20
