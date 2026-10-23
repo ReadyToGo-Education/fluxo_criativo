@@ -528,6 +528,7 @@ No modo `MCP_CONECTOR`, estas operações não têm ferramenta no conector. A sk
 2. **Buscar interesse por nome.** Recomendar público aberto com Advantage+. Se o aluno quiser interesse específico, ele pesquisa no Gerenciador.
 3. **Criar ou gerenciar regra automática.** A skill ajuda a desenhar a regra e o aluno cria no Gerenciador (Regras automatizadas). Liga e pausa por horário continua pelo MCP.
 4. **Apagar campanha, conjunto ou anúncio.** O MCP só apaga público. Para o resto: pausar ou arquivar pelo MCP, ou apagar no Gerenciador.
+5. **Subir imagem que está só no computador.** O MCP aceita imagem por URL pública, mas não recebe arquivo. Padrão: o aluno sobe todas as imagens de uma vez na Biblioteca de mídia do Gerenciador e a skill pega pelo conector. Reserva: token usado só para subir a mídia (`FB_TOKEN_MIDIA`, temporário, apagado no fim do lote, ou o `FB_ACCESS_TOKEN_PERMANENTE` se existir), sem trocar o modo. Detalhes na lacuna L5 da skill `trafego-conexao`.
 
 Público semelhante (lookalike), público de engajamento e de visualização de vídeo já são criados pelo MCP.
 
