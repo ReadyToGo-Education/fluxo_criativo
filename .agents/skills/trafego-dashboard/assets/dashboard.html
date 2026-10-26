@@ -197,6 +197,7 @@ details.diag pre{white-space:pre-wrap;word-break:break-word;font-size:12px;backg
 const CONFIG = {
   "nome": "Dashboard de Tráfego",
   "demo": true,
+  "fonte": "conector",
   "conector": "Meta MCP",
   "contas": [],
   "moeda": "BRL",
@@ -452,9 +453,10 @@ function indFreq(x) { return ok(x) && x > META.frequencia_maxima ? '<span class=
 function renderTopo() {
   $("#titulo").textContent = CONFIG.nome || "Dashboard de Tráfego";
   document.title = CONFIG.nome || "Dashboard de Tráfego";
-  $("#selo-demo").hidden = !D.demo;
+  $("#selo-demo").hidden = !D.demo && !D.gravado;
+  if (D.gravado) $("#selo-demo").textContent = "Dados gravados";
   const partes = [];
-  if (D.atualizadoEm) partes.push("Meta atualizada em " + D.atualizadoEm);
+  if (D.atualizadoEm) partes.push((D.gravado ? "Números da Meta buscados em " : "Meta atualizada em ") + D.atualizadoEm);
   if (D.checkout && D.vendasEm) partes.push("Vendas da " + D.checkout.plataforma + " buscadas em " + D.vendasEm);
   $("#ultima").textContent = partes.join(" · ");
   $("#atalhos").innerHTML = ATALHOS.map(([k, r]) => '<button type="button" class="chip" data-p="' + k + '" aria-pressed="' + (S.periodo === k) + '">' + r + "</button>").join("");
@@ -1345,10 +1347,42 @@ async function anexarVendas(D2) {
   }
 }
 
+// Dashboard com dados gravados (conta que a Meta ainda não liberou no conector): o Claude busca
+// os números com o App da Meta no computador do aluno e grava no banco do artefato, na coleção
+// "meta" (documento "info" e lotes "lote-1", "lote-2"...). A página só lê: nunca vê o token.
+async function lerGravados() {
+  const db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+  if (!db) throw { code: "sem_banco" };
+  const snap = await db.collection("meta").limit(500).get();
+  const docs = {};
+  snap.docs.forEach((d) => { if (d.exists) docs[d.id] = d.data(); });
+  const info = docs.info;
+  if (!info) throw { code: "sem_gravados" };
+  const D2 = Object.assign({ porHora: {}, comprasHora: {}, valorHora: {}, porHoraC: {} }, info, { demo: false, gravado: true, metaDiaCamp: [], metaDiaAd: [], anuncios: [], alcance: {}, vendas: [], pendentes: [], checkout: null });
+  D2.avisos = (info.avisos || []).slice();
+  let faltou = 0;
+  for (let n = 1; n <= (info.lotes || 0); n++) {
+    const l = docs["lote-" + n];
+    if (!l) { faltou++; continue; }
+    D2.metaDiaCamp = D2.metaDiaCamp.concat(l.camp || []);
+    D2.metaDiaAd = D2.metaDiaAd.concat(l.ad || []);
+    D2.anuncios = D2.anuncios.concat(l.anuncios || []);
+    (l.alc || []).forEach(([k, id, v]) => { (D2.alcance[k] = D2.alcance[k] || {})[id] = v; });
+  }
+  if (faltou) D2.avisos.push("Parte dos números gravados não chegou ao painel. Peça ao Claude: atualiza o meu dashboard.");
+  const quando = info.geradoEmIso ? Date.parse(info.geradoEmIso) : NaN;
+  if (Number.isFinite(quando) && Date.now() - quando > 12 * 3600e3) D2.avisos.push("Os números da Meta são de " + info.atualizadoEm + ". Para ver os de agora, peça ao Claude: atualiza o meu dashboard.");
+  diag = { quando: new Date().toISOString(), fonte: "dados gravados pelo App da Meta", buscadosEm: info.atualizadoEm, lotes: info.lotes, lotesFaltando: faltou, chamadas: [], amostras: {}, avisos: [], erros: [] };
+  await anexarVendas(D2);
+  return D2;
+}
+
 // ============================================================ mensagens de erro
 function textoErro(e) {
   const code = e && e.code, srv = "\"" + SERVER + "\"";
   switch (code) {
+    case "sem_banco": return "Esta visualização não tem acesso aos números gravados. Abra a página no claude.ai, logado na sua conta.";
+    case "sem_gravados": return "Os números da Meta ainda não chegaram ao painel. Peça ao Claude: atualiza o meu dashboard.";
     case "sem_contas": return e.total ? "O conector achou " + e.total + " conta(s) de anúncio, mas nenhuma está liberada para leitura (ou nenhuma é a conta configurada neste painel)." : "O conector não achou nenhuma conta de anúncio no seu perfil da Meta.";
     case "needs_reauth": return "A conexão com a Meta expirou. Reconecte o conector " + srv + " no claude.ai (Configurações, Conectores) e clique em Atualizar dados.";
     case "server_not_connected": case "server_not_found": return "O conector " + srv + " não está adicionado na sua conta do claude.ai. Adicione em Configurações, Conectores, e clique em Atualizar dados.";
@@ -1392,6 +1426,24 @@ function usar(dados) {
 }
 async function atualizar(fresco) {
   if (CONFIG.demo) { S.erro = null; usar(gerarDemo(!["#sem-checkout", "#mensagens"].includes(location.hash), location.hash === "#mensagens")); if (fresco) toast("Dados de demonstração. No painel ligado à sua conta, este botão busca os números novos na Meta."); return; }
+  if (CONFIG.fonte === "app") {
+    if (coletando) return;
+    coletando = true;
+    if (!D) estado('<div class="skel" style="width:40%"></div><div class="skel" style="width:70%"></div><p class="small muted">Lendo os números gravados…</p>');
+    try {
+      const novo = await lerGravados();
+      S.erro = null; usar(novo);
+      if (fresco) toast("Números da Meta buscados pelo Claude em " + novo.atualizadoEm + ". Para buscar os de agora, peça ao Claude: atualiza o meu dashboard.");
+    } catch (e) {
+      if (diag) diag.erros.push((e && e.code) + ": " + String((e && e.message) || "").slice(0, 300));
+      S.erro = textoErro(e);
+      if (D) render(); else { mostrarSecoes(false); estado('<div class="aviso erro">' + esc(S.erro) + "</div>"); }
+    } finally {
+      coletando = false;
+      gravarDiag();
+    }
+    return;
+  }
   if (coletando) return;
   if (!mcp) { toast("Esta visualização não tem acesso ao conector da Meta. Abra a página no claude.ai, logado na sua conta."); return; }
   coletando = true;
@@ -1416,6 +1468,12 @@ function iniciar() {
   liga();
   mostrarSecoes(false);
   if (CONFIG.demo) { atualizar(false); return; }
+  if (CONFIG.fonte === "app") {
+    const ajuda = document.querySelector(".diag p");
+    if (ajuda) ajuda.textContent = "Neste painel, os números da Meta são buscados pelo Claude no seu computador, com o App da Meta, e gravados aqui. A página não se conecta à Meta.";
+    atualizar(false);
+    return;
+  }
   const snap = lerSnapshot();
   if (snap) { usar(snap.dados); }
   else estado('<div class="skel" style="width:40%"></div><div class="skel" style="width:70%"></div><p class="small muted">Conectando à Meta…</p>');

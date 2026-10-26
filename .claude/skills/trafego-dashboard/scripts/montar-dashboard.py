@@ -3,7 +3,9 @@
 
 Copia assets/dashboard.html e troca só o bloco CONFIG (entre /*CONFIG_INICIO*/ e
 /*CONFIG_FIM*/) pelas escolhas do aluno gravadas no config.json do dashboard.
-Nenhum dado da conta entra na página: ela busca os números na Meta quando abre.
+Nenhum dado da conta entra na página: ela busca os números na Meta quando abre (fonte
+"conector") ou lê os números gravados no banco do artefato pelo meta-app.py (fonte "app").
+O token do App nunca entra na página.
 
 Uso:
   python montar-dashboard.py --config meus-produtos/_dashboard-trafego/{slug}/config.json --saida meus-produtos/_dashboard-trafego/{slug}/index.html
@@ -23,6 +25,7 @@ def config_da_pagina(cfg, demo):
     return {
         "nome": cfg.get("nome") or "Dashboard de Tráfego",
         "demo": bool(demo),
+        "fonte": "app" if cfg.get("fonte") == "app" else "conector",
         "conector": cfg.get("conector") or "Meta MCP",
         "contas": [str(c) for c in cfg.get("contas") or []],
         "moeda": cfg.get("moeda") or "BRL",

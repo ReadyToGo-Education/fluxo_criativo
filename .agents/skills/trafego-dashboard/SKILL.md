@@ -2,7 +2,8 @@
 name: trafego-dashboard
 description: >
   Dashboard de tráfego do Meta Ads publicado como artefato do Claude e ligado ao conector MCP
-  da Meta: visão geral com comparação ao período anterior, funil com alerta de etapa, ritmo do
+  da Meta (ou, para conta que a Meta ainda não liberou no conector, com dados gravados pelo App,
+  com o token só no computador do aluno): visão geral com comparação ao período anterior, funil com alerta de etapa, ritmo do
   dia por hora, campanhas com anúncios e gaveta de detalhe, evolução diária e, quando o aluno
   tem as credenciais da Hotmart ou da Kiwify no .env, vendas reais com bump, upsell, valor
   líquido e origem de cada venda. Especificação técnica usada pelo /trafego-dashboard: modelo pronto em
@@ -14,6 +15,8 @@ description: >
 # Tráfego Dashboard. Painel do Meta Ads
 
 O dashboard é um **artefato do Claude** (uma página guardada na conta Claude do aluno) montado a partir de um **modelo pronto**: `assets/dashboard.html`. A página lê a conta de anúncios pelo conector da Meta do próprio aluno, sem token no arquivo. Ela guarda a última leitura no navegador, abre na hora com esses números e busca os novos quando o aluno clica em **Atualizar dados** (ou sozinha, quando a última leitura tem mais de 1 hora).
+
+Conta que a Meta ainda não liberou no conector tem o **dashboard com dados gravados** (seção 5.1): o mesmo modelo, com os números buscados pelo Claude no computador do aluno com o token do App e gravados no banco do artefato. O token nunca vai para a página.
 
 **Este arquivo é a especificação.** O roteiro com o aluno está em `.claude/commands/trafego-dashboard.md`.
 
@@ -47,15 +50,17 @@ Sem vendas do checkout, compras e faturamento são os do pixel (janela de atribu
 | `scripts/montar-dashboard.py` | Gera a página do aluno: copia o modelo e troca só o bloco `CONFIG`. `--demo` gera a versão de demonstração (dados fictícios, sem conector). |
 | `scripts/hotmart-vendas.py` e `scripts/kiwify-vendas.py` | Leem as credenciais da plataforma no `.env`, buscam as vendas e gravam a pasta `banco/` que o Claude envia para o banco do artefato (seção 6.3). Sem nome, e-mail ou documento de quem comprou. |
 | `scripts/_vendas_comum.py` | Parte comum aos dois coletores: junta principal, bump e upsell num pedido e divide as vendas em lotes. |
+| `scripts/meta-app.py` | Dashboard com dados gravados (seção 5.1): lê o token do App no `.env`, busca na Graph API os números que a página leria pelo conector e grava a pasta `banco-meta/` que o Claude envia para o banco do artefato. Confere que o token não ficou em nenhum arquivo. |
 | `references/legado-dashboard-estatico.md` | Caminho sem artefato (fotografia em HTML). |
 
-Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`** com `config.json`, `index.html` e, com vendas do checkout, `vendas.json` (conferência local) e `banco/` (o que vai para o artefato). A pasta começa com `_` para não ser confundida com um produto.
+Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`** com `config.json`, `index.html` e, com vendas do checkout, `vendas.json` (conferência local) e `banco/` (o que vai para o artefato). No dashboard com dados gravados, também `banco-meta/` (os números da Meta que vão para o artefato). A pasta começa com `_` para não ser confundida com um produto.
 
 ### 2.1 `config.json`
 
 ```json
 {
   "nome": "Dashboard de Tráfego",
+  "fonte": "conector",
   "conector": "Meta MCP",
   "contas": [],
   "moeda": "BRL",
@@ -65,8 +70,9 @@ Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`**
 }
 ```
 
-- `conector`: nome exato do conector da Meta na conta Claude do aluno (seção 4.2).
-- `contas`: lista vazia usa todas as contas que o conector libera para leitura (com seletor no topo quando há mais de uma). Para fixar, ids no formato `act_123...`.
+- `fonte`: `conector` (padrão, dashboard ao vivo) ou `app` (dados gravados pelo App, seção 5.1).
+- `conector`: nome exato do conector da Meta na conta Claude do aluno (seção 4.2). Não é usado com `fonte: "app"`.
+- `contas`: lista vazia usa todas as contas que o conector libera para leitura (com seletor no topo quando há mais de uma). Para fixar, ids no formato `act_123...`. Com `fonte: "app"`, listar sempre as contas (sem lista, o coletor usa `FB_AD_ACCOUNT_IDS` ou `FB_AD_ACCOUNT_ID` do `.env`).
 - `metas`: só mudam se o aluno pedir. ROAS bom acende o ponto verde; CTR mínimo e frequência máxima acendem o ponto amarelo.
 - `checkout`: `null` sem vendas do checkout. Com Hotmart ou Kiwify (`plataforma` com o nome exato e os ids como a plataforma mostra; na Kiwify são códigos longos):
 
@@ -97,12 +103,14 @@ Claude encontra o seu dashboard.
 ## Dashboard de Tráfego
 - Link: https://claude.ai/artifact/...
 - Contas de anúncios: todas as que o conector libera para leitura
+- Fonte dos números: conector da Meta (ao vivo) | App da Meta (dados gravados)
 - Conector: Meta MCP
 - Vendas do checkout: Hotmart (produto principal 1234567) | Kiwify (...) | não ligadas
 - Pasta: meus-produtos/_dashboard-trafego/dashboard-trafego/
 - Personalizado: não
 - Criado em: 2026-10-09
 - Atualização automática das vendas: 8h, 12h, 16h e 20h (tarefa dashboard-vendas-dashboard-trafego) | não
+- Atualização automática dos números da Meta (só com dados gravados): 8h, 12h, 16h e 20h (tarefa dashboard-meta-dashboard-trafego) | não
 - Atualizado em: 2026-10-09
 ```
 
@@ -128,8 +136,20 @@ Dashboards antigos (feitos à mão antes do modelo, com o código em `meus-produ
 |---|---|---|
 | Ferramenta `Artifact` disponível | Aparece na sessão ou com `ToolSearch` | Explicar que o dashboard é publicado na conta Claude e só funciona no Claude Code dentro do app do Claude; oferecer o legado |
 | Conector da Meta adicionado na conta Claude do aluno | Seção 4.2 | Oferecer conectar (Passo 2A do `/trafego-conexao`) ou o legado |
+| Conta liberada pela Meta no conector | `ads_get_ad_accounts`: liberada quando `is_ads_mcp_enabled` e `is_queryable` não vêm `false` | Dashboard com dados gravados (seção 5.1) ou o legado |
 
-O `.env` não é usado pela página. Quem tem `META_AUTH_MODO=APP` também pode ter o dashboard, desde que adicione o conector na conta Claude. Nunca trocar `META_AUTH_MODO` sem o aluno pedir.
+O `.env` não é usado pela página. Quem tem `META_AUTH_MODO=APP` também pode ter o dashboard ao vivo, desde que adicione o conector na conta Claude **e** a conta esteja liberada nele. Nunca trocar `META_AUTH_MODO` sem o aluno pedir.
+
+### 4.1.1 Qual dashboard montar
+
+| Situação das contas escolhidas | Caminho |
+|---|---|
+| Todas liberadas no conector | Dashboard ao vivo (seção 5) |
+| Nenhuma liberada (é o caso de quem está no App porque a Meta ainda não liberou a conta) | Dashboard com dados gravados (seção 5.1). Sem o App configurado (`FB_ACCESS_TOKEN_PERMANENTE` vazio), configurar antes pelo `/trafego-conexao` (caminho do App) |
+| Algumas liberadas e outras não | Perguntar: ao vivo só com as liberadas, ou dados gravados com todas |
+| A sessão não tem a ferramenta `Artifact` | Legado (seção 9) |
+
+**Nunca publicar o dashboard ao vivo sem nenhuma conta liberada:** ele abriria vazio. Quando as ferramentas do conector não estão na conversa e não dá para conferir a liberação, publicar o ao vivo e, se o aluno avisar que o painel diz que nenhuma conta está liberada para leitura, oferecer o dashboard com dados gravados.
 
 ### 4.2 Nome do conector
 
@@ -175,6 +195,63 @@ Tudo isso já está no modelo; serve para diagnosticar.
 A ferramenta pode avisar que o conector não foi observado nesta sessão. É esperado quando a sessão do Claude Code não carrega o conector: a página foi feita para descobrir os campos sozinha. Confirmar com o diagnóstico (seção 7) depois que o aluno abrir.
 
 **Demonstração:** `montar-dashboard.py --demo --saida ...` gera a página com dados fictícios (selo "Dados de demonstração"), útil para mostrar o painel antes de o aluno ter conector. Nunca publicar a demonstração no lugar do dashboard do aluno.
+
+### 5.1 Dashboard com dados gravados (conta não liberada no conector)
+
+Para a conta que a Meta ainda não liberou no conector. É o mesmo modelo e o mesmo painel. Só muda de onde vêm os números:
+
+- O Claude roda `scripts/meta-app.py` **no computador do aluno**. O script lê `FB_ACCESS_TOKEN_PERMANENTE` no `.env`, busca na Graph API os mesmos números que a página leria pelo conector (campanhas e anúncios por dia nos últimos 31 dias, conjuntos ativos, alcance por janela e gasto por hora) e grava a pasta `banco-meta/`.
+- O Claude envia `banco-meta/` para o banco do artefato, coleção `meta` (documento `info` e lotes `lote-1`, `lote-2`..., cada um com até 200 KB), do mesmo jeito que as vendas do checkout.
+- A página, com `fonte: "app"`, só lê esse banco. Ela não pede o conector, mostra o selo "Dados gravados" e "Números da Meta buscados em {dia e hora}", e o botão Atualizar dados relê o banco e explica que, para números novos, é só pedir ao Claude.
+
+**Segurança (regra dura):**
+
+- O token do App **nunca** vai para a página, para o `config.json`, para o banco do artefato, para o registro nem para o chat. Ele só entra nas chamadas que o script faz à Meta, a partir do `.env`.
+- O script segue a paginação pelo cursor e nunca usa o link `paging.next` da resposta, que carrega o token. Antes de gravar, ele confere que o token não ficou em nenhum arquivo e para com `ERRO_SEGURANCA` se ficou.
+- O manifesto da publicação declara só o banco do artefato (`"db": {}`), sem o conector.
+- Quem tiver acesso ao artefato vê os números gravados (nunca o token). No ao vivo é diferente: quem abre só vê a conta se o conector dele tiver acesso a ela. Avisar o aluno antes de ele compartilhar o link.
+- Dashboard **ao vivo** sem o conector só existe hospedando fora do Claude, com o token numa variável de ambiente do servidor e uma função que lê a Meta (por exemplo, na Vercel). Não faz parte desta skill. Nunca colocar o token na página para isso.
+
+**Criar:**
+
+1. Gravar `config.json` com `"fonte": "app"` e a lista de `contas` (seção 2.1).
+2. Conferir o App (descobrir antes se a sessão usa `python3` ou `py -3`):
+   ```bash
+   python3 .claude/skills/trafego-dashboard/scripts/meta-app.py --verificar --config meus-produtos/_dashboard-trafego/{slug}/config.json
+   ```
+3. Montar a página como na seção 5, item 2.
+4. Publicar como na seção 5, item 3, com `description` "Dashboard do Meta Ads com visão geral, funil, campanhas e evolução diária, com os números buscados pelo App da Meta." e `capabilities` `{"db": {}}`.
+5. Buscar e enviar os números (abaixo).
+6. Com vendas do checkout, enviar as vendas também (seção 6.3).
+7. Gravar o bloco no registro (seção 3) com `Fonte dos números: App da Meta (dados gravados)`.
+
+**Buscar e enviar os números** (na criação e sempre que o aluno pedir "atualiza o meu dashboard"):
+
+1. ```bash
+   python3 .claude/skills/trafego-dashboard/scripts/meta-app.py --config meus-produtos/_dashboard-trafego/{slug}/config.json --pasta meus-produtos/_dashboard-trafego/{slug}
+   ```
+2. `ArtifactData` com `action: "list"`, a URL do dashboard e `collection: "meta"`, para pegar a versão de cada documento que já existe.
+3. Avisar antes de gravar: "Vou gravar os números da Meta no seu painel. O Claude vai mostrar um pedido de permissão: clique em permitir." Depois, `ArtifactData` com `action: "batch"`: um `set` por arquivo de `banco-meta/` (`doc_id` = nome do arquivo sem `.json`, `file_path` = o arquivo, `if_version` só quando o documento já existe) e um `delete` para cada lote que está no banco e não está mais na pasta. Até 50 entradas por chamada.
+4. Avisar o aluno para clicar em Atualizar dados. A página não precisa ser publicada de novo.
+
+Saídas de erro do coletor, em linguagem simples para o aluno e sem valores do `.env`: `ERRO_CREDENCIAIS` (o token do App não está no `.env`: configurar pelo `/trafego-conexao`), `ERRO_TOKEN` (a Meta recusou o token: gerar de novo pelo `/trafego-conexao`), `ERRO_CONTA` (nenhuma conta no `config.json` nem no `.env`), `ERRO_META` (a Meta recusou ou não respondeu a consulta), `ERRO_TAMANHO` (conta grande demais para dados gravados: usar o legado) e `ERRO_SEGURANCA` (o token apareceu nos dados; nada foi gravado: não tentar contornar, avisar o suporte).
+
+**Atualização automática dos números:** oferecer uma vez, depois que os primeiros números chegarem ao painel, com as mesmas opções e o mesmo jeito da seção 6.6 (`create_scheduled_task`), com `taskId` `dashboard-meta-{slug}`, título "Números do {nome do dashboard}" e este `prompt`:
+
+```
+Atualize os números da Meta do dashboard de tráfego "{nome}" do projeto Severino.
+
+1. Na pasta {caminho absoluto da raiz do projeto}, rode:
+   {python3 ou py -3} .claude/skills/trafego-dashboard/scripts/meta-app.py --config meus-produtos/_dashboard-trafego/{slug}/config.json --pasta meus-produtos/_dashboard-trafego/{slug}
+2. Se a saída tiver ERRO_CREDENCIAIS, ERRO_TOKEN ou ERRO_SEGURANCA, pare e responda só: "Os números do dashboard não foram atualizados: o App da Meta precisa ser conferido no Severino."
+3. Com a ferramenta ArtifactData e a URL {url do dashboard}: action "list" na coleção "meta" para ler a versão de cada documento; depois action "batch" com um "set" por arquivo da pasta meus-produtos/_dashboard-trafego/{slug}/banco-meta/ (doc_id = nome do arquivo sem .json, file_path = o arquivo, if_version = a versão lida, só quando o documento já existe) e um "delete" para cada lote que está no banco e não está mais na pasta.
+4. Nunca mostre valores do .env.
+5. Termine com uma linha: "Números do dashboard atualizados até {hora}."
+```
+
+Com vendas do checkout ligadas, uma tarefa só pode fazer as duas buscas (números da Meta e vendas), em sequência. Gravar no registro a linha "Atualização automática dos números da Meta".
+
+**Quando a Meta liberar a conta no conector:** oferecer trocar para o ao vivo. Mudar `fonte` para `conector`, remontar, publicar na mesma URL com o manifesto da seção 5 (conector e banco), desligar a tarefa `dashboard-meta-{slug}` e atualizar o registro.
 
 ---
 
@@ -365,7 +442,7 @@ Print de outro dashboard como referência: copiar a estrutura (indicadores, grá
 
 ## 9. Caminho legado (sem artefato)
 
-Sem a ferramenta `Artifact`, ou quando o aluno não quer o conector, o dashboard é o **estático** (fotografia de uma análise, em HTML no computador). Roteiro em **`references/legado-dashboard-estatico.md`**.
+Sem a ferramenta `Artifact`, ou quando o aluno não quer o conector nem o dashboard com dados gravados, o dashboard é o **estático** (fotografia de uma análise, em HTML no computador). Roteiro em **`references/legado-dashboard-estatico.md`**.
 
 ---
 
@@ -374,8 +451,9 @@ Sem a ferramenta `Artifact`, ou quando o aluno não quer o conector, o dashboard
 1. **Antes de criar, procurar um dashboard que já existe** (seção 3).
 2. **Só leitura.** Nenhuma ferramenta de escrita no manifesto.
 3. **Nunca inventar dado.** Sem dado, a página mostra "—".
-4. **Nunca embutir dado real do aluno no código da página.** O que é da conta vem do conector; as vendas do checkout vêm do banco do artefato.
-5. **Nunca colocar token, chave ou senha** na página, no `config.json`, no banco do artefato, no registro ou no chat. As credenciais da Hotmart e da Kiwify ficam só no `.env`.
-6. **As vendas não levam nome, e-mail nem documento** de quem comprou, nem no banco do artefato nem no `vendas.json` local.
-7. **O link vive em `meus-produtos/dashboard-trafego.md`**, nunca no `CLAUDE.md`.
-8. **Não mostrar código ao aluno.** Ele recebe o link e uma explicação curta.
+4. **Nunca embutir dado real do aluno no código da página.** O que é da conta vem do conector ou, no dashboard com dados gravados, do banco do artefato; as vendas do checkout vêm do banco do artefato.
+5. **Nunca colocar token, chave ou senha** na página, no `config.json`, no banco do artefato, no registro ou no chat. O token do App da Meta e as credenciais da Hotmart e da Kiwify ficam só no `.env` e só entram nas chamadas que os scripts fazem do computador do aluno.
+6. **Dashboard ao vivo só com conta liberada no conector.** Sem conta liberada, dados gravados (seção 5.1) ou legado; nunca publicar um ao vivo vazio.
+7. **As vendas não levam nome, e-mail nem documento** de quem comprou, nem no banco do artefato nem no `vendas.json` local.
+8. **O link vive em `meus-produtos/dashboard-trafego.md`**, nunca no `CLAUDE.md`.
+9. **Não mostrar código ao aluno.** Ele recebe o link e uma explicação curta.

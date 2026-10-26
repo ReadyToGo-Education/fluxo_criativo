@@ -558,7 +558,7 @@ Todos os commands `/trafego-*` invocáveis pelo usuário:
 - `/trafego-publicos`. Cria e gerencia públicos (personalizado, semelhante, engajamento, lista de clientes, bases por nível).
 - `/trafego-regras`. Regras automáticas e liga e pausa por horário.
 - `/trafego-testes`. Testes A/B disciplinados, duplicação variando uma coisa só e campanha de remarketing.
-- `/trafego-dashboard`. Dashboard da conta de anúncios (artefato do Claude com o conector MCP da Meta, montado a partir de um modelo pronto), com vendas da Hotmart ou da Kiwify quando há credenciais no `.env`, ou, sem artefato, dashboard estático (legado).
+- `/trafego-dashboard`. Dashboard da conta de anúncios (artefato do Claude com o conector MCP da Meta, montado a partir de um modelo pronto), com vendas da Hotmart ou da Kiwify quando há credenciais no `.env`. Para conta que a Meta ainda não liberou no conector, o mesmo painel com dados gravados: o Claude busca os números com o token do App no computador do aluno e grava no banco do artefato, e o token nunca vai para a página. Sem artefato, dashboard estático (legado).
 
 **Base de conhecimento (não invocável diretamente):**
 - `trafego-pago`. Conceitos e métricas de tráfego consultados pelas outras skills.
@@ -678,7 +678,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/trafego-publicos`. Criar e gerenciar públicos: evento do pixel, visualização de vídeo, engajamento, semelhante, lista de clientes (com hash local) e bases por nível
 - `/trafego-regras`. Desenhar regras automáticas e programar liga e pausa por horário
 - `/trafego-testes`. Montar testes A/B disciplinados, duplicar variando uma coisa só, campanha de remarketing e leitura do resultado no 7º dia
-- `/trafego-dashboard`. Abrir, criar ou atualizar o dashboard da conta de anúncios (artefato do Claude conectado ao MCP da Meta): visão geral com comparação, funil, ritmo do dia, campanhas com anúncios e dia a dia. Com credenciais da Hotmart ou da Kiwify no `.env`, mostra as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link. Sem MCP, monta o dashboard estático (legado)
+- `/trafego-dashboard`. Abrir, criar ou atualizar o dashboard da conta de anúncios (artefato do Claude conectado ao MCP da Meta): visão geral com comparação, funil, ritmo do dia, campanhas com anúncios e dia a dia. Com credenciais da Hotmart ou da Kiwify no `.env`, mostra as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link. Conta ainda não liberada no conector: painel com dados gravados pelo App (atualiza quando o aluno pede ou no horário marcado). Sem artefato, monta o dashboard estático (legado)
 
 **Dados e Automações:**
 - `/ads-relatorio`. Criar rotina diária automática que busca métricas do Facebook Ads e envia relatório pelo WhatsApp via Z-API. Agente agendado na nuvem do Claude, roda todo dia às 8h sem precisar do computador ligado.

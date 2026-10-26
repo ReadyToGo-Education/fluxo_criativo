@@ -97,6 +97,8 @@
 | Montar e publicar o dashboard de tráfego (modelo pronto, sem Hotmart) | cerca de 90 segundos | segundos |
 | Montar e publicar o dashboard com vendas do checkout (Hotmart ou Kiwify) | 2 a 3 minutos | minutos |
 | Buscar as vendas do checkout e atualizar o dashboard | cerca de 60 segundos | segundos |
+| Montar e publicar o dashboard com dados gravados (App) | 2 a 3 minutos | minutos |
+| Buscar os números da Meta pelo App e atualizar o dashboard | cerca de 60 segundos | segundos |
 | Ajustar o dashboard de tráfego ao vivo (editar e publicar de novo) | cerca de 90 segundos | segundos |
 
 ---
