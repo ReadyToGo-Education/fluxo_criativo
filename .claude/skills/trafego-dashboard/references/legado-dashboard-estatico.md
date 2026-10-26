@@ -4,8 +4,8 @@ Caminho antigo do dashboard de tráfego, mantido para quem não usa o conector M
 
 O `/trafego-dashboard` só chega aqui em dois casos:
 
-1. O aluno usa o App via Facebook Developers (`META_AUTH_MODO=APP`), foi avisado de que o dashboard ao vivo precisa do conector MCP da Meta e **decidiu não conectar**.
-2. A sessão não tem a ferramenta `Artifact` (por exemplo, Claude Code rodando só no terminal), então não dá para publicar o dashboard ao vivo.
+1. O aluno usa o App via Facebook Developers (`META_AUTH_MODO=APP`), foi avisado de que existe o painel ao vivo (pelo conector, se a conta estiver liberada) e o painel com dados gravados pelo App (seção 5.1 da skill), e **preferiu a fotografia no computador**.
+2. A sessão não tem a ferramenta `Artifact` (por exemplo, Claude Code rodando só no terminal), então não dá para publicar nenhum dos dois painéis.
 
 ---
 
