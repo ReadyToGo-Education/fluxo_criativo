@@ -251,6 +251,8 @@ function toast(msg) {
 // ============================================================ dados
 // D: estrutura normalizada que todas as seções leem.
 let D = null;
+// Fotografia para o analisador: a página leva o D dentro dela e não chama conector nem banco.
+const FOTO = CONFIG.fotografia || null;
 const I = {};
 function indexar() {
   I.camp = new Map(D.campanhas.map((c) => [c.id, c]));
@@ -452,14 +454,17 @@ function indFreq(x) { return ok(x) && x > META.frequencia_maxima ? '<span class=
 // ============================================================ topo
 function renderTopo() {
   $("#titulo").textContent = CONFIG.nome || "Dashboard de Tráfego";
-  document.title = CONFIG.nome || "Dashboard de Tráfego";
-  $("#selo-demo").hidden = !D.demo && !D.gravado;
-  if (D.gravado) $("#selo-demo").textContent = "Dados gravados";
+  document.title = (CONFIG.nome || "Dashboard de Tráfego") + (FOTO ? " (fotografia)" : "");
+  $("#selo-demo").hidden = !D.demo && !D.gravado && !FOTO;
+  if (FOTO) $("#selo-demo").textContent = "Fotografia";
+  else if (D.gravado) $("#selo-demo").textContent = "Dados gravados";
   const partes = [];
-  if (D.atualizadoEm) partes.push((D.gravado ? "Números da Meta buscados em " : "Meta atualizada em ") + D.atualizadoEm);
+  if (D.atualizadoEm) partes.push((FOTO ? "Números da Meta de " : D.gravado ? "Números da Meta buscados em " : "Meta atualizada em ") + D.atualizadoEm);
   if (D.checkout && D.vendasEm) partes.push("Vendas da " + D.checkout.plataforma + " buscadas em " + D.vendasEm);
   $("#ultima").textContent = partes.join(" · ");
-  $("#atalhos").innerHTML = ATALHOS.map(([k, r]) => '<button type="button" class="chip" data-p="' + k + '" aria-pressed="' + (S.periodo === k) + '">' + r + "</button>").join("");
+  // Na fotografia, "hoje" é o dia em que ela foi tirada: os atalhos mostram a data.
+  const rotulo = (k, r) => (FOTO && k === "hoje" ? diaCurto(hoje()) : FOTO && k === "ontem" ? diaCurto(somaDias(hoje(), -1)) : r);
+  $("#atalhos").innerHTML = ATALHOS.map(([k, r]) => '<button type="button" class="chip" data-p="' + k + '" aria-pressed="' + (S.periodo === k) + '">' + rotulo(k, r) + "</button>").join("");
   $("#de").value = S.de; $("#ate").value = S.ate;
   $("#de").min = $("#ate").min = D.inicio; $("#de").max = $("#ate").max = hoje();
   $("#grupo-conta").hidden = D.contas.length < 2;
@@ -470,7 +475,8 @@ function renderTopo() {
     $("#modo").innerHTML = [["anuncio", "Só de anúncio"], ["todas", "Todas as vendas"], ["pixel", "Pixel da Meta"]].map(([k, r]) => '<button type="button" data-m="' + k + '" aria-pressed="' + (S.modo === k) + '">' + r + "</button>").join("");
     $("#valor").innerHTML = [["liquido", "Líquido"], ["bruto", "Bruto"]].map(([k, r]) => '<button type="button" data-f="' + k + '" aria-pressed="' + (S.fat === k) + '"' + (S.modo === "pixel" ? " disabled" : "") + ">" + r + "</button>").join("");
   }
-  const av = (D.avisos || []).slice();
+  // Aviso que manda clicar em Atualizar dados ou pedir ao Claude não serve para quem lê a fotografia.
+  const av = (D.avisos || []).filter((t) => !FOTO || !/Claude|Atualizar dados/.test(t));
   if (!ck && S.res) av.unshift("Estas campanhas não registram compra pelo pixel. O painel mostra o resultado que cada campanha busca (" + tipoDominante(agg(S.de, S.ate)).curto + ") e o custo por resultado, como o Gerenciador.");
   else if (!ck) av.unshift("Compras e faturamento como a Meta registra pelo pixel, na janela de atribuição da conta. Com as vendas do checkout ligadas, o painel mostra o valor líquido, o bump, o upsell e a origem de cada venda.");
   else if (S.modo === "pixel") av.unshift("Modo pixel: compras e faturamento como a Meta registra (valor bruto do pixel). Bump e upsell continuam vindo do checkout.");
@@ -480,11 +486,11 @@ function renderTopo() {
   const vaTopo = vendasAte();
   let erroVendas = "";
   if (vaTopo && S.ate >= vaTopo.dia) {
-    const horas = (Date.now() - new Date(D.vendasAte).getTime()) / 36e5;
-    erroVendas = "As vendas da " + D.checkout.plataforma + " vão até " + D.vendasEm + ". Do que veio depois, o painel tem o gasto mas ainda não as vendas: faturamento, lucro, ROAS e CPA param nessa hora. Para trazer as vendas novas, peça ao Claude: atualize as vendas do dashboard.";
+    const horas = ((FOTO ? Date.parse(D.fotografiaEm) : Date.now()) - new Date(D.vendasAte).getTime()) / 36e5;
+    erroVendas = "As vendas da " + D.checkout.plataforma + " vão até " + D.vendasEm + ". Do que veio depois, o painel tem o gasto mas ainda não as vendas: faturamento, lucro, ROAS e CPA param nessa hora." + (FOTO ? "" : " Para trazer as vendas novas, peça ao Claude: atualize as vendas do dashboard.");
     if (horas < 12) { av.unshift(erroVendas); erroVendas = ""; }
   }
-  if (S.ate === hoje()) av.push("A Meta leva de 1 a 3 horas para fechar os números da última hora: o dia de hoje ainda vai mudar.");
+  if (S.ate === hoje()) av.push(FOTO ? "O dia " + diaCurto(hoje()) + " ainda estava em andamento quando a fotografia foi tirada: os números dele ficaram parciais." : "A Meta leva de 1 a 3 horas para fechar os números da última hora: o dia de hoje ainda vai mudar.");
   $("#avisos").innerHTML = (S.erro ? '<div class="aviso erro">' + esc(S.erro) + "</div>" : "") + (erroVendas ? '<div class="aviso erro">' + esc(erroVendas) + "</div>" : "") + av.map((t) => '<div class="aviso">' + esc(t) + "</div>").join("");
 }
 
@@ -893,6 +899,7 @@ function renderGaveta() {
 function renderNotas() {
   const ck = temCheckout();
   const linhas = [["Investimento, impressões, cliques, visitas", "Meta Ads, por campanha, por anúncio e por dia. Visitas são as visualizações da página de destino registradas pela Meta."]];
+  if (FOTO) linhas.unshift(["Fotografia", "Cópia fixa do dashboard de tráfego, com os números da Meta de " + (D.atualizadoEm || "—") + ". Ela não se atualiza: para ver números mais novos, é preciso tirar outra fotografia."]);
   if (S.res) linhas.push(
     ["Resultados", "O resultado do objetivo de cada campanha, contado pela Meta como no Gerenciador: conversas iniciadas no WhatsApp ou no Direct, leads, cadastros, visitas ao perfil. Quando as campanhas buscam resultados diferentes, o total soma todos."],
     ["Custo por resultado", "Investimento ÷ resultados."],
@@ -1409,6 +1416,47 @@ async function gravarDiag() {
   try { const db = window.claude && window.claude.use ? await window.claude.use("db") : null; if (db) await db.doc("diagnostico/ultima").set(JSON.parse(txt)); } catch (e) {}
 }
 
+// ============================================================ fotografia para o analisador
+// O link do painel ao vivo não serve para o analisador da mentoria: a página lê a Meta pelo
+// conector de quem abre. Por isso, a cada atualização que dá certo, o painel guarda no banco
+// do artefato (coleção "fotografia") os números que mostrou, e o /trafego-dashboard-analisador
+// publica com eles uma página fixa, sem conector. Um documento aceita até 256 KB: o texto vai
+// em partes de 60 mil caracteres, numa geração nova a cada gravação, e o "info" só passa a
+// apontar para ela depois que todas as partes foram gravadas.
+const PARTE_FOTO = 60000;
+async function guardarFotografia(dados) {
+  try {
+    const db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+    if (!db) return;
+    const chave = (dados.geradoEmIso || dados.atualizadoEm || "") + "|" + (dados.vendasAte || "");
+    const antes = await db.doc("fotografia/info").get();
+    const velho = antes.exists ? antes.data() : null;
+    if (velho && velho.chave === chave) return; // painel com dados gravados reaberto sem números novos
+    const numerosEmIso = dados.geradoEmIso || new Date().toISOString();
+    const txt = JSON.stringify(Object.assign({}, dados, { fotografiaEm: numerosEmIso }), (k, v) => (k === "_conta" ? undefined : v));
+    const partes = [];
+    for (let i = 0; i < txt.length; ) {
+      let fim = Math.min(i + PARTE_FOTO, txt.length);
+      const c = txt.charCodeAt(fim - 1);
+      if (fim < txt.length && c >= 0xd800 && c <= 0xdbff) fim--; // não cortar um emoji ao meio
+      partes.push(txt.slice(i, fim));
+      i = fim;
+    }
+    const geracao = Date.now().toString(36);
+    for (let n = 0; n < partes.length; n++) await db.doc("fotografia/" + geracao + "-" + (n + 1)).set({ texto: partes[n] });
+    await db.doc("fotografia/info").set({ geracao, partes: partes.length, chave, fonte: CONFIG.fonte, atualizadoEm: dados.atualizadoEm || null, numerosEmIso });
+    if (velho && velho.geracao) for (let n = 1; n <= (velho.partes || 0); n++) await db.doc("fotografia/" + velho.geracao + "-" + n).delete();
+  } catch (e) {
+    if (diag) diag.erros.push("fotografia: " + String((e && (e.code || e.message)) || e));
+  }
+}
+function iniciarFotografia() {
+  $("#atualizar").hidden = true;
+  $(".diag").closest(".painel").hidden = true;
+  usar(FOTO);
+  $("#h-ritmo").textContent = "Ritmo do dia " + diaCurto(hoje());
+}
+
 // ============================================================ fluxo da página
 function mostrarSecoes(sim) { ["#sec-geral", "#sec-funil", "#sec-campanhas", "#sec-dias"].forEach((s) => { $(s).hidden = !sim; }); if (!sim) { $("#sec-origem").hidden = true; $("#sec-ritmo").hidden = true; } }
 function estado(html) { $("#estado").innerHTML = html; }
@@ -1425,6 +1473,7 @@ function usar(dados) {
   estado(""); mostrarSecoes(true); render();
 }
 async function atualizar(fresco) {
+  let foto = Promise.resolve();
   if (CONFIG.demo) { S.erro = null; usar(gerarDemo(!["#sem-checkout", "#mensagens"].includes(location.hash), location.hash === "#mensagens")); if (fresco) toast("Dados de demonstração. No painel ligado à sua conta, este botão busca os números novos na Meta."); return; }
   if (CONFIG.fonte === "app") {
     if (coletando) return;
@@ -1432,7 +1481,7 @@ async function atualizar(fresco) {
     if (!D) estado('<div class="skel" style="width:40%"></div><div class="skel" style="width:70%"></div><p class="small muted">Lendo os números gravados…</p>');
     try {
       const novo = await lerGravados();
-      S.erro = null; usar(novo);
+      S.erro = null; usar(novo); foto = guardarFotografia(novo);
       if (fresco) toast("Números da Meta buscados pelo Claude em " + novo.atualizadoEm + ". Para buscar os de agora, peça ao Claude: atualiza o meu dashboard.");
     } catch (e) {
       if (diag) diag.erros.push((e && e.code) + ": " + String((e && e.message) || "").slice(0, 300));
@@ -1440,7 +1489,7 @@ async function atualizar(fresco) {
       if (D) render(); else { mostrarSecoes(false); estado('<div class="aviso erro">' + esc(S.erro) + "</div>"); }
     } finally {
       coletando = false;
-      gravarDiag();
+      foto.then(gravarDiag);
     }
     return;
   }
@@ -1451,7 +1500,7 @@ async function atualizar(fresco) {
   if (!D) estado('<div class="skel" style="width:40%"></div><div class="skel" style="width:70%"></div><div class="skel" style="width:55%"></div><p class="small muted">Buscando os números na Meta. A primeira vez leva até 1 minuto.</p>');
   try {
     const novo = await coletar(fresco);
-    S.erro = null; usar(novo); salvarSnapshot(novo);
+    S.erro = null; usar(novo); salvarSnapshot(novo); foto = guardarFotografia(novo);
     if (fresco) toast("Números atualizados.");
   } catch (e) {
     if (diag) diag.erros.push((e && e.code) + ": " + String((e && e.message) || "").slice(0, 300));
@@ -1461,12 +1510,13 @@ async function atualizar(fresco) {
     if (D) render(); else { mostrarSecoes(false); estado('<div class="aviso erro">' + esc(S.erro) + "</div>"); }
   } finally {
     coletando = false; btn.disabled = false; btn.textContent = "Atualizar dados";
-    gravarDiag();
+    foto.then(gravarDiag);
   }
 }
 function iniciar() {
   liga();
   mostrarSecoes(false);
+  if (FOTO) { iniciarFotografia(); return; }
   if (CONFIG.demo) { atualizar(false); return; }
   if (CONFIG.fonte === "app") {
     const ajuda = document.querySelector(".diag p");
