@@ -1,6 +1,6 @@
 ---
 name: "source-command-trafego-dashboard"
-description: "Abre, cria ou atualiza o dashboard de tráfego do Meta Ads. Verifica se o aluno já tem um dashboard (artefato do Claude ligado ao conector da Meta) e entrega o link; se não tiver, monta o dashboard a partir do modelo (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia) e salva o link em meus-produtos/dashboard-trafego.md. Para conta que a Meta ainda não liberou no conector, monta o dashboard com dados gravados pelo App (o token fica só no computador do aluno). Com as credenciais da Hotmart ou da Kiwify no .env, inclui as vendas reais com bump, upsell e origem; sem elas, oferece ligar depois. Use quando o aluno pedir \"meu dashboard\", \"painel de anúncios\", \"dashboard de tráfego\", \"atualiza as vendas do dashboard\" ou quiser ajustar o dashboard."
+description: "Abre, cria ou atualiza o dashboard de tráfego do Meta Ads. Verifica se o aluno já tem um dashboard (artefato do Claude ligado ao conector da Meta) e entrega o link; se não tiver, monta o dashboard a partir do modelo (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia) e salva o link em meus-produtos/dashboard-trafego.md. Para conta que a Meta ainda não liberou no conector, monta o dashboard com dados gravados pelo App (o token fica só no computador do aluno). Com as credenciais da Hotmart ou da Kiwify no .env, inclui as vendas reais com bump, upsell e origem; sem elas, oferece ligar depois. Use quando o aluno pedir \"meu dashboard\", \"painel de anúncios\", \"dashboard de tráfego\", \"atualiza as vendas do dashboard\" ou quiser ajustar o dashboard. Para mandar o dashboard ao analisador da mentoria, o caminho é o /trafego-dashboard-analisador."
 ---
 
 # source-command-trafego-dashboard
@@ -26,6 +26,8 @@ Abrir ou ajustar um dashboard não depende do `.env`: quem busca os dados é o c
 Seguir a seção 3 da skill (registro em `meus-produtos/dashboard-trafego.md` e, se estiver vazio, a lista de artefatos). Se a lista trouxer candidatos, perguntar (numerado) se algum é o dashboard do aluno, com a opção "Nenhum desses"; o escolhido vai para o registro.
 
 **Se o aluno pediu "atualiza as vendas do dashboard":** ir direto para o Passo 6.
+
+**Se o aluno quer mandar o dashboard para o analisador da mentoria (card do Fluxer):** seguir o `/trafego-dashboard-analisador`. O link deste painel não abre os números para o analisador.
 
 **Se o aluno pediu "atualiza o meu dashboard" e o registro diz `Fonte dos números: App da Meta (dados gravados)`:** ir direto para o Passo 6B. No dashboard ao vivo, lembrar que é só clicar em "Atualizar dados" no painel.
 

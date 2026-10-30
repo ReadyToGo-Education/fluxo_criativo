@@ -18,7 +18,9 @@ O dashboard é um **artefato do Claude** (uma página guardada na conta Claude d
 
 Conta que a Meta ainda não liberou no conector tem o **dashboard com dados gravados** (seção 5.1): o mesmo modelo, com os números buscados pelo Claude no computador do aluno com o token do App e gravados no banco do artefato. O token nunca vai para a página.
 
-**Este arquivo é a especificação.** O roteiro com o aluno está em `.claude/commands/trafego-dashboard.md`.
+Para o analisador da mentoria, que não consegue abrir o painel do aluno, existe a **fotografia** (seção 5.2): uma página fixa com os números da última atualização, publicada pelo `/trafego-dashboard-analisador`.
+
+**Este arquivo é a especificação.** O roteiro com o aluno está em `.claude/commands/trafego-dashboard.md` (e, para a fotografia, em `.claude/commands/trafego-dashboard-analisador.md`).
 
 ---
 
@@ -47,13 +49,13 @@ Sem vendas do checkout, compras e faturamento são os do pixel (janela de atribu
 | Arquivo | Papel |
 |---|---|
 | `assets/dashboard.html` | Modelo. Não editar para um aluno: as escolhas dele ficam no `config.json`. |
-| `scripts/montar-dashboard.py` | Gera a página do aluno: copia o modelo e troca só o bloco `CONFIG`. `--demo` gera a versão de demonstração (dados fictícios, sem conector). |
+| `scripts/montar-dashboard.py` | Gera a página do aluno: copia o modelo e troca só o bloco `CONFIG`. `--demo` gera a versão de demonstração (dados fictícios, sem conector). `--fotografia` gera a fotografia para o analisador (seção 5.2). |
 | `scripts/hotmart-vendas.py` e `scripts/kiwify-vendas.py` | Leem as credenciais da plataforma no `.env`, buscam as vendas e gravam a pasta `banco/` que o Claude envia para o banco do artefato (seção 6.3). Sem nome, e-mail ou documento de quem comprou. |
 | `scripts/_vendas_comum.py` | Parte comum aos dois coletores: junta principal, bump e upsell num pedido e divide as vendas em lotes. |
 | `scripts/meta-app.py` | Dashboard com dados gravados (seção 5.1): lê o token do App no `.env`, busca na Graph API os números que a página leria pelo conector e grava a pasta `banco-meta/` que o Claude envia para o banco do artefato. Confere que o token não ficou em nenhum arquivo. |
 | `references/legado-dashboard-estatico.md` | Caminho sem artefato (fotografia em HTML). |
 
-Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`** com `config.json`, `index.html` e, com vendas do checkout, `vendas.json` (conferência local) e `banco/` (o que vai para o artefato). No dashboard com dados gravados, também `banco-meta/` (os números da Meta que vão para o artefato). A pasta começa com `_` para não ser confundida com um produto.
+Pasta de cada dashboard do aluno: **`meus-produtos/_dashboard-trafego/{slug}/`** com `config.json`, `index.html` e, com vendas do checkout, `vendas.json` (conferência local) e `banco/` (o que vai para o artefato). No dashboard com dados gravados, também `banco-meta/` (os números da Meta que vão para o artefato). Depois da primeira fotografia para o analisador, também `fotografia-dados/` (os números baixados do banco) e `fotografia.html` (a página publicada). A pasta começa com `_` para não ser confundida com um produto.
 
 ### 2.1 `config.json`
 
@@ -253,6 +255,34 @@ Com vendas do checkout ligadas, uma tarefa só pode fazer as duas buscas (númer
 
 **Quando a Meta liberar a conta no conector:** oferecer trocar para o ao vivo. Mudar `fonte` para `conector`, remontar, publicar na mesma URL com o manifesto da seção 5 (conector e banco), desligar a tarefa `dashboard-meta-{slug}` e atualizar o registro.
 
+### 5.2 Fotografia para o analisador
+
+O link do painel não serve para o analisador da mentoria. No ao vivo, a página lê a Meta pelo conector de quem abre; com dados gravados, o banco do artefato só responde a quem entra na conta Claude com acesso a ele. A fotografia é uma página fixa, publicada como artefato separado, sem conector e sem banco, com os números dentro dela. O analisador abre pelo link que o aluno cola no card "Planilha ou Dash para acompanhar os dados de tráfego" do Fluxer. Roteiro com o aluno: `/trafego-dashboard-analisador`.
+
+**De onde vêm os números:** a cada atualização que dá certo (ao vivo ou dados gravados), o painel grava na coleção `fotografia` do banco do artefato os mesmos números que mostrou. O texto vai em partes de até 60 mil caracteres (`{geração}-1`, `{geração}-2`...), porque um documento aceita até 256 KB, e o documento `info` só passa a apontar para a geração nova (`geracao`, `partes`, `atualizadoEm`, `numerosEmIso`, `fonte`) depois que todas as partes foram gravadas. As partes da geração anterior são apagadas em seguida. O painel com dados gravados só grava de novo quando chegam números novos. A demonstração nunca grava. Erro na gravação aparece no diagnóstico (seção 7) começando por `fotografia:`.
+
+**Montar e publicar:**
+
+1. Painel montado antes da fotografia (o `index.html` da pasta não tem `guardarFotografia`): remontar (seção 5, item 2) e publicar na mesma URL como na seção 8, item 2, sem `capabilities` (o manifesto guardado continua valendo). Com `Personalizado: sim`, perguntar antes, porque a personalização se perde. Depois, o aluno abre o painel e clica em Atualizar dados.
+2. Baixar os números sem passar pela conversa: `ArtifactData` com `action: "list"`, a URL do dashboard, `collection: "fotografia"`, `query: {"limit": 100}` e `out_dir: meus-produtos/_dashboard-trafego/{slug}/fotografia-dados`. Os documentos ficam em `fotografia-dados/fotografia/`.
+3. Montar a página:
+   ```bash
+   python3 .claude/skills/trafego-dashboard/scripts/montar-dashboard.py --config meus-produtos/_dashboard-trafego/{slug}/config.json --fotografia meus-produtos/_dashboard-trafego/{slug}/fotografia-dados/fotografia --saida meus-produtos/_dashboard-trafego/{slug}/fotografia.html
+   ```
+   `ERRO_FOTOGRAFIA` (falta parte, partes incompletas ou números da demonstração): pedir ao aluno para clicar em Atualizar dados de novo e voltar ao item 2.
+4. Publicar com a ferramenta `Artifact`, **sem `capabilities`**:
+   - Primeira vez: `file_path` `meus-produtos/_dashboard-trafego/{slug}/fotografia.html`, `icon` `chart` e `description` "Fotografia dos números do dashboard de tráfego para o analisador da mentoria."
+   - Vezes seguintes: o mesmo arquivo com a `url` da linha "Link para o analisador" do registro, sem `icon`. Se a ferramenta recusar porque o artefato ainda não foi lido nesta conversa, ler com `action: "read"`, a `url` e `path: "index.html"` e publicar de novo.
+5. Gravar no bloco do dashboard, no registro: `- Link para o analisador: {URL} (números de {atualizadoEm})`.
+
+**Na página da fotografia:** o selo "Fotografia" e "Números da Meta de {dia e hora}" ficam no topo; os atalhos Hoje e Ontem viram as datas da fotografia; o botão Atualizar dados e o diagnóstico somem; avisos que mandam pedir ao Claude ou clicar em Atualizar dados ficam de fora. Os filtros de período, conta e vendas continuam funcionando sobre os números guardados.
+
+**Regras da fotografia:**
+
+- É a única página desta skill com números da conta dentro dela (exceção à regra 4 da seção 10). Nunca leva token nem credencial, e as vendas seguem sem nome, e-mail ou documento de quem comprou.
+- O link nasce privado ("Apenas você") e, assim, o analisador não abre. Só o aluno libera: Compartilhar, no alto da página, e em "Acesso geral" trocar "Apenas você" por "Qualquer pessoa com o link". O Claude não muda o compartilhamento. Quem tiver o link vê os números: avisar o aluno antes de ele colar o link no Fluxer.
+- Nunca mandar ao analisador o link do painel ao vivo, nunca montar a fotografia com `--demo` e nunca com números escritos à mão.
+
 ---
 
 ## 6. Vendas do checkout: Hotmart ou Kiwify (opcional)
@@ -451,7 +481,7 @@ Sem a ferramenta `Artifact`, ou quando o aluno não quer o conector nem o dashbo
 1. **Antes de criar, procurar um dashboard que já existe** (seção 3).
 2. **Só leitura.** Nenhuma ferramenta de escrita no manifesto.
 3. **Nunca inventar dado.** Sem dado, a página mostra "—".
-4. **Nunca embutir dado real do aluno no código da página.** O que é da conta vem do conector ou, no dashboard com dados gravados, do banco do artefato; as vendas do checkout vêm do banco do artefato.
+4. **Nunca embutir dado real do aluno no código da página.** O que é da conta vem do conector ou, no dashboard com dados gravados, do banco do artefato; as vendas do checkout vêm do banco do artefato. A única exceção é a fotografia para o analisador (seção 5.2).
 5. **Nunca colocar token, chave ou senha** na página, no `config.json`, no banco do artefato, no registro ou no chat. O token do App da Meta e as credenciais da Hotmart e da Kiwify ficam só no `.env` e só entram nas chamadas que os scripts fazem do computador do aluno.
 6. **Dashboard ao vivo só com conta liberada no conector.** Sem conta liberada, dados gravados (seção 5.1) ou legado; nunca publicar um ao vivo vazio.
 7. **As vendas não levam nome, e-mail nem documento** de quem comprou, nem no banco do artefato nem no `vendas.json` local.

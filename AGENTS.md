@@ -708,6 +708,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/trafego-regras`: regras automáticas e liga e pausa por horário.
 - `/trafego-testes`: testes A/B disciplinados e remarketing.
 - `/trafego-dashboard`: abrir ou criar o dashboard de tráfego. O ao vivo é um artefato do Claude e não roda no Codex; aqui, siga o dashboard estático (legado) do command.
+- `/trafego-dashboard-analisador`: fotografia do dashboard para o analisador da mentoria. Depende do artefato do Claude e não roda no Codex; aqui, oriente o aluno a rodar no app do Claude.
 
 ### Dados e Automações
 
@@ -955,6 +956,7 @@ Skills que herdam essa regra:
 - `/trafego-regras`.
 - `/trafego-testes`.
 - `/trafego-dashboard`.
+- `/trafego-dashboard-analisador`.
 
 Onde salvam: relatórios em `meus-produtos/{ativo}/entregas/trafego/`; dados de trabalho do produto em `meus-produtos/{ativo}/trafego/`; públicos, regras, pixel e dados da conta em `meus-produtos/_global/trafego/`.
 

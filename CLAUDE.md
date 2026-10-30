@@ -559,6 +559,7 @@ Todos os commands `/trafego-*` invocáveis pelo usuário:
 - `/trafego-regras`. Regras automáticas e liga e pausa por horário.
 - `/trafego-testes`. Testes A/B disciplinados, duplicação variando uma coisa só e campanha de remarketing.
 - `/trafego-dashboard`. Dashboard da conta de anúncios (artefato do Claude com o conector MCP da Meta, montado a partir de um modelo pronto), com vendas da Hotmart ou da Kiwify quando há credenciais no `.env`. Para conta que a Meta ainda não liberou no conector, o mesmo painel com dados gravados: o Claude busca os números com o token do App no computador do aluno e grava no banco do artefato, e o token nunca vai para a página. Sem artefato, dashboard estático (legado).
+- `/trafego-dashboard-analisador`. Só para mandar o dashboard ao analisador da mentoria: fotografia fixa dos números da última atualização do dashboard, publicada como página que o analisador consegue abrir, com o link para colar no card do Fluxer.
 
 **Base de conhecimento (não invocável diretamente):**
 - `trafego-pago`. Conceitos e métricas de tráfego consultados pelas outras skills.
@@ -578,6 +579,8 @@ O link do dashboard ao vivo de cada aluno fica salvo em `meus-produtos/dashboard
 1. Ler `meus-produtos/dashboard-trafego.md`.
 2. **Se houver link:** responder "Você já tem um dashboard ativo. Ele está aqui: {link}" e lembrar que dá para clicar em "Atualizar dados". Se o aluno quiser ajustar ou criar outro, seguir o `/trafego-dashboard`.
 3. **Se não houver:** seguir o `/trafego-dashboard`, que procura um dashboard criado em outro lugar e, se não achar, cria um novo.
+
+Quando o aluno pedir para mandar o dashboard ao analisador da mentoria (ou para colar no Fluxer), seguir o `/trafego-dashboard-analisador`. Nunca entregar para isso o link do dashboard ao vivo: ele não mostra os números do aluno para outra pessoa.
 
 ### Quando outras skills de tráfego forem criadas no futuro
 
