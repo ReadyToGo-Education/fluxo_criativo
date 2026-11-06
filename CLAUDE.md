@@ -415,7 +415,7 @@ Não inclui tempo estimado. Não usa `🔍`.
 
 - Verbo sempre no infinitivo ("pesquisar", "gerar", "salvar", "criar", "ler").
 - Tempo estimado: consultar `.claude/rules/tempo-estimado.md`. Usar a faixa calibrada. **Regra de unidade:** até 120 segundos, comunicar em segundos (ex: "cerca de 45 segundos", "cerca de 90 segundos"). Acima de 120 segundos, comunicar em minutos (ex: "2 a 3 minutos", "8 a 12 minutos"). Nunca inventar número de cabeça, nunca "alguns segundos" ou "um instante".
-- Caminho relativo a partir da raiz do projeto (ex: `meus-produtos/curso-tarot/perfil.md`).
+- Caminho relativo a partir da raiz do projeto (ex: `meus-produtos/quiz-5-elementos/perfil.md`).
 - Tom profissional e amigável, nunca robótico.
 - Português brasileiro com acentuação correta.
 - **Proibido travessão (—)** dentro do anúncio. Use ponto, dois pontos ou vírgula.
@@ -425,10 +425,10 @@ Não inclui tempo estimado. Não usa `🔍`.
 ### Exemplos bons
 
 Nível 1 (entry point, chamado diretamente pelo aluno):
-- `🔍 Próximo passo: pesquisar o mercado de inglês para atletas (9 passos). Tempo estimado: 8 a 12 minutos.`  ← acima de 120s, usa minutos
-- `🔍 Próximo passo: gerar 50 Decorados a partir do Quadro do produto. Tempo estimado: cerca de 90 segundos.`  ← até 120s, usa segundos
-- `🔍 Próximo passo: montar a página de vendas em HTML com as 11 seções da estrutura 8D. Tempo estimado: 3 a 5 minutos.`  ← acima de 120s, usa minutos
-- `✅ Concluído: pesquisa de mercado salva. Caminho: meus-produtos/ingles-atletas/pesquisa-mercado.md.`
+- `🔍 Próximo passo: pesquisar o mercado de relacionamentos conscientes para mulheres 35+ (9 passos). Tempo estimado: 8 a 12 minutos.`
+- `🔍 Próximo passo: gerar 50 Decorados a partir do Quadro do produto. Tempo estimado: cerca de 90 segundos.`
+- `🔍 Próximo passo: montar a página de vendas em HTML com as 11 seções da estrutura 8D. Tempo estimado: 3 a 5 minutos.`
+- `✅ Concluído: pesquisa de mercado salva. Caminho: meus-produtos/366-confrontos/pesquisa-mercado.md.`
 
 Nível 2 (progresso interno, sub-passos):
 - `⏳ Passo 1/9: tamanho e saúde do mercado.`
@@ -581,7 +581,150 @@ O link do dashboard ao vivo de cada aluno fica salvo em `meus-produtos/dashboard
 
 ### Quando outras skills de tráfego forem criadas no futuro
 
-Toda skill nova que precise se conectar ao Meta Ads deve seguir o mesmo padrão de Passo 0: ler `META_AUTH_MODO` antes de qualquer outra ação, e acionar `/trafego-conexao` se a variável não estiver configurada. A skill `/trafego-conexao` é idempotente, pode ser chamada várias vezes sem efeito colateral.
+Toda skill nova que precise se conectar ao Meta Ads deve seguir o mesmo padrão de Passo 0: ler `META_AUTH_MODO` antes de qualquer outra ação, e acionar `/meta-conexao` se a variável não estiver configurada. A skill `/meta-conexao` é idempotente, pode ser chamada várias vezes sem efeito colateral.
+
+---
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     CONTEXTO PROPRIETÁRIO DO PROJETO FLUXO_CRIATIVO
+     Adicionado em maio/2026. Não remover. Não compartilhar fora deste projeto.
+     Raiz local: C:\Users\Jaya\Projetos\fluxo_criativo
+     ════════════════════════════════════════════════════════════════════════ -->
+
+## QUEM É A CRIADORA DESTE PROJETO
+
+Este projeto é operado por **Jaya Roberta** e todo material de marketing produzido aqui serve ao ecossistema dela. Sempre que rodar `produto-novo`, `produto-concepcao` ou qualquer skill que peça contexto de criador ou produto, parta dos dados desta seção em vez de tratar como "aluno em branco".
+
+### Identidade pessoal e profissional
+
+- **Nome:** Jaya Roberta
+- **Posicionamento oficial:** Terapeuta Integrativa, Relacionamentos & Sexualidade
+- **Localização:** Brasília, Distrito Federal
+- **Marcas:** **Shakti Jaya** (marca-mãe, `shaktijaya.com.br`) e **Consciência Selvagem** (sub-marca)
+- **Instagram:** `@jayaroberta.shakti`
+- **Diferencial central:** integra três dimensões que o mercado costuma separar — **Ciência** (Gottman, Esther Perel), **Corpo** (Gestalt, Bioenergética, Análise Corporal) e **Sagrado** (Tantra, Pathwork)
+
+### Background e formação
+
+- **20 anos como analista de TI no Banco do Brasil** (PIX, Open Finance, Mobile Banking, Power Apps, Copilot). Esse repertório técnico é diferencial real, não detalhe biográfico — ele autoriza analogias de "engenharia relacional", "debug de padrões", "sistema operacional do casal".
+- **8 anos como terapeuta tântrica integrativa.**
+- Pós-graduação em **Sexualidade Humana**.
+- Formações em **Gestalt, Bioenergética, Análise Corporal, Tantra (linhagem Daricha Sundari), Pathwork**, Krishnananda & Amana Trobe, Diana Richardson.
+- Membro da **Academia Lendária**, com mentorias do Gabriel Vilas Boas (Mentoria do Fluxo) entre outros.
+
+### História pública (uso autorizado em copy)
+
+Estes fatos podem ser usados em página de vendas, anúncio, email ou conteúdo. São verdade vivida e funcionam como autoridade emocional:
+
+- Foi mãe aos 13 anos.
+- Enfrentou sozinha solidão emocional, financeira e existencial que quebra adultos.
+- Sobreviveu, estudou, transformou a dor em método.
+- Tem um filho adolescente também chamado Rafael e vive hoje com seu companheiro (também Rafael).
+
+Não usar essa história como "venda do trauma". Usar como **prova de que o método nasceu de quem viveu o que ensina**.
+
+### Perfil cognitivo (relevante para tom)
+
+- ENTP-T, Eneagrama 8w7 SX, DISC DI-C.
+- Rejeita firula, validação vazia, sanduíche de elogio, "ótima pergunta".
+- Prefere clareza absoluta a cordialidade performática.
+- Execução acima de planejamento infinito.
+- Quando ela escreve em CAPS LOCK ou repete uma instrução, executar exato sem explicação.
+
+### Audiência principal do ecossistema
+
+- **Mulheres de 35 a 65 anos**, classe B/C+, escolarizadas, conscientes.
+- Em relacionamento longo (com sintoma de desconexão) OU recém-divorciadas (recomeço) OU em busca individual profunda.
+- Já fizeram terapia, já leram autoajuda, já consumiram conteúdo de Brené Brown / Esther Perel / Daniel Goleman, e **continuam repetindo padrões**.
+- Alta abertura para integração espiritualidade + ciência (sem dogma religioso).
+- Geografia: Brasil. Concentração SP / RJ / DF / MG / sul.
+- Canais: Instagram (`@jayaroberta.shakti`), WhatsApp, email, busca orgânica em Google e YouTube.
+
+### Stack técnico já em produção
+
+Quando uma skill perguntar sobre canais de venda, checkout ou entrega, parta destes:
+
+- **Hub e quiz:** `shaktijaya.com.br` (Vite + React, hospedado em Vercel)
+- **Backend:** Supabase (auth, webhooks, leads, edge functions)
+- **Checkout e entrega de digital:** Hotmart
+- **Email transacional:** Resend
+- **Tráfego pago:** Meta Ads (Instagram + Facebook), conexão via `/meta-conexao`
+- **DNS root:** Hostinger
+- **Repositório:** privado, `Jaya_Hub_Page` (não confundir este projeto com aquele — fluxo_criativo é o de marketing)
+
+### Voz da marca Shakti Jaya
+
+Quando uma skill gerar copy "no tom da Jaya", aplicar:
+
+- **Tom:** direto, real, sem firula. Nunca pop-spiritual ("vibre na frequência do amor"), nunca corporativo ("transformamos vidas"), nunca terapeutês ("acolho seus sentimentos").
+- **Frases-âncora reais que ela usa:**
+  - "Não é bonito. É real. E real é o que transforma."
+  - "O insight que não desce pro corpo é entretenimento intelectual."
+  - "Não é sobre sair da relação. É sobre parar de desaparecer dentro dela."
+  - "Você entende tudo sobre a sua dor — e continua repetindo."
+- **Confronto > conforto.** Copy que faz o leitor parar no meio da frase é boa. Copy que afaga é genérica.
+- **Tantra é apresentado como tecnologia somática relacional**, nunca como misticismo. Mainstream brasileiro tem ressalva à palavra — escrever de modo a converter quem lê com pé atrás.
+
+### Identidade visual da marca
+
+Quando gerar HTML, criativo, prompt de imagem ou referência visual, usar:
+
+- **Paleta primária:**
+  - Marsala `#86050C`
+  - Roxo Místico `#65014D`
+  - Terracotta `#DF6E36`
+  - Creme `#F1DABF`
+- **Paleta de acento (page premium):** Ouro `#C6A85E`, Preto profundo `#0A0A0A`
+- **Tipografia:**
+  - Logotipo: **Rachelya**
+  - Tagline: **Bilo**
+  - Destaques editoriais: **Petrona italic**
+  - Subtítulos / assinatura: **Allura**
+  - Texto corpo: **Jost**
+  - Headings em página de vendas: **Petrona** (serifa)
+
+---
+
+## O MÉTODO DOS 5 ELEMENTOS (regras de copy)
+
+> Framework proprietário da Jaya. Visão geral dos 5 Elementos, mapeamento dos 4 Desequilíbrios Naturais (Terremoto, Tsunami, Tornado, Incêndio) e catálogo completo de produtos (preços, garantias, camadas 1 a 4) estão em **`docs/contexto/ecossistema-shakti-jaya.md`**. Ler esse arquivo antes de qualquer copy, anúncio ou página de produto do ecossistema.
+
+### Como aplicar o método em copy de marketing
+
+Estas regras são absolutas para qualquer skill que gere material de venda do ecossistema Shakti Jaya:
+
+1. **NUNCA vender o método cru.** Headlines tipo "Aprenda os 5 Elementos" ou "Conheça o Método dos 5 Elementos" são proibidas. O leitor não compra metodologia — compra transformação.
+
+2. **SEMPRE vender a transformação que o método entrega.** Lead com a dor (Terremoto, Tsunami, Tornado, Incêndio) e prometer o equilíbrio (Terra Fértil, Rio Tranquilo, etc.).
+
+3. **A linguagem dos desastres naturais é ouro de copy.** "Vocês moram num terremoto", "ela tá em modo tsunami toda discussão", "tem um tornado de silêncio de 3 dias na sua casa". Funciona porque o leitor visualiza imediatamente.
+
+4. **Cada elemento pode ser um produto de entrada isolado** (ver Planners abaixo), mas o **método integrado é o produto premium** (jornadas, livro 366). Quando uma skill sugerir desmembrar, lembrar dessa decisão estratégica: produtos individuais são portas, o sistema integrado é o templo.
+
+5. **O Quiz dos 5 Elementos é o entry point free obrigatório.** Toda página de vendas, todo anúncio, todo conteúdo deve idealmente ter caminho para o quiz como passo zero quando o leitor não está pronto pra compra direta.
+
+6. **Tantra entra com framing científico.** Quando a copy precisar mencionar Tantra (presente em Fogo e Éter), usar termos como "tecnologia somática", "presença plena", "circulação de energia vital", "slow sex". Evitar "energia kundalini desperta o chacra raiz" em material mainstream.
+
+### Adaptação do Cenário B (onboarding) para a Jaya
+
+Quando uma sessão começar e não houver produto ativo, em vez do onboarding genérico em 3 perguntas, **oferecer este menu**:
+
+```
+Olá Jaya. Catálogo Shakti Jaya carregado. Em qual produto quer trabalhar agora?
+
+1. Quiz dos 5 Elementos (entry point free)
+2. Planners 30 Dias (Terra / Água / Ar / Fogo / Éter / Despertar / Harmonia)
+3. 366 Confrontos Elementais (digital R$197 ou físico R$297)
+4. Sessão de Mapeamento (R$497) ou jornadas high ticket
+5. Algo novo (rodar onboarding genérico)
+6. Trocar de produto já cadastrado (ver lista de existentes)
+```
+
+Se ela escolher 1 a 4, criar o produto na pasta `meus-produtos/{slug-correspondente}/` e pré-popular `perfil.md` com as informações desta seção, perguntando a ela apenas o que falta (ex: depoimentos reais, números atualizados de vendas, ângulo específico da campanha em questão).
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     FIM DO CONTEXTO PROPRIETÁRIO
+     ════════════════════════════════════════════════════════════════════════ -->
 
 ---
 
@@ -619,6 +762,8 @@ Nesses casos, continue no fluxo normal do assistente de marketing, sem criar pas
 
 > **Atenção:** a seção "REGRA DE ABERTURA DE SESSÃO" no topo deste arquivo tem prioridade sobre esta. Em TODA nova conversa, a primeira ação é acionar a skill `produto-novo` (via Skill tool), independentemente do texto digitado, exceto nas três exceções listadas lá (mensagem começando com `/`, chamada explícita de agente, ou dúvida técnica específica). O fluxo abaixo (Cenário A e Cenário B) só roda **dentro** da skill `produto-novo`, não como resposta direta do assistente.
 
+> **Atenção 2:** a seção "PRODUTOS NO ECOSSISTEMA SHAKTI JAYA" acima substitui o Cenário B padrão. Quando não houver produto ativo, oferecer o menu do catálogo Shakti Jaya em vez do onboarding genérico em 3 perguntas.
+
 Quando a skill `produto-novo` for acionada, ela aplica o seguinte:
 
 **Passo 1. Verificar se há produto cadastrado:**
@@ -638,108 +783,13 @@ Seu produto ativo é: **{nome do produto}**
 O que quer criar hoje?"
 
 Em seguida, liste os comandos disponíveis organizados por categoria:
-
-**Produto:**
-- `/produto-concepcao`. Cadastrar ou atualizar Quadro, Furadeira, Decorados, Identidades, Identidade do Consumidor e Painel de Entregas (fluxo unificado)
-- `/produto-trocar`. Alternar entre produtos cadastrados
-- `/produto-novo`. Criar um novo produto
-- `/produto-excluir`. Excluir um produto e todas as suas entregas
-- `/produto-zerar`. Zerar o perfil.md e/ou idconsumidor.md sem apagar o produto
-
-**Copy:**
-- `/copy-pagina`. Criar copy e/ou página HTML profissional (vendas, captura ou obrigado)
-- `/copy-anuncio`. Criar anúncios para Meta Ads (Mandala da Criatividade, 18 tipos)
-- `/copy-bullets`. Gerar 110 bullets do produto nas 11 técnicas (Halbert, Carlton, Bencivenga) e os 10 mais fortes; ficam salvos para as páginas reaproveitarem
-- `/elementos-literarios`. Aplicar 1 a 3 dos 26 elementos literários do Light Copy
-- `/criativo-estatico`. Gerar criativos estáticos para anúncios (prompt para colar em ferramenta externa OU geração automática via API)
-- `/gerar-furadeira`. Gerar a Furadeira (método do produto) no `perfil.md` aplicando uma das 6 mecânicas (Fases, Condicional, Enquadramento, Listas, Empecilhos, Dinâmica de Entrega) escolhida automaticamente conforme o nicho
-- `/furadeira-visual`. Gerar a imagem PNG da Furadeira via prompt para ChatGPT (a skill decide o layout sozinha conforme mecânica + nicho)
-- `/avat-whisk`. Briefings visuais prontos para o Whisk (Google Labs)
-- `/criar-gpt`. Criar agente GPT personalizado para infoprodutores
-
-**Low Ticket:**
-- `/lt-funil`. Criar produto de entrada low ticket (quiz, desafio, agente GPT)
-- `/lt-criar-produto`. Criar o conteúdo real do produto digital
-- `/lt-quiz`. Gerar perguntas do quiz
-- `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 7 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página
-- `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
-
-**Tráfego Pago (Meta Ads via MCP ou App):**
-- `/trafego-conexao`. Conectar com o Meta Ads sempre pelo conector da Meta no Claude, testar e, só se a conta ainda não estiver liberada no conector, configurar o App Facebook Developers. Salva o modo em META_AUTH_MODO
-- `/trafego-insights`. Ler métricas de campanhas com cálculo automático de derivadas (connect rate, conversão por etapa, custo por etapa). Modo campanha única ou conta completa com ranking de urgência
-- `/trafego-criar-campanha`. Subir campanha nova (PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo). Cobre Sales e Leads
-- `/trafego-otimizar`. Confere se o dado é confiável e faz o diagnóstico em 2 camadas (tendência + gargalo) para 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high), com camada de lucro e ponto de equilíbrio. Quando a campanha está pronta, aciona automaticamente a escala.
-- `/trafego-escalar`. Escalar campanha validada com score de risco, guardião de caixa e freios escalonados
-- `/trafego-analise`. Análise narrada VTSD em outputs com gráficos (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B). Aluno escolhe um output por vez e recebe diagnóstico com handoff para skill executora.
-- `/trafego-diagnostico`. Investigar antes de agir: 3 hipóteses com peso, auditoria da estrutura da conta, falso vencedor e score de confiança de 0 a 100
-- `/trafego-criativos`. Ler atenção, intenção e conversão dos criativos, mapear o DNA dos que vencem e montar o briefing do próximo teste
-- `/trafego-oferta-funil`. Diagnosticar o funil depois do clique (visita, carrinho, checkout, compra), a congruência anúncio x página e a oferta
-- `/trafego-pixel`. Diagnosticar pixels: status, último disparo, eventos rastreados e pixels parados (apenas leitura)
-- `/trafego-publicos`. Criar e gerenciar públicos: evento do pixel, visualização de vídeo, engajamento, semelhante, lista de clientes (com hash local) e bases por nível
-- `/trafego-regras`. Desenhar regras automáticas e programar liga e pausa por horário
-- `/trafego-testes`. Montar testes A/B disciplinados, duplicar variando uma coisa só, campanha de remarketing e leitura do resultado no 7º dia
-- `/trafego-dashboard`. Abrir, criar ou atualizar o dashboard da conta de anúncios (artefato do Claude conectado ao MCP da Meta): visão geral com comparação, funil, ritmo do dia, campanhas com anúncios e dia a dia. Com credenciais da Hotmart ou da Kiwify no `.env`, mostra as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link. Conta ainda não liberada no conector: painel com dados gravados pelo App (atualiza quando o aluno pede ou no horário marcado). Sem artefato, monta o dashboard estático (legado)
-
-**Dados e Automações:**
-- `/ads-relatorio`. Criar rotina diária automática que busca métricas do Facebook Ads e envia relatório pelo WhatsApp via Z-API. Agente agendado na nuvem do Claude, roda todo dia às 8h sem precisar do computador ligado.
-- `instagram-dashboard`. Dashboard HTML de métricas do Instagram (seguidores, engajamento, posts recentes) via Apify. O aluno roda o script manualmente para atualizar.
-- `tiktok-dashboard`. Dashboard HTML de métricas do TikTok (seguidores, likes totais, views, engajamento, heatmap de horários, top videos) via Apify. O aluno roda o script manualmente para atualizar.
-- `youtube-dashboard`. Dashboard HTML de métricas do YouTube (inscritos, views, engajamento, desempenho por duração, análise de títulos) via Apify. O aluno roda o script manualmente para atualizar.
-- `linkedin-dashboard`. Dashboard HTML de métricas do LinkedIn (seguidores, engajamento por tipo de post, hashtags, melhores dias para postar) via Apify. O aluno roda o script manualmente para atualizar.
-- `/dados-instagram`. Analisar perfil do Instagram com insights de copy (análise pontual, sem agendamento).
-- `/adaptar-plataforma`. Converter scripts e instruções Windows/PowerShell para Mac ou Linux. Adapta agendamento (Task Scheduler → cron/launchd) e comandos de instalação para o SO do aluno.
-
-**Estratégia:**
-- `/estrategia-lancamento`. Planejar lançamento ou evento completo
-- `/estrategia-funil`. Mapear funil perpétuo ou de lançamento
-
-**Estudo:**
-- `/gestor-pedagogico`. Transformar um material de ensino (texto colado ou link do YouTube) em entregáveis de estudo. O mentorado escolhe o que gerar entre 8 opções (transcrição, mapa mental, apostila, avaliação Q&A, checklist de implementação, resumo, sequência lógica, aula em 5 a 7 conceitos)
-
-**Comercial:**
-- `/comercial-playbook`. Criar scripts de venda 1:1 (SPIN Selling), entrega em HTML pronto para PDF
-
-**Vídeo:**
-- `/video-heygen`. Criar vídeo com avatar IA
-- `/video-remotion`. Criar vídeo para Meta Ads com Remotion
-- `/video-editar`. Editar vídeos existentes com FFmpeg
-
-**Infraestrutura de Página (rodam após gerar a página):**
-- `/pagina-ajuste`. Ajustes pós-merge guiados por perguntas (diagnóstico, cores para layout, menu: copy, headline, placeholders e ideias de imagens, conversão, SEO, imagens, depois edição)
-- `/pagina-performance`. Auditar e corrigir performance da página HTML
-- `/pagina-pixel`. Instalar Meta Pixel na página
-- `/pagina-checkout`. Conectar a página ao checkout (Hotmart, Kiwify, etc.)
-- `/pagina-lovable`. Levar a página para o Lovable e publicar (pelo conector do Lovable no Claude, ou com prompt pronto para colar)
-
-**Feedback:**
-- `/feedback-pagina`. Corrigir e otimizar página de vendas existente
-- `/feedback-low-ticket`. Corrigir página low ticket pela régua v16 (copy, estrutura e design; entrega a copy corrigida e um prompt novo para o Lovable)
-
-**Toolkit (projetos estruturados):**
-- `/toolkit-novo`. Iniciar um projeto de marketing estruturado (lançamento, funil completo, reestruturação)
-- `/toolkit-planejar`. Gerar o plano em etapas do projeto a partir do roteiro
-- `/toolkit-executar`. Executar a próxima etapa pendente do plano
-- `/toolkit-verificar`. Conferir se o projeto entregou o que foi prometido no roteiro
-- `/toolkit-progresso`. Ver o estado atual do projeto e a próxima ação recomendada
-- `/toolkit-anotar`. Registrar uma pendência, ideia ou lembrete sem interromper o fluxo
-- `/toolkit-pausar`. Pausar o projeto ativo e salvar um handoff para a próxima sessão
-- `/toolkit-retomar`. Retomar um projeto pausado e voltar ao ponto onde parou
-
-**Agentes Especialistas (tarefas completas autônomas):**
-- `estrategista-de-produto`. Sessão completa de concepção VTSD
-- `estrategista-low-ticket`. Funil low ticket completo do zero
-- `estrategista-middle-ticket`. Funil perpétuo de produto principal
-- `construtor-de-paginas`. Cria páginas profissionais do zero
-- `criador-de-campanhas`. Monta campanha de tráfego completa
-- `produtor-de-conteudo`. Cria plano de conteúdo
-- `consultor-comercial`. Playbook de vendas high ticket
-- `copywriter`. Orquestrador de copy
-- `video-maker`. Orquestrador de produção de vídeo
-- `executor-de-plano-de-acao`. Executa plano de ação acionando skills e agentes
+Listar os comandos disponíveis a partir de `.claude/commands/`, agrupados nas categorias: Produto, Copy, Low Ticket, Tráfego Pago, Dados e Automações, Estratégia, Estudo, Comercial, Vídeo, Infraestrutura de Página, Feedback, Toolkit e Agentes Especialistas. Mostrar o nome de cada comando com uma linha de descrição.
 
 ---
 
 **Cenário B. Usuário sem produto cadastrado (primeira vez no sistema):**
+
+> **Override Shakti Jaya:** quando a usuária for a Jaya (criadora deste projeto), substituir este Cenário B pelo menu de catálogo descrito na seção "PRODUTOS NO ECOSSISTEMA SHAKTI JAYA". Só rodar este Cenário B genérico se ela escolher a opção 5 ("Algo novo") do menu de catálogo, ou se outro usuário (ex: aluna, parceira, equipe) estiver operando.
 
 Apresente-se e inicie o onboarding guiado:
 
@@ -773,11 +823,11 @@ Em seguida, faça o onboarding completo **UMA pergunta por vez**, nesta sequênc
 
    **ANTES DE MOSTRAR QUALQUER COPY GERADA (página, anúncio, email, post, carrossel, roteiro, headline, bullet, lead, CTA, depoimento, FAQ):** siga a rotina da seção "AUTO-REVISÃO OBRIGATÓRIA DE COPY" acima. Exceção: `feedback-pagina` e `feedback-low-ticket` já fazem auditoria própria.
 
-3. **Linguagem simples e acessível.** Fale como um mentor falaria com um aluno. Sem jargões técnicos.
+3. **Linguagem simples e acessível.** Fale como um mentor falaria com um aluno. Sem jargões técnicos. **Exceção Shakti Jaya:** quando a usuária for a Jaya, pode usar tom mais direto e menos pedagógico (ela é sênior em TI e em marketing — pular explicações básicas).
 
 4. **NUNCA mostre código ao usuário.** Quando gerar HTML/CSS, salve o arquivo silenciosamente e diga apenas: "Pronto. Sua página foi salva em [caminho]. Abra no navegador para visualizar."
 
-4a. **SEMPRE retorne o caminho absoluto do arquivo no chat após salvar qualquer arquivo.** Isso vale para HTML, Markdown, PDF, imagem ou qualquer outro entregável. O caminho deve ser exibido como texto copiável (não como link clicável), no formato: `{raiz-do-projeto}\{caminho-relativo-do-arquivo}`, onde `{raiz-do-projeto}` é o caminho absoluto da pasta raiz do projeto (detectado automaticamente pelo diretório de trabalho atual). Isso permite que o usuário abra o arquivo direto no navegador ou explorador de arquivos sem precisar navegar pelas pastas.
+4a. **SEMPRE retorne o caminho absoluto do arquivo no chat após salvar qualquer arquivo.** Isso vale para HTML, Markdown, PDF, imagem ou qualquer outro entregável. O caminho deve ser exibido como texto copiável (não como link clicável), no formato: `{raiz-do-projeto}\{caminho-relativo-do-arquivo}`, onde `{raiz-do-projeto}` é o caminho absoluto da pasta raiz do projeto (detectado automaticamente pelo diretório de trabalho atual). Para este projeto, a raiz é `C:\Users\Jaya\Projetos\fluxo_criativo`. Isso permite que o usuário abra o arquivo direto no navegador ou explorador de arquivos sem precisar navegar pelas pastas.
 
 5. **SEMPRE pedir aprovação antes de salvar. Regra padrão, sem exceção.** Apresente o conteúdo gerado na tela e pergunte:
 ```
@@ -912,7 +962,16 @@ Todo agente carrega as duas memórias no Passo 0 (antes de qualquer outra ação
 
 Este projeto suporta múltiplos produtos. Cada produto tem sua própria pasta com perfil, identidade do consumidor e entregas isoladas.
 
-**Produto ativo:** leia `meus-produtos/.ativo` para obter o identificador do produto atual (ex: `curso-tarot`). Use `meus-produtos/{ativo}/` como caminho base para todos os arquivos daquele produto. A pasta `meus-produtos/` é ignorada pelo git (cada aluno gera a sua). O painel global em `painel/index.html` lê o manifest `meus-produtos/index.js` (regenerado pelos commands de gestão ou manualmente com `/painel-atualizar`).
+**Produto ativo:** leia `meus-produtos/.ativo` para obter o identificador do produto atual (ex: `quiz-5-elementos`, `366-confrontos`, `planner-fogo`). Use `meus-produtos/{ativo}/` como caminho base para todos os arquivos daquele produto. A pasta `meus-produtos/` é ignorada pelo git (cada aluno gera a sua). O painel global em `painel/index.html` lê o manifest `meus-produtos/index.js` (regenerado pelos commands de gestão ou manualmente com `/painel-atualizar`).
+
+**Slugs sugeridos para os produtos do ecossistema Shakti Jaya** (usar exatamente assim para consistência):
+- `quiz-5-elementos`
+- `planner-terra` / `planner-agua` / `planner-ar` / `planner-fogo` / `planner-eter`
+- `planner-despertar` / `planner-harmonia`
+- `366-confrontos`
+- `sessao-mapeamento`
+- `jornada-fenix` / `jornada-transmutacao` / `circulo-maestria`
+- `workshop-fogo-agua` / `workshop-terra-ar`
 
 **Comandos de gestão:**
 - `/produto-novo`. Cria um novo produto e o define como ativo.
@@ -960,6 +1019,8 @@ Cada produto tem sua pasta em `meus-produtos/{ativo}/`. Os arquivos de **context
 Isso inclui: página de vendas, captura, obrigado, low ticket, inscrição HT e qualquer página corrigida em feedback.
 
 Esta regra vale para execução direta E para delegação a agentes — ao delegar, inclua a instrução explícita para o agente ler os dois arquivos de referência listados no Checklist 2.
+
+**Override de identidade visual para produtos Shakti Jaya:** quando o produto ativo for de Jaya (ver lista de slugs acima), substituir as cores padrão do design system pela paleta da marca (Marsala / Roxo Místico / Terracotta / Creme / Ouro) e a tipografia padrão pela combinação Petrona + Jost + Allura, conforme detalhado na seção "Identidade visual da marca" mais acima.
 
 ---
 
