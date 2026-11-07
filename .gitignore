@@ -18,9 +18,13 @@ docs/
 # Dados do aluno (cada um gera os seus)
 # ══════════════════════════════════════════
 # Estrutura multi-produto: toda a pasta meus-produtos/ fica local,
-# fora do repositorio. Painel global lê meus-produtos/index.json
+# fora do repositório. Painel global lê meus-produtos/index.js
 # (gerado pelos commands de gestão de produto).
-meus-produtos/
+# Sem barra no fim de propósito: nas worktrees de sessão, meus-produtos é um
+# atalho (symlink) para a pasta do checkout principal, criado pelo hook
+# .claude/hooks/worktree-meus-produtos.js. "meus-produtos/" só casa com pasta
+# e deixaria o atalho aparecer no git status.
+/meus-produtos
 
 # ══════════════════════════════════════════
 # Claude Code — arquivos de sessão/runtime
