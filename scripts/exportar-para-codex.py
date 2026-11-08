@@ -31,6 +31,11 @@ Uso:
     python3 scripts/exportar-para-codex.py --verificar  só confere; sai com código 1
                                                          se algo estiver desatualizado
 
+Arquivo gerado que já existe com o nome diferente só na maiúscula (skill.md no
+lugar de SKILL.md) é renomeado com git mv, e a troca entra no próximo commit. No
+Mac e no Windows o disco não diferencia maiúsculas: o git não perceberia a troca
+feita direto no disco, e gravar o nome novo e apagar o antigo apagaria o arquivo.
+
 Nunca edite .agents/ nem .codex/ à mão: edite .claude/ (ou codex-extras/, para o
 que vale só no Codex) e rode o script de novo.
 """
@@ -44,6 +49,7 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -352,14 +358,95 @@ def normalizar(conteudo: bytes) -> bytes:
     return conteudo if b"\0" in conteudo else conteudo.replace(b"\r\n", b"\n")
 
 
-def arquivos_existentes() -> set[Path]:
+def relativo(caminho: Path) -> str:
+    return caminho.relative_to(RAIZ).as_posix()
+
+
+def chave(caminho: Path) -> str:
+    """Compara nomes como o disco do Mac: sem diferenciar maiúscula, com a letra acentuada numa forma só (NFC)."""
+    return unicodedata.normalize("NFC", relativo(caminho)).casefold()
+
+
+def identidade(caminho: Path) -> tuple[int, int] | None:
+    """O arquivo no disco (dispositivo e inode), seja qual for o nome usado para chegar nele."""
+    try:
+        info = caminho.stat()
+    except OSError:
+        return None
+    return info.st_dev, info.st_ino
+
+
+def versionados() -> dict[str, Path]:
+    """Arquivos de .agents/ e .codex/ que o git guarda, pela chave de comparação. Sem o git, nenhum."""
+    try:
+        saida = subprocess.run(
+            ["git", "ls-files", "--cached", "-z", "--",
+             relativo(DESTINO_SKILLS), relativo(DESTINO_AGENTES), relativo(DESTINO_HOOKS)],
+            cwd=RAIZ, capture_output=True, check=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return {}
+    return {chave(RAIZ / p): RAIZ / p for p in saida.decode("utf-8").split("\0") if p}
+
+
+def arquivos_existentes(no_git: dict[str, Path]) -> set[Path]:
+    """Arquivos gerados que já existem, com o nome que o git guarda.
+
+    No Mac e no Windows o disco não diferencia maiúsculas e mostra o nome com que
+    o arquivo foi criado, que pode não ser o do repositório (skill.md no disco e
+    SKILL.md no git, por exemplo). Para comparar com o esperado, vale o nome do git.
+    """
     existentes = set()
     for pasta in (DESTINO_SKILLS, DESTINO_AGENTES):
         if pasta.exists():
             existentes.update(p for p in pasta.rglob("*") if p.is_file() and not eh_lixo(p.relative_to(pasta)))
     if DESTINO_HOOKS.exists():
         existentes.add(DESTINO_HOOKS)
-    return existentes
+    resultado = set()
+    for caminho in existentes:
+        nome_no_git = no_git.get(chave(caminho), caminho)
+        # Só vale o nome do git se ele leva ao mesmo arquivo neste disco.
+        if nome_no_git != caminho and identidade(nome_no_git) == identidade(caminho):
+            caminho = nome_no_git
+        resultado.add(caminho)
+    return resultado
+
+
+def pares_de_nome(novos: list[Path], sobrando: list[Path]) -> list[tuple[Path, Path]]:
+    """Arquivos que já existem com o nome diferente do esperado só na maiúscula (ou na forma da letra acentuada).
+
+    Viram troca de nome. Gravar o novo e apagar o antigo não serve: no Mac e no
+    Windows os dois nomes levam ao mesmo arquivo, e o arquivo gerado seria apagado.
+    """
+    livres = {chave(p): p for p in novos}
+    pares = []
+    for antigo in sobrando:
+        novo = livres.pop(chave(antigo), None)
+        if novo is not None:
+            pares.append((antigo, novo))
+    return pares
+
+
+def renomear_pelo_git(antigo: Path, novo: Path) -> bool:
+    """Renomeia com git mv. Devolve False se o git não conseguiu.
+
+    No Mac e no Windows é o único jeito de o git registrar uma troca só de
+    maiúscula: feita direto no disco, ele não percebe.
+    """
+    try:
+        subprocess.run(["git", "mv", "--", relativo(antigo), relativo(novo)],
+                       cwd=RAIZ, capture_output=True, check=True)
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return True
+
+
+def renomear_no_disco(antigo: Path, novo: Path) -> None:
+    # Passa por um nome intermediário: renomear direto só para trocar a
+    # maiúscula nem sempre tem efeito em disco que não diferencia maiúsculas.
+    intermediario = antigo.with_name(antigo.name + ".renomeando")
+    antigo.rename(intermediario)
+    intermediario.rename(novo)
 
 
 def remover_pastas_vazias(pasta: Path) -> None:
@@ -369,10 +456,6 @@ def remover_pastas_vazias(pasta: Path) -> None:
         caminho = Path(atual)
         if caminho != pasta and not any(caminho.iterdir()):
             caminho.rmdir()
-
-
-def relativo(caminho: Path) -> str:
-    return caminho.relative_to(RAIZ).as_posix()
 
 
 def escondidos_pelo_gitignore(caminhos: list[Path]) -> list[Path]:
@@ -403,7 +486,8 @@ def main() -> int:
 
     avisos: list[str] = []
     esperado, contagem = montar_esperado(avisos)
-    existentes = arquivos_existentes()
+    no_git = versionados()
+    existentes = arquivos_existentes(no_git)
 
     novos = sorted(p for p in esperado if p not in existentes)
     alterados = sorted(
@@ -411,6 +495,10 @@ def main() -> int:
         if p in existentes and normalizar(p.read_bytes()) != normalizar(esperado[p][0])
     )
     sobrando = sorted(existentes - set(esperado))
+    renomeados = pares_de_nome(novos, sobrando)
+    trocados = {caminho for par in renomeados for caminho in par}
+    novos = [p for p in novos if p not in trocados]
+    sobrando = [p for p in sobrando if p not in trocados]
     escondidos = escondidos_pelo_gitignore(sorted(esperado))
 
     for aviso in avisos:
@@ -423,19 +511,34 @@ def main() -> int:
 
     if args.verificar:
         pendencias = (
-            [("novo", p) for p in novos] + [("alterado", p) for p in alterados]
-            + [("sobrando", p) for p in sobrando] + [("ignorado pelo git", p) for p in escondidos]
+            [("novo", relativo(p)) for p in novos] + [("alterado", relativo(p)) for p in alterados]
+            + [("renomear", f"{relativo(antigo)} -> {relativo(novo)}") for antigo, novo in renomeados]
+            + [("sobrando", relativo(p)) for p in sobrando]
+            + [("ignorado pelo git", relativo(p)) for p in escondidos]
         )
         if not pendencias:
             print("Tudo em dia: .agents/ e .codex/ batem com .claude/ e codex-extras/.")
             return 0
         print(f"{len(pendencias)} arquivo(s) desatualizado(s) em .agents/ ou .codex/:")
-        for tipo, caminho in pendencias[:20]:
-            print(f"  {tipo}: {relativo(caminho)}")
+        for tipo, texto in pendencias[:20]:
+            print(f"  {tipo}: {texto}")
         if len(pendencias) > 20:
             print(f"  e mais {len(pendencias) - 20}.")
         print(f"Rode: python3 {SCRIPT}")
         return 1
+
+    no_indice = set(no_git.values())
+    registrados, falta_no_git = 0, []
+    for antigo, novo in renomeados:
+        novo.parent.mkdir(parents=True, exist_ok=True)
+        if antigo in no_indice and renomear_pelo_git(antigo, novo):
+            registrados += 1
+            continue
+        renomear_no_disco(antigo, novo)
+        if antigo in no_indice:
+            falta_no_git.append((antigo, novo))
+    # Com o nome certo, o conteúdo também pode precisar de atualização.
+    alterados += [novo for _, novo in renomeados if normalizar(novo.read_bytes()) != normalizar(esperado[novo][0])]
 
     for caminho in novos + alterados:
         conteudo, origem = esperado[caminho]
@@ -456,7 +559,17 @@ def main() -> int:
         f"Só do Codex (codex-extras/): {contagem['skills_codex']} skill(s) e "
         f"{contagem['acrescimos']} acréscimo(s)."
     )
-    print(f"Arquivos criados: {len(novos)}. Alterados: {len(alterados)}. Removidos: {len(sobrando)}.")
+    print(
+        f"Arquivos criados: {len(novos)}. Alterados: {len(alterados)}. Renomeados: {len(renomeados)}. "
+        f"Removidos: {len(sobrando)}."
+    )
+    if registrados:
+        print(f"Troca de nome já registrada no git (git mv) em {registrados} arquivo(s): ela entra no próximo commit.")
+    for antigo, novo in falta_no_git:
+        print(
+            f"Aviso: não deu para registrar no git a troca de nome de {relativo(antigo)}. "
+            f'Antes do commit, rode: git mv "{relativo(antigo)}" "{relativo(novo)}"'
+        )
     return 0
 
 
