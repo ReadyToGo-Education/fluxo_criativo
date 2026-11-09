@@ -48,11 +48,11 @@ Cada pergunta é UM turno separado. Exiba, pare, aguarde, salve, mostre micro-re
 
 Leia em paralelo:
 - `meus-produtos/.ativo`
-- `meus-produtos/{ativo}/perfil.md` (se existir)
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md; se o produto ainda não tiver concepção, seguir sem sugestão de nicho)
 
 Se não houver produto ativo, instrua o aluno a rodar `/produto-novo` primeiro e encerre.
 
-Do `perfil.md`, tente extrair como sugestão:
+Do `resumo-produto.md`, tente extrair como sugestão:
 - **Nicho**. Procure por "Nicho:", "Mercado:" ou identidade do produto.
 
 ### 0.2. Detecção de retomada

@@ -116,7 +116,7 @@ Para começar um novo produto, use /produto-novo.
 Pronto. Perfil e identidade do consumidor foram zerados.
 As suas entregas continuam salvas.
 
-Use /produto-editar para preencher o perfil novamente.
+Use /produto-concepcao para preencher o perfil novamente.
 ```
 
 **Se apagou só entregas (Opção 3):**

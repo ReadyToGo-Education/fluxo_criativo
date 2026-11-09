@@ -1,0 +1,1 @@
+> **No Codex, a imagem da Furadeira é gerada aqui mesmo.** As partes "Recepção da imagem" e a conferência depois dela mudam: siga a seção "/furadeira-visual" de `.agents/skills/imagem-no-codex/SKILL.md`. O mapeamento de layout, a paleta e a estrutura do prompt continuam valendo.

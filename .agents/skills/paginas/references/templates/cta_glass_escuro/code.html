@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTA. Método Atelier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface-1: #0a0a0a;
+            --surface-2: #111113;
+            --surface-3: #1c1c1e;
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* ── Section ── */
+        .cta-section {
+            position: relative;
+            padding: 120px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .cta-content {
+            max-width: 640px;
+            animation: fadeUpIn 0.8s ease-out both;
+        }
+
+        /* ── Shimmer line ── */
+        .shimmer-line {
+            width: 120px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto 48px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1px;
+        }
+
+        .shimmer-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        /* ── Headline ── */
+        .cta-headline {
+            font-size: 2.25rem;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Paragraph ── */
+        .cta-paragraph {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ── Glassmorphic Button ── */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            color: var(--text-primary);
+            background: rgba(194, 149, 107, 0.12);
+            border: 1px solid rgba(194, 149, 107, 0.25);
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            opacity: 0;
+            background: var(--text-primary);
+            transition: opacity 0.35s ease;
+            z-index: 0;
+        }
+
+        .cta-button span,
+        .cta-button .material-symbols-outlined {
+            position: relative;
+            z-index: 1;
+            transition: color 0.35s ease;
+        }
+
+        .cta-button .material-symbols-outlined {
+            font-size: 20px;
+        }
+
+        .cta-button:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 24px rgba(194, 149, 107, 0.15), 0 0 48px rgba(194, 149, 107, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+
+        .cta-button:hover span,
+        .cta-button:hover .material-symbols-outlined {
+            color: var(--bg);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* ── Trust element ── */
+        .cta-trust {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+        }
+
+        .cta-trust .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--text-tertiary);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .cta-section {
+                padding: 88px 20px;
+            }
+
+            .cta-headline {
+                font-size: 1.75rem;
+            }
+
+            .cta-paragraph {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 0.9375rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cta-section {
+                padding: 72px 16px;
+            }
+
+            .cta-headline {
+                font-size: 1.5rem;
+            }
+
+            .cta-paragraph {
+                font-size: 0.9375rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+                padding: 16px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <div class="shimmer-line"></div>
+            <h2 class="cta-headline">Transforme suas mãos em uma fonte de renda real</h2>
+            <p class="cta-paragraph">O Método Atelier já mostrou para centenas de artesãs que é possível viver do crochê com organização, técnica e um posicionamento que valoriza cada peça.</p>
+            <div style="margin-bottom: 32px;">
+                <p style="font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">12x de R$&nbsp;29,70</p>
+                <p style="font-size: 0.9375rem; color: var(--text-tertiary);">ou R$&nbsp;297,00 à vista</p>
+            </div>
+            <a href="#" class="cta-button">
+                <span>Quero começar agora</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+            <div class="cta-trust">
+                <span class="material-symbols-outlined">verified</span>
+                <span>Acesso imediato · Garantia de 7 dias</span>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

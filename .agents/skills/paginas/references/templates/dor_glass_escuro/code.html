@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier.. Método de Crochê Lucrativo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #000000;
+            --bg-surface-1: #0a0a0a;
+            --bg-surface-2: #111113;
+            --bg-surface-3: #1c1c1e;
+            --text-primary: #f8f8f8;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6c6c6c;
+            --accent: #c2956b;
+            --accent-glow: rgba(194, 149, 107, 0.15);
+            --accent-glow-strong: rgba(194, 149, 107, 0.25);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(17, 17, 19, 0.6);
+            --glass-bg-hover: rgba(28, 28, 30, 0.7);
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .brand-dot {
+            color: var(--accent);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .header-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .header-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            background: var(--accent);
+            color: var(--bg-base);
+            font-family: var(--font-family);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header-cta:hover {
+            background: #d4a87d;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* ========== SECTION: PROBLEMA / DOR ========== */
+        .section-dor {
+            padding: 10rem 2rem 6rem;
+            position: relative;
+        }
+
+        .section-dor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(194, 149, 107, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .section-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Shimmer line */
+        .shimmer-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 0 auto 2rem;
+            border-radius: 2px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.4; width: 60px; }
+            50% { opacity: 1; width: 90px; }
+        }
+
+        .section-label {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 1.5rem;
+            animation: fadeUpIn 0.8s ease both;
+        }
+
+        .section-headline {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.25rem;
+            animation: fadeUpIn 0.8s ease 0.1s both;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 50%, var(--text-primary) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 4rem;
+            line-height: 1.7;
+            animation: fadeUpIn 0.8s ease 0.2s both;
+        }
+
+        /* ========== PAIN CARDS ========== */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .pain-card {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fadeUpIn 0.8s ease both;
+            overflow: hidden;
+        }
+
+        .pain-card:nth-child(1) { animation-delay: 0.3s; }
+        .pain-card:nth-child(2) { animation-delay: 0.4s; }
+        .pain-card:nth-child(3) { animation-delay: 0.5s; }
+        .pain-card:nth-child(4) { animation-delay: 0.6s; }
+
+        .pain-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .pain-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+        }
+
+        .pain-card:hover::before {
+            opacity: 1;
+        }
+
+        .pain-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(194, 149, 107, 0.08);
+            border: 1px solid rgba(194, 149, 107, 0.12);
+            margin-bottom: 1.25rem;
+            transition: all 0.4s ease;
+        }
+
+        .pain-card:hover .pain-card-icon {
+            background: rgba(194, 149, 107, 0.14);
+            border-color: rgba(194, 149, 107, 0.25);
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        .pain-card-icon .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .pain-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+            line-height: 1.35;
+        }
+
+        .pain-card-text {
+            font-size: 0.925rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ========== BOTTOM EMPHASIS ========== */
+        .pain-emphasis {
+            margin-top: 3.5rem;
+            text-align: center;
+            animation: fadeUpIn 0.8s ease 0.7s both;
+        }
+
+        .pain-emphasis-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pain-emphasis-text strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ========== KEYFRAMES ========== */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.875rem 1.25rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .section-dor {
+                padding: 7rem 1.25rem 4rem;
+            }
+
+            .pain-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .pain-card {
+                padding: 1.5rem;
+            }
+
+            .section-subtitle {
+                margin-bottom: 3rem;
+            }
+
+            .pain-emphasis {
+                margin-top: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                font-size: 1.25rem;
+            }
+
+            .section-headline {
+                font-size: 1.75rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+            }
+
+            .pain-card {
+                padding: 1.25rem;
+            }
+
+            .pain-card-title {
+                font-size: 1rem;
+            }
+
+            .pain-card-text {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SEÇÃO: PROBLEMA / DOR -->
+    <section class="section-dor">
+        <div class="section-inner">
+
+            <div class="shimmer-line"></div>
+
+            <p class="section-label">O problema que ninguém fala</p>
+
+            <h2 class="section-headline">
+                <span class="gradient-text">Você cria peças incríveis, mas sente<br>que o seu trabalho não é valorizado</span>
+            </h2>
+
+            <p class="section-subtitle">
+                Talento não falta. O que falta é um caminho claro para transformar cada ponto de crochê em renda de verdade, sem depender de sorte ou de quem aparece.
+            </p>
+
+            <div class="pain-grid">
+
+                <!-- Card 1 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">schedule</span>
+                    </div>
+                    <h3 class="pain-card-title">Horas de trabalho, centavos de retorno</h3>
+                    <p class="pain-card-text">
+                        Você passa a noite inteira crochetando uma peça com carinho, escolhendo cada cor, cada detalhe. Na hora de vender, recebe menos do que gastou na linha. O tempo investido simplesmente desaparece.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">trending_down</span>
+                    </div>
+                    <h3 class="pain-card-title">"Faz por quanto? Ah, tá caro"</h3>
+                    <p class="pain-card-text">
+                        Toda vez é a mesma cena: a pessoa olha, elogia, pergunta o preço e faz aquela cara. Você acaba dando desconto só para não perder a venda, e no fundo sabe que saiu no prejuízo de novo.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                    <h3 class="pain-card-title">Um armário cheio de peças encalhadas</h3>
+                    <p class="pain-card-text">
+                        Toalhas, amigurumis, bolsas, sousplats. Tudo lindo, tudo feito com dedicação, tudo parado. Cada gaveta que você abre é um lembrete silencioso de que criar não é o mesmo que vender.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="pain-card">
+                    <div class="pain-card-icon">
+                        <span class="material-symbols-outlined">nightlight</span>
+                    </div>
+                    <h3 class="pain-card-title">Madrugadas em silêncio, enquanto todos dormem</h3>
+                    <p class="pain-card-text">
+                        A família já dormiu e você ainda está ali, com a agulha na mão, tentando dar conta de uma encomenda que mal paga a conta de luz. Você sente vergonha de cobrar o que realmente vale, e culpa por não conseguir descansar.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="pain-emphasis">
+                <p class="pain-emphasis-text">
+                    O problema nunca foi a qualidade do seu crochê.<br>
+                    O problema é que <strong>ninguém te ensinou a transformar talento em negócio</strong>.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>

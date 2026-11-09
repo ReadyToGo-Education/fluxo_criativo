@@ -10,10 +10,10 @@
 O fluxo de coleta do Erros **ignora** o `passo-coleta-base.md` padrão. A coleta é a do `prompt-erros.md` (6 perguntas, uma a mais que os outros estilos por causa do Desejo do público):
 
 ### 1.1. Nicho e produto em UMA frase
-Se `perfil.md` tiver Quadro/categoria do produto, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver Quadro/categoria do produto, pré-preencha como sugestão.
 
 ### 1.2. @ do Instagram
-Se `.env` tiver `IG_USER` ou `perfil.md` tiver handle, pré-preencha como sugestão.
+Se `.env` tiver `IG_USER` ou `resumo-produto.md` tiver handle, pré-preencha como sugestão.
 
 ### 1.3. Cores padrão da marca
 Default sem paleta: creme bege `#F2EAD9` (slides 1-5) + verde-sálvia escuro `#3D4A3F` (slide 6).
@@ -24,14 +24,14 @@ Default sem paleta: creme bege `#F2EAD9` (slides 1-5) + verde-sálvia escuro `#3
 ### 1.5. Desejo principal do público (pergunta EXTRA do estilo Erros)
 Pergunte: "Qual o desejo concreto do seu público?"
 
-**Regra de exemplo personalizado.** Antes de exibir, leia `perfil.md` (Quadro, Decorados, nicho) e `idconsumidor.md` (dores, desejos, paliativos) do produto ativo. Gere 2 a 3 exemplos de desejo COERENTES com o nicho do produto e o público-alvo, em vez de exemplos genéricos.
+**Regra de exemplo personalizado.** Antes de exibir, leia `resumo-produto.md` do produto ativo (Quadro, Decorados, nicho, dores, desejos, paliativos). Gere 2 a 3 exemplos de desejo COERENTES com o nicho do produto e o público-alvo, em vez de exemplos genéricos.
 
 Exemplos por nicho:
 - Produto de tarô → "tirar a primeira leitura sem trava, virar leitora consultora, deixar de depender de outros pra interpretar cartas"
 - Produto de finanças → "sair do vermelho em 6 meses, montar a primeira reserva de emergência, parar de gastar tudo no dia 10"
 - Produto fitness pós-parto → "voltar a calçar a calça pré-gravidez, tirar foto de praia sem culpa, ter energia pra brincar com filho sem cansar"
 
-Se o perfil/idconsumidor não der pistas suficientes, use 2 exemplos neutros relacionados ao nicho. Aguarde a resposta e salve como `desejo_publico`.
+Se o resumo do produto não der pistas suficientes, use 2 exemplos neutros relacionados ao nicho. Aguarde a resposta e salve como `desejo_publico`.
 
 ### 1.6. Estilo de design visual
 7 opções (Sofisticado e elegante, Editorial e cinematográfico, Despojado e bem-humorado, Energético e vibrante, Sério e técnico, Aconchegante e humano, Provocativo e ousado) ou descrição livre.
@@ -43,7 +43,7 @@ Se o perfil/idconsumidor não der pistas suficientes, use 2 exemplos neutros rel
 A skill `/carrossel` no estilo Erros faz o seguinte:
 
 1. **Carrega** `references/prompt-erros.md` inteiro.
-2. **Executa o Passo 1 do prompt** (coleta de 6 dados, com o Desejo do público como pergunta extra), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`/`idconsumidor.md`/`.env`.
+2. **Executa o Passo 1 do prompt** (coleta de 6 dados, com o Desejo do público como pergunta extra), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `resumo-produto.md`/`.env`.
 3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md), incluindo o desejo declarado no resumo.
 4. **Executa o prompt do Passo 2 ao Passo 4 exatamente como está**, na sessão atual:
    - Passo 2: gera os 6 slides (Slides 1-5 começam com `Erro #N:` e cada erro sabota o desejo declarado; Slide 6 é CTA criativa) com aprovação interna.

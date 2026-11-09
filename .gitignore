@@ -164,3 +164,9 @@ package-lock.json
 package.json
 # Fontes consolidadas para o NotebookLM (geradas por scripts/sincronizar-obsidian.py)
 notebooklm-fontes/
+# Codex: .agents/ e .codex/agents/ + .codex/hooks.json são gerados por
+# scripts/exportar-para-codex.py e vão para o repositório. O resto de .codex/
+# (configuração pessoal do Codex) fica local.
+.codex/*
+!.codex/agents/
+!.codex/hooks.json

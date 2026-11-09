@@ -38,7 +38,7 @@ Headline que empilha benefícios sem premissa lógica ou curiosidade não conver
 > *"Se prometer alguma coisa, tem que prometer que vai aprender algo. Mas é melhor que seja algo mais específico."*
 
 **Bullet points com "mesmo que" e objeções em vez de curiosidade**
-Bullets no padrão "mesmo que... sem precisar..." são clichê. O que funciona é curiosidade ou especificidade: lista numerada, inadequação, ou pergunta implícita com resposta adiada.
+Bullets no padrão "mesmo que... sem precisar..." são clichê. O que funciona é curiosidade ou especificidade: lista numerada, inadequação, ou pergunta implícita com resposta adiada. Se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (gerado pelo `/copy-bullets`), sugira a troca pelos bullets salvos que falam da mesma entrega; se não existir, indique o `/copy-bullets`.
 
 **Furadeira sem argumentação de cada etapa**
 Cada etapa precisa de: como era feito antes, como vai ser feito com o método, e qual argumento sustenta a diferença.

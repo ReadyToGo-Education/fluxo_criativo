@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --surface-1: #0a0a0a;
+      --surface-2: #111113;
+      --surface-3: #1c1c1e;
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Animations */
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Section */
+    .faq-section {
+      position: relative;
+      padding: 120px 24px;
+      overflow: hidden;
+    }
+
+    .faq-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(194, 149, 107, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .faq-container {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 56px;
+      animation: fadeUpIn 0.8s ease-out both;
+    }
+
+    /* Shimmer line */
+    .shimmer-line {
+      width: 120px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 auto 40px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 1px;
+    }
+
+    .shimmer-line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .faq-headline {
+      font-size: 2.25rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .faq-subtitle {
+      font-size: 1.0625rem;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Accordion */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeUpIn 0.8s ease-out 0.15s both;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-hover);
+    }
+
+    .faq-item.open {
+      border-color: rgba(194, 149, 107, 0.25);
+      box-shadow: 0 0 24px rgba(194, 149, 107, 0.06);
+    }
+
+    .faq-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      gap: 16px;
+    }
+
+    .faq-trigger .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--accent);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-trigger .material-symbols-outlined {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    .faq-answer-inner {
+      padding: 0 24px 20px;
+      font-size: 0.9375rem;
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .faq-footer {
+      text-align: center;
+      margin-top: 48px;
+      animation: fadeUpIn 0.8s ease-out 0.3s both;
+    }
+
+    .faq-footer p {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .faq-section { padding: 88px 20px; }
+      .faq-headline { font-size: 1.75rem; }
+      .faq-subtitle { font-size: 1rem; }
+      .faq-trigger { padding: 18px 20px; font-size: 0.9375rem; }
+      .faq-answer-inner { padding: 0 20px 18px; font-size: 0.875rem; }
+    }
+
+    @media (max-width: 480px) {
+      .faq-section { padding: 72px 16px; }
+      .faq-headline { font-size: 1.5rem; }
+      .faq-trigger { padding: 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="faq-section">
+    <div class="faq-container">
+
+      <div class="faq-header">
+        <div class="shimmer-line"></div>
+        <h2 class="faq-headline">Dúvidas frequentes</h2>
+        <p class="faq-subtitle">Se você ainda tem alguma pergunta, provavelmente ela está aqui.</p>
+      </div>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Funciona mesmo para quem está começando do zero?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Funciona. O método foi desenhado para quem não tem experiência prévia. Cada etapa parte do básico e avança no seu ritmo. Você não precisa de conhecimento técnico para começar.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Por quanto tempo terei acesso ao conteúdo?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Acesso vitalício. Uma vez dentro, o conteúdo é seu para sempre. incluindo todas as atualizações futuras que fizermos no material.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Tem alguma garantia?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Sim. Você tem 7 dias para acessar o material, assistir às aulas e decidir se faz sentido para você. Se não fizer, devolvemos 100% do valor sem perguntas.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Preciso de alguma ferramenta ou equipamento especial?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Não. Tudo que você precisa é de um celular ou computador com acesso à internet. O método usa ferramentas simples e acessíveis que você provavelmente já tem.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Consigo conciliar com meu trabalho atual?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Com certeza. As aulas são gravadas e curtas. Você assiste quando puder. de manhã, no intervalo do almoço ou à noite. O importante é manter a constância, não a velocidade.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Como funciona o suporte?</span>
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Você terá acesso à comunidade exclusiva de alunos e ao suporte direto da equipe. Dúvidas são respondidas em até 24 horas úteis.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="faq-footer">
+        <p>Ainda tem dúvidas? Fale com a gente pelo WhatsApp.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>

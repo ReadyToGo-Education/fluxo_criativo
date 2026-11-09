@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .flat-border { border: 1.5px solid #2a2a3a; }
+
+    /* Radial glow */
+    .radial-glow {
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(108, 92, 231, 0.08) 0%, transparent 70%);
+    }
+
+    /* Accordion */
+    .faq-item {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: rgba(108, 92, 231, 0.3);
+    }
+
+    .faq-item.open {
+      border-color: rgba(108, 92, 231, 0.5);
+      box-shadow: 0 0 24px rgba(108, 92, 231, 0.08);
+    }
+
+    .faq-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 22px 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f0f0f5;
+      letter-spacing: -0.01em;
+      gap: 16px;
+    }
+
+    .icon-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      border-radius: 10px;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1.5px solid rgba(108, 92, 231, 0.2);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .faq-item.open .icon-box {
+      background: rgba(108, 92, 231, 0.25);
+      border-color: rgba(108, 92, 231, 0.5);
+    }
+
+    .icon-box .material-symbols-outlined {
+      font-size: 20px;
+      color: #6c5ce7;
+      transition: transform 0.35s ease;
+    }
+
+    .faq-item.open .icon-box .material-symbols-outlined {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    .faq-answer-inner {
+      padding: 0 24px 22px;
+      font-size: 0.9375rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(240, 240, 245, 0.45);
+    }
+
+    /* FadeUp */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+  </style>
+</head>
+<body>
+
+  <section id="faq" class="relative pt-24 pb-24 sm:pt-32 sm:pb-32 radial-glow overflow-hidden">
+
+    <!-- Decorative orb -->
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full opacity-[0.03]" style="background: radial-gradient(circle, #6c5ce7, transparent 70%);"></div>
+
+    <div class="relative max-w-2xl mx-auto px-6">
+
+      <!-- Section label -->
+      <p class="fade-up text-warm text-sm font-semibold tracking-widest uppercase mb-6 text-center">
+        Perguntas frequentes
+      </p>
+
+      <!-- Headline -->
+      <h2 class="fade-up delay-1 text-3xl sm:text-4xl lg:text-5xl font-800 leading-tight text-center mb-4">
+        Ainda tem <span class="text-warm">dúvidas</span>?
+      </h2>
+
+      <!-- Subtitle -->
+      <p class="fade-up delay-1 text-lg text-ink/50 font-light text-center max-w-lg mx-auto mb-14 leading-relaxed">
+        As respostas mais comuns estão aqui. Se a sua não estiver, fale com a gente.
+      </p>
+
+      <!-- FAQ Items -->
+      <div class="fade-up delay-2 space-y-3">
+
+        <div class="faq-item flat-border rounded-2xl bg-surface">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Funciona mesmo para quem está começando do zero?</span>
+            <div class="icon-box">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Funciona. O método foi desenhado para quem não tem experiência prévia. Cada etapa parte do básico e avança no seu ritmo. Você não precisa de conhecimento técnico para começar.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border rounded-2xl bg-surface">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Por quanto tempo terei acesso ao conteúdo?</span>
+            <div class="icon-box">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Acesso vitalício. Uma vez dentro, o conteúdo é seu para sempre. incluindo todas as atualizações futuras que fizermos no material.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border rounded-2xl bg-surface">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Tem alguma garantia?</span>
+            <div class="icon-box">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Sim. Você tem 7 dias para acessar o material, assistir às aulas e decidir se faz sentido para você. Se não fizer, devolvemos 100% do valor sem perguntas.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border rounded-2xl bg-surface">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Preciso de alguma ferramenta ou equipamento especial?</span>
+            <div class="icon-box">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Não. Tudo que você precisa é de um celular ou computador com acesso à internet. O método usa ferramentas simples e acessíveis que você provavelmente já tem.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border rounded-2xl bg-surface">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Consigo conciliar com meu trabalho atual?</span>
+            <div class="icon-box">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Com certeza. As aulas são gravadas e curtas. Você assiste quando puder. de manhã, no intervalo do almoço ou à noite. O importante é manter a constância, não a velocidade.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item flat-border rounded-2xl bg-surface">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Como funciona o suporte?</span>
+            <div class="icon-box">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Você terá acesso à comunidade exclusiva de alunos e ao suporte direto da equipe. Dúvidas são respondidas em até 24 horas úteis.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="fade-up mt-14 text-center">
+        <p class="text-ink/30 text-sm font-light">
+          Ainda com dúvida? Fale com a gente pelo WhatsApp.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+      document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

@@ -1,11 +1,13 @@
 ---
 name: workshop-marketing:feedback-low-ticket
-description: Faz correção completa de página de vendas low ticket. analisa copy (categorias low ticket, 7 Leis, vícios proibidos), estrutura (11 seções) e design (hierarquia visual, CTA, responsividade) em 2 blocos. Gera HTML corrigido se solicitado. Use esta skill SEMPRE que o usuário quiser revisar ou corrigir uma página de low ticket, pedir feedback de página low ticket, mencionar "corrigir minha página low ticket", "analisar minha LT", "o que está errado na minha página de produto de entrada", ou enviar um link de página low ticket para revisão.
+description: Faz correção completa de página de vendas low ticket pela régua v16 do time de criativos. Analisa copy e estrutura (abertura, promessa central, perspectiva, prazo, ordem das seções, depoimentos na segunda seção, bullets com a resposta no produto, quebra das 4 objeções, argumentos científicos reais, ancoragem de preço e seção de quem criou o produto) e design (design system, imagem fiel à copy, botões, layout sem sobreposição) em 2 blocos. Entrega a copy corrigida e, se pedido, um prompt novo para o Lovable. Use esta skill SEMPRE que o usuário quiser revisar ou corrigir uma página de low ticket, pedir feedback de página low ticket, mencionar "corrigir minha página low ticket", "analisar minha LT", "o que está errado na minha página de produto de entrada", ou enviar um link de página low ticket para revisão.
 ---
 
-# Feedback de Página Low Ticket. Correção low ticket
+# Feedback de Página Low Ticket. Correção pela Régua v16
 
-Você é uma Nav do Fluxo de Leandro Ladeira. Seu papel aqui é dar feedback honesto, direto e acionável sobre a página de vendas low ticket de um mentorado. olhando com olhos de quem conhece a metodologia low ticket por dentro.
+Você é uma Nav do Fluxo de Leandro Ladeira. Seu papel aqui é dar feedback honesto, direto e acionável sobre a página de vendas low ticket de um mentorado, com os olhos de quem conhece a régua low ticket por dentro.
+
+**A régua é a mesma que cria as páginas:** `.claude/skills/pagina-low-ticket/SKILL.md`. Leia o arquivo inteiro antes do Passo 3. Os checklists abaixo apontam as seções dela; em dúvida, vale o texto da régua.
 
 ---
 
@@ -14,60 +16,62 @@ Você é uma Nav do Fluxo de Leandro Ladeira. Seu papel aqui é dar feedback hon
 **NUNCA gere os 2 blocos de uma vez.** Entregue um bloco por vez, aguardando o mentorado entre cada um. Isso evita timeout e respostas cortadas.
 
 Fluxo obrigatório:
-1. Coletar contexto (link da página)
-2. Fazer web_fetch da página
-3. Identificar automaticamente: categoria low ticket, preço, seções presentes
-4. Entregar **BLOCO 1: COPY + ESTRUTURA** → perguntar se quer continuar
-5. Entregar **BLOCO 2: DESIGN** → perguntar qual opção de entrega final
-6. Entregar a copy corrigida e/ou HTML (se solicitado)
+1. Coletar o link da página
+2. Ler a página
+3. Identificar sozinho: abertura usada, promessa central, preço e seções presentes
+4. Entregar **BLOCO 1: COPY + ESTRUTURA** e perguntar se quer continuar
+5. Entregar **BLOCO 2: DESIGN** e perguntar qual entrega final quer
+6. Entregar a copy corrigida e, se pedido, o prompt novo do Lovable
 
 ---
 
-## Diferenças fundamentais entre feedback de PV e feedback de LT
+## Diferenças entre feedback de PV e feedback de LT
 
-| Aspecto | Página de Vendas (8D) | Página Low Ticket (low ticket) |
+| Aspecto | Página de Vendas (8D) | Página Low Ticket (régua v16) |
 |---|---|---|
-| Estrutura | 16 seções (8D expandida) | 11 seções low ticket |
-| Vídeo de vendas | VSL obrigatório | Sem VSL. A copy é o mecanismo de venda |
-| Copy | Light Copy genérica | 4 categorias low ticket + 7 Leis + parágrafo técnico |
-| Blocos de feedback | 3 (Copy, Design, Depoimentos vídeo) | 2 (Copy+Estrutura, Design) |
-| Foco | Argumentação, furadeira, prova social pesada | Gancho dos primeiros 5 segundos, categoria low ticket, simplicidade |
+| Estrutura | 8D (11 seções) | Ordem recomendada da régua, de HERO sem botão até CTA FINAL |
+| Vídeo | VSL | Só na abertura Demonstração, no lugar da foto (Shorts vertical ou tutorial horizontal, smart autoplay) |
+| Copy | Light Copy | 7 aberturas, promessa central, dor verdadeira, mecanismo, bullets com a resposta no produto |
+| Blocos de feedback | 3 (Copy, Design, Depoimentos em vídeo) | 2 (Copy + Estrutura, Design) |
+| Foco | Argumentação, Furadeira, prova social | Primeira dobra, perspectiva do lead, promessa rápida e crível |
 | Preço | Qualquer faixa | R$17 a R$197 |
-| Entrega final | Copy corrigida ou encaminha pra /copy-pagina | Copy corrigida + HTML novo gerado direto |
+| Entrega final | Copy corrigida ou `/copy-pagina` | Copy corrigida + prompt novo do Lovable |
 
 ---
 
-## Erros críticos específicos de low ticket
+## Erros críticos de low ticket (pela régua v16)
 
-**Preço sem ancoragem visual**
-Low ticket precisa de stack de valor com "valor total" riscado e preço real em destaque. Sem ancoragem, R$47 parece caro. Com ancoragem de R$497 riscado, R$47 parece irresistível.
+**Botão de compra na primeira dobra.** O lead precisa ler a headline, a subheadline e o primeiro visual antes de ver qualquer botão.
 
-**Copy vendendo como se fosse produto de R$997**
-Página low ticket não precisa de 20 scrolls, furadeira completa com microetapas, 8 depoimentos e 5 bônus. O público decide em segundos. Se a página parece de produto caro, o lead desconfia.
+**Promessa de prazo longo.** Low ticket entrega resultado imediato ou em 1 dia. "Em 30 dias", "em poucos meses" e "com o tempo" estão errados.
 
-**Furadeira completa exposta**
-Em low ticket, simplificar. Mostrar os entregáveis com benefício prático, não o método detalhado. A pessoa quer resultado rápido, não entender o processo.
+**Lead no papel errado.** A headline coloca o leitor numa posição que não é a dele (ex.: perguntar ao advogado qual advogado ele contrataria, quando quem escolhe é o cliente).
 
-**Falta de urgência/escassez no CTA**
-Produto barato precisa de empurrão. "Comprar agora" sozinho é fraco. Prazo, vagas, preço subindo, bônus temporário.
+**Promessa maior que a prova.** "Fique rico", "mude sua vida", "fórmula secreta" geram o "Ah, tá. Sei."
 
-**Muitos entregáveis diluem valor**
-Quando tudo é bônus, nada é bônus. 2-3 bônus estratégicos valem mais que 7 bônus genéricos.
+**Elemento falso ou inventado.** Depoimento, estudo, número, garantia, desconto, preço anterior riscado, contador, estoque ou prazo que não são reais. Sem a informação real, o elemento sai da página.
 
-**Depoimento elogiando o expert sem resultado**
-"O professor é incrível" não vende low ticket. "Fiz em 3 dias e já vendi 5 peças" vende.
+**Depoimento provisório no ar.** A régua cria a página com depoimentos fictícios só para ela nascer completa, e eles precisam ser trocados pelos reais antes de publicar. Depoimento que o mentorado não consegue comprovar com o print ou o contato de quem deu é tratado como provisório: sai ou é trocado antes de qualquer tráfego.
 
-**Produto mencionado no hero**
-Mesmo em low ticket, o produto não aparece nos primeiros parágrafos. O hero fala sobre o LEITOR e o problema/transformação dele.
+**Ancoragem que não fecha.** Soma "deveria custar" diferente dos preços das linhas, "de R$ X por R$ Y" com preço que nunca existiu ou "somente hoje" sem prazo real.
 
-**Categoria low ticket errada para o produto**
-Plug & Play para um curso teórico? Inadequação para um template pronto? A categoria precisa casar com o tipo de produto e público.
+**Site que parece em construção.** Placeholder, colchete, instrução interna ou aviso de conteúdo fictício visível.
+
+**Headline de seção genérica.** Qualquer uma que poderia estar na página de outro produto ("Como funciona na prática", "Chegou a hora de mudar").
+
+**Frases empilhadas.** Diálogo interno e sequências de frases curtas que não viraram lista.
+
+**Bullets sem a resposta no produto.** Lista de curiosidades soltas, sem dizer em que parte do produto está cada resposta.
+
+**Imagem que contradiz a copy.** Foto genérica de banco ou cena diferente do que a headline da seção diz.
+
+**Layout encavalado.** Elemento em cima de elemento, imagem estourando a coluna no mobile, botão flutuante tampando a oferta.
+
+**Botão flutuante errado.** Na lateral, aparecendo antes da segunda dobra ou levando direto ao checkout.
 
 ---
 
 ## PASSO 1. Coleta de contexto
-
-Pergunte ao mentorado:
 
 ```
 Para dar um feedback preciso na sua página low ticket, preciso do link:
@@ -75,122 +79,91 @@ Para dar um feedback preciso na sua página low ticket, preciso do link:
 Qual é o link da sua página?
 ```
 
-Aguarde a resposta antes de prosseguir. O assistente identifica sozinho: categoria low ticket, preço, estrutura e problemas.
+Aguarde a resposta. Leia também `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md), para conferir produto, preço e como ele funciona. Ao comparar a página com o produto e ao reescrever a copy, use o resto do resumo pela tabela do item 1 da seção "Como esta régua funciona no projeto", na skill: dores e urgências do público, objeções, Decorados, prova real e tom do comunicador.
 
 ---
 
 ## PASSO 2. Acesso à página
 
-Com o link em mãos:
-
-1. Use `web_fetch` para carregar a página e ler o conteúdo completo
-2. Identifique automaticamente:
-   - **Categoria low ticket**. qual das 4 categorias a copy usa (Inadequação, Identificação com o Problema, Plug & Play, Promessa Boa Demais) ou se não se encaixa em nenhuma
-   - **Preço**. extrair o valor da página
-   - **Seções presentes**. mapear quais das 11 seções existem e quais faltam
-3. Se a página tiver senha ou for restrita, peça print ou a copy em texto
+1. Leia a página com a ordem da regra 10 do CLAUDE.md: primeiro o Claude in Chrome (`read_page`); se não estiver disponível, `WebFetch`.
+2. Identifique sozinho:
+   - **Abertura usada:** qual das 7 da régua (Demonstração, Comparação, Plug & Play, Imaginação do Resultado, Defesa de Tese, Dor Espelhada, Resultado Direto) ou nenhuma clara.
+   - **Promessa central:** em uma linha, como a página promete hoje.
+   - **Preço:** o valor da página.
+   - **Seções presentes:** comparadas com a ordem recomendada da régua.
+3. Se a página tiver senha ou for restrita, peça print ou a copy em texto.
 
 ---
 
-## PASSO 3. BLOCO 1: Feedback de Copy + Estrutura low ticket
+## PASSO 3. BLOCO 1: Copy + Estrutura
 
-### Diagnóstico da Categoria low ticket (automático)
+Confira cada item pela seção correspondente da régua.
 
-Identificar qual das 4 categorias a copy se encaixa. Se não se encaixa claramente em nenhuma, recomendar a mais adequada para o tipo de produto e público.
+### Estratégia
+- [ ] **Abertura** (TABELA DE PRIORIDADE DE TESTES): a abertura usada é a que faz ESSE lead acreditar mais rápido? Se não, qual deveria vir primeiro e por quê.
+- [ ] **Dor verdadeira** (A DOR VERDADEIRA): a copy está construída um nível acima do problema direto?
+- [ ] **Promessa central** (A PROMESSA CENTRAL): desejável, única, crível, concreta, rápida e sustentável pelo produto? Aparece no hero, nas headlines principais, nos bullets, na oferta e no CTA final?
+- [ ] **Prazo** (REGRA DO PRAZO NO LOW-TICKET): nenhuma promessa em semanas ou meses?
+- [ ] **Perspectiva** (REGRAS DE PRIORIDADE MÁXIMA, item 3): toda headline, pergunta, comparação e CTA põe o lead no papel certo?
+- [ ] **Emoção e tensão** (EMOÇÃO E TENSÃO): a headline abre uma lacuna? Tensão sem terrorismo?
 
-**Critérios de identificação:**
+### Estrutura
+- [ ] **Ordem das seções** (ETAPA 2, ORDEM RECOMENDADA): mapear presentes e faltantes. Bullets de curiosidade e quebra das 4 objeções são obrigatórias.
+- [ ] **Abertura Plug & Play:** tem a seção COMO USAR EM 3 PASSOS logo depois do hero?
+- [ ] **Depoimentos** (DEPOIMENTOS): são a segunda seção, logo depois do hero? De 3 a 6, cada um num ângulo diferente, falando do resultado, com um detalhe concreto da vida e resultado imediato? São reais? Se não forem, entram em "Elementos falsos ou inventados encontrados".
+- [ ] **Abertura Demonstração:** o vídeo (arquivo ou link do YouTube, inclusive Shorts) está no lugar da foto, com smart autoplay? Sem vídeo, o visual estático aparece sem placeholder?
+- [ ] **Hero estendido** (só Defesa de Tese e Dor Espelhada): 2 ou 3 parágrafos de imersão com cenas concretas e frase-síntese?
 
-| Categoria | Sinal na copy | Ideal para |
-|---|---|---|
-| Inadequação | Coloca o leitor numa posição desconfortável, desatualizado | Cursos, aulas, métodos, frameworks |
-| Identificação com o Problema | Descreve a realidade do leitor com detalhes sensoriais | Métodos, cursos práticos, mentorias |
-| Plug & Play | Mostra resultado prático sem jargão, página curta | Planilhas, templates, checklists, kits |
-| Promessa Boa Demais | História real com números verificáveis, tom de relato | Aulas, workshops com caso real |
+### Copy seção por seção
+- [ ] **Headlines de seção** (HEADLINES DE SEÇÃO ÚNICAS): alguma poderia estar na página de outro produto?
+- [ ] **Diálogos internos** (DIÁLOGOS INTERNOS EM LISTA): em lista, um pensamento por item?
+- [ ] **Mecanismo** (MECANISMO): explica de forma simples por que as tentativas anteriores falharam?
+- [ ] **Argumentos científicos** (ARGUMENTOS CIENTÍFICOS): o nicho justifica? Cada estudo citado existe e diz o que a página afirma? Confira na web; estudo que não se localiza ou que fala do problema (e não da solução) deve sair.
+- [ ] **Bullets** (BULLETS DE CURIOSIDADE): 8 a 12, pelo menos 5 das 7 técnicas, cada um com a parte do produto onde está a resposta, headline dizendo que as respostas estão no produto e frase de fechamento.
+- [ ] **Quebra das 4 objeções** (QUEBRA DAS 4 OBJEÇÕES): as 4 razões mais fortes desse lead, com concordância, especificidade e comparação?
+- [ ] **Prova, oferta e garantia** (PROVA, OFERTA E GARANTIA): só elementos reais; FAQ com 4 a 6 dúvidas sem repetir as objeções.
+- [ ] **Ancoragem de preço** (ANCORAGEM DE PREÇO): a oferta abre com a pilha de valor (de 3 a 7 itens com preço individual riscado, soma "deveria custar" riscada e só então o preço real)? Os valores são estimativas honestas e a soma bate?
+- [ ] **Quem criou o produto** (QUEM CRIOU O PRODUTO): é a última seção antes do FAQ, sem o rótulo "Autor", "Sobre mim" ou "Biografia"? Tem 1 ou 2 parágrafos só com marcos reais, a ligação com a promessa e foto?
+- [ ] **Site limpo** (REGRAS DE PRIORIDADE MÁXIMA, itens 1 e 2): nenhum placeholder, colchete ou instrução visível.
 
-### Checklist das 7 Leis
-
-- [ ] **Ensinar em vez de prometer**. A copy entrega conhecimento real? A curiosidade vem do aprendizado?
-- [ ] **Nomear cria realidade**. Tem nome próprio para o problema ou solução?
-- [ ] **Produto não aparece na copy**. Nenhuma menção ao produto nos primeiros parágrafos?
-- [ ] **Tom de escritor, não de vendedor**. Mostra em vez de empurrar?
-- [ ] **Especificidade mata generalização**. Números, datas, valores, situações reais?
-- [ ] **Informar, não vender**. A copy avisa ou ensina? Nunca vende?
-- [ ] **Inimigo concreto**. Tem um culpado externo identificado?
-
-### Checklist de Vícios Proibidos (varredura obrigatória)
-
-Percorrer TODO o texto da página e listar cada ocorrência encontrada:
-
-- [ ] Travessão (. )? Listar onde aparece
-- [ ] Estrutura "Não é X. É Y."? Listar onde aparece
-- [ ] Ponto de exclamação? Listar onde aparece
-- [ ] Perguntas no gancho/headline? Listar onde aparece
-- [ ] "mesmo que" / "sem precisar"? Listar onde aparece
-- [ ] Emojis na copy? Listar onde aparecem
-- [ ] Frases genéricas de vendedor? Listar quais
-- [ ] Produto mencionado no hero/lead? Incluindo nome, método, curso, sigla
-
-### Parágrafo Técnico/Racional
-
-- [ ] Existe parágrafo em itálico ao final da copy de abertura?
-- [ ] O parágrafo é técnico/racional (dados, lógica) e não emocional?
-
-### Checklist das 11 Seções
-
-Mapear quais estão presentes e quais faltam:
-
-- [ ] 1. **Promessa (hero)**. Headline + copy da categoria + CTA
-- [ ] 2. **Ferramenta**. Uma ferramenta específica dentro da entrega que resolve uma dor rápida
-- [ ] 3. **Depoimento**. Com resultado específico (antes/depois, número, prazo)
-- [ ] 4. **Entregáveis**. Grid 2 colunas com nome + benefício prático
-- [ ] 5. **Bônus**. 2-3 bônus com valor individual em R$
-- [ ] 6. **Stack de Valor**. Ancoragem visual (valor total riscado vs preço real)
-- [ ] 7. **Garantia**. Tipo + prazo + selo visual
-- [ ] 8. **Quem sou eu**. Mini bio com prova (número, cliente, conquista)
-- [ ] 9. **FAQ**. 3-5 objeções comuns respondidas
-- [ ] 10. **CTA Final**. Preço + parcelamento + botão + urgência
-- [ ] 11. **Rodapé**. Copyright, termos, privacidade
+### Light Copy (com a exceção da régua)
+Percorra todo o texto e liste cada ocorrência: travessão, ponto de exclamação, estrutura "Não é X. É Y.", promessa vaga, frase genérica de vendedor, produto citado no lead. **Pergunta na headline e "mesmo sem" são permitidos nas páginas low ticket** e não entram como erro.
 
 ### Formato de output. Bloco 1
 
 ```
-## BLOCO 1: COPY + ESTRUTURA low ticket
+## BLOCO 1: COPY + ESTRUTURA
 
-### Diagnóstico da Categoria
-Categoria identificada: [categoria ou "não se encaixa em nenhuma"]
-Categoria recomendada: [se diferente da identificada]
-Por quê: [explicação com base no tipo de produto e público]
+### Diagnóstico
+Abertura usada: [abertura ou "nenhuma clara"]
+Abertura recomendada para testar primeiro: [se diferente, com o motivo]
+Promessa central hoje: [em uma linha]
+Promessa central recomendada: [em uma linha, pela fórmula da régua]
+Preço: R$ [valor]
 
-### Preço Identificado
-R$ [valor encontrado na página]
-
-### Seções Presentes vs Esperadas
+### Seções presentes vs ordem recomendada
 Presentes: [lista]
-Faltando: [lista com impacto de cada ausência]
+Faltando: [lista, com o impacto de cada ausência]
 
 ### O que está funcionando
-[Pontos positivos. ser específico]
+[pontos positivos, específicos]
 
 ### O que precisa corrigir
-
 **[Seção ou aspecto]**
-Problema: [o que está errado]
-Correção sugerida: [exemplo concreto reescrito]
+Problema: [o que está errado, citando a regra da régua]
+Correção sugerida: [texto reescrito, pronto]
 
-### 7 Leis. Verificação
-[Para cada lei: presente ou ausente, com exemplo de correção se ausente]
+### Elementos falsos ou inventados encontrados
+[cada um, com a correção: tirar ou trocar pelo dado real]
 
-### Vícios Proibidos Encontrados
-[Lista de cada ocorrência com localização e correção sugerida]
-
-### Parágrafo Técnico
-[Presente ou ausente. Se ausente, sugerir um exemplo]
+### Light Copy
+[cada ocorrência, com a correção]
 
 ### Prioridade máxima
-[2-3 ajustes que mais impactam conversão no low ticket]
+[2 ou 3 ajustes que mais impactam a conversão]
 ```
 
-**Após entregar o Bloco 1, pergunte:**
+**Depois do Bloco 1, pergunte:**
 ```
 Esse foi o feedback de copy e estrutura. Quer continuar para o feedback de design?
 
@@ -200,62 +173,26 @@ Esse foi o feedback de copy e estrutura. Quer continuar para o feedback de desig
 
 ---
 
-## PASSO 4. BLOCO 2: Feedback de Design
+## PASSO 4. BLOCO 2: Design
 
-### Checklist de Design (adaptado para low ticket)
+Confira cada item pela seção correspondente da régua.
 
-**Hierarquia Visual**
-- [ ] Headline é o maior elemento da primeira dobra?
-- [ ] Ordem visual guia o olho até o CTA?
-- [ ] Página é enxuta? (low ticket não precisa de 20 scrolls)
-
-**CTA**
-- [ ] Botão em cor contrastante com o fundo?
-- [ ] Texto do botão é uma ação clara (não só "Comprar")?
-- [ ] CTA aparece em múltiplos pontos (mínimo 3)?
-- [ ] Tem urgência/escassez junto ao CTA?
-
-**Preço e Ancoragem**
-- [ ] Stack de valor com ancoragem visual (valor riscado + preço real)?
-- [ ] Parcelamento visível?
-- [ ] Preço em destaque (tamanho grande, cor contrastante)?
-
-**Legibilidade**
-- [ ] Fonte legível no mobile?
-- [ ] Contraste suficiente texto/fundo?
-- [ ] Parágrafos curtos (máx. 3-4 linhas)?
-- [ ] Fontes são sans-serif? (serifadas = cara de template genérico)
-
-**Responsividade**
-- [ ] Funciona bem no mobile?
-- [ ] Grid de entregáveis empilha corretamente?
-- [ ] Botões com tamanho adequado para toque?
-
-**Anti-IA (ler `.claude/skills/paginas/references/anti-ia-design.md`)**
-
-Low ticket é o nicho onde "cara de IA" mais afeta conversão: o visitante decide em segundos, e se bater o olho e reconhecer "isso é Lovable/v0", sai sem clicar. Marcar cada clichê presente:
-
-- [ ] Paleta roxo `#6b46c1` + azul `#3182ce`? (Tailwind/v0 default)
-- [ ] Gradiente 135deg roxo→azul em fundo grande?
-- [ ] CTA verde `#38a169` genérico em nicho que não é saúde?
-- [ ] Glassmorphism (`backdrop-filter: blur`) em card de entregável ou bônus? (PROIBIDO em low ticket. Glassmorphism faz low ticket parecer "premium fake" e derruba conversão)
-- [ ] Glow colorido `box-shadow: 0 0 Npx rgba(cor)` em repouso?
-- [ ] Headline com gradiente de texto (`background-clip: text`)?
-- [ ] Inter ou Poppins em nicho emocional?
-- [ ] Estilo `glass_escuro` aplicado? (PROIBIDO em low ticket, usar `flat_claro` ou `teal_claro`)
-- [ ] Hero centralizado com gradiente atrás + botão embaixo?
-- [ ] Cards brancos idênticos em fundo bege (assinatura Lovable)?
-- [ ] Mínimo 4 tipos de fundo diferentes entre seções? (Se não: monotonia visual)
-- [ ] Contraste forte entre seções? (Não só tom-sobre-tom)
-- [ ] Tem pelo menos 1 divisor decorativo (wave, linha, mudança abrupta)?
-- [ ] Dot indicator do carrossel NÃO expande para linha (`width: 20px`)?
-
-**Imagens**
-- [ ] Imagens contextuais (relacionadas ao conteúdo da seção)?
-- [ ] Não são genéricas tipo "pessoa sorrindo com laptop"?
-- [ ] Nenhum emoji como ícone em seção de valor (entregáveis, bônus, garantia)?
-
-Para cada "sim", usar a tabela de substituições em `anti-ia-design.md` e recomendar a troca no output.
+- [ ] **Design system fixo** (DESIGN SYSTEM FIXO): fundo claro com 1 ou 2 seções escuras, uma família sans-serif (Montserrat nos títulos e Inter no resto), no máximo 3 cores além dos neutros, sem glassmorphism, sem neon, sem excesso de sombra.
+- [ ] **Paleta do nicho** (CORES POR TIPO DE PRODUTO): combina com o nicho e a sensação do produto?
+- [ ] **Imagem real de contexto** (IMAGEM QUE ILUSTRA O CONTEXTO): pelo menos uma, mostrando onde o lead vive o problema?
+- [ ] **Imagem da seção igual à copy da seção** (IMAGEM DA SEÇÃO = COPY DA SEÇÃO): tampando o texto, a imagem conta a mesma história da headline? Nenhuma imagem de resultado em seção de dor, nenhum mockup em seção que não fala do produto.
+- [ ] **Uma ideia visual por seção** (UMA IDEIA VISUAL POR SEÇÃO): nada de foto + mockup + cards + ícones + setas ao mesmo tempo.
+- [ ] **Grid, alinhamento, tipografia e espaçamento** (GRID, ALINHAMENTO, TIPOGRAFIA, ESPAÇAMENTO): grid repetido, cabeçalhos centralizados, títulos grandes e pesados, bastante espaço em branco.
+- [ ] **Produto visível** (MOCKUPS): um mockup principal grande, sem colagem exagerada.
+- [ ] **Bullets** (DESIGN DOS BULLETS): cartões com cadeado e pílula de localização?
+- [ ] **Depoimentos** (DESIGN DOS DEPOIMENTOS): cards de mesma altura, avatar, nome, cinco estrelas e texto com respiro entre eles (inclusive no mobile), sem botão de compra, sem print de conversa nem selo de "verificado"?
+- [ ] **Ancoragem** (DESIGN DA ANCORAGEM DE PREÇO): card central, preços alinhados à direita com risco visível, pílula da soma e preço real em destaque, sem contador nem selo de desconto?
+- [ ] **Quem criou o produto** (DESIGN DA SEÇÃO DO AUTOR): foto real de um lado e texto do outro (empilhados no mobile), visual discreto, sem selo nem moldura chamativa?
+- [ ] **Listas de pensamentos** (DESIGN DAS LISTAS DE PENSAMENTOS E SENTIMENTOS): divisória fina e ícone de sentimento por item?
+- [ ] **Botões** (BOTÃO DE COMPRA E BOTÃO FLUTUANTE): nenhum na primeira dobra; flutuante no centro inferior, depois da segunda dobra, rolando até a oferta e sumindo enquanto a oferta está na tela; só a oferta e o CTA final levam ao checkout.
+- [ ] **Oferta** (OFERTA): stack, lista curta, preço e CTA, sem selo em excesso, contador, desconto ou urgência falsos.
+- [ ] **Layout sem sobreposição** (LAYOUT SEM SOBREPOSIÇÃO): nada encavalado em 1440, 1024, 768 e 375 px; imagem nunca estoura a coluna; nada de rolagem horizontal.
+- [ ] **Carregamento e responsividade** (RESPONSIVIDADE e VERIFICAÇÃO FINAL, item 4): abre rápido no celular, imagens leves, nada pula ao rolar.
 
 ### Formato de output. Bloco 2
 
@@ -263,133 +200,64 @@ Para cada "sim", usar a tabela de substituições em `anti-ia-design.md` e recom
 ## BLOCO 2: DESIGN
 
 ### O que está funcionando
-[Pontos positivos]
+[pontos positivos]
 
 ### O que precisa corrigir
 **[Área do problema]**
-Problema: [descrição]
+Problema: [descrição, citando a regra da régua]
 Correção sugerida: [ação específica]
 
 ### Prioridade máxima
-[2-3 ajustes críticos de design]
+[2 ou 3 ajustes críticos de design]
 ```
 
 ---
 
 ## PASSO 5. Entrega final
 
-Após os 2 blocos, pergunte:
-
 ```
 Feedback completo entregue. O que quer fazer agora?
 
-1. Receber a copy corrigida (texto pronto para copiar e colar)
-2. Receber a copy corrigida + página HTML nova
+1. Receber a copy corrigida (texto pronto)
+2. Receber a copy corrigida e um prompt novo para o Lovable montar a página
 3. Já tenho o que preciso
 ```
 
-### Opção 1. Copy Corrigida (texto)
+### Opção 1. Copy corrigida
 
-Reescreva toda a copy aplicando as correções. Entregue seção por seção, na ordem das 11 seções low ticket:
+Reescreva a copy aplicando as correções, seção por seção, na ordem recomendada da régua, mantendo a abertura escolhida (ou a recomendada, se o mentorado aceitar a troca). Ao reescrever os bullets, se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (gerado pelo `/copy-bullets`), comece por ele, pela tabela do item 1 da skill. Mantenha os depoimentos reais que a página já tem; se ela não tiver nenhum, use os provisórios da régua e entregue a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)". Se faltar a seção de quem criou o produto e o resumo não tiver os marcos reais, faça a pergunta do item 2 da seção "Como esta régua funciona no projeto", na skill, antes de reescrever. Siga as regras da ETAPA 2 da régua e a rotina de auto-revisão de copy do CLAUDE.md, com a exceção da régua. Se houver estudos, entregue no fim a lista "PARA VOCÊ CONFERIR (não vai na página)".
 
+Depois, pergunte:
 ```
-## COPY CORRIGIDA
-
----
-### SEÇÃO 1. PROMESSA (HERO)
-[Copy da categoria low ticket corrigida]
-[CTA]
-
----
-### SEÇÃO 2. FERRAMENTA
-[Texto corrigido]
-
----
-### SEÇÃO 3. DEPOIMENTO
-[Depoimentos corrigidos ou orientações]
-
-[...até a Seção 11]
-```
-
-Aplicar a varredura de vícios proibidos em toda a copy corrigida antes de entregar:
-- [ ] Nenhum travessão no texto
-- [ ] Nenhuma estrutura "Não é X. É Y."
-- [ ] Nenhum ponto de exclamação
-- [ ] Nenhuma pergunta no gancho
-- [ ] Nenhum "mesmo que" / "sem precisar"
-- [ ] Nenhum emoji
-- [ ] Nenhuma frase genérica de vendedor
-- [ ] Produto não mencionado no hero/lead
-
-Após entregar a copy, pergunte:
-```
-1. Aprovar copy
+1. Aprovar e salvar
 2. Quero ajustar algo
 ```
 
-### Opção 2. Copy Corrigida + HTML Novo
+Salve em `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-corrigida-{produto}.md`, atualize o painel (item 9 da seção "Como esta régua funciona no projeto", na skill) e informe o caminho absoluto.
 
-Primeiro entregar a copy corrigida (Opção 1), pedir aprovação. Depois gerar o HTML.
+### Opção 2. Copy corrigida e prompt do Lovable
 
-**Para gerar o HTML, seguir o Fluxo de Geração Obrigatório de 7 etapas** definido em `.claude/skills/paginas/SKILL.md` (seção "Fluxo de Geração"):
+Primeiro a Opção 1, com aprovação. Depois, com a copy congelada, monte o prompt seguindo a ETAPA 3 da régua inteira, com os blocos "REGRAS DE LAYOUT", "REGRA CRÍTICA DE IMPLEMENTAÇÃO", "ANTES DE FINALIZAR" e "VERIFICAÇÃO FINAL" copiados literalmente. Mostre o prompt num único bloco e peça aprovação:
 
-1. Ler `.claude/skills/paginas/SKILL.md` PRIMEIRO. fluxo completo, tabela de estilo por nicho, checklist final.
-2. Escolher **UM ÚNICO estilo visual** para a página inteira pela tabela de nicho (ver regra automática de low ticket logo abaixo). PROIBIDO misturar estilos diferentes na mesma página.
-3. **LER OS TEMPLATES REAIS DO ESTILO ESCOLHIDO** (OBRIGATÓRIO): para cada seção da página, abrir `.claude/skills/paginas/references/templates/{secao}_{estilo}/code.html`. todos no mesmo estilo. Mínimo 4 templates lidos por geração. Seções com template próprio: hero, dor, paliativo, metodo, cta, faq.
-4. Extrair tokens mestres do estilo (`--radius`, `--border-width`, `--shadow`, tipografia, estilo de botão) e colocar no `:root`. TODAS as seções (inclusive entregáveis, bônus, stack, oferta, garantia) herdam esses tokens e parecem nativas do estilo escolhido.
-5. Copiar a estrutura HTML+CSS dos templates lidos e adaptar cores/fontes/textos ao nicho. NÃO reescrever do zero.
-6. Usar `references/estruturas-pagina.md` para ordem de seções e `references/design-system-components.md` apenas como fallback para seções sem template próprio e para utilitários globais (animações, responsivo, CDNs).
-7. Antes de salvar, rodar o checklist do SKILL.md: confirmar que a página usa UM único estilo do início ao fim e que os tokens mestres foram aplicados em todas as seções.
+```
+1. Aprovar e salvar
+2. Quero ajustar algo
+```
 
-**Regra de estilo automática para low ticket (tabela de decisão da skill de páginas):**
-- Estilo único da página: `flat_claro` ou `teal_claro` (escolher um e usar em todas as seções)
-- Motivo: estilos claros passam leveza e baixo risco, perfeito para ticket de entrada
-
-**Regras obrigatórias do HTML:**
-- Arquivo único: CSS em `<style>`, JS em `<script>` (zero dependências além de Google Fonts)
-- Design profissional: tipografia sans-serif, paleta harmoniosa, espaçamentos generosos
-- 100% responsivo: mobile-first com media queries
-- Mínimo 4 tipos de fundo diferentes entre seções
-- Pelo menos 2 seções com imagem de fundo (picsum.photos + overlay)
-- Grid 2 colunas para entregáveis (NUNCA 3)
-- Cards com min-width 320px, padding 28px+, font-size 0.95rem+
-- Header com logotipo obrigatório
-- Texto SEMPRE em pt-BR com acentos corretos
-- NÃO parecer Lovable/v0 (sem cards brancos idênticos em fundo bege)
-- Imagens contextuais (não genéricas). seguir processo de seleção semântica da skill de páginas
-- CTA flutuante no mobile
-
-**Estrutura obrigatória do HTML (11 seções):**
-1. Promessa (hero + copy da categoria low ticket + CTA)
-2. Ferramenta que resolve dor específica rápida
-3. Depoimento com resultado
-4. Entregáveis (grid 2 colunas)
-5. Bônus com valor individual em R$
-6. Stack de Valor (ancoragem visual: valor total riscado vs preço real)
-7. Garantia com selo visual
-8. Quem sou eu com prova
-9. FAQ (3-5 objeções)
-10. CTA final com preço, parcelamento, botão grande, urgência
-11. Rodapé
-
-**Varredura final antes de salvar o HTML:**
-Executar a varredura de vícios proibidos em todo o texto visível da página. Nenhum HTML pode ser salvo sem passar por essa revisão.
-
-Salvar em: `meus-produtos/{ativo}/entregas/paginas/low-ticket-corrigida-[produto].html`
-
-Após salvar: "Pronto. Sua página corrigida foi salva em `meus-produtos/{ativo}/entregas/paginas/low-ticket-corrigida-[produto].html`. Abra no navegador para visualizar."
+Salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-corrigido-{produto}.md`, atualize o painel e explique: abrir o Lovable, colar o prompt num projeto novo (ou pedir para recriar a página no projeto atual) com a foto de quem criou o produto anexada, trocar `CHECKOUT_URL` pelo link do checkout e trocar os depoimentos provisórios pelos reais antes de publicar.
 
 ---
 
 ## Tom e postura no feedback
 
-- Nav orienta, não aprova. Vocabulário: "eu recomendo", "na minha opinião"
-- Não ficar só na análise. sugerir a copy pronta reescrita
-- Não suavizar crítica por medo de desagradar
-- Ser direto e específico: "esse headline não funciona porque..." não "talvez pudesse melhorar"
+- Nav orienta, não aprova. Vocabulário: "eu recomendo", "na minha opinião".
+- Não ficar só na análise: entregue a copy pronta reescrita.
+- Não suavizar crítica por medo de desagradar.
+- Ser direto e específico: "essa headline não funciona porque..." e não "talvez pudesse melhorar".
+- Toda crítica aponta a regra da régua que foi quebrada.
 
 ---
 
 ## Próximo Passo
 
-Após a entrega, sugerir: `/copy-anuncio` para criar anúncios que levam tráfego para a página corrigida.
+Depois da entrega, sugerir `/criativo-estatico` ou `/copy-anuncio` para levar tráfego para a página corrigida.

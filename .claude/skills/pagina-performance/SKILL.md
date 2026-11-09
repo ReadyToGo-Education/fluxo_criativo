@@ -4,7 +4,7 @@ description: >
   Audita a performance de uma página HTML gerada (peso, requisições, imagens,
   fontes, CSS/JS bloqueante, Core Web Vitals estimados) e corrige automaticamente
   os problemas encontrados, devolvendo a página otimizada. Pensada para páginas
-  estáticas single-file produzidas pelas skills `copy-pagina`, `lt-pagina` e
+  estáticas single-file produzidas pelas skills `copy-pagina` e
   `ht-pagina-inscricao`.
 ---
 
@@ -14,7 +14,7 @@ Roda uma auditoria de performance em uma página HTML que já existe no projeto 
 
 ## Quando Usar
 
-- Logo após gerar uma página com `/copy-pagina`, `/lt-pagina` ou `/ht-pagina-inscricao`.
+- Logo após gerar uma página com `/copy-pagina` ou `/ht-pagina-inscricao`.
 - Quando o usuário disser "audita essa página", "tá lenta", "melhora o PageSpeed", "otimiza essa página", "deixa essa página leve".
 - Antes de instalar Pixel ou publicar via Lovable. Página rápida primeiro, tracking depois.
 
@@ -24,7 +24,7 @@ Roda uma auditoria de performance em uma página HTML que já existe no projeto 
 
 Pergunte qual página auditar. Por padrão, ofereça:
 
-1. Última página salva em `entregas/{ativo}/paginas/`
+1. Última página salva em `meus-produtos/{ativo}/entregas/paginas/`
 2. Outra página (informar caminho)
 
 Se houver só uma, use direto.
@@ -122,7 +122,7 @@ Pergunte:
 
 Se o usuário aprovar, edite o HTML aplicando as correções listadas. Não regenere a página do zero, **mantenha a copy intacta**, mexa apenas em estrutura, atributos, ordem de tags e otimizações técnicas.
 
-Salve a versão otimizada **substituindo o arquivo original**. Antes disso, salve uma cópia de segurança em `entregas/{ativo}/paginas/.backup-perf-{timestamp}.html`.
+Salve a versão otimizada **substituindo o arquivo original**. Antes disso, salve uma cópia de segurança em `meus-produtos/{ativo}/entregas/paginas/.backup-perf-{timestamp}.html`.
 
 ### 5. Resumo final
 
@@ -133,8 +133,8 @@ Pronto. Página otimizada.
 Antes:  {KB antes}, {n imagens sem lazy}, {problemas críticos}
 Depois: {KB depois}, {n imagens sem lazy}, {problemas críticos}
 
-Backup: entregas/{ativo}/paginas/.backup-perf-{timestamp}.html
-Arquivo: entregas/{ativo}/paginas/{nome}.html
+Backup: meus-produtos/{ativo}/entregas/paginas/.backup-perf-{timestamp}.html
+Arquivo: meus-produtos/{ativo}/entregas/paginas/{nome}.html
 
 Próximo passo sugerido:
 - /pagina-pixel  (instalar Meta Pixel)

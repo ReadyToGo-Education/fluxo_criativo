@@ -77,5 +77,5 @@ Quer continuar com /produto-concepcao para editar o perfil, ou já ir para /copy
 Se `meus-produtos/{slug}/perfil.md` não existir:
 ```
 Este produto ainda não tem perfil cadastrado.
-Use /produto-editar para cadastrar o Quadro, Furadeira e as 3 Identidades.
+Use /produto-concepcao para cadastrar o Quadro, Furadeira e as 3 Identidades.
 ```

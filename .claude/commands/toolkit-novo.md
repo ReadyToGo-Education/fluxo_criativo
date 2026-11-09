@@ -19,7 +19,7 @@ Inicia um projeto de marketing estruturado quando a demanda é grande (lançamen
 
 Leia `meus-produtos/.ativo`. Se não existir, oriente: "Preciso de um produto ativo antes. Use `/produto-novo` primeiro."
 
-Leia `meus-produtos/{ativo}/perfil.md` para contexto. Se não existir, oriente: "Esse produto ainda não tem perfil. Use `/produto-concepcao` primeiro."
+Leia `meus-produtos/{ativo}/resumo-produto.md` para contexto (se não existir, gere conforme o CLAUDE.md). Se nem o `perfil.md` existir, oriente: "Esse produto ainda não tem perfil. Use `/produto-concepcao` primeiro."
 
 ### 2. Entrevista breve (3 perguntas, uma por vez)
 
@@ -98,12 +98,12 @@ meus-produtos/{ativo}/projeto/.ativo
 
 ## Produto ativo
 - Slug: {ativo}
-- Nome: {nome do produto lido do perfil.md}
+- Nome: {nome do produto lido do resumo-produto.md}
 - Tipo: {tipo lido de tipo.md se existir}
 
 ## Contexto do produto
-- Quadro: {leia do perfil.md}
-- Público principal: {leia do idconsumidor.md se existir}
+- Quadro: {leia do resumo-produto.md}
+- Público principal: {leia do resumo-produto.md}
 
 ## Criado em
 {data de hoje no formato AAAA-MM-DD}

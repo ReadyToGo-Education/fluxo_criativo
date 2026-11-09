@@ -16,7 +16,7 @@ Cria produtos low ticket usando a metodologia low ticket do VTSD: produto de ent
 ## O Que Fazer
 
 ### 1. Contexto
-Leia `meus-produtos/{ativo}/perfil.md`. Se não existir, oriente a usar `/produto-editar` primeiro.
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 Consulte `.claude/skills/vtsd-completo/SKILL.md` (Módulo 10: low ticket).
 
 Verifique também se existe `meus-produtos/{ativo}/pesquisa-mercado.md`. Se NÃO existir (ou tiver mais de 90 dias), acione a skill `pesquisa-mercado` antes de qualquer sugestão de preço, oferta, ângulo de quiz ou anúncio. É obrigatória. A pesquisa alimenta: sugestão de preço low ticket (baseada em faixa real do nicho), ângulos do quiz (baseados em assuntos quentes e objeções reais), copy dos anúncios (padrões virais mapeados) e copy da página (objeções reais do Reclame Aqui).
@@ -199,7 +199,7 @@ Estrutura do produto:
 
 | Material | Destino |
 | --- | --- |
-| Página final do quiz (HTML) | `meus-produtos/{ativo}/entregas/meus-produtos/{ativo}/entregas/paginas/quiz-[produto].html` |
+| Página final do quiz (HTML) | `meus-produtos/{ativo}/entregas/paginas/quiz-[produto].html` |
 | Anúncios low ticket | `meus-produtos/{ativo}/entregas/criativos/caixa-rapido-[produto].md` |
 | Produto desafio | `meus-produtos/{ativo}/entregas/textos-de-venda/desafio-[produto].md` |
 | Copy Hotmart/Kiwify | `meus-produtos/{ativo}/entregas/textos-de-venda/copy-plataforma-[produto].md` |

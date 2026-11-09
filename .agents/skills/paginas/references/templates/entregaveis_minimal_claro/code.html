@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entregáveis. Minimal Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.06s; }
+    .fade-up-delay-2 { transition-delay: 0.12s; }
+    .fade-up-delay-3 { transition-delay: 0.18s; }
+    .fade-up-delay-4 { transition-delay: 0.24s; }
+    .fade-up-delay-5 { transition-delay: 0.30s; }
+    .fade-up-delay-6 { transition-delay: 0.36s; }
+    .entregavel-card { transition: transform 0.2s ease; }
+    .entregavel-card:hover { transform: translateY(-2px); }
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f5;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Tudo que você recebe
+          <span class="text-gray-400">quando entrar.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Material direto, sem rodeio. Cada peça foi pensada para tirar a artesã do improviso e colocar no jogo.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="entregavel-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">play_circle</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Método em vídeo</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Sete módulos gravados, do posicionamento ao primeiro pedido pago. Aulas curtas para assistir no celular enquanto trabalha.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">menu_book</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Caderno de exercícios</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                PDF para imprimir com tabelas de precificação, cálculo de hora e ficha de cliente. Tudo pronto para usar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">edit_note</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Banco de legendas</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Trinta legendas testadas para Instagram. Você troca palavra por palavra e publica sem precisar pensar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">photo_camera</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Guia de fotos com celular</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Roteiro de 12 cenas e 8 ângulos para fotografar peça em casa, sem estúdio, sem ring light, sem fundo branco.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-5 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">forum</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Comunidade fechada</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Grupo de alunas só para mulheres. Espaço para mostrar peça, pedir feedback honesto e celebrar a primeira venda.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-6 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">support_agent</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Suporte por mensagem</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Você manda dúvida pelo formulário interno e recebe resposta da equipe em até 24 horas úteis.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -61,7 +61,7 @@ O HTML final em `meus-produtos/{slug}/entregas/paginas/vendas-{slug}.html` é **
 ### 1. Contexto (sempre)
 
 1. Ler `meus-produtos/.ativo` para o slug do produto.
-2. Ler `meus-produtos/{ativo}/perfil.md` e, se existir, `meus-produtos/{ativo}/entregas/copy-pagina/copy-{slug}.md`.
+2. Ler `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) e, se existir, `meus-produtos/{ativo}/entregas/copy-pagina/copy-{slug}.md`.
 3. Arquivo alvo padrão: `meus-produtos/{ativo}/entregas/paginas/vendas-{slug}.html` (ou o caminho que o usuário disser).
 4. **Onde as imagens ficam no projeto (sempre deixar explícito para o aluno ao falar de imagens):**
    - **No disco:** pasta **`meus-produtos/{ativo}/entregas/paginas/assets/`** (ao lado do HTML da página, não na raiz do repositório).
@@ -107,7 +107,7 @@ Digite o número:
 
 - Se **1** ou **2:** anotar valores (hex quando possível) e usar como referência em qualquer ajuste de CSS ou Tailwind no fluxo.
 - Se **3:** não alterar paleta por iniciativa, exceto se o aluno pedir depois num dos itens do menu.
-- Se **4:** propor 2 a 3 combinações curtas com base em `perfil.md` e nicho, **uma opção por vez** ou lista numerada para escolha, e só então aplicar ao editar.
+- Se **4:** propor 2 a 3 combinações curtas com base em `resumo-produto.md` e nicho, **uma opção por vez** ou lista numerada para escolha, e só então aplicar ao editar.
 
 3. **Pergunta principal:**
 
@@ -184,7 +184,7 @@ Para cada bloco, se faltar dado objetivo (URL de checkout, nome do criador, URL 
 
 **Itens 8 a 11 (copy, headline, placeholders, análise de imagens):**
 
-- **8. Incrementar copy:** comparar HTML com `copy-pagina/copy-{slug}.md` quando existir; sugerir reforços em bullets, parágrafos curtos ou CTAs sem contradizer a copy aprovada. Aplicar **Etapa 0** do SKILL `paginas`. Se não houver arquivo de copy, usar `perfil.md` e **uma** pergunta por vez sobre o que reforçar.
+- **8. Incrementar copy:** comparar HTML com `copy-pagina/copy-{slug}.md` quando existir; sugerir reforços em bullets, parágrafos curtos ou CTAs sem contradizer a copy aprovada. Para os bullets, partir de `copy-pagina/bullets-{slug}.md` (gerado pelo `/copy-bullets`) quando existir. Aplicar **Etapa 0** do SKILL `paginas`. Se não houver arquivo de copy, usar `resumo-produto.md` e **uma** pergunta por vez sobre o que reforçar.
 - **9. Ajustar headline:** foco na primeira dobra (premissa, subheadline, três bullets do hero). Propor alternativas em linguagem humana, pedir escolha ou ajuste, depois gravar no HTML. Respeitar regra de produto fora do lead quando couber.
 - **10. Verificar placeholders de imagem:** listar no chat os pontos encontrados (seletores ou trecho do `src`/`alt`), priorizar o que bloqueia publicação, pedir arquivos ou encaminhar para o fluxo da opção **7** ou geração IA.
 - **11. Análise para enriquecer com imagens:** leitura estratégica da página (hero, método, depoimentos, oferta). Entregar **lista em bullets** do tipo “seção X ganharia com print de Y”, sem gerar arte no escuro; oferecer seguir para opção **7** ou **4** (IA) se o aluno quiser.

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entregáveis. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --bg-surface-2: #111113;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .entregaveis-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .entregaveis-section::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 640px;
+      height: 480px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .entregaveis-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .shimmer-line {
+      width: 64px;
+      height: 2px;
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .entregaveis-headline {
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+
+    .entregaveis-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .entregaveis-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .entregaveis-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .entregavel-card {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 28px 26px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      animation: fadeUpIn 0.6s ease both;
+    }
+
+    .entregavel-card:nth-child(1) { animation-delay: 0.10s; }
+    .entregavel-card:nth-child(2) { animation-delay: 0.18s; }
+    .entregavel-card:nth-child(3) { animation-delay: 0.26s; }
+    .entregavel-card:nth-child(4) { animation-delay: 0.34s; }
+    .entregavel-card:nth-child(5) { animation-delay: 0.42s; }
+    .entregavel-card:nth-child(6) { animation-delay: 0.50s; }
+
+    .entregavel-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 32px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .entregavel-icon {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-glow-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.35s ease;
+    }
+
+    .entregavel-card:hover .entregavel-icon {
+      background: var(--accent-glow-strong);
+    }
+
+    .entregavel-icon .material-symbols-outlined {
+      font-size: 26px;
+      color: var(--accent);
+    }
+
+    .entregavel-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .entregavel-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .entregavel-desc {
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @media (min-width: 720px) {
+      .entregaveis-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .entregaveis-section { padding: 120px 32px 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="entregaveis-section">
+    <div class="entregaveis-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="entregaveis-headline">
+        <h2>Tudo que você recebe quando entrar</h2>
+      </div>
+
+      <p class="entregaveis-subtitle">
+        Um pacote pensado para tirar sua primeira venda online do papel em poucas semanas.
+      </p>
+
+      <div class="entregaveis-grid">
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">play_circle</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Método completo em vídeo</div>
+            <div class="entregavel-desc">48 aulas objetivas cobrindo do posicionamento da artesã até o fechamento da venda online.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">description</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Caderno de precificação</div>
+            <div class="entregavel-desc">Planilha pronta para calcular o valor justo de cada peça sem errar para mais ou para menos.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">photo_camera</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Guia de fotos com celular</div>
+            <div class="entregavel-desc">Passo a passo para tirar fotos que valorizam o crochê usando só o celular e luz natural.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">chat_bubble</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Scripts de venda no WhatsApp</div>
+            <div class="entregavel-desc">Modelos prontos para responder curiosos, enviar orçamento e fechar pedido sem parecer insistente.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">group</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Comunidade de artesãs</div>
+            <div class="entregavel-desc">Grupo exclusivo para tirar dúvidas, mostrar trabalhos e receber apoio de quem está na mesma jornada.</div>
+          </div>
+        </div>
+
+        <div class="entregavel-card">
+          <div class="entregavel-icon"><span class="material-symbols-outlined">auto_awesome</span></div>
+          <div class="entregavel-content">
+            <div class="entregavel-title">Banco de legendas prontas</div>
+            <div class="entregavel-desc">Mais de 60 legendas testadas para usar no Instagram e atrair clientes que valorizam o feito à mão.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

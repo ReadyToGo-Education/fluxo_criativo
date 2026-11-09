@@ -13,6 +13,8 @@ Este projeto é o **Workshop Marketing IA**: um assistente de marketing digital,
 5. Quando o comando apontar skills ou referências, leia somente os arquivos necessários em `.claude/skills/`.
 6. Se houver conflito entre `CLAUDE.md`, uma skill e um command, prefira o command específico lido para a tarefa atual. Se o conflito afetar arquitetura, script ou risco de sobrescrita, avise o usuário antes de seguir.
 
+As pastas `.agents/` e `.codex/` são geradas a partir de `.claude/` por `scripts/exportar-para-codex.py`. Nunca edite essas pastas: altere o original em `.claude/` e rode o script de novo.
+
 No Codex, este repositório está em **Modo Codex**. Slash commands do Claude Code não executam automaticamente. Pedido como `/copy-pagina`, `copy-pagina`, `segue o comando copy-pagina` ou `quero ajustar a página` deve ser interpretado como: abrir o arquivo em `.claude/commands/` e executar o roteiro manualmente.
 
 ## Papel do Agente
@@ -193,6 +195,19 @@ Responder em português com caminho e próximo passo
 
 Se o Codex não leu o command, skill ou agente relevante, ele ainda não tem contexto suficiente para executar o fluxo do workshop com fidelidade.
 
+### Geração de Imagem no Codex
+
+O Claude Code não gera imagem. Por isso vários fluxos do workshop terminam num prompt para o aluno colar no ChatGPT ou no Gemini, ou num script que paga o OpenRouter. No Codex é diferente: a ferramenta de imagem do próprio Codex gera a arte aqui mesmo, pelo plano do ChatGPT do aluno, sem chave de API.
+
+No Codex, antes de executar qualquer passo que gere imagem, leia `.agents/skills/imagem-no-codex/SKILL.md` e siga o que ela diz para aquele fluxo. Vale para:
+
+- `/criativo-estatico` (os 29 formatos);
+- `/furadeira-visual`, inclusive quando é chamado de dentro do `/produto-concepcao`;
+- `/carrossel`;
+- qualquer outro passo que mande o aluno colar um prompt de imagem no ChatGPT ou no Gemini, ou que rode um script de imagem pelo OpenRouter.
+
+Os arquivos em `.claude/` continuam descrevendo o fluxo do Claude Code, com o prompt para colar. Não os altere para o Codex: o que vale só no Codex fica em `codex-extras/`.
+
 ## Abertura de Sessão no Codex
 
 Em uma conversa normal de uso do workshop, se o usuário começar com saudação, pedido genérico ou intenção de criar produto, leia `.claude/commands/produto-novo.md` e siga o fluxo de produto novo.
@@ -211,11 +226,12 @@ Antes de criar, editar ou salvar qualquer entrega de produto:
 
 1. Leia `meus-produtos/.ativo`.
 2. Use o slug encontrado como base: `meus-produtos/{ativo}/`.
-3. Leia `meus-produtos/{ativo}/perfil.md`, se existir.
+3. Leia `meus-produtos/{ativo}/resumo-produto.md`, sem conferir antes se ele existe. É o contexto padrão de toda entrega, no lugar de `perfil.md`, `idconsumidor.md` e `pesquisa-mercado.md` inteiros. Se não for encontrado e o `perfil.md` tiver o Quadro preenchido, gere o resumo com o agente `gerador-resumo-produto` (modelo em `.claude/skills/resumo-produto/SKILL.md`) e leia o que ele gravar. Se não puder acionar o agente, gere o resumo você mesmo seguindo a seção 3 desse modelo e grave no mesmo caminho. Para um detalhe que o resumo não tem, leia só a seção indicada na tabela "Onde está o detalhe completo", no fim do resumo.
 4. Leia `meus-produtos/{ativo}/tipo.md`, se existir.
 5. Leia `meus-produtos/{ativo}/preco.md`, se existir.
-6. Leia `meus-produtos/{ativo}/idconsumidor.md`, se existir.
-7. Leia arquivos específicos da entrega atual, se existirem.
+6. Leia arquivos específicos da entrega atual, se existirem.
+
+Quem escreve, revisa ou gera a concepção (`produto-concepcao`, `gerar-furadeira`, `furadeira-visual`, `produto-zerar`, revisores e geradores) continua lendo os arquivos originais. Ao gravar `perfil.md`, `idconsumidor.md` ou `pesquisa-mercado.md`, apague o `resumo-produto.md` do produto (o hook `resumo-invalidar.js` faz isso sozinho quando está ativo); ele é gerado de novo na próxima entrega.
 
 Se `meus-produtos/.ativo` não existir ou estiver vazio:
 
@@ -240,6 +256,7 @@ meus-produtos/{slug}/tipo.md
 meus-produtos/{slug}/preco.md
 meus-produtos/{slug}/idconsumidor.md
 meus-produtos/{slug}/pesquisa-mercado.md
+meus-produtos/{slug}/resumo-produto.md
 meus-produtos/{slug}/nome.txt
 meus-produtos/{slug}/painel-entregas.html
 ```
@@ -303,7 +320,7 @@ Nunca dependa do caractere `/` funcionar como atalho interno no Codex.
 
 Use esta sequência quando o command não disser algo diferente:
 
-1. **Contexto:** ler produto ativo, `perfil.md`, `tipo.md`, `preco.md` e `idconsumidor.md`.
+1. **Contexto:** ler produto ativo, `resumo-produto.md` (gerar se não existir), `tipo.md` e `preco.md`.
 2. **Entrevista:** fazer somente as perguntas faltantes, de preferência uma por vez.
 3. **Confirmação:** resumir o que será criado e pedir OK, salvo quando o usuário pediu modo direto.
 4. **Geração:** criar o material usando a metodologia do command.
@@ -487,6 +504,9 @@ Proibido:
 - Copiar token de `.env` para exemplos.
 - Fazer heredoc Python com token.
 - Fazer `curl` com token pipeado para Python.
+- Abrir o `.env` para ler ou editar (`cat`, ferramentas de leitura ou edição de arquivo): a leitura traz todos os segredos para a conversa.
+
+No `.env`, seguir a seção "LEITURA SEGURA DO .env" do `CLAUDE.md`: presença com `grep -q "^NOME=." .env` (linha vazia conta como ausente), token usado por substituição dentro do `curl` e gravação com o comando de uma linha que apaga a linha antiga e acrescenta a nova, sem abrir o arquivo.
 
 Quando precisar exibir um comando ou valor sensível, mascare:
 
@@ -654,6 +674,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/copy-pagina`: criar copy completa e, conforme o fluxo atual, encaminhar página HTML.
 - `/copy-anuncio`: criar anúncios para Meta Ads com Mandala da Criatividade.
 - `/copy-roteiro`: criar roteiro de vendas ou conteúdo.
+- `/copy-bullets`: gerar 110 bullets do produto nas 11 técnicas, salvos para as páginas reaproveitarem.
 - `/copy-social`: criar conteúdo para redes sociais.
 - `/copy-variacao-post`: criar variações de um post.
 - `/elementos-literarios`: aplicar 1 a 3 elementos literários em uma peça.
@@ -668,16 +689,26 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/lt-funil`: criar funil low ticket.
 - `/lt-criar-produto`: criar conteúdo real do produto digital.
 - `/lt-quiz`: gerar perguntas de quiz.
-- `/lt-pagina`: gerar página ou leads low ticket conforme o command.
+- `/lt-pagina`: criar a página de vendas low ticket pela régua v16 (7 aberturas, copy completa e prompt para o Lovable).
 - `/lt-otimizar`: analisar planilha ou campanhas low ticket.
 
 ### Tráfego Pago
 
-- `/trafego-conexao`: configurar conexão com Meta Ads.
+- `/trafego-conexao`: conectar com Meta Ads sempre pelo conector (MCP) e testar; App só se a conta não estiver liberada no conector.
 - `/trafego-insights`: ler métricas e derivadas.
-- `/trafego-criar-campanha`: criar campanha via Marketing API.
-- `/trafego-otimizar`: diagnosticar e otimizar campanhas.
+- `/trafego-criar-campanha`: criar campanha via Marketing API ou MCP.
+- `/trafego-otimizar`: diagnosticar e otimizar campanhas, com camada de lucro.
+- `/trafego-escalar`: escalar campanha validada com score de risco e guardião de caixa.
 - `/trafego-analise`: análise narrada VTSD em outputs.
+- `/trafego-diagnostico`: investigar antes de agir (hipóteses, auditoria, falso vencedor, score de confiança).
+- `/trafego-criativos`: atenção, intenção e conversão dos criativos, DNA e briefing do próximo teste.
+- `/trafego-oferta-funil`: funil depois do clique, congruência anúncio x página, oferta e checkout.
+- `/trafego-pixel`: diagnosticar pixels e eventos (apenas leitura).
+- `/trafego-publicos`: criar e gerenciar públicos.
+- `/trafego-regras`: regras automáticas e liga e pausa por horário.
+- `/trafego-testes`: testes A/B disciplinados e remarketing.
+- `/trafego-dashboard`: abrir ou criar o dashboard de tráfego. O ao vivo é um artefato do Claude e não roda no Codex; aqui, siga o dashboard estático (legado) do command.
+- `/trafego-dashboard-analisador`: fotografia do dashboard para o analisador da mentoria. Depende do artefato do Claude e não roda no Codex; aqui, oriente o aluno a rodar no app do Claude.
 
 ### Dados e Automações
 
@@ -718,7 +749,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 ### Feedback
 
 - `/feedback-pagina`: corrigir e otimizar página de vendas existente.
-- `/feedback-low-ticket`: corrigir página low ticket.
+- `/feedback-low-ticket`: corrigir página low ticket pela régua v16.
 
 ### Toolkit
 
@@ -838,7 +869,7 @@ Sempre que criar materiais de marketing, use esta base:
 - **Urgências Ocultas:** 7 categorias com 10 itens cada, totalizando 70 itens.
 - **3 Identidades:** Comunicador, Consumidor e Produto.
 - **Light Copy:** escrita argumentativa, lógica, conversacional e não óbvia.
-- **Mandala da Criatividade:** 18 tipos de anúncio combinados com objetivos e momentos de consumo.
+- **Mandala da Criatividade:** 18 tipos de anúncio combinados com objetivos e momentos de consumo. Lista oficial dos tipos: `.claude/skills/mandala-de-anuncios/SKILL.md` (18 principais e 3 extras).
 - **Estrutura 8D:** página de vendas com seções de conversão.
 - **VVV:** estrutura de vídeo de vendas de valor.
 - **Elementos Literários:** 26 técnicas de escrita persuasiva. Usar 1 a 3 por peça, nunca "mínimo 3".
@@ -889,16 +920,25 @@ Para páginas de vendas, captura, obrigado e low ticket:
 7. Checar placeholders.
 8. Checar se a copy aprovada foi respeitada.
 
+### Checklist de Segurança
+
+Para toda entrega que grava dado, tem login ou chama API de terceiro (quiz, app no Lovable, função `api/*.js` na Vercel, formulário que manda lead para planilha, webhook ou CRM):
+
+- Carregar `.claude/rules/seguranca/checklist-seguranca.md` antes de gerar.
+- Copiar literal o bloco de segurança do tipo de entrega (funil sem login ou app com login) para o prompt do Lovable.
+- Conferir a entrega contra os 10 itens antes de mostrar ao usuário.
+- Página HTML estática só precisa do item 1 (nenhuma chave no navegador).
+
 ## Meta Ads, Conexão e Graph API
 
 Toda tarefa `/trafego-*` ou qualquer operação que toque Meta Ads deve começar pelo Passo 0.
 
 Passo 0 de tráfego:
 
-1. Ler `META_AUTH_MODO` no `.env`.
-2. Se ausente, seguir `/trafego-conexao`.
-3. Se for `MCP_CONECTOR`, verificar se a ferramenta MCP de ads está disponível no ambiente. Se não estiver, orientar reconexão ou voltar ao command de conexão.
-4. Se for `APP`, verificar `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID`. Para criação de campanha, verificar também `FB_PAGE_ID`.
+1. Ler `META_AUTH_MODO` no `.env` (só dois modos: `MCP_CONECTOR`, o padrão, e `APP`, a reserva para conta ainda não liberada pela Meta no MCP; não existe modo híbrido).
+2. Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP` (inclusive o legado `HIBRIDO`), seguir `/trafego-conexao` e aguardar.
+3. Se for `MCP_CONECTOR`, verificar se a ferramenta MCP de ads está disponível no ambiente. Se não estiver, orientar reconexão ou voltar ao command de conexão. Conferir também se `FB_AD_ACCOUNT_ID` tem valor (`grep -q "^FB_AD_ACCOUNT_ID=." .env`); se faltar (conexão feita por versão antiga), seguir `/trafego-conexao`, que lista as contas com `ads_get_ad_accounts` e grava a conta padrão. Nunca chamar o conector com a conta vazia. No MCP, subir vídeo novo, buscar interesse por nome, criar regra automática e apagar campanha, conjunto ou anúncio ainda não têm ferramenta: conduzir o passo a passo no Gerenciador.
+4. Se for `APP`, verificar se `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor com `grep -q "^NOME=." .env` (linha vazia conta como ausente), sem imprimir o valor (nunca `cat .env`). O `FB_PAGE_ID`, usado na criação de campanha, é descoberto e gravado pela própria skill quando falta, sem travar.
 5. Não prosseguir sem conexão validada.
 
 Skills que herdam essa regra:
@@ -906,7 +946,19 @@ Skills que herdam essa regra:
 - `/trafego-insights`.
 - `/trafego-criar-campanha`.
 - `/trafego-otimizar`.
+- `/trafego-escalar`.
 - `/trafego-analise`.
+- `/trafego-diagnostico`.
+- `/trafego-criativos`.
+- `/trafego-oferta-funil`.
+- `/trafego-pixel`.
+- `/trafego-publicos`.
+- `/trafego-regras`.
+- `/trafego-testes`.
+- `/trafego-dashboard`.
+- `/trafego-dashboard-analisador`.
+
+Onde salvam: relatórios em `meus-produtos/{ativo}/entregas/trafego/`; dados de trabalho do produto em `meus-produtos/{ativo}/trafego/`; públicos, regras, pixel e dados da conta em `meus-produtos/_global/trafego/`.
 
 Commands legados como `/ads-relatorio`, `/enviar-relatorio-ads` e `/lt-otimizar` podem usar variáveis próprias. Leia o command antes de assumir o padrão novo.
 
@@ -935,7 +987,10 @@ Regras:
 
 - Sem "sim", "aprovo", "pode" ou equivalente claro, não executar.
 - Nunca exibir o `curl` completo no chat.
-- Se for lote, listar todos os objetos afetados. Se forem muitos, mostrar resumo e lista completa abaixo.
+- Vale também para as ferramentas de escrita do MCP da Meta (`ads_create_*`, `ads_update_*`, `ads_activate_entity`, `ads_boost_ig_post`, `ads_delete_custom_audience`, `ads_pixel_event_*` e `ads_pixel_parameter_*` de criação, edição ou exclusão, `ads_experiment_abtest_create_test`, `ads_experiment_abtest_update_test`, `ads_experiment_lift_create_test` e qualquer outra que crie, altere ou apague algo na conta).
+- Um "sim" por lote, nunca por objeto: um fluxo da mesma skill (ex: campanha + conjuntos + anúncios) vai num bloco só e num "sim" só. Listar todos os objetos afetados; se forem muitos, mostrar resumo e lista completa abaixo. Só perguntar de novo se uma chamada falhar, o plano mudar ou surgir escrita fora do lote.
+- Exclusão é sempre à parte: nunca entra no "sim" do lote, ganha bloco e "sim" próprios e vai pelo MCP quando houver ferramenta (`ads_delete_custom_audience`). Sem ferramenta, não rodar `curl -X DELETE` direto: oferecer pausar ou arquivar, mostrar o comando mascarado para o usuário rodar ou guiar a exclusão no Gerenciador.
+- Fluxos que atravessam várias skills (atalhos compostos, modo Carteira do escalar, remarketing) só encadeiam sem novo gate no modo lote pré-aprovado.
 - Se o usuário cancelar, não chamar a API.
 - Após aprovação, executar e resumir resultado sem ecoar token.
 - Não usar heredoc Python nem `curl | python` com token.

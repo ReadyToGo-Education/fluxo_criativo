@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entregáveis. Crochê Lucrativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-entregaveis {
+      padding: 80px 24px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .section-entregaveis__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-entregaveis__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-entregaveis__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .entregaveis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .entregavel-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .entregavel-card:nth-child(1) { animation-delay: 0.05s; }
+    .entregavel-card:nth-child(2) { animation-delay: 0.1s; }
+    .entregavel-card:nth-child(3) { animation-delay: 0.15s; }
+    .entregavel-card:nth-child(4) { animation-delay: 0.2s; }
+    .entregavel-card:nth-child(5) { animation-delay: 0.25s; }
+    .entregavel-card:nth-child(6) { animation-delay: 0.3s; }
+
+    .entregavel-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 169, 157, 0.2);
+    }
+
+    .entregavel-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(0, 169, 157, 0.1), rgba(0, 169, 157, 0.04));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .entregavel-card__icon .material-symbols-outlined {
+      font-size: 30px;
+      color: var(--teal);
+    }
+
+    .entregavel-card__content {
+      flex: 1;
+    }
+
+    .entregavel-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .entregavel-card__text {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 760px) {
+      .section-entregaveis { padding: 56px 20px; }
+      .section-entregaveis__headline { font-size: 1.65rem; }
+      .section-entregaveis__subtitle { font-size: 1rem; }
+      .entregaveis-grid { grid-template-columns: 1fr; }
+      .entregavel-card { padding: 22px; gap: 16px; }
+      .entregavel-card__icon { width: 48px; height: 48px; }
+      .entregavel-card__icon .material-symbols-outlined { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-entregaveis">
+    <div class="section-entregaveis__header">
+      <h2 class="section-entregaveis__headline">Tudo que você recebe quando entrar</h2>
+      <p class="section-entregaveis__subtitle">Um pacote completo, organizado em módulos práticos, para você sair do lugar e começar a vender pela internet desde a primeira semana.</p>
+    </div>
+
+    <div class="entregaveis-grid">
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">play_circle</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">42 videoaulas em alta definição</h3>
+          <p class="entregavel-card__text">Aulas curtas, direto ao ponto, organizadas em seis módulos. Você assiste no celular, no tablet ou no computador, no horário que conseguir.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">menu_book</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Apostila Crochê Lucrativo em PDF</h3>
+          <p class="entregavel-card__text">Material completo com 84 páginas resumindo o método, com espaço para anotações e checklists para imprimir e seguir passo a passo.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">photo_library</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Banco de fotos profissionais</h3>
+          <p class="entregavel-card__text">Mais de 120 fotos de peças de crochê em alta resolução para você usar nos seus posts, anúncios e catálogos sem precisar sair de casa.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">chat_bubble</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Modelos de mensagens prontas</h3>
+          <p class="entregavel-card__text">Scripts de Direct, WhatsApp e legenda de Instagram que você só precisa adaptar com o nome da peça e o preço, em menos de um minuto.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">calculate</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Planilha de precificação justa</h3>
+          <p class="entregavel-card__text">A planilha que faz o cálculo automático do preço, considerando linha, tempo de produção, lucro real e margem para promoções.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">groups</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Comunidade fechada de alunas</h3>
+          <p class="entregavel-card__text">Grupo no Telegram com mais de 1.800 artesãs ativas trocando dicas, divulgando peças e ajudando umas às outras todos os dias.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

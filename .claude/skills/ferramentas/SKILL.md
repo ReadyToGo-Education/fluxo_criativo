@@ -219,11 +219,11 @@ O OpenRouter nao gera video diretamente. Para videos, use o fluxo:
 
 ### OpenRouter. Mesma chave para imagens da landing (HTML)
 
-**O que faz:** Grava PNG em `entregas/{slug}/paginas/assets/` para ilustrar secoes da pagina (hero, dor, autoridade, OG, etc.), usando modelo de imagem via API (ver script).
+**O que faz:** Grava PNG em `meus-produtos/{slug}/entregas/paginas/assets/` para ilustrar secoes da pagina (hero, dor, autoridade, OG, etc.), usando modelo de imagem via API (ver script).
 **Quando usar:** No fluxo **`/pagina-ajuste`**, quando o aluno escolher **gerar imagens com IA** em vez de enviar arquivos.
 **Chave:** a mesma `OPENROUTER_API_KEY` no `.env` na raiz do repositorio (ver `.env.example`).
 
-**Script:** `scripts/generate-openrouter-nano-banana-images.py` na raiz do projeto. O arquivo lista `JOBS` com nome do PNG, proporcao e `prompt` (em ingles costuma funcionar melhor). Saida direta em `entregas/{slug}/paginas/assets/`.
+**Script:** `scripts/generate-openrouter-nano-banana-images.py` na raiz do projeto. O arquivo lista `JOBS` com nome do PNG, proporcao e `prompt` (em ingles costuma funcionar melhor). Saida direta em `meus-produtos/{slug}/entregas/paginas/assets/`.
 
 **Comando tipico (na raiz):** `py -3 scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
 Opcoes uteis: `--skip N` e `--max M` para gerar so parte da lista (ver cabecalho do script).

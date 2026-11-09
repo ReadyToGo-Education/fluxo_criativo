@@ -18,7 +18,7 @@ Agente especialista em analise e otimizacao de campanhas de trafego pago para pr
 
 ### 1. Contexto
 
-Leia `meus-produtos/{ativo}/perfil.md` para saber o valor do produto (se disponivel).
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) para saber o valor do produto (se disponivel).
 Consulte `.claude/skills/trafego-pago/SKILL.md` para referencia de metricas.
 
 ### 2. Coleta de Dados

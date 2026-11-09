@@ -31,8 +31,7 @@ Você é o orquestrador de produção de vídeo do sistema VTSD. Seu papel é en
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, urgências ocultas
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → tom de comunicação, objeções
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, urgências ocultas, tom de comunicação, objeções
 
 Se não houver produto ativo, oriente: "Antes de produzir o vídeo, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 

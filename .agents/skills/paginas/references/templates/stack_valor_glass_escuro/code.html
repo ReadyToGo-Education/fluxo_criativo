@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack de Valor. Glass Escuro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #000000;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f8f8f8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6c6c6c;
+      --accent: #c2956b;
+      --accent-glow: rgba(194, 149, 107, 0.15);
+      --accent-glow-strong: rgba(194, 149, 107, 0.25);
+      --glass-bg: rgba(17, 17, 19, 0.6);
+      --glass-blur: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .stack-section {
+      position: relative;
+      padding: 96px 24px 112px;
+      overflow: hidden;
+    }
+
+    .stack-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 720px; height: 560px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .stack-container {
+      position: relative; z-index: 1;
+      max-width: 640px; margin: 0 auto;
+    }
+
+    .shimmer-line {
+      width: 64px; height: 2px; margin: 0 auto 40px; border-radius: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .stack-headline {
+      text-align: center; margin-bottom: 16px;
+      animation: fadeUpIn 0.7s ease both;
+    }
+    .stack-headline h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .stack-subtitle {
+      text-align: center;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 540px; margin: 0 auto 48px; line-height: 1.7;
+      animation: fadeUpIn 0.7s ease 0.1s both;
+    }
+
+    .stack-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      padding: 40px 32px;
+      animation: fadeUpIn 0.7s ease 0.2s both;
+    }
+
+    .stack-label {
+      font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--accent); margin-bottom: 18px; text-align: center;
+    }
+
+    .stack-list { list-style: none; margin-bottom: 28px; }
+
+    .stack-item {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+    .stack-item:last-child { border-bottom: none; }
+
+    .stack-item-name {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.95rem; color: var(--text-primary); line-height: 1.5;
+    }
+    .stack-item-name .material-symbols-outlined {
+      font-size: 18px; color: var(--accent); margin-top: 2px; flex-shrink: 0;
+    }
+
+    .stack-item-value {
+      font-size: 0.9rem; color: var(--text-tertiary);
+      font-weight: 500; white-space: nowrap;
+    }
+
+    .stack-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 0; margin-top: 8px;
+      border-top: 1px solid var(--border-hover);
+    }
+    .stack-total-label {
+      font-size: 0.875rem; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .stack-total-value {
+      font-size: 1.35rem; color: var(--text-tertiary); font-weight: 700;
+      text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 2px;
+    }
+
+    .stack-footer {
+      text-align: center; margin-top: 20px;
+      font-size: 0.9rem; color: var(--text-tertiary); line-height: 1.7;
+    }
+
+    @media (min-width: 1024px) {
+      .stack-section { padding: 120px 32px 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="stack-section">
+    <div class="stack-container">
+
+      <div class="shimmer-line"></div>
+
+      <div class="stack-headline">
+        <h2>Veja tudo que você recebe hoje</h2>
+      </div>
+
+      <p class="stack-subtitle">
+        Cada item abaixo foi pensado para te levar do ponto A ao ponto B da forma mais direta possível.
+      </p>
+
+      <div class="stack-card">
+
+        <div class="stack-label">O que está incluído</div>
+
+        <ul class="stack-list">
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Método completo em vídeo (48 aulas)
+            </span>
+            <span class="stack-item-value">R$ 897</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Caderno de precificação
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Guia de fotos com celular
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 01. Pack de 30 receitas
+            </span>
+            <span class="stack-item-value">R$ 297</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 02. Mentoria ao vivo Shopee
+            </span>
+            <span class="stack-item-value">R$ 197</span>
+          </li>
+          <li class="stack-item">
+            <span class="stack-item-name">
+              <span class="material-symbols-outlined">check_circle</span>
+              Bônus 03. Calendário anual de datas
+            </span>
+            <span class="stack-item-value">R$ 147</span>
+          </li>
+        </ul>
+
+        <div class="stack-total">
+          <span class="stack-total-label">Valor real do pacote</span>
+          <span class="stack-total-value">R$ 1.882</span>
+        </div>
+
+        <p class="stack-footer">
+          Mas você não vai pagar isso. Continue para ver a condição especial.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

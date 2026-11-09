@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academy. Método</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: '#0a0a0f',
+        surface: '#12121a',
+        ink: '#f0f0f5',
+        accent: '#2a2a3a',
+        warm: '#6c5ce7',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; color: #f0f0f5; background: #0a0a0f; -webkit-font-smoothing: antialiased; }
+.flat-border { border: 1.5px solid #2a2a3a; }
+
+.method-card {
+  background: #12121a;
+  transition: transform 0.35s ease, border-color 0.35s ease;
+  overflow: hidden;
+}
+.method-card:hover {
+  transform: translateY(-6px);
+  border-color: #6c5ce7;
+}
+
+.card-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.35) saturate(1.2);
+}
+.card-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #12121a 0%, rgba(18,18,26,0.6) 40%, transparent 100%);
+}
+
+.step-number {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #6c5ce7;
+  opacity: 0.25;
+}
+
+.micro-step {
+  position: relative;
+  padding-left: 1rem;
+}
+.micro-step::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  background: #6c5ce7;
+  border-radius: 0;
+}
+
+.section-glow {
+  position: relative;
+}
+.section-glow::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, rgba(108,92,231,0.02) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<section class="py-28 px-6 md:py-36 bg-base section-glow">
+  <div class="max-w-5xl mx-auto relative z-10">
+
+    <div class="text-center mb-16 md:mb-20">
+      <h2 class="fade-up text-3xl md:text-4xl font-bold leading-tight text-ink mb-6 max-w-3xl mx-auto">
+        Três etapas para construir uma carreira que não depende de sorte
+      </h2>
+      <p class="fade-up text-base md:text-lg font-light leading-relaxed text-ink/50 max-w-2xl mx-auto">
+        O Academy é um método estruturado em três fases progressivas. Cada etapa elimina um obstáculo específico entre você e o crescimento profissional que deveria estar acontecendo.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7 items-stretch">
+
+      <!-- Step 1 -->
+      <div class="fade-up method-card flat-border flex flex-col">
+        <div class="card-image">
+          <img src="https://picsum.photos/seed/career-planning-assessment/600/400" alt="Diagnóstico de carreira" loading="lazy">
+        </div>
+        <div class="p-6 md:p-7 flex flex-col flex-1">
+          <div class="flex items-start justify-between mb-4">
+            <span class="step-number">01</span>
+            <span class="material-symbols-outlined text-warm/60" style="font-size:32px;">search_insights</span>
+          </div>
+          <h3 class="text-xl font-semibold text-ink mb-3">Diagnóstico de Carreira</h3>
+          <p class="text-sm font-light text-ink/40 mb-5">Entender onde você está antes de decidir para onde ir.</p>
+          <div class="space-y-2.5 mt-auto">
+            <p class="micro-step text-sm font-light text-ink/60">Avaliar sua posição atual no mercado</p>
+            <p class="micro-step text-sm font-light text-ink/60">Identificar gaps técnicos e comportamentais</p>
+            <p class="micro-step text-sm font-light text-ink/60">Mapear oportunidades reais no seu setor</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="fade-up method-card flat-border flex flex-col">
+        <div class="card-image">
+          <img src="https://picsum.photos/seed/professional-portfolio-authority/600/400" alt="Construção de autoridade" loading="lazy">
+        </div>
+        <div class="p-6 md:p-7 flex flex-col flex-1">
+          <div class="flex items-start justify-between mb-4">
+            <span class="step-number">02</span>
+            <span class="material-symbols-outlined text-warm/60" style="font-size:32px;">workspace_premium</span>
+          </div>
+          <h3 class="text-xl font-semibold text-ink mb-3">Construção de Autoridade</h3>
+          <p class="text-sm font-light text-ink/40 mb-5">Ser reconhecido antes mesmo de abrir a boca na entrevista.</p>
+          <div class="space-y-2.5 mt-auto">
+            <p class="micro-step text-sm font-light text-ink/60">Posicionamento profissional estratégico</p>
+            <p class="micro-step text-sm font-light text-ink/60">Portfólio e presença digital que geram convites</p>
+            <p class="micro-step text-sm font-light text-ink/60">Networking que abre portas de verdade</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="fade-up method-card flat-border flex flex-col">
+        <div class="card-image">
+          <img src="https://picsum.photos/seed/interview-success-negotiation/600/400" alt="Aceleração de resultados" loading="lazy">
+        </div>
+        <div class="p-6 md:p-7 flex flex-col flex-1">
+          <div class="flex items-start justify-between mb-4">
+            <span class="step-number">03</span>
+            <span class="material-symbols-outlined text-warm/60" style="font-size:32px;">rocket_launch</span>
+          </div>
+          <h3 class="text-xl font-semibold text-ink mb-3">Aceleração de Resultados</h3>
+          <p class="text-sm font-light text-ink/40 mb-5">Transformar preparo em ofertas concretas e salário maior.</p>
+          <div class="space-y-2.5 mt-auto">
+            <p class="micro-step text-sm font-light text-ink/60">Aplicação prática com acompanhamento</p>
+            <p class="micro-step text-sm font-light text-ink/60">Preparação para entrevistas de alto nível</p>
+            <p class="micro-step text-sm font-light text-ink/60">Técnicas de negociação salarial</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 120);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

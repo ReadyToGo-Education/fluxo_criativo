@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oferta Final. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.1) 0%, transparent 65%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+
+    .stack-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(42, 42, 58, 0.7);
+      gap: 16px;
+    }
+    .stack-row:last-child { border-bottom: none; }
+    .stack-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(240, 240, 245, 0.85);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .stack-label .material-symbols-outlined {
+      color: #6c5ce7;
+      font-size: 22px;
+    }
+    .stack-value {
+      color: rgba(240, 240, 245, 0.5);
+      font-size: 0.92rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .cta-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 22px 32px;
+      background: linear-gradient(135deg, #6c5ce7, #8b7dff);
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border-radius: 16px;
+      text-decoration: none;
+      box-shadow:
+        0 0 0 1px rgba(108, 92, 231, 0.4),
+        0 12px 40px rgba(108, 92, 231, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: transform 0.25s ease, box-shadow 0.3s ease;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px rgba(108, 92, 231, 0.6),
+        0 18px 50px rgba(108, 92, 231, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-12">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Sua entrada no método
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Sua entrada para o <span class="text-warm">método completo</span>
+        </h2>
+      </div>
+
+      <div class="fade-up delay-1 flat-border rounded-3xl bg-surface/60 p-8 sm:p-10">
+
+        <p class="text-ink/40 text-xs uppercase tracking-widest font-600 mb-5">
+          O que está incluído
+        </p>
+
+        <div class="mb-7">
+          <div class="stack-row">
+            <div class="stack-label">
+              <span class="material-symbols-outlined">play_circle</span>
+              Método principal em 42 aulas
+            </div>
+            <span class="stack-value">R$ 997,00</span>
+          </div>
+          <div class="stack-row">
+            <div class="stack-label">
+              <span class="material-symbols-outlined">menu_book</span>
+              Apostila ilustrada em PDF
+            </div>
+            <span class="stack-value">R$ 197,00</span>
+          </div>
+          <div class="stack-row">
+            <div class="stack-label">
+              <span class="material-symbols-outlined">groups</span>
+              Comunidade fechada de alunas
+            </div>
+            <span class="stack-value">R$ 297,00</span>
+          </div>
+          <div class="stack-row">
+            <div class="stack-label">
+              <span class="material-symbols-outlined">redeem</span>
+              Bônus 01. 30 receitas que vendem
+            </div>
+            <span class="stack-value">R$ 197,00</span>
+          </div>
+          <div class="stack-row">
+            <div class="stack-label">
+              <span class="material-symbols-outlined">storefront</span>
+              Bônus 02. Vitrine de Instagram
+            </div>
+            <span class="stack-value">R$ 247,00</span>
+          </div>
+          <div class="stack-row">
+            <div class="stack-label">
+              <span class="material-symbols-outlined">edit_note</span>
+              Bônus 03. Pack de etiquetas
+            </div>
+            <span class="stack-value">R$ 147,00</span>
+          </div>
+        </div>
+
+        <div class="text-center pt-6 border-t border-accent/60 mb-8">
+          <p class="text-ink/50 text-sm font-500 mb-2">Valor total</p>
+          <p class="text-ink/40 text-xl line-through font-600 mb-5">R$ 2.082,00</p>
+
+          <p class="text-ink/60 text-sm font-500 mb-2">Por apenas</p>
+          <div class="flex items-baseline justify-center gap-1 mb-2">
+            <span class="text-warm text-2xl font-600">R$</span>
+            <span class="text-warm text-6xl sm:text-7xl font-800 leading-none tracking-tight">297</span>
+            <span class="text-warm text-2xl font-600">,00</span>
+          </div>
+          <p class="text-ink/55 text-base font-400">
+            ou 12x de R$ 29,70 no cartão
+          </p>
+        </div>
+
+        <a href="#" class="cta-button">
+          <span>Quero entrar agora</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-ink/45 text-xs font-500">
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">lock</span>
+            Compra segura
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">verified</span>
+            14 dias de garantia
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">bolt</span>
+            Acesso imediato
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

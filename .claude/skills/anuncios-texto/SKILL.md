@@ -46,26 +46,30 @@ Inclui prompt de IA para gerar o visual de fundo separadamente, se necessario.
 | **Thumb chamativa** | Expressao exagerada, fundo colorido, texto bold curto | Thumbnail YouTube ou post de alto impacto |
 | **Criativo estatico com design** | Peca grafica estruturada com hierarquia visual completa | Anuncio de alta qualidade |
 
-## Os 18 Tipos de Anuncios VTSD (Aplicados a Imagem)
+## Os 18 Tipos de Anúncios VTSD (Aplicados a Imagem)
 
-1. **Comparacao**. Imagem dividida: antes vs depois, errado vs certo
-2. **Problema/Solucao**. Imagem de problema + solucao visual
-3. **Explicacao**. Infografico ou imagem didatica
-4. **Curiosidade**. Imagem intrigante + headline que gera duvida
-5. **Reflexao**. Imagem minimalista + frase de impacto
-6. **Certo/Errado**. Layout de duas colunas com X e check
-7. **Demonstracao**. Screenshot, print de resultado, tutorial visual
-8. **Procedimento**. Passo a passo visual, checklist
-9. **Impacto Visual**. Imagem forte e impactante que para o scroll
-10. **Oportunidade**. Imagem de dados/graficos + copy reveladora
-11. **Historia**. Foto pessoal + copy narrativa
-12. **Prova Social**. Print de depoimento, resultado, faturamento
-13. **Clickbait**. Imagem chamativa + headline provocativa
-14. **Sensacao**. Imagem sensorial que desperta emocao
-15. **Contraste**. Imagem split-screen com contraste visual forte
-16. **Ensino**. Conteudo didatico, dica util aplicada a imagem
-17. **Revelacao**. Imagem que contradiz crenca popular ou revela algo inesperado
-18. **Dilema**. Imagem com duas opcoes visuais
+Fonte única da lista: `.claude/skills/mandala-de-anuncios/SKILL.md`.
+
+1. **Comparação**. Imagem dividida: um cenário vs outro, antes vs depois
+2. **Apelo Emocional**. Foto de uma cena real que toca o sentimento + frase curta
+3. **Certo vs Errado**. Layout de duas colunas com X e check
+4. **Curiosidade**. Imagem intrigante + headline com dado surpreendente
+5. **Demonstração**. Screenshot, print de resultado, tutorial visual
+6. **Oportunidade**. Imagem de dados ou gráficos + copy reveladora
+7. **Visual**. Imagem forte e impactante que para o scroll
+8. **Dilema**. Imagem com duas opções visuais
+9. **Clickbait**. Imagem chamativa + headline provocativa que se resolve na legenda
+10. **Prova**. Print de depoimento, resultado, faturamento
+11. **Contraste**. Imagem split-screen com contraste visual forte
+12. **História**. Foto pessoal + copy narrativa
+13. **Ultra Segmentado**. Imagem e headline que nomeiam um público bem específico (ex: "Para mães de crianças de 4 a 5 anos")
+14. **Reflexão**. Imagem minimalista + frase de impacto
+15. **Explicação**. Infográfico ou imagem didática
+16. **Problema-Solução**. Imagem do problema + solução visual
+17. **Sensação**. Imagem sensorial que desperta emoção
+18. **Mito**. Imagem que derruba uma crença popular do mercado (ex: a palavra "MITO" sobre a crença)
+
+Extras: 19. **Pesquisa Científica** (dado do estudo em destaque, com instituição e número), 20. **Atualidades** (notícia recente do nicho como manchete), 21. **Atualidades Trend** (meme ou trend do momento adaptado ao nicho).
 
 ## Aplicação interna de Elementos Literários (OBRIGATÓRIO. não exibir ao usuário)
 
@@ -186,16 +190,16 @@ CERTO:
 - Destaque no beneficio principal
 - CTA no rodape
 
-### Revelacao/Segredo
-- Headline: "O que [autoridades] nao te contam sobre [tema]"
+### Curiosidade (o que ninguém conta)
+- Headline: "O que [autoridades] não te contam sobre [tema]"
 - Imagem intrigante
 - Texto parcial que gera curiosidade
-- CTA: "Descubra o metodo completo"
+- CTA: "Veja a aula completa"
 
 ### Comparacao Visual
 - Coluna 1: "O jeito comum" (X com problemas)
 - Coluna 2: "O [Seu Metodo]" (check com beneficios)
-- Headline: "Ainda fazendo do jeito antigo?"
+- Headline: "O jeito antigo ainda custa caro para quem faz assim"
 
 ### Thumb Chamativa (alto impacto)
 - Expressao facial exagerada (surpresa, choque, incredulidade)

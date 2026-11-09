@@ -42,22 +42,23 @@ Ideal para: producoes mais elaboradas, producoes terceirizadas, Motion/Remotion.
 
 ## Os 18 Tipos de Anuncios VTSD (Aplicados a Video)
 
-Lista canonica (mesma da Mandala da Criatividade):
-1. Comparacao, 2. Problema/Solucao, 3. Explicacao, 4. Curiosidade, 5. Reflexao,
-6. Certo/Errado, 7. Demonstracao, 8. Procedimento, 9. Impacto Visual, 10. Oportunidade,
-11. Historia, 12. Prova Social, 13. Clickbait, 14. Sensacao, 15. Contraste,
-16. Ensino, 17. Revelacao, 18. Dilema
+Lista canônica (fonte única: `.claude/skills/mandala-de-anuncios/SKILL.md`):
+1. Comparação, 2. Apelo Emocional, 3. Certo vs Errado, 4. Curiosidade, 5. Demonstração,
+6. Oportunidade, 7. Visual, 8. Dilema, 9. Clickbait, 10. Prova,
+11. Contraste, 12. História, 13. Ultra Segmentado, 14. Reflexão, 15. Explicação,
+16. Problema-Solução, 17. Sensação, 18. Mito
+Extras: 19. Pesquisa Científica, 20. Atualidades, 21. Atualidades Trend
 
-**Os que mais performam em video (ordem de eficacia):**
-1. **Demonstracao**. Mostre o produto/metodo funcionando ao vivo
-2. **Historia**. Narrativa pessoal com arco emocional
-3. **Prova Social**. Depoimento em video, resultado filmado
-4. **Problema/Solucao**. Comece pelo problema, mostre a virada
-5. **Certo/Errado**. Demonstre os dois caminhos
-6. **Curiosidade**. Comece com gancho e revele ao longo do video
-7. **Explicacao**. Tutorial rapido, passo a passo visual
-8. **Revelacao**. Comece com a crenca errada, quebre com prova
-9. **Comparacao**. Antes e depois com transicao visual
+**Os que mais performam em vídeo (ordem de eficácia):**
+1. **Demonstração**. Mostre o produto ou método funcionando ao vivo
+2. **História**. Narrativa pessoal com arco emocional
+3. **Prova**. Depoimento em vídeo, resultado filmado
+4. **Problema-Solução**. Comece pelo problema, mostre a virada
+5. **Certo vs Errado**. Demonstre os dois caminhos
+6. **Curiosidade**. Comece com gancho e revele ao longo do vídeo
+7. **Explicação**. Tutorial rápido, passo a passo visual
+8. **Mito**. Comece com a crença errada, quebre com prova
+9. **Comparação**. Antes e depois com transição visual
 
 ## Aplicação interna de Elementos Literários (OBRIGATÓRIO. não exibir ao usuário)
 
@@ -66,7 +67,7 @@ Depois que o tipo da Mandala estiver definido e ANTES de gerar o roteiro, aciona
 Regras:
 - Esse processo é silencioso. **Não mencionar ao usuário** quais elementos foram escolhidos, nem que a skill foi consultada.
 - Os 1 a 3 elementos selecionados devem ser efetivamente aplicados no roteiro gerado (gancho, desenvolvimento, regancho ou CTA), não apenas listados.
-- A escolha precisa fazer sentido com o tipo da Mandala (ex.: Historia combina com setup/punchline; Demonstracao combina com triade comica; Revelacao combina com antitese; Curiosidade combina com neologismo).
+- A escolha precisa fazer sentido com o tipo da Mandala (ex.: História combina com setup/punchline; Demonstração combina com tríade cômica; Mito combina com antítese; Curiosidade combina com neologismo).
 - Continuar respeitando todas as proibicoes de Light Copy.
 - Nao exibir rotulos como "elemento usado: X" no entregavel final.
 
@@ -157,6 +158,18 @@ Tamanho alvo: ~130 palavras por roteiro (~35-45 segundos de fala natural). Calib
 | Resolucao minima | 720p |
 | Taxa de quadros | 30fps minimo |
 
+**Zona segura (margem de respiro) obrigatória em 9:16:**
+
+O vídeo preenche os 1080x1920 inteiros, mas texto, headline, legenda queimada e CTA precisam ficar dentro da área segura. Fora dela, a interface do Instagram cobre o conteúdo.
+
+| Área | Reservar | O que cobre |
+| --- | --- | --- |
+| Rodapé | 14% | Nome do anunciante e botão nativo "Saiba mais" do Meta Ads |
+| Topo | 12% | Barra de perfil e status |
+| Lateral direita | 15% | Coluna de ícones (curtir, comentar, compartilhar, áudio) |
+
+Nenhum texto encosta na borda. Se o roteiro pedir texto na tela em algum desses trechos, reposicione para o miolo do quadro.
+
 ### YouTube Ads
 
 | Especificacao | Valor |
@@ -213,6 +226,7 @@ Antes de publicar, verifique:
 - [ ] Legendas incluidas?
 - [ ] CTA claro no final?
 - [ ] Formato vertical (9:16) para Reels/Stories?
+- [ ] Zona segura respeitada (rodapé 14%, topo 12%, lateral direita 15% livres de texto)?
 - [ ] Duracao adequada ao formato?
 - [ ] Copy segue regras Light Copy (sem pontos de exclamacao, sem perguntas no gancho)?
 - [ ] Audio limpo e audivel?
@@ -258,8 +272,25 @@ Quando possível, dar nome próprio ao conceito ensinado no vídeo ("Método da 
 | --- | --- | --- |
 | Descoberta | Atrair novas pessoas que ainda nao conhecem | "Me segue para mais" / "Salva esse video" |
 | Relacionamento | Criar conexao com quem ja segue | "Comenta aqui" / "Marca alguem" / "Compartilha" |
-| Conversao | Vender | "Link na bio" / "Clica no botao" / "Garante sua vaga" |
+| Conversao | Vender | "Clique em Saiba mais" / "Clica no botão aqui embaixo" / "Garante sua vaga" |
 | RMKT | Converter quem ja viu a pagina | "Ultimas vagas" / "So ate amanha" / "Garanta agora" |
+
+**Regra de CTA em anúncio pago:** o padrão é "Saiba mais", que é o botão nativo do Meta Ads. Se o aluno indicou outro em qualquer momento, usar esse. Nunca inventar CTA. Nunca usar "Link na bio" nem "Clique no link da bio", porque em anúncio pago o clique acontece no botão, não na bio.
+
+**Perguntar o CTA antes de gerar.** Se o aluno ainda não indicou a chamada, pergunte antes de escrever o roteiro:
+
+```
+Qual chamada você quer no vídeo?
+
+1. Saiba mais (padrão do Meta Ads)
+2. Cadastre-se
+3. Comprar agora
+4. Outra (me diga qual)
+
+Digite o número:
+```
+
+Se o aluno já indicou o CTA antes, não repita a pergunta, apenas confirme em uma linha.
 
 ## Pesquisa de Tendencias (OBRIGATORIA antes de gerar)
 
@@ -336,8 +367,8 @@ O aluno que mais trava raramente e o que sabe menos. Isso acontece porque ele ap
 
 | Estrutura | Quando Usar | Logica de Retencao |
 |---|---|---|
-| **Loop Perfeito** | Revelacao, insights | Final conecta ao gancho, incentiva replay |
-| **Tutorial de 3 Passos** | Procedimento, ensino | Cada passo avanca a narrativa ate o fim |
+| **Loop Perfeito** | Mito, Curiosidade | Final conecta ao gancho, incentiva replay |
+| **Tutorial de 3 Passos** | Demonstração, Explicação | Cada passo avanca a narrativa ate o fim |
 | **Quebra-Padrao** | Contraste, paradoxo | Abertura inesperada, forca pausa no scroll |
 
 Usar estruturas diferentes nas 3 variacoes sempre que possivel.

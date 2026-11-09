@@ -18,7 +18,7 @@ description: >
    1. Aprovar e salvar
    2. Quero ajustar algo
    ```
-5. **Usar dados do perfil.** Quadro, Furadeira e Urgências Ocultas do `perfil.md` devem guiar o conteúdo gerado. não inventar do zero.
+5. **Usar dados do perfil.** Quadro, Furadeira e Urgências Ocultas do `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) devem guiar o conteúdo gerado. não inventar do zero.
 6. **Tom de escrita:** claro, direto, acessível. Mesmo padrão Light Copy do restante do sistema.
 
 ---
@@ -66,7 +66,7 @@ Após todos os capítulos aprovados, gere um HTML com:
 - Rodapé com instruções: "Para salvar como PDF: Ctrl+P → Salvar como PDF → Layout: Retrato"
 - Design limpo e profissional (sem excesso de cor, foco em legibilidade)
 
-**Onde salvar:** `entregas/{ativo}/produto/ebook-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/ebook-[slug-produto].html`
 
 ---
 
@@ -105,7 +105,7 @@ Gere HTML com:
 - Instruções de uso no topo ("Como usar este checklist...")
 - Layout otimizado para impressão A4 e uso em tela
 
-**Onde salvar:** `entregas/{ativo}/produto/checklist-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/checklist-[slug-produto].html`
 
 ---
 
@@ -155,8 +155,8 @@ Quer que eu gere um material de apoio para o aluno (slides ou apostila resumo)?
 Se sim: gere HTML com slides/apostila simples. tópicos de cada aula, espaço para anotações, design clean.
 
 **Onde salvar:**
-- Roteiros: `entregas/{ativo}/produto/roteiros-[slug-produto].md`
-- Material de apoio (se gerado): `entregas/{ativo}/produto/material-apoio-[slug-produto].html`
+- Roteiros: `meus-produtos/{ativo}/entregas/produto/roteiros-[slug-produto].md`
+- Material de apoio (se gerado): `meus-produtos/{ativo}/entregas/produto/material-apoio-[slug-produto].html`
 
 ---
 
@@ -204,7 +204,7 @@ Gere HTML como "caderno do desafio" com:
 - Design motivacional (cores energizantes, não sóbrias demais)
 - Barra de progresso visual ao longo do desafio
 
-**Onde salvar:** `entregas/{ativo}/produto/desafio-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/desafio-[slug-produto].html`
 
 ---
 
@@ -215,8 +215,8 @@ Gere HTML como "caderno do desafio" com:
 ### Antes de começar — Leitura obrigatória
 
 Leia **obrigatoriamente** os dois arquivos abaixo antes de gerar qualquer coisa:
-- `produtos/{ativo}/perfil.md` — para extrair: Quadro, Furadeira (cada etapa do método), Tom de voz, Vocabulário do comunicador
-- `produtos/{ativo}/idconsumidor.md` — para extrair: frases que o público diria, palavras que conectam, palavras que afastam, objeções de compra
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md). Para extrair: Quadro, Furadeira (cada etapa do método), Tom de voz, Vocabulário do comunicador, frases que o público diria, objeções de compra
+- Para as palavras que conectam e as palavras que afastam, leia também só a seção `## Como se Comunicar` de `meus-produtos/{ativo}/idconsumidor.md`
 
 Esses dados são insumos diretos do prompt. Sem eles, o agente ficará genérico.
 
@@ -227,10 +227,10 @@ Esses dados são insumos diretos do prompt. Sem eles, o agente ficará genérico
 Com base no que leu dos dois arquivos, proponha:
 - Nome do agente (deve soar como um assistente pessoal, não uma ferramenta genérica)
 - Função principal em 1 frase (o que ele faz de melhor, baseada no Quadro do produto)
-- Tom de voz (extraído do perfil.md e do idconsumidor.md — nunca genérico)
+- Tom de voz (extraído do resumo-produto.md, nunca genérico)
 - Lista do que o agente FAZ (5 a 8 capacidades, derivadas da Furadeira/método)
 - Lista do que o agente NÃO FAZ (3 a 5 limitações claras, incluindo não diagnosticar, não substituir profissional)
-- 3 exemplos de como o comprador usaria o agente no dia a dia (use frases reais do idconsumidor.md)
+- 3 exemplos de como o comprador usaria o agente no dia a dia (use frases reais do resumo-produto.md)
 
 Mostre e pergunte:
 ```
@@ -244,7 +244,7 @@ Gere o prompt de configuração. O prompt DEVE conter obrigatoriamente todas as 
 
 **2.1 Identidade**
 - Nome do agente sem placeholder — nunca deixar `[nome]` ou `[produto]` no texto final
-- Nome real da criadora (extraído do perfil.md — campo Identidade do Comunicador)
+- Nome real da criadora (extraído do resumo-produto.md, seção Identidade do Comunicador)
 - Credencial real (anos de experiência, formação)
 - Propósito em 1 frase clara
 
@@ -254,18 +254,18 @@ Gere o prompt de configuração. O prompt DEVE conter obrigatoriamente todas as 
 - Para temas fora do escopo: incluir frase de redirecionamento gentil pronta para o agente usar
 
 **2.3 Tom de voz**
-- Adjetivos do tom (extraídos do perfil.md)
+- Adjetivos do tom (extraídos do resumo-produto.md)
 - Proibições absolutas de estilo: nunca usar ponto de exclamação, nunca usar travessão, nunca usar perguntas retóricas como gancho, nunca usar "Não é X. É Y."
 - **Vocabulário que conecta:** extrair do idconsumidor.md (campo "Palavras que conectam")
 - **Vocabulário proibido:** extrair do idconsumidor.md (campo "Palavras que afastam")
 
 **2.4 Reconhecer o vocabulário do público**
-- Lista de frases que o público usa (extraídas do idconsumidor.md, campo "Frases que essa pessoa diria")
+- Lista de frases que o público usa (extraídas do resumo-produto.md, campo "Frases que diria")
 - Para cada frase: instrução de como o agente deve reagir (validar, acolher, perguntar, etc.)
 - Esta seção torna o agente capaz de identificar o estado emocional da usuária pelo vocabulário, não só pelo conteúdo
 
 **2.5 Conhecimento base**
-- Principais conceitos do nicho (extraídos do perfil.md)
+- Principais conceitos do nicho (extraídos do resumo-produto.md)
 - Para produtos com método em etapas (desafio, mini-curso): detalhar CADA etapa com:
   - Quando usar após o produto (situação que indica essa prática)
   - Duração e o que a usuária precisa (posição, material, ambiente)
@@ -293,7 +293,7 @@ Formato de tabela ou lista:
 
 **2.9 Exemplos de resposta dentro do prompt (mínimo 3)**
 - Incluir pares Usuária/Agente diretamente no prompt, não só no arquivo .md
-- Os exemplos devem cobrir: pergunta sobre prática, crise leve, frase do idconsumidor.md
+- Os exemplos devem cobrir: pergunta sobre prática, crise leve, frase do público (resumo-produto.md)
 
 **Verificação obrigatória antes de salvar o prompt:**
 Antes de mostrar para aprovação, passe por este checklist:
@@ -316,9 +316,9 @@ Inclua no arquivo salvo um bloco de instruções com:
 - Como configurar no ChatGPT (GPTs customizados): passo a passo numerado
 - Como configurar no Claude (Projects): passo a passo numerado
 - Sugestão de ícone com prompt de geração pronto
-- 4 iniciadores de conversa sugeridos (use frases do idconsumidor.md como base)
+- 4 iniciadores de conversa sugeridos (use frases do resumo-produto.md como base)
 
-**Onde salvar:** `entregas/{ativo}/produto/agente-gpt-[slug-produto].md`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/agente-gpt-[slug-produto].md`
 
 ---
 
@@ -368,4 +368,4 @@ No final do arquivo HTML, inclua um bloco colapsável "Como recriar no Google Sh
 - Fórmulas do Google Sheets prontas para copiar e colar em cada célula de resultado
 - Dica de formatação (cores, negrito, largura de coluna)
 
-**Onde salvar:** `entregas/{ativo}/produto/planilha-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/planilha-[slug-produto].html`

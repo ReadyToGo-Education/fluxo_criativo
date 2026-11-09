@@ -96,7 +96,7 @@ A pesquisa de mercado NÃO mora mais nesta skill. Toda pesquisa de mercado, conc
 
 Fluxo padrão:
 1. Definir nicho, Quadro inicial e formato pretendido.
-2. Acionar `pesquisa-mercado` e aguardar o relatório completo em `entregas/{ativo}/pesquisa-mercado.md`.
+2. Acionar `pesquisa-mercado` e aguardar o relatório completo em `meus-produtos/{ativo}/pesquisa-mercado.md`.
 3. Voltar para esta skill (`concepcao-produto`) usando os dados da pesquisa como insumo para gerar Decorados, enriquecer Urgências Ocultas, definir as 3 Identidades, preço e Argumentos Incontestáveis.
 
 Sem pesquisa, sem sugestão. Se o aluno tentar pular, explicar que a pesquisa é obrigatória porque é ela que transforma "achismo" em decisão fundamentada.

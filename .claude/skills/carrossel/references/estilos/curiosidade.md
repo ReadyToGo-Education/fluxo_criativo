@@ -13,17 +13,17 @@ O fluxo de coleta da Curiosidade **ignora** o `passo-coleta-base.md` padrão. A 
 ### 1.1. @ do Instagram
 "Qual o @ do seu Instagram?"
 
-Se `perfil.md` (ou `idconsumidor.md`) tiver um handle, pré-preencha como sugestão: "Sugestão a partir do seu produto: {handle}. Confirme ou corrija."
+Se `resumo-produto.md` tiver um handle, pré-preencha como sugestão: "Sugestão a partir do seu produto: {handle}. Confirme ou corrija."
 
 ### 1.2. Nicho
 "Qual o seu nicho? (ex: música, finanças, maternidade, surf)"
 
-Se `perfil.md` tiver nicho, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver nicho, pré-preencha como sugestão.
 
 ### 1.3. Produto
 "Qual o produto que você vende? (nome, formato e para quem é)"
 
-Se `perfil.md` tiver Quadro, formato e público, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver Quadro, formato e público, pré-preencha como sugestão.
 
 > O tema e o tom NÃO são coletados aqui. O tema é escolhido na Etapa 3 do prompt (depois da busca na web) e o tom na Etapa 4. No modo individual, são interativos. No modo "Gerar todos", veja a regra abaixo.
 
@@ -34,7 +34,7 @@ Se `perfil.md` tiver Quadro, formato e público, pré-preencha como sugestão.
 A skill `/carrossel` no estilo Curiosidade faz o seguinte:
 
 1. **Carrega** `references/prompt-curiosidade.md` inteiro.
-2. **Executa a Etapa 1** (coleta de @, nicho, produto), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`.
+2. **Executa a Etapa 1** (coleta de @, nicho, produto), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `resumo-produto.md`.
 3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
 4. **Executa o prompt da Etapa 2 à Etapa 7 exatamente como está**, na sessão atual:
    - Etapa 2: busca de 5 curiosidades atemporais via `WebSearch`.

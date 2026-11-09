@@ -51,7 +51,7 @@ Leia `meus-produtos/.ativo`. Se estiver vazio ou ausente, pare e informe:
 Nenhum produto ativo. Use /produto-novo ou /produto-trocar primeiro.
 ```
 
-O `{ativo}` define onde os entregaveis sao salvos. Se existir `meus-produtos/{ativo}/perfil.md`, voce pode le-lo de leve para, no checklist de implementacao, conectar o ensinamento ao produto do mentorado. Nao e obrigatorio.
+O `{ativo}` define onde os entregaveis sao salvos. Se existir `meus-produtos/{ativo}/perfil.md`, você pode ler de leve o resumo do produto em `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) para, no checklist de implementação, conectar o ensinamento ao produto do mentorado. Não é obrigatório.
 
 ### Passo 1. Receber o material
 
@@ -304,7 +304,7 @@ Transforme o ensinamento em passos que o mentorado pode executar. Cada item:
 - Vem na ordem de execucao real.
 Agrupe os itens em fases ou blocos quando fizer sentido (ex: "Antes de comecar",
 "Execucao", "Revisao"). Use checkboxes markdown "- [ ]".
-Se o perfil do produto ativo foi fornecido no contexto, voce pode adaptar 1 ou 2 itens
+Se o resumo do produto ativo foi fornecido no contexto, você pode adaptar 1 ou 2 itens
 para conectar com o produto do mentorado, sem distorcer o ensinamento do material.
 Foco total em acao. Teoria fica na apostila, nao aqui.
 ```

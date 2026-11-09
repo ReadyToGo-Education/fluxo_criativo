@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paliativo. O que você já tentou</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .flat-border {
+      border: 1.5px solid #2a2a3a;
+    }
+
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.06) 0%, transparent 60%);
+    }
+
+    /* FadeUp animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up:nth-child(2) { transition-delay: 0.08s; }
+    .fade-up:nth-child(3) { transition-delay: 0.16s; }
+    .fade-up:nth-child(4) { transition-delay: 0.24s; }
+
+    /* Card hover */
+    .paliativo-card {
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .paliativo-card:hover {
+      border-color: rgba(108, 92, 231, 0.35);
+      background-color: rgba(18, 18, 26, 0.9);
+    }
+
+    /* X icon pulse */
+    .x-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 12px;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1.5px solid rgba(108, 92, 231, 0.25);
+      transition: background 0.3s ease;
+    }
+
+    .paliativo-card:hover .x-icon-wrap {
+      background: rgba(108, 92, 231, 0.18);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
+    <div class="max-w-3xl mx-auto w-full">
+
+      <!-- Headline -->
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          O que você já tentou
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Você já fez de tudo para alavancar sua carreira.
+          <span class="text-ink/50"> Nada funcionou de verdade.</span>
+        </h2>
+      </div>
+
+      <!-- Cards -->
+      <div class="flex flex-col gap-5">
+
+        <!-- Card 1 -->
+        <div class="paliativo-card fade-up flat-border rounded-2xl bg-surface/60 p-6 sm:p-7">
+          <div class="-mx-6 -mt-6 md:-mx-7 md:-mt-7 mb-5 overflow-hidden rounded-t-2xl relative">
+            <img src="https://picsum.photos/seed/laptop/600/300" alt="" class="w-full h-36 md:h-44 object-cover" style="filter: brightness(0.35) saturate(1.2)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#12121a] to-transparent"></div>
+          </div>
+          <div class="flex gap-5 items-start">
+            <div class="x-icon-wrap">
+              <span class="material-symbols-outlined text-warm text-[26px]">close</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">
+                Fazer cursos online genéricos
+              </h3>
+              <p class="text-ink/55 text-[0.95rem] leading-relaxed font-light">
+                Certificados que ninguém valoriza, conteúdo raso que repete o óbvio. Você acumula horas de aula, mas na hora de uma entrevista ou de um desafio real, percebe que não aprendeu nada aplicável. O mercado não quer diplomas decorativos. quer resultado.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paliativo-card fade-up flat-border rounded-2xl bg-surface/60 p-6 sm:p-7">
+          <div class="-mx-6 -mt-6 md:-mx-7 md:-mt-7 mb-5 overflow-hidden rounded-t-2xl relative">
+            <img src="https://picsum.photos/seed/resume/600/300" alt="" class="w-full h-36 md:h-44 object-cover" style="filter: brightness(0.35) saturate(1.2)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#12121a] to-transparent"></div>
+          </div>
+          <div class="flex gap-5 items-start">
+            <div class="x-icon-wrap">
+              <span class="material-symbols-outlined text-warm text-[26px]">close</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">
+                Atualizar o currículo e disparar para dezenas de vagas
+              </h3>
+              <p class="text-ink/55 text-[0.95rem] leading-relaxed font-light">
+                Sem retorno, sem diferencial. Seu currículo entra na mesma pilha de outros milhares. e o silêncio depois do envio diz tudo. O problema nunca foi a formatação do PDF. É que currículo sozinho não comunica valor, não mostra quem você é e muito menos o que você resolve.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paliativo-card fade-up flat-border rounded-2xl bg-surface/60 p-6 sm:p-7">
+          <div class="-mx-6 -mt-6 md:-mx-7 md:-mt-7 mb-5 overflow-hidden rounded-t-2xl relative">
+            <img src="https://picsum.photos/seed/network/600/300" alt="" class="w-full h-36 md:h-44 object-cover" style="filter: brightness(0.35) saturate(1.2)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#12121a] to-transparent"></div>
+          </div>
+          <div class="flex gap-5 items-start">
+            <div class="x-icon-wrap">
+              <span class="material-symbols-outlined text-warm text-[26px]">close</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">
+                Tentar networking forçado no LinkedIn
+              </h3>
+              <p class="text-ink/55 text-[0.95rem] leading-relaxed font-light">
+                Conexões vazias, mensagens copiadas e coladas, sem resultado real. Você adiciona pessoas, comenta posts, manda mensagens. e nada volta. Networking de verdade não é um jogo de números. É construir autoridade genuína que atrai oportunidades, não mendigá-las.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paliativo-card fade-up flat-border rounded-2xl bg-surface/60 p-6 sm:p-7">
+          <div class="-mx-6 -mt-6 md:-mx-7 md:-mt-7 mb-5 overflow-hidden rounded-t-2xl relative">
+            <img src="https://picsum.photos/seed/office/600/300" alt="" class="w-full h-36 md:h-44 object-cover" style="filter: brightness(0.35) saturate(1.2)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#12121a] to-transparent"></div>
+          </div>
+          <div class="flex gap-5 items-start">
+            <div class="x-icon-wrap">
+              <span class="material-symbols-outlined text-warm text-[26px]">close</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">
+                Aceitar qualquer promoção ou projeto
+              </h3>
+              <p class="text-ink/55 text-[0.95rem] leading-relaxed font-light">
+                Sobrecarga sem crescimento de verdade. Você diz sim para tudo achando que isso mostra comprometimento. e acorda meses depois fazendo o dobro de trabalho pelo mesmo salário, sem clareza de direção. Mais responsabilidade sem estratégia não é evolução. É exaustão disfarçada de progresso.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Closing line / bridge -->
+      <div class="fade-up text-center mt-14">
+        <p class="text-ink/45 text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto">
+          O problema não é falta de esforço. É falta de um método que conecte o que você sabe ao que o mercado precisa. de forma estratégica e intencional.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // FadeUp on scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -77,30 +77,26 @@ def extract_body_scripts(body: str) -> tuple[str, list[str]]:
     return body_clean.strip(), scripts
 
 
-def _escopar_seletor(s: str, scope: str) -> str:
-    """Aplica o prefixo `scope` a um seletor individual."""
-    if s == ":root" or s.startswith(":"):
-        return s
-    if s in ("html", "body"):
-        return scope
-    if s == "*":
-        return f"{scope} *"
-    return f"{scope} {s}"
+_AT_RULES_ANINHADAS = ("media", "supports", "container", "layer", "document")
 
 
-def _fim_do_bloco(css: str, inicio: int) -> int:
-    """Recebe a posição logo após um `{` e devolve a posição do `}` correspondente."""
-    profundidade = 1
-    i = inicio
-    while i < len(css):
-        if css[i] == "{":
-            profundidade += 1
-        elif css[i] == "}":
-            profundidade -= 1
-            if profundidade == 0:
-                return i
-        i += 1
-    return len(css)
+def _split_top_level(texto: str, sep: str) -> list[str]:
+    """Divide `texto` em `sep` ignorando separadores dentro de parenteses."""
+    partes: list[str] = []
+    atual: list[str] = []
+    prof = 0
+    for ch in texto:
+        if ch == "(":
+            prof += 1
+        elif ch == ")":
+            prof = max(0, prof - 1)
+        if ch == sep and prof == 0:
+            partes.append("".join(atual))
+            atual = []
+        else:
+            atual.append(ch)
+    partes.append("".join(atual))
+    return partes
 
 
 def scope_css(css: str, scope: str) -> str:
@@ -108,38 +104,54 @@ def scope_css(css: str, scope: str) -> str:
 
     Regras:
     - html, body, * viram o proprio scope (nao vazam pro documento global)
-    - :root, keyframes, font-face e demais @-rules sem seletores ficam intactos
-    - @media, @supports e @container sao percorridos por dentro, para que as
-      regras responsivas recebam o mesmo prefixo (e a mesma especificidade)
-      das regras de fora. Sem isso, a versão de celular perde para a de desktop.
+    - :root e @keyframes/@font-face ficam intactos
+    - @media/@supports: o conteudo interno tambem e escopado, inclusive a
+      PRIMEIRA regra do bloco (antes ela ficava sem prefixo e perdia para a
+      regra base, que tem mais especificidade, deixando o responsivo quebrado)
     - seletores normais recebem prefixo `scope `
     """
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
     out: list[str] = []
-    i = 0
-    while i < len(css):
-        abre = css.find("{", i)
-        if abre == -1:
+    i, n = 0, len(css)
+    while i < n:
+        j = css.find("{", i)
+        if j == -1:
             out.append(css[i:])
             break
-        preludio = css[i:abre]
-        # Declarações soltas do tipo @import ...; antes do próximo bloco
-        if ";" in preludio:
-            corte = preludio.rfind(";") + 1
-            out.append(preludio[:corte])
-            preludio = preludio[corte:]
-        fecha = _fim_do_bloco(css, abre + 1)
-        corpo = css[abre + 1:fecha]
-        cabeca = preludio.strip()
-        if cabeca.startswith(("@media", "@supports", "@container")):
-            out.append(f"{cabeca} {{{scope_css(corpo, scope)}}}")
-        elif cabeca.startswith("@"):
-            out.append(f"{cabeca} {{{corpo}}}")
+        prof, k = 1, j + 1
+        while k < n and prof:
+            if css[k] == "{":
+                prof += 1
+            elif css[k] == "}":
+                prof -= 1
+            k += 1
+        if prof:
+            out.append(css[i:])
+            break
+        prelude = css[i:j].strip()
+        corpo = css[j + 1 : k - 1]
+        if prelude.startswith("@"):
+            nome = re.match(r"@([\w-]+)", prelude).group(1).lower()
+            if nome in _AT_RULES_ANINHADAS:
+                corpo = scope_css(corpo, scope)
+            out.append(prelude + "{" + corpo + "}")
         else:
-            seletores = [s.strip() for s in cabeca.split(",") if s.strip()]
-            out.append(", ".join(_escopar_seletor(s, scope) for s in seletores) + f" {{{corpo}}}")
-        out.append("\n")
-        i = fecha + 1
+            novos = []
+            for s in (x.strip() for x in _split_top_level(prelude, ",")):
+                if not s:
+                    continue
+                if s == ":root":
+                    novos.append(s)
+                elif s in ("html", "body"):
+                    novos.append(scope)
+                elif s == "*":
+                    novos.append(f"{scope} *")
+                elif s.startswith(":"):
+                    novos.append(s)
+                else:
+                    novos.append(f"{scope} {s}")
+            out.append(", ".join(novos) + "{" + corpo + "}")
+        i = k
     return "".join(out)
 
 
@@ -238,23 +250,25 @@ def main() -> None:
     if not page_desc:
         page_desc = "Pagina de vendas do produto."
 
-    # Trecho opcional para o <head> (ex: Meta Pixel). Fica em copias/head-extra.html
-    # para sobreviver a cada nova montagem da página.
-    head_extra_path = copias_dir / "head-extra.html"
-    head_extra = head_extra_path.read_text(encoding="utf-8").strip() if head_extra_path.is_file() else ""
-
     merged_css = "\n\n".join(all_css)
     merged_body = "\n\n".join(all_body)
     merged_scripts = "\n".join(all_scripts)
+
+    # Trechos opcionais que vivem fora das copias de secao (Pixel, rastreio de
+    # compra). Sem eles, cada remontagem apagaria o Pixel da pagina.
+    head_extra_path = copias_dir / "head-extra.html"
+    body_end_extra_path = copias_dir / "body-end-extra.html"
+    head_extra = head_extra_path.read_text(encoding="utf-8").strip() if head_extra_path.is_file() else ""
+    body_end_extra = body_end_extra_path.read_text(encoding="utf-8").strip() if body_end_extra_path.is_file() else ""
 
     html_out = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{head_extra}
 <title>{page_title}</title>
 <meta name="description" content="{page_desc}">
-{head_extra}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {fonts_head}
@@ -273,6 +287,8 @@ body {{ font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }}
 {merged_body}
 
 {merged_scripts}
+
+{body_end_extra}
 
 </body>
 </html>

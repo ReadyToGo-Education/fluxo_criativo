@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoridade. Minimal Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .author-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      filter: grayscale(100%);
+      opacity: 0.85;
+      display: block;
+    }
+    .credibility-card {
+      padding: 18px;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Quem está por trás
+          <span class="text-gray-400">do método.</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-14 items-start">
+
+        <div class="fade-up md:col-span-2">
+          <div class="flat-border">
+            <img src="https://i.pravatar.cc/400?img=49" alt="" class="author-photo">
+          </div>
+          <p class="mt-5 text-base font-semibold">Helena Verdi</p>
+          <p class="text-sm text-gray-500 font-light">Artesã de crochê há 18 anos</p>
+        </div>
+
+        <div class="fade-up fade-up-delay-1 md:col-span-3 space-y-5">
+          <p class="text-base md:text-lg text-gray-600 leading-relaxed font-light">
+            Comecei vendendo amigurumi numa feira de bairro em 2007. Ganhava o suficiente para pagar o fio do mês seguinte e mais nada. Demorei cinco anos para entender que o problema nunca tinha sido a minha mão, era a forma como eu oferecia.
+          </p>
+          <p class="text-base md:text-lg text-gray-600 leading-relaxed font-light">
+            Quando troquei a feira pelo Instagram e passei a contar a história por trás de cada peça, o preço médio saiu de R$ 35 para R$ 280. Hoje vivo só do crochê, atendo clientes de seis estados e ensino o método para mais de 1.200 alunas.
+          </p>
+          <p class="text-base md:text-lg text-ink leading-relaxed font-medium">
+            Esse curso é tudo que eu queria ter aprendido em 2007.
+          </p>
+
+          <div class="grid grid-cols-2 gap-4 mt-10">
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">1.200+</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Alunas formadas em todo o Brasil</p>
+            </div>
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">18 anos</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Vivendo de crochê em tempo integral</p>
+            </div>
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">R$ 280</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Ticket médio atual por peça vendida</p>
+            </div>
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">6 estados</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Clientes ativas sem sair de casa</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

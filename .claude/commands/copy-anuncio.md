@@ -37,7 +37,7 @@ Digite o número:
 ```
 
 **Se escolher um produto cadastrado (opções 1, 2, 3...):**
-- Leia `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir
+- Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md)
 - Se não for o produto ativo, use o slug escolhido como base para todos os caminhos de arquivo desta sessão (sem alterar o `.ativo`)
 - Extraia internamente: Decorados, Urgências Ocultas, Quadro, público, preço, tom
 
@@ -64,13 +64,13 @@ Qual o preço do produto?
 (ex: "R$ 497", "gratuito", "R$ 97/mês")
 ```
 
-Após coletar essas informações, prosseguir o fluxo usando esses dados no lugar do perfil.md. Salvar os anúncios gerados em `meus-produtos/{ativo}/entregas/criativos/` (criar a pasta se não existir).
+Após coletar essas informações, prosseguir o fluxo usando esses dados no lugar do resumo-produto.md. Salvar os anúncios gerados em `meus-produtos/{ativo}/entregas/criativos/` (criar a pasta se não existir).
 
 ---
 
 **Extraia e liste internamente (não precisa mostrar ao usuário):**
-- Todos os **Decorados** do perfil. esses são os benefícios que podem virar tema central de anúncio
-- Todas as **Urgências Ocultas** do perfil, organizadas em 7 categorias com 10 itens cada (dores, dúvidas, desejos, assuntos relacionados, urgências quentes, frias e inusitadas). Cada item é um ângulo de entrada possível para um anúncio.
+- Todos os **Decorados**: além do resumo, leia só a seção `## Decorados (Benefícios)` de `meus-produtos/{ativo}/perfil.md` (os 50, para os temas não se esgotarem entre um pacote e outro). esses são os benefícios que podem virar tema central de anúncio
+- Todas as **Urgências Ocultas** do resumo, organizadas em 7 categorias com 10 itens cada (dores, dúvidas, desejos, assuntos relacionados, urgências quentes, frias e inusitadas). Cada item é um ângulo de entrada possível para um anúncio.
 
 **Verifique o histórico:** leia todos os arquivos em `meus-produtos/{ativo}/entregas/criativos/`. Identifique quais urgências ocultas e decorados já foram explorados nos anúncios anteriores.
 
@@ -230,15 +230,15 @@ Calibrar a duração a partir dos virais encontrados na pesquisa. usar duração
 
 | Estrutura | Quando usar | Lógica de retenção |
 |---|---|---|
-| **Loop Perfeito** | Revelação, insights | O final conecta ao gancho. incentiva replay |
-| **Tutorial de 3 Passos** | Procedimento, ensino | Cada passo avança a narrativa. pessoa assiste até o fim para completar |
+| **Loop Perfeito** | Mito, Curiosidade | O final conecta ao gancho. incentiva replay |
+| **Tutorial de 3 Passos** | Demonstração, Explicação | Cada passo avança a narrativa. pessoa assiste até o fim para completar |
 | **Quebra-Padrão** | Contraste, paradoxo | Começo inesperado para o cérebro. força a pausa no scroll |
 
 Usar estruturas diferentes nas 3 variações sempre que possível.
 
 ### 4. Geração (após aprovação do resumo)
 
-Use a Mandala de 18 Tipos (skill vtsd-completo):
+Use a Mandala de 18 Tipos (lista única em `.claude/skills/mandala-de-anuncios/SKILL.md`, a mesma da skill `anuncios` e da `vtsd-completo`; os 3 extras, Pesquisa Científica, Atualidades e Atualidades Trend, também valem):
 
 **Para Meta Ads, gere 3 variações usando tipos diferentes da Mandala da Criatividade:**
 - Variação 1: [tipo escolhido]. ex: Comparação, Certo vs Errado
@@ -452,14 +452,14 @@ Salve em: `meus-produtos/{ativo}/entregas/criativos/prompts-visuais-[formato]-[i
 
 **Se Imagem Estática:**
 
-Monte o prompt de imagem para cada variação (mesma lógica descrita acima). Leia o `.env` do projeto e verifique se existe `FREEPIK_API_KEY`.
+Monte o prompt de imagem para cada variação (mesma lógica descrita acima). Confira se `FREEPIK_API_KEY` tem valor no `.env` sem abrir o arquivo nem mostrar a chave: `grep -q "^FREEPIK_API_KEY=." .env && echo "presente" || echo "ausente"` (linha vazia conta como ausente).
 
 **Se existir**, gere via API:
 
 ```bash
 # Imagem estática — para cada variação (substituir N pelo número):
 curl -X POST "https://api.freepik.com/v1/ai/text-to-image" \
-  -H "x-freepik-api-key: $FREEPIK_API_KEY" \
+  -H "x-freepik-api-key: $(grep ^FREEPIK_API_KEY= .env | cut -d= -f2-)" \
   -H "Content-Type: application/json" \
   -d '{"prompt": "PROMPT_VARIACAO_N", "num_images": 1, "image": {"size": "square_1_1"}}'
 ```
@@ -497,28 +497,28 @@ Quando o usuário configurar, gere as imagens automaticamente.
 
 **Se Vídeo:**
 
-Use o roteiro aprovado de cada variação. Verifique no `.env` se existem as três variáveis:
+Use o roteiro aprovado de cada variação. Confira se as três variáveis têm valor no `.env` sem abrir o arquivo nem mostrar os valores, uma por vez, com `grep -q "^HEYGEN_API_KEY=." .env && echo "presente" || echo "ausente"` (e o mesmo comando para as outras duas; linha vazia conta como ausente):
 - `HEYGEN_API_KEY`
 - `HEYGEN_AVATAR_ID`
 - `HEYGEN_VOICE_ID`
 
-**Se todas existirem**, gere o vídeo via HeyGen:
+**Se todas existirem**, leia os dois IDs (não são segredo e podem aparecer) com `grep "^HEYGEN_AVATAR_ID=" .env | cut -d= -f2-` e `grep "^HEYGEN_VOICE_ID=" .env | cut -d= -f2-`, coloque-os no JSON abaixo no lugar dos marcadores e gere o vídeo via HeyGen. A chave da API entra só dentro do `curl`, pela substituição já escrita no comando:
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/video/generate" \
-  -H "X-Api-Key: $HEYGEN_API_KEY" \
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)" \
   -H "Content-Type: application/json" \
   -d '{
     "video_inputs": [{
       "character": {
         "type": "avatar",
-        "avatar_id": "HEYGEN_AVATAR_ID",
+        "avatar_id": "<valor de HEYGEN_AVATAR_ID>",
         "avatar_style": "normal"
       },
       "voice": {
         "type": "text",
         "input_text": "ROTEIRO_VARIACAO_N",
-        "voice_id": "HEYGEN_VOICE_ID",
+        "voice_id": "<valor de HEYGEN_VOICE_ID>",
         "speed": 1.0
       },
       "background": {
@@ -534,7 +534,7 @@ A API retorna um `video_id`. Faça polling a cada 30 segundos:
 
 ```bash
 curl "https://api.heygen.com/v1/video_status.get?video_id=VIDEO_ID" \
-  -H "X-Api-Key: $HEYGEN_API_KEY"
+  -H "X-Api-Key: $(grep ^HEYGEN_API_KEY= .env | cut -d= -f2-)"
 ```
 
 Quando status for `completed`, faça download do `video_url` e salve em:

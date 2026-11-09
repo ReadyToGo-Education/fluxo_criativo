@@ -1,6 +1,6 @@
 ---
 name: revisor-idconsumidor
-description: Agente revisor de idconsumidor.md. Verifica completude das seções exatas que o parser parse_identidade_consumidor() e parse_objecoes_do_idconsumidor() esperam (Para Quem É, Identidade do Consumidor com campos chave-valor, Objeções com Framework dos 7 Argumentos, Paliativos, Baldes, Como se Comunicar). Faz revisão de português. Retorna relatório com seções afetadas, fixes e flags.
+description: Agente revisor de idconsumidor.md. Verifica completude das seções exatas que o parser parse_identidade_consumidor() e parse_objecoes_do_idconsumidor() esperam (Para Quem É, Identidade do Consumidor com campos chave-valor, Objeções com Framework dos 7 Argumentos, Paliativos só em Middle Ticket, Baldes, Como se Comunicar). Faz revisão de português. Retorna relatório com seções afetadas, fixes e flags.
 tools: Read, Edit
 model: claude-sonnet-4-6
 ---
@@ -19,6 +19,8 @@ FIXES:
 FLAGS:
 - Arquivo idconsumidor.md não encontrado no caminho indicado
 ```
+
+Depois, leia `tipo.md` na mesma pasta do `idconsumidor.md` (`meus-produtos/{slug}/tipo.md`). Ele diz se o produto é Low Ticket, Middle Ticket ou High Ticket. Esse tipo decide a regra de Paliativos (item 1.4). Se `tipo.md` não existir, não acuse nada sobre Paliativos.
 
 ## PASSO 1. Checklist de Estrutura (alinhado ao parser)
 
@@ -95,12 +97,19 @@ Verificações:
 
 O parser busca `## Paliativos` (com ou sem o subtítulo longo sobre Middle Ticket).
 
-Verificações:
-- [ ] A seção existe
-- [ ] Tem ao menos 3 bullets com soluções que o público já tentou antes
+**Regra do projeto: Low Ticket NÃO tem paliativos.** A seção só existe em Middle Ticket (ver `.claude/commands/produto-concepcao.md`). Use o tipo lido no PASSO 0.
 
-**Se ausente:** registre no flag.
-**Se tiver menos de 3 bullets:** registre no flag.
+**Se Low Ticket:**
+- Seção ausente: correto. Não registre nada.
+- Seção presente: registre no flag ("Low Ticket não deve ter Paliativos, remover a seção"). Não apague sozinho.
+
+**Se Middle Ticket:**
+- [ ] A seção existe
+- [ ] Tem ao menos 3 bullets com ferramentas ou soluções concorrentes do mercado (paliativo é o concorrente, não "o que o público já tentou")
+- Se ausente: registre no flag.
+- Se tiver menos de 3 bullets: registre no flag.
+
+**Se High Ticket ou tipo desconhecido:** não acuse nada sobre Paliativos.
 
 ### 1.5 Seção "Baldes de Para Quem É"
 
@@ -109,23 +118,7 @@ O parser busca (nesta ordem):
 2. `## Baldes de Para Quem E`
 3. Qualquer H2 que contenha "Baldes" (busca flexível, ex: `## Baldes`)
 
-O parser aceita três formatos de balde:
-
-**Formato 1 — seta ➤ (legado):**
-```
-➤ Pra quem é - Nome do Balde
-1. item
-2. item
-3. item
-```
-
-**Formato 2 — bold com traço:**
-```
-**Balde N – Nome do Balde**
-Descrição em parágrafo.
-```
-
-**Formato 3 — H3 com dois pontos (padrão atual do gerador):**
+**Formato canônico (único que o gerador escreve):**
 ```
 ### Balde N: Nome do Balde
 
@@ -135,13 +128,23 @@ Descrição em parágrafo.
 - orientação
 ```
 
+**Formatos legados (aceitos na leitura, só existem em produtos antigos):**
+```
+➤ Pra quem é - Nome do Balde
+(itens numerados ou **Descrição:** + **Como se comunicar:**)
+
+**Balde N – Nome do Balde**
+Descrição em parágrafo.
+```
+
+O parser do painel (`parse_baldes()` em `scripts/painel-incremental.py`) e o verificador (`scripts/verificar-idconsumidor.py`) aceitam os três. **Não converta legado para canônico.** Arquivo antigo funciona como está. Converter à mão só gera retrabalho e risco de perder conteúdo.
+
 Verificações:
 - [ ] A seção existe (com qualquer um dos nomes aceitos)
-- [ ] Tem ao menos 3 baldes em qualquer um dos três formatos acima
+- [ ] Tem de 3 a 5 baldes, em qualquer um dos formatos acima
 - [ ] Cada balde tem nome descritivo e ao menos uma descrição ou item
 
-**Se usar Formato 1 e houver linha em branco entre o título do balde e os itens numerados:** remova a linha em branco. Registre no fix.
-**Se usar Formato 3 e `**Descrição:**` estiver ausente mas houver parágrafo logo após o H3:** aceite como válido, o parser captura o primeiro parágrafo como descrição.
+**Se `**Descrição:**` estiver ausente mas houver parágrafo logo após o título do balde:** aceite como válido, o parser captura o primeiro parágrafo como descrição.
 **Se a seção não existir:** registre no flag.
 **Se existir com menos de 3 baldes:** registre no flag.
 

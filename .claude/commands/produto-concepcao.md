@@ -799,9 +799,11 @@ Após o aluno aprovar:
 
 4. Após o revisor retornar: rode `py -3 scripts/painel-incremental.py --secao identidade-consumidor --slug {slug}`.
 
-5. Avise o aluno: `✅ Tudo revisado. Recarregue o painel para ver a identidade do consumidor completa.`
+5. Gere o resumo do produto: dispare um sub-agente síncrono com `subagent_type: "gerador-resumo-produto"`. Prompt: `Gere o resumo do produto {slug}.` (substitua `{slug}` pelo slug real). O agente lê `perfil.md`, `idconsumidor.md` e `pesquisa-mercado.md` e grava `meus-produtos/{slug}/resumo-produto.md`, o contexto que todas as entregas vão usar daqui para frente (modelo em `.claude/skills/resumo-produto/SKILL.md`). Não mostre o conteúdo do resumo ao aluno.
 
-6. Não interrompa o fluxo se o aluno estiver respondendo algo. Processe a notificação na primeira oportunidade natural.
+6. Avise o aluno: `✅ Tudo revisado. Recarregue o painel para ver a identidade do consumidor completa.`
+
+7. Não interrompa o fluxo se o aluno estiver respondendo algo. Processe a notificação na primeira oportunidade natural.
 
 
 ### 5. Gerar Painel de Entregas (primeira versão imediata, atualização automática)
@@ -862,6 +864,8 @@ Quer refazer alguma parte antes de seguir?
 ```
 
 Se escolher de 1 a 7, volte ao bloco correspondente e regere apenas aquela parte. Se escolher 8, siga para a recomendação de próximo passo abaixo.
+
+**Antes da recomendação, confira o resumo do produto.** Tente ler `meus-produtos/{ativo}/resumo-produto.md`. Se não for encontrado (o aluno refez uma parte e o resumo antigo foi apagado sozinho), acione o sub-agente síncrono `gerador-resumo-produto` com o slug, como no passo 5 da notificação da Seção 4.
 
 **Se Middle Ticket:**
 ```

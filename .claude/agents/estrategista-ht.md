@@ -43,8 +43,7 @@ Conduzir o aluno por uma das 4 trilhas do funil HT:
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, decorados, urgências, 3 identidades
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → público, objeções, paliativos
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, decorados principais, urgências, 3 identidades, público, objeções, paliativos
 - `meus-produtos/{ativo}/entregas/ht/` (glob) → checar o que já foi entregue (big-idea, página de inscrição, cronograma, conteúdo, pitch, etc.)
 
 Se não houver produto ativo, oriente: "Antes de montar o funil High Ticket, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."

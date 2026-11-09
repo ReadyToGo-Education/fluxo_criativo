@@ -127,7 +127,7 @@ py -3 scripts/painel-atualizar.py
 Produto "{nome excluído}" excluído com sucesso.
 Produto ativo agora: {novo produto ativo}
 
-Use /produto-editar para editar o perfil ou /produto-trocar para alternar entre produtos.
+Use /produto-concepcao para editar o perfil ou /produto-trocar para alternar entre produtos.
 ```
 
 **Se não há mais produtos:**

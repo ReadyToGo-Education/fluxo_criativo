@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provas Sociais. Flat Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#fafafa',
+            surface: '#f0f0f2',
+            ink: '#18181b',
+            accent: '#d4d4d8',
+            warm: '#c2956b',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .depo-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .depo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .depo-avatar {
+      width: 64px; height: 64px; border-radius: 9999px; object-fit: cover;
+    }
+    .divider-line {
+      height: 1px; background: rgba(24,24,27,0.1); margin: 18px 0;
+    }
+  </style>
+</head>
+<body class="text-ink font-sans antialiased">
+
+  <section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Depoimentos de modelo
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Substitua por depoimentos reais com autorização antes de rodar anúncio pago.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=47" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Marina S.</p>
+              <p class="text-xs text-gray-500">MEI de serviços</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            Antes eu misturava Pix com gasto pessoal no mesmo arquivo. Hoje eu fecho a semana com um painel que eu consigo explicar em cinco minutos.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=32" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Roberto L.</p>
+              <p class="text-xs text-gray-500">Pequeno comércio</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            A gente tinha três planilhas de venda e nenhuma batia com o caixa. Padronizar cortou a reunião de vamos alinhar o Excel.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=49" alt="" class="depo-avatar flat-border">
+            <div>
+              <p class="font-semibold text-base">Fernanda K.</p>
+              <p class="text-xs text-gray-500">Freelancer</p>
+            </div>
+          </div>
+          <p class="text-sm font-light text-ink leading-relaxed">
+            Eu não queria mais curso. Queria modelo que rodasse. Os vídeos curtos me poupam ir ao YouTube genérico.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

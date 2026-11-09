@@ -21,10 +21,10 @@ Mapeia o ecossistema do nicho do aluno. Faz 4 a 6 buscas combinadas de WebSearch
 
 ### 0. Contexto
 
-Leia `entregas/.ativo`, `entregas/{ativo}/perfil.md` e `entregas/{ativo}/idconsumidor.md` (se existir). Identifique:
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md). Identifique:
 - Nicho principal (ex: emagrecimento, finanças, tarô, marketing digital)
 - Sub-nicho ou angle específico (ex: emagrecimento feminino 40+, finanças pra autônomos)
-- Urgências Ocultas do perfil (vão virar ideia de conteúdo no fim)
+- Urgências Ocultas do resumo (vão virar ideia de conteúdo no fim)
 
 ### 1. Entrevista curta (uma pergunta por vez)
 
@@ -91,7 +91,7 @@ Cada sugestão deve ter: título/gancho, formato, tema e por que provavelmente v
 
 ### 6. Montar o relatório final
 
-Arquivo: `entregas/{ativo}/dados/nicho-{data}.md`
+Arquivo: `meus-produtos/{ativo}/entregas/dados/nicho-{data}.md`
 
 Estrutura:
 ```markdown
@@ -139,7 +139,7 @@ Após aprovação, salve e mostre:
 ```
 Pronto. Relatório do nicho salvo.
 
-Arquivo: entregas/{ativo}/dados/nicho-{data}.md
+Arquivo: meus-produtos/{ativo}/entregas/dados/nicho-{data}.md
 
 Próximos passos:
 - Leve as sugestões pro /copy-carrossel pra virar posts e carrosséis

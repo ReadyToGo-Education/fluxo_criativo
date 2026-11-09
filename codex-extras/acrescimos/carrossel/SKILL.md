@@ -1,0 +1,1 @@
+> **No Codex, as imagens do carrossel são geradas aqui mesmo, sem perguntar.** No passo de gerar as imagens (`references/passo-output-triplo.md`), siga a seção "/carrossel" de `.agents/skills/imagem-no-codex/SKILL.md`: as imagens são geradas direto, sem o menu de caminhos (Manual, Chrome, API).

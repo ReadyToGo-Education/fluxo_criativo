@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack de Valor. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.08) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; }
+
+    .stack-card {
+      position: relative;
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+    .stack-card:hover {
+      border-color: rgba(108, 92, 231, 0.5);
+      background-color: rgba(18, 18, 26, 0.95);
+      transform: translateY(-4px);
+    }
+
+    .stack-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px dashed rgba(42, 42, 58, 0.8);
+      font-size: 0.95rem;
+    }
+    .stack-item:last-child { border-bottom: none; }
+
+    .price-strike {
+      color: rgba(240, 240, 245, 0.4);
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Resumo do pacote
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Tudo que você <span class="text-warm">recebe hoje</span>
+        </h2>
+        <p class="text-ink/45 text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto mt-5">
+          Cada entregável foi pensado para funcionar junto. Veja o valor individual de cada um.
+        </p>
+      </div>
+
+      <div class="stack-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7 md:p-10">
+
+        <p class="text-[0.72rem] font-700 uppercase tracking-widest text-warm/80 mb-6">O que está incluso</p>
+
+        <div class="stack-item">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-warm text-[18px]">check_circle</span>
+            <span>Método completo em vídeo (48 aulas)</span>
+          </span>
+          <span class="font-semibold text-ink/60">R$ 897</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-warm text-[18px]">check_circle</span>
+            <span>Caderno de precificação</span>
+          </span>
+          <span class="font-semibold text-ink/60">R$ 197</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-warm text-[18px]">check_circle</span>
+            <span>Guia de fotos com celular</span>
+          </span>
+          <span class="font-semibold text-ink/60">R$ 147</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-warm text-[18px]">check_circle</span>
+            <span>Bônus 01. Pack de receitas</span>
+          </span>
+          <span class="font-semibold text-ink/60">R$ 197</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-warm text-[18px]">check_circle</span>
+            <span>Bônus 02. Vitrine de Instagram</span>
+          </span>
+          <span class="font-semibold text-ink/60">R$ 247</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-warm text-[18px]">check_circle</span>
+            <span>Bônus 03. Pack de etiquetas</span>
+          </span>
+          <span class="font-semibold text-ink/60">R$ 147</span>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-accent/60 flex items-baseline justify-between">
+          <span class="text-ink/40 text-xs uppercase tracking-wider font-500">Valor total</span>
+          <span class="price-strike text-2xl">R$ 1.832</span>
+        </div>
+
+        <p class="mt-5 text-center text-ink/40 text-sm font-light leading-relaxed">
+          Mas você não vai pagar isso. Continue para ver a condição especial.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

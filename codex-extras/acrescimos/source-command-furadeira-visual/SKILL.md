@@ -1,0 +1,1 @@
+> **No Codex, a imagem da Furadeira é gerada aqui mesmo.** Os passos 8 e 9 abaixo (colar o prompt no ChatGPT e esperar a imagem) mudam: siga a seção "/furadeira-visual" de `.agents/skills/imagem-no-codex/SKILL.md`. Os outros passos continuam iguais.

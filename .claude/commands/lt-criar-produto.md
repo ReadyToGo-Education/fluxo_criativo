@@ -19,11 +19,11 @@ Cria o conteúdo real do produto digital (o que o comprador vai receber), confir
 
 Leia:
 - `meus-produtos/.ativo` → se não existir, oriente a usar `/produto-novo` primeiro
-- `meus-produtos/{ativo}/perfil.md` → se não existir, oriente a usar `/produto-editar` primeiro
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md)
 
 ### 2. Verificar formato
 
-Leia `meus-produtos/{ativo}/perfil.md` e identifique se o formato do produto já está definido.
+Use o `meus-produtos/{ativo}/resumo-produto.md` e identifique se o formato do produto já está definido.
 
 **Se o formato já estiver no perfil**, confirme com o usuário:
 

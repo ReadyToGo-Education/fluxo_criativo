@@ -10,10 +10,10 @@
 O fluxo de coleta do Sempre **ignora** o `passo-coleta-base.md` padrão. A coleta é a do `prompt-sempre.md` (5 perguntas):
 
 ### 1.1. Nicho e produto em UMA frase
-Se `perfil.md` tiver Quadro/categoria do produto, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver Quadro/categoria do produto, pré-preencha como sugestão.
 
 ### 1.2. @ do Instagram
-Se `.env` tiver `IG_USER` ou `perfil.md` tiver handle, pré-preencha como sugestão.
+Se `.env` tiver `IG_USER` ou `resumo-produto.md` tiver handle, pré-preencha como sugestão.
 
 ### 1.3. Cores padrão da marca
 Default sem paleta: creme bege `#F2EAD9` (slides 1-5) + verde-sálvia escuro `#3D4A3F` (slide 6).
@@ -31,7 +31,7 @@ Default sem paleta: creme bege `#F2EAD9` (slides 1-5) + verde-sálvia escuro `#3
 A skill `/carrossel` no estilo Sempre faz o seguinte:
 
 1. **Carrega** `references/prompt-sempre.md` inteiro.
-2. **Executa o Passo 1 do prompt** (coleta de 5 dados), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`/`.env`.
+2. **Executa o Passo 1 do prompt** (coleta de 5 dados), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `resumo-produto.md`/`.env`.
 3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
 4. **Executa o prompt do Passo 2 ao Passo 4 exatamente como está**, na sessão atual:
    - Passo 2: gera os 6 slides com aprovação interna.

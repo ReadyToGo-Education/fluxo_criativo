@@ -43,7 +43,7 @@ O quiz é a ponte entre o anúncio e a venda do produto de entrada (Low Ticket).
 
 ## FASE 0 — VERIFICAÇÃO: QUIZ É O FORMATO CERTO?
 
-Antes de começar, aplique o framework de decisão com base no perfil do produto. Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/perfil.md`.
+Antes de começar, aplique o framework de decisão com base no perfil do produto. Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 | Critério | Aponta para QUIZ | Aponta para PÁGINA |
 |---|---|---|
@@ -63,11 +63,11 @@ Se o quiz for confirmado como formato correto (ou o usuário insistir), continue
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md`.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-Se `perfil.md` não existir, oriente a usar `/produto-editar` primeiro.
+Se `perfil.md` não existir, oriente a usar `/produto-concepcao` primeiro.
 
-Use o Quadro, Furadeira, Urgências Ocultas, Decorados e público do perfil para gerar as perguntas.
+Use o Quadro, Furadeira, Urgências Ocultas, Decorados e público do resumo para gerar as perguntas.
 
 ### 2. Entrevista (máximo 2 perguntas)
 
@@ -513,32 +513,48 @@ Gere um **único arquivo** que contém, em sequência:
 
 As perguntas já devem estar embutidas dentro do prompt técnico (Seção 5. Quiz), com os prompts de imagem da P1 incluídos diretamente no campo `image_prompt` de cada opção.
 
-Substitua todo o conteúdo do exemplo do curso de francês pelo produto do aluno, mantendo a estrutura técnica intacta. Adapte seção por seção:
+Antes de montar o prompt técnico, carregue `.claude/rules/seguranca/checklist-seguranca.md`. O quiz grava dados pessoais de leads (nome, e-mail, telefone), então a segurança é parte fixa do prompt.
+
+Monte o prompt técnico com as 9 seções abaixo, nesta ordem, com o conteúdo do produto do aluno:
+
+**Seção 1. ABERTURA E STACK:**
+- Abrir com: "Crie um funil de quiz para [nome do produto] com as seguintes características:"
+- Stack: React + Tailwind + Supabase (banco, login do painel e Edge Functions)
+- Interface 100% em português do Brasil
+
+**Seção 2. SEGURANÇA:**
+- Copiar literal o bloco "Prompt do Lovable para funil sem login que grava lead (quiz)" do checklist de segurança
+
+**Seção 3. BANCO DE DADOS E TRACKING:**
+- Tabela `funnel_events`: `id`, `session_id`, `etapa`, `resposta`, `created_at`. Um registro por resposta e por avanço de etapa. Etapas: `landing`, `quiz_pergunta_1` até `quiz_pergunta_10`, `resultado`, `pagina_vendas`, `checkout`
+- Tabela `leads`: `id`, `session_id`, `nome`, `email`, `telefone`, `respostas` (jsonb com as 10 respostas), `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `ip_hash`, `created_at`. Gravada só pela Edge Function `registrar-lead`
+- Tabela `admins`: conforme o bloco de segurança
+- Restrições de tamanho e formato no banco, conforme o bloco de segurança
 
 **Seção 4. LANDING PAGE:**
 - Título H1: use a headline gerada
 - Subtítulo: use a subheadline gerada
 - Botão CTA: texto adequado ao produto (ex: "Começar o Diagnóstico →")
-- Remova o emoji 🇫🇷 e referências à Paris. substitua por fundo adequado ao nicho
+- Fundo adequado ao nicho
 - Texto "⏱ Leva menos de 2 minutos". manter
 
 **Seção 5. QUIZ:**
-- Substitua as 5 perguntas do exemplo pelas 10 perguntas geradas (estrutura SPIN)
+- As 10 perguntas geradas (estrutura SPIN)
 - Para cada pergunta, inclua o campo `type` com o tipo de pergunta (`multipla_escolha`, `calculadora`, `slider`, `sim_nao`, `input_numero`)
 - Para perguntas do tipo `calculadora`: incluir campos, fórmula e template de resultado
 - Para perguntas do tipo `slider`: incluir min, max, labels e chave
 - Para perguntas do tipo `multipla_escolha`: manter formato `{ label, emoji, value }`
 - P1: incluir campo `image_prompt` em cada opção (prompts de imagem embutidos)
-- Adapte o mapeamento de values para labels legíveis (Tab RESPOSTAS)
-- Atualize o `last_step` para `quiz_pergunta_1` até `quiz_pergunta_10`
+- Mapeamento de values para labels legíveis (Tab RESPOSTAS)
+- Cada resposta grava um evento em `funnel_events` com a etapa `quiz_pergunta_1` até `quiz_pergunta_10`
 
 **Seção 6. TELA DE RESULTADO:**
-- Substitua as mensagens condicionais pelo nicho do produto
-- Adapte título e subtítulo para refletir o Quadro do produto
-- Mantenha a lógica condicional baseada na resposta da Pergunta 1
+- Mensagens condicionais do nicho do produto
+- Título e subtítulo que refletem o Quadro do produto
+- Lógica condicional baseada na resposta da Pergunta 1
 
 **Seção 7. PÁGINA DE VENDAS:**
-- Hero: substitua Paris por fundo do nicho; remova referências ao francês
+- Hero: fundo adequado ao nicho
 - Badge: "✅ Método validado por +[X] alunos". número realista
 - H1: use o Quadro do produto
 - Barra de prova social: adapte os 4 itens para o produto
@@ -548,22 +564,24 @@ Substitua todo o conteúdo do exemplo do curso de francês pelo produto do aluno
 - Sem seção de vídeo na Página Final
 
 **Seção 8. MODAL DE PRÉ-CHECKOUT:**
-- Adapte título e descrição para o produto
-- Manter os 3 campos (nome, email, telefone)
+- Título e descrição adequados ao produto
+- 3 campos visíveis (nome, email, telefone) e o campo escondido `website` do bloco de segurança
+- Envio pela Edge Function `registrar-lead` (com `session_id`, respostas e UTMs), nunca gravando direto na tabela
+- Se der erro, mostrar só a mensagem genérica do bloco de segurança
+- Depois do envio, redirecionar para o link de checkout preservando as UTMs
 
 **Seção 9. PAINEL ADMINISTRATIVO:**
-- Header: substitua pelo nome do produto
-- Adapte labels das etapas para 10 perguntas (P1 a P10)
+- Acesso em `/admin` com login; só quem está na tabela `admins` vê dados (bloco de segurança)
+- Header: nome do produto
+- Labels das etapas para 10 perguntas (P1 a P10)
 - Tab RESPOSTAS: 10 colunas com scroll horizontal
-- Tab PERFORMANCE: 14 etapas (landing + 10 perguntas + resultado + vendas + checkout)
-
-**Banco de dados e tracking:**
-- Manter tabelas `leads` e `funnel_events` como no template
-- Atualizar `last_step` para refletir 10 perguntas
+- Tab PERFORMANCE: 14 etapas (landing + 10 perguntas + resultado + vendas + checkout), contadas em `funnel_events`
 
 **Design System:**
-- Manter paleta original (azul marinho, dourado, creme). universal para qualquer nicho
+- Paleta padrão: azul marinho, dourado e creme. universal para qualquer nicho
 - Só trocar paleta se o nicho exigir (ex: saúde infantil, moda feminina)
+
+Antes de salvar, confira o prompt técnico contra os 10 itens do checklist de segurança. Se faltar algo, corrija no prompt.
 
 Salve o arquivo em:
 
@@ -573,6 +591,8 @@ Salve o arquivo em:
 
 Após salvar o arquivo `.md` do prompt, **NÃO encerre o fluxo**. O quiz só está completo quando o link publicado no Lovable também estiver registrado, para o painel de entregas exibir os dois.
 
+Logo depois de salvar o prompt, e antes do Passo 6.1, rode em silêncio `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder). Assim o prompt já aparece na aba Low Ticket do painel quando o aluno for copiar.
+
 > **Princípio de comunicação:** o aluno SÓ INTERAGE pelo chat. Em nenhuma mensagem visível ao aluno mencione `quiz-meta.json`, `perfil.md`, `painel-incremental.py`, "rode no terminal", "edite o arquivo" ou qualquer detalhe técnico de bastidor. Esses arquivos existem nos bastidores e o agente cuida deles silenciosamente. Para o aluno, só existem: o painel de entregas (que ele abre no navegador) e o chat (onde ele fala comigo).
 
 **Passo 6.1. Confirmar que o prompt foi salvo (mensagem visível ao aluno):**
@@ -581,9 +601,11 @@ Após salvar o arquivo `.md` do prompt, **NÃO encerre o fluxo**. O quiz só est
 ✅ Quiz pronto. Para gerar o funil:
 
 1. Abra https://lovable.dev em uma aba nova
-2. Copie todo o conteúdo do prompt que está no painel de entregas (aba Copy da Página)
+2. Copie todo o conteúdo do prompt: no painel de entregas, aba Low Ticket, clique em "Abrir prompt"
 3. Cole no chat do Lovable e aguarde gerar
-4. Quando terminar, volte aqui e me mande o link do quiz publicado
+4. Entre em /admin no seu quiz e crie sua conta (se chegar um e-mail de confirmação, confirme). Depois peça no chat do Lovable: "Libere o painel do quiz para o usuário com e-mail SEU_EMAIL (adicione na tabela admins)". Só quem você liberar enxerga os leads.
+5. Ao publicar, o Lovable mostra uma verificação rápida de segurança. Um alerta dizendo que visitantes sem login conseguem gravar respostas é esperado, porque o quiz é público. Os outros alertas, peça no chat para corrigir.
+6. Quando terminar, volte aqui e me mande o link do quiz publicado
 ```
 
 **Passo 6.2. Pedir o link do quiz publicado:**
@@ -609,9 +631,9 @@ Após capturar o link (ou registrar como pendente), o agente faz silenciosamente
 
 1. Salva os metadados do quiz em `meus-produtos/{ativo}/entregas/quiz/quiz-meta.json` (estrutura: `prompt_path`, `lovable_url`, `generated_at`, `url_updated_at`, `produto_nome`, `produto_slug`)
 2. Faz upsert da seção `## Quiz` no `perfil.md` (campos `_prompt`, `_lovable_url`, `_meta`, `_atualizado`)
-3. Roda `py -3 scripts/painel-incremental.py --secao copy-pagina` para atualizar a aba do quiz no painel
+3. Roda `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder) para atualizar a aba Low Ticket do painel
 
-O painel já renderiza o card do Quiz lendo o JSON automaticamente. Tudo isso é invisível para o aluno, ele só vê a mensagem do passo 6.6.
+A aba Low Ticket mostra o card do quiz lendo o JSON: o link publicado (ou o aviso de pendente) e o prompt. Tudo isso é invisível para o aluno, ele só vê a mensagem do passo 6.6.
 
 **Passo 6.6. Confirmação final ao aluno (UMA mensagem curta, sem mencionar arquivos internos):**
 
@@ -649,4 +671,5 @@ Próximo passo: /copy-anuncio para criar os anúncios que vão direcionar tráfe
 ❌ Expor o produto antes da página final
 ❌ Número diferente de 10 perguntas (nem mais, nem menos)
 ❌ Coletar dados dentro do quiz (só no modal de pré-checkout)
-❌ Alterar a estrutura técnica do template (tabelas, tracking, componentes). só substituir conteúdo
+❌ Tirar ou afrouxar a Seção 2 (Segurança) do prompt técnico, ou mudar as tabelas e o tracking da Seção 3
+❌ Painel admin com senha escrita no código, ou lead gravado direto pelo navegador
