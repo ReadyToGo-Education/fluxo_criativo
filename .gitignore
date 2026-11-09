@@ -162,3 +162,5 @@ inputs/
 
 package-lock.json
 package.json
+# Fontes consolidadas para o NotebookLM (geradas por scripts/sincronizar-obsidian.py)
+notebooklm-fontes/

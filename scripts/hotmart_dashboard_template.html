@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faturamento Hotmart</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f6f5f1;
+  --surface-1: #fcfcfb;
+  --surface-2: #f0efec;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #6f6d68;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4;
+  --muted-bar: #d4d3cc;
+  --up: #006300; --down: #b42f2f;
+  --q1:#cde2fb; --q2:#9ec5f4; --q3:#6da7ec; --q4:#3987e5; --q5:#256abf; --q6:#184f95; --q7:#0d366b;
+  --chip-on: #0b0b0b; --chip-on-text: #fcfcfb;
+  --shadow: 0 1px 2px rgba(11,11,11,.04), 0 8px 24px rgba(11,11,11,.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #262624;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #9a9890;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+    --muted-bar: #3a3a37; --up: #0ca30c; --down: #e66767;
+    --q1:#1a2a40; --q2:#173a66; --q3:#184f95; --q4:#256abf; --q5:#3987e5; --q6:#6da7ec; --q7:#b7d3f6;
+    --chip-on: #f0efec; --chip-on-text: #1a1a19; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #262624;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #9a9890;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+  --muted-bar: #3a3a37; --up: #0ca30c; --down: #e66767;
+  --q1:#1a2a40; --q2:#173a66; --q3:#184f95; --q4:#256abf; --q5:#3987e5; --q6:#6da7ec; --q7:#b7d3f6;
+  --chip-on: #f0efec; --chip-on-text: #1a1a19; --shadow: none;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--page); color: var(--text-primary);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding: 28px 24px 64px; }
+header.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+h1 { font-size: 28px; line-height: 1.15; margin: 4px 0 4px; font-weight: 650; letter-spacing: -.01em; }
+.sub { color: var(--text-secondary); font-size: 14px; margin: 0; }
+.btn {
+  appearance: none; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+  border-radius: 10px; padding: 8px 12px; font: inherit; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:focus-visible, select:focus-visible, .chip:focus-visible, .card-prod:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+
+/* Filtros */
+.filters {
+  position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  padding: 12px 0; margin: 0 0 8px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+.field { display: flex; flex-direction: column; gap: 2px; }
+.field label { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+select {
+  appearance: none; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: 10px; padding: 8px 34px 8px 12px; min-width: 120px; max-width: 270px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 55%, calc(100% - 12px) 55%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip {
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+  border-radius: 999px; padding: 6px 9px; font: inherit; font-size: 13px; cursor: pointer; line-height: 1.2;
+}
+.chip:hover { background: var(--surface-2); }
+.chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-text); border-color: var(--chip-on); font-weight: 600; }
+.chip:disabled { opacity: .35; cursor: default; }
+.spacer { flex: 1; }
+
+/* Blocos */
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); margin-top: 16px; }
+.panel { background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); min-width: 0; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
+.span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+.panel h2 { font-size: 15px; font-weight: 650; margin: 0; }
+.panel .hint { color: var(--text-muted); font-size: 13px; margin: 2px 0 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr); gap: 16px; margin-top: 16px; }
+.hero-main { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+.hero-label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+.hero-value { font-size: clamp(36px, 5vw, 54px); font-weight: 650; letter-spacing: -.02em; line-height: 1.05; margin: 6px 0 8px; word-break: break-word; }
+.delta { font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.delta.up { color: var(--up); } .delta.down { color: var(--down); } .delta.flat { color: var(--text-muted); }
+.delta small { color: var(--text-muted); font-weight: 500; }
+.hero-context { font-size: 13px; color: var(--text-secondary); border-top: 1px solid var(--grid); padding-top: 14px; }
+.hero-context b { color: var(--text-primary); font-weight: 600; }
+
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+.tile { padding: 14px 16px; border-left: 1px solid var(--grid); border-top: 1px solid var(--grid); }
+.tile:nth-child(-n+3) { border-top: 0; }
+.tile:nth-child(3n+1) { border-left: 0; }
+.tile .lbl { font-size: 12.5px; color: var(--text-secondary); }
+.tile .val { font-size: 22px; font-weight: 650; margin-top: 2px; letter-spacing: -.01em; }
+.tile .note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Barra segmentada */
+.segbar { display: flex; gap: 2px; height: 28px; margin: 6px 0 14px; }
+.seg { height: 100%; border-radius: 4px; min-width: 0; display: flex; align-items: center; padding: 0 8px; font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; overflow: visible; cursor: default; }
+.seg.dark-text { color: #0b0b0b; }
+.legend { display: grid; gap: 8px; }
+.legend-row { display: grid; grid-template-columns: 12px 1fr auto auto; gap: 10px; align-items: center; font-size: 13px; }
+.legend-row .sw { width: 10px; height: 10px; border-radius: 3px; }
+.legend-row .nm { color: var(--text-secondary); }
+.legend-row .vv { font-variant-numeric: tabular-nums; font-weight: 600; }
+.legend-row .pp { font-variant-numeric: tabular-nums; color: var(--text-muted); min-width: 44px; text-align: right; }
+
+/* Alternador */
+.toggle { display: inline-flex; background: var(--surface-2); border-radius: 10px; padding: 3px; gap: 2px; }
+.toggle button { border: 0; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12.5px; padding: 5px 10px; border-radius: 8px; cursor: pointer; }
+.toggle button[aria-pressed="true"] { background: var(--surface-1); color: var(--text-primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+
+/* Gráficos */
+svg { display: block; overflow: visible; }
+.chart { width: 100%; position: relative; }
+.axis-text { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.val-text { fill: var(--text-secondary); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.gridline { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
+.baseline { stroke: var(--axis); stroke-width: 1; shape-rendering: crispEdges; }
+.hit { fill: transparent; cursor: pointer; }
+.hit:hover + .mark, .mark.hover { filter: brightness(1.08); }
+.rank-row { cursor: pointer; }
+.rank-row:hover .rank-bg { fill: var(--surface-2); }
+.rank-name { fill: var(--text-primary); font-size: 12.5px; }
+
+/* Mapa de calor */
+.heat-wrap { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+table.heat { border-collapse: separate; border-spacing: 2px; width: 100%; min-width: 640px; }
+table.heat th { font-size: 11px; color: var(--text-muted); font-weight: 600; padding: 2px 4px; text-align: center; white-space: nowrap; }
+table.heat th.rowh { text-align: left; color: var(--text-secondary); font-weight: 500; font-size: 12.5px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; cursor: pointer; }
+table.heat th.rowh:hover { color: var(--text-primary); text-decoration: underline; }
+table.heat td { height: 30px; border-radius: 4px; background: var(--surface-2); min-width: 34px; }
+table.heat td.sel { outline: 2px solid var(--text-primary); outline-offset: -2px; }
+.heat-scale { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-muted); margin-top: 10px; }
+.heat-scale span.b { width: 22px; height: 10px; border-radius: 2px; display: inline-block; }
+
+/* Cards de produto */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.card-prod {
+  text-align: left; font: inherit; color: inherit; background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 14px 14px 10px; cursor: pointer;
+  display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, transform .15s;
+}
+.card-prod:hover { border-color: var(--s1); transform: translateY(-1px); }
+.card-prod .nm { font-size: 13px; color: var(--text-secondary); line-height: 1.3; min-height: 34px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-prod .big { font-size: 20px; font-weight: 650; letter-spacing: -.01em; }
+.card-prod .meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.rankpos { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+
+/* Tabela */
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+table.data th { text-align: right; font-weight: 600; color: var(--text-muted); font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--axis); cursor: pointer; white-space: nowrap; user-select: none; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th[aria-sort="descending"]::after { content: " ↓"; }
+table.data th[aria-sort="ascending"]::after { content: " ↑"; }
+table.data td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.data td:first-child { white-space: normal; max-width: 340px; }
+table.data tbody tr:hover { background: var(--surface-2); }
+table.data tbody tr.clickable { cursor: pointer; }
+table.data tfoot td { font-weight: 650; border-top: 1px solid var(--axis); border-bottom: 0; }
+.pill { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--text-secondary); margin-left: 6px; }
+
+/* Lista de pagamentos */
+.paylist { display: grid; gap: 12px; }
+.payrow .top { display: flex; justify-content: space-between; font-size: 13px; }
+.payrow .top span:last-child { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.meter { height: 8px; border-radius: 999px; background: var(--q1); margin-top: 5px; overflow: hidden; }
+.meter > i { display: block; height: 100%; border-radius: 999px; background: var(--s1); }
+
+.empty { color: var(--text-muted); font-size: 14px; padding: 30px 0; text-align: center; }
+.foot { color: var(--text-muted); font-size: 12px; margin-top: 28px; line-height: 1.6; }
+.foot b { color: var(--text-secondary); }
+
+#tip {
+  position: fixed; pointer-events: none; z-index: 50; background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; font-size: 12.5px; box-shadow: 0 8px 24px rgba(0,0,0,.14);
+  opacity: 0; transition: opacity .1s; max-width: 280px;
+}
+#tip .t { font-weight: 650; margin-bottom: 4px; }
+#tip .r { display: flex; justify-content: space-between; gap: 16px; color: var(--text-secondary); }
+#tip .r b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.hidden { display: none !important; }
+
+@media (max-width: 1000px) {
+  .hero { grid-template-columns: 1fr; }
+  .span-8, .span-7, .span-5, .span-4 { grid-column: span 12; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 20px 16px 48px; }
+  h1 { font-size: 23px; }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile { border-left: 1px solid var(--grid) !important; border-top: 1px solid var(--grid) !important; }
+  .tile:nth-child(-n+2) { border-top: 0 !important; }
+  .tile:nth-child(2n+1) { border-left: 0 !important; }
+  .filters { position: static; }
+  select { min-width: 0; width: 100%; max-width: none; }
+  .field { flex: 1 1 140px; }
+  .panel { padding: 16px; }
+}
+@media print { .filters, .btn { display: none; } .panel { break-inside: avoid; box-shadow: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Instituto Mannah · Hotmart</div>
+      <h1 id="titulo">Faturamento e valor recebido</h1>
+      <p class="sub" id="subtitulo"></p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="btnCsv" type="button">Baixar CSV</button>
+      <button class="btn" id="btnTema" type="button" aria-label="Alternar tema claro e escuro">◐ Tema</button>
+    </div>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filtros">
+    <div class="field">
+      <label for="fAno">Ano</label>
+      <select id="fAno"></select>
+    </div>
+    <div class="field" style="flex:1 1 360px">
+      <label>Mês</label>
+      <div class="chips" id="fMes"></div>
+    </div>
+    <div class="field">
+      <label for="fProd">Produto</label>
+      <select id="fProd"></select>
+    </div>
+    <button class="btn" id="btnLimpar" type="button" style="align-self:flex-end">Limpar filtros</button>
+  </div>
+
+  <section class="hero">
+    <div class="panel hero-main">
+      <div>
+        <div class="hero-label">Valor recebido real <span id="heroPeriodo"></span></div>
+        <div class="hero-value" id="heroValor">R$ 0</div>
+        <div id="heroDelta"></div>
+      </div>
+      <div class="hero-context" id="heroCtx"></div>
+    </div>
+    <div class="panel" style="padding:6px 4px">
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel span-8">
+      <div class="panel-head">
+        <div>
+          <h2 id="tMensal">Evolução mês a mês</h2>
+          <p class="hint" id="hMensal"></p>
+        </div>
+        <div class="toggle" id="metricToggle" role="group" aria-label="Métrica do gráfico">
+          <button type="button" data-m="rc" aria-pressed="true">Recebido</button>
+          <button type="button" data-m="br" aria-pressed="false">Bruto</button>
+          <button type="button" data-m="n" aria-pressed="false">Vendas</button>
+        </div>
+      </div>
+      <div class="chart" id="chartMensal"></div>
+    </section>
+
+    <section class="panel span-4">
+      <div class="panel-head"><div><h2>Para onde vai o dinheiro</h2><p class="hint">Divisão de tudo o que os clientes pagaram</p></div></div>
+      <div id="divisao"></div>
+    </section>
+
+    <section class="panel span-7" id="secRanking">
+      <div class="panel-head"><div><h2>Ranking de produtos</h2><p class="hint">Valor recebido no período. Clique para abrir o painel do produto</p></div></div>
+      <div class="chart" id="chartRanking"></div>
+    </section>
+
+    <section class="panel span-5" id="secPagamentos">
+      <div class="panel-head"><div><h2>Como os clientes pagaram</h2><p class="hint">Participação no valor recebido</p></div></div>
+      <div id="pagamentos" class="paylist"></div>
+    </section>
+
+    <section class="panel span-12" id="secHeat">
+      <div class="panel-head"><div><h2 id="tHeat">Mapa de calor: produto × mês</h2><p class="hint" id="hHeat">Quanto mais escuro, mais dinheiro recebido</p></div>
+        <div class="toggle" id="heatToggle" role="group" aria-label="Escala do mapa de calor">
+          <button type="button" data-e="geral" aria-pressed="true">Escala geral</button>
+          <button type="button" data-e="linha" aria-pressed="false">Melhores meses de cada produto</button>
+        </div></div>
+      <div class="heat-wrap" id="heat"></div>
+    </section>
+
+    <section class="panel span-12" id="secCards">
+      <div class="panel-head"><div><h2>Painel de cada produto</h2><p class="hint" id="hCards"></p></div></div>
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <section class="panel span-12">
+      <div class="panel-head"><div><h2 id="tTabela">Detalhe por produto</h2><p class="hint" id="hTabela">Clique no título da coluna para ordenar</p></div></div>
+      <div class="table-wrap"><table class="data" id="tabela"></table></div>
+    </section>
+  </div>
+
+  <p class="foot" id="rodape"></p>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const D = /*__DADOS__*/null;
+const MESES = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const MESES_LONGOS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const NOME_PAG = { CREDIT_CARD: "Cartão de crédito", PIX: "Pix", BILLET: "Boleto", PAYPAL: "PayPal", GOOGLE_PAY: "Google Pay",
+  APPLE_PAY: "Apple Pay", DEBIT_CARD: "Cartão de débito", HOTCARD: "Hotcard", WALLET: "Carteira Hotmart", HYBRID: "Pagamento híbrido",
+  DIRECT_DEBIT: "Débito em conta", MANUAL_TRANSFER: "Transferência", FINANCED_INSTALLMENT: "Parcelado financiado", CASH_PAYMENT: "Dinheiro", OUTRO: "Outro" };
+// Colunas da linha de venda
+const A=0,M=1,DIA=2,P=3,PG=4,INT=5,BR=6,OF=7,TX=8,CL=9,RP=10,RC=11;
+
+const fmtBRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+const fmtBRL2 = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtInt = new Intl.NumberFormat("pt-BR");
+const fmtPct = v => (v * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + "%";
+function compactBRL(v) {
+  const a = Math.abs(v);
+  if (a >= 1e6) return "R$ " + (v / 1e6).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " mi";
+  if (a >= 1e3) return "R$ " + (v / 1e3).toLocaleString("pt-BR", { maximumFractionDigits: a >= 1e5 ? 0 : 1 }) + " mil";
+  return fmtBRL.format(v);
+}
+function compactNum(v) { return v >= 1e3 ? (v / 1e3).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " mil" : fmtInt.format(v); }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const HOJE = D.hoje; // [ano, mês, dia]
+const ANOS = [...new Set(D.vendas.map(r => r[A]))].sort((a, b) => b - a);
+const state = { ano: ANOS[0], mes: 0, prod: -1, metric: "rc", heat: "geral", sort: { key: "rc", dir: -1 } };
+
+// ---------- utilidades de agregação ----------
+function soma(rows) {
+  const t = { n: rows.length, br: 0, of: 0, tx: 0, cl: 0, rp: 0, rc: 0, intN: 0, intRc: 0 };
+  for (const r of rows) { t.br += r[BR]; t.of += r[OF]; t.tx += r[TX]; t.cl += r[CL]; t.rp += r[RP]; t.rc += r[RC]; if (r[INT]) { t.intN++; t.intRc += r[RC]; } }
+  return t;
+}
+function filtra(rows, { ano, mes, prod, corte }) {
+  return rows.filter(r => (!ano || r[A] === ano) && (!mes || r[M] === mes) && (prod < 0 || r[P] === prod)
+    && (!corte || (r[M] < corte[0] || (r[M] === corte[0] && r[DIA] <= corte[1]))));
+}
+function filtraReemb(rows, { ano, mes, prod, corte }) {
+  return rows.filter(r => (!ano || r[0] === ano) && (!mes || r[1] === mes) && (prod < 0 || r[2] === prod) && (!corte || r[1] <= corte[0]));
+}
+const atual = () => filtra(D.vendas, state);
+
+// Período de comparação: mesmo período do ano anterior (cortado na data de hoje se o período atual ainda está correndo)
+function comparacao() {
+  if (!state.ano) return null;
+  const emCurso = state.ano === HOJE[0] && (!state.mes || state.mes === HOJE[1]);
+  const corte = emCurso ? [HOJE[1], HOJE[2]] : null;
+  const prev = state.ano - 1;
+  if (!D.vendas.some(r => r[A] === prev)) return null;
+  return { rows: filtra(D.vendas, { ano: prev, mes: state.mes, prod: state.prod, corte }), ano: prev, corte };
+}
+
+function nomePeriodo() {
+  if (!state.ano) return state.mes ? `em ${MESES_LONGOS[state.mes - 1]} (todos os anos)` : "em todo o histórico";
+  return state.mes ? `em ${MESES_LONGOS[state.mes - 1]} de ${state.ano}` : `em ${state.ano}`;
+}
+
+// ---------- tooltip ----------
+const tip = document.getElementById("tip");
+function showTip(e, titulo, linhas) {
+  tip.innerHTML = `<div class="t">${esc(titulo)}</div>` + linhas.map(([k, v]) => `<div class="r"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
+  tip.style.opacity = 1; moveTip(e);
+}
+function moveTip(e) {
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+  if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+  tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px";
+}
+function hideTip() { tip.style.opacity = 0; }
+function bindTip(el, titulo, linhas) {
+  el.addEventListener("mouseenter", e => showTip(e, titulo, linhas));
+  el.addEventListener("mousemove", moveTip);
+  el.addEventListener("mouseleave", hideTip);
+}
+
+// ---------- filtros ----------
+const fAno = document.getElementById("fAno"), fMes = document.getElementById("fMes"), fProd = document.getElementById("fProd");
+fAno.innerHTML = ANOS.map(a => `<option value="${a}">${a}</option>`).join("") + `<option value="0">Todos os anos</option>`;
+fMes.innerHTML = `<button type="button" class="chip" data-m="0">Ano inteiro</button>` + MESES.map((m, i) => `<button type="button" class="chip" data-m="${i + 1}">${m}</button>`).join("");
+const totalPorProd = D.produtos.map(() => 0);
+for (const r of D.vendas) totalPorProd[r[P]] += r[RC];
+const ordemProd = D.produtos.map((n, i) => i).filter(i => totalPorProd[i] > 0).sort((a, b) => totalPorProd[b] - totalPorProd[a]);
+fProd.innerHTML = `<option value="-1">Todos os produtos</option>` + ordemProd.map(i => `<option value="${i}">${esc(D.produtos[i])}</option>`).join("");
+
+fAno.onchange = () => { state.ano = +fAno.value; render(); };
+fMes.onclick = e => { const b = e.target.closest(".chip"); if (!b || b.disabled) return; state.mes = +b.dataset.m; render(); };
+fProd.onchange = () => { state.prod = +fProd.value; render(); scrollTo({ top: 0, behavior: "smooth" }); };
+document.getElementById("btnLimpar").onclick = () => { state.ano = ANOS[0]; state.mes = 0; state.prod = -1; render(); };
+document.getElementById("metricToggle").onclick = e => { const b = e.target.closest("button"); if (!b) return; state.metric = b.dataset.m; render(); };
+document.getElementById("heatToggle").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return; state.heat = b.dataset.e;
+  document.querySelectorAll("#heatToggle button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderHeat();
+};
+function abrirProduto(i) { state.prod = i; render(); scrollTo({ top: 0, behavior: "smooth" }); }
+
+// Tema
+const btnTema = document.getElementById("btnTema");
+btnTema.onclick = () => {
+  const escuroAgora = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.dataset.theme = escuroAgora ? "light" : "dark";
+  try { localStorage.setItem("tema-hotmart", document.documentElement.dataset.theme); } catch (e) {}
+  render();
+};
+try { const t = localStorage.getItem("tema-hotmart"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+// ---------- hero e indicadores ----------
+function deltaHTML(cur, prev, rotulo) {
+  if (prev == null || prev === 0) return `<span class="delta flat">sem vendas no mesmo período do ano anterior</span>`;
+  const d = (cur - prev) / Math.abs(prev);
+  const cls = Math.abs(d) < 0.005 ? "flat" : d > 0 ? "up" : "down";
+  const seta = cls === "up" ? "▲" : cls === "down" ? "▼" : "•";
+  return `<span class="delta ${cls}">${seta} ${fmtPct(Math.abs(d))} <small>${rotulo}</small></span>`;
+}
+function renderHero(rows, t) {
+  const comp = comparacao();
+  const tc = comp ? soma(comp.rows) : null;
+  const rot = comp ? `vs ${state.mes ? MESES[state.mes - 1] + "/" : ""}${comp.ano}${comp.corte ? " (até " + comp.corte[1] + "/" + String(comp.corte[0]).padStart(2, "0") + ")" : ""}` : "";
+  document.getElementById("heroPeriodo").textContent = nomePeriodo();
+  document.getElementById("heroValor").textContent = fmtBRL2.format(t.rc);
+  document.getElementById("heroDelta").innerHTML = comp ? deltaHTML(t.rc, tc.rc, rot) + (tc.rc ? `<div class="hint" style="font-size:12.5px;color:var(--text-muted);margin-top:4px">Mesmo período do ano anterior: ${fmtBRL.format(tc.rc)}</div>` : "") : "";
+  const margem = t.br ? t.rc / t.br : 0;
+  const prodTxt = state.prod >= 0 ? `<b>${esc(D.produtos[state.prod])}</b>. ` : "";
+  document.getElementById("heroCtx").innerHTML = t.n
+    ? `${prodTxt}De cada <b>R$ 100</b> que os clientes pagaram, <b>${fmtBRL2.format(margem * 100)}</b> ficaram com o Instituto. O restante foi para taxas, juros de parcelamento e coprodução.`
+    : `${prodTxt}Nenhuma venda aprovada neste período.`;
+
+  const reemb = filtraReemb(D.reembolsos, { ano: state.ano, mes: state.mes, prod: state.prod });
+  const reembV = reemb.reduce((s, r) => s + r[3], 0);
+  const tiles = [
+    ["Vendas aprovadas", fmtInt.format(t.n), comp && tc.n ? deltaHTML(t.n, tc.n, rot) : "aprovadas e completas"],
+    ["Faturamento bruto", compactBRL(t.br), "o que os clientes pagaram"],
+    ["Ticket médio recebido", t.n ? fmtBRL.format(t.rc / t.n) : "R$ 0", "valor líquido por venda"],
+    ["Taxas Hotmart", compactBRL(t.tx + t.cl), t.br ? fmtPct((t.tx + t.cl) / t.br) + " do bruto (taxa + Club)" : ""],
+    ["Coprodução e afiliados", compactBRL(t.rp), t.br ? fmtPct(t.rp / t.br) + " do bruto" : ""],
+    ["Reembolsos", fmtInt.format(reemb.length), reemb.length ? "≈ " + fmtBRL.format(reembV) + " devolvidos" : "nenhum no período"],
+    ["Vendas internacionais", fmtInt.format(t.intN), t.n ? fmtPct(t.intN / t.n) + " das vendas · " + compactBRL(t.intRc) : ""],
+    ["Produtos com venda", fmtInt.format(new Set(rows.map(r => r[P])).size), state.prod >= 0 ? "produto filtrado" : "no período"],
+    ["Juros e impostos", compactBRL(t.br - t.of), "pagos pelo cliente, ficam com a Hotmart"],
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(([l, v, n]) => `<div class="tile"><div class="lbl">${l}</div><div class="val">${v}</div><div class="note">${n}</div></div>`).join("");
+}
+
+// ---------- divisão do dinheiro (barra segmentada) ----------
+function renderDivisao(t) {
+  const el = document.getElementById("divisao");
+  if (!t.br) { el.innerHTML = `<div class="empty">Sem vendas no período</div>`; return; }
+  const partes = [
+    ["Recebido pelo Instituto", t.rc, "--s1", false],
+    ["Taxa Hotmart", t.tx, "--s2", false],
+    ["Juros e impostos (pagos pelo cliente)", Math.max(0, t.br - t.of), "--s5", false],
+    ["Coprodução e afiliados", t.rp, "--s4", true],
+    ["Hotmart Club", t.cl, "--s3", false],
+  ];
+  const resto = t.br - partes.reduce((s, p) => s + p[1], 0);
+  if (resto > t.br * 0.002) partes.push(["Spread de câmbio (vendas internacionais)", resto, "--muted-bar", true]);
+  const tot = partes.reduce((s, p) => s + p[1], 0);
+  el.innerHTML = `<div class="segbar" id="segbar"></div><div class="legend" id="segleg"></div>`;
+  const bar = document.getElementById("segbar"), leg = document.getElementById("segleg");
+  partes.forEach(([nome, v, cor, escuro]) => {
+    if (v <= 0) return;
+    const share = v / tot;
+    const s = document.createElement("div");
+    s.className = "seg" + (escuro ? " dark-text" : "");
+    s.style.flex = `${share} 1 0`; s.style.background = `var(${cor})`;
+    const txt = fmtPct(share);
+    if (share > 0.13) s.textContent = txt;
+    bindTip(s, nome, [["Valor", fmtBRL2.format(v)], ["Participação", txt]]);
+    bar.appendChild(s);
+    leg.insertAdjacentHTML("beforeend", `<div class="legend-row"><span class="sw" style="background:var(${cor})"></span><span class="nm">${nome}</span><span class="vv">${compactBRL(v)}</span><span class="pp">${txt}</span></div>`);
+  });
+}
+
+// ---------- evolução mensal (colunas) ----------
+function serieMensal() {
+  const base = filtra(D.vendas, { ano: state.ano, mes: 0, prod: state.prod });
+  let chaves;
+  if (state.ano) {
+    const ult = state.ano === HOJE[0] ? HOJE[1] : 12;
+    chaves = Array.from({ length: ult }, (_, i) => [state.ano, i + 1]);
+  } else {
+    const ini = D.vendas.reduce((m, r) => Math.min(m, r[A] * 12 + r[M] - 1), Infinity);
+    const fim = HOJE[0] * 12 + HOJE[1] - 1;
+    chaves = []; for (let k = ini; k <= fim; k++) chaves.push([Math.floor(k / 12), (k % 12) + 1]);
+  }
+  const mapa = new Map(chaves.map(k => [k[0] * 100 + k[1], { a: k[0], m: k[1], n: 0, br: 0, rc: 0 }]));
+  for (const r of base) { const o = mapa.get(r[A] * 100 + r[M]); if (o) { o.n++; o.br += r[BR]; o.rc += r[RC]; } }
+  return [...mapa.values()];
+}
+function niceMax(v) {
+  if (v <= 0) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v))), f = v / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p;
+}
+function renderMensal() {
+  const el = document.getElementById("chartMensal");
+  const serie = serieMensal();
+  const met = state.metric;
+  const fmtV = met === "n" ? v => fmtInt.format(v) : compactBRL;
+  const W = Math.max(300, el.clientWidth), H = 300, ml = 62, mr = 8, mt = 22, mb = 30;
+  const iw = W - ml - mr, ih = H - mt - mb;
+  const max = niceMax(Math.max(...serie.map(s => s[met]), 0) * 1.08);
+  const band = iw / serie.length, bw = Math.min(24, Math.max(3, band * 0.62));
+  const y = v => mt + ih - (v / max) * ih;
+  let svg = `<svg width="${W}" height="${H}" role="img" aria-label="Gráfico de colunas por mês">`;
+  for (let i = 0; i <= 4; i++) {
+    const v = max * i / 4, yy = y(v);
+    svg += `<line class="${i ? "gridline" : "baseline"}" x1="${ml}" x2="${W - mr}" y1="${yy}" y2="${yy}"/>`;
+    svg += `<text class="axis-text" x="${ml - 8}" y="${yy + 4}" text-anchor="end">${met === "n" ? compactNum(v) : compactBRL(v)}</text>`;
+  }
+  const passo = Math.ceil(serie.length / Math.floor(iw / 38));
+  const melhor = serie.reduce((b, s, i) => s[met] > serie[b][met] ? i : b, 0);
+  serie.forEach((s, i) => {
+    const x = ml + band * i + (band - bw) / 2, v = s[met], top = y(v), h = mt + ih - top;
+    const destacado = !state.mes || s.m === state.mes;
+    const cor = destacado ? "var(--s1)" : "var(--muted-bar)";
+    if (h > 0.5) {
+      const r = Math.min(4, bw / 2, h);
+      svg += `<path class="mark" data-i="${i}" fill="${cor}" d="M${x},${mt + ih} V${top + r} Q${x},${top} ${x + r},${top} H${x + bw - r} Q${x + bw},${top} ${x + bw},${top + r} V${mt + ih} Z"/>`;
+    }
+    svg += `<rect class="hit" data-i="${i}" x="${ml + band * i}" y="${mt}" width="${band}" height="${ih}"/>`;
+    if (i % passo === 0 || serie.length <= 14) {
+      const lbl = state.ano ? MESES[s.m - 1] : (s.m === 1 || i === 0 ? MESES[s.m - 1] + "/" + String(s.a).slice(2) : MESES[s.m - 1]);
+      svg += `<text class="axis-text" x="${ml + band * i + band / 2}" y="${H - 10}" text-anchor="middle">${lbl}</text>`;
+    }
+    const rotular = (state.mes && s.m === state.mes && state.ano) || (!state.mes && i === melhor && v > 0);
+    if (rotular && h > 0) svg += `<text class="val-text" x="${x + bw / 2}" y="${top - 6}" text-anchor="middle">${fmtV(v)}</text>`;
+  });
+  svg += `</svg>`;
+  el.innerHTML = svg;
+  el.querySelectorAll(".hit").forEach(h => {
+    const s = serie[+h.dataset.i];
+    const linhas = [["Recebido", fmtBRL2.format(s.rc)], ["Bruto", fmtBRL2.format(s.br)], ["Vendas", fmtInt.format(s.n)], ["Ticket recebido", s.n ? fmtBRL.format(s.rc / s.n) : "-"]];
+    const tit = `${MESES_LONGOS[s.m - 1]} de ${s.a}`;
+    h.addEventListener("mouseenter", e => { showTip(e, tit, linhas); const m = el.querySelector(`.mark[data-i="${h.dataset.i}"]`); if (m) m.classList.add("hover"); });
+    h.addEventListener("mousemove", moveTip);
+    h.addEventListener("mouseleave", () => { hideTip(); el.querySelectorAll(".mark.hover").forEach(m => m.classList.remove("hover")); });
+    h.addEventListener("click", () => { if (state.ano) { state.mes = state.mes === s.m ? 0 : s.m; } else { state.ano = s.a; state.mes = s.m; } render(); });
+  });
+  const nomes = { rc: "valor recebido real", br: "faturamento bruto", n: "número de vendas" };
+  document.getElementById("hMensal").textContent = `${nomes[met][0].toUpperCase() + nomes[met].slice(1)} ${state.ano ? "em " + state.ano : "em todo o histórico"}${state.prod >= 0 ? " · " + D.produtos[state.prod] : ""}. Clique numa coluna para filtrar o mês`;
+}
+
+// ---------- ranking ----------
+function porProduto(rows) {
+  const m = new Map();
+  for (const r of rows) {
+    let o = m.get(r[P]); if (!o) { o = { p: r[P], rows: [] }; m.set(r[P], o); }
+    o.rows.push(r);
+  }
+  return [...m.values()].map(o => Object.assign(soma(o.rows), { p: o.p })).sort((a, b) => b.rc - a.rc);
+}
+function renderRanking(rows) {
+  const el = document.getElementById("chartRanking");
+  const lista = porProduto(rows);
+  if (!lista.length) { el.innerHTML = `<div class="empty">Sem vendas no período</div>`; return; }
+  const TOP = 10;
+  const itens = lista.slice(0, TOP);
+  if (lista.length > TOP) {
+    const resto = lista.slice(TOP);
+    itens.push({ p: -1, rc: resto.reduce((s, x) => s + x.rc, 0), n: resto.reduce((s, x) => s + x.n, 0), br: resto.reduce((s, x) => s + x.br, 0), outros: resto.length });
+  }
+  const total = lista.reduce((s, x) => s + x.rc, 0);
+  const W = Math.max(300, el.clientWidth), rowH = 34, nameW = Math.min(250, W * 0.42), valW = 92;
+  const H = itens.length * rowH + 4, bx = nameW + 8, bwMax = W - bx - valW;
+  const max = Math.max(...itens.map(i => i.rc));
+  let svg = `<svg width="${W}" height="${H}" role="img" aria-label="Ranking de produtos por valor recebido">`;
+  itens.forEach((it, i) => {
+    const yy = i * rowH, w = Math.max(2, (it.rc / max) * bwMax), bh = 14, by = yy + (rowH - bh) / 2;
+    const nome = it.p < 0 ? `Outros ${it.outros} produtos` : D.produtos[it.p];
+    const curto = nome.length > Math.floor(nameW / 6.6) ? nome.slice(0, Math.floor(nameW / 6.6) - 1) + "…" : nome;
+    const r = Math.min(4, w / 2);
+    svg += `<g class="rank-row" data-i="${i}"><rect class="rank-bg" x="0" y="${yy + 1}" width="${W}" height="${rowH - 2}" rx="8" fill="transparent"/>`;
+    svg += `<text class="rank-name" x="4" y="${yy + rowH / 2 + 4}">${esc(curto)}</text>`;
+    svg += `<path fill="${it.p < 0 ? "var(--muted-bar)" : "var(--s1)"}" d="M${bx},${by} H${bx + w - r} Q${bx + w},${by} ${bx + w},${by + r} V${by + bh - r} Q${bx + w},${by + bh} ${bx + w - r},${by + bh} H${bx} Z"/>`;
+    svg += `<text class="val-text" x="${bx + w + 8}" y="${yy + rowH / 2 + 4}">${compactBRL(it.rc)}</text></g>`;
+  });
+  el.innerHTML = svg + `</svg>`;
+  el.querySelectorAll(".rank-row").forEach(g => {
+    const it = itens[+g.dataset.i];
+    const nome = it.p < 0 ? `Outros ${it.outros} produtos` : D.produtos[it.p];
+    bindTip(g, nome, [["Recebido", fmtBRL2.format(it.rc)], ["Participação", fmtPct(it.rc / total)], ["Vendas", fmtInt.format(it.n)], ["Bruto", fmtBRL2.format(it.br)]]);
+    if (it.p >= 0) g.addEventListener("click", () => abrirProduto(it.p)); else g.style.cursor = "default";
+  });
+}
+
+// ---------- formas de pagamento ----------
+function renderPagamentos(rows, t) {
+  const el = document.getElementById("pagamentos");
+  if (!t.n) { el.innerHTML = `<div class="empty">Sem vendas no período</div>`; return; }
+  const m = new Map();
+  for (const r of rows) { const o = m.get(r[PG]) || { n: 0, rc: 0 }; o.n++; o.rc += r[RC]; m.set(r[PG], o); }
+  const lista = [...m.entries()].sort((a, b) => b[1].rc - a[1].rc);
+  el.innerHTML = lista.map(([k, o]) => {
+    const nome = NOME_PAG[D.pagamentos[k]] || D.pagamentos[k];
+    const share = t.rc ? o.rc / t.rc : 0;
+    return `<div class="payrow"><div class="top"><span>${esc(nome)}</span><span>${compactBRL(o.rc)} · ${fmtInt.format(o.n)} vendas</span></div><div class="meter" title="${fmtPct(share)}"><i style="width:${Math.max(1, share * 100)}%"></i></div></div>`;
+  }).join("") + `<p class="hint" style="margin:4px 0 0">Internacional: ${fmtInt.format(t.intN)} vendas (${t.n ? fmtPct(t.intN / t.n) : "0%"}), convertidas para reais pela cotação do dia.</p>`;
+}
+
+// ---------- mapa de calor ----------
+function renderHeat() {
+  const sec = document.getElementById("secHeat"), el = document.getElementById("heat");
+  if (state.prod >= 0) { sec.classList.add("hidden"); return; }
+  sec.classList.remove("hidden");
+  let colunas, rotulo, chaveCol;
+  if (state.ano) {
+    const ult = state.ano === HOJE[0] ? HOJE[1] : 12;
+    colunas = Array.from({ length: ult }, (_, i) => i + 1); rotulo = c => MESES[c - 1]; chaveCol = r => r[M];
+    document.getElementById("tHeat").textContent = `Mapa de calor: produto × mês (${state.ano})`;
+  } else {
+    colunas = [...ANOS].reverse(); rotulo = c => c; chaveCol = r => r[A];
+    document.getElementById("tHeat").textContent = "Mapa de calor: produto × ano";
+  }
+  const base = filtra(D.vendas, { ano: state.ano, mes: 0, prod: -1 });
+  const tops = porProduto(base).slice(0, 15);
+  if (!tops.length) { el.innerHTML = `<div class="empty">Sem vendas no período</div>`; return; }
+  const cel = new Map();
+  for (const r of base) { const k = r[P] + ":" + chaveCol(r); const o = cel.get(k) || { rc: 0, n: 0 }; o.rc += r[RC]; o.n++; cel.set(k, o); }
+  const maxLinha = new Map();
+  let max = 0;
+  for (const t of tops) {
+    let ml = 0; for (const c of colunas) ml = Math.max(ml, (cel.get(t.p + ":" + c) || { rc: 0 }).rc);
+    maxLinha.set(t.p, ml); max = Math.max(max, ml);
+  }
+  const porLinha = state.heat === "linha";
+  document.getElementById("hHeat").textContent = porLinha
+    ? "Cada linha tem a própria escala: o tom mais escuro é o melhor mês daquele produto"
+    : "Quanto mais escuro, mais dinheiro recebido (mesma escala para todos os produtos)";
+  const passo = (v, p) => { const ref = porLinha ? maxLinha.get(p) : max; return v <= 0 || !ref ? 0 : Math.min(7, 1 + Math.floor((porLinha ? v / ref : Math.sqrt(v / ref)) * 6.999)); };
+  let h = `<table class="heat"><thead><tr><th></th>${colunas.map(c => `<th>${rotulo(c)}</th>`).join("")}<th style="text-align:right">Total</th></tr></thead><tbody>`;
+  for (const t of tops) {
+    h += `<tr><th class="rowh" data-p="${t.p}" title="${esc(D.produtos[t.p])}">${esc(D.produtos[t.p])}</th>`;
+    for (const c of colunas) {
+      const o = cel.get(t.p + ":" + c), s = o ? passo(o.rc, t.p) : 0;
+      const sel = state.ano && state.mes === c ? " sel" : "";
+      h += `<td class="${sel}" data-p="${t.p}" data-c="${c}" style="${s ? `background:var(--q${s})` : ""}"></td>`;
+    }
+    h += `<th style="text-align:right;color:var(--text-primary);font-weight:600;font-variant-numeric:tabular-nums">${compactBRL(t.rc)}</th></tr>`;
+  }
+  h += `</tbody></table><div class="heat-scale">Menos <span class="b" style="background:var(--surface-2)"></span>${[1,2,3,4,5,6,7].map(i => `<span class="b" style="background:var(--q${i})"></span>`).join("")} Mais <span style="margin-left:auto">15 produtos que mais receberam no período</span></div>`;
+  el.innerHTML = h;
+  el.querySelectorAll("td[data-p]").forEach(td => {
+    const p = +td.dataset.p, c = +td.dataset.c, o = cel.get(p + ":" + c) || { rc: 0, n: 0 };
+    bindTip(td, D.produtos[p], [[state.ano ? `${MESES_LONGOS[c - 1]} de ${state.ano}` : `${c}`, ""], ["Recebido", fmtBRL2.format(o.rc)], ["Vendas", fmtInt.format(o.n)]]);
+    td.style.cursor = "pointer";
+    td.addEventListener("click", () => { if (state.ano) state.mes = c; else state.ano = c; state.prod = p; render(); scrollTo({ top: 0, behavior: "smooth" }); });
+  });
+  el.querySelectorAll("th.rowh").forEach(th => th.addEventListener("click", () => abrirProduto(+th.dataset.p)));
+}
+
+// ---------- cards de produto ----------
+function sparkline(valores, w, h) {
+  const max = Math.max(...valores, 1), n = valores.length;
+  if (n < 2) return "";
+  const pts = valores.map((v, i) => [i * (w - 8) / (n - 1) + 4, h - 4 - (v / max) * (h - 10)]);
+  const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+  const area = d + ` L${pts[n - 1][0]},${h - 2} L${pts[0][0]},${h - 2} Z`;
+  const lp = pts[n - 1];
+  return `<svg width="${w}" height="${h}" aria-hidden="true"><path d="${area}" fill="var(--s1)" fill-opacity=".1"/><path d="${d}" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${lp[0]}" cy="${lp[1]}" r="4" fill="var(--s1)" stroke="var(--surface-1)" stroke-width="2"/></svg>`;
+}
+function renderCards(rows) {
+  const sec = document.getElementById("secCards"), el = document.getElementById("cards");
+  if (state.prod >= 0) { sec.classList.add("hidden"); return; }
+  sec.classList.remove("hidden");
+  const lista = porProduto(rows);
+  const base = filtra(D.vendas, { ano: state.ano, mes: 0, prod: -1 });
+  const ult = state.ano ? (state.ano === HOJE[0] ? HOJE[1] : 12) : 0;
+  document.getElementById("hCards").textContent = `${lista.length} produtos com venda ${nomePeriodo()}. A linha mostra o valor recebido ${state.ano ? "mês a mês em " + state.ano : "ano a ano"}. Clique para abrir o painel completo do produto`;
+  const serie = new Map();
+  for (const r of base) {
+    let arr = serie.get(r[P]);
+    if (!arr) { arr = state.ano ? new Array(ult).fill(0) : ANOS.slice().reverse().map(() => 0); serie.set(r[P], arr); }
+    const idx = state.ano ? r[M] - 1 : ANOS.slice().reverse().indexOf(r[A]);
+    if (idx >= 0 && idx < arr.length) arr[idx] += r[RC];
+  }
+  const total = lista.reduce((s, x) => s + x.rc, 0);
+  el.innerHTML = lista.map((it, i) => `
+    <button type="button" class="card-prod" data-p="${it.p}">
+      <span class="rankpos">#${i + 1} · ${total ? fmtPct(it.rc / total) : ""} do total</span>
+      <span class="nm">${esc(D.produtos[it.p])}</span>
+      <span class="big">${fmtBRL.format(it.rc)}</span>
+      ${sparkline(serie.get(it.p) || [], 212, 40)}
+      <span class="meta"><span>${fmtInt.format(it.n)} vendas</span><span>ticket ${fmtBRL.format(it.rc / it.n)}</span>${it.intN ? `<span>${it.intN} intl.</span>` : ""}</span>
+    </button>`).join("") || `<div class="empty">Sem vendas no período</div>`;
+  el.querySelectorAll(".card-prod").forEach(b => b.addEventListener("click", () => abrirProduto(+b.dataset.p)));
+}
+
+// ---------- tabela ----------
+let linhasTabela = [], colunasTabela = [];
+function renderTabela(rows) {
+  const tb = document.getElementById("tabela");
+  const reemb = filtraReemb(D.reembolsos, { ano: state.ano, mes: state.mes, prod: state.prod });
+  if (state.prod < 0) {
+    document.getElementById("tTabela").textContent = `Detalhe por produto ${nomePeriodo()}`;
+    const rmap = new Map(); for (const r of reemb) rmap.set(r[2], (rmap.get(r[2]) || 0) + 1);
+    linhasTabela = porProduto(rows).map(o => ({ chave: o.p, nome: D.produtos[o.p], ...o, re: rmap.get(o.p) || 0 }));
+  } else {
+    document.getElementById("tTabela").textContent = `${D.produtos[state.prod]}: mês a mês`;
+    const m = new Map();
+    for (const r of filtra(D.vendas, { ano: state.ano, mes: 0, prod: state.prod })) {
+      const k = r[A] * 100 + r[M]; let o = m.get(k); if (!o) { o = []; m.set(k, o); } o.push(r);
+    }
+    const rmap = new Map(); for (const r of filtraReemb(D.reembolsos, { ano: state.ano, mes: 0, prod: state.prod })) { const k = r[0] * 100 + r[1]; rmap.set(k, (rmap.get(k) || 0) + 1); }
+    linhasTabela = [...m.entries()].map(([k, rs]) => ({ chave: k, nome: `${MESES_LONGOS[k % 100 - 1]} de ${Math.floor(k / 100)}`, ...soma(rs), re: rmap.get(k) || 0, sel: state.mes && k % 100 === state.mes }));
+    if (!state.sort.manual) state.sort = { key: "chave", dir: -1 };
+  }
+  const tot = linhasTabela.reduce((s, x) => s + x.rc, 0);
+  colunasTabela = [
+    ["nome", state.prod < 0 ? "Produto" : "Mês", x => esc(x.nome) + (x.sel ? `<span class="pill">selecionado</span>` : "")],
+    ["n", "Vendas", x => fmtInt.format(x.n)],
+    ["br", "Bruto", x => fmtBRL2.format(x.br)],
+    ["txcl", "Taxas Hotmart", x => fmtBRL2.format(x.tx + x.cl)],
+    ["rp", "Coprodução", x => fmtBRL2.format(x.rp)],
+    ["rc", "Recebido real", x => `<b>${fmtBRL2.format(x.rc)}</b>`],
+    ["pct", "% do total", x => tot ? fmtPct(x.rc / tot) : "-"],
+    ["tk", "Ticket recebido", x => fmtBRL2.format(x.n ? x.rc / x.n : 0)],
+    ["intN", "Intl.", x => fmtInt.format(x.intN)],
+    ["re", "Reembolsos", x => fmtInt.format(x.re)],
+  ];
+  const val = (x, k) => k === "txcl" ? x.tx + x.cl : k === "pct" ? x.rc : k === "tk" ? (x.n ? x.rc / x.n : 0) : x[k];
+  const { key, dir } = state.sort;
+  linhasTabela.sort((a, b) => { const va = val(a, key), vb = val(b, key); return (typeof va === "string" ? va.localeCompare(vb, "pt-BR") : va - vb) * dir; });
+  const t = soma(rows);
+  tb.innerHTML = `<thead><tr>${colunasTabela.map(([k, l]) => `<th data-k="${k}" aria-sort="${key === k ? (dir < 0 ? "descending" : "ascending") : "none"}">${l}</th>`).join("")}</tr></thead>
+    <tbody>${linhasTabela.map(x => `<tr class="${state.prod < 0 ? "clickable" : ""}" data-k="${x.chave}">${colunasTabela.map(([, , f]) => `<td>${f(x)}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="10" class="empty">Sem vendas no período</td></tr>`}</tbody>
+    <tfoot><tr><td>Total</td><td>${fmtInt.format(state.prod < 0 ? t.n : linhasTabela.reduce((s, x) => s + x.n, 0))}</td><td>${fmtBRL2.format(linhasTabela.reduce((s, x) => s + x.br, 0))}</td><td>${fmtBRL2.format(linhasTabela.reduce((s, x) => s + x.tx + x.cl, 0))}</td><td>${fmtBRL2.format(linhasTabela.reduce((s, x) => s + x.rp, 0))}</td><td>${fmtBRL2.format(tot)}</td><td>100,0%</td><td></td><td>${fmtInt.format(linhasTabela.reduce((s, x) => s + x.intN, 0))}</td><td>${fmtInt.format(linhasTabela.reduce((s, x) => s + x.re, 0))}</td></tr></tfoot>`;
+  tb.querySelectorAll("th").forEach(th => th.onclick = () => {
+    const k = th.dataset.k;
+    state.sort = { key: k, dir: state.sort.key === k ? -state.sort.dir : (k === "nome" ? 1 : -1), manual: true };
+    renderTabela(rows);
+  });
+  if (state.prod < 0) tb.querySelectorAll("tbody tr[data-k]").forEach(tr => tr.onclick = () => abrirProduto(+tr.dataset.k));
+}
+
+// ---------- CSV ----------
+document.getElementById("btnCsv").onclick = () => {
+  const num = v => v.toFixed(2).replace(".", ",");
+  const linhas = [["Ano", "Mês", "Produto", "Vendas", "Bruto (R$)", "Taxa Hotmart (R$)", "Hotmart Club (R$)", "Coprodução e afiliados (R$)", "Recebido real (R$)", "Vendas internacionais"]];
+  const m = new Map();
+  for (const r of filtra(D.vendas, state)) {
+    const k = r[A] + "|" + r[M] + "|" + r[P]; let o = m.get(k); if (!o) { o = []; m.set(k, o); } o.push(r);
+  }
+  [...m.entries()].sort().forEach(([k, rs]) => {
+    const [a, mes, p] = k.split("|").map(Number), t = soma(rs);
+    linhas.push([a, mes, D.produtos[p], t.n, num(t.br), num(t.tx), num(t.cl), num(t.rp), num(t.rc), t.intN]);
+  });
+  const csv = "﻿" + linhas.map(l => l.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `hotmart-${state.ano || "todos"}${state.mes ? "-" + String(state.mes).padStart(2, "0") : ""}.csv`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
+// ---------- render ----------
+function render() {
+  fAno.value = String(state.ano); fProd.value = String(state.prod);
+  fMes.querySelectorAll(".chip").forEach(b => {
+    const m = +b.dataset.m;
+    b.setAttribute("aria-pressed", String(m === state.mes));
+    b.disabled = m > 0 && state.ano === HOJE[0] && m > HOJE[1];
+    b.textContent = m === 0 ? (state.ano ? "Ano inteiro" : "Todos os meses") : MESES[m - 1];
+  });
+  document.querySelectorAll("#metricToggle button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.m === state.metric)));
+  if (state.prod < 0 && state.sort.key === "chave") state.sort = { key: "rc", dir: -1 };
+  if (state.prod >= 0 && state.sort.manual && state.sort.key === "chave") state.sort.manual = false;
+
+  const rows = atual(), t = soma(rows);
+  document.getElementById("titulo").textContent = state.prod >= 0 ? D.produtos[state.prod] : "Faturamento e valor recebido";
+  document.getElementById("subtitulo").textContent = `${state.prod >= 0 ? "Painel do produto · " : "Visão geral de todos os produtos · "}dados da Hotmart atualizados em ${D.atualizado}`;
+  document.getElementById("secRanking").classList.toggle("hidden", state.prod >= 0);
+  document.getElementById("secPagamentos").classList.toggle("span-5", state.prod < 0);
+  document.getElementById("secPagamentos").classList.toggle("span-12", state.prod >= 0);
+  renderHero(rows, t);
+  renderDivisao(t);
+  renderMensal();
+  renderRanking(rows);
+  renderPagamentos(rows, t);
+  renderHeat();
+  renderCards(rows);
+  renderTabela(rows);
+}
+document.getElementById("rodape").innerHTML =
+  `<b>Como ler os números.</b> <b>Valor recebido real</b> é a comissão que cai na conta do Instituto em cada venda aprovada, já sem a taxa da Hotmart, o Hotmart Club e a parte de coprodutores e afiliados. <b>Bruto</b> é o que o cliente pagou, incluindo juros de parcelamento e impostos. Vendas reembolsadas ou canceladas não entram nos totais (os reembolsos aparecem à parte). O mês considerado é o da aprovação do pagamento. Vendas em moeda estrangeira foram convertidas para reais pela taxa da própria Hotmart, e as comissões pagas em dólar pela cotação PTAX de venda do Banco Central no dia da aprovação. Os dois cadastros "Mannah Quantec" da Hotmart aparecem somados como um produto só.`;
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 150); });
+render();
+</script>
+</body>
+</html>

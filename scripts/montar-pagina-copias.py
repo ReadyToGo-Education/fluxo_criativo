@@ -77,40 +77,69 @@ def extract_body_scripts(body: str) -> tuple[str, list[str]]:
     return body_clean.strip(), scripts
 
 
+def _escopar_seletor(s: str, scope: str) -> str:
+    """Aplica o prefixo `scope` a um seletor individual."""
+    if s == ":root" or s.startswith(":"):
+        return s
+    if s in ("html", "body"):
+        return scope
+    if s == "*":
+        return f"{scope} *"
+    return f"{scope} {s}"
+
+
+def _fim_do_bloco(css: str, inicio: int) -> int:
+    """Recebe a posição logo após um `{` e devolve a posição do `}` correspondente."""
+    profundidade = 1
+    i = inicio
+    while i < len(css):
+        if css[i] == "{":
+            profundidade += 1
+        elif css[i] == "}":
+            profundidade -= 1
+            if profundidade == 0:
+                return i
+        i += 1
+    return len(css)
+
+
 def scope_css(css: str, scope: str) -> str:
     """Prefixa seletores CSS com `scope` pra evitar colisao entre secoes.
 
     Regras:
     - html, body, * viram o proprio scope (nao vazam pro documento global)
-    - :root, @-rules, keyframes ficam intactos
+    - :root, keyframes, font-face e demais @-rules sem seletores ficam intactos
+    - @media, @supports e @container sao percorridos por dentro, para que as
+      regras responsivas recebam o mesmo prefixo (e a mesma especificidade)
+      das regras de fora. Sem isso, a versão de celular perde para a de desktop.
     - seletores normais recebem prefixo `scope `
     """
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
     out: list[str] = []
-    for bloco in re.split(r"(\})", css):
-        if not bloco.strip():
-            out.append(bloco)
-            continue
-        if bloco == "}":
-            out.append(bloco)
-            continue
-        if "{" in bloco:
-            sel_part, _, decl = bloco.partition("{")
-            seletores = [s.strip() for s in sel_part.split(",") if s.strip()]
-            novos = []
-            for s in seletores:
-                if s.startswith("@") or s == ":root":
-                    novos.append(s)
-                elif s in ("html", "body"):
-                    novos.append(scope)
-                elif s == "*":
-                    novos.append(f"{scope} *")
-                elif s.startswith(":"):
-                    novos.append(s)
-                else:
-                    novos.append(f"{scope} {s}")
-            out.append(", ".join(novos) + "{" + decl)
+    i = 0
+    while i < len(css):
+        abre = css.find("{", i)
+        if abre == -1:
+            out.append(css[i:])
+            break
+        preludio = css[i:abre]
+        # Declarações soltas do tipo @import ...; antes do próximo bloco
+        if ";" in preludio:
+            corte = preludio.rfind(";") + 1
+            out.append(preludio[:corte])
+            preludio = preludio[corte:]
+        fecha = _fim_do_bloco(css, abre + 1)
+        corpo = css[abre + 1:fecha]
+        cabeca = preludio.strip()
+        if cabeca.startswith(("@media", "@supports", "@container")):
+            out.append(f"{cabeca} {{{scope_css(corpo, scope)}}}")
+        elif cabeca.startswith("@"):
+            out.append(f"{cabeca} {{{corpo}}}")
         else:
-            out.append(bloco)
+            seletores = [s.strip() for s in cabeca.split(",") if s.strip()]
+            out.append(", ".join(_escopar_seletor(s, scope) for s in seletores) + f" {{{corpo}}}")
+        out.append("\n")
+        i = fecha + 1
     return "".join(out)
 
 
@@ -209,6 +238,11 @@ def main() -> None:
     if not page_desc:
         page_desc = "Pagina de vendas do produto."
 
+    # Trecho opcional para o <head> (ex: Meta Pixel). Fica em copias/head-extra.html
+    # para sobreviver a cada nova montagem da página.
+    head_extra_path = copias_dir / "head-extra.html"
+    head_extra = head_extra_path.read_text(encoding="utf-8").strip() if head_extra_path.is_file() else ""
+
     merged_css = "\n\n".join(all_css)
     merged_body = "\n\n".join(all_body)
     merged_scripts = "\n".join(all_scripts)
@@ -220,6 +254,7 @@ def main() -> None:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{page_title}</title>
 <meta name="description" content="{page_desc}">
+{head_extra}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {fonts_head}

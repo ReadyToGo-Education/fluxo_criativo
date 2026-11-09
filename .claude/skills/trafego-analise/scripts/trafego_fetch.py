@@ -40,6 +40,11 @@ def err(msg):
     sys.stderr.buffer.flush()
 
 
+def info(msg):
+    sys.stderr.buffer.write(f"[INFO] {msg}\n".encode("utf-8"))
+    sys.stderr.buffer.flush()
+
+
 def fetch(url, retries=3, backoff=5):
     """Faz GET com retry em rate limit."""
     for attempt in range(retries):

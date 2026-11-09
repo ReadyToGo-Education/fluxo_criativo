@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "vturb": {
+      "command": "python",
+      "args": ["scripts/mcp-vturb.py"]
+    },
+    "hotmart": {
+      "command": "python",
+      "args": ["scripts/mcp-hotmart.py"]
+    }
+  }
+}
