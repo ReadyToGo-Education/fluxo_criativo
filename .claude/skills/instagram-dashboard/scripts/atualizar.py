@@ -134,7 +134,7 @@ def buscar_perfil(token, ig_user):
     data = apify_post(token, SCRAPER_URL, {
         'directUrls': [f'https://www.instagram.com/{ig_user}/'],
         'resultsType': 'details',
-    }, timeout=60)
+    }, timeout=300)
     if not data:
         raise ValueError('Apify nao retornou dados de perfil')
     return data[0]

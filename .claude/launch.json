@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "pagina-aniversario-mannah",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "meus-produtos/Mannah-quantec/entregas/paginas/aniversario-1-ano"],
+      "port": 8765
+    },
+    {
+      "name": "pagina-imersao-fluxos-dinheiro",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "meus-produtos/imersao-maquina-fluxos-dinheiro/entregas/paginas"],
+      "port": 8766
+    },
+    {
+      "name": "pagina-seja-ima-dinheiro",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8767", "--directory", "C:/Users/luizh/Documents/fluxo-criativo/meus-produtos/seja-uma-ima-de-dinheiro/entregas/paginas"],
+      "port": 8767
+    },
+    {
+      "name": "pagina-imersao-radiestesia-5d",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8768", "--directory", "C:/Users/luizh/Documents/fluxo-criativo/meus-produtos/imersao-radiestesia-holografica-5d/entregas/paginas"],
+      "port": 8768
+    },
+    {
+      "name": "painel-ca06",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8769", "--directory", "C:/Users/luizh/Documents/fluxo-criativo/meus-produtos/Mannah-quantec/entregas/trafego/painel-ca06"],
+      "port": 8769
+    }
+  ]
+}
