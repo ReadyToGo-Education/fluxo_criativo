@@ -523,7 +523,7 @@ function renderMensal() {
   const serie = serieMensal();
   const met = state.metric;
   const fmtV = met === "n" ? v => fmtInt.format(v) : compactBRL;
-  const W = Math.max(300, el.clientWidth), H = 300, ml = 62, mr = 8, mt = 22, mb = 30;
+  const W = Math.max(220, el.clientWidth), H = 300, ml = 62, mr = 8, mt = 22, mb = 30;
   const iw = W - ml - mr, ih = H - mt - mb;
   const max = niceMax(Math.max(...serie.map(s => s[met]), 0) * 1.08);
   const band = iw / serie.length, bw = Math.min(24, Math.max(3, band * 0.62));
@@ -587,7 +587,7 @@ function renderRanking(rows) {
     itens.push({ p: -1, rc: resto.reduce((s, x) => s + x.rc, 0), n: resto.reduce((s, x) => s + x.n, 0), br: resto.reduce((s, x) => s + x.br, 0), outros: resto.length });
   }
   const total = lista.reduce((s, x) => s + x.rc, 0);
-  const W = Math.max(300, el.clientWidth), rowH = 34, nameW = Math.min(250, W * 0.42), valW = 92;
+  const W = Math.max(220, el.clientWidth), rowH = 34, nameW = Math.min(250, W * 0.42), valW = 92;
   const H = itens.length * rowH + 4, bx = nameW + 8, bwMax = W - bx - valW;
   const max = Math.max(...itens.map(i => i.rc));
   let svg = `<svg width="${W}" height="${H}" role="img" aria-label="Ranking de produtos por valor recebido">`;
