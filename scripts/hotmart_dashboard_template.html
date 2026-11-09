@@ -772,11 +772,26 @@ document.getElementById("btnCsv").onclick = () => {
     linhas.push([a, mes, D.produtos[p], t.n, num(t.br), num(t.tx), num(t.cl), num(t.rp), num(t.rc), t.intN]);
   });
   const csv = "﻿" + linhas.map(l => l.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+  const nomeArq = `hotmart-${state.ano || "todos"}${state.mes ? "-" + String(state.mes).padStart(2, "0") : ""}.csv`;
+  if (salvarArquivo) {
+    // Página publicada no Claude: o download passa pela confirmação do próprio Claude
+    salvarArquivo.save({ filename: nomeArq, data: csv }).catch(e => {
+      if (e && e.code !== "declined" && e.code !== "rate_limited") btnCsv.classList.add("hidden");
+    });
+    return;
+  }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-  a.download = `hotmart-${state.ano || "todos"}${state.mes ? "-" + String(state.mes).padStart(2, "0") : ""}.csv`;
+  a.download = nomeArq;
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 };
+// Dentro do Claude, o CSV só pode ser baixado pela capacidade "downloads"; sem ela, o botão some
+const btnCsv = document.getElementById("btnCsv");
+let salvarArquivo = null;
+if (window.claude && typeof window.claude.use === "function") {
+  btnCsv.classList.add("hidden");
+  window.claude.use("downloads").then(d => { salvarArquivo = d; if (d) btnCsv.classList.remove("hidden"); }).catch(() => {});
+}
 
 // ---------- render ----------
 function render() {
