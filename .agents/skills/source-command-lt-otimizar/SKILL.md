@@ -161,6 +161,7 @@ Aplicar SOMENTE se TODAS as condicoes forem verdadeiras:
 1. Conjunto esta dentro do CPA nos ultimos 7 dias
 2. Possui mais de 50 compras nos ultimos 28 dias
 3. NAO possui campanha Advantage+ ativa
+4. O aluno está no nível Hard ou acima e o analisador concorda (caso a caso). Abaixo de 50 compras, nada de Advantage+: público, posicionamento e criativo manuais (régua da seção 1.3 do `/trafego-criar-campanha`).
 
 **Acao: Criar campanha Advantage+:**
 - 1 campanha

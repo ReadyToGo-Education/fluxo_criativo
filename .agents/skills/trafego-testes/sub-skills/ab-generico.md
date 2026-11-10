@@ -105,6 +105,15 @@ Toda opção de [1] a [8] do menu da `/trafego-testes` cai aqui:
 - `adsets_separados` é o padrão para qualquer outra dimensão.
 - `campanhas_separadas` para `estrutura` (cada estrutura precisa da própria campanha, com o próprio jeito de distribuir o orçamento) e para o escopo 2 (campanha inteira).
 
+**Teste de anúncio (criativo, headline e CTA): campanha nova e tudo manual.** Regra do Severino:
+- O teste roda sempre numa campanha nova `[WS-AB] {dimensao}-{slug}`, separada da campanha que está no ar. No passo 4 da coleta, essas dimensões não mostram a pergunta. No modelo `ads_mesmo_adset`, os anúncios entram numa cópia do conjunto base criada dentro da campanha nova, nunca no conjunto do molde.
+- **Público sem Advantage+** (`targeting_automation.advantage_audience: 0`): a mesma localização, idade, gênero, interesses e públicos do molde, sem a Meta expandir para fora deles. Se o molde usa Público Advantage+ aberto, o conjunto do teste leva idade definida e pelo menos 3 interesses, como na régua da seção 1.3 do `.claude/skills/trafego-criar-campanha/SKILL.md`.
+- **Posicionamento manual:** o do molde, se já for manual; se o molde usa Posicionamentos Advantage+, a sugestão manual da Fase 8 do `/trafego-criar-campanha` (Feed, Stories e Reels do Instagram e do Facebook).
+- **Criativo sem Advantage+:** um criativo por anúncio (passo 2 da Montagem) e sem as melhorias automáticas da Meta.
+- Lance e o resto seguem o molde.
+- No MCP, conferir no schema de `ads_create_ad_set` e de `ads_update_entity` se aceitam `targeting_automation` e as posições. Se não aceitarem, desligar o Advantage+ entra no passo guiado do Gerenciador (seção "Lições de campo" e passo a passo da seção 1.3 do `.claude/skills/trafego-criar-campanha/SKILL.md`), no conjunto e no anúncio do teste.
+- O A/B de estrutura compara justamente o Advantage+ com o manual, então só vale para conta que já vende: 50 compras ou mais nos últimos 28 dias e nível Hard ou acima, combinado com o analisador (seção 1.3 do `.claude/skills/trafego-criar-campanha/SKILL.md`). Fora disso, explicar a régua e oferecer outra dimensão.
+
 ---
 
 ## Inputs comuns (toda dimensão)
@@ -440,6 +449,7 @@ A coleta parte de uma **campanha molde**: o aluno escolhe uma campanha existente
 3. **Conjunto base.** *Só no escopo 1.* Campanha com mais de 1 conjunto ativo: lista numerada com nome, CPA de 7 dias e gasto de 7 dias. Com 1 conjunto: usar direto.
 
 4. **Onde criar os conjuntos do teste.** *Só no escopo 1.* Antes de perguntar, ver se o molde é CBO: a campanha tem orçamento próprio, diário ou total (MCP: `daily_budget` em `ads_get_ad_entities` e, para o orçamento total, o campo que `ads_get_field_context` indicar; App: `GET /<campaign_id>?fields=daily_budget,lifetime_budget`).
+   - **Teste de anúncio (`criativo`, `headline` ou `cta`):** não mostrar a pergunta. Ir direto para a opção 2 e avisar em uma linha: "Teste de anúncio roda numa campanha nova [WS-AB], separada da que está no ar, e todo no manual: público, posicionamento e criativo sem Advantage+." Regra em "Teste de anúncio", logo depois do Mapa das 8 dimensões.
    - **Molde CBO:** não mostrar a pergunta. Ir direto para a opção 2 e avisar em uma linha: "Sua campanha distribui o orçamento entre os conjuntos. Para os 2 lados terem o mesmo orçamento, separado dos conjuntos que já estão no ar, vou criar uma campanha nova [WS-AB] só para o teste." Se o aluno insistir em ficar dentro do molde, avisar que o orçamento não fica igual nos 2 lados nem separado da produção e que o A/B de lance não funciona ali (em CBO a estratégia de lance é da campanha, a mesma para todos os conjuntos).
    - **Molde ABO:** perguntar. Padrão 2:
    ```
@@ -634,7 +644,10 @@ Está certo? (sim segue, não cancela aqui)
         - MCP: cópia por source_adset_id / source_ad_id e variação por
           ads_update_entity; se falhar, duplicação guiada no Gerenciador
      c. Trocar SÓ os campos da coluna "Campo(s) que mudam"
-     d. status: PAUSED
+     d. Teste de anúncio (criativo, headline, cta): conjuntos na campanha nova [WS-AB],
+        público com advantage_audience 0, posicionamento manual e criativo sem
+        melhorias (regra "Teste de anúncio")
+     e. status: PAUSED
 6. Conferir a simetria: orçamento igual, público igual (exceto audiencia/faixa_etaria),
    posicionamento igual (exceto posicionamento), lance igual (exceto lance)
 7. Resumo em linguagem natural e "sim"

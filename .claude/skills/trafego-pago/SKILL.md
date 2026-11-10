@@ -36,6 +36,12 @@ user-invocable: false
 - Orçamento: 10-20% do total
 - Métrica principal: ROAS
 
+### Régua do time para quem está começando
+
+- **Low ticket de conta iniciante** (menos de 50 compras nos últimos 28 dias, o comum em Newbie e Soft): 3 anúncios, cada um na própria campanha 1-1-1 (1 campanha, 1 conjunto, 1 anúncio), com otimização a cada 3 dias. Orçamento de no mínimo R$ 20 por dia por campanha (os analisadores trabalham entre R$ 20 e R$ 30); sem isso, o mínimo que o Gerenciador aceitar na conta. Quem já vende não tem estrutura fixa: o analisador define.
+- **Nada de Advantage+ abaixo de 50 compras em 28 dias:** público com idade definida e pelo menos 3 interesses, posicionamento manual e criativo sem melhorias automáticas. Advantage+ só a partir de 50 compras e do nível Hard, caso a caso com o analisador. Teste de anúncio vai sempre no manual.
+- Detalhe e passo a passo para desligar o Advantage+ no Gerenciador: seção 1.3 e Fases 3, 4, 6 e 8 do `.claude/skills/trafego-criar-campanha/SKILL.md`.
+
 ### Google Ads. Rede de Pesquisa
 
 - Campanhas por intenção de busca

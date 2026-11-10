@@ -38,6 +38,10 @@ Se não houver produto ativo, oriente: "Antes de criar campanhas, você precisa 
 
 Se não houver página de destino, avise: "Você não tem página de destino ainda. Recomendo criar com `/copy-pagina` antes dos anúncios, para que o anúncio tenha para onde mandar tráfego."
 
+Antes de qualquer campanha que vai rodar de verdade, confira a vitrine do perfil: mínimo de 6 conteúdos de vitrine no Instagram (posts que mostram o especialista, o que ele ensina, resultado de aluno ou o produto). Faltando, ofereça criar o que falta com `/criativo-estatico`, `/copy-roteiro`, `/copy-social` ou `/carrossel`, sem travar a campanha: a vitrine pode ser produzida assim que ela começar a rodar, reaproveitando os anúncios como posts com outro CTA. A pergunta e as opções estão na Fase 0 do `/trafego-criar-campanha`.
+
+Conta com menos de 50 vendas nos últimos 28 dias (o comum em Newbie e Soft) não começa com Advantage+: público com idade e pelo menos 3 interesses, posicionamento manual e criativo sem melhorias automáticas. Low ticket nessa fase usa a estrutura fixa do time (3 anúncios, cada um em campanha 1-1-1, R$ 20 por dia por campanha e otimização a cada 3 dias). Régua completa na seção 1.3 e nas Fases 3, 4, 6 e 8 do `/trafego-criar-campanha`.
+
 ### 1B. Verifique a conexão Meta (Passo 0 obrigatório de tráfego)
 
 Antes de direcionar para qualquer trilha que envolva subir campanha real, ler métricas da Graph API ou otimizar campanha em veiculação, confirme que a conexão Meta está configurada:
