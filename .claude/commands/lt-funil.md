@@ -1,11 +1,13 @@
 ---
 name: workshop-marketing:lt-funil
-description: Criar produto low ticket completo usando a metodologia low ticket do VTSD. produto de entrada (R$37-97), página final do quiz, anúncios low ticket, produto desafio e copy para Hotmart.
+description: Criar produto low ticket completo usando a metodologia low ticket do VTSD. produto de entrada (R$37-97), página de vendas, order bump, anúncios low ticket, produto desafio e copy para Hotmart. Quiz só como exceção, no Inlead.
 ---
 
 # Low Ticket (low ticket). Produto de Entrada Rápido e Lucrativo
 
-Cria produtos low ticket usando a metodologia low ticket do VTSD: produto de entrada, página de quiz, anúncios low ticket e copy para plataforma.
+Cria produtos low ticket usando a metodologia low ticket do VTSD: produto de entrada, página de vendas, order bump, anúncios low ticket e copy para plataforma.
+
+**Página é o padrão do low ticket.** A página de vendas sai pelo `/lt-pagina` (régua com 4 aberturas). O quiz é exceção, só quando o aluno pedir ou o analisador indicar, e é montado no Inlead: as opções de quiz deste comando valem só nesse caso. O funil já nasce com order bump.
 
 ## Usage
 
@@ -27,11 +29,12 @@ Verifique também se existe `meus-produtos/{ativo}/pesquisa-mercado.md`. Se NÃO
 ```
 O que quer criar?
 
-1. Produto low ticket completo (página quiz + anúncios + copy)
-2. Página final do quiz (estrutura de 12 blocos)
-3. Anúncios low ticket (focados em quiz)
+1. Produto low ticket completo (página de vendas + order bump + anúncios + copy)
+2. Página final do quiz (só na exceção do quiz, no Inlead)
+3. Anúncios low ticket
 4. Produto desafio (3-7 dias com missões)
 5. Copy para Hotmart/Kiwify (descrição da plataforma)
+6. Order bump (o que oferecer, preço e texto)
 
 Digite o número:
 ```
@@ -97,18 +100,16 @@ Entregável: [tipo]
 Formato: [formato]
 Problema: [problema]
 Preço: R$ [valor]
-Próximo: Quiz
+Próximo: Formato do funil
 ---
 ```
 
-**Bloco 5/5. Quiz:**
+**Bloco 5/5. Formato do funil:**
 ```
-Tem quiz pronto?
+O padrão do low ticket é a página de vendas. Vai seguir com ela?
 
-1. Sim, no Lovable
-2. Sim, no Typeform
-3. Sim, outra ferramenta
-4. Não tenho quiz ainda
+1. Sim, página de vendas (padrão)
+2. Não, o analisador indicou quiz (montado no Inlead)
 
 Digite o número:
 ```
@@ -120,7 +121,7 @@ Resumo do produto low ticket:
 - Formato: [formato]
 - Problema: [problema]
 - Preço: R$ [valor]
-- Quiz: [ferramenta ou não tem]
+- Funil: [página de vendas ou quiz no Inlead]
 
 1. Tudo certo, pode gerar
 2. Quero ajustar algo
@@ -135,7 +136,11 @@ Gerar 5 opções de Quadro seguindo as regras VTSD adaptadas para low ticket:
 - Solução prática e imediata
 - Exemplos: "Organizar finanças em 7 dias", "Criar 30 posts em 1 hora"
 
-**Página Final do Quiz (12 blocos. estrutura obrigatória low ticket):**
+**Página de vendas (padrão):** seguir o `/lt-pagina` (régua com 4 aberturas, copy completa e prompt do Lovable). Não gerar a página aqui.
+
+**Order bump:** seguir a seção "Order Bump" de `.claude/skills/criacao-produto-low-ticket/SKILL.md` (o que oferecer, preço e texto).
+
+**Página Final do Quiz (só na exceção do quiz, montado no Inlead. 12 blocos):**
 1. Headline com premissa. gancho principal
 2. Subheadline. reforço de dor ou desejo
 3. Print de Resultado. Antes e Depois visual
@@ -151,8 +156,8 @@ Gerar 5 opções de Quadro seguindo as regras VTSD adaptadas para low ticket:
 
 Gerar como HTML seguindo o padrão de qualidade do CLAUDE.md (arquivo único, responsivo, Google Fonts).
 
-**Anúncios Low Ticket (3 variações para quiz):**
-Estrutura de cada anúncio:
+**Anúncios Low Ticket (3 variações):**
+Com página (padrão), o anúncio leva para a página e segue a abertura escolhida no `/lt-pagina`. Na exceção do quiz, a estrutura de cada anúncio é:
 1. Abertura. pergunta ou situação familiar
 2. Problema. dor do público
 3. Solução. o que o quiz revela
@@ -201,6 +206,7 @@ Estrutura do produto:
 | --- | --- |
 | Página final do quiz (HTML) | `meus-produtos/{ativo}/entregas/paginas/quiz-[produto].html` |
 | Anúncios low ticket | `meus-produtos/{ativo}/entregas/criativos/caixa-rapido-[produto].md` |
+| Order bump | `meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-[produto].md` |
 | Produto desafio | `meus-produtos/{ativo}/entregas/textos-de-venda/desafio-[produto].md` |
 | Copy Hotmart/Kiwify | `meus-produtos/{ativo}/entregas/textos-de-venda/copy-plataforma-[produto].md` |
 | Agente GPT (estrutura) | `meus-produtos/{ativo}/entregas/textos-de-venda/agente-gpt-[produto].md` |

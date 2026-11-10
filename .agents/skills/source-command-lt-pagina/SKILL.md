@@ -1,6 +1,6 @@
 ---
 name: "source-command-lt-pagina"
-description: "Criar a página de vendas low ticket pela régua v16 do time de criativos. Promessa central, 7 aberturas (Demonstração, Comparação, Plug & Play, Imaginação do Resultado, Defesa de Tese, Dor Espelhada, Resultado Direto) com tabela de prioridade de testes, copy completa (depoimentos na segunda seção, ancoragem de preço e seção de quem criou o produto) e um prompt único para o Lovable montar a página."
+description: "Criar a página de vendas low ticket pela régua v16 do time de criativos. Promessa central, 4 aberturas (Demonstração, Comparação, Plug & Play e Resultado Direto) com tabela de prioridade de testes, copy completa (depoimentos na segunda seção, ancoragem de preço e seção de quem criou o produto) e um prompt único para o Lovable montar a página."
 ---
 
 # source-command-lt-pagina
@@ -13,7 +13,7 @@ Use esta skill quando o usuário pedir o comando `/lt-pagina` do workshop (ou `l
 
 # Página Low Ticket. Régua v16
 
-Cria a página de vendas do produto low ticket em 3 etapas, com aprovação entre elas: promessa e 7 aberturas, copy completa e o prompt que o Lovable usa para montar a página.
+Cria a página de vendas do produto low ticket em 3 etapas, com aprovação entre elas: promessa e 4 aberturas, copy completa e o prompt que o Lovable usa para montar a página. Página é o padrão do low ticket; quiz é exceção, só no Inlead.
 
 **A régua completa está em `.claude/skills/pagina-low-ticket/SKILL.md`.** Leia o arquivo inteiro antes do Passo 2 e siga cada seção dele à risca. Este command é o roteiro com o aluno: diz a ordem, as perguntas, onde salvar e o que mostrar.
 
@@ -63,52 +63,25 @@ Digite o número:
 
 ---
 
-## Passo 1. Página ou Quiz
+## Passo 1. Página é o padrão
 
-Antes de criar a página, aplique o framework de decisão. **Nunca pergunte de cara qual formato o aluno quer.** Recomende com base nos critérios e explique o porquê.
+Página é o padrão do low ticket: siga direto para o Passo 2, sem perguntar o formato. Quiz é exceção, só quando o aluno pedir ou disser que o analisador indicou, e é montado no Inlead. Nesse caso, encaminhe para o `/lt-quiz` e encerre este command.
 
-| Critério | Aponta para QUIZ | Aponta para PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional / dor / identificação | Prático / ferramenta / direto ao ponto |
-| Nível de consciência do lead | Não sabe que tem problema | Já sabe o que quer |
-| Complexidade da decisão | Precisa diagnosticar / explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico / pragmático |
-
-**Regra:** 2 ou mais critérios para o mesmo lado, siga ele. **Desempate:** recomendar QUIZ (mais rápido de validar).
-
-```
-Com base no seu produto e público, minha recomendação é:
-
-→ [QUIZ ou PÁGINA DE VENDAS]
-
-Por quê:
-• [Critério 1]: [explicação com dado real do produto]
-• [Critério 2]: [explicação com dado real do produto]
-• [Critério 3]: [explicação com dado real do produto]
-
-Você pode trocar depois se quiser testar o outro formato.
-
-1. Concordo, seguir com [recomendação]
-2. Prefiro o outro formato
-```
-
-- **QUIZ:** encaminhe para `/lt-quiz` e encerre este command.
-- **PÁGINA:** siga para o Passo 2.
+Se o produto ainda não tem order bump (`meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-{produto}.md`), lembre em uma linha, depois da entrega, que o funil low ticket já nasce com ele (seção "Order Bump" de `.claude/skills/criacao-produto-low-ticket/SKILL.md`).
 
 ---
 
-## Passo 2. Etapa 1. Promessa e 7 aberturas
+## Passo 2. Etapa 1. Promessa e 4 aberturas
 
 ```
-🔍 Próximo passo: criar a promessa central e as 7 aberturas da sua página, com a ordem de testes. Tempo estimado: 2 a 3 minutos.
+🔍 Próximo passo: criar a promessa central e as 4 aberturas da sua página, com a ordem de testes. Tempo estimado: 2 a 3 minutos.
 ```
 
-Siga a régua nas seções "A DOR VERDADEIRA", "A PROMESSA CENTRAL", "REGRA DO PRAZO NO LOW-TICKET", "EMOÇÃO E TENSÃO", "ETAPA 1. AS 7 ABERTURAS", "HERO ESTENDIDO", "O PRIMEIRO VISUAL MOSTRA O MUNDO DO LEAD", "FORMATO DA ETAPA 1" e "TABELA DE PRIORIDADE DE TESTES".
+Siga a régua nas seções "A DOR VERDADEIRA", "A PROMESSA CENTRAL", "REGRA DO PRAZO NO LOW-TICKET", "EMOÇÃO E TENSÃO", "ETAPA 1. AS 4 ABERTURAS", "O PRIMEIRO VISUAL MOSTRA O MUNDO DO LEAD", "FORMATO DA ETAPA 1" e "TABELA DE PRIORIDADE DE TESTES".
 
 Antes de mostrar, aplique a rotina de auto-revisão de copy do CLAUDE.md com a exceção da régua (pergunta na headline e "mesmo sem" liberados nas páginas low ticket).
 
-Entregue no formato da régua: a linha `PROMESSA CENTRAL:`, as 7 opções já na ordem de prioridade, a tabela e a recomendação de teste A/B. Termine **só** com:
+Entregue no formato da régua: a linha `PROMESSA CENTRAL:`, as 4 opções já na ordem de prioridade, a tabela e a recomendação de teste A/B. Termine **só** com:
 
 ```
 Qual dessas aberturas você quer usar? Pode responder pelo número ou pelo nome.
@@ -116,7 +89,7 @@ Qual dessas aberturas você quer usar? Pode responder pelo número ou pelo nome.
 
 E pare.
 
-Quando o aluno escolher, salve as 7 aberturas e a tabela em `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` (servem para os próximos testes A/B), atualize o painel (item 9 da seção "Como esta régua funciona no projeto") e informe o caminho absoluto em uma linha.
+Quando o aluno escolher, salve as 4 aberturas e a tabela em `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` (servem para os próximos testes A/B), atualize o painel (item 9 da seção "Como esta régua funciona no projeto") e informe o caminho absoluto em uma linha.
 
 ---
 

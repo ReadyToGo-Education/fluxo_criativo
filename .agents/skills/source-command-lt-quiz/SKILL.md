@@ -13,6 +13,8 @@ Use esta skill quando o usuário pedir o comando `/lt-quiz` do workshop (ou `lt-
 
 # Quiz de Vendas. Low Ticket
 
+> **Quiz é exceção no low ticket.** A página de vendas (`/lt-pagina`) é o padrão. O quiz só entra quando o aluno pedir ou o analisador indicar, e é montado no Inlead: deste comando valem as perguntas, a tela de resultado e a página final de oferta. O prompt para o Lovable.dev (passos 5 e 6) só se o aluno pedir esse caminho.
+
 Gera **um único arquivo** com tudo em sequência:
 - Perguntas do quiz (Tela de Entrada + 10 perguntas SPIN com prompts de imagem e tipos variados)
 - Prompt técnico completo para o Lovable.dev (com as perguntas já embutidas no formato técnico)
@@ -51,19 +53,21 @@ O quiz é a ponte entre o anúncio e a venda do produto de entrada (Low Ticket).
 
 ## FASE 0 — VERIFICAÇÃO: QUIZ É O FORMATO CERTO?
 
-Antes de começar, aplique o framework de decisão com base no perfil do produto. Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
+Leia `meus-produtos/.ativo` e `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-| Critério | Aponta para QUIZ | Aponta para PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional / dor / identificação | Prático / ferramenta / direto ao ponto |
-| Nível de consciência do lead | Não sabe que tem problema | Já sabe o que quer |
-| Complexidade da decisão | Precisa diagnosticar / explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico / pragmático |
+Página é o padrão do low ticket. Antes de começar, confirme que este é o caso de exceção:
 
-**Regra:** 2 ou mais critérios para PÁGINA — informe o usuário e sugira `/paginas-low-ticket` antes de continuar. Desempate: seguir com QUIZ.
+```
+No low ticket, o padrão do time é a página de vendas. O quiz entra como
+exceção e é montado no Inlead.
 
-Se o quiz for confirmado como formato correto (ou o usuário insistir), continue para a Fase 1.
+1. O analisador indicou o quiz (ou eu quero o quiz mesmo assim)
+2. Prefiro seguir com a página de vendas (/lt-pagina)
+
+Digite o número:
+```
+
+Se 1, continue para a Fase 1. Se 2, encaminhe para o `/lt-pagina`.
 
 ---
 
