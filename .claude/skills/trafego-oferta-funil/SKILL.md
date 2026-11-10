@@ -230,7 +230,7 @@ Fontes: Firework, Fetchfunnel, Baymard, Lucky Orange, LanderLab, HeroSpark (low 
 
 1. **Oferta:** a promessa (Quadro) não justifica o preço, falta ancoragem ou stack de valor, a garantia é curta ou condicional, os bônus não resolvem objeção.
 2. **Página:** a primeira dobra não sustenta o anúncio, a Furadeira não fica clara, a prova vem depois do preço, o botão de compra aparece tarde ou some no celular, o vídeo é longo antes do primeiro botão.
-3. **Congruência e público:** o anúncio promete uma coisa e a página fala de outra, o criativo gera clique de curiosidade, o público é frio demais para a oferta ou um posicionamento manda visita que não compra.
+3. **Congruência e público:** o anúncio promete uma coisa e a página fala de outra, o criativo gera clique de curiosidade (sem filtro de copy no começo, `.claude/skills/revisora/references/filtro-de-copy.md`), o público é frio demais para a oferta ou um posicionamento manda visita que não compra.
 4. **Técnico ou medição:** botão sem link ou com link errado, checkout que demora a abrir, pixel que não dispara no checkout da plataforma. Conferir sempre, mas só concluir depois do teste do botão ou da checagem do evento.
 
 **Como separar as hipóteses:**
@@ -248,7 +248,7 @@ Fontes: Firework, Fetchfunnel, Baymard, Lucky Orange, LanderLab, HeroSpark (low 
 
 **Encaminhamento:**
 - Oferta e página: leitura da página, congruência e diagnóstico de oferta desta skill; correção em `/feedback-pagina` ou `/feedback-low-ticket`, `/pagina-ajuste`, `/copy-pagina` ou `/lt-pagina`.
-- Congruência e público: módulo de congruência anúncio x página e, conforme o caso, `/copy-anuncio` ou `/trafego-criativos`.
+- Congruência e público: módulo de congruência anúncio x página e, conforme o caso, `/copy-anuncio` (com filtro de copy no começo, para o curioso passar reto) ou `/trafego-criativos`.
 - Botão ou link quebrado: `/pagina-checkout` (ligação da página com o checkout). É o único caso de início de checkout baixo que vai para essa skill.
 - Medição: `/trafego-pixel` (diagnóstico) e `/pagina-pixel` (instalação).
 

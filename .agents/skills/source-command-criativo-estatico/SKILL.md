@@ -266,6 +266,7 @@ O contexto do produto ativo (Passo 0) já está carregado. As sub-skills NÃO pr
 - Nunca pular a pergunta de roteamento, exceto quando o aluno mencionou explicitamente o nome do formato na primeira mensagem (atalho do Passo 1).
 - As sub-skills herdam todas as regras globais do CLAUDE.md. Light Copy, auto-revisão obrigatória de copy, anúncio de próximo passo, aprovação antes de salvar, acentuação correta em pt_BR.
 - O orquestrador NÃO gera copy nem texto de anúncio. Apenas roteia.
+- Regra do projeto que vale para toda sub-skill, junto das regras globais: filtro de copy na imagem, com cenário e objetos que só o público reconhece no prompt visual, e palavras ou frases do público no título (`.claude/skills/revisora/references/filtro-de-copy.md`). Cenário neutro só quando o formato pedir.
 - Cada sub-skill tem fluxo próprio. O orquestrador não define perguntas, opções de saída ou regras de geração. Quem define isso é o arquivo da sub-skill.
 - Se o aluno escolher um número inválido (fora de 1 a 29), repetir o menu de forma curta sem mostrar a descrição das opções de novo.
 - Se a sub-skill terminar e o aluno quiser criar outro criativo de outro formato, retornar a esta skill (`/criativo-estatico`) em vez de chamar a outra sub-skill direto. O Passo 0 garante contexto fresco.
