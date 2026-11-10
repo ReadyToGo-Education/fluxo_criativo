@@ -36,6 +36,12 @@ user-invocable: false
 - Orçamento: 10-20% do total
 - Métrica principal: ROAS
 
+### Régua do time para quem está começando
+
+- **Low ticket de conta iniciante** (menos de 50 compras nos últimos 28 dias, o comum em Newbie e Soft): 3 anúncios, cada um na própria campanha 1-1-1 (1 campanha, 1 conjunto, 1 anúncio), com otimização a cada 3 dias. Orçamento de no mínimo R$ 20 por dia por campanha (os analisadores trabalham entre R$ 20 e R$ 30); sem isso, o mínimo que o Gerenciador aceitar na conta. Quem já vende não tem estrutura fixa: o analisador define.
+- **Nada de Advantage+ abaixo de 50 compras em 28 dias:** público com idade definida e pelo menos 3 interesses, posicionamento manual e criativo sem melhorias automáticas. Advantage+ só a partir de 50 compras e do nível Hard, caso a caso com o analisador. Teste de anúncio vai sempre no manual.
+- Detalhe e passo a passo para desligar o Advantage+ no Gerenciador: seção 1.3 e Fases 3, 4, 6 e 8 do `.claude/skills/trafego-criar-campanha/SKILL.md`.
+
 ### Google Ads. Rede de Pesquisa
 
 - Campanhas por intenção de busca
@@ -105,9 +111,10 @@ Nomes da tabela: os campos de vídeo, `spend`, `impressions`, `inline_link_click
 
 1. **Criativo não converte?** Teste novo gancho (primeiros 3 segundos)
 2. **CTR baixo?** Problema no criativo ou segmentação
-3. **CTR alto mas CPA alto?** Conferir primeiro o Click-to-LPV Rate: abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento), a conferir com `/pagina-performance` antes de mexer no anúncio. Com a visita à página saudável e o Offer Rate baixo, pode ser curiosidade vazia: o anúncio atrai clique de quem não compra (conferir a congruência entre anúncio e página com `/trafego-oferta-funil`)
-4. **CPA subindo?** Fadiga de criativo. Criar novos (`/copy-anuncio`, `/criativo-estatico`)
-5. **CTR baixo mas CPA bom?** Criativo qualificado: filtra o público antes do clique. Não cortar por CTR baixo
+3. **CTR alto mas CPA alto?** Conferir primeiro o Click-to-LPV Rate: abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento), a conferir com `/pagina-performance` antes de mexer no anúncio. Com a visita à página saudável e o Offer Rate baixo, pode ser curiosidade vazia: o anúncio atrai clique de quem não compra (conferir a congruência entre anúncio e página com `/trafego-oferta-funil` e refazer o começo do anúncio com filtro de copy em `/copy-anuncio`, regra em `.claude/skills/revisora/references/filtro-de-copy.md`)
+4. **Pouca gente inicia o checkout?** Oferta ou página primeiro (preço, garantia, prova, headline, botão de compra), depois congruência e público. Não é o checkout: quem não iniciou nem chegou a vê-lo. O checkout só entra quando muita gente inicia e pouca conclui. Régua completa na §3.6 de `.claude/skills/trafego-oferta-funil/SKILL.md`
+5. **CPA subindo?** Fadiga de criativo. Criar novos (`/copy-anuncio`, `/criativo-estatico`)
+6. **CTR baixo mas CPA bom?** Criativo qualificado: filtra o público antes do clique. Não cortar por CTR baixo
 
 ## Mapa das Skills de Tráfego do Projeto
 

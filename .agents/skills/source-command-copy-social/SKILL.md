@@ -99,6 +99,7 @@ Resumo:
 Antes de escrever, leia `.claude/skills/revisora/references/manual-copy.md` e aplique. Toda peça passa pela skill `revisora` antes de ir ao usuário.
 
 - Gancho: afirmação contra-intuitiva, paradoxo ou revelação. NUNCA pergunta.
+- **Filtro de copy no começo:** pelo menos um sinal que só o público reconhece (ambiente, palavras, objetos, frases ou sons do nicho) nos 3 primeiros segundos, na primeira imagem ou na primeira linha, para quem não é do público passar reto. Regra e exemplos em `.claude/skills/revisora/references/filtro-de-copy.md`.
 - Entregar valor real dentro do post: quem lê aprende ou se reconhece.
 - Produto não aparece nos primeiros slides ou nos primeiros 3 segundos.
 - Uma ideia por post, um CTA por post.

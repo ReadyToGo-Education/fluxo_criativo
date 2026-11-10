@@ -100,6 +100,8 @@ Se 3: seguir para o Passo 3.
 
 > **Opção [11]:** pular os Passos 3 a 6. A `leitura-resultado.md` tem o próprio fluxo de 8 passos.
 
+> **Teste de anúncio ([1] criativo, [2] headline, [8] CTA e a [9] quando muda criativo ou headline):** roda sempre numa campanha nova `[WS-AB]`, separada da que está no ar, e todo no manual (público, posicionamento e criativo sem Advantage+). O [7] A/B de estrutura só vale para conta com 50 compras ou mais em 28 dias e nível Hard ou acima. Regra em `sub-skills/ab-generico.md`, logo depois do Mapa das 8 dimensões.
+
 ---
 
 ## Passo 3. Hipótese

@@ -188,7 +188,7 @@ Se o autor não tem nenhum desses, a copy precisa buscar a autoridade em outro l
 - [ ] Toda promessa tem dado concreto (número, prazo, cenário)
 - [ ] Copy tem tese (explica **por que** o problema existe, não só descreve)
 - [ ] Zero lero-lero (palavras genéricas de nicho que não dizem nada)
-- [ ] Zero siglas ou técnicas sem explicação
+- [ ] Zero siglas ou técnicas sem explicação (a palavra do dia a dia do próprio público, usada como filtro de copy, não precisa de explicação: ver `filtro-de-copy.md`)
 - [ ] Especificidade presente (números, situações reais, detalhes)
 
 ### Bloco C. Estrutura VTSD
@@ -198,6 +198,7 @@ Se o autor não tem nenhum desses, a copy precisa buscar a autoridade em outro l
 - [ ] Inimigo concreto identificado (ou cenário inevitável)
 - [ ] Razão **e** emoção presentes
 - [ ] Quadro **e** Decorado defendidos
+- [ ] Anúncio, post e roteiro com filtro de copy no começo (ambiente, palavras, objetos, frases ou sons do público), conforme `filtro-de-copy.md`
 - [ ] Dor real, não a superficial que o cliente diz primeiro
 
 ### Bloco D. Seções de página (quando aplicável)

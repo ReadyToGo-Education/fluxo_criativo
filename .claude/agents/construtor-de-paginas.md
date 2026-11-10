@@ -117,7 +117,7 @@ Use /copy-pagina agora.
 ```
 Para produto de entrada, a lógica é diferente da 8D. Use:
 
-→ /lt-pagina  Promessa central, 7 aberturas com ordem de testes, copy
+→ /lt-pagina  Promessa central, 4 aberturas com ordem de testes, copy
               completa e o prompt para o Lovable montar a página
 
 Essa skill aplica a régua low ticket do time de criativos (versão 16).

@@ -473,25 +473,9 @@ Checklist visual mínimo para HTML:
 
 ## Low Ticket
 
-Quando o produto ativo for Low Ticket e o próximo passo for funil de vendas, aplique o raciocínio Quiz vs Página antes de sugerir formato.
+Quando o produto ativo for Low Ticket e o próximo passo for funil de vendas, o formato padrão é a página de vendas pelo `lt-pagina` (régua com 4 aberturas: Demonstração, Comparação, Plug & Play e Resultado Direto). Quiz é exceção: só quando o usuário pedir ou o analisador indicar, e é montado no Inlead.
 
-Critérios que puxam para quiz:
-
-- Dor emocional.
-- Público ainda não sabe nomear o problema.
-- Precisa de diagnóstico.
-- Preço baixo, especialmente até R$47.
-- Público decide por identificação.
-
-Critérios que puxam para página:
-
-- Produto prático ou ferramenta.
-- Público já sabe o que quer.
-- Decisão simples.
-- Preço mais alto, especialmente acima de R$97.
-- Público analítico ou pragmático.
-
-Com 2 ou mais critérios para o mesmo lado, siga esse lado. Em empate, prefira quiz.
+O funil low ticket já nasce com order bump: o que oferecer, preço e texto, na seção "Order Bump" de `.claude/skills/criacao-produto-low-ticket/SKILL.md`.
 
 ## Tráfego, APIs e Credenciais
 
@@ -688,8 +672,8 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 
 - `/lt-funil`: criar funil low ticket.
 - `/lt-criar-produto`: criar conteúdo real do produto digital.
-- `/lt-quiz`: gerar perguntas de quiz.
-- `/lt-pagina`: criar a página de vendas low ticket pela régua v16 (7 aberturas, copy completa e prompt para o Lovable).
+- `/lt-quiz`: gerar perguntas de quiz (exceção; montagem no Inlead).
+- `/lt-pagina`: criar a página de vendas low ticket pela régua v16 (4 aberturas, copy completa e prompt para o Lovable).
 - `/lt-otimizar`: analisar planilha ou campanhas low ticket.
 
 ### Tráfego Pago

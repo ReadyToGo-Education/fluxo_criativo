@@ -64,37 +64,21 @@ Digite o número:
 
 Leia `.claude/skills/criacao-produto-low-ticket/SKILL.md` e siga o fluxo do formato escolhido.
 
-### 4. Próximo passo — Aplicar Framework Quiz vs. Página
+### 4. Order bump
 
-Após salvar o produto, aplique OBRIGATORIAMENTE o framework abaixo para recomendar o próximo passo. Nunca sugira /pagina-de-vendas ou /quiz sem antes passar por esse framework.
+Com o produto salvo, crie o order bump pela seção "Order Bump" de `.claude/skills/criacao-produto-low-ticket/SKILL.md`: o que oferecer (3 opções), o preço e o texto. O funil low ticket já nasce com ele.
 
-**Framework de Decisão: Quiz vs. Página de Vendas**
+### 5. Próximo passo
 
-| Critério | Aponta para QUIZ | Aponta para PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional / dor / identificação | Prático / ferramenta / direto ao ponto |
-| Nível de consciência do lead | Não sabe que tem problema | Já sabe o que quer |
-| Complexidade da decisão | Precisa diagnosticar / explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico / pragmático |
-
-**Regra:** 2 ou mais critérios para o mesmo lado — siga ele. Desempate: recomendar QUIZ.
-
-Apresente a recomendação assim:
+**Página é o padrão do low ticket.** O funil de vendas usa a página pelo `/lt-pagina` (régua com 4 aberturas: Demonstração, Comparação, Plug & Play e Resultado Direto). Quiz é exceção: só quando o aluno pedir ou o analisador indicar, e é montado no Inlead.
 
 ```
-Produto criado e salvo.
+Produto e order bump criados e salvos.
 
-Com base no seu produto e público, o próximo passo recomendado é:
+O próximo passo é a página de vendas.
 
-→ [QUIZ ou PÁGINA DE VENDAS]
-
-Por quê:
-• [Critério 1]: [explicação com dado real do produto]
-• [Critério 2]: [explicação com dado real do produto]
-• [Critério 3]: [explicação com dado real do produto]
-
-1. Concordo, seguir com [recomendação] → use /quiz ou /paginas-low-ticket
-2. Prefiro o outro formato
-3. Criar anúncios primeiro → use /copy-anuncio
+1. Criar a página → use /lt-pagina
+2. Criar anúncios primeiro → use /copy-anuncio
 ```
+
+Só oferecer o quiz se o aluno pedir ou disser que o analisador indicou (montagem no Inlead).

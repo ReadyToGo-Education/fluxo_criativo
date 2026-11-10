@@ -41,7 +41,7 @@
 | Gerar página de vendas HTML (11 seções, estrutura 8D) | 3 a 5 minutos | minutos |
 | Gerar página de captura HTML | 2 a 3 minutos | minutos |
 | Gerar página de obrigado HTML | cerca de 90 segundos | segundos |
-| Página low ticket, Etapa 1 (promessa, 7 aberturas e tabela de testes) | 2 a 3 minutos | minutos |
+| Página low ticket, Etapa 1 (promessa, 4 aberturas e tabela de testes) | 2 a 3 minutos | minutos |
 | Página low ticket, Etapa 2 (copy completa) | 3 a 5 minutos | minutos |
 | Página low ticket, Etapa 3 (prompt do Lovable) | 2 a 3 minutos | minutos |
 | Levar a página para o Lovable pelo conector (criar, conferir e publicar) | 3 a 5 minutos | minutos |

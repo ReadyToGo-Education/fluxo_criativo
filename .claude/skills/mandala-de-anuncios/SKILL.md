@@ -234,7 +234,7 @@ Conflito com a tipologia da mandala: se um tipo da mandala parece sugerir um ví
 
 Sempre nesta ordem:
 
-1. **Gancho** — o título escolhido pelo aluno no Passo 3. Premissa não óbvia, nunca pergunta. Avisa ou ensina.
+1. **Gancho** — o título escolhido pelo aluno no Passo 3. Premissa não óbvia, nunca pergunta. Avisa ou ensina. Leva o filtro de copy: palavras, frases ou cenário que só o público reconhece (`.claude/skills/revisora/references/filtro-de-copy.md`).
 2. **Desenvolvimento** — dois parágrafos argumentando a partir do gancho. Primeiro parágrafo entrega o pedaço de conhecimento (mecanismo, dado, antes/depois). Segundo parágrafo conecta com a dor real e prepara o terreno para o CTA, sem virar vendedor. Manter os parágrafos concisos (4-6 linhas cada). Não esticar.
 3. **CTA** — 4 opções, uma por fase do funil (tabela abaixo). O aluno escolhe qual quer gravar.
 
@@ -398,5 +398,6 @@ Quando o aluno escolher uma ideia:
 - [ ] CTA correto da fase do funil (em Conversão, sem pedido de compra)
 - [ ] CTA de Descoberta sempre com motivo concreto pra seguir o perfil
 - [ ] Parágrafos concisos (4-6 linhas cada, não esticar)
+- [ ] Filtro de copy no gancho: quem não é do público não acharia que a peça é para ele
 
 Se qualquer item falhar, reescreva antes de entregar. Não entregue copy com vício.

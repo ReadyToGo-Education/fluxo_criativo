@@ -141,9 +141,12 @@ Leia a skill antes de iniciar. Ela contém o fluxo completo para cada um dos 6 f
 
 Identifique o formato escolhido na Etapa 1 e siga o fluxo correspondente na skill.
 
+Com o produto salvo, crie o **order bump** pela seção "Order Bump" da mesma skill: o que oferecer (3 opções), o preço e o texto. O funil low ticket já nasce com ele.
+
 ```
 --- Etapa 2/5 concluída ---
 Produto criado: [nome do arquivo salvo]
+Order bump: [nome e preço]
 Próxima etapa: Identidade do consumidor
 ---
 ```
@@ -190,42 +193,13 @@ Próxima etapa: Página de vendas
 
 ### Etapa 4. Página de Vendas
 
-Antes de perguntar qualquer coisa, analise os dados já coletados (leia `meus-produtos/{ativo}/resumo-produto.md`; se não existir, gere conforme o CLAUDE.md) e aplique o framework de decisão abaixo para determinar a recomendação.
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
-#### Framework de Decisão: Quiz vs. Página de Vendas
+#### Página é o padrão
 
-Avalie cada critério com base no que foi coletado nas etapas anteriores:
+**Página é o padrão do low ticket.** O funil de vendas usa a página pelo `/lt-pagina` (régua com 4 aberturas: Demonstração, Comparação, Plug & Play e Resultado Direto). Quiz é exceção: só quando o aluno pedir ou o analisador indicar, e é montado no Inlead.
 
-| Critério | Aponta para QUIZ | Aponta para PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional / dor / identificação | Prático / ferramenta / direto ao ponto |
-| Nível de consciência do lead | Não sabe que tem problema | Já sabe o que quer |
-| Complexidade da decisão | Precisa diagnosticar ou explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico / pragmático |
-
-**Regra:** Se 2 ou mais critérios apontarem para o mesmo lado, siga ele.
-**Desempate:** Em caso de empate, recomende QUIZ (mais rápido de validar).
-
-Após a análise, apresente a recomendação com a seguinte estrutura:
-
-```
-Com base no que construímos até aqui, minha recomendação é:
-
-→ [QUIZ ou PÁGINA DE VENDAS]
-
-Por quê:
-• [Critério 1]: [explicação baseada nos dados do produto/público]
-• [Critério 2]: [explicação baseada nos dados do produto/público]
-• [Critério 3]: [explicação baseada nos dados do produto/público]
-
-Você pode trocar depois se quiser testar o outro formato.
-
-1. Concordo, pode seguir com [recomendação]
-2. Prefiro começar com o outro formato
-```
-
-Aguarde a resposta do aluno antes de acionar qualquer skill.
+Siga direto para a página. Só siga para o quiz se o aluno pedir o quiz ou disser que o analisador indicou, e avise que ele é montado no Inlead.
 
 ---
 
@@ -233,9 +207,9 @@ Aguarde a resposta do aluno antes de acionar qualquer skill.
 
 **Skill que rege esta etapa:** `.claude/commands/lt-pagina.md` (roteiro) + `.claude/skills/pagina-low-ticket/SKILL.md` (régua v16)
 
-Leia os dois antes de iniciar e siga o roteiro do `/lt-pagina` a partir do Passo 2 (o framework Quiz vs. Página já foi aplicado acima):
+Leia os dois antes de iniciar e siga o roteiro do `/lt-pagina` a partir do Passo 2:
 
-1. **Etapa 1:** promessa central, as 7 aberturas na ordem de prioridade e a tabela de testes. Pare e pergunte qual abertura usar.
+1. **Etapa 1:** promessa central, as 4 aberturas na ordem de prioridade e a tabela de testes. Pare e pergunte qual abertura usar.
 2. **Etapa 2:** copy completa com a abertura escolhida. Pare e peça aprovação da copy.
 3. **Etapa 3:** prompt único para o Lovable montar a página. Mostre, peça aprovação e salve em `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md`.
 
@@ -243,7 +217,9 @@ A página low ticket não é gerada em HTML no projeto: a entrega é o prompt do
 
 ---
 
-**Se concordar com QUIZ ou escolher QUIZ. Funil de quiz (Lovable.dev):**
+**Se for a exceção do quiz (o aluno pediu ou o analisador indicou). Montagem no Inlead:**
+
+O quiz é montado no Inlead. Do `/lt-quiz`, use as perguntas, a tela de resultado e a página final; a montagem é no Inlead, não no Lovable.dev. As instruções abaixo, de prompt para o Lovable.dev, só valem se o aluno pedir esse caminho.
 
 **Skill que rege esta etapa:** `.claude/commands/lt-quiz.md`
 
@@ -324,6 +300,7 @@ Funil de produto de entrada completo.
 O que foi criado:
 [v] Produto definido: [nome]. [quadro]
 [v] Produto digital criado: meus-produtos/{ativo}/entregas/produto/[arquivo]
+[v] Order bump: meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-[produto].md
 [v] Identidade do consumidor: meus-produtos/{ativo}/idconsumidor.md
 [v] Página de vendas: meus-produtos/{ativo}/entregas/paginas/[arquivo].md (prompt do Lovable)
 [v] Anúncios: meus-produtos/{ativo}/entregas/criativos/[arquivo].md

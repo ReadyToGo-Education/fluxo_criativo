@@ -2,7 +2,8 @@
 name: criacao-produto-low-ticket
 description: >
   Base de conhecimento para criação do conteúdo real de produtos digitais de entrada (low ticket).
-  Cobre 6 formatos: e-book, checklist, mini-curso, desafio, agente GPT e planilha.
+  Cobre 6 formatos: e-book, checklist, mini-curso, desafio, agente GPT e planilha, mais o order bump
+  (o que oferecer, preço e texto), que entra desde o começo do funil low ticket.
   Acionada automaticamente pelo agente estrategista-low-ticket na Etapa 2.
 ---
 
@@ -369,3 +370,34 @@ No final do arquivo HTML, inclua um bloco colapsável "Como recriar no Google Sh
 - Dica de formatação (cores, negrito, largura de coluna)
 
 **Onde salvar:** `meus-produtos/{ativo}/entregas/produto/planilha-[slug-produto].html`
+
+---
+
+## Order Bump (entra desde o começo do funil low ticket)
+
+Todo funil low ticket já nasce com order bump: a oferta de 1 clique que aparece no checkout do produto principal. Para quem está começando (Newbie e Soft), ele faz parte do primeiro plano de ação, junto do produto e da página. Entregar três coisas: o que oferecer, o preço e o texto do bump.
+
+### 1. O que oferecer
+- **Complemento lógico do produto principal:** acelera, facilita ou aprofunda o mesmo resultado, para a mesma pessoa, no mesmo momento da compra. Nunca outro assunto.
+- **Rápido de usar no mesmo dia:** checklist, planilha, template, pack de prompts, modelos prontos ou uma aula curta.
+- **Ponto de partida:** os Decorados e as Urgências Ocultas do `resumo-produto.md` que o produto principal não cobre inteiro.
+- Apresentar **3 opções**, cada uma com nome, o que entrega e por que combina com o produto principal. O aluno escolhe uma.
+- O bump escolhido pode ser criado com os formatos desta skill (checklist, planilha, agente GPT, e-book curto), seguindo as mesmas Regras Gerais.
+
+### 2. Preço
+- Preço de impulso, sempre abaixo do preço do produto principal.
+- Referência do Severino: de R$ 17 a R$ 47 (a mesma do `/estrategia-funil`), sem passar do preço do principal.
+- Taxa de aceite saudável: de 15% a 25% de quem compra o principal (referência na seção 4.5 de `.claude/skills/trafego-oferta-funil/SKILL.md`), útil para acompanhar depois.
+
+### 3. Texto do bump
+- Título curto com o resultado do bump.
+- 1 ou 2 frases ligando ao produto principal: por que levar junto agora.
+- Preço visível e, só se for real, o valor cheio para comparação.
+- Passa pela rotina de auto-revisão de copy do CLAUDE.md (Manual da Copy e `revisora`) antes de aparecer para o aluno.
+
+### 4. Onde configurar
+- O bump é configurado na plataforma do checkout (Hotmart ou Kiwify), na área de order bump do produto principal, e precisa estar cadastrado como produto na plataforma.
+- Na página low ticket montada no Lovable, o bump fica só no checkout da plataforma. Em página HTML feita no projeto, o `/pagina-checkout` também instala a caixinha do bump na página.
+
+### 5. Salvar
+`meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-{produto}.md`, com as 3 opções, a escolhida, o preço e o texto. Mostrar e pedir aprovação antes de salvar.

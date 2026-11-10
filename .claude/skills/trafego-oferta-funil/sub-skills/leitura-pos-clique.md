@@ -46,6 +46,8 @@ Custo dessa perda: R$ 328/dia desperdiçados em visitas que não convertem
 
 **Regra:** identificar a etapa com maior % de perda entre consecutivas. Essa é a "etapa de quebra" e o foco do diagnóstico.
 
+**Sem carrinho no funil** (comum na Hotmart e na Kiwify), a etapa visita à página → checkout iniciado é o início de checkout: a decisão de compra tomada na página. Quando ela é a etapa de quebra, a explicação aponta oferta e página, depois congruência e público (seção 3.6 do SKILL.md), e nunca diz que o problema está no checkout. O checkout só é etapa de quebra quando a perda maior fica entre checkout iniciado e compra.
+
 **Julgar as taxas pela faixa de ticket (seção 3.5 do SKILL.md, ticket lido do resumo do produto), não por limiar fixo.** Connect rate (não muda com preço): saudável 80% ou mais, atenção de 60% a 79%, crítico abaixo de 60%; abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento), conforme a seção 3.5 do SKILL.md. Já conversão da página e conclusão de checkout dependem do ticket (ex.: alto ticket R$ 2.500 → página de 0,4% a 1,2%, checkout de 7% a 18%). Comparar a taxa do aluno com a faixa do ticket dele, sempre com etiqueta de confiança. Quando a conversão estiver abaixo da faixa mas houver campanhas de zero venda no escopo, declarar "média envenenada" (distribuição), não página ruim.
 
 ## Quantificação do gap em R$/dia

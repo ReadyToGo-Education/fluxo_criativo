@@ -2,6 +2,8 @@
 
 Usa eventos atribuídos pela Meta para identificar possível quebra na etapa final de conversão. Opera com a limitação dura de não ter acesso ao backend (gateway de pagamento, Pix, boleto, cartão).
 
+**Escopo:** este módulo julga só a conclusão de checkout (compras ÷ checkouts iniciados). Início de checkout baixo (pouca gente clicando para comprar) não é diagnóstico deste módulo e nunca vira `friccao_provavel`: segue a seção 3.6 do SKILL.md, com oferta e página primeiro. Se o início de checkout estiver baixo e a conclusão saudável, dizer as duas coisas ao aluno: o checkout está ok e a perda acontece antes dele.
+
 ## Quando é acionado
 
 - Opção [6] do menu principal

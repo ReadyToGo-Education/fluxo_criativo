@@ -79,16 +79,19 @@ Caso contrário, **modo guia**: começar pela Fase 1 da skill.
 
 ## Passo 2. Conduzir as 9 fases (modo guia)
 
-Aplicar as Fases 1 a 9 da skill, uma pergunta por mensagem:
+Antes de tudo, ler o momento da conta (seção 1.3 da skill): compras dos últimos 28 dias. Com menos de 50, a conta é iniciante e a campanha vai sem Advantage+ (público, posicionamento e criativo manuais), com o aviso e o passo a passo para desligar no Gerenciador.
 
+Aplicar a Fase 0 e as Fases 1 a 9 da skill, uma pergunta por mensagem:
+
+0. **Vitrine do perfil**. Mínimo de 6 conteúdos de vitrine no perfil. Faltando, oferecer criar agora (criativo estático, roteiro de Reels, carrossel ou copy de post) ou seguir sem bloqueio: a vitrine é produzida assim que a campanha começar a rodar, e dá para reaproveitar os anúncios como posts trocando o CTA (Fase 0 da skill).
 1. **Objetivo**. Sales ou Leads. Black Friday, data comemorativa ou evento com data: registrar a sazonalidade (Fase 1 da skill).
 2. **Produto e ticket**. Lidos do `resumo-produto.md` e confirmados em uma linha. Só pergunta se a campanha vender outra oferta.
-3. **Estrutura**. 1-X-1, 1-1-X ou X-1-1. Contar 1 anúncio por criativo (feed + Stories = 1, carrossel = 1, cada legenda = 1). Várias campanhas no mesmo pedido sobem uma por vez (Fase 3 da skill).
-4. **Orçamento**. ABO ou CBO + valor. Com data marcada, período (início e fim) e orçamento por dia ou total do período (Fase 4.3).
+3. **Estrutura**. Low ticket de conta iniciante: estrutura fixa do time, 3 anúncios, cada um na própria campanha 1-1-1, com otimização a cada 3 dias. Conta que já vende: o analisador define; sem isso, 1-X-1, 1-1-X ou X-1-1. Contar 1 anúncio por criativo (feed + Stories = 1, carrossel = 1, cada legenda = 1). Várias campanhas no mesmo pedido sobem uma por vez (Fase 3 da skill).
+4. **Orçamento**. Low ticket de conta iniciante: orçamento no conjunto, mínimo de R$ 20 por dia por campanha (os analisadores trabalham entre R$ 20 e R$ 30); sem isso, o mínimo que o Gerenciador aceitar na conta. Demais casos: ABO ou CBO + valor. Com data marcada, período (início e fim) e orçamento por dia ou total do período (Fase 4.3).
 5. **Tracking** (gate duro). Validar pixel ativo + evento recebendo dados.
-6. **Público**. Advantage+ (recomendado), Advantage+ com interesses (termos tirados do resumo) ou personalizado. Lookalike novo é criado pelo `/trafego-publicos`. No modo MCP, interesse por nome é lacuna: a skill recomenda Advantage+ ou conduz o passo manual guiado. Com público personalizado ou semelhante, perguntar se a Meta pode expandir para fora dele (Fase 6.3.6).
+6. **Público**. Conta iniciante e teste de anúncio: personalizado, sem Advantage+, com idade definida e pelo menos 3 interesses. Conta que já vende: Advantage+, Advantage+ com interesses ou personalizado, com o Advantage+ só a partir do nível Hard, caso a caso com o analisador (Fase 6 e seção 1.3 da skill). Lookalike novo é criado pelo `/trafego-publicos`. No modo MCP, interesse por nome é lacuna: a skill conduz o passo manual guiado. Com público personalizado ou semelhante, perguntar se a Meta pode expandir para fora dele (Fase 6.3.6).
 7. **Criativos**. Arquivos em `meus-produtos/{ativo}/entregas/criativos/`, biblioteca da conta ou pendentes (pendentes: o lote cria só a campanha e os conjuntos, sem anúncios; os anúncios entram depois pela seção 7.8 da skill). Para gerar copy, sugerir `/copy-anuncio`. Para imagem, `/criativo-estatico` ou `/img-anuncio`. Para vídeo, `/video-heygen`, `/video-remotion` ou `/video-editar`. No modo MCP, vídeo novo e imagem do computador são lacunas (L1 e L5): o aluno sobe tudo pela Biblioteca de mídia do Gerenciador antes do preview e a skill usa o que está lá; para imagem, a reserva é o token só de mídia. Uma legenda por anúncio, descrição obrigatória e o formato da Fase 7.6 (o que publica).
-8. **Posicionamentos**. Advantage+ Placements (default) ou manual.
+8. **Posicionamentos**. Conta iniciante e teste de anúncio: manual (sugestão: Feed, Stories e Reels do Instagram e do Facebook). Conta que já vende: Advantage+ Placements só a partir do nível Hard, caso a caso.
 9. **Nome da campanha**. Padrão automático, aluno pode editar.
 
 Manter o tom do projeto: pergunta numerada quando há opção, exemplo entre parênteses quando aberta.
