@@ -193,8 +193,8 @@ diagnóstico parcial sabendo que a confiabilidade é baixa.
 ### 5.2 Gargalo (§5.2 da SKILL): bottom-up
 - `criativo` (CTR baixo) [DENTRO do Meta]
 - `tecnico` (Connect Rate < 70%) [FORA do Meta]
-- `pagina` (conversão da página crítica) [FORA do Meta]
-- `checkout` (Carrinho → Compra crítico, ou Checkout → Compra abaixo da metade do piso da faixa do ticket, tabela da §3.5 da `/trafego-oferta-funil`) [FORA do Meta]
+- `pagina` (conversão da página crítica com início de checkout baixo: oferta e página primeiro, nunca o checkout, régua da §3.6 da `/trafego-oferta-funil`) [FORA do Meta]
+- `checkout` (só com início de checkout ok: Carrinho → Compra crítico, ou Checkout → Compra abaixo da metade do piso da faixa do ticket, tabela da §3.5 da `/trafego-oferta-funil`) [FORA do Meta]
 - `leilao_audiencia` (CPM alto)
 - `saturacao` (Frequência > 3,5)
 - `nenhum` (tudo saudável: avaliar prontidão pra escala)

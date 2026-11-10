@@ -152,7 +152,7 @@ Digite o número:
 - Se o pós-clique mostra connect rate abaixo de 70%: a leitura da página busca sinais de problema técnico (abaixo de 70%, a primeira hipótese é técnica; régua na seção 3.5).
 - Se a congruência é baixa: o diagnóstico de oferta recebe o alerta "desalinhamento com o anúncio".
 - Se o checkout mostra fricção: o plano prioriza o briefing de checkout.
-- Se a página tem nota alta mas as métricas são ruins: o problema pode ser preço, público ou checkout, não a página.
+- Se a página tem nota alta mas as métricas são ruins: o problema pode ser preço, público ou congruência, não a página. O checkout só entra quando o início de checkout está saudável e a conclusão de checkout está baixa (seção 3.6).
 
 ---
 
@@ -184,7 +184,7 @@ Limitação do conector nunca vira troca para o modo App: o App é só para cont
 
 **Campos no `ads_get_ad_entities` (contrato do conector: `.claude/skills/trafego-insights/SKILL.md` §10.1 "Contrato do conector da Meta (MCP)", conferido na conta real em 09/10/2026):** `amount_spent` (não `spend`), `impressions`, `reach`, `link_click`, `landing_page_view`, `omni_initiated_checkout`, `omni_purchase`, `offsite_conversion_fb_pixel_purchase_values` (sem ele, valor = `purchase_roas × amount_spent`), `purchase_roas`, `results`, `name`, `effective_status`, `campaign_id` e `adset_id`. Métrica sem evento volta `null`. CTR de link, CPM e frequência saem da conta: `link_click ÷ impressions`, `amount_spent ÷ impressions × 1000` e `impressions ÷ reach`. Não pedir `actions`, `action_values` nem `inline_link_clicks` crus: estão fora do contrato (a forma conferida é `link_click` e os campos `omni_*`). Carrinho e qualquer outro campo de ação: confirmar com `ads_get_field_context` antes.
 
-**Métricas derivadas do funil completo:** connect rate = visitas à página ÷ cliques no link; conversão da página = compras ÷ visitas; taxa de checkout = checkout iniciado ÷ visitas; conclusão de checkout = compras ÷ checkout iniciado.
+**Métricas derivadas do funil completo:** connect rate = visitas à página ÷ cliques no link; conversão da página = compras ÷ visitas; início de checkout = checkout iniciado ÷ visitas (decisão tomada na página, seção 3.6); conclusão de checkout = compras ÷ checkout iniciado (o que acontece dentro do checkout, seção 3.5).
 
 ---
 
@@ -217,6 +217,42 @@ Limitação do conector nunca vira troca para o modo App: o App é só para cont
 **Como usar:** colocar a faixa do ticket do aluno ao lado dos números reais dele. Quando a conversão da página estiver abaixo da faixa mas houver campanhas com zero venda no conjunto, declarar que é "média envenenada" (distribuição), não necessariamente página ruim.
 
 Fontes: Firework, Fetchfunnel, Baymard, Lucky Orange, LanderLab, HeroSpark (low ticket Brasil).
+
+---
+
+## 3.6 Início de checkout baixo: a decisão acontece na página
+
+> **Régua única do Severino para o início de checkout.** A `/trafego-otimizar`, a `/trafego-analise`, a `/trafego-criativos`, a `/trafego-diagnostico` e as sub-skills desta skill seguem esta seção sempre que pouca gente inicia o checkout.
+
+**Início de checkout** = checkouts iniciados ÷ visitas à página (com carrinho no funil, carrinho → checkout iniciado). É o mesmo Offer Rate da `/trafego-criativos` em campanha de venda. Mede a decisão de clicar em comprar, que acontece **na página**. É uma etapa diferente da **conclusão de checkout** (compras ÷ checkouts iniciados, seção 3.5), que mede o que acontece **dentro** do checkout.
+
+**Regra dura:** início de checkout baixo nunca vira "o problema é o checkout". Quem não iniciou o checkout ainda nem chegou a ver o checkout. As hipóteses seguem a régua de otimização do time, nesta ordem:
+
+1. **Oferta:** a promessa (Quadro) não justifica o preço, falta ancoragem ou stack de valor, a garantia é curta ou condicional, os bônus não resolvem objeção.
+2. **Página:** a primeira dobra não sustenta o anúncio, a Furadeira não fica clara, a prova vem depois do preço, o botão de compra aparece tarde ou some no celular, o vídeo é longo antes do primeiro botão.
+3. **Congruência e público:** o anúncio promete uma coisa e a página fala de outra, o criativo gera clique de curiosidade, o público é frio demais para a oferta ou um posicionamento manda visita que não compra.
+4. **Técnico ou medição:** botão sem link ou com link errado, checkout que demora a abrir, pixel que não dispara no checkout da plataforma. Conferir sempre, mas só concluir depois do teste do botão ou da checagem do evento.
+
+**Como separar as hipóteses:**
+
+| Sinal | Leitura |
+|---|---|
+| CTR de link e connect rate saudáveis, início de checkout baixo | O anúncio atrai e o link funciona. Oferta ou página (hipóteses 1 e 2): ler a página e a oferta antes de qualquer outra coisa |
+| CTR de link bem acima da média da conta com início de checkout baixo, ou um posicionamento concentrando visitas sem checkout | Congruência e público (hipótese 3) |
+| Compras maiores ou iguais aos checkouts iniciados, ou checkout iniciado zerado com venda registrada na Hotmart ou na Kiwify | Medição: o evento não dispara no checkout. Não é oferta, página nem checkout. Encaminhar para `/trafego-pixel` |
+| Início de checkout caiu de repente sem mudança de oferta, página ou público | Testar o botão antes de tudo: abrir a página no celular, clicar como cliente e ver se o checkout abre rápido |
+| Início de checkout saudável e conclusão de checkout abaixo do piso da faixa do ticket (seção 3.5) | Aí sim o checkout entra como hipótese (pagamento, Pix, formulário, preço que só aparece no checkout), com a ressalva da Hotmart e da Kiwify da seção 3.5 |
+| Sem o evento de checkout iniciado | Julgar pela conversão da página (compras ÷ visitas) como oferta ou página, declarar a etapa como indisponível e não citar o checkout como causa |
+
+**Régua inicial** (visita → checkout iniciado, perpétuo): crítico abaixo de 5%, atenção de 5% a 12%, saudável acima de 12%. 🟡 Referência de partida do Severino, sem fonte de mercado verificada: com 14 dias ou mais de histórico, a média da própria conta vale mais. Como o preço já aparece na página, ticket alto tende a ter início de checkout menor: julgar junto com a faixa do ticket da seção 3.5.
+
+**Encaminhamento:**
+- Oferta e página: leitura da página, congruência e diagnóstico de oferta desta skill; correção em `/feedback-pagina` ou `/feedback-low-ticket`, `/pagina-ajuste`, `/copy-pagina` ou `/lt-pagina`.
+- Congruência e público: módulo de congruência anúncio x página e, conforme o caso, `/copy-anuncio` ou `/trafego-criativos`.
+- Botão ou link quebrado: `/pagina-checkout` (ligação da página com o checkout). É o único caso de início de checkout baixo que vai para essa skill.
+- Medição: `/trafego-pixel` (diagnóstico) e `/pagina-pixel` (instalação).
+
+**Como dizer ao aluno** (no lugar de "o problema é o checkout"): "Pouca gente que chega na página clica para comprar. Isso acontece antes do checkout, então a primeira suspeita é a oferta ou a página: {sinais que apontam para isso}. O checkout só entra na conta quando muita gente inicia e pouca conclui."
 
 ---
 
@@ -371,6 +407,7 @@ A régua é o produto real do aluno, lido do `resumo-produto.md`, nunca um exemp
 | "Essa página não converte porque não tem VSL" | Página sem vídeo pode converter bem | Avaliar pelos elementos que ela TEM |
 | "Vi a página, sei tudo sobre a oferta" | A leitura não assiste vídeo e o WebFetch não roda JavaScript | Declarar as limitações explicitamente |
 | "O checkout está quebrando por cartão recusado" | Sem dados do gateway | "Possível fricção final. Conferir na plataforma (Hotmart, Kiwify)." |
+| "O problema é o checkout porque pouca gente inicia a compra" | Quem não iniciou o checkout nem chegou a vê-lo: o início de checkout mede a decisão tomada na página | "Pouca gente clica para comprar: primeiro oferta e página, depois congruência e público. O checkout só entra com conclusão baixa ou botão quebrado" (seção 3.6) |
 | "A nota da oferta é a revisão da página" | A nota é leitura estrutural cruzada com números | Auditoria completa de copy no `/feedback-pagina` ou `/feedback-low-ticket` |
 
 ---

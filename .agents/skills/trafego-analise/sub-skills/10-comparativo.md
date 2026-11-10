@@ -124,8 +124,8 @@ Calcular para cada campanha **antes** de montar a tabela. Para denominadores zer
 | Connect Rate | `actions[landing_page_view]` / `actions[link_click]` | Quadro na Parede |
 | Hold Rate | `video_p50_watched_actions` / `video_p25_watched_actions` | Decorados |
 | Play-Through Rate | `video_p95_watched_actions` / `impressions` | Furadeira |
-| Checkout Rate | `offsite_conversion.fb_pixel_initiate_checkout` / `landing_page_views` | Oferta (só OUTCOME_SALES) |
-| Conversion Rate | `offsite_conversion.fb_pixel_purchase` / `offsite_conversion.fb_pixel_initiate_checkout` | Furadeira + Decorados (só OUTCOME_SALES) |
+| Início de checkout (Checkout Rate) | `offsite_conversion.fb_pixel_initiate_checkout` / `landing_page_views` | Oferta e página, não o checkout (só OUTCOME_SALES) |
+| Conclusão de checkout (Conversion Rate) | `offsite_conversion.fb_pixel_purchase` / `offsite_conversion.fb_pixel_initiate_checkout` | Furadeira + Decorados (só OUTCOME_SALES) |
 | Lead Rate | `leads` / `landing_page_views` | Isca Digital (só OUTCOME_LEADS) |
 | CPA | `spend` / `offsite_conversion.fb_pixel_purchase` | (métrica-norte SALES) |
 | CPL | `spend` / `leads` | (métrica-norte LEADS) |
@@ -198,9 +198,9 @@ FUNIL
   Cliques no link        {N}                  {N}
   Connect Rate           {X,XX%}              {X,XX%}     {vencedora}
   LP Views               {N}                  {N}
-  Checkout Rate          {X,XX%}              {X,XX%}     {vencedora}
+  Início de checkout     {X,XX%}              {X,XX%}     {vencedora}
   Checkouts iniciados    {N}                  {N}
-  Conversion Rate        {X,XX%}              {X,XX%}     {vencedora}
+  Conclusão de checkout  {X,XX%}              {X,XX%}     {vencedora}
   Compras                {N}                  {N}
 
 EFICIÊNCIA
@@ -255,7 +255,7 @@ VENCEDORA NA MÉTRICA-NORTE: {A | B}
 
 **Marcação de vencedora:** `<- A` ou `<- B` na coluna da direita. Se a diferença for menor que 5%, marcar `aprox.` (empate técnico).
 
-**Linhas de LP View:** omitir Connect Rate, Checkout Rate e Lead Rate se `landing_page_views` não retornar para nenhuma das campanhas. Alertar: "LP views não rastreado. Conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
+**Linhas de LP View:** omitir Connect Rate, Início de checkout e Lead Rate se `landing_page_views` não retornar para nenhuma das campanhas. Alertar: "LP views não rastreado. Conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
 
 ---
 
@@ -277,8 +277,8 @@ mais alinhado ao público. {Explicação em 2 linhas do que isso significa na pr
 | Connect Rate | Quadro na Parede | O que o anúncio promete é diferente do que a página entrega |
 | Hold Rate | Decorados | Os benefícios apresentados no meio do vídeo não sustentam o interesse |
 | Play-Through Rate | Furadeira | O método não está claro o suficiente para o espectador terminar o vídeo |
-| Checkout Rate | Oferta | Preço, garantia ou stack de valor não convencem quem chegou na página |
-| Conversion Rate | Furadeira + Decorados | O checkout não reforça o método e os benefícios o suficiente |
+| Início de checkout | Oferta (e página) | Preço, garantia ou stack de valor não convencem quem chegou na página. Não é o checkout: a pessoa nem chegou a ele |
+| Conclusão de checkout | Furadeira + Decorados | O checkout não reforça o método e os benefícios o suficiente |
 | Lead Rate | Isca Digital | A oferta de captura não é suficientemente atraente |
 | CPM | Leilão | Uma das campanhas está pagando mais caro por atenção: pode ser criativo fadigado ou público mais concorrido |
 | Frequência | Fadiga | Uma das campanhas está saturando o mesmo público |
@@ -307,14 +307,16 @@ No VTSD, isso aponta para {elemento}: {ação específica para corrigir}.
 | Connect Rate | < 60% (crítico); 60% a 79% (atenção) | 80% ou mais | sem faixa própria (80% ou mais já é saudável) |
 | Hold Rate | < 40% | 40% a 60% | > 60% |
 | Play-Through Rate | < 5% | 5% a 15% | > 15% |
-| Checkout Rate | < 5% | 5% a 12% | > 12% |
-| Conversion Rate (checkout → compra) | abaixo do piso da faixa do ticket | dentro da faixa | acima da faixa |
+| Início de checkout | < 5% | 5% a 12% | > 12% |
+| Conclusão de checkout (checkout → compra) | abaixo do piso da faixa do ticket | dentro da faixa | acima da faixa |
 | Lead Rate | < 5% | 5% a 15% | > 15% |
 | Frequência | > 4 (sinal de fadiga) | 2 a 4 | < 2 |
 
 **Hook Rate e Connect Rate seguem a régua única do projeto**, a mesma dos outros outputs: Hook Rate segue a régua única da `/trafego-insights` (seção 4.3) e Connect Rate a da §3.5 de `trafego-oferta-funil/SKILL.md`. Connect Rate abaixo de 70%: a primeira hipótese é técnica (página lenta, link errado, redirecionamento); conferir com `/pagina-performance` e a congruência anúncio x página com `/trafego-oferta-funil` antes de mexer no anúncio.
 
-**Conversion Rate (checkout → compra) não tem corte fixo:** a faixa sai do ticket do resumo do produto, na tabela da §3.5 de `trafego-oferta-funil/SKILL.md` (coluna "Conclusão de checkout"; ex.: até R$ 297, de 25% a 45%; acima de R$ 2.500, de 5% a 15%). Exibir junto a ressalva da §3.5: o checkout iniciado da Hotmart e da Kiwify dispara mais solto, então o número é aproximação, nunca prova de checkout quebrado.
+**Início de checkout baixo não é problema de checkout:** quem não iniciou o checkout nem chegou a vê-lo. Com CTR e connect rate saudáveis, a leitura é oferta ou página; depois vêm congruência e público; botão quebrado e medição só com teste. Régua completa na §3.6 de `trafego-oferta-funil/SKILL.md`. Nunca narrar "o checkout está ruim" a partir desta etapa: o checkout só entra quando o início está saudável e a conclusão está baixa.
+
+**Conclusão de checkout não tem corte fixo:** a faixa sai do ticket do resumo do produto, na tabela da §3.5 de `trafego-oferta-funil/SKILL.md` (coluna "Conclusão de checkout"; ex.: até R$ 297, de 25% a 45%; acima de R$ 2.500, de 5% a 15%). Exibir junto a ressalva da §3.5: o checkout iniciado da Hotmart e da Kiwify dispara mais solto, então o número é aproximação, nunca prova de checkout quebrado.
 
 ---
 
@@ -470,7 +472,8 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Campanha perdedora com gasto alto e conversões zero | "trafego-otimizar": pausar via ação em lote (filtro: gasto > X e zero conversão) |
 | Diferença principal em Hook Rate ou Hold Rate | "trafego-testes": A/B de criativo com nova Urgência Oculta ou Decorado diferente |
 | Diferença principal em Connect Rate | Connect Rate da perdedora abaixo de 70%: primeiro "pagina-performance" (velocidade, link, redirecionamento). Depois, ou com connect de 70% ou mais: "feedback-pagina" (headline e promessa da página não batem com o anúncio), com "trafego-oferta-funil" para confirmar o gargalo |
-| Diferença principal em Checkout Rate ou Conversion Rate | "feedback-pagina" ou "pagina-checkout": revisar oferta, garantia e stack de valor |
+| Diferença principal no início de checkout | "trafego-oferta-funil" e "feedback-pagina" (low ticket: "feedback-low-ticket"): revisar oferta, garantia e stack de valor da página. Não é o checkout |
+| Diferença principal na conclusão de checkout | "trafego-oferta-funil" (diagnóstico de checkout) e "pagina-checkout": revisar pagamento e a ligação da página com o checkout |
 | Diferença principal em Lead Rate | "copy-pagina": revisar isca digital e formulário de captura |
 | Frequência acima de 4 em alguma das campanhas | "trafego-publicos": criar nova audience (Lookalike ou aberto) para rodar a mesma campanha |
 | Campanhas com eficiência próxima (diferença < 10% no CPA/CPL) | "trafego-testes": A/B formal antes de decidir qual escalar |

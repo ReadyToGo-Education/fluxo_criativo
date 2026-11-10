@@ -462,11 +462,14 @@ Esta camada é o que diferencia diagnóstico raso de diagnóstico sênior. Todas
 | **Conversão da página (perpétuo)** | Compras ÷ LP Views | Página de vendas + oferta | ≥ 1,5% (low/mid), ≥ 0,8% (high) | metade do saudável | < metade |
 | **Conversão da página (lançamento)** | Leads ÷ LP Views | Landing de captação | ≥ 25% | 15 a 25% | < 15% |
 | **Conversão do anúncio** | Compras (ou Leads) ÷ Cliques | Combinação criativo + página | depende da trilha | depende | depende |
+| **Início de checkout** (perpétuo) | InitiateCheckout ÷ LP Views | Decisão de comprar, tomada na página (oferta, página, congruência). **Não mede o checkout** | > 12% | 5 a 12% | < 5% |
 | **Carrinho → Compra** (perpétuo) | Compras ÷ AddToCart | Atrito do checkout | ≥ 30% | 15 a 30% | < 15% |
 | **Checkout → Compra** (perpétuo) | Compras ÷ InitiateCheckout | Atrito final (pagamento, frete) | dentro ou acima da faixa do ticket | abaixo do piso da faixa | abaixo da metade do piso |
 | **Custo por etapa** | Gasto ÷ (PV, ATC, IC, Purchase) | Onde o custo escala desproporcionalmente | analisado em razão | n/a | n/a |
 
 **Checkout → Compra sem limiar fixo:** a faixa vem da tabela da §3.5 de `trafego-oferta-funil/SKILL.md`, pelo ticket do resumo do produto (a conclusão de checkout cai conforme o ticket sobe). Esses números são estimativa, e o `initiate_checkout` da Hotmart e da Kiwify pode disparar mais "solto", deixando a taxa artificialmente baixa: tratar a comparação como aproximação, nunca como prova de checkout quebrado.
+
+**Início de checkout baixo não é problema de checkout:** quem não iniciou o checkout nem chegou a vê-lo. A leitura segue a régua única da §3.6 de `trafego-oferta-funil/SKILL.md`: oferta e página primeiro, depois congruência e público, e só então botão quebrado ou medição. O checkout só entra como hipótese quando o início de checkout está saudável e a conclusão (Checkout → Compra) está baixa.
 
 **Benchmarks vs histórico:** se houver histórico ≥ 14 dias da própria conta, prioriza a média histórica como referência. Os benchmarks fixos acima só servem para contas novas.
 
@@ -630,12 +633,17 @@ Métrica-norte (CPA/CPL) acima do target?
 │     → TÉCNICO (link errado, página fora, redirect quebrado, velocidade)
 │     → Ação: ALERTAR aluno. NÃO pausar nem reduzir orçamento.  [FORA DO META]
 │
-├─ 3. Connect Rate ok, mas Conversão da Página crítica?
-│     → PÁGINA / OFERTA (copy, preço, prova, headline)
+├─ 3. Connect Rate ok, mas Conversão da Página crítica com Início de checkout
+│     baixo (§3.3) ou sem o evento de checkout iniciado?
+│     → PÁGINA / OFERTA (oferta, preço, garantia, prova, headline, botão de compra),
+│       depois congruência anúncio x página e público
+│     → NUNCA apontar o checkout como causa aqui: quem não iniciou o checkout
+│       nem chegou a vê-lo. Antes de fechar, descartar botão quebrado e medição
+│       (§3.6 de `trafego-oferta-funil/SKILL.md`).
 │     → Ação: ALERTAR aluno. NÃO pausar criativo bom.
 │         Se gasto continuar improdutivo, reduzir -20% como contenção.  [FORA DO META]
 │
-├─ 4. Conversão da página ok, mas Carrinho → Compra < 15% ou Checkout → Compra
+├─ 4. Início de checkout ok, mas Carrinho → Compra < 15% ou Checkout → Compra
 │     crítico pela faixa do ticket (§3.3) (perpétuo)?
 │     → CHECKOUT (atrito, pagamento, frete, confiança)
 │     → Ação: ALERTAR aluno. Mesma lógica do item 3.  [FORA DO META]
@@ -656,7 +664,7 @@ Métrica-norte (CPA/CPL) acima do target?
 1. **Diagnóstico:** `/trafego-oferta-funil` lê a página real, compara com o anúncio e aponta onde a oferta falha.
 2. **Correção, conforme o que o diagnóstico apontar:**
    - **Página de vendas** (copy, estrutura, prova, headline): `/feedback-pagina` (página 8D) ou `/feedback-low-ticket` (página low ticket). Ajuste pontual em `/pagina-ajuste`; reescrever a copy em `/copy-pagina` ou `/lt-pagina`.
-   - **Checkout** (atrito, meio de pagamento, link quebrado): `/pagina-checkout`.
+   - **Checkout** (atrito, meio de pagamento, link quebrado): `/pagina-checkout`. Só para o gargalo do item 4 ou para botão de compra quebrado. Início de checkout baixo (item 3) vai para a correção da página e da oferta.
    - **Técnico** (velocidade, redirect, página fora do ar): `/pagina-performance`.
    - **Pixel sem disparar na página:** `/pagina-pixel` (instalação) e `/trafego-pixel` (diagnóstico do evento).
 

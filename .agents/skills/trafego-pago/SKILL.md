@@ -106,8 +106,9 @@ Nomes da tabela: os campos de vídeo, `spend`, `impressions`, `inline_link_click
 1. **Criativo não converte?** Teste novo gancho (primeiros 3 segundos)
 2. **CTR baixo?** Problema no criativo ou segmentação
 3. **CTR alto mas CPA alto?** Conferir primeiro o Click-to-LPV Rate: abaixo de 70%, a primeira hipótese é técnica (página lenta, link errado, redirecionamento), a conferir com `/pagina-performance` antes de mexer no anúncio. Com a visita à página saudável e o Offer Rate baixo, pode ser curiosidade vazia: o anúncio atrai clique de quem não compra (conferir a congruência entre anúncio e página com `/trafego-oferta-funil`)
-4. **CPA subindo?** Fadiga de criativo. Criar novos (`/copy-anuncio`, `/criativo-estatico`)
-5. **CTR baixo mas CPA bom?** Criativo qualificado: filtra o público antes do clique. Não cortar por CTR baixo
+4. **Pouca gente inicia o checkout?** Oferta ou página primeiro (preço, garantia, prova, headline, botão de compra), depois congruência e público. Não é o checkout: quem não iniciou nem chegou a vê-lo. O checkout só entra quando muita gente inicia e pouca conclui. Régua completa na §3.6 de `.claude/skills/trafego-oferta-funil/SKILL.md`
+5. **CPA subindo?** Fadiga de criativo. Criar novos (`/copy-anuncio`, `/criativo-estatico`)
+6. **CTR baixo mas CPA bom?** Criativo qualificado: filtra o público antes do clique. Não cortar por CTR baixo
 
 ## Mapa das Skills de Tráfego do Projeto
 
