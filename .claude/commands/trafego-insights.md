@@ -203,6 +203,7 @@ Métricas derivadas:
 - Connect rate: [X,XX%]   (cliques que viram LP View)
 - Conversão da página: [X,XX%]   (LP Views que viram compra/lead)
 - Conversão do anúncio: [X,XX%]   (cliques que viram compra/lead)
+- Início de checkout: [X,XX%]   (LP Views que viraram checkout iniciado, só perpétuo; mede a página e a oferta, não o checkout)
 - Carrinho → Compra: [X,XX%]   (só perpétuo)
 - Checkout → Compra: [X,XX%]   (só perpétuo)
 

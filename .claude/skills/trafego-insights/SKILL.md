@@ -159,7 +159,7 @@ Toda skill de tráfego que usa métrica de vídeo (ex.: `/trafego-criativos`) se
 
 ## 5. Métricas derivadas (calculadas pela skill)
 
-A skill **sempre** calcula e entrega as 7 métricas derivadas no output. Estas são parte do vocabulário comum do sistema e não devem ser duplicadas em outras skills.
+A skill **sempre** calcula e entrega as 8 métricas derivadas no output. Estas são parte do vocabulário comum do sistema e não devem ser duplicadas em outras skills.
 
 ### 5.1 Definições
 
@@ -172,6 +172,7 @@ A skill **sempre** calcula e entrega as 7 métricas derivadas no output. Estas s
 | `taxa_conversao_anuncio_lancamento` | `leads ÷ link_clicks` | Apenas lançamento |
 | `taxa_carrinho_compra` | `purchases ÷ add_to_cart` | Apenas perpétuo |
 | `taxa_checkout_compra` | `purchases ÷ initiate_checkout` | Apenas perpétuo |
+| `taxa_inicio_checkout` | `initiate_checkout ÷ lp_views` | Apenas perpétuo. É o `offer_rate` do funil (seção 12.3). Mede a decisão tomada na página, não o checkout: leitura na §3.6 de `trafego-oferta-funil/SKILL.md` |
 
 ### 5.2 Custo por etapa de funil (perpétuo)
 Calcular para diagnosticar onde o custo escala desproporcionalmente:
@@ -359,6 +360,7 @@ campanha:
         taxa_conversao_anuncio: 0.0056
         taxa_carrinho_compra: 0.056
         taxa_checkout_compra: 0.083
+        taxa_inicio_checkout: 0.079
         custo_por_lp_view: 1.31
         custo_por_atc: 11.03
         custo_por_ic: 16.54

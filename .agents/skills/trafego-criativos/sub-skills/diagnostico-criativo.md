@@ -47,7 +47,7 @@ Para cada criativo, avaliar 4 camadas em sequência:
 | `falha_sustentacao` | Camada 1 FAIL no hold (Hook OK, Hold < 30%) | Meio do vídeo | Reescrever desenvolvimento. Gancho funciona. |
 | `falha_intencao` | Camadas 1 OK, Camada 2 FAIL (CTR baixo ou LPV baixo) | Transição atenção → clique | Se CTR baixo: fortalecer CTA e urgência. Se CTR alto + LPV baixo: primeiro conferir a causa técnica (página lenta, link errado, redirecionamento) com `/pagina-performance` e a congruência com `/trafego-oferta-funil`, sem mexer no anúncio; descartada a causa técnica, é curiosidade vazia: alinhar promessa com destino em `/copy-anuncio`. |
 | `falha_qualificacao` | Camadas 1-2 OK, Camada 3 FAIL com CTR e LPV bons | Tráfego qualificado chega mas não compra | Problema pode ser oferta, preço, prova ou checkout. Testar CTA mais direto ou âncora de preço no criativo. |
-| `falha_pos_clique` | Camadas 1-2 OK, Camada 3 FAIL com Offer Rate muito baixo (< 2%) | Página/checkout, NÃO o criativo | NÃO pausar criativo. Rodar `/trafego-oferta-funil` para ler a página e diagnosticar a oferta. |
+| `falha_pos_clique` | Camadas 1-2 OK, Camada 3 FAIL com Offer Rate muito baixo (< 2%) | Página e oferta, NÃO o criativo (nem o checkout: com Offer Rate baixo, quase ninguém chegou a ele) | NÃO pausar criativo. Rodar `/trafego-oferta-funil` para ler a página e diagnosticar a oferta. |
 | `criativo_equilibrado` | 4 camadas OK | Nenhuma (candidato a escala) | Criar variações. Para escalar: `/trafego-diagnostico` (falso vencedor e score) e depois `/trafego-escalar`. |
 | `dados_insuficientes` | < 1.000 impressões OU < 7 dias OU < 3 conversões | N/A | Aguardar mais dados. |
 
@@ -59,7 +59,7 @@ Quando múltiplas camadas falham simultaneamente, aplicar esta ordem de priorida
 2. **`falha_gancho`**: se Camada 1 FAIL no hook, parar aqui. Sem atenção, avaliar intenção e conversão é irrelevante.
 3. **`falha_sustentacao`**: se hook OK mas hold FAIL, parar. O público não chega ao CTA.
 4. **`falha_intencao`**: se atenção OK mas Camada 2 FAIL (CTR ou LPV baixos). Inclui curiosidade vazia (CTR alto + LPV baixo), que só vale depois de descartar a causa técnica da página (LPV abaixo de 70%: `/pagina-performance` e `/trafego-oferta-funil` primeiro).
-5. **`falha_pos_clique`**: se atenção e intenção OK, conversão FAIL **e** Offer Rate < 2% (problema fora do criativo: página, checkout, oferta). Prevalece sobre falha_qualificacao quando Offer Rate é muito baixo.
+5. **`falha_pos_clique`**: se atenção e intenção OK, conversão FAIL **e** Offer Rate < 2% (problema fora do criativo: página ou oferta; o checkout fica de fora, porque quase ninguém chegou a ele, régua da §3.6 de `trafego-oferta-funil/SKILL.md`). Prevalece sobre falha_qualificacao quando Offer Rate é muito baixo.
 6. **`falha_qualificacao`**: se atenção e intenção OK, conversão FAIL com tráfego qualificado (LPV bom) **e** Offer Rate ≥ 2% (o tráfego chega e demonstra algum interesse, mas não fecha).
 7. **`criativo_equilibrado`**: só quando TODAS as 4 camadas estão OK.
 
@@ -243,7 +243,8 @@ qualificado, mas quase ninguém demonstra interesse na oferta
 (Offer Rate {X}%, abaixo de 2%).
 
 Por que importa: o problema NÃO é o criativo. É a página, a
-oferta, o preço, a prova ou o checkout.
+oferta, o preço ou a prova. Também não é o checkout: quase
+ninguém chegou a ele.
 
 O que NÃO fazer: NÃO pausar esse criativo. Ele está trazendo
 tráfego qualificado para uma página que não converte.
