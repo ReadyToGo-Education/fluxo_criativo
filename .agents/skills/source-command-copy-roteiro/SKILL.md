@@ -113,6 +113,7 @@ Resumo do que vou criar:
 Antes de escrever, leia `.claude/skills/revisora/references/manual-copy.md` e aplique.
 
 - Gancho nos primeiros 3 segundos: afirmação, paradoxo ou revelação. NUNCA pergunta.
+- **Filtro de copy no começo:** pelo menos um sinal que só o público reconhece (ambiente, palavras, objetos, frases ou sons do nicho) nos 3 primeiros segundos, na primeira imagem ou na primeira linha, para quem não é do público passar reto. Regra e exemplos em `.claude/skills/revisora/references/filtro-de-copy.md`.
 - Entregar valor real dentro do vídeo: quem assiste aprende ou se reconhece.
 - Produto não aparece nos primeiros blocos.
 - Argumento antes de oferta.
