@@ -207,6 +207,7 @@ Resumo do que vou criar:
 - **Inimigo concreto ou método antigo:** o anúncio precisa de um culpado externo (sistema, método ensinado, mito do nicho), não "você é o problema".
 - **Entregar valor real no próprio post/vídeo:** a pessoa que lê ou assiste aprende algo concreto. Anúncio que só promete não converte.
 - **Produto não aparece no gancho:** nada de "curso", "treinamento", nome do método nos 3s iniciais. Só a realidade do leitor.
+- **Filtro de copy no começo:** pelo menos um sinal que só o público reconhece (ambiente, palavras, objetos, frases ou sons do nicho) nos 3 primeiros segundos, na primeira imagem ou na primeira linha, para quem não é do público passar reto. Regra e exemplos em `.claude/skills/revisora/references/filtro-de-copy.md`. Antes de escrever, listar os filtros do produto a partir do resumo (público, Identidade do Consumidor e Urgências Ocultas).
 - **CTA adequado à fase do funil** (ver tabela abaixo).
 
 **Estrutura obrigatória para TODO vídeo (~45. 60s / ~150. 200 palavras):**
@@ -214,6 +215,8 @@ Resumo do que vou criar:
 ```
 [0. 3s]   GANCHO      → Afirmação contra-intuitiva ou quebra-padrão.
                        Texto na tela + fala simultâneos.
+                       Filtro de copy: ambiente, objeto, palavra,
+                       frase ou som que só o público reconhece.
 [4. 15s]  TEASE       → Expande o gancho, cria tensão, contextualiza o problema.
 [16. 42s] ENTREGA     → Ensina, demonstra ou revela algo real e concreto.
                        NUNCA apenas prometer. ENTREGAR dentro do vídeo.
