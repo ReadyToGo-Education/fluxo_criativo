@@ -77,9 +77,96 @@ Comportamento: skill assume defaults para campos não declarados, monta o previe
 
 ---
 
+## 1.3 Régua do Advantage+ e momento da conta (vale para toda campanha do Severino)
+
+Regra do time para quem está começando. Vale nesta skill e no `/trafego-testes`, no `/trafego-escalar`, no `/trafego-otimizar` e no agente `criador-de-campanhas`, que apontam para esta seção.
+
+**Momento da conta.** Antes da Fase 1, contar as compras da conta de anúncios nos últimos 28 dias (a mesma régua do `/lt-otimizar`): no `MCP_CONECTOR`, `ads_get_ad_entities` no nível da conta com o campo `omni_purchase`; no `APP`, `GET /act_<id>/insights?date_preset=last_28d&fields=actions` (compras em `actions`). Sem leitura possível (conta nova, campo vazio), perguntar ao aluno quantas vendas os anúncios fizeram nos últimos 28 dias. Registrar no preview `momento_conta: iniciante` (menos de 50 compras) ou `ja_vende` (50 ou mais).
+
+**Conta iniciante (menos de 50 compras em 28 dias, o comum em Newbie e Soft): nada de Advantage+.**
+- **Público:** idade definida e pelo menos 3 interesses, com o Público Advantage+ desligado (`audience.modo: PERSONALIZADO`, `advantage_audience: 0`). País e gênero conforme o público do produto (Fase 6).
+- **Posicionamento:** manual (Fase 8).
+- **Criativo:** um criativo por anúncio e sem as melhorias automáticas da Meta (Fase 7.6, que já é o padrão).
+
+**Aviso obrigatório**, no começo da Fase 6 e no preview:
+```
+Sua conta ainda não chegou a 50 vendas nos últimos 28 dias. Nessa fase, a
+campanha não pode começar com Advantage+: público, posicionamento e criativo
+vão no manual, para você saber o que está funcionando. Quando a conta passar
+de 50 vendas, o Advantage+ pode entrar, caso a caso, com o seu analisador.
+```
+
+**Como desligar o Advantage+ no Gerenciador.** Mostrar sempre que o aluno for criar, editar ou conferir a campanha no Gerenciador, e na conferência da seção 5:
+```
+📋 Passo 1. Ao criar a campanha de vendas, escolha a configuração manual,
+           e não a de Advantage+.
+📋 Passo 2. No conjunto de anúncios, em Público: se aparecer "Público
+           Advantage+", troque para as opções de público originais. Defina a
+           idade e coloque pelo menos 3 interesses na segmentação detalhada.
+📋 Passo 3. No conjunto, em Posicionamentos: troque "Posicionamentos
+           Advantage+" por posicionamentos manuais e marque só os combinados.
+📋 Passo 4. No anúncio, nas melhorias de criativo Advantage+: desligue todas.
+
+🛟 Se algum nome de botão estiver diferente, me mande um print.
+```
+
+**Conta que já vende (50 compras ou mais em 28 dias):** o Advantage+ pode entrar a partir do nível Hard, caso a caso, combinado com o analisador. Perguntar o nível do aluno na mentoria só nessa hora. Sem o nível Hard ou sem a combinação com o analisador, seguir a régua da conta iniciante.
+
+**Teste de anúncio** (criativo, headline ou CTA) vai sempre no manual, em qualquer momento da conta: público, posicionamento e criativo sem Advantage+.
+
+---
+
 ## 2. Fluxo de coleta. Modo guia
 
-A skill percorre 9 fases. Em cada fase, faz uma pergunta por mensagem, mostra a recomendação quando há heurística clara, espera confirmação e avança.
+A skill abre com a conferência da vitrine do perfil (Fase 0) e percorre 9 fases. Em cada fase, faz uma pergunta por mensagem, mostra a recomendação quando há heurística clara, espera confirmação e avança.
+
+### Fase 0. Vitrine do perfil (antes de montar a campanha)
+
+Quem vê o anúncio costuma abrir o perfil antes de comprar. Perfil vazio ou só com post solto derruba a confiança e encarece a venda. Regra do Severino: **mínimo de 6 conteúdos de vitrine no perfil.** Faltando, a campanha não trava: segue, e a vitrine é produzida assim que ela começar a rodar.
+
+**Conteúdo de vitrine** é post do feed (Reels, carrossel ou imagem) que mostra quem é o especialista, o que ele ensina, resultado de aluno ou o produto. Seis posts são as duas primeiras linhas do perfil. Post fixado conta; story que já sumiu não conta.
+
+Pergunta (uma mensagem):
+```
+Antes de montar a campanha: quem vê o anúncio costuma olhar o seu perfil antes de comprar.
+
+Quantos posts de vitrine o seu perfil do Instagram tem hoje? (posts no feed que mostram quem você é, o que você ensina, resultado de aluno ou o produto)
+
+1. 6 ou mais
+2. Menos de 6
+3. Não sei
+
+Digite o número:
+```
+
+- **1:** seguir para a Fase 1. Registrar `vitrine_perfil: ok` no preview.
+- **3:** pedir para o aluno abrir o perfil e contar os posts das duas primeiras linhas que mostram ele, o método, resultado ou o produto. Com a resposta, seguir como 1 ou 2.
+- **2:** oferecer criar agora o que falta:
+
+```
+Para chegar aos 6, faltam {N}. Posso criar com você agora. O que prefere?
+
+1. Criativo estático (imagem pronta para postar)
+2. Roteiro de Reels
+3. Carrossel
+4. Legenda e copy de post
+5. Seguir com a campanha assim mesmo
+
+Digite o número:
+```
+
+| Opção | Skill |
+|---|---|
+| 1. Criativo estático | `/criativo-estatico` |
+| 2. Roteiro de Reels | `/copy-roteiro` (Reels de 60 segundos) ou `/video-heygen` (vídeo com avatar) |
+| 3. Carrossel | `/copy-social` (carrossel de texto) ou `/carrossel` (com imagem por card) |
+| 4. Legenda e copy de post | `/copy-social` |
+
+Ao acionar a skill, avisar que a peça é conteúdo de vitrine: apresentar o especialista, o método (Furadeira), resultado de aluno ou o produto, com o tema tirado do `resumo-produto.md`. Ao fim de cada peça, perguntar se o aluno quer criar a próxima ou voltar para a campanha. A campanha continua da Fase 1 quando ele voltar.
+
+- **5 (seguir assim mesmo):** pode seguir, sem bloqueio. Combinar que a vitrine é produzida assim que a campanha começar a rodar, e que dá para reaproveitar os próprios anúncios como posts do perfil, trocando o CTA (de "saiba mais" para seguir, comentar ou salvar). Registrar `vitrine_perfil: abaixo_do_minimo` com a contagem no preview e repetir o aviso nos próximos passos do resultado (seção 5).
+
+No modo expresso, se a mensagem não disser quantos posts de vitrine o perfil tem, a pergunta vai junto do preview, numa linha só, sem abrir outra rodada.
 
 ### Fase 1. Objetivo e tipo de funil
 Pergunta:
@@ -109,7 +196,12 @@ Necessário para:
 - Validar coerência com budget na fase 4.
 
 ### Fase 3. Estrutura
-Mostre opção e justifique. **Não impor.** Aluno pode pedir qualquer estrutura (incluindo customizada).
+
+**Low ticket de conta iniciante (`momento_conta: iniciante`, seção 1.3): estrutura fixa do time.** 3 anúncios, cada um na própria campanha `1-1-1` (1 campanha, 1 conjunto, 1 anúncio): 3 campanhas no total. Não perguntar a estrutura: apresentar, explicar em uma linha (cada anúncio com o próprio orçamento, para ler cada um sozinho) e confirmar. As 3 campanhas sobem uma por vez, como em "Várias campanhas no mesmo pedido", logo abaixo. A otimização é a cada 3 dias, pelo `/trafego-otimizar`.
+
+**Conta que já vende (`ja_vende`):** sem estrutura fixa; quem define é o analisador. Se o aluno trouxer a estrutura combinada com o analisador, seguir. Se não, usar a heurística abaixo como sugestão.
+
+Nos demais casos, mostre opção e justifique. **Não impor.** Aluno pode pedir qualquer estrutura (incluindo customizada).
 
 Heurística inicial:
 - Vai testar **público**? → sugerir `1-X-1` (1 campanha, X conjuntos, 1 anúncio cada)
@@ -127,6 +219,8 @@ Aceitar resposta livre. Confirmar quantos conjuntos e quantos anúncios por conj
 
 ### Fase 4. Orçamento
 Sempre perguntar **dois pontos**, um por mensagem (e o terceiro, período, quando a campanha tem data marcada):
+
+**Low ticket de conta iniciante (estrutura fixa da Fase 3):** não perguntar ABO ou CBO. Com 1 conjunto por campanha, o orçamento vai no conjunto (ABO). Valor: **mínimo de R$ 20 por dia por campanha**; os analisadores trabalham entre R$ 20 e R$ 30. Se o aluno não conseguir R$ 20 por campanha, usar o mínimo que o Gerenciador aceitar na conta dele: a Meta não publica um valor fixo em real, ele varia por conta e objetivo, e em campanha de vendas costuma ficar entre R$ 6 e R$ 10 por dia. O Gerenciador avisa quando o valor está abaixo do mínimo; na API, a recusa por orçamento baixo costuma trazer o mínimo da conta na mensagem, que é mostrado ao aluno antes de tentar de novo. Esses valores ainda estão sendo acertados com os analisadores: tratar como a referência atual do time.
 
 **4.1. ABO ou CBO?**
 > "ABO (orçamento por conjunto) ou CBO (orçamento por campanha distribuído pelo Meta)?"
@@ -242,24 +336,33 @@ Se qualquer validação falhar:
 
 ### Fase 6. Público
 
-Apresentar **3 opções numeradas**, com a opção 1 marcada como recomendada. Adaptar a recomendação à trilha (low/mid/high) e ao produto ativo.
+**Conta iniciante (seção 1.3): sem Advantage+.** Mostrar o aviso da seção 1.3 e não oferecer as opções 1 e 2 da pergunta padrão. O público vai como `audience.modo: PERSONALIZADO` (`advantage_audience: 0`), com:
+- idade definida pelo público do produto (do resumo do produto; perguntar se faltar);
+- pelo menos 3 interesses, montados pelos passos 6.2.b a 6.2.e (no `APP`, buscados pelo ID; no `MCP_CONECTOR`, pelo passo manual da lacuna L2, com o conjunto criado pausado e os interesses acrescentados pelo aluno no Gerenciador) ou vindos da base por nível salva, se ela tiver 3 ou mais;
+- país e gênero do público do produto.
+
+Na conta iniciante, os interesses dos passos 6.2 entram como segmentação do público personalizado: salvar como `audience.modo: PERSONALIZADO`, nunca como `ADVANTAGE_PLUS_COM_INTERESSES`.
+
+**Conta que já vende (`ja_vende`):** apresentar as **3 opções numeradas** da pergunta padrão. As opções 1 e 2 (Advantage+) só a partir do nível Hard, caso a caso, combinado com o analisador (seção 1.3); sem isso, recomendar a opção 3 com idade e pelo menos 3 interesses. Adaptar à trilha (low/mid/high) e ao produto ativo.
+
+**Campanha de teste de anúncio** (na Fase 3, o aluno vai testar criativo, headline ou CTA): regra do Severino, o teste vai **todo no manual**, em qualquer momento da conta, para a comparação entre os anúncios não depender da Meta: público personalizado com idade e pelo menos 3 interesses (`audience.modo: PERSONALIZADO`, `advantage_audience: 0`), posicionamento manual (Fase 8) e criativo sem melhorias (Fase 7.6). As opções 1 e 2 não são oferecidas. O teste roda nesta campanha nova, nunca dentro de uma campanha que já está no ar. Para testar a partir de uma campanha existente, o caminho é o `/trafego-testes`, que segue a mesma regra.
 
 Pergunta padrão:
 > "Fase 6 de 9. Público
 >
 > Para {trilha} de {objetivo da campanha}, a recomendação é começar amplo e deixar o algoritmo aprender.
 >
-> 1. **Advantage+ Audience (recomendado).** Público 100% aberto, sem sugestões nem restrições. O Meta encontra quem converte sozinho, ideal para descobrir o público real do produto.
+> 1. **Advantage+ Audience (caso a caso, a partir do nível Hard).** Público 100% aberto, sem sugestões nem restrições. O Meta encontra quem converte sozinho, ideal para descobrir o público real do produto.
 > 2. **Advantage+ com interesses.** Mantém o Advantage+ como base, mas adiciona interesses relacionados ao produto como sugestão (não restringe, só orienta o algoritmo no início).
 > 3. **Personalizado.** Você combina o que quiser: públicos customizados, lookalikes, interesses específicos, idade, localização. Use quando já validou um público que converte ou quando precisa restringir por motivo de negócio.
 >
 > Qual prefere?"
 
-No modo `MCP_CONECTOR`, a opção 1 é ainda mais recomendada: o conector não pesquisa interesses (lacuna L2), então as opções 2 e 3 com interesses passam por um passo manual no Gerenciador.
+No modo `MCP_CONECTOR`, o conector não pesquisa interesses (lacuna L2): todo público com interesses, inclusive o da conta iniciante, passa por um passo manual no Gerenciador.
 
 **Bases por nível já montadas.** Antes de perguntar, conferir se existem arquivos `meus-produtos/_global/trafego/publicos/saved-targeting-{nivel}-{slug-do-produto}.md` (gerados pelo `/trafego-publicos` opção 4). Se existirem, ou se o aluno disser "usa a base Iniciantes" (ou Intermediários, Avançados), ler o arquivo do nível e usar a segmentação dele: idade, gênero, localização e interesses. Os interesses com ID entram direto no conjunto (modo `APP`); interesses só com nome seguem o passo manual da lacuna L2 no modo `MCP_CONECTOR`. Mostrar no preview YAML que o público veio da base salva.
 
-**6.1. Opção 1. Advantage+ puro (recomendado)**
+**6.1. Opção 1. Advantage+ puro (só conta que já vende, caso a caso)**
 
 Configurar `audience.modo: ADVANTAGE_PLUS` com `sugestoes: {}` e `excluidos: {}`. País fica em `["BR"]` por default (ou outro país se aluno declarou em fase anterior). Idade abre em 18 a 65+. Gênero `all`. Sem interesses.
 
@@ -290,7 +393,7 @@ Só perguntar ao aluno se o resumo não trouxer esses dados. Se nem o resumo nem
 
   Cada resposta traz `id`, `name`, `audience_size_lower_bound`, `audience_size_upper_bound`, `topic`. Seguir para 6.2.d.
 
-- **`MCP_CONECTOR`:** não há ferramenta de busca de interesse. Recomendar de novo a opção 1 (Advantage+ puro), padrão atual da Meta. Se o aluno quiser interesses mesmo assim, seguir o passo manual guiado:
+- **`MCP_CONECTOR`:** não há ferramenta de busca de interesse. Na conta iniciante e no teste de anúncio, seguir direto o passo manual guiado abaixo (a régua pede pelo menos 3 interesses), registrando `audience.modo: PERSONALIZADO` no lugar do modo do item 2. Na conta que já vende e liberada para Advantage+ (seção 1.3), a opção 1 dispensa o passo manual. Se o aluno quiser interesses, seguir o passo manual guiado:
   1. Mostrar a lista de termos de 6.2.b (português e inglês).
   2. Registrar no preview `audience.modo: ADVANTAGE_PLUS_COM_INTERESSES`, `interesses: pendente_manual` e os termos.
   3. Criar o conjunto aberto (Advantage+) pelo conector, junto com o resto da campanha, tudo PAUSED.
@@ -512,7 +615,9 @@ Formato padrão, nos dois modos. É o formato que publicou sem erro em teste rea
 Se o aluno insistir em imagem por posicionamento, tratar como teste: só no anúncio piloto (seção 4.1), com uma legenda, e só replicar se o piloto publicar sem erro.
 
 ### Fase 8. Posicionamentos
-Default: **Advantage+ Placements** (todos automáticos). Mostrar como recomendação.
+**Conta iniciante e teste de anúncio (seção 1.3): posicionamento manual.** Sugestão inicial: Feed, Stories e Reels do Instagram e do Facebook, sem Audience Network e sem Messenger (baixam o CPA médio, mas convertem pior). O aluno pode ajustar. Enviar `publisher_platforms` e as posições (`facebook_positions`, `instagram_positions`) explícitas, com os nomes que o schema do conector ou a versão da API listar.
+
+**Conta que já vende:** **Advantage+ Placements** (todos automáticos) só a partir do nível Hard, caso a caso, combinado com o analisador. Sem isso, o mesmo posicionamento manual acima.
 
 Override: se aluno declarar "só Feed" ou "só Reels e Stories", aceitar e configurar manualmente.
 
@@ -556,6 +661,8 @@ Esquema do YAML salvo:
 
 ```yaml
 preview_campanha:
+  momento_conta: iniciante                  # iniciante (menos de 50 compras em 28 dias) | ja_vende (seção 1.3)
+  vitrine_perfil: ok                        # ok | abaixo_do_minimo (com a contagem, ex.: "4 de 6"), Fase 0
   conta:
     ad_account_id: "act_1234567890"
     page_id: "..."
@@ -583,8 +690,8 @@ preview_campanha:
       attribution_spec: "7d_click"
       placements: ADVANTAGE_PLUS            # ou lista manual
       audience:
-        modo: ADVANTAGE_PLUS
-        advantage_audience: 1               # 1 para Advantage+, 0 para targeting manual (obrigatório; erro 1870227 se ausente)
+        modo: PERSONALIZADO                 # conta iniciante e teste de anúncio: sempre PERSONALIZADO, com idade e 3+ interesses (seção 1.3)
+        advantage_audience: 0               # 1 para Advantage+, 0 para targeting manual (obrigatório; erro 1870227 se ausente)
         sugestoes:
           paises: ["BR"]
           idade: [25, 55]
@@ -595,6 +702,10 @@ preview_campanha:
         targeting_relaxation:               # só com público personalizado ou semelhante (Fase 6.3.6); 0 = não expandir
           custom_audience: 0
           lookalike: 0
+      posicionamento:
+        modo: MANUAL                        # MANUAL (conta iniciante e teste de anúncio) | ADVANTAGE (só conta que já vende, caso a caso), Fase 8
+        plataformas: ["facebook", "instagram"]
+        posicoes: ["feed", "stories", "reels"]
       schedule:
         start_time: "2026-05-04T18:00:00-03:00"   # próxima hora cheia, default; data marcada vem da Fase 4.3
         end_time: null                            # preenchido quando há período (Fase 4.3); obrigatório com orçamento total
@@ -674,6 +785,7 @@ Após o `sim` do lote, criar em ordem, sem nova pergunta. **Rotear cada chamada 
      - targeting manual/personalizado ou público segmentado vindo do `/trafego-publicos` (interesses ou custom audiences) → `advantage_audience: 0`
    - Sob CBO, não enviar `daily_budget` nem `bid_strategy` no conjunto (herda da campanha). Se a campanha tiver teto de custo ou de lance, o `bid_amount` vai em cada conjunto, porque a campanha não tem esse campo. Sob ABO, enviar `daily_budget` (e `bid_strategy`/`bid_amount`, se houver) no conjunto. Com orçamento total (Fase 4.3), `lifetime_budget` no lugar do `daily_budget`, sempre com `end_time`.
    - Com público personalizado ou semelhante, enviar `targeting.targeting_relaxation_types` como combinado na Fase 6.3.6, mesmo quando for 0: a Meta liga a expansão sozinha se o campo não for.
+   - Posicionamento manual (Fase 8): enviar `targeting.publisher_platforms` e as posições de cada plataforma. Com Advantage+ Placements, não enviar esses campos.
 3. **Para cada anúncio** (pular os marcados `pendente: true`), sempre no formato da Fase 7.6:
    - **`APP`:** criar o criativo (`POST /act_<id>/adcreatives`) e depois o anúncio (`POST /act_<id>/ads`).
    - **`MCP_CONECTOR`:** montar o criativo dentro do próprio `ads_create_ad` quando o schema aceitar; senão, `ads_create_creative` (nunca com `placement_customizations`) e depois `ads_create_ad`.
@@ -759,6 +871,8 @@ proximos_passos:
   - "Após 48 a 72h de veiculação, use /trafego-analise para a primeira leitura narrada e /trafego-otimizar para os ajustes"
   - "Para puxar dados de performance: /trafego-insights"
   - "Com sazonalidade (Black, data comemorativa, evento): marcar a mesma sazonalidade no /trafego-otimizar e declarar a janela sazonal no /trafego-escalar"
+  - "Com vitrine abaixo do mínimo (Fase 0): produzir os posts que faltam para chegar a 6 assim que a campanha começar a rodar (dá para reaproveitar os anúncios como posts, trocando o CTA)"
+  - "Low ticket de conta iniciante (Fase 3): rodar o /trafego-otimizar a cada 3 dias"
 
 ativacao:
   status_atual: PAUSED                      # ou RASCUNHO, se o conector criou como rascunho (seção 4.2)
@@ -776,6 +890,7 @@ Para mostrar a prévia visual de um anúncio criado, quando o aluno pedir: MCP `
 5. **Mídias extras:** se aparecer "várias mídias", "mídias relacionadas" ou uma mídia que não é do anúncio, desligar.
 6. **Público:** expansão de públicos personalizados como combinado na Fase 6.3.6.
 7. **Datas e orçamento:** início, fim e valor como no preview.
+8. **Advantage+ desligado** (conta iniciante e teste de anúncio): público sem "Público Advantage+", posicionamentos manuais e criativo sem melhorias. Passo a passo na seção 1.3.
 
 Se algo estiver diferente do aprovado em vários anúncios, parar antes de criar o resto (seção 4.1) e corrigir o molde.
 
@@ -789,17 +904,18 @@ Aluno envia em uma mensagem só:
 
 Skill executa:
 
-1. **Inferir** o que conseguir (da mensagem e do resumo do produto): objetivo `OUTCOME_SALES`, ticket R$ 497, trilha `perpetuo_low`, ABO, Advantage+ Audience, criativo existente, etc.
+1. **Inferir** o que conseguir (da mensagem e do resumo do produto): objetivo `OUTCOME_SALES`, ticket R$ 497, trilha `perpetuo_low`, ABO, criativo existente, etc. Ler o momento da conta (seção 1.3): se o aluno pediu Advantage+ e a conta é iniciante, mostrar o aviso e montar o preview no manual.
 2. **Aplicar defaults**:
    - 1 campanha, 1 conjunto, 1 anúncio (estrutura mínima)
-   - Posicionamentos Advantage+
+   - Posicionamento e público pela régua da seção 1.3 (conta iniciante: manual, com idade e pelo menos 3 interesses)
    - `special_ad_categories: []`
    - Status PAUSED
    - Nomenclatura padrão
 3. **Validar tracking**: pixel e evento, em segundo plano.
-4. **Mostrar o preview completo** (resumo em texto, seção 3).
-5. **Pedir aprovação única** (bloco 🛡️ do lote).
-6. **Criar** após o `sim`.
+4. **Conferir a vitrine do perfil** (Fase 0): se a mensagem não disser, perguntar na mesma mensagem do preview.
+5. **Mostrar o preview completo** (resumo em texto, seção 3).
+6. **Pedir aprovação única** (bloco 🛡️ do lote).
+7. **Criar** após o `sim`.
 
 Diferença essencial vs modo guia: zero perguntas intermediárias, mas o preview ainda é obrigatório.
 

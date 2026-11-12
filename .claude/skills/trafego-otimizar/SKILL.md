@@ -866,6 +866,7 @@ Qualquer:
 
 ### 8.1 Low ticket (até R$ 500). Janelas 1d / 3d / 7d
 - Decisões mais rápidas. Dado matura por volume.
+- Conta iniciante (menos de 50 compras em 28 dias) na estrutura fixa do time (3 anúncios, cada um em campanha 1-1-1, Fase 3 do `/trafego-criar-campanha`): otimização a cada 3 dias. Nenhuma sugestão desta skill liga Advantage+ nessa conta (seção 1.3 do `.claude/skills/trafego-criar-campanha/SKILL.md`).
 - Watchlist após R$ 100 de gasto sem venda em um anúncio.
 - Refresh criativo a cada 10 a 14 dias.
 

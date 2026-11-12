@@ -640,7 +640,7 @@ Em **lançamento** (fase de captação inicial ou final) ou em **janela sazonal 
 
   **Lacunas do teste `nova_segmentacao` (só no MCP):**
   - **Lookalike novo:** não é lacuna. Criar pelo MCP com `ads_create_custom_audience` (subtipo LOOKALIKE) ou delegar a `/trafego-publicos`. Se a Meta recusar o subtipo na prática, a `/trafego-publicos` conduz o passo a passo guiado no Gerenciador e a duplicação segue com o ID do público criado.
-  - **Interesse por nome:** o MCP não busca interesse. Recomendar primeiro público aberto com Advantage+ (padrão atual da Meta). Se o aluno quiser um interesse específico, guiar a pesquisa no Gerenciador (no conjunto, segmentação detalhada, digitar o tema e anotar o nome exato do interesse) e pedir o nome ou ID para usar na duplicação. No APP, a busca vai por `GET /search?type=adinterest`.
+  - **Interesse por nome:** o MCP não busca interesse. Público aberto com Advantage+ só pela régua da §3.5 (50 compras ou mais em 28 dias e nível Hard ou acima, com o analisador); fora dela, seguir com interesses. Se o aluno quiser um interesse específico, guiar a pesquisa no Gerenciador (no conjunto, segmentação detalhada, digitar o tema e anotar o nome exato do interesse) e pedir o nome ou ID para usar na duplicação. No APP, a busca vai por `GET /search?type=adinterest`.
   - **Lookalike já existente ou público amplo:** sem lacuna (o público existente é referenciado por ID na duplicação).
 
 - **Risco:** canibalização entre conjuntos, aprendizado novo a partir do zero em cada duplicação.
@@ -657,6 +657,7 @@ Em **lançamento** (fase de captação inicial ou final) ou em **janela sazonal 
 - **Risco:** reset de aprendizado nos novos conjuntos. **Custo estimado declarado antes da execução.**
 
 ### 3.5 Campanha Advantage (escala por consolidação de criativos vencedores)
+- **Régua do Advantage+ (vale para esta seção, para o teste `advantage_placement` do Horizontal e para qualquer público Advantage+ na escala):** só com 50 compras ou mais nos últimos 28 dias e aluno no nível Hard ou acima, caso a caso, combinado com o analisador (seção 1.3 do `.claude/skills/trafego-criar-campanha/SKILL.md`). Fora disso, não oferecer: explicar a régua e seguir com vertical, horizontal manual ou consolidação CBO.
 - **Quando:** o aluno tem **5 ou mais anúncios vencedores** (pela definição única da Leitura 1 do Passo 0.75.1: 50 conversões em low e middle ticket ou 30 em high ticket na janela média da trilha, ou `validado` num teste da `/trafego-testes`) e quer consolidar a verba em uma estrutura enxuta e otimizada pelo algoritmo.
 - **Estrutura:** 1 campanha, 1 conjunto com público Advantage+, de 5 a 50 anúncios vencedores dentro do conjunto.
 - **Como:** identificar os melhores anúncios da conta (ou da seleção indicada pelo aluno), validar que todos pertencem ao mesmo produto/funil/público-alvo declarado na sessão e montar a campanha Advantage com eles (anúncios referenciando o `creative_id` de cada vencedor).
