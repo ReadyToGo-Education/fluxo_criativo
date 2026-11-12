@@ -661,10 +661,10 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/criar-gpt`. Criar agente GPT personalizado para infoprodutores
 
 **Low Ticket:**
-- `/lt-funil`. Criar produto de entrada low ticket (quiz, desafio, agente GPT)
+- `/lt-funil`. Criar produto de entrada low ticket (página, order bump, desafio, agente GPT; quiz só como exceção, no Inlead)
 - `/lt-criar-produto`. Criar o conteúdo real do produto digital
-- `/lt-quiz`. Gerar perguntas do quiz
-- `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 7 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página
+- `/lt-quiz`. Gerar perguntas do quiz (exceção: só quando o aluno pedir ou o analisador indicar; montagem no Inlead)
+- `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 4 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página
 - `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
 
 **Tráfego Pago (Meta Ads via MCP ou App):**
@@ -795,17 +795,7 @@ Exceção única: páginas HTML (mostrar o código seria confuso, então salvar 
 
 7. **Não faça perguntas repetidas.** Antes de perguntar, consulte o produto ativo em `meus-produtos/{ativo}/` e o histórico da conversa. Só pergunte o que ainda falta ou é ambíguo.
 
-8. **Framework Quiz vs. Página — obrigatório para Low Ticket.** Sempre que o produto ativo for Low Ticket e o próximo passo for criar o funil de vendas, aplique o framework antes de sugerir qualquer comando:
-
-| Critério | QUIZ | PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional / dor / identificação | Prático / ferramenta / direto ao ponto |
-| Nível de consciência | Não sabe que tem o problema | Já sabe o que quer |
-| Complexidade | Precisa diagnosticar / explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico / pragmático |
-
-Regra: 2 ou mais critérios para o mesmo lado — siga ele. Desempate: QUIZ. Apresente a recomendação com os critérios do produto antes de sugerir o comando.
+8. **Página é o padrão no Low Ticket.** Sempre que o produto ativo for Low Ticket e o próximo passo for criar o funil de vendas, o formato é a página de vendas pelo `/lt-pagina` (régua com 4 aberturas: Demonstração, Comparação, Plug & Play e Resultado Direto). Quiz é exceção: só quando o aluno pedir ou o analisador indicar, e é montado no Inlead. O funil low ticket já nasce com order bump (o que oferecer, preço e texto, na seção "Order Bump" da skill `criacao-produto-low-ticket`).
 
 9. **Edições cirúrgicas.** Quando o usuário pedir um ajuste pontual (uma headline, um parágrafo, um bloco, um botão), altere SOMENTE o que foi pedido. Não reescreva seções vizinhas, não melhore o que não foi solicitado e não adicione elementos que não existiam. Se notar outro problema durante o ajuste, mencione depois da entrega, separado, como sugestão opcional. Nunca corrija sem autorização.
 

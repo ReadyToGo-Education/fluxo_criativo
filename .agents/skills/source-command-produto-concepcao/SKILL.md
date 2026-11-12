@@ -889,25 +889,9 @@ Próximo passo: /copy-pagina para criar a página de vendas 8D do produto.
 
 **Se Low Ticket:**
 
-Aplique o framework de decisão Quiz vs. Página com base no produto:
-
-| Critério | QUIZ | PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional, dor, identificação | Prático, ferramenta, direto ao ponto |
-| Nível de consciência | Não sabe que tem o problema | Já sabe o que quer |
-| Complexidade | Precisa diagnosticar ou explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico ou pragmático |
-
-Regra: 2 ou mais critérios para o mesmo lado definem a recomendação. Em caso de empate: QUIZ.
-
-Apresente a análise aplicada ao produto específico com justificativa e recomende:
+Página é o padrão do low ticket. O quiz é exceção: só quando o aluno pedir ou o analisador indicar, e é montado no Inlead. O funil já nasce com order bump.
 
 ```
-Com base no seu produto, a recomendação é: [QUIZ / PÁGINA]
-
-[Justificativa com os critérios que definiram a escolha]
-
-Próximo passo: /lt-quiz   (se QUIZ)
-              /lt-pagina  (se PÁGINA)
+Próximo passo: /lt-criar-produto  (conteúdo do produto e order bump)
+              /lt-pagina         (página de vendas, régua com 4 aberturas)
 ```

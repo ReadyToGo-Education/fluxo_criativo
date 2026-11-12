@@ -51,7 +51,7 @@ Copy Light Copy não grita. Troque todo "!" por ".".
 ### 1.3 Pergunta no gancho proibida
 Leads e primeiras linhas nunca começam com pergunta. Reescreva como afirmação.
 
-**Exceção: páginas low ticket** (`/lt-pagina` e `/feedback-low-ticket`, régua `.claude/skills/pagina-low-ticket/SKILL.md`). Ali a pergunta na headline é permitida, porque abre a lacuna das 7 aberturas. Não reescreva.
+**Exceção: páginas low ticket** (`/lt-pagina` e `/feedback-low-ticket`, régua `.claude/skills/pagina-low-ticket/SKILL.md`). Ali a pergunta na headline é permitida, porque abre a lacuna das aberturas. Não reescreva.
 
 ### 1.4 Estrutura "Não é X. É Y." proibida
 Substitua por afirmação direta de Y.
