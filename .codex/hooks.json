@@ -15,6 +15,16 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/worktree-meus-produtos.js\"",
+            "commandWindows": "node .claude/hooks/worktree-meus-produtos.js",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/gsd-check-update.js\"",
             "commandWindows": "node .claude/hooks/gsd-check-update.js"
           }
