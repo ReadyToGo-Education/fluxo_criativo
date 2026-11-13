@@ -136,6 +136,8 @@ Antes de entregar, revise e substitua:
 
 O gancho deve ser uma **premissa não óbvia**. afirmação que surpreende quem já está no nicho.
 
+O começo do anúncio também leva o **filtro de copy**: ambiente, palavras, objetos, frases ou sons que só o público reconhece, para atrair quem está pronto para comprar e fazer o curioso passar reto. Regra e exemplos em `.claude/skills/revisora/references/filtro-de-copy.md`.
+
 **ERRADO:**
 - "Sabe aquela sensação de não conseguir avançar?" ❌ (pergunta)
 - "Você já se sentiu travado no seu negócio?" ❌ (pergunta)

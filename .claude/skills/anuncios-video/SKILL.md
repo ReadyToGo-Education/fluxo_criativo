@@ -83,6 +83,7 @@ Regras:
 - ❌ NUNCA usar premissa obvia ("aprender X e dificil")
 - Texto na tela reforçando o gancho
 - Movimento ou mudanca visual imediata
+- Filtro de copy: ambiente, objetos, palavras, frases ou sons que só o público reconhece, para quem não é do público passar reto (`.claude/skills/revisora/references/filtro-de-copy.md`)
 
 **Exemplos de gancho ERRADO:**
 - "Voce ja sentiu dificuldade de..." ❌ (pergunta)

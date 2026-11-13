@@ -20,6 +20,7 @@ O Manual contém os 15 princípios fundamentais, os 20 vícios proibidos e o che
 
 - [references/regras-vtsd.md](references/regras-vtsd.md). Substituições linha-a-linha para vícios 1 a 10.
 - [references/phrases.md](references/phrases.md) e [references/structures.md](references/structures.md). Padrões de AI slop.
+- [references/filtro-de-copy.md](references/filtro-de-copy.md). Filtro de copy no começo de anúncio, post e roteiro.
 
 ## Quando rodar
 
@@ -70,7 +71,7 @@ Toda promessa precisa de número, prazo ou cenário específico.
 ## 2. Checagem Light Copy
 
 - **Argumentativa, não declarativa.** Cada afirmação sustenta a próxima.
-- **Linguagem simples.** Sem jargão de marketing, sem palavras difíceis.
+- **Linguagem simples.** Sem jargão de marketing, sem palavras difíceis. Exceção: a palavra do dia a dia do próprio público, usada de propósito como filtro de copy (`references/filtro-de-copy.md`), fica como está.
 - **Conversacional.** Como se fosse um mentor falando com o aluno.
 - **Não óbvio.** Se a frase poderia estar em qualquer página de qualquer nicho, reescreva com especificidade.
 - **Foco no leitor.** Use "você" quando fizer sentido, não "as pessoas" nem "a galera".
@@ -115,6 +116,8 @@ Quando o texto for de uma página de vendas e não houver nenhuma indicação de
 
 Se o texto citar uma sigla, acrônimo ou nome de técnica sem explicar o que é na mesma página ou parágrafo, corrija inserindo uma explicação curta entre parênteses ou reescreva para não usar a sigla.
 
+Não corrija a palavra que o próprio público usa no dia a dia e que está ali como filtro de copy (`references/filtro-de-copy.md`): explicar essa palavra desfaz o filtro. A regra vale para a sigla ou a técnica do especialista, que o público ainda não conhece.
+
 ### 4.5 Depoimento sem resultado concreto (flag)
 
 Se houver depoimentos que apenas elogiam ("material lindo", "professor incrível", "mudou minha vida", "recomendo muito") sem mencionar resultado específico, número, prazo ou mudança tangível, sinalize: `[REVISORA: depoimento fraco. Exigido: antes + resultado específico com número + prazo + palavras-chave em negrito. Ver Manual Parte 2, princípio 14.]`
@@ -148,6 +151,10 @@ Cada bloco de argumento deveria ter: mecanismo (como se faz) + comparação ante
 ### 4.12 Razão sem emoção (ou emoção sem razão)
 
 Se a copy fala só da técnica sem gatilho emocional (ganância, reconhecimento, identificação) ou só da emoção sem argumento lógico, sinalize: `[REVISORA: falta razão+emoção. Ver Manual Parte 2, princípio 9.]`
+
+### 4.13 Anúncio, post ou roteiro sem filtro de copy (flag)
+
+Se o começo da peça (3 primeiros segundos, primeira imagem ou primeira linha) não tem nenhum sinal que só o público do produto reconhece, ou serve para qualquer pessoa de qualquer nicho, sinalize: `[REVISORA: sem filtro de copy no começo. Incluir ambiente, palavras, objetos, frases ou sons do público. Ver references/filtro-de-copy.md.]`
 
 ---
 
