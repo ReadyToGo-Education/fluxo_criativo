@@ -134,8 +134,9 @@ process.stdin.on('end', () => {
       'lt-pagina':                 { agent: 'estrategista-low-ticket', task: 'escrevendo copy low ticket' },
       'criacao-produto-low-ticket':{ agent: 'estrategista-low-ticket', task: 'criando conteudo do produto' },
       'app-saas':                  { agent: 'estrategista-low-ticket', task: 'planejando SaaS' },
-      'criar-gpt':                 { agent: 'estrategista-low-ticket', task: 'criando agente GPT' },
-      'agente-gpt':                { agent: 'estrategista-low-ticket', task: 'consultando agente GPT' },
+      'criar-agente':              { agent: 'estrategista-low-ticket', task: 'criando agente de IA' },
+      'criar-gpt':                 { agent: 'estrategista-low-ticket', task: 'criando agente de IA' },
+      'agente-ia':                 { agent: 'estrategista-low-ticket', task: 'consultando agente de IA' },
 
       // High Ticket
       'ht-anuncios':               { agent: 'estrategista-ht', task: 'criando anuncios HT' },

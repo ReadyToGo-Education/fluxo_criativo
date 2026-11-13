@@ -422,7 +422,7 @@ A Página Final é a página de vendas que aparece depois da Tela de Resultado. 
 - **Copy direta e curta.** Frases curtas, parágrafos de no máximo 2-3 linhas. Sem rodeios, sem repetição de argumento. O lead já passou pelo quiz inteiro, então a página final vai direto ao ponto.
 - **Quadro Comparativo: máximo 3 linhas.** Escolher os 3 contrastes mais impactantes entre a situação atual e o resultado. Menos é mais.
 - Produto obrigatoriamente entre R$37 e R$97
-- Formatos permitidos: e-book, guia, planilha, desafio, mini-curso, agente GPT
+- Formatos permitidos: e-book, guia, planilha, desafio, mini-curso, agente de IA
 - Depoimentos/provas sociais SEMPRE indicados como imagem. nunca transcritos como texto
 - Copy no estilo Light Copy. argumentativa, lógica, conversacional, sem ponto de exclamação
 - O link de checkout aparece em todos os 4 botões

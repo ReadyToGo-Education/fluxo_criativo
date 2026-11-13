@@ -1,6 +1,6 @@
 ---
 name: "source-command-lt-criar-produto"
-description: "Cria o conteúdo real do produto digital de entrada. e-book, checklist, mini-curso, desafio, agente GPT ou planilha. Gera o arquivo pronto para entregar ao comprador."
+description: "Cria o conteúdo real do produto digital de entrada. e-book, checklist, mini-curso, desafio, agente de IA (Hotmart ou plugin do ChatGPT) ou planilha. Gera o arquivo pronto para entregar ao comprador."
 ---
 
 # source-command-lt-criar-produto
@@ -54,7 +54,7 @@ Qual é o formato do produto que vou criar?
 2. Checklist / Roteiro de autoaplicação
 3. Mini-curso (3 a 5 aulas curtas em vídeo)
 4. Desafio (5 a 7 dias com tarefas diárias)
-5. Agente GPT (assistente de IA personalizado)
+5. Agente de IA (na Hotmart ou em plugin do ChatGPT)
 6. Planilha (ferramenta de cálculo ou organização)
 
 Digite o número:

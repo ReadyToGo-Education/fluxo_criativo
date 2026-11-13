@@ -1150,7 +1150,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
         <li>Lovable Starter: US$ 5/mês (cerca de R$ 28, obrigatório para rodar quiz e SaaS do funil low ticket)</li>
         <li>Node.js, Claude in Chrome, Conector Vercel, Vercel, Whisk, Canva: gratuito</li>
         <li>HeyGen, Freepik (Magnific), Apify: começam nos planos gratuitos</li>
-        <li>OpenRouter (API): <b>variável</b>, pague conforme usa. US$ 10 de crédito costumam durar 2 a 3 meses para quem roda /dados-instagram, /criar-gpt e automações esporádicas</li>
+        <li>OpenRouter (API): <b>variável</b>, pague conforme usa. US$ 10 de crédito costumam durar 2 a 3 meses para quem roda /dados-instagram e automações esporádicas</li>
         <li><b>Total fixo: cerca de R$ 578/mês + variável da API</b></li>
       </ul>
       <p style="font-size:14px;color:var(--ink-3);margin-top:10px">Os dois pagos fixos são Claude Max e Lovable Starter. O OpenRouter é crédito pré-pago que você só coloca quando for usar comandos que consomem API externa (geralmente centavos por chamada). Tudo o mais que a trilha lista tem plano gratuito suficiente para você rodar a imersão inteira e entregar seu primeiro funil.</p>

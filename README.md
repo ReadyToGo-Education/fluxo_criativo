@@ -63,7 +63,7 @@ Para configurar qualquer integração, use o comando correspondente no chat (`/c
 - **VTSD (Venda Todo Santo Dia).** Quadro (transformação), Furadeira (método estruturado em macroetapas e microetapas), Decorados (50 benefícios em 5 categorias), 3 Identidades (Comunicador, Consumidor, Produto), Urgências Ocultas (7 categorias x 10 itens = 70 itens por produto), Mandala da Criatividade (18 tipos de anúncio x 4 objetivos x 3 momentos), Estrutura 8D (11 seções de página de vendas), VVV (vídeo de vendas), 26 Elementos Literários.
 - **Light Copy.** Argumentativa, lógica, conversacional, não óbvia. Proibições duras codificadas em `.claude/rules/copy/checklist-light-copy.md` (12 itens): travessão, ponto de exclamação, pergunta no gancho, "Não é X. É Y.", "mesmo que", "sem precisar", nome do produto no lead, lero-lero, copy sem tese, sigla sem explicação, depoimento sem resultado, venda só do Quadro sem Decorado.
 - **C10X (High Ticket).** Retiros online, webinar, pitch de palco, call SPIN, WhatsApp, proposta comercial, follow-up pós-evento. Disponível via skills globais do plugin C10X (`ht-big-idea`, `ht-oferta`, `ht-pitch-palco`, etc.) e via agente `estrategista-ht`.
-- **Low Ticket.** Produto de entrada (R$37-97) com quiz ou página direta, desafio, agente GPT, copy para Hotmart/Kiwify, otimização de Ads via planilha colada do Gerenciador.
+- **Low Ticket.** Produto de entrada (R$37-97) com quiz ou página direta, desafio, agente de IA, copy para Hotmart/Kiwify, otimização de Ads via planilha colada do Gerenciador.
 
 ## Regras absolutas de estilo
 
@@ -218,7 +218,7 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/programar-carrossel-noticia`. Programa tarefa recorrente no `/schedule` do Claude para gerar carrossel de notícia automaticamente.
 
 ### Low Ticket
-- `/lt-funil`. Cria produto de entrada low ticket (quiz, desafio, agente GPT).
+- `/lt-funil`. Cria produto de entrada low ticket (quiz, desafio, agente de IA).
 - `/lt-criar-produto`. Cria o conteúdo real do produto digital.
 - `/lt-quiz`. Gera perguntas do quiz.
 - `/lt-pagina`. Cria a página de vendas low ticket pela régua v16 do time de criativos: promessa central, 7 aberturas com tabela de prioridade de testes, copy completa e um prompt único para o Lovable montar a página.
@@ -266,7 +266,7 @@ Fluxo proprietário para conduzir projetos grandes (lançamento, funil completo,
 - `/enviar-relatorio-ads`. Dispara o relatório agora.
 - `/dados-instagram`. Análise pontual de perfil do Instagram (insights de copy + dashboard HTML com filtros).
 - `/app-saas`. Gera PRD + prompt técnico de mini-SaaS relevante para os alunos do infoprodutor, pronto para colar no Lovable.dev.
-- `/criar-gpt`. Gera agente GPT personalizado para infoprodutores com 10 ideias, metodologia e prompt final.
+- `/criar-agente`. Cria o agente de IA do produto com 10 ideias que entregam algo pronto: Agente de IA da Hotmart ou plugin do ChatGPT em .zip, com as 8 mensagens de teste. Substitui o `/criar-gpt` (os GPTs saem do ar em 11/12/2026).
 - `/adaptar-plataforma`. Converte scripts e instruções Windows/PowerShell para Mac ou Linux (Task Scheduler → cron/launchd).
 
 ### Dashboards de redes sociais
@@ -327,7 +327,7 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 - `carrossel/`, `carrossel-visual/`. Carrosséis de Instagram (texto + foto IA por card).
 - `copy-variacao-post/`. Variações de conteúdo validado pelo algoritmo.
 - `conteudo/`. Frameworks de copy, gatilhos, exemplos de VSL.
-- `criacao-produto-low-ticket/`. Conteúdo real do produto LT (e-book, checklist, mini-curso, desafio, agente GPT, planilha).
+- `criacao-produto-low-ticket/`. Conteúdo real do produto LT (e-book, checklist, mini-curso, desafio, agente de IA, planilha).
 
 **Anúncios e criativos**
 - `anuncios/`, `anuncios-texto/`, `anuncios-video/`. Mandala da Criatividade, formatos Meta Ads e Google Ads, especificações técnicas.
@@ -370,7 +370,7 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 
 **Painel e suporte**
 - `painel-revisar/`. Audita estado e completude do painel.
-- `agente-gpt/`. Base para criar agentes GPT personalizados.
+- `agente-ia/`. Base do `/criar-agente`: agente na Hotmart ou plugin do ChatGPT, com o script que monta o .zip.
 - `app-saas/`. Ideação e PRD de mini-SaaS para alunos do infoprodutor.
 - `ferramentas/`. Integrações externas.
 - `adaptar-plataforma/`. Adaptação cross-platform (Windows/Mac/Linux).
@@ -469,7 +469,7 @@ Configuradas via `.env` (veja `.env.example`). Token sempre lido do `.env`, nunc
 ### Low Ticket
 1. `/produto-concepcao`
 2. `/lt-funil` (após framework Quiz vs. Página descrito no `CLAUDE.md`)
-3. `/lt-criar-produto` (e-book, checklist, agente GPT, etc.)
+3. `/lt-criar-produto` (e-book, checklist, agente de IA, etc.)
 4. `/lt-pagina` ou `/lt-quiz`
 5. `/copy-anuncio` (formatos low ticket)
 6. `/lt-otimizar` (com planilha do Gerenciador)
