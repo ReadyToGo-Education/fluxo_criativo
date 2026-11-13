@@ -518,7 +518,7 @@ Próximos passos:
 - Ao gerar o PRD, sempre entregar: paleta completa em hex (nunca "a definir"), fonte escolhida da lista aprovada, referência visual real (app ou site existente). Nunca deixar campo de design em aberto.
 - Executar a verificação anti-serifa (checklist inline no template) antes de passar para a Etapa 5. Se encontrar qualquer nome proibido, substituir antes de continuar.
 - Identidade visual sempre inferida do `resumo-produto.md` (nicho, público, tom). Se o resumo não tiver paleta definida, propor paleta adequada ao nicho.
-- Se o problema puder ser resolvido com uma planilha ou com `/criar-gpt`, dizer ao aluno antes de gerar o PRD completo.
+- Se o problema puder ser resolvido com uma planilha ou com `/criar-agente`, dizer ao aluno antes de gerar o PRD completo.
 - Não usar travessão em nenhum texto exibido.
 - Não usar ponto de exclamação.
 - Acentuação em português do Brasil correta em todo o texto.

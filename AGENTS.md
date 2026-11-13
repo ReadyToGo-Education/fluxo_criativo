@@ -666,7 +666,7 @@ Quando o usuário pedir "o que posso fazer", "quais comandos existem" ou quando 
 - `/gerar-furadeira`: gerar a Furadeira do produto no `perfil.md`.
 - `/furadeira-visual`: gerar imagem ou briefing visual da Furadeira.
 - `/avat-whisk`: criar briefings visuais para Whisk.
-- `/criar-gpt`: criar agente GPT personalizado para infoprodutores.
+- `/criar-agente`: criar o agente de IA do produto, na Hotmart ou como plugin do ChatGPT (substitui o `/criar-gpt`; os GPTs saem do ar em 11/12/2026).
 
 ### Low Ticket
 

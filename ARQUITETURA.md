@@ -68,7 +68,7 @@ workshop_inteligente/
 │       ├── instagram-dashboard/, tiktok-dashboard/, youtube-dashboard/ ← Dashboards
 │       ├── dados-instagram/, dados-nicho/ ← Analise pontual de perfis e nicho
 │       ├── furadeira-visual/, canvas-design/, ui-reverse-engineer/ ← Visuais
-│       └── tutorial-ferramentas/, ferramentas/, agente-gpt/, app-saas/, etc.
+│       └── tutorial-ferramentas/, ferramentas/, agente-ia/, app-saas/, etc.
 │
 ├── scripts/                               ← UTILITARIOS PYTHON/POWERSHELL
 │   ├── README-creative.md                 ← Processo de criacao de criativos
