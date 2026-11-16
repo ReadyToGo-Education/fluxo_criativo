@@ -31,6 +31,10 @@
 | Gerar Identidade do Comunicador | cerca de 45 segundos | segundos |
 | Gerar 50 ideias de produto | cerca de 60 segundos | segundos |
 | Gerar o resumo do produto (resumo-produto.md) | cerca de 60 segundos | segundos |
+| Criar o agente de IA do produto (/criar-agente, do começo à entrega) | 3 a 5 minutos | minutos |
+| Gerar 10 ideias de agente de IA | cerca de 45 segundos | segundos |
+| Escrever as instruções do agente de IA | cerca de 90 segundos | segundos |
+| Montar o plugin do ChatGPT em .zip | cerca de 15 segundos | segundos |
 
 ---
 

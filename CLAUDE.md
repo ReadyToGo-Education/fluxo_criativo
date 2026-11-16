@@ -658,10 +658,10 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 - `/gerar-furadeira`. Gerar a Furadeira (método do produto) no `perfil.md` aplicando uma das 6 mecânicas (Fases, Condicional, Enquadramento, Listas, Empecilhos, Dinâmica de Entrega) escolhida automaticamente conforme o nicho
 - `/furadeira-visual`. Gerar a imagem PNG da Furadeira via prompt para ChatGPT (a skill decide o layout sozinha conforme mecânica + nicho)
 - `/avat-whisk`. Briefings visuais prontos para o Whisk (Google Labs)
-- `/criar-gpt`. Criar agente GPT personalizado para infoprodutores
+- `/criar-agente`. Criar o agente de IA do produto para entregar aos alunos: Agente de IA da Hotmart (ficha e instruções para colar) ou plugin do ChatGPT em .zip, para quem vende em outra plataforma. Substitui o `/criar-gpt`, porque os GPTs do ChatGPT saem do ar em 11/12/2026
 
 **Low Ticket:**
-- `/lt-funil`. Criar produto de entrada low ticket (página, order bump, desafio, agente GPT; quiz só como exceção, no Inlead)
+- `/lt-funil`. Criar produto de entrada low ticket (página, order bump, desafio, agente de IA; quiz só como exceção, no Inlead)
 - `/lt-criar-produto`. Criar o conteúdo real do produto digital
 - `/lt-quiz`. Gerar perguntas do quiz (exceção: só quando o aluno pedir ou o analisador indicar; montagem no Inlead)
 - `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 4 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página

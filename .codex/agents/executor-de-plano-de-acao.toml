@@ -93,7 +93,7 @@ Use esta tabela de mapeamento como referência:
 | Planejar High Ticket (qualquer fase C10X) | agente `estrategista-ht` ou skills `ht-*` específicas |
 | Criar ou editar perfil do produto | comando `/produto-concepcao` (gera Quadro, Furadeira, Decorados, Urgências, 3 Identidades e Identidade do Consumidor no fluxo unificado) ou `/produto-novo` para começar do zero |
 | Aplicar elementos literários em copy | skill `elementos-literarios` |
-| Criar GPT personalizado | skill `criar-gpt` |
+| Criar agente de IA do produto (Hotmart ou plugin do ChatGPT) | command `/criar-agente` |
 
 Se uma tarefa for ambígua ou não encaixar em nenhuma skill, marque para perguntar ao usuário no final do mapeamento.
 

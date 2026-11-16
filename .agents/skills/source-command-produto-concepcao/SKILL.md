@@ -244,13 +244,13 @@ Assim que o Quadro estiver aprovado, verifique se `meus-produtos/{ativo}/pesquis
 
 **Bloco 2/6. Furadeira (Mecanismo Único):**
 
-**Detecção de tipo de produto:** Verifique em `meus-produtos/{ativo}/tipo.md` se o produto é Low Ticket (R$37-97) ou se o formato é planilha, checklist, e-book, agente GPT, template ou desafio. Se for produto de entrada, siga a regra abaixo. Se for Middle Ticket, siga o fluxo padrão.
+**Detecção de tipo de produto:** Verifique em `meus-produtos/{ativo}/tipo.md` se o produto é Low Ticket (R$37-97) ou se o formato é planilha, checklist, e-book, agente de IA, template ou desafio. Se for produto de entrada, siga a regra abaixo. Se for Middle Ticket, siga o fluxo padrão.
 
 **Se for produto Low Ticket:** A Furadeira É o próprio produto/ferramenta. Não pergunte sobre macroetapas. Pergunte:
 
 ```
 Qual ferramenta o comprador vai receber? O que ela faz? Como ele usa no dia a dia?
-(ex: "Planilha com fórmulas prontas para calcular precificação de doces. O comprador preenche os custos e vê o preço sugerido automaticamente", "30 vídeos curtos de 10 minutos com exercício de sombra. O comprador assiste 1 por dia durante 30 dias", "Agente GPT que responde dúvidas sobre legislação trabalhista. O comprador cola a pergunta e recebe a resposta em segundos")
+(ex: "Planilha com fórmulas prontas para calcular precificação de doces. O comprador preenche os custos e vê o preço sugerido automaticamente", "30 vídeos curtos de 10 minutos com exercício de sombra. O comprador assiste 1 por dia durante 30 dias", "Agente de IA que calcula a rescisão trabalhista. O comprador informa salário, datas e motivo da saída e recebe o cálculo pronto, verba por verba")
 ```
 
 Com a resposta, derive automaticamente **3 macroetapas** que representem a jornada de uso da ferramenta, no formato:

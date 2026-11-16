@@ -56,7 +56,7 @@ Qual tipo de produto low ticket?
 4. Checklist
 5. Mini-curso (até 2h)
 6. Desafio (3-7 dias)
-7. Agente GPT
+7. Agente de IA (Hotmart ou plugin do ChatGPT)
 8. Template
 
 NÃO recomendado para low ticket: mentorias, cursos extensos, comunidades.
@@ -186,7 +186,7 @@ Elementos da descrição na plataforma:
 - Diferenciais
 - Garantia
 
-**Agente GPT como Produto (se escolhido):**
+**Agente de IA como Produto (se escolhido):**
 Tipos de agentes vendáveis:
 - Gerador de conteúdo
 - Assistente de planejamento
@@ -194,8 +194,8 @@ Tipos de agentes vendáveis:
 - Organizador de tarefas
 - Tutor especializado
 
-Estrutura do produto:
-- Link do agente
+Estrutura do produto (o agente é criado pelo `/criar-agente`; os GPTs do ChatGPT saem do ar em 11/12/2026):
+- O agente: Agente de IA da Hotmart ou plugin do ChatGPT em .zip, conforme a plataforma onde vende
 - Manual de uso
 - Prompts prontos
 - Suporte básico
@@ -209,7 +209,7 @@ Estrutura do produto:
 | Order bump | `meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-[produto].md` |
 | Produto desafio | `meus-produtos/{ativo}/entregas/textos-de-venda/desafio-[produto].md` |
 | Copy Hotmart/Kiwify | `meus-produtos/{ativo}/entregas/textos-de-venda/copy-plataforma-[produto].md` |
-| Agente GPT (estrutura) | `meus-produtos/{ativo}/entregas/textos-de-venda/agente-gpt-[produto].md` |
+| Agente de IA (estrutura) | `meus-produtos/{ativo}/entregas/textos-de-venda/agente-[produto].md` |
 
 ### 5. Próximo Passo
 "Produto low ticket criado. Use `/copy-anuncio` para criar mais variações de anúncios, ou `/estrategia-funil` para mapear o funil completo com upsell."

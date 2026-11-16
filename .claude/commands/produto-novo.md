@@ -101,7 +101,7 @@ Qual o nome deste produto?
 ```
 Que tipo de produto é este?
 
-1. Low Ticket (R$ 37 a R$ 97. quiz, desafio, mini-curso, agente GPT)
+1. Low Ticket (R$ 37 a R$ 97. quiz, desafio, mini-curso, agente de IA)
 2. Middle Ticket (R$ 97 a R$ 997. curso online, workshop, grupo)
 
 Digite o número:
@@ -259,13 +259,13 @@ Com base na pesquisa de mercado e no conceito de **urgências ocultas**, gere **
 8. Comunidade paga (assinatura)
 9. Workshop (evento curto e intensivo)
 10. Serviço (feito para o cliente)
-11. Agente GPT (assistente personalizado treinado para resolver uma dor específica do nicho)
+11. Agente de IA (assistente treinado no método para resolver uma dor específica do nicho, entregue na Hotmart ou como plugin do ChatGPT)
 12. Mini-SaaS ou ferramenta web (microaplicativo simples, página única, que entrega um resultado em segundos)
 13. Planilha pronta (Excel ou Google Sheets com cálculo, automação ou diagnóstico)
 14. Checklist (PDF ou Notion com lista validada passo a passo, baixo ticket, alta percepção de valor)
 15. Desafio (jornada cronometrada de 3, 7, 21 ou 30 dias com entrega diária)
 
-Distribua as 50 ideias entre as 15 categorias garantindo **pelo menos 3 em cada**. Em particular, as 5 categorias finais (Agente GPT, Mini-SaaS, Planilha, Checklist, Desafio) **NUNCA podem ficar de fora**, mesmo que o nicho pareça pouco tecnológico. Sempre encaixe pelo menos 3 ideias em cada uma, traduzindo a metodologia do mestre/criador para o formato. As 5 ideias restantes (50 - 15×3 = 5) vão para as categorias com maior aderência ao nicho pesquisado.
+Distribua as 50 ideias entre as 15 categorias garantindo **pelo menos 3 em cada**. Em particular, as 5 categorias finais (Agente de IA, Mini-SaaS, Planilha, Checklist, Desafio) **NUNCA podem ficar de fora**, mesmo que o nicho pareça pouco tecnológico. Sempre encaixe pelo menos 3 ideias em cada uma, traduzindo a metodologia do mestre/criador para o formato. As 5 ideias restantes (50 - 15×3 = 5) vão para as categorias com maior aderência ao nicho pesquisado.
 
 **Organização do output:**
 Apresente a lista **agrupada por formato**, com um subtítulo para cada categoria e as ideias daquela categoria numeradas logo abaixo. Dentro de cada grupo, use tabela:
