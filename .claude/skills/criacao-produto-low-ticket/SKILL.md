@@ -2,7 +2,8 @@
 name: criacao-produto-low-ticket
 description: >
   Base de conhecimento para criação do conteúdo real de produtos digitais de entrada (low ticket).
-  Cobre 6 formatos: e-book, checklist, mini-curso, desafio, agente GPT e planilha.
+  Cobre 6 formatos: e-book, checklist, mini-curso, desafio, agente de IA e planilha, mais o order bump
+  (o que oferecer, preço e texto), que entra desde o começo do funil low ticket.
   Acionada automaticamente pelo agente estrategista-low-ticket na Etapa 2.
 ---
 
@@ -208,9 +209,23 @@ Gere HTML como "caderno do desafio" com:
 
 ---
 
-## Formato 5. Agente GPT (assistente de IA personalizado)
+## Formato 5. Agente de IA (assistente de IA do produto)
 
-**Objetivo:** assistente de IA configurado para ajudar o comprador com o tema do produto, disponível 24h.
+**Objetivo:** assistente de IA configurado para ajudar o comprador com o tema do produto, disponível 24h, que termina sempre em algo pronto na mão do comprador.
+
+**Onde o agente fica.** Os GPTs personalizados do ChatGPT saem do ar em 11/12/2026 e não são mais uma opção. O agente é entregue por um de dois caminhos, conforme a plataforma onde o aluno vende (detalhes em `.claude/skills/agente-ia/SKILL.md`):
+- **Hotmart:** produto do tipo Agentes de IA da Hotmart, vendido pelo preço do low ticket. As instruções têm até 10.000 caracteres.
+- **Outra plataforma (Kiwify, Eduzz, Greenn):** plugin do ChatGPT em .zip, entregue numa aula da área de membros, que o comprador instala no ChatGPT dele (até na conta gratuita).
+
+Pergunte onde o aluno vende antes do Passo 1, se ainda não souber:
+```
+Onde você vai vender este produto?
+
+1. Hotmart
+2. Outra plataforma (Kiwify, Eduzz, Greenn, a sua)
+
+Digite o número:
+```
 
 ### Antes de começar — Leitura obrigatória
 
@@ -310,15 +325,16 @@ Mostre o prompt completo e pergunte:
 2. Quero ajustar algo
 ```
 
-**Passo 3. Instruções de configuração**
+**Passo 3. Entregar pelo caminho certo**
 
-Inclua no arquivo salvo um bloco de instruções com:
-- Como configurar no ChatGPT (GPTs customizados): passo a passo numerado
-- Como configurar no Claude (Projects): passo a passo numerado
-- Sugestão de ícone com prompt de geração pronto
-- 4 iniciadores de conversa sugeridos (use frases do resumo-produto.md como base)
+O prompt aprovado vira as instruções do agente. Feche a marcação do tipo e siga a skill `agente-ia`:
+- Hotmart: Passo 5A (ficha, instruções com no máximo 10.000 caracteres contados pelo script, cadastro na Hotmart com o preço do produto).
+- Outra plataforma: Passo 5B (plugin montado em .zip pelo script, instalação pelo Plugin Creator e texto da aula da área de membros).
+- Nos dois: Passo 6 (as 8 mensagens de teste) e uma sugestão de imagem para o agente com o prompt de geração pronto.
 
-**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/agente-gpt-[slug-produto].md`
+No plugin, se o prompt passar de um momento só (ex: montar o plano e revisar a semana), divida em até três habilidades, como manda o Passo 3 da skill `agente-ia`.
+
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/agente-{slug-produto}/` (o `.md` com ficha, instruções e testes e, no plugin, o `.zip`)
 
 ---
 
@@ -369,3 +385,34 @@ No final do arquivo HTML, inclua um bloco colapsável "Como recriar no Google Sh
 - Dica de formatação (cores, negrito, largura de coluna)
 
 **Onde salvar:** `meus-produtos/{ativo}/entregas/produto/planilha-[slug-produto].html`
+
+---
+
+## Order Bump (entra desde o começo do funil low ticket)
+
+Todo funil low ticket já nasce com order bump: a oferta de 1 clique que aparece no checkout do produto principal. Para quem está começando (Newbie e Soft), ele faz parte do primeiro plano de ação, junto do produto e da página. Entregar três coisas: o que oferecer, o preço e o texto do bump.
+
+### 1. O que oferecer
+- **Complemento lógico do produto principal:** acelera, facilita ou aprofunda o mesmo resultado, para a mesma pessoa, no mesmo momento da compra. Nunca outro assunto.
+- **Rápido de usar no mesmo dia:** checklist, planilha, template, pack de prompts, modelos prontos ou uma aula curta.
+- **Ponto de partida:** os Decorados e as Urgências Ocultas do `resumo-produto.md` que o produto principal não cobre inteiro.
+- Apresentar **3 opções**, cada uma com nome, o que entrega e por que combina com o produto principal. O aluno escolhe uma.
+- O bump escolhido pode ser criado com os formatos desta skill (checklist, planilha, agente de IA, e-book curto), seguindo as mesmas Regras Gerais.
+
+### 2. Preço
+- Preço de impulso, sempre abaixo do preço do produto principal.
+- Referência do Severino: de R$ 17 a R$ 47 (a mesma do `/estrategia-funil`), sem passar do preço do principal.
+- Taxa de aceite saudável: de 15% a 25% de quem compra o principal (referência na seção 4.5 de `.claude/skills/trafego-oferta-funil/SKILL.md`), útil para acompanhar depois.
+
+### 3. Texto do bump
+- Título curto com o resultado do bump.
+- 1 ou 2 frases ligando ao produto principal: por que levar junto agora.
+- Preço visível e, só se for real, o valor cheio para comparação.
+- Passa pela rotina de auto-revisão de copy do CLAUDE.md (Manual da Copy e `revisora`) antes de aparecer para o aluno.
+
+### 4. Onde configurar
+- O bump é configurado na plataforma do checkout (Hotmart ou Kiwify), na área de order bump do produto principal, e precisa estar cadastrado como produto na plataforma.
+- Na página low ticket montada no Lovable, o bump fica só no checkout da plataforma. Em página HTML feita no projeto, o `/pagina-checkout` também instala a caixinha do bump na página.
+
+### 5. Salvar
+`meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-{produto}.md`, com as 3 opções, a escolhida, o preço e o texto. Mostrar e pedir aprovação antes de salvar.

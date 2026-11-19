@@ -1,6 +1,6 @@
 ---
 name: workshop-marketing:trafego-dashboard-analisador
-description: Só para mandar o dashboard de tráfego ao analisador da Mentoria Fluxo. Tira uma fotografia fixa dos números que o dashboard do aluno mostrou na última atualização, publica como uma página que o analisador consegue abrir e devolve o link para colar no card "Planilha ou Dash para acompanhar os dados de tráfego" do Fluxer. Use somente quando o aluno digitar /trafego-dashboard-analisador ou pedir para mandar, entregar ou compartilhar o dashboard com o analisador ou no Fluxer. Para ver, criar, ajustar ou atualizar o próprio dashboard, o caminho é o /trafego-dashboard.
+description: Só para mandar o dashboard de tráfego ao analisador da Mentoria Fluxo. Tira uma fotografia fixa dos números que o dashboard do aluno mostrou na última atualização, publica como uma página que o analisador consegue abrir e devolve o link para colar no card "Criar o dashboard de tráfego pelo Severino" do Fluxer. Use somente quando o aluno digitar /trafego-dashboard-analisador ou pedir para mandar, entregar ou compartilhar o dashboard com o analisador ou no Fluxer. Para ver, criar, ajustar ou atualizar o próprio dashboard, o caminho é o /trafego-dashboard.
 ---
 
 # Tráfego Dashboard para o Analisador. Fotografia para o Fluxer
@@ -98,8 +98,8 @@ consegue abrir.
 1. Abra o link.
 2. Clique em Compartilhar, no alto da página.
 3. Em "Acesso geral", troque "Apenas você" por "Qualquer pessoa com o link".
-4. Cole o link no Fluxer, no card "Planilha ou Dash para acompanhar os
-   dados de tráfego".
+4. Cole o link no Fluxer, no card "Criar o dashboard de tráfego pelo
+   Severino".
 
 Quem tiver o link vê os números da fotografia: investimento, faturamento e
 campanhas. As vendas não levam nome nem e-mail de quem comprou.

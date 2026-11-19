@@ -138,8 +138,8 @@ CPA = sum(spend) / sum(actions onde action_type = "offsite_conversion.fb_pixel_p
 | CTR (link) | `link_click` / `impressions` | nunca zero |
 | Connect Rate | `landing_page_view` / `link_click` (ambos do array `actions`) | marcar `-` se LP views ausente |
 | Lead Rate | `leads` / `landing_page_views` | só para funil OUTCOME_LEADS |
-| Checkout Rate | `initiate_checkout` / `landing_page_views` | só para funil OUTCOME_SALES |
-| Conversion Rate | `purchases` / `initiate_checkout` | só para funil OUTCOME_SALES |
+| Início de checkout (Checkout Rate) | `initiate_checkout` / `landing_page_views` | só para funil OUTCOME_SALES. Mede a decisão tomada na página, não o checkout |
+| Conclusão de checkout (Conversion Rate) | `purchases` / `initiate_checkout` | só para funil OUTCOME_SALES |
 
 `initiate_checkout` = `offsite_conversion.fb_pixel_initiate_checkout` (tipo canônico).
 
@@ -263,10 +263,10 @@ LP VIEWS           {N:,}
   ↓ Connect Rate {X%} {🟢|🟡|🔴} · Quadro na Parede: anúncio alinhado com a página?
 
 CHECKOUT INICIADO  {N:,}
-  ↓ Checkout Rate {X%} {🟢|🟡|🔴} · Oferta: preço, garantia e stack de valor OK?
+  ↓ Início de checkout {X%} {🟢|🟡|🔴} · Oferta e página: preço, garantia e stack de valor OK?
 
 COMPRAS            {N:,}
-  ↓ Conv. Rate {X%} {🟢|🟡|🔴}   · Furadeira + Decorados: checkout convence?
+  ↓ Conclusão de checkout {X%} {🟢|🟡|🔴} · Furadeira + Decorados: checkout convence?
 
 ────────────────────────────────
 ROAS final: {X.X}x  ·  CPA: R$ {Y}  ·  Spend: R$ {Z}
@@ -301,13 +301,15 @@ CPL: R$ {X}  ·  Total leads: {N}  ·  Spend: R$ {Y}
 | Hook Rate (vídeo) | < 15% | 15% a 25% | > 25% |
 | CTR (link) | < 1% | 1% a 2% | > 2% |
 | Connect Rate | < 60% | 60% a 79% | 80% ou mais |
-| Checkout Rate | < 5% | 5% a 12% | > 12% |
-| Conversion Rate (checkout → compra) | abaixo da metade do piso da faixa do ticket | abaixo do piso da faixa | dentro ou acima da faixa |
+| Início de checkout | < 5% | 5% a 12% | > 12% |
+| Conclusão de checkout (checkout → compra) | abaixo da metade do piso da faixa do ticket | abaixo do piso da faixa | dentro ou acima da faixa |
 | Lead Rate | < 5% | 5% a 15% | > 15% |
 
 **Connect Rate abaixo de 70%:** a primeira hipótese é técnica (página lenta, link errado, redirecionamento). Conferir com `/pagina-performance` e a congruência anúncio x página com `/trafego-oferta-funil` antes de mexer no anúncio.
 
-**Conversion Rate (checkout → compra) não tem corte fixo:** a faixa sai do ticket do resumo do produto, na tabela da §3.5 de `trafego-oferta-funil/SKILL.md` (coluna "Conclusão de checkout"; ex.: até R$ 297, de 25% a 45%; acima de R$ 2.500, de 5% a 15%). Exibir junto a ressalva da §3.5: o checkout iniciado da Hotmart e da Kiwify dispara mais solto, então o número é aproximação, nunca prova de checkout quebrado.
+**Início de checkout baixo não é problema de checkout:** quem não iniciou o checkout nem chegou a vê-lo. Com CTR e connect rate saudáveis, a leitura é oferta ou página; depois vêm congruência e público; botão quebrado e medição só com teste. Régua completa na §3.6 de `trafego-oferta-funil/SKILL.md`. Nunca narrar "o checkout está ruim" a partir desta etapa: o checkout só entra quando o início está saudável e a conclusão está baixa.
+
+**Conclusão de checkout não tem corte fixo:** a faixa sai do ticket do resumo do produto, na tabela da §3.5 de `trafego-oferta-funil/SKILL.md` (coluna "Conclusão de checkout"; ex.: até R$ 297, de 25% a 45%; acima de R$ 2.500, de 5% a 15%). Exibir junto a ressalva da §3.5: o checkout iniciado da Hotmart e da Kiwify dispara mais solto, então o número é aproximação, nunca prova de checkout quebrado.
 
 Se `landing_page_views` não retornar (pixel sem evento de LP view), omitir as linhas "LP VIEWS", "Connect Rate" e tudo que depende delas. Alertar: "LP views não rastreado. Conecte o evento no pixel via 'trafego-pixel' para ver o funil completo."
 
@@ -386,8 +388,8 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Hook Rate baixo | Urgência Oculta | A dor não está sendo ativada no primeiro segundo do criativo |
 | CTR baixo | Identidade do Produto | O ângulo do anúncio não comunica o diferencial claramente |
 | Connect Rate baixo | Quadro na Parede | O que o anúncio promete não é o que a página entrega |
-| Checkout Rate baixo | Oferta | Preço, garantia, bônus ou stack de valor não convencem |
-| Conversion Rate baixa | Furadeira + Decorados | O método e os benefícios não estão claros na página de checkout |
+| Início de checkout baixo | Oferta (e página) | Preço, garantia, bônus ou stack de valor não convencem quem chegou na página. Não é o checkout: a pessoa nem chegou a ele |
+| Conclusão de checkout baixa | Furadeira + Decorados | O método e os benefícios não estão claros na página de checkout |
 | Lead Rate baixa | Isca Digital | A oferta de captura (e-book, aula, etc.) não é atraente o suficiente |
 
 4. **Ação recomendada**: handoff para skill executora com instrução específica.
@@ -403,7 +405,8 @@ Se qualquer item estiver descoberto: adicionar a seção correspondente antes de
 | Posicionamento perdedor com gasto > 15% do total | "trafego-testes": criar teste A/B de posicionamento |
 | Gargalo em Hook Rate | "trafego-testes": A/B de criativo com nova Urgência Oculta |
 | Gargalo em Connect Rate | "trafego-oferta-funil" para confirmar o gargalo; correção em "feedback-pagina" (headline e promessa da página não batem com o anúncio) ou "pagina-performance" (velocidade, URL/redirect) |
-| Gargalo em Checkout Rate ou Conversion Rate | "trafego-oferta-funil" para o diagnóstico; correção em "feedback-pagina" ou "pagina-checkout" (oferta, garantia, stack de valor). Low ticket: "feedback-low-ticket" |
+| Gargalo no início de checkout | "trafego-oferta-funil" para ler a página, a congruência e a oferta; correção em "feedback-pagina" (oferta, garantia, stack de valor). Low ticket: "feedback-low-ticket". "pagina-checkout" só se o teste do botão de compra mostrar link quebrado |
+| Gargalo na conclusão de checkout | "trafego-oferta-funil" (diagnóstico de checkout); ajustes de pagamento na plataforma e "pagina-checkout" para a ligação da página com o checkout |
 | CPM subindo > 20% WoW | Investigar fadiga → output [3] Criativos & Copy |
 | Lead Rate baixa | "copy-pagina": revisar isca digital e formulário de captura |
 
@@ -433,7 +436,7 @@ Renderizar todos os gráficos abaixo que tiverem dado real disponível, logo ap�
 
 | Gráfico | Componente / receita | Fonte de dado | Posição |
 |---|---|---|---|
-| Radar do funil vs. benchmark | SVG radar (receita A) | 5 etapas como % do benchmark: Hook/CTR, CTR-link, Connect Rate, Checkout Rate, Conversion Rate (Fórmulas + tabela de benchmarks da Resposta 4) | `.charts-grid`, 1ª coluna |
+| Radar do funil vs. benchmark | SVG radar (receita A) | 5 etapas como % do benchmark: Hook/CTR, CTR-link, Connect Rate, Início de checkout, Conclusão de checkout (Fórmulas + tabela de benchmarks da Resposta 4) | `.charts-grid`, 1ª coluna |
 | Funil completo da winner | `.funnel` (receita B) | agregado da campanha winner: impressões → cliques link → LPV → vendas | `.charts-grid`, 2ª coluna |
 | CPM / CPC / CTR atual vs. anterior | `.wow-chart` (receita C) | Chamada de comparação (período atual × anterior), média ponderada por spend | `.chart-card` full-width sob o `.charts-grid` |
 | Posicionamento: vendeu vs. queimou | `.hbar-row` (receita D) | breakdown `platform_position` da Resposta 3: top que converteu (`.win`) vs. top que queimou (`.burn`) | `.chart-card` dentro da Resposta 3 |

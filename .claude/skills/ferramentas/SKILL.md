@@ -12,7 +12,7 @@ O toolkit funciona 100% sem nenhuma ferramenta externa (nivel basico). As integr
 
 **O que faz:** Publica paginas HTML na internet com URL propria.
 **Usada por:** `/copy-pagina`, agent `construtor-de-paginas`
-**Chave necessaria:** `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`
+**Chave necessaria:** `VERCEL_API_TOKEN`
 
 **Como configurar:**
 1. Acesse vercel.com e crie uma conta gratuita
@@ -259,7 +259,7 @@ Anuncio -> Quiz (Lovable) -> Pagina Final do Quiz (toolkit) -> Checkout (Hotmart
 
 | Ferramenta | Chave .env | Nivel | Automacao |
 | --- | --- | --- | --- |
-| Vercel | VERCEL_TOKEN | Intermediario | Deploy de paginas |
+| Vercel | VERCEL_API_TOKEN | Intermediario | Deploy de paginas |
 | OpenRouter | OPENROUTER_API_KEY | Intermediario | Criativos de anuncio (`/criativo-estatico`) e assets de landing (`generate-openrouter-nano-banana-images.py`, ver playbook) |
 | Freepik (Magnific) | FREEPIK_API_KEY | Intermediario | Geracao de imagens (alternativa) |
 | HeyGen | HEYGEN_API_KEY | Intermediario | Criacao de videos com avatar IA |
