@@ -51,6 +51,8 @@ from playbook_template import (  # noqa: E402
     render_secao_10_preco,
     render_secao_13_recuperacao,
     render_secao_14_follow_up,
+    quadro_em_frase,
+    frase_metodo,
 )
 
 # ============================================================================
@@ -127,6 +129,140 @@ def _primeira_linha_nao_vazia(bloco: str) -> str:
     return ""
 
 
+def _valor_rotulo(bloco: str, rotulo: str, prefixo: bool = False) -> str:
+    """Valor de uma linha de lista '- Rótulo: valor', com ou sem negrito no rótulo.
+
+    Aceita '- **Rótulo:** valor', '- **Rótulo**: valor' e '- Rótulo: valor'
+    (formato do resumo-produto.md). Com prefixo=True, o rótulo pode continuar
+    antes dos dois pontos (ex.: 'Mantras' acha 'Mantras/Jargões próprios').
+    """
+    resto = r"[^:\n*]*" if prefixo else ""
+    padrao = re.compile(
+        rf"^[ \t]*[-*][ \t]+(?:\*\*)?{re.escape(rotulo)}{resto}(?:\*\*)?[ \t]*:"
+        rf"[ \t]*(?:\*\*)?[ \t]*(\S.*?)[ \t]*$",
+        re.MULTILINE | re.IGNORECASE,
+    )
+    m = padrao.search(bloco or "")
+    return m.group(1).strip() if m else ""
+
+
+def _sub_bullets_rotulo(bloco: str, rotulo: str) -> list[str]:
+    """Sub-itens logo abaixo de '- Rótulo:' (com ou sem negrito no rótulo)."""
+    padrao = re.compile(
+        rf"^[ \t]*[-*][ \t]+(?:\*\*)?{re.escape(rotulo)}[^\n]*\n((?:[ \t]+[-*][ \t]+.+\n?)+)",
+        re.MULTILINE | re.IGNORECASE,
+    )
+    m = padrao.search(bloco or "")
+    return _linhas_bullet(m.group(1)) if m else []
+
+
+def _itens_lista(bloco: str) -> list[str]:
+    """Itens de lista com marcador (- ou *) ou numerados (1. 2. 3.)."""
+    itens = []
+    for linha in (bloco or "").splitlines():
+        m = re.match(r"^[ \t]*(?:[-*]|\d+\.)[ \t]+(.+?)[ \t]*$", linha)
+        if m:
+            itens.append(m.group(1).strip())
+    return itens
+
+
+def _sem_aspas_externas(texto: str) -> str:
+    """Tira as aspas que envolvem a frase inteira, mantendo as aspas internas."""
+    t = (texto or "").strip()
+    pares = {'"': '"', "“": "”", "'": "'", "‘": "’"}
+    if len(t) >= 2 and t[0] in pares and t[-1] == pares[t[0]]:
+        return t[1:-1].strip()
+    return t
+
+
+def _lista_de_frases(valor: str) -> list[str]:
+    """Separa frases curtas escritas na mesma linha (mantras, frases do público).
+
+    Usa os trechos entre aspas; sem aspas, separa por '|', ';' ou quebra de linha
+    (nunca por vírgula, que pode estar dentro da frase).
+    """
+    valor = (valor or "").strip()
+    if not valor or re.fullmatch(r"(?i)(nenhum[a]?(\s+ainda)?|n[ãa]o\s+tem|-)\.?", valor):
+        return []
+    aspas = re.findall(r"[\"“]([^\"”]+)[\"”]", valor)
+    if aspas:
+        return [a.strip() for a in aspas if a.strip()]
+    partes = re.split(r"\s*[|;]\s*|\n+", valor)
+    return [_sem_aspas_externas(p) for p in partes if p.strip()]
+
+
+_ABREVIACOES = {
+    "dr", "dra", "sr", "sra", "srta", "prof", "profa", "art", "arts", "inc",
+    "ltda", "av", "n", "nº", "p", "pág", "vol", "ex", "obs", "cap",
+}
+
+
+def _maiuscula_inicial(texto: str) -> str:
+    texto = (texto or "").strip()
+    return texto[:1].upper() + texto[1:]
+
+
+def _dividir_frases(texto: str) -> list[str]:
+    """Divide um texto corrido em frases, por ponto e vírgula e por fim de frase.
+
+    Não quebra em número ('R$1.500'), em artigo de lei ('art. 34') nem em
+    abreviação de tratamento ('Dr. Paulo').
+    """
+    pedacos: list[str] = []
+    for parte in re.split(r";\s*", texto or ""):
+        inicio = 0
+        for m in re.finditer(r"[.!?](?=\s+[A-ZÁÉÍÓÚÂÊÔÃÕÀÇ\"“])", parte):
+            anterior = re.search(r"([\wº]+)$", parte[inicio:m.start()])
+            if anterior and anterior.group(1).lower() in _ABREVIACOES:
+                continue
+            pedacos.append(parte[inicio:m.end()])
+            inicio = m.end()
+        pedacos.append(parte[inicio:])
+    frases = []
+    for pedaco in pedacos:
+        frase = pedaco.strip().strip(",").strip()
+        if not frase:
+            continue
+        frase = _maiuscula_inicial(frase)
+        if frase[-1] not in ".!?":
+            frase += "."
+        frases.append(frase)
+    return frases
+
+
+def _parecidos(a: str, b: str) -> bool:
+    """True quando dois textos dizem praticamente a mesma coisa (70% das palavras em comum)."""
+    pa = set(re.findall(r"\w+", (a or "").lower()))
+    pb = set(re.findall(r"\w+", (b or "").lower()))
+    if not pa or not pb:
+        return False
+    return len(pa & pb) / len(pa | pb) >= 0.7
+
+
+def _nome_do_titulo(titulo: str) -> str:
+    """Nome do produto num título como 'Perfil do Negócio: Planilhas Pro'.
+
+    Título genérico sem nome ('Perfil do Negócio', 'Resumo do Produto') devolve vazio.
+    """
+    titulo = (titulo or "").strip()
+    for separador in (" \u2014 ", " \u2013 ", " - ", ": ", ". "):
+        if separador in titulo:
+            candidato = titulo.split(separador, 1)[1].strip()
+            if candidato:
+                return candidato
+    if re.match(r"(?i)(perfil|resumo|identidade)\b", titulo):
+        return ""
+    return titulo
+
+
+def _ler_opcional(caminho: Path) -> str:
+    """Conteúdo do arquivo, ou vazio se ele não existir (aceita BOM do Bloco de Notas)."""
+    try:
+        return caminho.read_text(encoding="utf-8-sig")
+    except (FileNotFoundError, NotADirectoryError):
+        return ""
+
+
 # ============================================================================
 # Parser do perfil.md
 # ============================================================================
@@ -135,12 +271,15 @@ def _primeira_linha_nao_vazia(bloco: str) -> str:
 def parse_perfil(texto: str) -> dict:
     dados: dict = {}
 
-    # Nome do produto (primeiro h1)
+    # Identidade do Produto (nome, entregaveis, posicionamento, diferenciais, preco)
+    bloco_id_produto = _secao(texto, r"Identidade\s+do\s+Produto")
+
+    # Nome do produto: campo Nome da Identidade do Produto ou, em perfil antigo,
+    # o nome no título ("# Perfil do Negócio: Planilhas Pro"). Vazio se não houver:
+    # ler_produto() completa com nome.txt e resumo-produto.md.
     m = re.search(r"^#\s+(.+?)\s*$", texto, re.MULTILINE)
-    nome_h1 = m.group(1).strip() if m else ""
-    # Remove prefixo tipo "Perfil do Negócio." se existir
-    nome_produto = re.sub(r"^Perfil\s+do\s+(Neg[oó]cio|Produto)\.?\s*", "", nome_h1, flags=re.IGNORECASE).strip()
-    dados["nome_produto"] = nome_produto or "Produto"
+    nome_h1 = _nome_do_titulo(m.group(1)) if m else ""
+    dados["nome_produto"] = _valor_rotulo(bloco_id_produto, "Nome") or nome_h1
 
     # Quadro
     bloco_quadro = _secao(texto, r"Quadro.*?")
@@ -183,18 +322,25 @@ def parse_perfil(texto: str) -> dict:
             })
     dados["furadeira_etapas"] = etapas
 
-    # Identidade do Produto (entregaveis, posicionamento, diferenciais, preco)
-    bloco_id_produto = _secao(texto, r"Identidade\s+do\s+Produto")
     dados["preco_texto"] = _valor_chave(bloco_id_produto, "Preço") or _valor_chave(bloco_id_produto, "Valor") or ""
     dados["posicionamento"] = _valor_chave(bloco_id_produto, "Posicionamento") or ""
+    dados["formato"] = _valor_rotulo(bloco_id_produto, "Formato")
 
-    # Entregaveis: sub-bullets apos "- **Entregáveis:**"
-    dados["entregaveis"] = _sub_bullets(bloco_id_produto, "Entregáveis")
+    # Entregaveis: sub-bullets apos "- **Entregáveis:**" ou, na mesma linha, separados por ";"
+    entregaveis = _sub_bullets(bloco_id_produto, "Entregáveis")
+    if not entregaveis:
+        em_linha = _valor_rotulo(bloco_id_produto, "Entregáveis")
+        entregaveis = [_maiuscula_inicial(p) for p in re.split(r"\s*;\s*", em_linha) if p.strip()]
+    dados["entregaveis"] = entregaveis
 
-    # Diferenciais: sub-bullets de "- **Diferencial versus concorrentes:**" (com ou sem texto extra)
+    # Diferenciais: sub-bullets de "- **Diferencial versus concorrentes:**" (com ou sem texto extra).
+    # No perfil atual vem em texto corrido na mesma linha ("- **Diferencial:** ..."): uma frase por item.
     diferenciais = _sub_bullets(bloco_id_produto, "Diferencial versus concorrentes")
     if not diferenciais:
         diferenciais = _sub_bullets(bloco_id_produto, "Diferenciais")
+    if not diferenciais:
+        em_linha = _valor_rotulo(bloco_id_produto, "Diferencial", prefixo=True)
+        diferenciais = _dividir_frases(em_linha)
     dados["diferenciais"] = diferenciais
 
     # Argumentos Incontestaveis: todas as bullets da secao
@@ -241,9 +387,13 @@ def parse_perfil(texto: str) -> dict:
     dados["tom_voz"] = _valor_chave(bloco_comm, "Tom de voz") or ""
     dados["posicionamento_comunicador"] = _valor_chave(bloco_comm, "Posicionamento pessoal") or ""
 
-    # Mantras (sub-bullets de '- **Mantras...:**')
+    # Mantras (sub-bullets de '- **Mantras...:**'). No perfil atual vêm na mesma linha,
+    # entre aspas: '- **Mantras/Jargões próprios:** "Frase um." e "Frase dois."'
     mantras_raw = _sub_bullets(bloco_comm, "Mantras")
-    dados["mantras"] = [x.strip('"').strip("'").strip("“").strip("”") for x in mantras_raw]
+    if mantras_raw:
+        dados["mantras"] = [x.strip('"').strip("'").strip("“").strip("”") for x in mantras_raw]
+    else:
+        dados["mantras"] = _lista_de_frases(_valor_rotulo(bloco_comm, "Mantras", prefixo=True))
 
     # Palavras que conectam: derivar do Vocabulario base + mantras
     conectar_texto = _valor_chave(bloco_comm, "Vocabulário base") or ""
@@ -305,27 +455,53 @@ def parse_perfil(texto: str) -> dict:
 # ============================================================================
 
 
+# Título de balde. Canônico (gerador-idconsumidor): "### Balde N: Nome".
+# Legados aceitos na leitura: "➤ Pra quem é - Nome" (com ou sem ###) e "**Balde N – Nome**".
+_BALDE_TITULO = re.compile(
+    r"^(?:#{2,4}[ \t]*)?(?:"
+    r"Balde[ \t]+\d+[ \t]*[:.\-\u2013\u2014][ \t]*(?P<a>.+?)"
+    r"|\*\*Balde[ \t]+\d+[ \t]*[:.\-\u2013\u2014][ \t]*(?P<b>.+?)\*\*"
+    r"|[\u27a4\u279c\u27a2\u25ba]?[ \t]*Pra[ \t]+quem[ \t]+[ée][ \t]*[:.\-\u2013\u2014]?[ \t]*(?P<c>.+?)"
+    r")[ \t]*$",
+    re.MULTILINE | re.IGNORECASE,
+)
+
+
+def _parse_baldes(bloco: str) -> list[dict]:
+    """Baldes de Para Quem É: título, descrição e itens (numerados ou 'Como se comunicar')."""
+    titulos = list(_BALDE_TITULO.finditer(bloco or ""))
+    baldes = []
+    for i, t in enumerate(titulos):
+        nome = (t.group("a") or t.group("b") or t.group("c") or "").strip().strip("*[]").strip()
+        fim = titulos[i + 1].start() if i + 1 < len(titulos) else len(bloco)
+        corpo = bloco[t.end():fim]
+        m = re.search(
+            r"\*\*Descri[cç][aã]o:\*\*\s*(.+?)(?=\n\s*\n|\*\*Como|\Z)", corpo, re.DOTALL
+        )
+        if nome:
+            baldes.append({
+                "titulo": nome,
+                "descricao": " ".join(m.group(1).split()) if m else "",
+                "itens": _itens_lista(corpo),
+            })
+    return baldes
+
+
 def parse_idconsumidor(texto: str) -> dict:
     dados: dict = {}
 
-    # Baldes de Para Quem E
-    bloco_baldes = _secao(texto, r"Baldes\s+de\s+Para\s+Quem\s+[ÉE]")
-    baldes = []
-    padrao_balde = re.compile(
-        r"^###\s*.?\s*Pra\s+quem\s+[eé]\.?\s*(.+?)\s*$(.*?)(?=^###\s+|\Z)",
-        re.DOTALL | re.MULTILINE | re.IGNORECASE,
-    )
-    for m in padrao_balde.finditer(bloco_baldes):
-        titulo = m.group(1).strip()
-        corpo = m.group(2)
-        itens = []
-        for linha in corpo.splitlines():
-            mm = re.match(r"^\s*\d+\.\s+(.+?)\s*$", linha)
-            if mm:
-                itens.append(mm.group(1).strip())
-        if titulo and itens:
-            baldes.append({"titulo": titulo, "itens": itens})
-    dados["baldes"] = baldes
+    # Baldes de Para Quem E (qualquer H2 com "Baldes" no título)
+    bloco_baldes = _secao(texto, r"[^\n]*Baldes")
+    dados["baldes"] = _parse_baldes(bloco_baldes)
+
+    # Para Quem É: o primeiro parágrafo (sem a lista "Não é para")
+    para_quem = ""
+    for paragrafo in re.split(r"\n\s*\n", _secao(texto, r"Para\s+Quem\s+[ÉE]")):
+        p = " ".join(paragrafo.split())
+        if p and not p.startswith(("-", "*")) and not re.match(r"(?i)n[ãa]o\s+[ée]\s+para", p):
+            para_quem = _sem_aspas_externas(p)
+            break
+    dados["para_quem"] = para_quem
 
     # Objecoes de Compra (Framework dos 7 Argumentos) — delegamos para extrair-objecoes.py
     # Aqui so sinalizamos se existe ou nao, pra montar HTML final.
@@ -337,10 +513,11 @@ def parse_idconsumidor(texto: str) -> dict:
     paliativos = _linhas_bullet(bloco_pal) if bloco_pal else []
     dados["paliativos_idc"] = paliativos
 
-    # 10 frases que o consumidor diria
-    bloco_frases = _secao(texto, r"Frases\s+que\s+(ela|o\s+consumidor).*?")
-    frases = _linhas_bullet(bloco_frases) if bloco_frases else []
-    dados["frases_consumidor"] = [x.strip('"').strip("'") for x in frases]
+    # Frases que o consumidor diria ("## Frases que Essa Pessoa Diria", "## Frases que ela diria"...),
+    # em lista com marcador ou numerada
+    bloco_frases = _secao(texto, r"(?:\d+\s+)?Frases\s+que")
+    frases = [_sem_aspas_externas(x) for x in _itens_lista(bloco_frases)]
+    dados["frases_consumidor"] = [x for x in frases if x]
 
     # Tom, Como se comunicar (complementa)
     bloco_tom = _secao(texto, r"Como\s+se\s+comunicar.*?")
@@ -348,6 +525,102 @@ def parse_idconsumidor(texto: str) -> dict:
         dados["tom_complemento"] = bloco_tom.strip()
 
     return dados
+
+
+# ============================================================================
+# Parser do resumo-produto.md (reserva para o que o perfil.md não traz)
+# ============================================================================
+
+
+def parse_resumo(texto: str) -> dict:
+    """Campos do resumo-produto.md. Linhas no formato '- Rótulo: valor'."""
+    if not texto:
+        return {}
+    m = re.search(r"^#\s+(.+?)\s*$", texto, re.MULTILINE)
+    bloco_produto = _secao(texto, r"Produto")
+    bloco_id_produto = _secao(texto, r"Identidade\s+do\s+Produto")
+    bloco_comm = _secao(texto, r"Identidade\s+do\s+Comunicador")
+    bloco_publico = _secao(texto, r"P[úu]blico")
+
+    frases = _sub_bullets_rotulo(bloco_publico, "Frases que diria") or _lista_de_frases(
+        _valor_rotulo(bloco_publico, "Frases que diria")
+    )
+    return {
+        "nome": _valor_rotulo(bloco_produto, "Nome") or (_nome_do_titulo(m.group(1)) if m else ""),
+        "tipo": _valor_rotulo(bloco_produto, "Tipo"),
+        "preco": _valor_rotulo(bloco_produto, "Preço"),
+        "formato": _valor_rotulo(bloco_produto, "Formato"),
+        "posicionamento": _valor_rotulo(bloco_id_produto, "Posicionamento"),
+        "diferencial": _valor_rotulo(bloco_id_produto, "Diferencial"),
+        "mantras": _lista_de_frases(_valor_rotulo(bloco_comm, "Mantras", prefixo=True)),
+        "perfil_consumidor": _valor_rotulo(bloco_publico, "Perfil"),
+        "frases": [_sem_aspas_externas(f) for f in frases if f.strip()],
+    }
+
+
+# ============================================================================
+# Leitura completa do produto
+# ============================================================================
+
+
+def ler_produto(pasta_produto: Path) -> tuple[dict, dict]:
+    """Lê perfil.md e idconsumidor.md e completa o que faltar.
+
+    O nome vem primeiro do nome.txt (como no painel-atualizar.py). Tipo, preço,
+    formato, posicionamento, diferenciais, mantras, perfil do consumidor e frases
+    que não estiverem no formato esperado do perfil.md ou do idconsumidor.md saem
+    do tipo.md, do preco.md e do resumo-produto.md.
+    """
+    perfil = parse_perfil((pasta_produto / "perfil.md").read_text(encoding="utf-8"))
+    idc = parse_idconsumidor((pasta_produto / "idconsumidor.md").read_text(encoding="utf-8"))
+    resumo = parse_resumo(_ler_opcional(pasta_produto / "resumo-produto.md"))
+
+    perfil["nome_produto"] = (
+        _primeira_linha_nao_vazia(_ler_opcional(pasta_produto / "nome.txt"))
+        or perfil.get("nome_produto")
+        or resumo.get("nome")
+        or pasta_produto.name.replace("-", " ").title()
+    )
+    perfil["tipo"] = (
+        _primeira_linha_nao_vazia(_ler_opcional(pasta_produto / "tipo.md")) or resumo.get("tipo", "")
+    )
+    perfil["preco_texto"] = (
+        perfil.get("preco_texto")
+        or _primeira_linha_nao_vazia(_ler_opcional(pasta_produto / "preco.md"))
+        or resumo.get("preco", "")
+    )
+    perfil["formato"] = perfil.get("formato") or resumo.get("formato", "")
+    perfil["posicionamento"] = _maiuscula_inicial(
+        perfil.get("posicionamento") or resumo.get("posicionamento", "")
+    )
+
+    # Sem lista de entregáveis no perfil, o formato descreve o que o cliente recebe
+    if not perfil.get("entregaveis") and perfil["formato"]:
+        perfil["entregaveis"] = [_maiuscula_inicial(perfil["formato"])]
+
+    if not perfil.get("diferenciais") and resumo.get("diferencial"):
+        perfil["diferenciais"] = _dividir_frases(resumo["diferencial"])
+    if perfil["posicionamento"]:
+        # O posicionamento já aparece no card do produto: não repetir como diferencial
+        perfil["diferenciais"] = [
+            d for d in perfil["diferenciais"] if not _parecidos(d, perfil["posicionamento"])
+        ]
+
+    if not perfil.get("mantras"):
+        perfil["mantras"] = resumo.get("mantras", [])
+
+    demograficos = perfil.get("demograficos", {})
+    perfil["perfil_consumidor"] = (
+        demograficos.get("Público-alvo")
+        or demograficos.get("Publico-alvo")
+        or idc.get("para_quem")
+        or resumo.get("perfil_consumidor", "")
+    )
+
+    if not idc.get("frases_consumidor"):
+        idc["frases_consumidor"] = perfil.get("frases_publico") or resumo.get("frases", [])
+
+    return perfil, idc
 
 
 # ============================================================================
@@ -388,6 +661,7 @@ def extrair_objecoes_html(slug: str) -> tuple[str, bool]:
 def montar_html(slug: str, perfil: dict, idc: dict) -> str:
     # Merge do perfil e idconsumidor em um dict unico
     dados = dict(perfil)
+    dados["nome_produto"] = dados.get("nome_produto") or slug.replace("-", " ").title()
     # idconsumidor overrides e complementa
     if idc.get("paliativos_idc"):
         dados["paliativos"] = idc["paliativos_idc"]
@@ -460,10 +734,12 @@ def montar_html(slug: str, perfil: dict, idc: dict) -> str:
         render_dicionario(),                    # 12
     ]
 
-    titulo = f"Playbook comercial WhatsApp · {dados.get('nome_produto', 'Produto')}"
+    titulo = f"Playbook comercial WhatsApp · {dados['nome_produto']}"
     ctx = {
-        "nome_produto": dados.get("nome_produto", ""),
+        "nome_produto": dados["nome_produto"],
         "quadro": dados.get("quadro", ""),
+        "quadro_frase": quadro_em_frase(dados.get("quadro", "")),
+        "frase_metodo": frase_metodo(dados),
         "preco_texto": dados.get("preco_texto", ""),
     }
     return render_shell(titulo, "\n".join(partes), ctx)
@@ -502,11 +778,7 @@ def main() -> int:
     if not idc_path.exists():
         raise SystemExit(f"idconsumidor.md não encontrado em {pasta_produto}. Rode /produto-concepcao antes.")
 
-    perfil_texto = perfil_path.read_text(encoding="utf-8")
-    idc_texto = idc_path.read_text(encoding="utf-8")
-
-    perfil = parse_perfil(perfil_texto)
-    idc = parse_idconsumidor(idc_texto)
+    perfil, idc = ler_produto(pasta_produto)
 
     html_final = montar_html(slug, perfil, idc)
 
