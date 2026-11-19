@@ -31,7 +31,7 @@ Fluxo obrigatório:
 |---|---|---|
 | Estrutura | 8D (11 seções) | Ordem recomendada da régua, de HERO sem botão até CTA FINAL |
 | Vídeo | VSL | Só na abertura Demonstração, no lugar da foto (Shorts vertical ou tutorial horizontal, smart autoplay) |
-| Copy | Light Copy | 7 aberturas, promessa central, dor verdadeira, mecanismo, bullets com a resposta no produto |
+| Copy | Light Copy | 4 aberturas, promessa central, dor verdadeira, mecanismo, bullets com a resposta no produto |
 | Blocos de feedback | 3 (Copy, Design, Depoimentos em vídeo) | 2 (Copy + Estrutura, Design) |
 | Foco | Argumentação, Furadeira, prova social | Primeira dobra, perspectiva do lead, promessa rápida e crível |
 | Preço | Qualquer faixa | R$17 a R$197 |
@@ -87,7 +87,7 @@ Aguarde a resposta. Leia também `meus-produtos/{ativo}/resumo-produto.md` (se n
 
 1. Leia a página com a ordem da regra 10 do CLAUDE.md: primeiro o Claude in Chrome (`read_page`); se não estiver disponível, `WebFetch`.
 2. Identifique sozinho:
-   - **Abertura usada:** qual das 7 da régua (Demonstração, Comparação, Plug & Play, Imaginação do Resultado, Defesa de Tese, Dor Espelhada, Resultado Direto) ou nenhuma clara.
+   - **Abertura usada:** qual das 4 da régua (Demonstração, Comparação, Plug & Play, Resultado Direto) ou nenhuma clara. Se a página usar uma das aberturas que saíram da régua (Imaginação do Resultado, Defesa de Tese ou Dor Espelhada), registrar e recomendar a troca por uma das 4.
    - **Promessa central:** em uma linha, como a página promete hoje.
    - **Preço:** o valor da página.
    - **Seções presentes:** comparadas com a ordem recomendada da régua.
@@ -112,7 +112,7 @@ Confira cada item pela seção correspondente da régua.
 - [ ] **Abertura Plug & Play:** tem a seção COMO USAR EM 3 PASSOS logo depois do hero?
 - [ ] **Depoimentos** (DEPOIMENTOS): são a segunda seção, logo depois do hero? De 3 a 6, cada um num ângulo diferente, falando do resultado, com um detalhe concreto da vida e resultado imediato? São reais? Se não forem, entram em "Elementos falsos ou inventados encontrados".
 - [ ] **Abertura Demonstração:** o vídeo (arquivo ou link do YouTube, inclusive Shorts) está no lugar da foto, com smart autoplay? Sem vídeo, o visual estático aparece sem placeholder?
-- [ ] **Hero estendido** (só Defesa de Tese e Dor Espelhada): 2 ou 3 parágrafos de imersão com cenas concretas e frase-síntese?
+- [ ] **Abertura dentro da régua:** a página usa uma das 4 aberturas? Se usa Imaginação do Resultado, Defesa de Tese ou Dor Espelhada (com hero estendido), a correção troca por uma das 4.
 
 ### Copy seção por seção
 - [ ] **Headlines de seção** (HEADLINES DE SEÇÃO ÚNICAS): alguma poderia estar na página de outro produto?

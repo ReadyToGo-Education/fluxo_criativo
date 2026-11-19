@@ -93,6 +93,7 @@ Expandidas em relação à `/trafego-otimizar` (que tem 6: criativo, técnico, p
 | CPC aceitável | confirma | médio |
 | Visitas à página (landing page views) ok | confirma (tráfego chega) | alto |
 | Conversão pós-clique baixa | confirma (problema na página) | alto |
+| Início de checkout baixo com CTR e visitas ok | confirma (oferta ou página; não é o checkout, régua da §3.6 de `trafego-oferta-funil/SKILL.md`) | alto |
 | CPA alto apesar de tráfego | confirma | alto |
 | ROAS ruim com volume de cliques | confirma | alto |
 | Connect rate < 60% | refuta parcialmente (pode ser técnico, não oferta) | médio |

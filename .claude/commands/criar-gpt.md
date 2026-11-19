@@ -1,40 +1,24 @@
 ---
 name: workshop-marketing:criar-gpt
-description: Criar agente GPT personalizado para infoprodutores. gera 10 ideias, metodologia e prompt final com regras de seguranca. Pronto para configurar no ChatGPT.
+description: Comando antigo, substituído pelo /criar-agente. Os GPTs personalizados do ChatGPT saem do ar em 11/12/2026. Avisa o aluno e segue o /criar-agente, que cria o agente na Hotmart ou como plugin do ChatGPT.
 ---
 
-# Criar Agente GPT
+# Criar GPT (substituído pelo /criar-agente)
 
-Cria um agente GPT personalizado para melhorar a entrega do produto do infoprodutor, com prompt pronto para usar no ChatGPT.
-
-## Usage
-
-```
-/criar-gpt
-```
+Os GPTs personalizados do ChatGPT saem do ar em 11/12/2026, e a criação de GPT novo já está fechada. O agente do produto agora é criado pelo `/criar-agente`.
 
 ## O Que Fazer
 
-### 1. Contexto
+1. Mostre ao aluno, numa mensagem só:
 
-Tente ler:
-- `meus-produtos/.ativo` → se existir, leia `meus-produtos/{ativo}/resumo-produto.md` como base (se não existir, gere conforme o CLAUDE.md)
-- Se nao existir produto ativo, peca ao usuario um texto sobre o produto/servico
+   ```
+   O /criar-gpt mudou de nome: agora é /criar-agente.
 
-### 2. Gerar ideias
+   Os GPTs do ChatGPT saem do ar em 11/12/2026. O seu agente continua o mesmo, o que muda é onde ele fica:
+   - Se você vende na Hotmart: vira um Agente de IA da Hotmart.
+   - Se vende em outra plataforma: vira um plugin do ChatGPT, que o seu aluno instala.
 
-Leia `.claude/skills/agente-gpt/SKILL.md` e siga o fluxo completo:
+   Vou seguir pelo /criar-agente. Se você já tem um GPT no ar, dá para trazer ele também.
+   ```
 
-- **Passo 0:** Coletar dados (do produto ativo ou texto do usuario)
-- **Passo 1:** Gerar 10 ideias de agentes em tabela. Usuario escolhe 1.
-- **Passo 2:** Criar metodologia do agente escolhido. Usuario aprova.
-- **Passo 3:** Gerar prompt final com regra de seguranca + instrucoes + regra anti-engenharia reversa. Usuario aprova.
-
-### 3. Salvar
-
-- Com produto ativo: `meus-produtos/{ativo}/entregas/produto/agente-gpt-[slug].md`
-- Sem produto ativo: `entregas/agente-gpt-[slug].md`
-
-### 4. Finalizar
-
-Apos o usuario aprovar o prompt final, salve e informe o caminho. NAO sugira proximos passos ou melhorias adicionais.
+2. Leia `.claude/commands/criar-agente.md` e siga o fluxo a partir dali, sem pedir para o aluno digitar o comando novo.

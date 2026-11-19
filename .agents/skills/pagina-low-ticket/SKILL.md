@@ -2,7 +2,8 @@
 name: pagina-low-ticket
 description: >
   Régua oficial da página de vendas low ticket (versão 16 do time de criativos). Promessa central,
-  7 aberturas com tabela de prioridade de testes, copy completa (depoimentos na segunda seção, dor
+  4 aberturas (Demonstração, Comparação, Plug & Play e Resultado Direto) com tabela de prioridade
+  de testes, copy completa (depoimentos na segunda seção, dor
   verdadeira, mecanismo, bullets com a resposta no produto, quebra das 4 objeções, argumentos
   científicos só com estudo real, ancoragem de preço na oferta e seção de quem criou o produto antes
   do FAQ) e um prompt único para o Lovable, com design system fixo, regras de layout sem
@@ -24,7 +25,7 @@ O texto da régua começa em "Régua v16", mais abaixo, e foi mantido como o tim
    | PERSPECTIVA CORRETA (quem é o lead e o que ele deseja) | `## Público (Identidade do Consumidor)`: perfil, sonho e frases que diria | `idconsumidor.md`, `## Identidade do Consumidor` |
    | A DOR VERDADEIRA | `## Urgências Ocultas`: Dores e Urgências Quentes. As frases do `## Público (Identidade do Consumidor)` dão as palavras do lead | |
    | A PROMESSA CENTRAL | `## Quadro` (o topo da escada "o que eu estou realmente vendendo"), `## Identidade do Produto` (diferencial e promessa) e `## Pesquisa de mercado (síntese)`: os concorrentes mostram o que a promessa não pode repetir para ser única | `pesquisa-mercado.md`, seção 2 (concorrentes) |
-   | EMOÇÃO E TENSÃO, hero estendido e DIÁLOGOS INTERNOS | `## Urgências Ocultas`: Dúvidas, Desejos, Urgências Frias e Inusitadas, mais as frases do `## Público (Identidade do Consumidor)` | |
+   | EMOÇÃO E TENSÃO e DIÁLOGOS INTERNOS | `## Urgências Ocultas`: Dúvidas, Desejos, Urgências Frias e Inusitadas, mais as frases do `## Público (Identidade do Consumidor)` | |
    | DEPOIMENTOS (segunda seção) | Os depoimentos reais que o aluno colar na conversa (item 3). Sem eles, os provisórios da régua, escritos na voz das frases do `## Público (Identidade do Consumidor)` e falando da promessa central | |
    | MECANISMO | `## Furadeira` (nome do método e etapas, literais) e a parte dos `## Argumentos Incontestáveis` que explica a lógica do método | `perfil.md`, `## Furadeira (Método)` |
    | BULLETS DE CURIOSIDADE, CARACTERÍSTICAS e BENEFÍCIOS | `## Decorados principais` para o motivo de querer; `## Furadeira` para dizer em que parte do produto está cada resposta. Se o aluno já rodou o `/copy-bullets`, comece pelos bullets salvos: as técnicas 1 a 7 de lá são as 7 técnicas desta régua. Escolha de 8 a 12 com resposta localizável no produto, acrescente "→ parte do produto" e aplique a regra do prazo. O "Como [resultado] com [limitação]" da técnica 1 de lá pode ganhar o "mesmo com" desta régua. Os 10 bullets quentes de lá também servem de ponto de partida para as headlines das aberturas | `perfil.md`, `## Decorados (Benefícios)`; `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` |
@@ -38,18 +39,18 @@ O texto da régua começa em "Régua v16", mais abaixo, e foi mantido como o tim
    **O que não vira prova.** Dados de mercado e a lógica do método, mesmo estando nos Argumentos Incontestáveis, foram gerados a partir da pesquisa: servem para o mecanismo e para dar credibilidade à promessa, nunca como resultado do produto, nem como marco de quem criou o produto. Urgências, Decorados e frases do público são material de copy. Os depoimentos provisórios podem usar a voz do público, mas continuam provisórios até o aluno trocar pelos reais. Na dúvida se um número é do aluno, pergunte antes de usar como prova.
 2. **Pergunta 4 (quem criou o produto) no começo da Etapa 2.** A régua avisa que é a única pergunta que pede preparo. No projeto, ela vem depois da escolha da abertura, para não travar a Etapa 1. O nome já está no resumo: pergunte só os marcos e resultados reais (mini currículo de 1 ou 2 parágrafos) e se o aluno vai ter uma foto para a seção. Sem resposta, a seção sai da página, como a régua manda.
 3. **Depoimentos reais primeiro.** Também no começo da Etapa 2, pergunte se o aluno já tem depoimentos reais de quem usou o produto. Se tiver, eles entram na seção DEPOIMENTOS com as palavras originais (só a frase mais forte vai em negrito) e não há provisórios. Se não tiver, valem os provisórios da régua, e a entrega sempre traz a lista "DEPOIMENTOS PROVISÓRIOS (troque pelos reais antes de publicar)" com o aviso em uma linha. Depoimento provisório nunca vai ao ar: o `/lt-pagina` lembra disso ao entregar o prompt e o Painel de Entregas mostra o alerta enquanto a copy tiver provisórios.
-4. **Exceção ao checklist de Light Copy.** Nas páginas low ticket valem as regras desta régua: **pergunta na headline** (para abrir a lacuna) e a fórmula **"mesmo sem..."** estão liberadas, porque fazem parte do método das 7 aberturas. Os **depoimentos provisórios** da seção DEPOIMENTOS também são permitidos, sempre listados para troca. O resto do checklist continua valendo: sem travessão, sem ponto de exclamação, sem promessa vaga, produto fora do lead, sem lero-lero, nenhum outro depoimento, número, marco ou prova inventados. A revisora aplica essa exceção.
+4. **Exceção ao checklist de Light Copy.** Nas páginas low ticket valem as regras desta régua: **pergunta na headline** (para abrir a lacuna) e a fórmula **"mesmo sem..."** estão liberadas, porque fazem parte do método das aberturas. Os **depoimentos provisórios** da seção DEPOIMENTOS também são permitidos, sempre listados para troca. O resto do checklist continua valendo: sem travessão, sem ponto de exclamação, sem promessa vaga, produto fora do lead, sem lero-lero, nenhum outro depoimento, número, marco ou prova inventados. A revisora aplica essa exceção.
 5. **As paradas da régua são as aprovações do projeto.** Fim da Etapa 1 ("Qual dessas aberturas você quer usar?") e fim da Etapa 2 ("Aprovou a copy...?"). O prompt do Lovable também é mostrado e aprovado antes de salvar.
 6. **A entrega é o prompt do Lovable.** O projeto não gera o HTML da página low ticket: quem monta a página é o Lovable, a partir do prompt da Etapa 3. Dentro do Lovable, o aluno:
    - troca a constante `CHECKOUT_URL` pelo link do checkout;
    - na abertura Demonstração, troca `VIDEO_URL` pelo vídeo (arquivo ou link do YouTube, inclusive Shorts);
    - anexa a foto de quem criou o produto junto com o prompt. A foto não vai escrita no prompt: o prompt pede para usar a imagem anexada na seção QUEM CRIOU O PRODUTO;
    - troca os depoimentos provisórios pelos reais antes de publicar.
-7. **Onde salvar.** `{produto}` é o identificador do produto ativo (o conteúdo de `meus-produtos/.ativo`). `{abertura}` é o nome curto da abertura escolhida, sempre um destes: `demonstracao`, `comparacao`, `plug-and-play`, `imaginacao-do-resultado`, `defesa-de-tese`, `dor-espelhada` ou `resultado-direto`. O Painel de Entregas reconhece as aberturas por esses nomes.
+7. **Onde salvar.** `{produto}` é o identificador do produto ativo (o conteúdo de `meus-produtos/.ativo`). `{abertura}` é o nome curto da abertura escolhida, sempre um destes: `demonstracao`, `comparacao`, `plug-and-play` ou `resultado-direto`. O Painel de Entregas reconhece as aberturas por esses nomes (e ainda mostra as páginas antigas feitas com as aberturas que saíram, item 11).
 
    | O quê | Caminho |
    |---|---|
-   | As 7 aberturas e a tabela de prioridade (Etapa 1) | `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` |
+   | As 4 aberturas e a tabela de prioridade (Etapa 1) | `meus-produtos/{ativo}/entregas/copy-pagina/lt-aberturas-{produto}.md` |
    | Copy aprovada (Etapa 2), com as listas "DEPOIMENTOS PROVISÓRIOS", "PARA VOCÊ CONFERIR" e "PARA VOCÊ GRAVAR" em seções separadas no fim, quando existirem | `meus-produtos/{ativo}/entregas/copy-pagina/lt-copy-{produto}-{abertura}.md` |
    | Prompt do Lovable (Etapa 3) | `meus-produtos/{ativo}/entregas/paginas/lt-prompt-lovable-{produto}-{abertura}.md` |
 
@@ -59,6 +60,8 @@ O texto da régua começa em "Régua v16", mais abaixo, e foi mantido como o tim
 10. **Duas correções no texto da v16.** O documento da v16 chegou com dois deslizes de edição, corrigidos aqui:
    - Em BOTÃO DE COMPRA E BOTÃO FLUTUANTE, voltaram as linhas que a v11 tinha e a v16 perdeu ("também rolam até a OFERTA" e "O ÚNICO botão que leva ao checkout..."), e o título DESIGN DAS LISTAS DE PENSAMENTOS E SENTIMENTOS, que o resto da régua continua citando.
    - Em DESIGN DOS BULLETS, saiu um bloco repetido que mandava usar ícone de check. A própria seção diz que o cadeado vai "no lugar do check", e as instruções do Lovable e a verificação final pedem cadeado.
+11. **Só 4 aberturas (decisão do time, novembro de 2026).** A página low ticket usa só Demonstração, Comparação, Plug & Play e Resultado Direto. Saíram Imaginação do Resultado, Defesa de Tese e Dor Espelhada, e com elas o hero estendido. O texto da régua abaixo já está ajustado. Páginas antigas feitas com as aberturas que saíram continuam valendo: na próxima revisão (`/feedback-low-ticket`), a recomendação é trocar por uma das 4.
+12. **Página é o padrão do low ticket.** O funil de quem está começando usa esta página. Quiz é exceção, só quando o aluno pedir ou o analisador indicar, e é montado no Inlead.
 
 ---
 
@@ -72,7 +75,7 @@ Você é um especialista de elite em Direct Response, copywriting, ofertas low-t
 
 Sua função: transformar 3 informações simples sobre um produto numa landing page de alta conversão, em 3 etapas:
 
-ETAPA 1. PROMESSA, 7 ABERTURAS E PRIORIDADE DE TESTES
+ETAPA 1. PROMESSA, 4 ABERTURAS E PRIORIDADE DE TESTES
 
 ETAPA 2. COPY COMPLETA
 
@@ -150,7 +153,7 @@ Fórmula: [RESULTADO DESEJADO] + [PRAZO CURTO OU IMEDIATO] + [SEM O OBSTÁCULO Q
 
 Teste: desejável, única, crível, concreta, rápida e sustentável pelo produto? Se falhar em qualquer item: REESCREVA.
 
-A promessa central aparece, com palavras diferentes, nas 7 headlines, nas headlines de seção principais, nos bullets, na oferta e no CTA final. As aberturas mudam o ÂNGULO, nunca a PROMESSA.
+A promessa central aparece, com palavras diferentes, nas 4 headlines, nas headlines de seção principais, nos bullets, na oferta e no CTA final. As aberturas mudam o ÂNGULO, nunca a PROMESSA.
 
 ## REGRA DO PRAZO NO LOW-TICKET
 
@@ -168,9 +171,9 @@ Low-ticket precisa ser entendido rápido, mas clareza sozinha não vende. Equili
 
 A headline abre uma lacuna ("Será que isso acontece comigo?", "E se eu estiver fazendo errado?"). Medo só quando é real e específico; o melhor medo é a DÚVIDA de estar fazendo algo errado. Tensão, nunca terrorismo. Não invente riscos, multas, doenças nem perdas.
 
-## ETAPA 1. AS 7 ABERTURAS
+## ETAPA 1. AS 4 ABERTURAS
 
-Depois da coleta, crie SOMENTE o hero, em 7 versões REALMENTE diferentes:
+Depois da coleta, crie SOMENTE o hero, em 4 versões REALMENTE diferentes:
 
 1. DEMONSTRAÇÃO: mostrar o produto funcionando (apps, IA, planilhas, templates, ferramentas). MOSTRE > EXPLIQUE.
 
@@ -182,27 +185,7 @@ Nesta abertura, no lugar da foto entra um VÍDEO DEMONSTRATIVO do produto funcio
 
 Nesta abertura, a página DEVE ter a seção COMO USAR EM 3 PASSOS.
 
-4. IMAGINAÇÃO DO RESULTADO: o lead se vê vivendo o resultado. Se depender de outra pessoa: o lead age, a outra reage.
-
-5. DEFESA DE TESE: mudar uma crença antes de vender. O lead acredita em X, X parece lógico, MAS o verdadeiro problema é Y; entendendo Y, a solução Z faz sentido.
-
-6. DOR ESPELHADA: situação dolorosa e recorrente que o lead reconhece na hora: o que ele faz, vê, tenta, pensa e sente. Reação: "esse sou eu".
-
-7. RESULTADO DIRETO: benefício tão claro que dispensa preparação.
-
-## HERO ESTENDIDO (DEFESA DE TESE E DOR ESPELHADA)
-
-Nessas duas aberturas o hero é MAIOR. Além da headline e da subheadline, ele tem 2 ou 3 parágrafos de imersão, no estilo de Eugene Schwartz:
-
-- comece pela DOR VERDADEIRA, não pelo produto, e nunca presuma que o lead já conhece a categoria (ex.: não comece falando de "produto coreano" como se ele soubesse);
-
-- use cenas concretas da vida dele (o que compra, o que vê no feed, o que guarda na gaveta, o que pensa depois de pagar);
-
-- faça ele SENTIR e SE IMAGINAR, com a linguagem dele, inclusive pensamentos em itálico;
-
-- na defesa de tese, construa a crença atual, mostre por que ela parece lógica e vire para a tese verdadeira;
-
-- termine com uma frase-síntese em negrito que abre a próxima seção.
+4. RESULTADO DIRETO: benefício tão claro que dispensa preparação.
 
 ## O PRIMEIRO VISUAL MOSTRA O MUNDO DO LEAD
 
@@ -216,7 +199,7 @@ Primeiro, em uma linha: PROMESSA CENTRAL: [a promessa].
 
 ANTES de escrever as opções, faça internamente a análise de prioridade de testes (ver TABELA DE PRIORIDADE DE TESTES).
 
-Depois, apresente as 7 opções JÁ NA ORDEM DE PRIORIDADE: a opção 1 é a abertura que deve ser testada primeiro, a opção 7 é a última. O número da opção é o MESMO número da prioridade na tabela, para que o usuário possa responder só com o número sem confusão. Nunca numere pela ordem fixa dos tipos.
+Depois, apresente as 4 opções JÁ NA ORDEM DE PRIORIDADE: a opção 1 é a abertura que deve ser testada primeiro, a opção 4 é a última. O número da opção é o MESMO número da prioridade na tabela, para que o usuário possa responder só com o número sem confusão. Nunca numere pela ordem fixa dos tipos.
 
 Para cada opção:
 
@@ -230,9 +213,9 @@ Teste interno de cada headline (0 a 10): curiosidade, tensão, desejo, identific
 
 ## TABELA DE PRIORIDADE DE TESTES
 
-Depois das 7 opções e ANTES da pergunta final, entregue a tabela de prioridade de testes para AQUELE produto. A coluna de prioridade usa exatamente os números das opções apresentadas (prioridade 1 = opção 1).
+Depois das 4 opções e ANTES da pergunta final, entregue a tabela de prioridade de testes para AQUELE produto. A coluna de prioridade usa exatamente os números das opções apresentadas (prioridade 1 = opção 1).
 
-Princípio: o produto não define a headline. Não se testam 7 frases; testam-se 7 formas de fazer a pessoa acreditar. A pergunta é: "Qual é a maneira mais rápida de fazer alguém acreditar que esse produto entrega o que promete?"
+Princípio: o produto não define a headline. Não se testam 4 frases; testam-se 4 formas de fazer a pessoa acreditar. A pergunta é: "Qual é a maneira mais rápida de fazer alguém acreditar que esse produto entrega o que promete?"
 
 Para montar a ordem, passe o produto pela árvore de decisão:
 
@@ -241,12 +224,6 @@ Para montar a ordem, passe o produto pela árvore de decisão:
 - Dá para COMPARAR (antes × depois, com × sem)? → Comparação.
 
 - Já vem PRONTO (trabalho feito, não conhecimento)? → Plug & Play.
-
-- Dá para IMAGINAR numa cena futura? → Imaginação do Resultado.
-
-- Existe uma CRENÇA impedindo a compra? → Defesa de Tese.
-
-- Existe uma DOR muito reconhecível? → Dor Espelhada.
 
 - O RESULTADO já vende sozinho (público já entende problema e solução)? → Resultado Direto.
 
@@ -258,33 +235,27 @@ Referência por tipo:
 
 - PLUG & PLAY ("Pegue pronto e use"): templates, prompts, scripts, planilhas, checklists, bibliotecas. Nichos: marketing, vendas, negócios, IA, carreira, produtividade.
 
-- IMAGINAÇÃO DO RESULTADO ("Imagine você..."): curso, treinamento, evento, ebook, método. Nichos: idiomas, carreira, dinheiro, relacionamento, educação, vendas.
-
-- DEFESA DE TESE ("Você acha que é X. Mas é Y."): curso, método, ebook, treinamento, evento. Nichos: marketing, negócios, saúde, educação, relacionamento.
-
-- DOR ESPELHADA ("Isso acontece com você?"): curso, método, app, guia, comunidade. Nichos: finanças, carreira, relacionamento, produtividade, saúde, marketing.
-
 - RESULTADO DIRETO ("Consiga X"): quase qualquer low-ticket. Nichos: dinheiro, fitness, marketing, vendas, produtividade, concursos, idiomas.
 
 A árvore e a referência são ponto de partida, NÃO a resposta. Antes de ordenar, faça uma análise crítica do produto:
 
-- O QUE MOVE ESSA COMPRA? Desejo de uma experiência (viagem, hobby, lazer, beleza, relacionamento) → aberturas emocionais primeiro (Imaginação, Dor Espelhada, Defesa de Tese). Desejo de economizar trabalho (templates, prompts, planilhas) → Plug & Play e Demonstração sobem. Desejo de um resultado mensurável → Resultado Direto e Comparação sobem.
+- O QUE MOVE ESSA COMPRA? Desejo de uma experiência (viagem, hobby, lazer, beleza, relacionamento) → Resultado Direto e Comparação primeiro, com o resultado vivido em imagem (a praia, o cabelo, o antes × depois). Desejo de economizar trabalho (templates, prompts, planilhas) → Plug & Play e Demonstração sobem. Desejo de um resultado mensurável → Resultado Direto e Comparação sobem.
 
 - O QUE IMPRESSIONA MAIS: VER O PRODUTO OU VER O RESULTADO? Demonstração só sobe quando a interface ou o processo do produto é, por si só, impressionante (app, IA, automação). Num guia, num ebook ou numa curadoria, o resultado (a praia, o cabelo, a viagem) é muito mais forte que a tela do guia, e Demonstração vai para o fim.
 
 - O LEAD QUER PULAR TRABALHO OU QUER VIVER ALGO? Plug & Play só sobe quando "economizar trabalho" é o desejo principal. Se o lead compra para viver uma experiência, "está pronto" é benefício secundário, não abertura.
 
-- O RESULTADO TEM IMAGEM FORTE? Se sim, Comparação e Resultado Direto ficam no meio da tabela, acima dos formatos de esforço.
+- O RESULTADO TEM IMAGEM FORTE? Se sim, Comparação e Resultado Direto sobem, acima dos formatos de esforço (Plug & Play e Demonstração).
 
 - "Fácil de demonstrar" ou "fácil de produzir" nunca é critério de prioridade. O critério é: qual argumento faz ESSE lead acreditar mais rápido?
 
-Exemplo (guia de surf trip para iniciantes): 1 Imaginação do Resultado, 2 Dor Espelhada, 3 Defesa de Tese, 4 Comparação, 5 Resultado Direto, 6 Plug & Play, 7 Demonstração. Motivo: quem compra quer viver a viagem, não economizar planejamento, e a praia vende muito mais que a tela do guia.
+Exemplo (guia de surf trip para iniciantes): 1 Resultado Direto, 2 Comparação, 3 Plug & Play, 4 Demonstração. Motivo: quem compra quer viver a viagem, não economizar planejamento, e a praia vende muito mais que a tela do guia.
 
-Formato da tabela (as 7 aberturas, da 1ª à 7ª prioridade):
+Formato da tabela (as 4 aberturas, da 1ª à 4ª prioridade):
 
 PRIORIDADE / Nº DA OPÇÃO | ABERTURA | POR QUE TESTAR NESSA ORDEM (uma frase sobre ESTE produto)
 
-Depois da tabela, recomende em uma linha um primeiro teste A/B com as 2 ou 3 aberturas do topo, que sejam argumentos DIFERENTES entre si (ex.: Demonstração × Dor Espelhada × Defesa de Tese).
+Depois da tabela, recomende em uma linha um primeiro teste A/B com as 2 ou 3 aberturas do topo, que sejam argumentos DIFERENTES entre si (ex.: Demonstração × Comparação × Resultado Direto).
 
 Final da Etapa 1, diga SOMENTE: "Qual dessas aberturas você quer usar? Pode responder pelo número ou pelo nome." E PARE.
 

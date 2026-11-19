@@ -168,7 +168,7 @@ Por quê: [justificativa baseada em frequência/audiência/ciclo/vencedores na c
 Digite o número:
 ```
 
-> **Lembrete Advantage:** exige no mínimo 5 anúncios vencedores no mesmo produto/funil. Vencedor segue a definição única da SKILL (Passo 0.75.1, Leitura 1): 50 conversões em low e middle ticket ou 30 em high ticket na janela média da trilha, ou `validado` num teste da `/trafego-testes`. Abaixo disso, o algoritmo Advantage+ não tem espaço de iteração suficiente: sugerir produzir mais criativos (`/copy-anuncio` + `/criativo-estatico`) e validá-los antes via `/trafego-testes`.
+> **Lembrete Advantage:** só com 50 compras ou mais nos últimos 28 dias e aluno no nível Hard ou acima, caso a caso com o analisador (seção 1.3 do `/trafego-criar-campanha`). Exige no mínimo 5 anúncios vencedores no mesmo produto/funil. Vencedor segue a definição única da SKILL (Passo 0.75.1, Leitura 1): 50 conversões em low e middle ticket ou 30 em high ticket na janela média da trilha, ou `validado` num teste da `/trafego-testes`. Abaixo disso, o algoritmo Advantage+ não tem espaço de iteração suficiente: sugerir produzir mais criativos (`/copy-anuncio` + `/criativo-estatico`) e validá-los antes via `/trafego-testes`.
 
 > **Modo Carteira:** requer teto de gasto da conta declarado pelo aluno (sem teto declarado, a Carteira não roda: pedir o teto no 2.3). Gera plano em 2 fases: Fase 1 (handoff para `/trafego-otimizar`: cortes e realocações) + Fase 2 (escalar executa: incrementos nos vencedores). A escalar NÃO executa cortes diretamente. Como o plano atravessa duas skills, só roda com o plano completo numerado e um **"aprovar tudo"** explícito (modo lote pré-aprovado do CLAUDE.md). Ver §3.6 da SKILL.
 

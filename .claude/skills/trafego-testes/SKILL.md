@@ -234,6 +234,8 @@ Ex: menos de 50 conversões por lado depois de 7 dias, ou diferença menor que a
 ### 5.1 Modelo "anúncios no mesmo conjunto" (para criativo, headline e CTA)
 Vários anúncios dentro do mesmo conjunto. A Meta distribui o orçamento sozinha, mas pode favorecer um cedo. Para teste mais limpo, usar o 5.2.
 
+**Teste de anúncio (criativo, headline e CTA), nos dois modelos:** roda sempre numa campanha nova `[WS-AB]`, separada da que está no ar, e todo no manual: público sem Advantage+ (`advantage_audience: 0`), posicionamento manual e criativo sem melhorias automáticas. O A/B de estrutura (Advantage+ contra manual) só vale para conta com 50 compras ou mais nos últimos 28 dias e nível Hard ou acima (seção 1.3 do `.claude/skills/trafego-criar-campanha/SKILL.md`). Regra completa em `sub-skills/ab-generico.md`, logo depois do Mapa das 8 dimensões.
+
 ### 5.2 Modelo "conjuntos separados" (para audiência, idade, posicionamento, lance)
 Conjuntos idênticos exceto na dimensão testada, cada um com orçamento próprio. Comparação mais justa porque o algoritmo otimiza cada um separado.
 

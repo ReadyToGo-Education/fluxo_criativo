@@ -44,6 +44,8 @@ Regra dura: **nunca agrupar 2 ou mais inputs na mesma mensagem**. O aluno **nunc
 
 5. **Hipótese** ("Espero que com {valor_novo} eu consiga ___ porque ___").
 
+   **Mudança no criativo ou na headline é teste de anúncio:** a cópia vai para uma campanha nova `[WS-AB]`, separada da que está no ar, todo no manual: público, posicionamento e criativo sem Advantage+ (regra "Teste de anúncio" da [ab-generico.md](./ab-generico.md)). Avisar em uma linha antes da confirmação.
+
 6. **Manter o original** só se o aluno disser que quer pausar o original (padrão: o original continua). Pausar o original é outra escrita, com confirmação própria.
 
 **Proibido:** pedir ID de entidade ou de criativo; pular para a confirmação sem os passos 1 a 5.

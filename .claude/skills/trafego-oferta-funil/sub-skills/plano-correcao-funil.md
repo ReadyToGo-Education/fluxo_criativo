@@ -52,7 +52,7 @@ da primeira dobra: /copy-pagina ou /lt-pagina.
 
 ### Tipo 2: Briefing de prova e oferta
 
-Acionado quando: etapa de quebra é Lead→Checkout (interesse sem decisão) OU score de oferta < 60 OU prova posicionada depois do preço.
+Acionado quando: etapa de quebra é Lead→Checkout (interesse sem decisão) ou, sem carrinho no funil, visita à página → checkout iniciado (início de checkout baixo, seção 3.6 do SKILL.md) OU score de oferta < 60 OU prova posicionada depois do preço.
 
 ```
 BRIEFING #2: REFORÇAR PROVA E OFERTA
@@ -72,7 +72,7 @@ Teste recomendado:
 - Adicionar FAQ com as 5 objeções principais
 - Reforçar ancoragem de preço
 
-Métrica principal: taxa cadastro ou carrinho → checkout iniciado
+Métrica principal: taxa cadastro ou carrinho → checkout iniciado (sem carrinho: início de checkout, checkouts iniciados ÷ visitas à página)
 Critério de sucesso: aumento de 15% ou mais na taxa
 Critério de morte: nenhuma melhoria depois de 200 cadastros ou carrinhos
 
@@ -83,7 +83,7 @@ do FAQ. Bloco pontual numa página do Severino: /pagina-ajuste.
 
 ### Tipo 3: Briefing de checkout
 
-Acionado quando: diagnóstico de checkout = `friccao_provavel` ou `queda_abrupta`.
+Acionado quando: diagnóstico de checkout = `friccao_provavel` ou `queda_abrupta`. Nunca aciona por início de checkout baixo: esse caso vai para os briefings 1 e 2 (seção 3.6 do SKILL.md). Botão ou link de compra quebrado é correção direta em `/pagina-checkout`, sem briefing de teste.
 
 ```
 BRIEFING #3: REDUZIR FRICÇÃO NO CHECKOUT
