@@ -489,16 +489,20 @@ def main() -> int:
     no_git = versionados()
     existentes = arquivos_existentes(no_git)
 
-    novos = sorted(p for p in esperado if p not in existentes)
+    # Compara pelo texto do caminho: no Windows, o Path ignora a maiúscula e
+    # trataria skill.md e SKILL.md como o mesmo nome.
+    nomes_existentes = {p.as_posix() for p in existentes}
+    nomes_esperados = {p.as_posix() for p in esperado}
+    novos = sorted(p for p in esperado if p.as_posix() not in nomes_existentes)
     alterados = sorted(
         p for p in esperado
-        if p in existentes and normalizar(p.read_bytes()) != normalizar(esperado[p][0])
+        if p.as_posix() in nomes_existentes and normalizar(p.read_bytes()) != normalizar(esperado[p][0])
     )
-    sobrando = sorted(existentes - set(esperado))
+    sobrando = sorted(p for p in existentes if p.as_posix() not in nomes_esperados)
     renomeados = pares_de_nome(novos, sobrando)
-    trocados = {caminho for par in renomeados for caminho in par}
-    novos = [p for p in novos if p not in trocados]
-    sobrando = [p for p in sobrando if p not in trocados]
+    trocados = {caminho.as_posix() for par in renomeados for caminho in par}
+    novos = [p for p in novos if p.as_posix() not in trocados]
+    sobrando = [p for p in sobrando if p.as_posix() not in trocados]
     escondidos = escondidos_pelo_gitignore(sorted(esperado))
 
     for aviso in avisos:
