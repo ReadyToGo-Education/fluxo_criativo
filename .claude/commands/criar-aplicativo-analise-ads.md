@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:criar-aplicativo-analise-ads
 description: Guia passo a passo para criar um App no Facebook Developers com acesso à Marketing API, necessário para gerar o token de acesso ao Facebook Ads.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Bash, WebFetch, WebSearch
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:programar-carrossel-noticia
 description: Programa tarefa recorrente que gera carrossel de notícia para Instagram automaticamente (via /schedule do Claude). Configura escopo (só busca ou carrossel inteiro), modo (aleatório ou fixo), tom travado, categoria travada (Trend ou Atemporal) e frequência. Coleta @, nicho e produto uma única vez (reaproveita do perfil ativo quando possível).
+categoria: Conteúdo e Criativos
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-insights
 description: Lê métricas de campanhas Meta Ads (Facebook + Instagram) com cálculo automático de métricas derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate). Modo campanha única ou conta completa com ranking de urgência. É a fonte única de leitura que /trafego-otimizar, /trafego-escalar, /trafego-analise e /trafego-diagnostico consomem. Use quando o aluno pedir "como está performando", "me mostra os números", "qual o CPA", "quanto gastei", "puxar relatório", "quais campanhas estão ativas".
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 user-invocable: false

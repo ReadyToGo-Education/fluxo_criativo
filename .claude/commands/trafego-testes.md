@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-testes
 description: Cria testes A/B disciplinados e variações estruturadas no Meta Ads, pelo MCP da Meta (padrão) ou pela Marketing API (modo App). Cobre A/B de criativo, headline, audiência, faixa etária, posicionamento, lance, estrutura e CTA, duplicar campanha, conjunto ou anúncio mudando UMA coisa só, e campanha de remarketing completa (público + campanha). Toda criação nasce pausada e documenta a hipótese; no 7º dia, a opção [11] lê o resultado, classifica, registra o aprendizado e sugere o próximo teste. Use quando o aluno pedir "testar A vs B", "duplicar minha melhor campanha mudando a idade", "criar campanha de remarketing", "Reels vs Feed", "broad vs segmentado", "como ficou meu teste".
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-visual
 description: Criar página de vendas a partir de prints de referência do aluno + copy aprovada. Cada print vira uma cópia HTML com design 100% preservado (sem harmonização global). Seções sem print são geradas a partir do design system extraído das cópias existentes. Montagem final concatena tudo em vendas-{slug}.html.
+categoria: Infraestrutura de Página
 ---
 
 # Página Visual. Clone de prints + copy aprovada

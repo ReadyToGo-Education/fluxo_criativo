@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:lt-pagina
 description: Criar a página de vendas low ticket pela régua v16 do time de criativos. Promessa central, 4 aberturas (Demonstração, Comparação, Plug & Play e Resultado Direto) com tabela de prioridade de testes, copy completa (depoimentos na segunda seção, ancoragem de preço e seção de quem criou o produto) e um prompt único para o Lovable montar a página.
+categoria: Low Ticket
 ---
 
 # Página Low Ticket. Régua v16

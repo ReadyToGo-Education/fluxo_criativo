@@ -1,6 +1,6 @@
 ---
 name: "source-command-video-heygen"
-description: "Criar video com avatar IA usando HeyGen com multiplas cenas, avatares rotacionados, backgrounds variados e direcao visual baseada em dados reais (Apify/dashboard) ou Urgencias Ocultas do perfil. Entrega video pronto com cenas diferentes, nao mais \"avatar falando em fundo branco\"."
+description: "Criar vídeo com avatar IA usando HeyGen com múltiplas cenas, avatares rotacionados, backgrounds variados e direção visual baseada em dados reais (Apify/dashboard) ou Urgências Ocultas do perfil. Entrega vídeo pronto com cenas diferentes, não mais \"avatar falando em fundo branco\"."
 ---
 
 # source-command-video-heygen

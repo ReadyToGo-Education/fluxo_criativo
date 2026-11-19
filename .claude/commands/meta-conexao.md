@@ -1,6 +1,8 @@
 ---
 name: workshop-marketing:meta-conexao
 description: Alias de compatibilidade. Esta skill foi renomeada para /trafego-conexao. Quem invocar /meta-conexao é redirecionado automaticamente. Mantida apenas para evitar quebra em referências antigas.
+categoria: Tráfego Pago
+interno: true
 allowed-tools: Skill
 model: sonnet
 user-invocable: false

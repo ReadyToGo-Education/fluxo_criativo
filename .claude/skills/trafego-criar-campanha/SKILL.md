@@ -21,7 +21,7 @@ Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes
 4. **Uma confirmação por lote, nunca por objeto.** Subir uma campanha é UM lote. Mostrar o plano completo (campanha + todos os conjuntos + todos os anúncios + todos os criativos + uploads de imagem e vídeo) num único bloco 🛡️ e pedir UM único `sim`. Esse `sim` autoriza o lote de ponta a ponta. **Proibido voltar a perguntar a cada objeto** ("posso criar o conjunto?", "posso subir o vídeo?"). Só parar se uma chamada falhar (relatar o erro e perguntar como seguir), se o aluno mudar o plano no meio ou se surgir uma escrita fora do lote.
 5. **Exclusão nunca entra no `sim` do lote.** Cada exclusão tem bloco 🛡️ e `sim` próprios. Esta skill não apaga nada por conta própria (ver seção 4, tratamento de falhas).
 6. Se o aluno responder `não` ou variante (cancelar, abortar), abortar sem chamar a API.
-7. **Nunca usar `python3 << 'EOF'` (heredoc) nem `curl | python3 -c`** com o token. Ver "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" e "LEITURA SEGURA DO .env" no CLAUDE.md.
+7. **Nunca usar `python3 << 'EOF'` (heredoc) nem `curl | python3 -c`** com o token. Ver "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" em `.claude/skills/trafego-pago/references/regras-meta-api.md` e "LEITURA SEGURA DO .env" no CLAUDE.md.
 
 **O gate vale nos dois modos.** A aprovação é sobre **o que** muda na conta, não sobre o transporte.
 

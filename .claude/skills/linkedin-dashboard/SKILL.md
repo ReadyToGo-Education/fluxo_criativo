@@ -1,7 +1,7 @@
 ---
 name: linkedin-dashboard
 description: >
-  Configura e gera o dashboard HTML de metricas do LinkedIn para o produto ativo.
+  Configura e gera o dashboard HTML de métricas do LinkedIn para o produto ativo.
   Coleta dados publicos do perfil (seguidores, headline, bio) e dos ultimos 30 posts
   (likes, comentarios, shares, tipo de post, data) via Apify, sem exigir login.
   Gera dashboard autossuficiente que abre direto no navegador com filtros interativos.

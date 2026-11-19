@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:obter-id-conta-anuncios
 description: Guia para localizar o ID da conta de anúncios no Business Manager do Facebook e salvar em FB_AD_ACCOUNT_ID no .env. Skill reutilizável chamada por qualquer skill de Meta Ads que precise do ID da conta (ex: /trafego-conexao, /ads-relatorio).
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Bash
 model: sonnet
 user-invocable: false

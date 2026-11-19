@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:copy-social
 description: Criar conteúdo para redes sociais. Carrossel, roteiro de Reels e linha editorial de 30 dias. Baseado nas Urgências Ocultas e Decorados do produto ativo.
+categoria: Conteúdo e Criativos
 ---
 
 # Conteúdo Social

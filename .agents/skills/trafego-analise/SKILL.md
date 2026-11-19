@@ -94,7 +94,7 @@ Ler `FB_AD_ACCOUNT_IDS` no `.env` (campo com múltiplas contas separadas por ví
 **Se houver mais de uma conta em `FB_AD_ACCOUNT_IDS`**: listar as contas disponíveis e perguntar qual usar. Obter o nome de cada conta **roteando por modo** (ver Passo 0.2):
 
 - **`MCP_CONECTOR`:** chamar a tool `ads_get_ad_accounts` (sem token). Ela traz o nome de cada conta em `ad_account_name` (e o id em `ad_account_id`, que pode vir com `act_`); se vierem com outro nome (`name`, `account_id`), usar o equivalente.
-- **`APP`:** uma única chamada `Bash(curl ...)` batch (sem heredoc Python, ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no CLAUDE.md). Construir a string `act_<id1>,act_<id2>,...` a partir de `FB_AD_ACCOUNT_IDS` e disparar:
+- **`APP`:** uma única chamada `Bash(curl ...)` batch (sem heredoc Python, ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" em `.claude/skills/trafego-pago/references/regras-meta-api.md`). Construir a string `act_<id1>,act_<id2>,...` a partir de `FB_AD_ACCOUNT_IDS` e disparar:
 
 ```
 curl -s "https://graph.facebook.com/v25.0/?ids=act_<id1>,act_<id2>,act_<id3>&fields=name&access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)"

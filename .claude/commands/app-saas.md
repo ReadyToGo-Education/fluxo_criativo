@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:app-saas
 description: Lê o perfil do produto ativo, sugere 10 ideias de mini-SaaS relevantes para os alunos do infoprodutor e, após a escolha, gera o PRD completo com schema, telas, user stories e prompt técnico pronto para colar no Lovable.dev.
+categoria: Produto
 ---
 
 # App SaaS. Gerador de Épicos para Alunos

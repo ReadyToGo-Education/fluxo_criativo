@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:lt-funil
 description: Criar produto low ticket completo usando a metodologia low ticket do VTSD. produto de entrada (R$37-97), página de vendas, order bump, anúncios low ticket, produto desafio e copy para Hotmart. Quiz só como exceção, no Inlead.
+categoria: Low Ticket
 ---
 
 # Low Ticket (low ticket). Produto de Entrada Rápido e Lucrativo

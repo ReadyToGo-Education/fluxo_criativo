@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-pixel
 description: Instalar Meta Pixel (Facebook Pixel) numa página HTML pronta. Configura os eventos certos pro tipo de página (vendas, captura, obrigado, inscrição C10X) e suporta Conversions API opcional. Skill de infraestrutura, roda depois da página estar pronta.
+categoria: Infraestrutura de Página
 ---
 
 # Página Pixel. Instalação de Meta Pixel

@@ -219,63 +219,6 @@ Antes de rodar qualquer comando que toque o `.env`, conferir: ele vai imprimir a
 
 ---
 
-## EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API (REGRA GLOBAL)
-
-> Esta regra tem prioridade absoluta. Aplica-se a toda skill ou agente que faça chamada para `https://graph.facebook.com/*`.
-
-### Padrão obrigatório
-
-1. **Cada chamada Graph API = 1 chamada `Bash(curl ...)` separada.** Token vai inline na URL.
-2. **Cada cálculo de data = 1 `Bash(date ...)` separado.** Já autorizado em `.claude/settings.local.json`.
-3. **Processamento dos JSONs retornados = feito pelo Claude lendo a saída do curl como texto.** Sem rodar Python adicional.
-
-### Proibições absolutas
-
-- **PROIBIDO `python3 << 'EOF' ... EOF`** (heredoc bash com Python). O detector "expansion obfuscation" do Claude Code dispara em qualquer heredoc que carregue token e ignora o allow list, forçando pop-up nativo com token visível.
-- **PROIBIDO `curl ... | python3 -c "..."`** (pipe com Python que lê stdin). Mesma classe de detector dispara.
-- **PROIBIDO `python3 -c "<código longo com token>"`.** Apenas `python3 -c` com expressões curtas e sem token (ex: `python3 -c "import json; print(json.load(open('/tmp/x.json')))"`).
-- **PROIBIDO scripts bash multi-linha começando com `TOKEN="..."`** + múltiplos `curl`. Mesmo problema.
-
-### Padrão correto para análises complexas (ex: comparativo CPM/ROAS, ranking, lifecycle, períodos múltiplos)
-
-Quando uma skill precisa de várias chamadas Graph API + cálculos:
-
-1. Calcular timestamps via `Bash(date +%s)` separados (cada um = 1 Bash call).
-2. Para cada chamada Graph API, disparar `Bash(curl -s "https://graph.facebook.com/...?access_token=$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)")` **individual**, com o token entrando por substituição dentro do próprio `curl`, como no padrão da seção "LEITURA SEGURA DO .env". Nunca ler o valor para depois colar no comando.
-3. Receber o JSON de retorno como texto.
-4. Processar mentalmente os JSONs (somar, comparar, calcular delta) — Claude faz o cálculo direto na resposta, sem código intermediário.
-5. Apresentar resultado ao aluno em linguagem natural, mascarando qualquer token na exibição.
-
-### Convenção `curl -g` quando o `fields` tem campos aninhados
-
-Quando o parâmetro `fields=` usar campos aninhados (ex: `campaign{name}`, `creative{video_id,thumbnail_url}`), usar `curl -g`. Sem o `-g`, o curl trata `{` e `}` como padrão de expansão e corta a URL sem avisar: a Graph API responde 200, mas sem os campos aninhados.
-
-```bash
-curl -gs "https://graph.facebook.com/v25.0/act_<id>/ads?fields=id,creative{video_id,thumbnail_url}&access_token=..."
-```
-
-### Por que essa restrição existe
-
-O Claude Code tem proteções anti-injection que ignoram allow list quando detectam padrões suspeitos:
-- Heredoc bash + variável interpolada
-- Pipe com Python que recebe stdin
-- Script bash com aspas duplas dentro de aspas simples
-- Brace expansion combinada com aspas (`${...}`, `$(...)`)
-
-Em todas essas situações, o pop-up nativo dispara e exibe o comando completo. O perigo está no formato em que o token aparece escrito no próprio comando (heredoc, `TOKEN="..."`, pipe para Python): aí ele vai inteiro para a tela. A única exceção é a gravação do segredo que o aluno acabou de colar (item 4 da seção "LEITURA SEGURA DO .env"), que não serve de modelo para nenhuma outra chamada. O formato padrão do projeto é cada chamada Graph API como um `curl` simples, com o token entrando por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`). Esse formato também pode pedir aprovação, mas o pop-up mostra só a expressão, nunca o valor do token.
-
-### Exceção controlada
-
-Se a análise realmente precisa de processamento que não dá pra fazer mentalmente (ex: agrupar 200+ ads por idade × posicionamento × hora):
-
-1. Salvar JSONs em arquivos via `curl ... > /tmp/insights-{nome}.json` (cada um = 1 Bash call, casa com `Bash(curl ...)`).
-2. Processar com `Bash(python3 /tmp/script.py)` onde `/tmp/script.py` foi escrito previamente via `Edit` ou `Write` no arquivo (sem token dentro do script — script lê os JSONs locais).
-3. Limpar `/tmp/insights-*.json` ao final.
-
-Esse caminho mantém cada chamada Bash simples e cobre o pattern matching.
-
----
-
 ## GATE EM CAMADA DE CHAT ANTES DE OPERAÇÕES DE ESCRITA NA META GRAPH API (REGRA GLOBAL)
 
 > Esta regra tem prioridade absoluta sobre qualquer skill ou agente. Aplica-se a toda chamada `curl` (ou equivalente) com método **POST, PUT, PATCH ou DELETE** em `https://graph.facebook.com/*`.
@@ -312,31 +255,13 @@ Pode aplicar? Responda "sim" pra confirmar, "não" pra cancelar.
 3. **Uma confirmação por lote, nunca por objeto.** Um fluxo de trabalho de uma mesma skill (ex: subir campanha = campanha + conjuntos + anúncios + criativos + uploads; pausar 8 anúncios filtrados) é UM lote. Listar todas as operações e objetos afetados num único bloco 🛡️ e pedir UM único "sim". Se forem mais de 5 itens, mostrar os 5 primeiros + "e mais N itens, lista completa abaixo" + lista colapsada. Depois do "sim", executar tudo em sequência sem reabrir o gate a cada objeto. Só parar para perguntar de novo se: (a) uma chamada falhar, (b) o aluno mudar o plano no meio, ou (c) surgir uma escrita que não estava no lote aprovado.
 4. Se o aluno responder "não" ou variante (cancelar, abortar, espera), abortar e não chamar a API.
 5. Quando o aluno aprova, executar e devolver resposta resumida, sem ecoar o `curl` que foi rodado.
-6. **Nunca usar Python heredoc nem pipe `curl | python3`** para executar a operação. Esses formatos disparam o detector de "expansion obfuscation" e exibem o token completo. Ver seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" acima: toda escrita segue o mesmo padrão de curl direto.
+6. **Nunca usar Python heredoc nem pipe `curl | python3`** para executar a operação. Esses formatos disparam o detector de "expansion obfuscation" e exibem o token completo. Ver a seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`: toda escrita segue o mesmo padrão de curl direto.
 7. **Exclusão (DELETE) é sempre à parte e tem prioridade sobre a regra do lote.** Apagar não tem volta, então:
    - Nunca entra no "sim" de um lote. O "sim" do lote só autoriza criar e atualizar.
    - Cada exclusão ganha o próprio bloco 🛡️, dizendo exatamente o que some, e o próprio "sim", mesmo dentro de um fluxo já aprovado.
    - Quando existe ferramenta no MCP para apagar (hoje, só `ads_delete_custom_audience`), apagar por ela.
    - Sem ferramenta no MCP, não rodar `curl -X DELETE` direto: oferecer a alternativa que não destrói (pausar ou arquivar) ou mostrar o comando mascarado para o aluno rodar ele mesmo, ou guiar a exclusão no Gerenciador.
 8. **Fluxos que atravessam várias skills** (atalhos compostos do `/trafego-otimizar`, modo Carteira do `trafego-escalar`, remarketing do `/trafego-testes`) só encadeiam sem novo gate no modo "lote pré-aprovado" descrito abaixo.
-
-### Aplica-se a estas operações (lista não exaustiva)
-
-| Operação semântica | Método HTTP | Skill que executa |
-|---|---|---|
-| Criar campanha | POST `/campaigns` | `/trafego-criar-campanha` |
-| Atualizar campanha (status, budget) | POST `/{campaign_id}` | `/trafego-otimizar`, `/trafego-escalar` |
-| Pausar / ativar adset | POST `/{adset_id}` | `/trafego-otimizar`, `/trafego-regras` |
-| Atualizar orçamento de adset/campanha | POST `/{id}` com `daily_budget` | `/trafego-otimizar`, `/trafego-escalar` |
-| Pausar / ativar anúncio | POST `/{ad_id}` | `/trafego-otimizar` |
-| Arquivar anúncio, conjunto ou campanha (apagar, não: não há ferramenta no MCP e não se roda `curl -X DELETE` direto, regra 7; a exclusão é feita à mão no Gerenciador) | POST `/{id}` com `status=ARCHIVED` ou `ads_update_entity` | `/trafego-otimizar` |
-| Criar público (personalizado, semelhante, engajamento, lista de clientes) | POST `/customaudiences` ou `ads_create_custom_audience` | `/trafego-publicos` |
-| Apagar público | `ads_delete_custom_audience` (sempre à parte, regra 7) | `/trafego-publicos` |
-| Criar regra automática | POST `/adrules_library` (só no modo App; no MCP é feita à mão no Gerenciador) | `/trafego-regras` |
-| Programar liga e pausa por horário | POST `/{adset_id}` com `adset_schedule` | `/trafego-regras` |
-| Subir imagem ou vídeo de criativo | POST `/adimages`, POST `/advideos` | `/trafego-criar-campanha`, `/trafego-testes` |
-| Duplicar adset / campanha (cria novo) | POST `/{id}/copies` ou `ads_create_*` com `source_*_id` | `/trafego-escalar`, `/trafego-testes` |
-| Lote (em massa) | qualquer combinação acima | `acoes-lote.md` (sub-skill de `/trafego-otimizar`) |
 
 ### Não se aplica a (operações de leitura)
 
@@ -349,10 +274,6 @@ Se o aluno disser explicitamente algo como "aprova tudo desse plano de ação", 
 - Pede confirmação UMA vez ("aprovar tudo? sim/não").
 - Após confirmação, executa em sequência, devolvendo resumo por item.
 - Se uma operação falhar no meio, parar e perguntar antes de continuar.
-
-### Princípio de fundo
-
-A autorização no settings é confiança operacional (evita pop-up + vazamento visual de token). O gate em camada de chat é confiança semântica (aluno aprova o QUE vai ser feito, não o COMO). As duas camadas juntas dão segurança sem fricção tóxica.
 
 ---
 
@@ -509,68 +430,9 @@ Proibido criar CSS ou componentes que não estejam nos arquivos de referência.
 
 ---
 
-## TRÁFEGO PAGO. CONEXÃO META OBRIGATÓRIA NO PASSO 0
+## TRÁFEGO PAGO (META ADS)
 
-> Esta regra tem prioridade sobre qualquer outra instrução de execução das skills de tráfego. Aplica-se a todo command que comece com `/trafego-*` ou que precise tocar a Marketing API do Meta (Facebook Ads, Instagram Ads).
-
-**Toda skill que faz operação no Meta Ads precisa de conexão configurada antes de qualquer outra ação.** A conexão é estabelecida pelo command `/trafego-conexao`, que valida e salva o modo em `META_AUTH_MODO` no `.env`. O aluno não escolhe o modo no início: a conexão sempre começa pelo conector da Meta e é testada; o App só é oferecido depois desse teste, quando a conta não foi liberada no conector ou o conector não responde. Existem só dois modos:
-
-- **`MCP_CONECTOR` (padrão, recomendado).** Conector oficial Claude + Meta, login por OAuth, sem token e sem App no Facebook Developers.
-- **`APP` (reserva).** App via Facebook Developers com token permanente no `.env`. Serve para quem tem a conta de anúncios ainda não liberada pela Meta no MCP (a Meta libera conta por conta; a conta não liberada devolve `is_ads_mcp_enabled: false` ou o erro "Ads MCP is gradually being rolled out"). Configurado pela sequência `/criar-aplicativo-analise-ads` e `/gerar-token-permanente-facebook-ads` (que já lista as contas e grava a conta padrão). O `/obter-id-conta-anuncios` só entra se a conta padrão continuar faltando depois dessa listagem.
-
-Não existe modo híbrido no Severino. Se o `.env` trouxer `META_AUTH_MODO=HIBRIDO` (de outro material), o `/trafego-conexao` explica e regrava como `MCP_CONECTOR` (ou `APP`, se a conta não estiver liberada no MCP) depois de validar e confirmar com o aluno.
-
-### O que o MCP da Meta ainda não faz
-
-No modo `MCP_CONECTOR`, estas operações não têm ferramenta no conector. A skill não troca de modo sozinha: conduz o aluno por um passo a passo curto no Gerenciador de Anúncios e depois segue o fluxo.
-
-1. **Subir vídeo novo.** O MCP só usa vídeo que já está na biblioteca da conta. O aluno sobe o vídeo pelo Gerenciador e a skill segue usando esse vídeo.
-2. **Buscar interesse por nome.** Recomendar público aberto com Advantage+. Se o aluno quiser interesse específico, ele pesquisa no Gerenciador.
-3. **Criar ou gerenciar regra automática.** A skill ajuda a desenhar a regra e o aluno cria no Gerenciador (Regras automatizadas). Liga e pausa por horário continua pelo MCP.
-4. **Apagar campanha, conjunto ou anúncio.** O MCP só apaga público. Para o resto: pausar ou arquivar pelo MCP, ou apagar no Gerenciador.
-5. **Subir imagem que está só no computador.** O MCP aceita imagem por URL pública, mas não recebe arquivo. Padrão: o aluno sobe todas as imagens de uma vez na Biblioteca de mídia do Gerenciador e a skill pega pelo conector. Reserva: token usado só para subir a mídia (`FB_TOKEN_MIDIA`, temporário, apagado no fim do lote, ou o `FB_ACCESS_TOKEN_PERMANENTE` se existir), sem trocar o modo. Detalhes na lacuna L5 da skill `trafego-conexao`.
-
-Público semelhante (lookalike), público de engajamento e de visualização de vídeo já são criados pelo MCP.
-
-### Passo 0 obrigatório de toda skill de tráfego
-
-Antes de executar qualquer ação, a skill deve:
-
-1. **Ler `META_AUTH_MODO`** no `.env`.
-2. **Se vazio, ausente ou com valor diferente de `MCP_CONECTOR` e `APP`** (inclusive o legado `HIBRIDO`): acionar `/trafego-conexao` e aguardar conclusão. Não tentar adivinhar, não cair em fallback, não pedir credenciais ad-hoc.
-3. **Se `MCP_CONECTOR`:** confirmar que pelo menos uma tool cujo nome termina em `ads_get_ad_accounts` (ou outra `ads_*` do conector da Meta) está disponível. O começo do nome da tool varia de instalação para instalação. Se nenhuma estiver, instruir o aluno a reabrir o Claude Code (MCP recém-adicionado pode precisar de reload). Se persistir, voltar ao `/trafego-conexao` para diagnosticar. Se a conta escolhida vier como não liberada, oferecer o modo App pelo `/trafego-conexao`. Conferir também se `FB_AD_ACCOUNT_ID` tem valor (padrão da seção "LEITURA SEGURA DO .env"). Se faltar (conexão feita por uma versão antiga, que no MCP não gravava a conta), acionar `/trafego-conexao`: ele completa a conta pela opção Validar (seção 5.1.1 da SKILL: lista com `ads_get_ad_accounts`, grava sem perguntar quando há 1 conta liberada e pergunta quando há mais) e volta para a skill. Nunca chamar o conector com a conta vazia.
-4. **Se `APP`:** confirmar que `FB_ACCESS_TOKEN_PERMANENTE` e `FB_AD_ACCOUNT_ID` têm valor no `.env`, sempre com o padrão da seção "LEITURA SEGURA DO .env" (linha vazia conta como ausente). Se faltar algum, acionar `/trafego-conexao`. O `FB_PAGE_ID`, usado pelo `/trafego-criar-campanha`, é descoberto e gravado pela própria skill ou pelo `/trafego-conexao` quando falta.
-
-A skill **nunca prossegue** sem essa validação passar.
-
-### Skills que herdam essa regra
-
-Todos os commands `/trafego-*` invocáveis pelo usuário:
-- `/trafego-insights`. Leitura de métricas (com cache local em arquivo .md).
-- `/trafego-criar-campanha`. Criação de campanha via Marketing API ou MCP.
-- `/trafego-otimizar`. Diagnóstico e otimização, com camada de lucro. Inclui ações em lote por filtro e atalhos compostos.
-- `/trafego-escalar`. Escala de campanha validada (também acionada pelo `/trafego-otimizar` quando `sinal_para_escala.pronta: true`).
-- `/trafego-analise`. Análise narrada VTSD em 10 outputs.
-- `/trafego-diagnostico`. Investigação antes de agir: hipóteses, auditoria estrutural, falso vencedor e score de confiança (apenas leitura).
-- `/trafego-criativos`. Leitura de atenção, intenção e conversão dos criativos, DNA e briefing do próximo teste (apenas leitura).
-- `/trafego-oferta-funil`. Funil depois do clique, congruência anúncio x página, oferta e checkout (apenas leitura).
-- `/trafego-pixel`. Diagnóstico de pixels e eventos (apenas leitura).
-- `/trafego-publicos`. Cria e gerencia públicos (personalizado, semelhante, engajamento, lista de clientes, bases por nível).
-- `/trafego-regras`. Regras automáticas e liga e pausa por horário.
-- `/trafego-testes`. Testes A/B disciplinados, duplicação variando uma coisa só e campanha de remarketing.
-- `/trafego-dashboard`. Dashboard da conta de anúncios (artefato do Claude com o conector MCP da Meta, montado a partir de um modelo pronto), com vendas da Hotmart ou da Kiwify quando há credenciais no `.env`. Para conta que a Meta ainda não liberou no conector, o mesmo painel com dados gravados: o Claude busca os números com o token do App no computador do aluno e grava no banco do artefato, e o token nunca vai para a página. Sem artefato, dashboard estático (legado).
-- `/trafego-dashboard-analisador`. Só para mandar o dashboard ao analisador da mentoria: fotografia fixa dos números da última atualização do dashboard, publicada como página que o analisador consegue abrir, com o link para colar no card do Fluxer.
-
-**Base de conhecimento (não invocável diretamente):**
-- `trafego-pago`. Conceitos e métricas de tráfego consultados pelas outras skills.
-
-### Onde as skills de tráfego salvam
-
-- Relatórios e entregas: `meus-produtos/{ativo}/entregas/trafego/` (com subpastas por skill, ex: `diagnostico/`, `criativos/`, `oferta-funil/`, `testes/`, `otimizar/`).
-- Dados de trabalho do produto: `meus-produtos/{ativo}/trafego/` (cache de insights, HTML da análise, histórico de escala).
-- O que pertence à conta de anúncios e não a um produto: `meus-produtos/_global/trafego/` (`insights/` da conta, `publicos/`, `regras/`, `pixel/`).
-
-Os commands legados (`/ads-relatorio`, `/enviar-relatorio-ads`, `/lt-otimizar`) usam variáveis próprias (`RELATORIO_AUTH_MODO=CLI`, `ACCESS_TOKEN`, `AD_ACCOUNT_ID`) e não dependem de `META_AUTH_MODO`. Migração desses commands é tarefa separada.
+> Toda skill ou agente que lê ou altera a conta de anúncios da Meta (comandos `/trafego-*`, agentes de campanha, qualquer chamada ao conector da Meta ou a `graph.facebook.com`) lê **antes** o arquivo `.claude/skills/trafego-pago/references/regras-meta-api.md`. Ele traz o Passo 0 de conexão (`META_AUTH_MODO`, `/trafego-conexao`), o que o conector da Meta ainda não faz, o formato obrigatório de cada chamada à Graph API, onde as skills de tráfego salvam e qual skill executa cada operação de escrita. Nunca chamar a Meta sem ter lido esse arquivo na conversa.
 
 ### Dashboard de tráfego ao vivo
 
@@ -581,10 +443,6 @@ O link do dashboard ao vivo de cada aluno fica salvo em `meus-produtos/dashboard
 3. **Se não houver:** seguir o `/trafego-dashboard`, que procura um dashboard criado em outro lugar e, se não achar, cria um novo.
 
 Quando o aluno pedir para mandar o dashboard ao analisador da mentoria (ou para colar no Fluxer), seguir o `/trafego-dashboard-analisador`. Nunca entregar para isso o link do dashboard ao vivo: ele não mostra os números do aluno para outra pessoa.
-
-### Quando outras skills de tráfego forem criadas no futuro
-
-Toda skill nova que precise se conectar ao Meta Ads deve seguir o mesmo padrão de Passo 0: ler `META_AUTH_MODO` antes de qualquer outra ação, e acionar `/trafego-conexao` se a variável não estiver configurada. A skill `/trafego-conexao` é idempotente, pode ser chamada várias vezes sem efeito colateral.
 
 ---
 
@@ -640,105 +498,7 @@ Seu produto ativo é: **{nome do produto}**
 
 O que quer criar hoje?"
 
-Em seguida, liste os comandos disponíveis organizados por categoria:
-
-**Produto:**
-- `/produto-concepcao`. Cadastrar ou atualizar Quadro, Furadeira, Decorados, Identidades, Identidade do Consumidor e Painel de Entregas (fluxo unificado)
-- `/produto-trocar`. Alternar entre produtos cadastrados
-- `/produto-novo`. Criar um novo produto
-- `/produto-excluir`. Excluir um produto e todas as suas entregas
-- `/produto-zerar`. Zerar o perfil.md e/ou idconsumidor.md sem apagar o produto
-
-**Copy:**
-- `/copy-pagina`. Criar copy e/ou página HTML profissional (vendas, captura ou obrigado)
-- `/copy-anuncio`. Criar anúncios para Meta Ads (Mandala da Criatividade, 18 tipos)
-- `/copy-bullets`. Gerar 110 bullets do produto nas 11 técnicas (Halbert, Carlton, Bencivenga) e os 10 mais fortes; ficam salvos para as páginas reaproveitarem
-- `/elementos-literarios`. Aplicar 1 a 3 dos 26 elementos literários do Light Copy
-- `/criativo-estatico`. Gerar criativos estáticos para anúncios (prompt para colar em ferramenta externa OU geração automática via API)
-- `/gerar-furadeira`. Gerar a Furadeira (método do produto) no `perfil.md` aplicando uma das 6 mecânicas (Fases, Condicional, Enquadramento, Listas, Empecilhos, Dinâmica de Entrega) escolhida automaticamente conforme o nicho
-- `/furadeira-visual`. Gerar a imagem PNG da Furadeira via prompt para ChatGPT (a skill decide o layout sozinha conforme mecânica + nicho)
-- `/avat-whisk`. Briefings visuais prontos para o Whisk (Google Labs)
-- `/criar-agente`. Criar o agente de IA do produto para entregar aos alunos: Agente de IA da Hotmart (ficha e instruções para colar) ou plugin do ChatGPT em .zip, para quem vende em outra plataforma. Substitui o `/criar-gpt`, porque os GPTs do ChatGPT saem do ar em 11/12/2026
-
-**Low Ticket:**
-- `/lt-funil`. Criar produto de entrada low ticket (página, order bump, desafio, agente de IA; quiz só como exceção, no Inlead)
-- `/lt-criar-produto`. Criar o conteúdo real do produto digital
-- `/lt-quiz`. Gerar perguntas do quiz (exceção: só quando o aluno pedir ou o analisador indicar; montagem no Inlead)
-- `/lt-pagina`. Criar a página de vendas low ticket pela régua v16: promessa central, 4 aberturas com ordem de testes, copy completa e prompt para o Lovable montar a página
-- `/lt-otimizar`. Analisar planilha do Gerenciador e otimizar campanhas low ticket
-
-**Tráfego Pago (Meta Ads via MCP ou App):**
-- `/trafego-conexao`. Conectar com o Meta Ads sempre pelo conector da Meta no Claude, testar e, só se a conta ainda não estiver liberada no conector, configurar o App Facebook Developers. Salva o modo em META_AUTH_MODO
-- `/trafego-insights`. Ler métricas de campanhas com cálculo automático de derivadas (connect rate, conversão por etapa, custo por etapa). Modo campanha única ou conta completa com ranking de urgência
-- `/trafego-criar-campanha`. Subir campanha nova (PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo). Cobre Sales e Leads
-- `/trafego-otimizar`. Confere se o dado é confiável e faz o diagnóstico em 2 camadas (tendência + gargalo) para 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high), com camada de lucro e ponto de equilíbrio. Quando a campanha está pronta, aciona automaticamente a escala.
-- `/trafego-escalar`. Escalar campanha validada com score de risco, guardião de caixa e freios escalonados
-- `/trafego-analise`. Análise narrada VTSD em outputs com gráficos (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B). Aluno escolhe um output por vez e recebe diagnóstico com handoff para skill executora.
-- `/trafego-diagnostico`. Investigar antes de agir: 3 hipóteses com peso, auditoria da estrutura da conta, falso vencedor e score de confiança de 0 a 100
-- `/trafego-criativos`. Ler atenção, intenção e conversão dos criativos, mapear o DNA dos que vencem e montar o briefing do próximo teste
-- `/trafego-oferta-funil`. Diagnosticar o funil depois do clique (visita, carrinho, checkout, compra), a congruência anúncio x página e a oferta
-- `/trafego-pixel`. Diagnosticar pixels: status, último disparo, eventos rastreados e pixels parados (apenas leitura)
-- `/trafego-publicos`. Criar e gerenciar públicos: evento do pixel, visualização de vídeo, engajamento, semelhante, lista de clientes (com hash local) e bases por nível
-- `/trafego-regras`. Desenhar regras automáticas e programar liga e pausa por horário
-- `/trafego-testes`. Montar testes A/B disciplinados, duplicar variando uma coisa só, campanha de remarketing e leitura do resultado no 7º dia
-- `/trafego-dashboard`. Abrir, criar ou atualizar o dashboard da conta de anúncios (artefato do Claude conectado ao MCP da Meta): visão geral com comparação, funil, ritmo do dia, campanhas com anúncios e dia a dia. Com credenciais da Hotmart ou da Kiwify no `.env`, mostra as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link. Conta ainda não liberada no conector: painel com dados gravados pelo App (atualiza quando o aluno pede ou no horário marcado). Sem artefato, monta o dashboard estático (legado)
-
-**Dados e Automações:**
-- `/ads-relatorio`. Criar rotina diária automática que busca métricas do Facebook Ads e envia relatório pelo WhatsApp via Z-API. Agente agendado na nuvem do Claude, roda todo dia às 8h sem precisar do computador ligado.
-- `instagram-dashboard`. Dashboard HTML de métricas do Instagram (seguidores, engajamento, posts recentes) via Apify. O aluno roda o script manualmente para atualizar.
-- `tiktok-dashboard`. Dashboard HTML de métricas do TikTok (seguidores, likes totais, views, engajamento, heatmap de horários, top videos) via Apify. O aluno roda o script manualmente para atualizar.
-- `youtube-dashboard`. Dashboard HTML de métricas do YouTube (inscritos, views, engajamento, desempenho por duração, análise de títulos) via Apify. O aluno roda o script manualmente para atualizar.
-- `linkedin-dashboard`. Dashboard HTML de métricas do LinkedIn (seguidores, engajamento por tipo de post, hashtags, melhores dias para postar) via Apify. O aluno roda o script manualmente para atualizar.
-- `/dados-instagram`. Analisar perfil do Instagram com insights de copy (análise pontual, sem agendamento).
-- `/adaptar-plataforma`. Converter scripts e instruções Windows/PowerShell para Mac ou Linux. Adapta agendamento (Task Scheduler → cron/launchd) e comandos de instalação para o SO do aluno.
-
-**Estratégia:**
-- `/estrategia-lancamento`. Planejar lançamento ou evento completo
-- `/estrategia-funil`. Mapear funil perpétuo ou de lançamento
-
-**Estudo:**
-- `/gestor-pedagogico`. Transformar um material de ensino (texto colado ou link do YouTube) em entregáveis de estudo. O mentorado escolhe o que gerar entre 8 opções (transcrição, mapa mental, apostila, avaliação Q&A, checklist de implementação, resumo, sequência lógica, aula em 5 a 7 conceitos)
-
-**Comercial:**
-- `/comercial-playbook`. Criar scripts de venda 1:1 (SPIN Selling), entrega em HTML pronto para PDF
-
-**Vídeo:**
-- `/video-heygen`. Criar vídeo com avatar IA
-- `/video-remotion`. Criar vídeo para Meta Ads com Remotion
-- `/video-editar`. Editar vídeos existentes com FFmpeg
-
-**Infraestrutura de Página (rodam após gerar a página):**
-- `/pagina-ajuste`. Ajustes pós-merge guiados por perguntas (diagnóstico, cores para layout, menu: copy, headline, placeholders e ideias de imagens, conversão, SEO, imagens, depois edição)
-- `/pagina-performance`. Auditar e corrigir performance da página HTML
-- `/pagina-pixel`. Instalar Meta Pixel na página
-- `/pagina-checkout`. Conectar a página ao checkout (Hotmart, Kiwify, etc.)
-- `/pagina-lovable`. Levar a página para o Lovable e publicar (pelo conector do Lovable no Claude, ou com prompt pronto para colar)
-
-**Feedback:**
-- `/feedback-pagina`. Corrigir e otimizar página de vendas existente
-- `/feedback-low-ticket`. Corrigir página low ticket pela régua v16 (copy, estrutura e design; entrega a copy corrigida e um prompt novo para o Lovable)
-
-**Toolkit (projetos estruturados):**
-- `/toolkit-novo`. Iniciar um projeto de marketing estruturado (lançamento, funil completo, reestruturação)
-- `/toolkit-planejar`. Gerar o plano em etapas do projeto a partir do roteiro
-- `/toolkit-executar`. Executar a próxima etapa pendente do plano
-- `/toolkit-verificar`. Conferir se o projeto entregou o que foi prometido no roteiro
-- `/toolkit-progresso`. Ver o estado atual do projeto e a próxima ação recomendada
-- `/toolkit-anotar`. Registrar uma pendência, ideia ou lembrete sem interromper o fluxo
-- `/toolkit-pausar`. Pausar o projeto ativo e salvar um handoff para a próxima sessão
-- `/toolkit-retomar`. Retomar um projeto pausado e voltar ao ponto onde parou
-
-**Agentes Especialistas (tarefas completas autônomas):**
-- `estrategista-de-produto`. Sessão completa de concepção VTSD
-- `estrategista-low-ticket`. Funil low ticket completo do zero
-- `estrategista-middle-ticket`. Funil perpétuo de produto principal
-- `construtor-de-paginas`. Cria páginas profissionais do zero
-- `criador-de-campanhas`. Monta campanha de tráfego completa
-- `produtor-de-conteudo`. Cria plano de conteúdo
-- `consultor-comercial`. Playbook de vendas high ticket
-- `copywriter`. Orquestrador de copy
-- `video-maker`. Orquestrador de produção de vídeo
-- `executor-de-plano-de-acao`. Executa plano de ação acionando skills e agentes
+**Lista de comandos:** fica em `COMANDOS.md`, na raiz do projeto, agrupada por categoria (gerada a partir dos arquivos de `.claude/commands/` por `scripts/gerar-catalogo-comandos.py`). Quando for preciso mostrar ao aluno o que o assistente faz (ele pediu "quais comandos tem?", "o que você faz?", ou uma skill manda mostrar), leia o `COMANDOS.md` e mostre a parte que interessa, com o nome do comando e uma linha de descrição. Não liste comandos de memória.
 
 ---
 
@@ -992,6 +752,8 @@ python3 scripts/exportar-para-codex.py
 ```
 
 Para só conferir se as pastas estão em dia, sem gravar nada, acrescente `--verificar` ao comando.
+
+O mesmo script gera também o `COMANDOS.md` (lista de comandos por categoria, via `scripts/gerar-catalogo-comandos.py`). Todo command novo precisa de `categoria:` no cabeçalho, ao lado do `description:`; aliases antigos e comandos de uso interno levam `interno: true` e ficam fora da lista.
 
 O que vale só no Codex (por exemplo, gerar a imagem com a ferramenta do próprio Codex no lugar do prompt para colar no ChatGPT) fica em `codex-extras/`, nunca em `.claude/`. O mesmo script junta essa pasta na exportação. Detalhes em `codex-extras/README.md`.
 

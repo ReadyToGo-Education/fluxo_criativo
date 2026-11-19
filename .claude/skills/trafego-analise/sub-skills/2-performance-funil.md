@@ -47,7 +47,7 @@ Para responder "CPM de maio vs. abril ficou mais caro?", fazer **duas chamadas c
 **Regras obrigatórias:**
 - Usar `time_range` como JSON (não `since`/`until` direto no urlencode: causa comportamento imprevisível).
 - **NÃO usar `effective_status` nas chamadas de comparação**: com `effective_status`, a API ignora a janela histórica e retorna sempre o estado atual, fazendo ambos os períodos retornarem dados idênticos.
-- Calcular as datas em **chamadas Bash separadas** com `date` (nunca em script Python heredoc: ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no CLAUDE.md).
+- Calcular as datas em **chamadas Bash separadas** com `date` (nunca em script Python heredoc: ver regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" em `.claude/skills/trafego-pago/references/regras-meta-api.md`).
 
 #### Padrão obrigatório (modo APP)
 

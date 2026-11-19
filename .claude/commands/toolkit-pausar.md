@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-pausar
 description: Pausar o projeto ativo. Salva um resumo do estado e libera o produto para trabalhar em outra coisa sem perder contexto.
+categoria: Toolkit
 ---
 
 # Toolkit. Pausar Projeto

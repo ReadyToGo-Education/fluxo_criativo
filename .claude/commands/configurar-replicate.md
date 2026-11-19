@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:configurar-replicate
 description: Guia para criar conta no Replicate (via GitHub), gerar o API Token e salvar no .env como REPLICATE_API_TOKEN. Skill reutilizável chamada por qualquer skill que anime criativos via API (sub-fluxo Animar em loop do /criativo-estatico).
+categoria: Configurações
 allowed-tools: Read, Edit, Bash
 model: sonnet
 ---

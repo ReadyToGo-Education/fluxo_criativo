@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-criar-campanha
 description: Subir campanha nova no Meta Ads (Facebook + Instagram) pelo conector da Meta (MCP) ou pela Marketing API (modo App). Cobre apenas infoprodutos com objetivo OUTCOME_SALES (perpétuo de venda direta) ou OUTCOME_LEADS (lançamento de captação). Lê o resumo do produto ativo, exige pixel ativo, mostra preview antes de criar, pede uma única confirmação para o lote inteiro e sobe a campanha PAUSED por padrão. Use quando o aluno pedir "subir campanha", "criar campanha", "lançar anúncio novo", "rodar tráfego", "anunciar produto X". Não cobre Awareness, Traffic, Engagement ou App Promotion.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

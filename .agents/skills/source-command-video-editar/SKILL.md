@@ -1,6 +1,6 @@
 ---
 name: "source-command-video-editar"
-description: "Editar videos existentes com FFmpeg. cortar, juntar, redimensionar, legendar, adicionar musica, comprimir, extrair audio. Ideal para ajustar Reels, VSLs e anuncios sem abrir software de edicao."
+description: "Editar vídeos existentes com FFmpeg. cortar, juntar, redimensionar, legendar, adicionar música, comprimir, extrair audio. Ideal para ajustar Reels, VSLs e anuncios sem abrir software de edicao."
 ---
 
 # source-command-video-editar

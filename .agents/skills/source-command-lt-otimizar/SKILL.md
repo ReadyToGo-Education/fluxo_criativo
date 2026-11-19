@@ -1,6 +1,6 @@
 ---
 name: "source-command-lt-otimizar"
-description: "Analisar planilhas exportadas do Gerenciador de Anuncios do Meta Ads e recomendar acoes praticas de otimizacao para campanhas de produtos low ticket. Baseado em CPA dos ultimos 7 dias, estrutura CBO/ABO, Advantage+ e volume de compras em 28 dias."
+description: "Analisar planilhas exportadas do Gerenciador de Anúncios do Meta Ads e recomendar ações práticas de otimização para campanhas de produtos low ticket. Baseado em CPA dos ultimos 7 dias, estrutura CBO/ABO, Advantage+ e volume de compras em 28 dias."
 ---
 
 # source-command-lt-otimizar

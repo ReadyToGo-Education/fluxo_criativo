@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:estrategia-funil
 description: Mapear funil de vendas completo. perpétuo ou lançamento. Inclui touchpoints, páginas, emails, anúncios e métricas. Baseado na estrutura de campanha VTSD.
+categoria: Estratégia
 ---
 
 # Funil de Vendas. Mapeamento Completo

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-checkout
 description: Conectar uma página HTML pronta ao checkout (Hotmart, Kiwify, Eduzz, Cakto, Pepper, Stripe ou link próprio). Configura UTMs, order bump opcional e dispara InitiateCheckout no Pixel. Skill de infraestrutura, roda depois da página estar pronta.
+categoria: Infraestrutura de Página
 ---
 
 # Página Checkout. Conexão com Plataforma de Pagamento

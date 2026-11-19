@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-escalar
 description: Escala campanhas Meta Ads já validadas e performando, sem destruir aprendizado. Cobre 6 modos (vertical, horizontal, vertical+horizontal, consolidação CBO, campanha Advantage, carteira) e 3 velocidades (conservadora +15%/72h, normal +20%/24h, agressiva +30 a +50%/24h). Revalida critérios de gatilho a cada incremento (incluindo lucro/dia ≥ 0 quando a margem é coletada), calcula o risco de cada incremento, protege o caixa da conta sob teto, aplica freios escalonados (leve, médio, total) e devolve handoff para /trafego-otimizar quando o freio total aciona. Recusa rodar sem sinal de prontidão. Use quando o aluno pedir "escalar campanha", "aumentar budget", "subir verba", "duplicar conjunto vencedor", "expandir audiência", "consolidar em CBO", "campanha Advantage", ou quando /trafego-otimizar emitiu sinal_para_escala.pronta=true.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

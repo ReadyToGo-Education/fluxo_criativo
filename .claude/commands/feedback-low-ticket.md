@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:feedback-low-ticket
 description: Faz correção completa de página de vendas low ticket pela régua v16 do time de criativos. Analisa copy e estrutura (abertura, promessa central, perspectiva, prazo, ordem das seções, depoimentos na segunda seção, bullets com a resposta no produto, quebra das 4 objeções, argumentos científicos reais, ancoragem de preço e seção de quem criou o produto) e design (design system, imagem fiel à copy, botões, layout sem sobreposição) em 2 blocos. Entrega a copy corrigida e, se pedido, um prompt novo para o Lovable. Use esta skill SEMPRE que o usuário quiser revisar ou corrigir uma página de low ticket, pedir feedback de página low ticket, mencionar "corrigir minha página low ticket", "analisar minha LT", "o que está errado na minha página de produto de entrada", ou enviar um link de página low ticket para revisão.
+categoria: Feedback
 ---
 
 # Feedback de Página Low Ticket. Correção pela Régua v16

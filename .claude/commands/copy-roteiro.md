@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:copy-roteiro
 description: Criar roteiros de vídeo para os 3 formatos principais. Avatar IA (HeyGen), Reels 60 segundos e VVV (vídeo de vendas completo). Salva em meus-produtos/{ativo}/entregas/criativos/.
+categoria: Copy
 ---
 
 # Roteiro de Vídeo

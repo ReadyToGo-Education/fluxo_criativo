@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:ads-relatorio
 description: Configura as credenciais e preferências do relatório de Facebook Ads (canal, métricas, filtro de campanhas) e oferece envio imediato via /enviar-relatorio-ads. Telegram ou WhatsApp. Usa o Meta Ads CLI via Python.
+categoria: Dados e Automações
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 model: sonnet
 user-invocable: false

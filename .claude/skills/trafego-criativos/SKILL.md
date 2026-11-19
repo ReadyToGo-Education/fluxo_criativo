@@ -219,7 +219,7 @@ No modo MCP (tool terminada em `ads_get_ad_entities`), os campos de anúncio tê
 Quando o escopo é grande (regra prática: **mais de 12 campanhas OU mais de 120 anúncios esperados**):
 
 1. Coletar em **lotes** (por bloco de campanhas ou por campanha), nunca tudo de uma vez.
-2. Quando o resultado vier salvo em arquivo (a própria tool faz isso ao estourar), **processar o arquivo fora do contexto** (script local que lê o JSON salvo, sem token, sem reimprimir o bruto no chat) e trazer só o agregado. É a "Exceção controlada" da seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md.
+2. Quando o resultado vier salvo em arquivo (a própria tool faz isso ao estourar), **processar o arquivo fora do contexto** (script local que lê o JSON salvo, sem token, sem reimprimir o bruto no chat) e trazer só o agregado. É a "Exceção controlada" da seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`.
 3. Pedir só os campos necessários do módulo: não puxar a curva de vídeo inteira quando o módulo só precisa de gasto e compras.
 4. **No MCP, filtrar e paginar sempre** (contrato do conector, `.claude/skills/trafego-insights/SKILL.md` §10.1): na coleta por anúncio, `filtering: [{field: "ad.impressions", operator: "GREATER_THAN", value: ["0"]}]` (sem filtro, o conector devolve anúncios antigos sem entrega) e `limit: 1000`. Repetir a chamada com o `cursor` devolvido enquanto houver próxima página. Se vierem 1.000 linhas sem próxima página, avisar o aluno que a lista pode ter sido cortada.
 

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-vercel
 description: Publicar uma página HTML do projeto direto na Vercel via API e devolver o link público. Inclui setup guiado do token da API. Skill de infraestrutura, última etapa do fluxo de página, depois de copy + performance + pixel + checkout.
+categoria: Infraestrutura de Página
 ---
 
 # Página Vercel. Publicação via API

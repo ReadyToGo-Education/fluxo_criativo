@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-concepcao
 description: Cadastrar produto/negócio do aluno com Quadro, Furadeira, Decorados e 3 Identidades da metodologia VTSD.
+categoria: Produto
 ---
 
 # Produto. Cadastro Completo do Negócio

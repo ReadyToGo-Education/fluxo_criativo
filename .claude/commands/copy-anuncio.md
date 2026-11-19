@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:copy-anuncio
 description: Criar pacotes completos de anúncios para Meta Ads e Google Ads usando a Mandala de 18 Tipos de Anúncios da metodologia VTSD. Inclui copy, direção criativa e estratégia de campanha.
+categoria: Copy
 ---
 
 # Anúncio. Mandala de 18 Tipos (VTSD)

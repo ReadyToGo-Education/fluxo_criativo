@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:gerar-token-permanente-facebook-ads
 description: Guia para gerar token permanente de acesso ao Facebook Ads via Usuário do Sistema no Business Manager. Token nunca expira e não precisa ser renovado.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Bash, WebFetch, WebSearch
 model: sonnet
 ---

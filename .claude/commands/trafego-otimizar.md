@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-otimizar
 description: Diagnostica e otimiza campanhas Meta Ads em veiculação. Valida a confiabilidade do dado antes de diagnosticar (janela/atribuição, pixel, conciliação). Aplica diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo), classifica em 6 trilhas e decide por LUCRO em reais (margem de contribuição, ROAS/CPA de break-even, três zonas) com o CPA como guardrail. Ações neutras ou pra baixo (nunca aumentam o gasto total): reduzir -20%, realocação neutra, limites por conjunto em CBO, cost cap, pausar, cortar posicionamento, guardrail automático. Painel de decisão em HTML opcional. Emite sinal de prontidão para /trafego-escalar quando o ROAS sustentado passa do break-even. Use quando o aluno pedir "analisar campanha", "otimizar", "diagnóstico", "CPA alto", "CPL caro", "está dando lucro?", "criativo cansou", "frequência alta", "está pronta para escalar?", "realocar orçamento", "pausa tudo com ROAS<1". Para low ticket via planilha colada (sem API), use /lt-otimizar.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

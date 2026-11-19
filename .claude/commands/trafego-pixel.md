@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-pixel
 description: Diagnostica os pixels do Meta Ads (Meta Pixel / conjuntos de dados) da conta de anúncios. Status de cada pixel, último disparo, eventos rastreados nos últimos 7 dias, taxa de deduplicação entre pixel e API de Conversões (CAPI) e pixels parados. Apenas leitura, nunca cria, edita ou apaga evento. Use quando o aluno perguntar "meu pixel está funcionando?", "quais eventos meu pixel rastreia?", "tem pixel sem atividade?", "qual foi o último disparo do pixel?". Para instalar o pixel numa página, use /pagina-pixel. Para criar evento personalizado que vire público, use /trafego-publicos.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---
