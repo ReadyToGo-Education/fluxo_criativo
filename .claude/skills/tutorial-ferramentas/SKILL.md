@@ -558,7 +558,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     </div>
     <div class="callout">
       <i class="ph ph-lightbulb-filament"></i>
-      <div><b>Alternativa via token.</b> Se preferir o fluxo antigo (comando <span class="inline">/pagina-vercel</span> lendo a variável <span class="inline">VERCEL_TOKEN</span> do .env), pegue o token em <b>Account Settings &gt; Tokens &gt; Create Token</b> no site do Vercel. Mas a forma recomendada hoje é o conector.</div>
+      <div><b>Alternativa via token.</b> Se preferir o fluxo antigo (comando <span class="inline">/pagina-vercel</span> lendo a variável <span class="inline">VERCEL_API_TOKEN</span> do .env), pegue o token em <b>Account Settings &gt; Tokens &gt; Create Token</b> no site do Vercel. Mas a forma recomendada hoje é o conector.</div>
     </div>
   </div>
 
@@ -723,7 +723,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     </div>
     <div class="callout ok">
       <i class="ph ph-check-circle"></i>
-      <div><b>Alternativa ao .env.</b> Se usar o conector, você não precisa da variável <span class="inline">VERCEL_TOKEN</span> no arquivo .env. O conector cuida da autenticação sozinho.</div>
+      <div><b>Alternativa ao .env.</b> Se usar o conector, você não precisa da variável <span class="inline">VERCEL_API_TOKEN</span> no arquivo .env. O conector cuida da autenticação sozinho.</div>
     </div>
   </div>
 </section>
@@ -1114,8 +1114,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
       </thead>
       <tbody>
         <tr><td>Claude Code</td><td class="mono">ANTHROPIC_API_KEY</td><td>Login via <span class="inline">claude</span></td></tr>
-        <tr><td>Vercel</td><td class="mono">VERCEL_TOKEN</td><td>Opcional (use o conector)</td></tr>
-        <tr><td>Vercel</td><td class="mono">VERCEL_PROJECT_ID</td><td>Opcional (use o conector)</td></tr>
+        <tr><td>Vercel</td><td class="mono">VERCEL_API_TOKEN</td><td>Opcional (use o conector)</td></tr>
         <tr><td>HeyGen</td><td class="mono">HEYGEN_API_KEY</td><td>Para <span class="inline">/video-heygen</span></td></tr>
         <tr><td>Freepik (Magnific)</td><td class="mono">FREEPIK_API_KEY</td><td>Para <span class="inline">/criativo-estatico</span></td></tr>
         <tr><td>OpenRouter</td><td class="mono">OPENROUTER_API_KEY</td><td>Para criativos IA</td></tr>
@@ -1129,7 +1128,7 @@ footer{margin-top:var(--sp-700);padding-top:var(--sp-400);border-top:1px solid v
     </div>
     <div class="tool-section">
       <h4><i class="ph ph-file-text"></i>Exemplo de .env completo</h4>
-      <code class="code"><span class="c"># Vídeo com avatar</span><br>HEYGEN_API_KEY=sua_chave_heygen<br><br><span class="c"># Imagens para anúncio</span><br>FREEPIK_API_KEY=sua_chave_freepik<br>OPENROUTER_API_KEY=sk-or-sua_chave<br>OPENROUTER_IMAGE_MODEL=black-forest-labs/flux-1.1-pro<br><br><span class="c"># Dashboard Instagram</span><br>APIFY_API_TOKEN=seu_token_apify<br><br><span class="c"># Vercel (só se não usar o conector)</span><br><span class="c"># VERCEL_TOKEN=seu_token_vercel</span><br><span class="c"># VERCEL_PROJECT_ID=seu_project_id</span></code>
+      <code class="code"><span class="c"># Vídeo com avatar</span><br>HEYGEN_API_KEY=sua_chave_heygen<br><br><span class="c"># Imagens para anúncio</span><br>FREEPIK_API_KEY=sua_chave_freepik<br>OPENROUTER_API_KEY=sk-or-sua_chave<br>OPENROUTER_IMAGE_MODEL=black-forest-labs/flux-1.1-pro<br><br><span class="c"># Dashboard Instagram</span><br>APIFY_API_TOKEN=seu_token_apify<br><br><span class="c"># Vercel (só se não usar o conector)</span><br><span class="c"># VERCEL_API_TOKEN=seu_token_vercel</span></code>
     </div>
   </div>
 </section>

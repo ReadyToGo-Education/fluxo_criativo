@@ -53,7 +53,7 @@ Copie `.env.example` para `.env` e preencha apenas o que for usar:
 | Nível | O que preencher | O que desbloqueia |
 |---|---|---|
 | **Básico** | Nada | Todos os entregáveis em arquivo local |
-| **Intermediário** | `VERCEL_TOKEN`, `FREEPIK_API_KEY` ou `OPENROUTER_API_KEY`, `APIFY_API_TOKEN` | Páginas publicadas, criativos automáticos, dashboards de redes |
+| **Intermediário** | `VERCEL_API_TOKEN`, `FREEPIK_API_KEY` ou `OPENROUTER_API_KEY`, `APIFY_API_TOKEN` | Páginas publicadas, criativos automáticos, dashboards de redes |
 | **Avançado** | `HEYGEN_API_KEY`, `FB_ACCESS_TOKEN_PERMANENTE` (ou MCP oficial Claude + Meta), `TELEGRAM_BOT_TOKEN`, `Z-API` | Vídeo com avatar IA, tráfego Meta Ads via API ou MCP, relatório diário automático |
 
 Para configurar qualquer integração, use o comando correspondente no chat (`/configurar-heygen`, `/configurar-apify`, `/configurar-telegram`, `/configurar-zapi`, `/trafego-conexao`, etc.). Ele guia o processo completo, mascara tokens na exibição e grava sempre no `.env` (regra global do projeto: token nunca aparece hardcoded em outro arquivo).
