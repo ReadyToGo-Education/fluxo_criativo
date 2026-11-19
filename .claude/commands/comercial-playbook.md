@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:comercial-playbook
 description: Gerar o playbook comercial completo de venda 1:1 por WhatsApp (middle e low ticket) do produto ativo. Cobre moldura DEF (Descoberta, Encantamento, Fechamento), abordagem ativa, abordagem receptiva, SPIN, recuperação de carrinho, follow-up, quebra de objeções pelo Framework dos 7 Argumentos e dicionário do comercial. Entrega em HTML único, pronto para leitura e exportação em PDF.
+categoria: Comercial
 ---
 
 # Playbook Comercial. Venda 1:1 por WhatsApp (Middle e Low Ticket)

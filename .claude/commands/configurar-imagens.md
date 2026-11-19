@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:configurar-imagens
 description: Guia para conectar uma API de geração de imagens (OpenRouter) ao projeto. Salva OPENROUTER_API_KEY no .env, usado pela skill /criativo-estatico.
+categoria: Configurações
 allowed-tools: Read, Edit, Bash
 model: sonnet
 ---

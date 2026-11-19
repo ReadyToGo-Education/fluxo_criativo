@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:configurar-telegram
 description: Guia para criar um bot no Telegram via BotFather, obter o Chat ID e conectar ao Workshop para envio de relatórios e automações.
+categoria: Configurações
 allowed-tools: Read, Edit, Bash, WebFetch, WebSearch
 model: sonnet
 ---

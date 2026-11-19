@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:configurar-higgsfield
 description: Guia para conectar o Higgsfield ao Claude via conector personalizado (MCP), permitindo animar criativos direto pelo chat. Skill reutilizável chamada pelo sub-fluxo Animar em loop do /criativo-estatico quando o conector não está ativo.
+categoria: Configurações
 allowed-tools: Read, Bash
 model: sonnet
 ---

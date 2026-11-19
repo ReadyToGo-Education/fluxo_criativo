@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-excluir
 description: Excluir um produto cadastrado e todas as suas entregas e pastas. Use esta skill SEMPRE que o usuário quiser deletar, remover ou apagar um produto do sistema.
+categoria: Produto
 ---
 
 # Excluir Produto. Remover Produto e Todas as Entregas

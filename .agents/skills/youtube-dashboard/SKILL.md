@@ -1,9 +1,9 @@
 ---
 name: youtube-dashboard
 description: >
-  Configura dashboard HTML de metricas do YouTube via Apify. Coleta dados
-  publicos do canal (inscritos, total de views, descricao), videos recentes
-  (views, likes, comentarios, duracao, titulo, thumbnail). Todas as
+  Configura dashboard HTML de métricas do YouTube via Apify. Coleta dados
+  publicos do canal (inscritos, total de views, descricao), vídeos recentes
+  (views, likes, comentarios, duração, titulo, thumbnail). Todas as
   thumbnails embutidas em base64. Roda localmente na maquina do mentorado,
   sem servidor, sem GitHub, sem agendamento automatico.
 user-invocable: false

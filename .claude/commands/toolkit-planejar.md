@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-planejar
 description: Gerar o plano em etapas do projeto ativo a partir do roteiro. Quebra o objetivo em etapas sequenciais com skill/comando associado, entregável esperado e ordem de execução.
+categoria: Toolkit
 ---
 
 # Toolkit. Gerar Plano

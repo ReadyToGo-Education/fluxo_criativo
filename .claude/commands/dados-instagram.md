@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:dados-instagram
 description: Analisar um perfil do Instagram coletando dados públicos (bio, últimos posts, engajamento, temas recorrentes, horários). Gera dashboard HTML com filtros (tipo de post, engajamento, tema) e relatório escrito com insights práticos de conteúdo para o aluno usar.
+categoria: Dados e Automações
 ---
 
 # Dados Instagram. Análise de Perfil com Dashboard

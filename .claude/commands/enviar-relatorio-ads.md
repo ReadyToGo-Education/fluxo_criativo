@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:enviar-relatorio-ads
 description: Busca as métricas do Facebook Ads e envia o relatório pelo Telegram ou WhatsApp. Detecta automaticamente o modo configurado (CLI Python ou Manual PowerShell).
+categoria: Dados e Automações
 allowed-tools: Read, Bash
 model: sonnet
 user-invocable: false

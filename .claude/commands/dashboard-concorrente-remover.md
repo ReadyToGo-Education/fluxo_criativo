@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:dashboard-concorrente-remover
 description: Remover um concorrente analisado anteriormente em /dashboard-social. Apaga a pasta `entregas/concorrentes/{slug}/` e regenera o painel para refletir a remocao.
+categoria: Dados e Automações
 ---
 
 # Remover Concorrente. Apagar Pasta e Atualizar Painel

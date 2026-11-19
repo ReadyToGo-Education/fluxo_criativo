@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-conexao
 description: Porta única de entrada para conectar o projeto com o Meta Ads (Facebook + Instagram). Confere os pré-requisitos no Meta, conecta sempre primeiro pelo conector oficial da Meta no Claude (MCP via OAuth, sem token) e testa; só se a conta ainda não estiver liberada no conector (ou o conector não responder) configura o App via Facebook Developers (token permanente no .env). Valida a conexão e salva o modo em META_AUTH_MODO e a conta padrão em FB_AD_ACCOUNT_ID. Skill reutilizável, chamada por qualquer skill de Meta Ads quando META_AUTH_MODO ainda não está configurada ou tem valor antigo.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

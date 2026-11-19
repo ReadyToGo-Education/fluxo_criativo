@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:lt-criar-produto
 description: Cria o conteúdo real do produto digital de entrada. e-book, checklist, mini-curso, desafio, agente de IA (Hotmart ou plugin do ChatGPT) ou planilha. Gera o arquivo pronto para entregar ao comprador.
+categoria: Low Ticket
 ---
 
 # Criar Produto Low Ticket

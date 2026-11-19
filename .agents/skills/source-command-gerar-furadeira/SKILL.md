@@ -1,6 +1,6 @@
 ---
 name: "source-command-gerar-furadeira"
-description: "Gerar a Furadeira (metodo) do produto ativo no perfil.md. Decide automaticamente qual das 6 mecanicas usar (Logica Condicional, Enquadramento, Listas, Fases, Empecilhos, Dinamica de Entrega), gera a estrutura, sugere nome do metodo e aplica teste de eficiencia. Sem entrevista."
+description: "Gerar a Furadeira (método) do produto ativo no perfil.md. Decide automaticamente qual das 6 mecânicas usar (Lógica Condicional, Enquadramento, Listas, Fases, Empecilhos, Dinâmica de Entrega), gera a estrutura, sugere nome do método e aplica teste de eficiência. Sem entrevista."
 ---
 
 # source-command-gerar-furadeira

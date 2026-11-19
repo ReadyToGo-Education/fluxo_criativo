@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-criativos
 description: Inteligência criativa por métricas de atenção, intenção e conversão para Meta Ads. 6 módulos de investigação (leitura de atenção com curva de retenção, intenção criativa com detecção de curiosidade vazia, conversão por temperatura cold/warm, diagnóstico criativo em 4 camadas, DNA comportamental ligado aos tipos da Mandala da Criatividade e briefing dos próximos testes). Nunca executa ação na conta e não produz o criativo: encaminha a produção para /copy-anuncio, /criativo-estatico, /mandala-de-anuncios e as skills de vídeo. Lê o resumo do produto e consome dados via /trafego-insights. Use quando o aluno pedir "por que esse criativo não vende?", "que criativo devo testar?", "análise criativa", "briefing de criativos", "DNA dos meus criativos".
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

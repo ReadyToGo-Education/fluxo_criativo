@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-precheckout
-description: Criar uma página de pre-checkout leve que captura nome, email e WhatsApp antes de enviar o lead pro checkout real. Salva o contato num CRM simples em JSON local, dispara evento InitiateCheckout no Pixel e redireciona pro Hotmart/Kiwify/Stripe. Skill de infraestrutura.
+description: Criar uma página de pré-checkout leve que captura nome, email e WhatsApp antes de enviar o lead pro checkout real. Salva o contato num CRM simples em JSON local, dispara evento InitiateCheckout no Pixel e redireciona pro Hotmart/Kiwify/Stripe. Skill de infraestrutura.
+categoria: Infraestrutura de Página
 ---
 
 # Página Pre-checkout com CRM Simples

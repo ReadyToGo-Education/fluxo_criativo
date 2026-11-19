@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:configurar-apify
 description: Guia para criar conta no Apify, gerar o Personal API Token e salvar no .env como APIFY_API_TOKEN. Skill reutilizável chamada por qualquer skill que dependa do Apify (instagram-dashboard, etc.).
+categoria: Configurações
 allowed-tools: Read, Edit, Bash
 model: sonnet
 ---

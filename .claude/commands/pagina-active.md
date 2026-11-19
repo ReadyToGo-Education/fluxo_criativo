@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-active
 description: Conectar uma página de captura HTML ao ActiveCampaign via API. Cadastra o lead na lista certa, dispara a sequência de emails e redireciona para a página de obrigado. Skill de infraestrutura, roda depois da copy da captura estar pronta.
+categoria: Infraestrutura de Página
 ---
 
 # Página ActiveCampaign. Integração via API

@@ -1,6 +1,6 @@
 ---
 name: "source-command-furadeira-visual"
-description: "Gerar a imagem PNG da Furadeira do produto ativo. Le a Furadeira ja escrita no perfil.md (gerada por /gerar-furadeira), decide o layout visual conforme mecanica + nicho, monta um prompt em ingles para o aluno colar no ChatGPT, recebe a imagem de volta e salva no projeto + painel de entregas."
+description: "Gerar a imagem PNG da Furadeira do produto ativo. Lê a Furadeira já escrita no perfil.md (gerada por /gerar-furadeira), decide o layout visual conforme mecanica + nicho, monta um prompt em ingles para o aluno colar no ChatGPT, recebe a imagem de volta e salva no projeto + painel de entregas."
 ---
 
 <!-- Acréscimo só do Codex, gerado por scripts/exportar-para-codex.py a partir de codex-extras/acrescimos/source-command-furadeira-visual/SKILL.md. -->

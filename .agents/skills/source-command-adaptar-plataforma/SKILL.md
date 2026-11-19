@@ -1,6 +1,6 @@
 ---
 name: "source-command-adaptar-plataforma"
-description: "Converte scripts e instrucoes Windows/PowerShell para Mac ou Linux. Adapta agendamento (Task Scheduler → cron/launchd), comandos de instalacao e execucao para o sistema operacional do aluno."
+description: "Converte scripts e instruções Windows/PowerShell para Mac ou Linux. Adapta agendamento (Task Scheduler → cron/launchd), comandos de instalação e execução para o sistema operacional do aluno."
 ---
 
 # source-command-adaptar-plataforma

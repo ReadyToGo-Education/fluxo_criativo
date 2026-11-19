@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:painel-atualizar
 description: Atualizar o manifest meus-produtos/index.js que alimenta o painel global painel/index.html. Varre a pasta meus-produtos/ e regenera a lista de produtos, seus nomes e caminhos dos painéis.
+categoria: Produto
 ---
 
 # Atualizar Manifest do Painel

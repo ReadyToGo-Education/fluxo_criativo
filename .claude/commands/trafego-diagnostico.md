@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-diagnostico
 description: Central de diagnóstico estratégico Meta Ads. 4 módulos de investigação (diagnóstico diferencial com 3 hipóteses competitivas, auditoria estrutural, detector de falso vencedor e score de confiança de 0 a 100 por decisão). Nunca executa ação na conta. Lê ticket, tipo, Quadro e Furadeira do resumo do produto e busca as métricas via /trafego-insights. Protege o caixa e é o freio antes de /trafego-escalar. Use quando o aluno pedir "onde está o problema?", "essa campanha é vencedora mesmo?", "minha conta está bagunçada?", "posso confiar nesse resultado?", "vale a pena escalar?", "por que meu CPA subiu?" ou "diagnóstico completo".
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

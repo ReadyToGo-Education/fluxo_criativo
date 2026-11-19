@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-novo
 description: Porta de entrada do projeto. Verifica produto ativo, cria um novo produto ou gera ideias de produto. Acionada automaticamente em QUALQUER nova conversa pela regra de abertura de sessão do CLAUDE.md.
+categoria: Produto
 ---
 
 <!--

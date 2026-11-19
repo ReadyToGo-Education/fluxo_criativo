@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-trocar
 description: Listar os produtos cadastrados e trocar o produto ativo.
+categoria: Produto
 ---
 
 # Trocar Produto. Selecionar Produto Ativo

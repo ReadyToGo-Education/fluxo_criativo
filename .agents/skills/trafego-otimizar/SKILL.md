@@ -29,7 +29,7 @@ Esta skill executa operações que **modificam estado** na conta Meta Ads. Antes
 5. **DELETE é sempre separado.** Nunca entra no "sim" do lote. Esta skill não apaga entidades: para tirar algo do ar, pausa (`status=PAUSED`) ou arquiva (`status=ARCHIVED`).
 6. **Atalhos compostos (§16)**, que atravessam várias skills, exigem o modo "lote pré-aprovado" do CLAUDE.md: plano completo numerado uma vez e um **"aprovar tudo"** explícito.
 7. Se o aluno responder `não` ou variante (cancelar, abortar, espera), abortar sem chamar a API.
-8. **NUNCA usar `python3 << 'EOF'` (heredoc) nem `curl | python3 -c`** com o token. Leitura segura do `.env`: checar presença com `grep -q`, nunca `cat .env`; o valor sensível só entra por substituição inline dentro do `curl`. Usar `curl -g` quando o `fields=` tiver `{}` aninhado. Ver "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" no CLAUDE.md.
+8. **NUNCA usar `python3 << 'EOF'` (heredoc) nem `curl | python3 -c`** com o token. Leitura segura do `.env`: checar presença com `grep -q`, nunca `cat .env`; o valor sensível só entra por substituição inline dentro do `curl`. Usar `curl -g` quando o `fields=` tiver `{}` aninhado. Ver "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" em `.claude/skills/trafego-pago/references/regras-meta-api.md`.
 
 **O gate vale nos dois modos.** A aprovação é sobre **o que** muda na conta, não sobre o transporte. A escrita via tool MCP (`ads_update_entity`, `ads_activate_entity`) passa pelo bloco 🛡️ tanto quanto o curl do modo `APP`.
 

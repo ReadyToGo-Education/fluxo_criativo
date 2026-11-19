@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:video-editar
-description: Editar videos existentes com FFmpeg. cortar, juntar, redimensionar, legendar, adicionar musica, comprimir, extrair audio. Ideal para ajustar Reels, VSLs e anuncios sem abrir software de edicao.
+description: Editar vídeos existentes com FFmpeg. cortar, juntar, redimensionar, legendar, adicionar música, comprimir, extrair audio. Ideal para ajustar Reels, VSLs e anuncios sem abrir software de edicao.
+categoria: Vídeo
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 model: opus
 ---

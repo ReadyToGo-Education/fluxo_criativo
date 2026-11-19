@@ -373,7 +373,7 @@ A `trafego-diagnostico` **nunca faz fetch direto** de métricas de performance. 
 
 ### 3.1. Leituras complementares (só leitura, por modo)
 
-Quando a insights não traz um dado, buscar direto, sempre leitura pura. No `MCP_CONECTOR`, usar a tool pelo **final do nome**; quando não tiver certeza do nome exato de um campo, fazer antes **1 chamada de verificação** com `ads_get_field_context` (nunca disparar a coleta cheia com campo adivinhado). No `APP`, 1 `curl` por chamada, versão `v25.0`, token inline lido do `.env` no momento da execução (padrão da seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md), `curl -g` quando o `fields` tiver chaves `{}` aninhadas, e na tela sempre `***TOKEN_MASCARADO***`.
+Quando a insights não traz um dado, buscar direto, sempre leitura pura. No `MCP_CONECTOR`, usar a tool pelo **final do nome**; quando não tiver certeza do nome exato de um campo, fazer antes **1 chamada de verificação** com `ads_get_field_context` (nunca disparar a coleta cheia com campo adivinhado). No `APP`, 1 `curl` por chamada, versão `v25.0`, token inline lido do `.env` no momento da execução (padrão da seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`), `curl -g` quando o `fields` tiver chaves `{}` aninhadas, e na tela sempre `***TOKEN_MASCARADO***`.
 
 | Dado complementar | Usado em | `MCP_CONECTOR` | `APP` (curl GET) |
 |---|---|---|---|
