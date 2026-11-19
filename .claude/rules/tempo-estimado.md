@@ -81,6 +81,22 @@
 
 ---
 
+## Vídeo (/video-editar)
+
+Medido num notebook comum, só com o processador (sem placa de vídeo).
+
+| Operação | Tempo estimado | Unidade |
+|----------|----------------|---------|
+| Instalar o whisper.cpp e o modelo de transcrição (só na primeira vez) | 2 a 5 minutos | minutos |
+| Analisar o vídeo para a edição automática (Reels ou anúncio de até 1 minuto) | cerca de 60 segundos | segundos |
+| Analisar o vídeo para a edição automática (vídeo de 3 a 5 minutos) | 3 a 5 minutos | minutos |
+| Analisar só as pausas (sem legenda e sem corte de erros) | cerca de 15 segundos | segundos |
+| Refazer a análise com ajustes (reaproveita a transcrição) | cerca de 5 segundos | segundos |
+| Gerar o vídeo editado com cortes e legenda (vídeo final de até 1 minuto) | cerca de 45 segundos | segundos |
+| Gerar o vídeo editado com cortes e legenda (vídeo final de 3 a 5 minutos) | 2 a 3 minutos | minutos |
+
+---
+
 ## Painel e Scripts
 
 | Operação | Tempo estimado | Unidade |

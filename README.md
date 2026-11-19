@@ -42,9 +42,9 @@ Distribuição empacotada para alunos. O instalador (`instalador/script-windows.
 | Ferramenta | Ativa |
 |---|---|
 | **Vercel CLI** | `/pagina-vercel` (publicar páginas) |
-| **FFmpeg** | `/video-editar` (corte, legenda, compressão) |
+| **FFmpeg** | `/video-editar` (legenda automática, corte de erros e de silêncios, compressão) |
 | **Remotion** | `/video-remotion` (vídeo animado para Ads) |
-| **whisper.cpp** | `/video-editar` (transcrição e legenda automática, instalado sob demanda em `.claude/tools/whisper/`) |
+| **whisper.cpp** | `/video-editar` (transcrição para a legenda e o corte de erros; roda só no processador, instalado sob demanda em `.claude/tools/whisper/`) |
 
 ### APIs (todas opcionais. O toolkit funciona 100% sem nenhuma)
 
@@ -210,7 +210,7 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/furadeira-visual`. Gera a imagem PNG da Furadeira a partir do que já está escrito no `perfil.md`. Decide o layout sozinho conforme mecânica + nicho, monta prompt em inglês para o aluno colar no ChatGPT, recebe a imagem de volta e salva no projeto + painel de entregas.
 - `/video-heygen`. Vídeo com avatar IA via HeyGen, múltiplas cenas, avatares rotacionados, backgrounds variados, direção baseada em dados reais (Apify/dashboard) ou Urgências Ocultas.
 - `/video-remotion`. Vídeo animado para Meta Ads via Remotion.
-- `/video-editar`. Edita vídeos existentes com FFmpeg (corte, legenda via Whisper, compressão).
+- `/video-editar`. Edita vídeos existentes com FFmpeg. A edição automática da fala coloca a legenda, tira as frases com erro (fica a última tomada) e corta as pausas longas, tudo no computador do aluno, sem placa de vídeo. Também corta, junta, redimensiona e comprime.
 - `/video-efeitos`. Aplica efeitos visuais em vídeo (transições, scrub, otimização).
 
 ### Carrossel

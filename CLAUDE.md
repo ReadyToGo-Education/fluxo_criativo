@@ -705,7 +705,7 @@ Em seguida, liste os comandos disponíveis organizados por categoria:
 **Vídeo:**
 - `/video-heygen`. Criar vídeo com avatar IA
 - `/video-remotion`. Criar vídeo para Meta Ads com Remotion
-- `/video-editar`. Editar vídeos existentes com FFmpeg
+- `/video-editar`. Editar vídeos gravados: legenda automática, corte das frases com erro e das pausas longas, e outras edições com FFmpeg (cortar, juntar, redimensionar, comprimir)
 
 **Infraestrutura de Página (rodam após gerar a página):**
 - `/pagina-ajuste`. Ajustes pós-merge guiados por perguntas (diagnóstico, cores para layout, menu: copy, headline, placeholders e ideias de imagens, conversão, SEO, imagens, depois edição)
