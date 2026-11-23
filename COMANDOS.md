@@ -98,7 +98,7 @@ os outros são chamados pelo nome ("usar o instagram-dashboard").
 
 ## Vídeo
 
-- `/video-editar`. Editar vídeos existentes com FFmpeg.
+- `/video-editar`. Editar vídeos gravados com FFmpeg: edição automática da fala (legenda, corte de erros e corte de silêncios) e edições manuais (cortar, juntar, redimensionar, legendar, música, comprimir, extrair áudio, efeitos).
 - `/video-efeitos`. Aplicar motion graphics animados em vídeos existentes usando GSAP + Puppeteer + FFmpeg.
 - `/video-heygen`. Criar vídeo com avatar IA usando HeyGen com múltiplas cenas, avatares rotacionados, backgrounds variados e direção visual baseada em dados reais (Apify/dashboard) ou Urgências Ocultas do perfil.
 - `/video-remotion`. Criar vídeo para Meta Ads com Remotion.
