@@ -28,6 +28,28 @@
             "commandWindows": "bash .claude/hooks/gsd-session-state.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/sincronizar-meus-produtos.js\"",
+            "commandWindows": "node .claude/hooks/sincronizar-meus-produtos.js",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/sincronizar-meus-produtos.js\"",
+            "commandWindows": "node .claude/hooks/sincronizar-meus-produtos.js",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "PostToolUse": [
