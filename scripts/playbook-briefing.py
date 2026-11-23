@@ -51,6 +51,7 @@ _montar = importlib.util.module_from_spec(_montar_spec)
 _montar_spec.loader.exec_module(_montar)
 parse_perfil = _montar.parse_perfil
 parse_idconsumidor = _montar.parse_idconsumidor
+ler_produto = _montar.ler_produto
 
 
 # ============================================================================
@@ -77,9 +78,11 @@ def _aspa(texto: str) -> str:
 
 
 def gerar_briefing(perfil: dict, idc: dict, slug: str) -> str:
-    nome = perfil.get("nome_produto", "Produto")
+    nome = perfil.get("nome_produto") or slug.replace("-", " ").title()
     quadro = perfil.get("quadro", "")
     preco = perfil.get("preco_texto", "")
+    tipo = perfil.get("tipo", "")
+    formato = perfil.get("formato", "")
     posicionamento = perfil.get("posicionamento", "")
     tom_voz = perfil.get("tom_voz", "")
     posicionamento_com = perfil.get("posicionamento_comunicador", "")
@@ -110,10 +113,13 @@ def gerar_briefing(perfil: dict, idc: dict, slug: str) -> str:
     palavras_conectar = perfil.get("palavras_conectar", [])
     palavras_afastar = perfil.get("palavras_afastar", [])
 
-    # Consumidor
-    publico = perfil.get("demograficos", {}).get("Público-alvo") or perfil.get(
-        "demograficos", {}
-    ).get("Publico-alvo", "")
+    # Consumidor (Público-alvo do perfil antigo, Para Quem É do idconsumidor ou Perfil do resumo)
+    demograficos = perfil.get("demograficos", {})
+    publico = (
+        perfil.get("perfil_consumidor")
+        or demograficos.get("Público-alvo")
+        or demograficos.get("Publico-alvo", "")
+    )
     paliativos = idc.get("paliativos_idc") or perfil.get("paliativos") or []
     frases = idc.get("frases_consumidor") or perfil.get("frases_publico") or []
 
@@ -147,6 +153,8 @@ def gerar_briefing(perfil: dict, idc: dict, slug: str) -> str:
 - Nome: {nome}
 - Quadro (transformação): {quadro or "(vazio)"}
 - Preço: {preco or "(vazio)"}
+- Tipo: {tipo or "(vazio)"}
+- Formato (o que o cliente recebe): {formato or "(vazio)"}
 - Posicionamento: {posicionamento or "(vazio)"}
 
 ## Furadeira (método em macroetapas)
@@ -260,8 +268,7 @@ def main() -> int:
             f"idconsumidor.md não encontrado em {pasta_produto}. Rode /produto-concepcao antes."
         )
 
-    perfil = parse_perfil(perfil_path.read_text(encoding="utf-8"))
-    idc = parse_idconsumidor(idc_path.read_text(encoding="utf-8"))
+    perfil, idc = ler_produto(pasta_produto)
 
     briefing = gerar_briefing(perfil, idc, slug)
 

@@ -40,6 +40,63 @@ def e(valor: Any) -> str:
 
 
 # ============================================================================
+# Textos derivados do produto (usados nas frases prontas e no assistente)
+# ============================================================================
+
+
+def _listar(itens: list[str]) -> str:
+    """Junta itens em português: 'a', 'a e b', 'a, b e c'."""
+    itens = [i for i in itens if i]
+    if len(itens) <= 1:
+        return "".join(itens)
+    return ", ".join(itens[:-1]) + " e " + itens[-1]
+
+
+def quadro_em_frase(quadro: str) -> str:
+    """Quadro pronto para entrar no meio de uma frase: inicial minúscula, sem ponto final.
+
+    Mantém a inicial quando a primeira palavra é sigla (OAB, INSS) ou tem
+    maiúscula no meio (YouTube).
+    """
+    texto = (quadro or "").strip().rstrip(".").strip()
+    if not texto:
+        return ""
+    letras = [c for c in texto.split()[0] if c.isalpha()]
+    if len(letras) > 1 and (
+        all(c.isupper() for c in letras) or any(c.isupper() for c in letras[1:])
+    ):
+        return texto
+    return texto[0].lower() + texto[1:]
+
+
+def _sujeito_metodo(d: dict) -> str:
+    """'O método, Protocolo Caso Pronto,' / 'O Método Fluência 3F' / 'O método'."""
+    nome = (d.get("furadeira_nome") or "").strip()
+    if not nome:
+        return "O método"
+    if nome.lower().startswith(("método", "metodo")):
+        return f"O {nome}"
+    return f"O método, {nome},"
+
+
+def frase_metodo(d: dict) -> str:
+    """Frase com as etapas da Furadeira, sem o jargão interno.
+
+    Ex.: 'O método, Protocolo Caso Pronto, tem 5 etapas: A, B, C, D e E.'
+    Vazio quando a Furadeira não tem etapas cadastradas.
+    """
+    nomes = [
+        str(et.get("nome", "")).strip().rstrip(".:").strip()
+        for et in (d.get("furadeira_etapas") or [])
+    ]
+    nomes = [n for n in nomes if n]
+    if not nomes:
+        return ""
+    etapas = "etapa" if len(nomes) == 1 else "etapas"
+    return f"{_sujeito_metodo(d)} tem {len(nomes)} {etapas}: {_listar(nomes)}."
+
+
+# ============================================================================
 # CSS
 # ============================================================================
 
@@ -1063,15 +1120,16 @@ _JS = """\
 _JS_ASSISTENTE = """\
 (function() {
   var CTX = window.PLAYBOOK_CTX || {};
-  var PRODUTO = CTX.nome_produto || 'o programa';
-  var QUADRO = CTX.quadro || 'a transformação que você procura';
-  var PRECO = CTX.preco_texto || 'o investimento do programa';
+  var PRODUTO = CTX.nome_produto || '[PRODUTO]';
+  var QUADRO = CTX.quadro_frase || '';
+  var PRECO = CTX.preco_texto || '[VALOR]';
+  var ETAPAS = CTX.frase_metodo || 'O método é dividido em etapas, e eu te mostro cada uma.';
 
   var INTENCOES = [
     { id: 'pronto-comprar', label: 'Pronto para comprar', secao: 'secao-8', secao_nome: 'Fechamento em 4 passos',
       palavras: ['quero comprar','como pago','onde pago','fechado','me manda o link','pode mandar o link','mandar o link','aceitei','quero fechar','tô dentro','to dentro','pode fechar','vou fechar'] },
     { id: 'preco', label: 'Perguntou preço', secao: 'secao-7', secao_nome: 'Apresentação e ancoragem de preço',
-      palavras: ['quanto custa','quanto é','qual o valor','qual o preço','valor do','preço do','valor do curso','preço do curso'] },
+      palavras: ['quanto custa','quanto é','qual o valor','qual o preço','valor do','preço do','valor da','preço da'] },
     { id: 'caro', label: 'Achou caro', secao: 'secao-9', secao_nome: 'Quebra de objeções (7 Argumentos)',
       palavras: ['caro','muito caro','acima do','alto demais','salgado','fora do orçamento','fora do orcamento','não tenho esse valor','nao tenho esse valor'] },
     { id: 'desconto', label: 'Pediu desconto ou parcelamento', secao: 'secao-9', secao_nome: 'Quebra de objeções (7 Argumentos)',
@@ -1086,21 +1144,21 @@ _JS_ASSISTENTE = """\
       palavras: ['já tentei','ja tentei','já fiz','ja fiz','não deu certo','nao deu certo','não funcionou pra mim','nao funcionou','já comprei','ja comprei','já investi','ja investi'] },
     { id: 'confiar', label: 'Dúvida se funciona', secao: 'secao-9', secao_nome: 'Quebra de objeções (7 Argumentos)',
       palavras: ['funciona mesmo','é sério','eh serio','é verdade','eh verdade','golpe','confiar','como sei','como saber','tenho medo','será que funciona','sera que funciona'] },
-    { id: 'conjuge', label: 'Vai falar com cônjuge ou família', secao: 'secao-9', secao_nome: 'Quebra de objeções (7 Argumentos)',
-      palavras: ['falar com meu marido','falar com minha esposa','conversar com meu marido','conversar com minha esposa','ver com minha família','ver com minha familia','falar em casa','minha mulher','meu esposo'] },
+    { id: 'conjuge', label: 'Vai falar com cônjuge, família ou sócio', secao: 'secao-9', secao_nome: 'Quebra de objeções (7 Argumentos)',
+      palavras: ['falar com meu marido','falar com minha esposa','conversar com meu marido','conversar com minha esposa','ver com minha família','ver com minha familia','falar em casa','minha mulher','meu esposo','falar com meu sócio','falar com minha sócia','ver com meu sócio','ver com minha sócia','meu sócio','minha sócia'] },
     { id: 'meu-caso-diferente', label: 'Acha que o caso dele é diferente', secao: 'secao-6', secao_nome: 'SPIN adaptado ao WhatsApp',
       palavras: ['meu caso é diferente','meu caso eh diferente','minha situação','minha situacao','é diferente','eh diferente','comigo é','comigo eh','no meu caso'] },
     { id: 'como-funciona', label: 'Quer entender o método', secao: 'secao-2', secao_nome: 'Identidade do Produto',
       palavras: ['como funciona','como é','como eh','me explica','o que é','o que eh','me conta mais','me fala mais','do que se trata','no que consiste','funciona como'] },
     { id: 'prova', label: 'Pediu prova ou depoimento', secao: 'secao-7', secao_nome: 'Apresentação e ancoragem de preço',
-      palavras: ['depoimento','caso de sucesso','prova','resultado de aluno','quem já','quem ja','alguém conseguiu','alguem conseguiu','tem algum caso','algum resultado'] },
+      palavras: ['depoimento','caso de sucesso','prova','resultado de','quem já','quem ja','alguém conseguiu','alguem conseguiu','tem algum caso','algum resultado'] },
     { id: 'saudacao', label: 'Saudação inicial', secao: 'secao-5', secao_nome: 'Abordagem Receptiva · Inbound',
       palavras: ['oi','olá','ola','bom dia','boa tarde','boa noite','tudo bem','tudo bom','td bem','oii','e aí','e ai','opa'] }
   ];
 
   var RESPOSTAS = {
     'pronto-comprar': [
-      '[NOME], show. Vou te mandar o checkout agora. Me confirma a compra por aqui que já libero seus acessos.',
+      '[NOME], combinado. Vou te mandar o link de pagamento agora. Assim que o pagamento confirmar, te passo por aqui os próximos passos.',
       'Perfeito, [NOME]. Link do checkout: [COLE O LINK]. Depois do pagamento me avisa que eu mando as boas-vindas e os primeiros passos.'
     ],
     'preco': [
@@ -1110,47 +1168,47 @@ _JS_ASSISTENTE = """\
     'caro': [
       '[NOME], eu entendo a percepção. Pra eu te ajudar melhor: hoje você compara esse valor com o quê especificamente?',
       'Faz sentido o que você sentiu, [NOME]. Só pra gente olhar junto: se essa dificuldade continuar por mais 6 meses, quanto isso custa pra você em tempo, energia e oportunidade? Esse é o preço real de não resolver.',
-      'Posso te mostrar de outro ângulo, [NOME]. O valor é ' + PRECO + '. Dividido pelo tempo de acompanhamento, sai por bem menos que a maioria gasta em coisas que não mudam o resultado. Faz sentido olhar assim?'
+      'Posso te mostrar de outro ângulo, [NOME]. O valor é ' + PRECO + '. Coloca do lado quanto o problema já custa hoje, em dinheiro e em tempo. Qual das duas contas pesa mais?'
     ],
     'desconto': [
-      '[NOME], o valor é fixo pra todo mundo, exatamente pra não gerar insegurança em quem pagou o preço cheio. O parcelamento vai até [X]x sem entrada. Te mando o link?',
-      'Entendo o pedido, [NOME]. O que consigo garantir por você é o bônus [NOME DO BÔNUS] que fecha hoje. No cartão dá pra parcelar em [X]x. Como prefere, à vista ou parcelado?'
+      '[NOME], o valor é o mesmo pra todo mundo, exatamente pra não gerar insegurança em quem pagou o preço cheio. As formas de pagamento são: [FORMAS DE PAGAMENTO]. Te mando o link?',
+      'Entendo o pedido, [NOME]. Antes de falar de condição, deixa eu te mostrar, item por item, o que esse valor inclui. Aí você vê se a conta fecha.'
     ],
     'sem-dinheiro': [
-      '[NOME], faz sentido pensar assim. Só quero te perguntar uma coisa: quanto você imagina que já gastou nos últimos 12 meses tentando resolver isso por fora? Às vezes o custo de adiar sai mais caro que o programa.',
-      'Te entendo, [NOME]. Dá pra começar no cartão parcelado em [X]x, a primeira parcela só entra daqui a 30 dias. Assim você começa hoje e a parcela chega depois que já viu resultado. Faz sentido pra você?'
+      '[NOME], faz sentido pensar assim. Só quero te perguntar uma coisa: quanto você imagina que já gastou nos últimos 12 meses tentando resolver isso por fora? Às vezes o custo de adiar sai mais caro que o investimento.',
+      'Te entendo, [NOME]. Uma conta rápida ajuda a decidir: quanto esse problema custa por mês hoje, em dinheiro e em tempo? Se passar de ' + PRECO + ', adiar sai mais caro que resolver.'
     ],
     'vou-pensar': [
       '[NOME], claro. Só pra eu te ajudar a pensar com mais clareza, o que ainda falta pra você sentir segurança de decidir? É o método, o tempo, o valor ou outra coisa?',
-      'Faz sentido. Só te adianto uma coisa: a condição de hoje (bônus mais parcelamento) fecha em [X]h. Depois disso volta ao valor cheio. Quer que eu te mande o link pra você decidir com o material em mãos?'
+      'Faz sentido. Quer que eu te mande um resumo curto do que está incluído e do valor, pra você decidir com tudo em mãos?'
     ],
     'sem-tempo': [
-      '[NOME], entendo. A maioria dos alunos começa exatamente nesse cenário. O programa pede poucos minutos por dia e foi desenhado pra quem tem rotina cheia. A pergunta que faz diferença é: essa falta de tempo hoje vai sumir em 3 meses sozinha ou só vai piorar?',
-      'Faz total sentido, [NOME]. Por isso o formato é gravado e você assiste no seu ritmo. Dá pra acompanhar no trânsito, na academia, na cozinha. Quer que eu te mostre como funciona a primeira semana?'
+      '[NOME], entendo. Me conta como é a sua semana hoje, que eu te mostro quanto tempo isso pede de você na prática. E vale a pergunta: essa falta de tempo vai sumir sozinha nos próximos 3 meses?',
+      'Faz sentido, [NOME]. Quer que eu te mostre como funciona a primeira semana, passo a passo? Aí você vê se cabe na sua rotina.'
     ],
     'ja-tentei': [
       '[NOME], me conta rapidinho o que você tentou antes e onde travou. Assim consigo te falar com honestidade se o ' + PRODUTO + ' vai te servir ou não.',
-      'Ajuda a gente pensar assim, [NOME]: o que a maioria tenta resolve parte, mas não resolve a causa. O que a gente faz diferente é [DIFERENCIAL DA FURADEIRA]. Por isso quem já tentou antes costuma ver resultado aqui.'
+      'Ajuda a gente pensar assim, [NOME]: o que a maioria tenta resolve parte, mas não resolve a causa. O que muda aqui é [DIFERENCIAL DO PRODUTO]. Quer que eu te mostre como isso funciona no seu caso?'
     ],
     'confiar': [
-      '[NOME], pergunta justa. Tenho alunos formados nos últimos anos com resultado documentado. Te mando 2 depoimentos de pessoas com perfil parecido com o seu pra você ver com seus olhos?',
-      'Faz sentido pedir prova, [NOME]. A garantia é de [X] dias: se você entrar, seguir o método e não ver resultado, devolvo 100% do valor. Quem tá errado é quem paga, não você.'
+      '[NOME], pergunta justa. O que te daria mais segurança pra decidir: ver como funciona por dentro, conhecer um caso real ou entender as condições da compra?',
+      'Faz sentido pedir prova, [NOME]. Te mostro como funciona, passo a passo, pra você avaliar com os próprios olhos. Posso te mandar agora?'
     ],
     'conjuge': [
-      '[NOME], claro. Só pra você já chegar em casa com tudo na mão, te passo um resumo em 5 linhas do que é o ' + PRODUTO + ', o que entrega, prazo e valor. Posso mandar?',
-      'Faz sentido, [NOME]. Quando for conversar, duas perguntas que ajudam a família a entender: 1) quanto essa dificuldade tá custando hoje em casa; 2) quanto vai custar em 6 meses sem resolver. Aí o valor faz mais sentido.'
+      '[NOME], claro. Só pra você chegar nessa conversa com tudo na mão, te passo um resumo em 5 linhas do que é o ' + PRODUTO + ', o que entrega e quanto custa. Posso mandar?',
+      'Faz sentido, [NOME]. Quando for conversar, duas perguntas ajudam: 1) quanto essa dificuldade está custando hoje; 2) quanto vai custar em 6 meses sem resolver. Aí o valor faz mais sentido.'
     ],
     'meu-caso-diferente': [
       '[NOME], me conta um pouco mais do seu caso. O que você considera diferente? Assim consigo te falar com honestidade se o ' + PRODUTO + ' serve ou não.',
       'Ajuda se eu te perguntar por partes, [NOME]: 1) há quanto tempo você convive com isso? 2) o que já tentou? 3) o que mudaria na sua rotina se isso fosse resolvido nos próximos 90 dias?'
     ],
     'como-funciona': [
-      '[NOME], explico em 3 mensagens rápidas. O ' + PRODUTO + ' entrega ' + QUADRO + '. O método é dividido em etapas claras e você sai de [ponto A] pra [ponto B] em [prazo].',
+      '[NOME], explico rapidinho. ' + (QUADRO ? 'O objetivo é ' + QUADRO + '. ' : '') + ETAPAS,
       'Antes de entrar nos detalhes, [NOME], me diz uma coisa: qual parte disso mais te interessa resolver hoje? Assim eu foco a explicação no que te serve.'
     ],
     'prova': [
-      '[NOME], te mando 2 casos de alunos com perfil parecido com o seu. Só me fala antes: você tá mais em busca de [cenário A] ou [cenário B]? Aí te mando o caso mais próximo do seu.',
-      'Claro, [NOME]. [Nome fictício], [perfil], tinha [dificuldade]. Em [tempo] conseguiu [resultado]. Quer que eu te mostre o print do depoimento?'
+      '[NOME], claro. Um caso real: [CLIENTE REAL], [PERFIL], tinha [DIFICULDADE] e hoje [RESULTADO]. Quer que eu te mande o print?',
+      'Claro, [NOME]. Te mostro como funciona na prática, passo a passo, pra você avaliar com os próprios olhos. Posso mandar?'
     ],
     'saudacao': [
       'Oi, [NOME]. Tudo bem? Vi que você chegou aqui. O que te fez procurar sobre o ' + PRODUTO + ' agora?',
@@ -1307,12 +1365,15 @@ def render_shell(titulo: str, conteudo: str, ctx: dict | None = None) -> str:
     """Monta o HTML completo a partir do conteudo do miolo.
 
     ctx: dicionario opcional com dados do produto usados pelo assistente de
-    resposta. Chaves esperadas: nome_produto, quadro, preco_texto.
+    resposta. Chaves esperadas: nome_produto, quadro, quadro_frase (Quadro com
+    inicial minúscula, para o meio da frase), frase_metodo e preco_texto.
     """
     css = _CSS_TOKENS + _CSS_BASE + _CSS_COMPONENTS + _CSS_ASSISTENTE + _CSS_PRINT
     ctx_dict = {
         "nome_produto": (ctx or {}).get("nome_produto", ""),
         "quadro": (ctx or {}).get("quadro", ""),
+        "quadro_frase": (ctx or {}).get("quadro_frase", ""),
+        "frase_metodo": (ctx or {}).get("frase_metodo", ""),
         "preco_texto": (ctx or {}).get("preco_texto", ""),
     }
     # Evita quebra do script via </script> embutido no JSON
@@ -1353,7 +1414,7 @@ def render_shell(titulo: str, conteudo: str, ctx: dict | None = None) -> str:
         <button id="assistente-analisar" class="assistente-btn assistente-btn-primario">Analisar mensagem</button>
         <button id="assistente-limpar" class="assistente-btn assistente-btn-secundario">Limpar</button>
       </div>
-      <div class="assistente-dica">Dica: troque [NOME] pelo primeiro nome do lead antes de enviar. Ctrl+Enter analisa.</div>
+      <div class="assistente-dica">Dica: troque [NOME] pelo primeiro nome do lead e preencha os outros trechos entre colchetes antes de enviar. Ctrl+Enter analisa.</div>
       <div id="assistente-resultado" class="assistente-resultado"></div>
     </div>
   </div>
@@ -1453,7 +1514,7 @@ def render_identidade_produto(d: dict) -> str:
 
     return f"""<section id="secao-2">
   <h2>2. Identidade do Produto</h2>
-  <p>Para o time aprender o produto do zero. Tudo aqui vem do perfil.md do produto ativo.</p>
+  <p>Para o time aprender o produto do zero.</p>
   <div class="card">
     <h3 style="margin-top:0;">{e(nome)}</h3>
     <p><strong>Quadro (transformação):</strong> {e(quadro)}</p>
@@ -1462,7 +1523,7 @@ def render_identidade_produto(d: dict) -> str:
   </div>
 
   <h3 style="margin-top:24px;">{furadeira_titulo}</h3>
-  <p style="font-size:13px;color:var(--color-detail);">Método em macroetapas. O que o aluno faz em cada passo.</p>
+  <p style="font-size:13px;color:var(--color-detail);">Método em macroetapas. O que acontece em cada passo.</p>
   {furadeira_html}
 
   <h3 style="margin-top:24px;">Entregáveis</h3>
@@ -1480,7 +1541,18 @@ def render_identidade_produto(d: dict) -> str:
 
 def render_def(d: dict) -> str:
     """Secao 3. Metodologia DEF (Descoberta, Encantamento, Fechamento)."""
-    quadro = d.get("quadro", "a transformação do produto")
+    quadro_frase = quadro_em_frase(d.get("quadro", ""))
+    sujeito = _sujeito_metodo(d)
+    if quadro_frase:
+        frase_caminho = (
+            f"Pelo que você descreveu, o caminho é {quadro_frase}. "
+            f"{sujeito} tem um passo para cada parte disso."
+        )
+    else:
+        frase_caminho = (
+            f"Pelo que você descreveu, {sujeito[0].lower()}{sujeito[1:]} "
+            "tem um passo para cada parte disso."
+        )
     estagios = [
         {
             "letra": "D",
@@ -1502,8 +1574,8 @@ def render_def(d: dict) -> str:
             "objetivo": "Conectar a dor ao Quadro e à Furadeira com as palavras do lead. Mostrar que o método resolve aquilo especificamente.",
             "sinais": "O lead pergunta preço, formato ou prazo.",
             "frases": [
-                f"Pelo que você descreveu, a saída passa exatamente por {quadro}. O método tem uma trilha pra isso.",
-                "Isso que você está sentindo é o que o passo 2 da Furadeira destrava. Não é aleatório, tem ordem.",
+                frase_caminho,
+                "Isso que você descreveu é o que o passo [Nº], [NOME DO PASSO], resolve. Te mostro como ele funciona no seu caso.",
             ],
         },
         {
@@ -1515,7 +1587,7 @@ def render_def(d: dict) -> str:
             "sinais": "O lead confirma que faz sentido e pergunta como pagar.",
             "frases": [
                 "Faz sentido pra você? Se sim, já te mando o checkout aqui.",
-                "Vou te enviar o link agora. Me confirma a compra por aqui que libero os acessos no ato.",
+                "Vou te enviar o link agora. Assim que o pagamento confirmar, te mando por aqui os próximos passos.",
             ],
         },
     ]
@@ -1546,20 +1618,22 @@ def render_def(d: dict) -> str:
 
 def render_fechamento(d: dict) -> str:
     """Secao 8. Fechamento em 4 passos (template)."""
-    produto = d.get("nome_produto", "o programa")
-    preco = d.get("preco_texto", "o valor da oferta")
-    quadro = d.get("quadro", "a transformação principal")
+    produto = d.get("nome_produto") or "[PRODUTO]"
+    preco = d.get("preco_texto") or "[VALOR]"
+    quadro_frase = quadro_em_frase(d.get("quadro", ""))
+    objetivo = f" O objetivo é {quadro_frase}." if quadro_frase else ""
+    metodo = frase_metodo(d) or "Te mostro agora, item por item, o que está incluído."
     return f"""<section id="secao-8">
   <h2>8. Fechamento em 4 passos (WhatsApp)</h2>
-  <p>Sequência pronta. Substitua [Nome], [DOR], [TEMPO] pelos dados do lead na conversa real.</p>
+  <p>Sequência pronta. Substitua [Nome], [DOR] e [O QUE O LEAD JÁ TENTOU] pelos dados do lead na conversa real.</p>
   <div class="bolha-grupo">
     <h4>Passo 1. Conexão dor-solução</h4>
-    <div class="bolha">[Nome], sua dificuldade é [DOR]. É exatamente isso que {e(produto)} resolve. Em [TEMPO] você consegue {e(quadro)}.</div>
+    <div class="bolha">[Nome], sua dificuldade é [DOR]. É exatamente isso que {e(produto)} resolve.{e(objetivo)}</div>
   </div>
   <div class="bolha-grupo">
     <h4>Passo 2. Ancoragem de valor</h4>
-    <div class="bolha">Se você fosse resolver isso com os paliativos que já tentou, gastaria muito mais e continuaria sem método. Aqui você tem trilha, acompanhamento e ponto final.</div>
-    <div class="bolha">Isso significa parar de pagar por solução avulsa e passar a ter um sistema que resolve de uma vez.</div>
+    <div class="bolha">Pensa no que você já tentou para resolver isso: [O QUE O LEAD JÁ TENTOU]. Quanto isso custou até aqui, em dinheiro e em tempo?</div>
+    <div class="bolha">{e(metodo)}</div>
   </div>
   <div class="bolha-grupo">
     <h4>Passo 3. Preço + confirmação</h4>
@@ -1567,7 +1641,7 @@ def render_fechamento(d: dict) -> str:
   </div>
   <div class="bolha-grupo">
     <h4>Passo 4. Envio do link</h4>
-    <div class="bolha">Vou te mandar o checkout agora. Me confirma a compra por aqui que já libero seus acessos.</div>
+    <div class="bolha">Vou te mandar o checkout agora. Assim que o pagamento confirmar, te mando por aqui os próximos passos.</div>
   </div>
   <div class="card" style="background:var(--color-negative-subtle);border-left:3px solid var(--color-negative);">
     <strong>Proibido:</strong> perguntar "quer comprar?". Assuma o interesse e envie o link.
@@ -1579,7 +1653,7 @@ def render_fechamento(d: dict) -> str:
 def render_dicionario() -> str:
     """Secao 12. Dicionario do Comercial (fixo, 16 termos)."""
     termos = [
-        ("Lead", "Pessoa que entrou em contato ou foi abordada pelo comercial. Ainda não é aluno."),
+        ("Lead", "Pessoa que entrou em contato ou foi abordada pelo comercial. Ainda não é cliente."),
         ("Inbound", "Lead que chega por iniciativa dele (anúncio, orgânico, link da bio). Já tem dor consciente."),
         ("Outbound", "Lead que o comercial aborda primeiro. Tem perfil, mas ainda não sabe que tem a dor."),
         ("SDR", "Vendedor que faz o primeiro contato, qualifica o lead e passa adiante. Não fecha venda."),
