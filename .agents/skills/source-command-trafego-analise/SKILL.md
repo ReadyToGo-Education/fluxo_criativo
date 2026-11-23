@@ -188,7 +188,7 @@ Qual período da análise?
 
   Período customizado (opção 4): trocar `--periodo {PERIODO}` por `--since YYYY-MM-DD --until YYYY-MM-DD` nos dois comandos. Conta de captação: acrescentar `--cpl-alvo {CPL_ALVO}` ao processar. O cache fica na pasta do produto ativo (`{ativo}`, lido em `meus-produtos/.ativo`), em `meus-produtos/{ativo}/trafego/analise/cache/`, com o mesmo `--cache-dir` nos dois comandos (sem ele, os scripts caem na pasta reserva `skill-analise/cache/`). O cache vale só no mesmo dia; se o fetch devolver `{"error": ...}`, não rodar o processar e explicar ao aluno que a Meta não respondeu (detalhes no Passo 4 do `SKILL.md`).
 
-  As chamadas extras de cada output (breakdowns, listagens) vão por `curl` direto, uma chamada `Bash(curl ...)` por vez, conforme a regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md, com o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`) e colchetes e chaves codificados. Nunca exibir o `curl` com o token no chat.
+  As chamadas extras de cada output (breakdowns, listagens) vão por `curl` direto, uma chamada `Bash(curl ...)` por vez, conforme a regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`, com o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`) e colchetes e chaves codificados. Nunca exibir o `curl` com o token no chat.
 
 ### Campos base (modo APP)
 

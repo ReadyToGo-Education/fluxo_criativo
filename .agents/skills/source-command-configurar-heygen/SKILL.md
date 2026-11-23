@@ -1,6 +1,6 @@
 ---
 name: "source-command-configurar-heygen"
-description: "Guia para conectar uma conta do HeyGen ao projeto (videos com avatar IA). Salva a API key no .env como HEYGEN_API_KEY para ser usada pela skill /video-heygen."
+description: "Guia para conectar uma conta do HeyGen ao projeto (vídeos com avatar IA). Salva a API key no .env como HEYGEN_API_KEY para ser usada pela skill /video-heygen."
 ---
 
 # source-command-configurar-heygen

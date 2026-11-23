@@ -510,7 +510,7 @@ Fechar com `.chart-legend` (azul = Gasto/dia eixo esq. · verde = Vendas/dia eix
 
 Gráficos com muitos pontos (linha de N meses, heatmap de dezenas de células) ou geometria não trivial (gauge, funil duplo, scatter) **NÃO devem ser plotados à mão**: vira fonte de erro. Use o helper **`.claude/skills/trafego-analise/scripts/trafego_chart_geom.py`**: matemática pura, **sem token, sem Graph API**. Recebe um spec JSON no stdin e devolve a geometria pronta (points, rects, paths, labels) para colar no SVG. É a mesma filosofia do `serie_diaria_svg`, generalizada para qualquer output.
 
-> Como o helper **não toca a API nem carrega token**, ele é exceção às restrições de `curl`/Python da Graph API (regra global EXECUÇÃO TÉCNICA). Padrão recomendado (evita dor de cabeça com aspas no shell): gravar o spec num arquivo temporário e redirecionar o stdin:
+> Como o helper **não toca a API nem carrega token**, ele é exceção às restrições de `curl`/Python da Graph API (regra EXECUÇÃO TÉCNICA de `.claude/skills/trafego-pago/references/regras-meta-api.md`). Padrão recomendado (evita dor de cabeça com aspas no shell): gravar o spec num arquivo temporário e redirecionar o stdin:
 > ```bash
 > {PY} "{RAIZ_PROJETO}/.claude/skills/trafego-analise/scripts/trafego_chart_geom.py" <tipo> < "{RAIZ_PROJETO}/meus-produtos/{ativo}/trafego/tmp/spec-{tipo}.json"
 > ```

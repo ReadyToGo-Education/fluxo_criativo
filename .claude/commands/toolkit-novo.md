@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-novo
 description: Iniciar um novo projeto de marketing estruturado (lançamento, funil completo, reestruturação). Cria a pasta projeto/ dentro do produto ativo com roteiro, estado e pendências.
+categoria: Toolkit
 ---
 
 # Toolkit. Novo Projeto

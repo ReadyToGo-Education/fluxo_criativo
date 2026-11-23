@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-publicos
 description: Cria, lista e gerencia públicos (audiences) do Meta Ads pelo MCP da Meta (padrão) ou pela Marketing API (modo App). Cobre público por evento padrão do pixel, evento personalizado (com conversão personalizada opcional), visualização de vídeo (25 a 100%), bases por nível (iniciante, intermediário, avançado) a partir do resumo do produto, público semelhante (lookalike), lista de clientes com hash feito no computador do aluno, engajamento com Instagram e Facebook e listagem com alertas. Toda criação passa por resumo, bloco 🛡️ e confirmação. Use quando o aluno pedir "criar público", "audience custom", "lookalike", "público semelhante", "remarketing", "público de quem viu vídeo", "público dos compradores", "subir minha lista de clientes", "público de quem clicou no botão".
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

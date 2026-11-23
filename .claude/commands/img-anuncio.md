@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:img-anuncio
 description: Edita uma imagem de referência que o usuário já tem. Troca personagem, altera texto, altera cor ou faz edição pontual. Executa via skill usar-referencia-visual com OpenRouter (único provider com visão multimodal).
+categoria: Conteúdo e Criativos
 ---
 
 # Imagem para Anúncio. Referência Visual

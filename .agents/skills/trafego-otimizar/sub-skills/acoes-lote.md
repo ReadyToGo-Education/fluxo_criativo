@@ -90,7 +90,7 @@ No bloco 🛡️ da redução, cada linha mostra o nível em que a redução cai
 
 ## Implementação (pseudocódigo)
 
-O Claude aplica o filtro lendo o retorno de `/trafego-insights` como texto. Nada de script com token, heredoc Python ou `curl | python3` (regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md).
+O Claude aplica o filtro lendo o retorno de `/trafego-insights` como texto. Nada de script com token, heredoc Python ou `curl | python3` (regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`).
 
 ```
 # 1. Puxar dados via /trafego-insights (escopo conta_completa, breakdowns conforme filtro)

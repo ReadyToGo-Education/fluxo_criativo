@@ -27,7 +27,7 @@ Toda criação ou alteração de público segue a seção "GATE EM CAMADA DE CHA
 2. **Bloco 🛡️ com o Preview YAML** da sub-skill logo abaixo dele. O "sim" desse bloco é a única autorização do lote: criar 3 semelhantes de uma vez, ou criar a lista de clientes e enviar todos os lotes, é um lote só.
 3. Depois do "sim", executar em sequência sem reabrir o gate. Parar e perguntar de novo só se uma chamada falhar, o aluno mudar o plano ou surgir uma escrita que não estava no lote.
 4. **Excluir público nunca entra no lote.** Cada exclusão tem bloco 🛡️ e "sim" próprios (regra 7 do gate). No MCP, pela tool `ads_delete_custom_audience`. No modo App, nunca rodar `curl -X DELETE` direto: guiar a exclusão no Gerenciador ou mostrar o comando sem o token para o aluno rodar (ver `sub-skills/listar.md`).
-5. Nunca exibir `curl` com token. Mascarar (`***TOKEN_MASCARADO***`). Proibido heredoc Python e `curl | python3` com token (seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md).
+5. Nunca exibir `curl` com token. Mascarar (`***TOKEN_MASCARADO***`). Proibido heredoc Python e `curl | python3` com token (seção "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`).
 
 **Não passam pelo gate:** leituras (tools `ads_get_*` ou `GET` na Graph API) e o sub-fluxo `bases-niveis`, que só grava arquivos locais (confirmação simples antes de gravar).
 

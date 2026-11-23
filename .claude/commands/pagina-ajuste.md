@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-ajuste
 description: Ajustes pós-merge guiados por perguntas. Diagnóstico, cores para layout, menu (conversão, vídeo, autoridade, SEO, imagens, incrementar copy, headline, placeholders de imagem, ideias de imagens), upload ou geração IA em assets/, só então edita o bloco atômico e re-roda o merge. Use quando pedir /pagina-ajuste ou ajustes na página.
+categoria: Infraestrutura de Página
 ---
 
 # Página ajuste. Etapa pós-merge (modo guiado)

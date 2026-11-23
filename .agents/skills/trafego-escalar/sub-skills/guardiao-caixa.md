@@ -47,7 +47,7 @@ gasto_acumulado_mes = soma do gasto desde o dia 1 do mês
 gasto_total_estimado = gasto_acumulado_mes + gasto_projetado_mes
 ```
 
-Cada data (hoje, primeiro e último dia do mês) é calculada com uma chamada `date` separada, como manda a regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md.
+Cada data (hoje, primeiro e último dia do mês) é calculada com uma chamada `date` separada, como manda a regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`.
 
 ### 4. Vazamentos (campanhas que gastam sem retornar)
 

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-progresso
 description: Mostrar o estado atual do projeto ativo. Resumo do plano, status de cada etapa, pendências em aberto e próxima ação recomendada.
+categoria: Toolkit
 ---
 
 # Toolkit. Progresso

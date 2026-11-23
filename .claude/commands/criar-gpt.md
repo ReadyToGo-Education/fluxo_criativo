@@ -1,6 +1,8 @@
 ---
 name: workshop-marketing:criar-gpt
 description: Comando antigo, substituído pelo /criar-agente. Os GPTs personalizados do ChatGPT saem do ar em 11/12/2026. Avisa o aluno e segue o /criar-agente, que cria o agente na Hotmart ou como plugin do ChatGPT.
+categoria: Produto
+interno: true
 ---
 
 # Criar GPT (substituído pelo /criar-agente)

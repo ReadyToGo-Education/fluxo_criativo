@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-executar
 description: Executar a próxima etapa pendente do plano do projeto ativo. Aciona a skill correta, registra o entregável e atualiza o estado automaticamente.
+categoria: Toolkit
 ---
 
 # Toolkit. Executar Próxima Etapa

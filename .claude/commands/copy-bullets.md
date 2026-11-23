@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:copy-bullets
 description: Gerar 110 bullets de copy do produto ativo (frases curtas de curiosidade sobre uma entrega concreta do produto) nas 11 técnicas de bullet, mais os 10 bullets quentes para headline, assunto de e-mail e abertura de anúncio. Lê o resumo do produto no lugar de perguntar e salva os bullets aprovados em meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md, de onde /lt-pagina, /copy-pagina e outras skills de página os reaproveitam. Use quando o aluno pedir "gera bullets", "bullets pra minha página", "fascinations", "frases de curiosidade", "110 bullets do meu produto" ou bullets para VSL, e-mail ou anúncio.
+categoria: Copy
 ---
 
 # Bullets do Produto. 110 Bullets em 11 Técnicas

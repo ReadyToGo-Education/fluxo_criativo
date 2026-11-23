@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-verificar
 description: Conferir se o projeto entregou o que foi prometido no roteiro. Checa cada entregável, sinaliza pendências e faz auditoria contra o objetivo.
+categoria: Toolkit
 ---
 
 # Toolkit. Verificar Entrega

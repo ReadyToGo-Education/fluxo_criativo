@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:video-editar
-description: Editar vídeos gravados com FFmpeg. Edição automática da fala (legenda, corte de erros e corte de silêncios) e edições manuais (cortar, juntar, redimensionar, legendar, música, comprimir, extrair áudio, efeitos). Ideal para Reels, Stories, VSLs e anúncios sem abrir software de edição.
+description: Editar vídeos gravados com FFmpeg: edição automática da fala (legenda, corte de erros e corte de silêncios) e edições manuais (cortar, juntar, redimensionar, legendar, música, comprimir, extrair áudio, efeitos). Ideal para Reels, Stories, VSLs e anúncios sem abrir software de edição.
+categoria: Vídeo
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 model: opus
 ---

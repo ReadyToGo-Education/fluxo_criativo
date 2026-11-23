@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-regras
 description: Cria automações no Meta Ads. Regras automáticas com gatilho de CPA, CPL, ROAS, CTR, frequência ou gasto que pausam, ajustam orçamento ou avisam por e-mail nativo da Meta (ações PAUSE, CHANGE_BUDGET, CHANGE_CAMPAIGN_BUDGET e NOTIFICATION), programação de liga e pausa de conjunto por horário (adset_schedule) e gestão das regras existentes. No modo MCP, a skill desenha a regra e o aluno cria no Gerenciador com passo a passo (o conector não tem regra automática); a programação por horário segue pelo MCP. No modo App, tudo pela Marketing API. Toda regra nasce desativada. Use quando o aluno pedir "automatizar", "regra automática", "se CPA passar de X pause", "me avisa por e-mail se o gasto passar de R$ 500", "rodar campanha só em horário comercial", "programar liga e pausa".
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-oferta-funil
 description: Diagnóstico pós-clique, leitura da página e análise da oferta para Meta Ads, a partir dos números do funil. Lê a página real (Claude in Chrome primeiro, WebFetch depois), compara com o anúncio, dá nota à oferta usando o Quadro e a Furadeira reais do produto, verifica o checkout e o upsell e monta o plano de correção. 6 módulos (pós-clique, página, congruência, oferta, checkout, plano). Nunca executa ação na conta nem modifica páginas; as correções vão para /feedback-pagina, /feedback-low-ticket, /pagina-checkout, /pagina-ajuste, /pagina-performance, /copy-pagina e /lt-pagina. Use quando o aluno pedir "por que minha página não converte?", "o anúncio e a página estão alinhados?", "a oferta é forte?", "o checkout está quebrando?", ou quando outra skill detectar gargalo fora do Meta.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion, WebFetch
 model: sonnet
 ---

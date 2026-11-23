@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:criar-agente
 description: Criar o agente de IA do produto para entregar aos alunos como bônus, order bump ou produto. Faz as seis perguntas, gera 10 ideias de agente que entregam algo pronto e escreve as instruções. Dois caminhos. quem vende na Hotmart recebe a ficha e as instruções para colar no Agente de IA da Hotmart; quem vende em outra plataforma (Kiwify, Eduzz, Greenn) recebe o plugin do ChatGPT pronto em .zip, com a aula para a área de membros. Também atualiza um agente já criado e converte um GPT antigo (os GPTs saem do ar em 11/12/2026). Use quando o aluno pedir "criar agente", "agente de IA do meu produto", "bônus com IA", "assistente para os meus alunos", "plugin do ChatGPT", "agente na Hotmart" ou "meu GPT vai sair do ar".
+categoria: Produto
 ---
 
 # Criar Agente de IA

@@ -1,6 +1,6 @@
 ---
 name: "source-command-copy-variacao-post"
-description: "Criar variacoes de posts que ja tiveram alto engajamento, a partir do insights.json gerado pelo dashboard do Instagram. Cada post selecionado gera 3 variacoes com elementos literarios diferentes."
+description: "Criar variações de posts que já tiveram alto engajamento, a partir do insights.json gerado pelo dashboard do Instagram. Cada post selecionado gera 3 variações com elementos literários diferentes."
 ---
 
 # source-command-copy-variacao-post

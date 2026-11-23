@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-analise
 description: Análise narrada de tráfego pago Meta Ads com terminologia VTSD (Mandala 18 tipos, Urgência Oculta, Quadro na Parede, Furadeira, Decorados, 3 Identidades, HOT/COLD/SUPERCOLD, Caixa Rápido, Pico vs Evergreen). 10 outputs narrativos: Diagnóstico Rápido, Performance & Funil, Criativos & Copy, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B. Busca os dados pelo conector MCP da Meta (padrão) ou pela Graph API (modo App). Cada output entrega diagnóstico, causa provável, interpretação VTSD e ação recomendada com handoff para skill executora.
+categoria: Tráfego Pago
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion
 model: sonnet
 ---
@@ -182,7 +183,7 @@ Qual período da análise?
 
   Período customizado (opção 4): trocar `--periodo {PERIODO}` por `--since YYYY-MM-DD --until YYYY-MM-DD` nos dois comandos. Conta de captação: acrescentar `--cpl-alvo {CPL_ALVO}` ao processar. O cache fica na pasta do produto ativo (`{ativo}`, lido em `meus-produtos/.ativo`), em `meus-produtos/{ativo}/trafego/analise/cache/`, com o mesmo `--cache-dir` nos dois comandos (sem ele, os scripts caem na pasta reserva `skill-analise/cache/`). O cache vale só no mesmo dia; se o fetch devolver `{"error": ...}`, não rodar o processar e explicar ao aluno que a Meta não respondeu (detalhes no Passo 4 do `SKILL.md`).
 
-  As chamadas extras de cada output (breakdowns, listagens) vão por `curl` direto, uma chamada `Bash(curl ...)` por vez, conforme a regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" do CLAUDE.md, com o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`) e colchetes e chaves codificados. Nunca exibir o `curl` com o token no chat.
+  As chamadas extras de cada output (breakdowns, listagens) vão por `curl` direto, uma chamada `Bash(curl ...)` por vez, conforme a regra "EXECUÇÃO TÉCNICA DE CHAMADAS GRAPH API" de `.claude/skills/trafego-pago/references/regras-meta-api.md`, com o token por substituição (`$(grep ^FB_ACCESS_TOKEN_PERMANENTE= .env | cut -d= -f2-)`) e colchetes e chaves codificados. Nunca exibir o `curl` com o token no chat.
 
 ### Campos base (modo APP)
 

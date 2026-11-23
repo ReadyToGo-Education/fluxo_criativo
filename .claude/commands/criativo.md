@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:criativo
 description: Criar criativos visuais para o produto ativo. Três caminhos: Criativo AIDA (prompt em 3 passos para anúncio em imagem), Referência Visual (editar imagem existente com troca de personagem, texto ou cor) ou Carrossel para Instagram (cards com foto real gerada por IA). Tudo vai para meus-produtos/{ativo}/entregas/criativos/.
+categoria: Conteúdo e Criativos
 ---
 
 # Criativo. Gerador de Criativos Visuais

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:trafego-dashboard
 description: Abre, cria ou atualiza o dashboard de tráfego do Meta Ads. Verifica se o aluno já tem um dashboard (artefato do Claude ligado ao conector da Meta) e entrega o link; se não tiver, monta o dashboard a partir do modelo (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia) e salva o link em meus-produtos/dashboard-trafego.md. Para conta que a Meta ainda não liberou no conector, monta o dashboard com dados gravados pelo App (o token fica só no computador do aluno). Com as credenciais da Hotmart ou da Kiwify no .env, inclui as vendas reais com bump, upsell e origem; sem elas, oferece ligar depois. Use quando o aluno pedir "meu dashboard", "painel de anúncios", "dashboard de tráfego", "atualiza as vendas do dashboard" ou quiser ajustar o dashboard. Para mandar o dashboard ao analisador da mentoria, o caminho é o /trafego-dashboard-analisador.
+categoria: Tráfego Pago
 ---
 
 # Tráfego Dashboard. Seu Painel do Meta Ads

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:elementos-literarios
 description: Aplicar os 26 Elementos Literários (Ladeirísticos) do Light Copy em copy existente ou criar trechos do zero. Gera 3 variações usando 1 a 3 elementos que combinam com o contexto.
+categoria: Copy
 ---
 
 # Elementos Literários. Aplicador de Ladeirísticos

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-lovable
 description: Levar uma página HTML do projeto para o Lovable e devolver o link público. Com o conector do Lovable ligado no Claude, cria o projeto, confere e publica sozinho; sem o conector, entrega um prompt pronto para colar no Lovable. Skill de infraestrutura, última etapa do fluxo de página, depois de copy + performance + pixel + checkout.
+categoria: Infraestrutura de Página
 ---
 
 # Página Lovable. Publicação pelo conector do Lovable

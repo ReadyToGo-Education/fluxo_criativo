@@ -577,5 +577,15 @@ def main() -> int:
     return 0
 
 
+def catalogo_de_comandos() -> int:
+    """Gera (ou, com --verificar, confere) o COMANDOS.md, que também depende de .claude/commands/."""
+    argumentos = ["--verificar"] if "--verificar" in sys.argv[1:] else []
+    return subprocess.run(
+        [sys.executable, str(RAIZ / "scripts" / "gerar-catalogo-comandos.py"), *argumentos],
+        cwd=RAIZ,
+    ).returncode
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    codigo = main()
+    sys.exit(codigo or catalogo_de_comandos())

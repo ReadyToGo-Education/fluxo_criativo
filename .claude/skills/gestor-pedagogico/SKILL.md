@@ -1,17 +1,17 @@
 ---
 name: gestor-pedagogico
 description: >
-  Gestor pedagogico. O mentorado manda um material de ensino (texto colado ou
+  Gestor pedagógico. O mentorado manda um material de ensino (texto colado ou
   link do YouTube) e a skill pergunta o que ele quer gerar a partir dele, entre
-  8 entregaveis: transcricao, mapa mental, apostila, avaliacao Q&A, checklist de
-  implementacao, resumo, sequencia logica do ensinamento e a aula resumida em
+  8 entregáveis: transcrição, mapa mental, apostila, avaliação Q&A, checklist de
+  implementação, resumo, sequência lógica do ensinamento e a aula resumida em
   5 a 7 conceitos principais. Nao gera tudo de uma vez: o mentorado escolhe.
-  A geracao roda em paralelo (um sub-agente por entregavel) para terminar rapido,
-  com fallback sequencial quando o ambiente nao suporta sub-agentes. Material
+  A geração roda em paralelo (um sub-agente por entregável) para terminar rápido,
+  com fallback sequencial quando o ambiente não suporta sub-agentes. Material
   longo (curso, palestra) passa por uma digestao em blocos antes de gerar. Use
-  quando o mentorado pedir para "estudar esse video", "transformar essa palestra
+  quando o mentorado pedir para "estudar esse vídeo", "transformar essa palestra
   em material", "fazer apostila disso", "mapa mental dessa aula", "resumir esse
-  curso", "criar prova/Q&A desse conteudo" ou variantes.
+  curso", "criar prova/Q&A desse conteúdo" ou variantes.
 allowed-tools: Read, Write, Edit, Bash, Agent
 ---
 

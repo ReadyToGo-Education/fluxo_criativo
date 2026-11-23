@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:copy-pagina
 description: Criar copy completa e/ou página HTML de vendas, captura ou obrigado. Para vendas 8D, preenche blocos atômicos do repositório com a copy aprovada (preserva layout do tema; não redesenha o template). Light Copy e metodologia VTSD.
+categoria: Copy
 ---
 
 # Página de Vendas. Copy e HTML

@@ -1,6 +1,8 @@
 ---
 name: workshop-marketing:produto-consumidor
 description: Comando obsoleto. A identidade do consumidor e o Painel de Entregas agora são gerados automaticamente pelo /produto-concepcao.
+categoria: Produto
+interno: true
 ---
 
 # Identidade do Consumidor (fluxo unificado em /produto-concepcao)

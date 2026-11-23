@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:quiz
 description: Gerar quiz de vendas completo para o Low Ticket. 10 perguntas (estrutura SPIN) + prompt técnico para o Lovable.dev, entregues em um único arquivo .md pronto para colar.
+categoria: Low Ticket
 ---
 
 # Quiz de Vendas. Low Ticket

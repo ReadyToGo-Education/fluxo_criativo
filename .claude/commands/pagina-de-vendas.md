@@ -1,6 +1,8 @@
 ---
 name: workshop-marketing:pagina-de-vendas
 description: Comando descontinuado. Redireciona para /copy-pagina, que é o fluxo oficial de página de vendas baseado em templates atômicos com merge, preservando layout do tema sem redesenhar.
+categoria: Copy
+interno: true
 ---
 
 # Página de Vendas. Redirecionamento

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:video-heygen
-description: Criar video com avatar IA usando HeyGen com multiplas cenas, avatares rotacionados, backgrounds variados e direcao visual baseada em dados reais (Apify/dashboard) ou Urgencias Ocultas do perfil. Entrega video pronto com cenas diferentes, nao mais "avatar falando em fundo branco".
+description: Criar vídeo com avatar IA usando HeyGen com múltiplas cenas, avatares rotacionados, backgrounds variados e direção visual baseada em dados reais (Apify/dashboard) ou Urgências Ocultas do perfil. Entrega vídeo pronto com cenas diferentes, não mais "avatar falando em fundo branco".
+categoria: Vídeo
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent, WebFetch, AskUserQuestion, Skill, mcp__Claude_in_Chrome__tabs_context_mcp, mcp__Claude_in_Chrome__tabs_create_mcp, mcp__Claude_in_Chrome__navigate, mcp__Claude_in_Chrome__read_page, mcp__Claude_in_Chrome__get_page_text, mcp__Claude_in_Chrome__find, mcp__Claude_in_Chrome__form_input, mcp__Claude_in_Chrome__computer
 model: opus
 ---

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-anotar
 description: Registrar uma pendência, ideia ou lembrete no projeto ativo sem interromper o fluxo. Útil quando surge uma ideia no meio de outra etapa.
+categoria: Toolkit
 ---
 
 # Toolkit. Anotar
