@@ -2,7 +2,7 @@
 name: gerador-urgencias-ocultas
 description: Agente gerador das 70 Urgências Ocultas em 7 categorias com 10 itens cada (Dores, Dúvidas, Desejos, Assuntos Relacionados, Urgências Quentes, Urgências Frias, Urgências Inusitadas). Recebe o contexto do produto e retorna a lista completa formatada em markdown. Acionado em paralelo pelo /produto-concepcao junto com gerador-decorados.
 tools: []
-model: claude-sonnet-4-6
+model: claude-opus-5-5
 ---
 
 # Gerador de Urgências Ocultas

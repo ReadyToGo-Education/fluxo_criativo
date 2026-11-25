@@ -189,7 +189,7 @@ Middle Ticket
 Rode no terminal para regenerar `meus-produtos/index.js` (o painel global em `painel.html` lê esse arquivo):
 
 ```
-py -3 scripts/painel-atualizar.py
+{python} scripts/painel-atualizar.py
 ```
 
 #### Passo 9. Inicializar Painel de Entregas
@@ -322,7 +322,7 @@ Crie as subpastas de entregas dentro de `meus-produtos/{slug}/` (mesmos passos 5
 Rode no terminal para regenerar `meus-produtos/index.js`:
 
 ```
-py -3 scripts/painel-atualizar.py
+{python} scripts/painel-atualizar.py
 ```
 
 #### Passo 7. Inicializar Painel de Entregas

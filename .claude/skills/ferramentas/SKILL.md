@@ -225,7 +225,7 @@ O OpenRouter nao gera video diretamente. Para videos, use o fluxo:
 
 **Script:** `scripts/generate-openrouter-nano-banana-images.py` na raiz do projeto. O arquivo lista `JOBS` com nome do PNG, proporcao e `prompt` (em ingles costuma funcionar melhor). Saida direta em `meus-produtos/{slug}/entregas/paginas/assets/`.
 
-**Comando tipico (na raiz):** `py -3 scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
+**Comando tipico (na raiz):** `{python} scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
 Opcoes uteis: `--skip N` e `--max M` para gerar so parte da lista (ver cabecalho do script).
 
 **Referencias para o assistente e o aluno:**  

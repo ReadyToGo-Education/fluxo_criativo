@@ -1,6 +1,6 @@
 # Etapa de ajustes da página (pós-merge)
 
-Documento de referência da **etapa obrigatória** que vem **depois** do `workshop-merge-pagina.py` e **antes** de tratar a página como pronta para tráfego, anúncio ou deploy.
+Documento de referência da **etapa obrigatória** que vem **depois** do `montar-pagina-copias.py` e **antes** de tratar a página como pronta para tráfego, anúncio ou deploy.
 
 ## Quando acionar
 

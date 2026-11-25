@@ -2,7 +2,7 @@
 name: criador-de-campanhas
 description: Agente orquestrador de campanhas de tráfego pago. Lê o contexto do produto ativo, diagnostica qual tipo de campanha o usuário precisa (perpétua, lançamento, low ticket, high ticket, remarketing) e direciona para as skills de anúncios corretas, na ordem certa, explicando o porquê de cada peça.
 tools: Read, Write, Edit, Glob, Grep
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente

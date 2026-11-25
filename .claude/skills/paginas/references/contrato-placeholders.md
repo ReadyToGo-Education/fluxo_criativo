@@ -3,7 +3,7 @@
 Este arquivo é a **fonte única da verdade** sobre os placeholders usados nos templates atômicos dos 5 temas visuais e no arquivo de copy `copy-{slug}.md`.
 
 Usado por:
-- `scripts/build-pagina-vendas.py` — lê copy, aplica placeholders nos `code.html`, roda merge
+- `scripts/montar-pagina-copias.py` — junta as cópias HTML de cada seção em uma página final (as cópias saem do `/pagina-visual`)
 - Command `/copy-pagina` — gera copy no formato compatível
 - Os 80 arquivos `code.html` dos blocos atômicos (5 temas × 16 blocos)
 

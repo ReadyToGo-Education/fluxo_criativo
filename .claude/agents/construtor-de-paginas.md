@@ -2,7 +2,7 @@
 name: construtor-de-paginas
 description: Agente orquestrador de páginas web. Lê o contexto do produto ativo, diagnostica qual tipo de página o usuário precisa (vendas 8D, captura, obrigado, low ticket, inscrição HT) e direciona para a skill certa, explicando por que e em qual ordem. Não repete metodologia, aciona as skills.
 tools: Read, Write, Edit, Glob
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente
@@ -60,15 +60,13 @@ Digite o número:
 ```
 Para página de vendas do produto principal, use a skill:
 
-→ /copy-pagina  Gera a página HTML 8D bloco a bloco (melhor custo-benefício), depois merge automático
+→ /copy-pagina  Gera e aprova a copy nos 16 blocos; depois o /pagina-visual cria cada seção isolada e a página é montada pelo script
 
 Como funciona (padrão atual):
-• A copy aprovada fica em `copy-pagina/copy-{produto}.md` com `## Bloco 01` … `## Bloco 16` (template `template-copy-pagina-vendas.md`). Cada bloco HTML usa **só** o texto desse arquivo
-• **Primeiro** copiar o tema para a entrega: `python scripts/workshop-copy-template-tema.py --tema {estilo}` → pasta `meus-produtos/{slug}/entregas/paginas/templates-{estilo}/`
-• Cada bloco edita **só** o `code.html` atômico **nessa cópia** (não o plugin): **preserva o layout** e **troca só a copy** (texto, links, mídia). **Não** redesenha o bloco. **Não** cola tudo em um único arquivo em `entregas/` até o merge
-• Ao final: `python scripts/workshop-merge-pagina.py --tema {estilo} --templates-root meus-produtos/{slug}/entregas/paginas/templates-{estilo} --copiar-entregas` (ou `build_merge.py` dentro da pasta `pagina_completa_{estilo}` **da cópia**)
-• Você pode aprovar bloco a bloco ou dizer "ir direto à versão final"
-• Segunda prova social: em flat/minimal o merge duplica provas; em glass/teal/purple use `hero_{estilo}_depoimentos`
+• A copy aprovada fica em `copy-pagina/copy-{produto}.md` com `## Bloco 01` … `## Bloco 16` (template `template-copy-pagina-vendas.md`). Cada seção HTML usa **só** o texto desse arquivo
+• O `/pagina-visual` gera uma cópia HTML isolada por seção em `meus-produtos/{slug}/entregas/paginas/copias/`: **preserva o layout** e **troca só a copy** (texto, links, mídia). **Não** redesenha o bloco
+• Ao final: `{python} scripts/montar-pagina-copias.py --slug {slug}` junta as seções em `vendas-{slug}.html`, sem mesclar cores ou fontes entre elas
+• Você pode aprovar seção a seção ou dizer "ir direto à versão final"
 
 A skill já aplica:
 • Estrutura 8D completa (ordem alinhada ao `build_merge.py` de cada tema)
@@ -169,7 +167,7 @@ Se escolher 1, ao final da geração sugira o próximo passo lógico (ex: criar 
 
 ## Anúncio de próximo passo (regra obrigatória)
 
-Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada operação que demora mais de 10 segundos (gerar página HTML com 11 seções 8D, criar copy, montar visual da Furadeira), anuncie em UMA linha:
+Esta regra herda do CLAUDE.md (seção "PENSAR EM VOZ ALTA. ANÚNCIO DE PRÓXIMO PASSO"). Antes de cada operação que demora mais de 10 segundos (gerar página HTML com 16 blocos 8D, criar copy, montar visual da Furadeira), anuncie em UMA linha:
 
 ```
 🔍 Próximo passo: {ação no infinitivo}. Tempo estimado: {faixa de .claude/rules/tempo-estimado.md}.

@@ -109,7 +109,7 @@ O produto ativo aparece marcado como `(ativo)` na lista. Se o usuário escolher 
 Anuncie: `🔍 Próximo passo: gerar briefing compacto e montar shell HTML com 12 seções. Tempo estimado: cerca de 1 minuto.`
 
 **Como invocar o Python** (escolha conforme o ambiente do aluno):
-- **Windows:** `py -3 scripts/playbook-briefing.py --slug {produto-escolhido}` e depois `py -3 scripts/playbook-montar.py --slug {produto-escolhido}`
+- **Windows:** `{python} scripts/playbook-briefing.py --slug {produto-escolhido}` e depois `{python} scripts/playbook-montar.py --slug {produto-escolhido}`
 - **Mac/Linux:** `python3 scripts/playbook-briefing.py --slug {produto-escolhido}` e depois `python3 scripts/playbook-montar.py --slug {produto-escolhido}`
 
 Se `py -3` não estiver disponível no Windows (raro), use `python` no lugar.
@@ -323,7 +323,7 @@ Schema literal:
 
 - Windows:
 ```
-py -3 scripts/playbook-aplicar-criativas.py --slug {produto-escolhido} --json scripts/.tmp-criativas-4.json --json scripts/.tmp-criativas-5.json --json scripts/.tmp-criativas-6.json --json scripts/.tmp-criativas-7.json --json scripts/.tmp-criativas-10.json --json scripts/.tmp-criativas-11.json --cleanup
+{python} scripts/playbook-aplicar-criativas.py --slug {produto-escolhido} --json scripts/.tmp-criativas-4.json --json scripts/.tmp-criativas-5.json --json scripts/.tmp-criativas-6.json --json scripts/.tmp-criativas-7.json --json scripts/.tmp-criativas-10.json --json scripts/.tmp-criativas-11.json --cleanup
 ```
 
 - Mac/Linux:
@@ -347,7 +347,7 @@ Anuncie ao final: `✅ 93 textos aplicados nas 6 seções criativas. Caminho: {c
 
 - O card do Playbook Comercial no painel exibe um **botão** (classe `.btn-primary`), nunca um link de texto simples.
 - O caminho no `href` do botão deve ser relativo à pasta do produto (ex: `entregas/comercial/playbook-{slug}.html`), nunca relativo à raiz do repositório. O `painel-incremental.py` usa `arquivo.relative_to(produto_dir)` para garantir isso. Caminho errado faz o botão não abrir.
-- Se o painel foi gerado antes dessa correção e o botão não abre, regere rodando `py -3 scripts/painel-incremental.py --secao comercial-playbook --slug {slug}` novamente.
+- Se o painel foi gerado antes dessa correção e o botão não abre, regere rodando `{python} scripts/painel-incremental.py --secao comercial-playbook --slug {slug}` novamente.
 
 **Etapa 4. Registrar o playbook no Painel de Entregas (obrigatório, ~2 segundos)**
 
@@ -357,7 +357,7 @@ Anuncie: `🔍 Próximo passo: registrar o playbook como entrega no Painel do pr
 
 - Windows:
 ```
-py -3 scripts/painel-incremental.py --secao comercial-playbook --slug {produto-escolhido}
+{python} scripts/painel-incremental.py --secao comercial-playbook --slug {produto-escolhido}
 ```
 
 - Mac/Linux:

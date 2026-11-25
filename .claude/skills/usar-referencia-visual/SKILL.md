@@ -287,7 +287,7 @@ Para modo 2 (alterar texto): headline e subheadline ficam vazios. O texto é alt
 
 **Com LAYOUT apenas (modos 2, 3, 4):**
 ```bash
-py -3 scripts/gerar-banner-estatico.py \
+{python} scripts/gerar-banner-estatico.py \
   --config "meus-produtos/{ativo}/entregas/criativos/{nome-sessao}/config-ref.json" \
   --ref-layout "meus-produtos/{ativo}/entregas/criativos/{nome-sessao}/REFERENCIA/layout.png" \
   --skip-html
@@ -295,7 +295,7 @@ py -3 scripts/gerar-banner-estatico.py \
 
 **Com LAYOUT + PERSONAGEM (modo 1):**
 ```bash
-py -3 scripts/gerar-banner-estatico.py \
+{python} scripts/gerar-banner-estatico.py \
   --config "meus-produtos/{ativo}/entregas/criativos/{nome-sessao}/config-ref.json" \
   --ref-layout "meus-produtos/{ativo}/entregas/criativos/{nome-sessao}/REFERENCIA/layout.png" \
   --ref-personagem "meus-produtos/{ativo}/entregas/criativos/{nome-sessao}/REFERENCIA/personagem.png" \

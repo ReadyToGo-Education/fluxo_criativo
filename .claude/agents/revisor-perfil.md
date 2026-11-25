@@ -2,7 +2,7 @@
 name: revisor-perfil
 description: Agente revisor de perfil.md. Verifica completude de Quadro, Furadeira, Decorados (5 categorias x 10 itens), Urgências Ocultas (7 categorias x 10 itens) e Identidades. Corrige formatação automaticamente e sinaliza lacunas de conteúdo. Faz revisão de português (acentuação, travessão). Retorna relatório com seções afetadas, fixes e flags.
 tools: Read, Edit
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 # Agente Revisor de Perfil do Produto

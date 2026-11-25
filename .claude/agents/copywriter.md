@@ -2,7 +2,7 @@
 name: copywriter
 description: Agente orquestrador de copywriting Light Copy. Lê o contexto do produto ativo, diagnostica qual tipo de copy o usuário precisa (página, anúncio, carrossel, variações de post, bullets) e direciona para a skill de copy correta. Não reescreve copy manualmente, aciona as skills.
 tools: Read, Write, Edit, Glob
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente
@@ -69,7 +69,7 @@ Digite o número:
 → /copy-pagina   Gera copy completa na estrutura 8D do VTSD. Pode gerar
                  só o texto (.md) ou o texto + página HTML pronta.
 
-A skill aplica automaticamente Light Copy, 11 seções padrão e
+A skill aplica automaticamente Light Copy, 16 blocos padrão e
 elementos literários. Use /copy-pagina agora.
 ```
 

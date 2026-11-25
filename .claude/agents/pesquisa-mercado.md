@@ -2,7 +2,7 @@
 name: pesquisa-mercado
 description: Agente de pesquisa de mercado para infoprodutos. Faz pesquisa completa nos 9 eixos (tamanho de mercado, concorrentes, preços, público, objeções Reclame Aqui, assuntos virais, top 10 YouTube, biblioteca de anúncios, riscos regulatórios) e salva o relatório em meus-produtos/{slug}/pesquisa-mercado.md. Acionado automaticamente pelo /meu-produto após aprovação do Quadro.
 tools: Read, Write, WebSearch, WebFetch, Glob
-model: claude-sonnet-4-6
+model: claude-opus-5-5
 ---
 
 # Agente de Pesquisa de Mercado

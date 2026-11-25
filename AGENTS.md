@@ -11,7 +11,7 @@ Este projeto é o **Workshop Marketing IA**: um assistente de marketing digital,
 3. Quando a tarefa envolver marketing, copy, produto, página, tráfego ou entrega do aluno, consulte `CLAUDE.md`.
 4. Quando o usuário pedir um comando do workshop, leia `.claude/commands/{nome}.md` antes de agir.
 5. Quando o comando apontar skills ou referências, leia somente os arquivos necessários em `.claude/skills/`.
-6. Se houver conflito entre `CLAUDE.md`, uma skill e um command, prefira o command específico lido para a tarefa atual. Se o conflito afetar arquitetura, script ou risco de sobrescrita, avise o usuário antes de seguir.
+6. Se houver conflito entre `CLAUDE.md`, uma skill e um command, prefira o command específico lido para a tarefa atual. A exceção são as regras de segurança do `CLAUDE.md`: tokens e segredos só no `.env`, mascaramento na tela e confirmação no chat antes de escrever na Graph API. Elas valem sempre, mesmo que um command ou skill diga o contrário. Se o conflito afetar arquitetura, script ou risco de sobrescrita, avise o usuário antes de seguir.
 
 As pastas `.agents/` e `.codex/` são geradas a partir de `.claude/` por `scripts/exportar-para-codex.py`. Nunca edite essas pastas: altere o original em `.claude/` e rode o script de novo.
 
@@ -48,7 +48,6 @@ Quando a tarefa for manutenção do repositório, scripts, configuração de age
 | --- | --- |
 | Manual completo do ecossistema Claude | `CLAUDE.md` |
 | Manual operacional do Codex | `AGENTS.md` |
-| Regras do Cursor | `.cursor/rules/*.mdc` |
 | Roteiros dos comandos | `.claude/commands/*.md` |
 | Skills e referências | `.claude/skills/` |
 | Agentes especializados | `.claude/agents/` |
@@ -439,7 +438,7 @@ Estado atual observado no repositório:
 - `copy-pagina.md` orienta gerar ou validar copy aprovada em `meus-produtos/{ativo}/entregas/copy-pagina/copy-{ativo}.md`.
 - Para HTML, o command atual encaminha para `/pagina-visual` em vez de montar tudo do zero.
 - `CLAUDE.md` contém observação de arquitetura dizendo que scripts antigos de merge podem estar deprecated.
-- Algumas skills antigas ainda citam `workshop-copy-template-tema.py` e `workshop-merge-pagina.py`.
+- Os scripts `workshop-merge-pagina.py` e `build-pagina-vendas.py` não existem mais. Se algum arquivo ainda citar esses nomes, siga `pagina-visual` e `montar-pagina-copias.py`.
 
 Regra prática:
 

@@ -194,7 +194,7 @@ Posso conferir a imagem com você. Os modelos de imagem do ChatGPT costumam erra
 
 Após salvar a PNG:
 
-1. Rodar `py -3 scripts/painel-incremental.py --slug {ativo}` para o painel de entregas reconhecer a nova furadeira.
+1. Rodar `{python} scripts/painel-incremental.py --slug {ativo}` para o painel de entregas reconhecer a nova furadeira.
 2. Mostrar caminho absoluto ao aluno.
 3. Sugerir próximo passo (`/copy-pagina` para usar a Furadeira na seção Método da página de vendas).
 

@@ -2,7 +2,7 @@
 name: gerador-idconsumidor
 description: Agente gerador da Identidade do Consumidor. Recebe o contexto completo do produto (perfil.md, pesquisa-mercado.md, dados demográficos) e gera o arquivo idconsumidor.md completo com 5 objeções, 7 argumentos cada, baldes de segmentação e regras de comunicação. Acionado em background pelo /produto-concepcao após aprovação do perfil.
 tools: Read, Write
-model: claude-sonnet-4-6
+model: claude-opus-5-5
 ---
 
 # Gerador de Identidade do Consumidor

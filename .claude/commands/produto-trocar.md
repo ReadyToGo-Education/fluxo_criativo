@@ -61,7 +61,7 @@ Após o aluno digitar o número:
 Rode no terminal para atualizar `meus-produtos/index.js` (o painel global usa esse arquivo para saber o produto ativo):
 
 ```
-py -3 scripts/painel-atualizar.py
+{python} scripts/painel-atualizar.py
 ```
 
 ### 6. Confirmar e sugerir próximo passo

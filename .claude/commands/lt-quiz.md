@@ -636,7 +636,7 @@ Após capturar o link (ou registrar como pendente), o agente faz silenciosamente
 
 1. Salva os metadados do quiz em `meus-produtos/{ativo}/entregas/quiz/quiz-meta.json` (estrutura: `prompt_path`, `lovable_url`, `generated_at`, `url_updated_at`, `produto_nome`, `produto_slug`)
 2. Faz upsert da seção `## Quiz` no `perfil.md` (campos `_prompt`, `_lovable_url`, `_meta`, `_atualizado`)
-3. Roda `python3 scripts/painel-incremental.py --secao low-ticket` (no Windows, `py -3` quando `python3` não responder) para atualizar a aba Low Ticket do painel
+3. Roda `{python} scripts/painel-incremental.py --secao low-ticket` para atualizar a aba Low Ticket do painel
 
 A aba Low Ticket mostra o card do quiz lendo o JSON: o link publicado (ou o aviso de pendente) e o prompt. Tudo isso é invisível para o aluno, ele só vê a mensagem do passo 6.6.
 

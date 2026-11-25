@@ -24,7 +24,7 @@ A skill funciona em 2 ambientes (CLI ou Desktop), mas com capacidades diferentes
 
 A extensão Claude in Chrome é um produto **Desktop-only**. Ela vive como uma extensão do navegador Chrome e se comunica apenas com sessões da claude.ai abertas no navegador. Quando o aluno está rodando esta skill pelo Claude Code no terminal/CLI, **mesmo tendo a extensão instalada no Chrome, ela NÃO se comunica com a sessão CLI** (são processos isolados).
 
-A skill detecta isso em runtime checando se as tools `mcp__Claude_in_Chrome__*` estão presentes:
+A skill detecta isso em runtime checando se as tools `mcp__claude-in-chrome__*` estão presentes:
 - Presentes → ambiente Desktop, oferece opção 2 (Chrome) no menu.
 - Ausentes → ambiente CLI ou Desktop sem extensão, **não oferece** opção 2 e explica o motivo ao aluno.
 
