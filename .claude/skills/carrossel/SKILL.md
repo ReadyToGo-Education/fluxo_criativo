@@ -50,8 +50,7 @@ OBRIGATÓRIO: exibir 1 pergunta, parar, aguardar, salvar, exibir micro-resumo de
 
 Leia em paralelo:
 - `meus-produtos/.ativo`
-- `meus-produtos/{ativo}/perfil.md` (se existir)
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir)
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md)
 
 Se não houver produto ativo, oriente o aluno a rodar `/produto-novo` primeiro e encerre.
 
@@ -168,7 +167,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == nunca`
 
 1. **Carregue** `references/estilos/nunca.md` e `references/prompt-nunca.md`.
-2. **Execute o Passo 1 do `prompt-nunca.md`** (Coleta: 5 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `perfil.md` / `.env` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+2. **Execute o Passo 1 do `prompt-nunca.md`** (Coleta: 5 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `resumo-produto.md` / `.env` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
 3. **Vá para o Passo 2.5** (confirmação consolidada).
 4. Após confirmação, **execute o `prompt-nunca.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima. Sequência: Passo 2 do prompt → Passo 3.1, 3.2, 3.3 do prompt → menu dinâmico via `passo-output-triplo.md` → execução do caminho escolhido → Passo 4 do prompt (legenda).
 5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-nunca/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/` se o aluno escolheu API paralela).
@@ -177,7 +176,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == sempre`
 
 1. **Carregue** `references/estilos/sempre.md` e `references/prompt-sempre.md`.
-2. **Execute o Passo 1 do `prompt-sempre.md`** (Coleta: 5 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `.env` quando existir.
+2. **Execute o Passo 1 do `prompt-sempre.md`** (Coleta: 5 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `resumo-produto.md` / `.env` quando existir.
 3. **Vá para o Passo 2.5** (confirmação consolidada).
 4. Após confirmação, **execute o `prompt-sempre.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
 5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-sempre/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
@@ -186,7 +185,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == odeio`
 
 1. **Carregue** `references/estilos/odeio.md` e `references/prompt-odeio.md`.
-2. **Execute o Passo 1 do `prompt-odeio.md`** (Coleta: 5 perguntas), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `.env`.
+2. **Execute o Passo 1 do `prompt-odeio.md`** (Coleta: 5 perguntas), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `resumo-produto.md` / `.env`.
 3. **Vá para o Passo 2.5**.
 4. Após confirmação, **execute o `prompt-odeio.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
 5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-odeio/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
@@ -195,7 +194,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == erros`
 
 1. **Carregue** `references/estilos/erros.md` e `references/prompt-erros.md`.
-2. **Execute o Passo 1 do `prompt-erros.md`** (Coleta: 6 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design e desejo do público), uma pergunta por turno, cabeçalho "Pergunta X de 6" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `idconsumidor.md` / `.env`. O desejo é derivado do Quadro do produto quando possível.
+2. **Execute o Passo 1 do `prompt-erros.md`** (Coleta: 6 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design e desejo do público), uma pergunta por turno, cabeçalho "Pergunta X de 6" e micro-resumo entre cada uma. Pré-preencha sugestões do `resumo-produto.md` / `.env`. O desejo é derivado do Quadro do produto quando possível.
 3. **Vá para o Passo 2.5**.
 4. Após confirmação, **execute o `prompt-erros.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
 5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-erros/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
@@ -204,7 +203,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == amo`
 
 1. **Carregue** `references/estilos/amo.md` e `references/prompt-amo.md`.
-2. **Execute o Passo 1 do `prompt-amo.md`** (Coleta: 5 perguntas), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `.env`.
+2. **Execute o Passo 1 do `prompt-amo.md`** (Coleta: 5 perguntas), uma pergunta por turno, cabeçalho "Pergunta X de 5" e micro-resumo entre cada uma. Pré-preencha sugestões do `resumo-produto.md` / `.env`.
 3. **Vá para o Passo 2.5**.
 4. Após confirmação, **execute o `prompt-amo.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
 5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-amo/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
@@ -213,7 +212,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == ninguem-conta`
 
 1. **Carregue** `references/estilos/ninguem-conta.md` e `references/prompt-ninguem-conta.md`.
-2. **Execute o Passo 1 do `prompt-ninguem-conta.md`** (Coleta: 6 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design e objetivo do público), uma pergunta por turno, cabeçalho "Pergunta X de 6" e micro-resumo entre cada uma. Pré-preencha sugestões do `perfil.md` / `idconsumidor.md` / `.env`. O objetivo é derivado do Quadro do produto quando possível.
+2. **Execute o Passo 1 do `prompt-ninguem-conta.md`** (Coleta: 6 perguntas — nicho/produto, @ do Instagram, cores, tom, estilo de design e objetivo do público), uma pergunta por turno, cabeçalho "Pergunta X de 6" e micro-resumo entre cada uma. Pré-preencha sugestões do `resumo-produto.md` / `.env`. O objetivo é derivado do Quadro do produto quando possível.
 3. **Vá para o Passo 2.5**.
 4. Após confirmação, **execute o `prompt-ninguem-conta.md` com a interceptação do output triplo** conforme a "Nota. Output triplo nos 6 estilos clássicos (verbatim)" acima.
 5. **Salve em** `meus-produtos/{ativo}/entregas/conteudo-social/carrossel-ninguem-conta/` (`texto.md` + `prompts.txt` + `legenda.txt`; opcionalmente `imagens/`).
@@ -222,7 +221,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == noticia`
 
 1. **Carregue** `references/estilos/noticia.md` e `references/prompt-noticia.md`.
-2. **Execute a Etapa 1 do `prompt-noticia.md`** (@ do Instagram, nicho, produto), uma pergunta por turno, cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `perfil.md` / `.env` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+2. **Execute a Etapa 1 do `prompt-noticia.md`** (@ do Instagram, nicho, produto), uma pergunta por turno, cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `resumo-produto.md` / `.env` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
 3. **Vá para o Passo 2.5** (confirmação consolidada).
 4. Após confirmação, **execute o `prompt-noticia.md` exatamente como está**, da Etapa 2 à Etapa 7, na sessão atual. Não reescreva nem resuma o prompt. A busca de notícias trend (Etapa 2) usa `WebSearch` com regra de frescor obrigatório (últimos 7 dias). A data para o nome do arquivo consolidado é calculada via `Bash` com `Get-Date -Format "yyyy-MM-dd"` (PowerShell).
 5. O texto dos slides passa pelo **Manual da Copy + revisora** de forma silenciosa antes da Etapa 6. As regras de copy do prompt (sem travessão, sem exclamação, sem pergunta na capa) já estão alinhadas com o Manual.
@@ -234,7 +233,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == curiosidade`
 
 1. **Carregue** `references/estilos/curiosidade.md` e `references/prompt-curiosidade.md`.
-2. **Execute a Etapa 1 do `prompt-curiosidade.md`** (@ do Instagram, nicho, produto), uma pergunta por turno, com cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com o valor correspondente do `perfil.md` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+2. **Execute a Etapa 1 do `prompt-curiosidade.md`** (@ do Instagram, nicho, produto), uma pergunta por turno, com cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com o valor correspondente do `resumo-produto.md` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
 3. **Vá para o Passo 2.5** (confirmação consolidada).
 4. Após confirmação, **execute o `prompt-curiosidade.md` exatamente como está**, da Etapa 2 à Etapa 7, na sessão atual. Não reescreva nem resuma o prompt. A busca de curiosidades atemporais (Etapa 2) usa `WebSearch`. A data para o nome do arquivo consolidado é calculada via `Bash` com `Get-Date -Format "yyyy-MM-dd"` (PowerShell).
 5. O texto dos slides passa pelo **Manual da Copy + revisora** de forma silenciosa antes da Etapa 6. As regras de copy do prompt já estão alinhadas com o Manual, então a revisão garante o padrão sem alterar o prompt.
@@ -244,7 +243,7 @@ A nota acima aplica-se a todos os 6 ramos clássicos. Cada ramo abaixo apenas de
 ### Se `estilo_carrossel == editorial`
 
 1. **Carregue** `references/estilos/editorial.md` e `references/prompt-editorial.md`.
-2. **Execute o Passo 1 do `prompt-editorial.md`** (Briefing: produto/serviço e público), uma pergunta por turno, cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `perfil.md` / `idconsumidor.md` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
+2. **Execute o Passo 1 do `prompt-editorial.md`** (Briefing: produto/serviço e público), uma pergunta por turno, cabeçalho "Pergunta X de 3" e micro-resumo entre cada uma. Pré-preencha cada pergunta com a sugestão correspondente do `resumo-produto.md` quando existir, no formato "Sugestão a partir do seu produto: {valor}. Confirme ou corrija."
 3. **Execute o Passo 2 do prompt** (Tipo de CTA do slide 6: ManyChat, Seguir, Engajar, Salvar). Salve como `editorial_cta_tipo`.
 4. **Vá para o Passo 2.5** (confirmação consolidada).
 5. Após confirmação, **execute o `prompt-editorial.md` exatamente como está**, do Passo 3 ao Passo 5, na sessão atual. Não reescreva nem resuma o prompt. O Passo 3 gera as 10 ideias com ângulos variados (notícia real, polêmica, conta maluca, pesquisa científica, comparação) e pede a escolha; o Passo 4 entrega os 6 slides + a legenda do Instagram e pede aprovação; o Passo 5 entrega o prompt único pra colar no ChatGPT.
@@ -648,7 +647,7 @@ Exiba os caminhos absolutos no formato copiável conforme regra do `CLAUDE.md` (
 - **"Cancelar"** disponível em toda aprovação. Aluno pode sair a qualquer momento.
 - **Sem travessão, sem exclamação** em todo texto gerado.
 - **Português brasileiro com acentuação correta** em todo texto exibido ao aluno.
-- **Reaproveitar contexto** do produto ativo. Se `perfil.md` tem handle, nicho, produto, paleta, ofereça como sugestão.
+- **Reaproveitar contexto** do produto ativo. Se `resumo-produto.md` tem handle, nicho, produto, paleta, ofereça como sugestão.
 
 ---
 

@@ -1,6 +1,8 @@
 ---
 name: workshop-marketing:meta-conexao
 description: Alias de compatibilidade. Esta skill foi renomeada para /trafego-conexao. Quem invocar /meta-conexao é redirecionado automaticamente. Mantida apenas para evitar quebra em referências antigas.
+categoria: Tráfego Pago
+interno: true
 allowed-tools: Skill
 model: sonnet
 user-invocable: false
@@ -12,7 +14,7 @@ Esta skill foi renomeada. Toda a lógica de conexão com o Meta Ads vive agora e
 
 ## O que fazer
 
-Acionar imediatamente a skill `/trafego-conexao` repassando os argumentos recebidos. Não duplicar lógica aqui — todo o fluxo (Passo 0 a Passo 4 + saída final + princípios) está mantido em `.claude/commands/trafego-conexao.md`.
+Acionar imediatamente a skill `/trafego-conexao` repassando os argumentos recebidos. Não duplicar lógica aqui: o fluxo é orquestrado por `.claude/commands/trafego-conexao.md` e a especificação completa está em `.claude/skills/trafego-conexao/SKILL.md`.
 
 ## Por que este arquivo existe
 

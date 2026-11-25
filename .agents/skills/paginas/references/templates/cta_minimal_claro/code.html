@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier. CTA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        canvas: '#ffffff',
+        surface: '#f4f4f5',
+        ink: '#18181b',
+        accent: '#e4e4e7',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; color: #18181b; background: #ffffff; -webkit-font-smoothing: antialiased; }
+.flat-border { border: 1.5px solid #18181b; }
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #18181b;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  border: 1.5px solid #18181b;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+}
+.cta-button:hover {
+  background: #ffffff;
+  color: #18181b;
+}
+.cta-button .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+.cta-button:hover .material-symbols-outlined {
+  transform: translateX(4px);
+}
+</style>
+</head>
+<body>
+
+<section class="py-24 px-6 md:py-32 bg-canvas">
+  <div class="max-w-xl mx-auto text-center">
+
+    <p class="text-sm tracking-widest uppercase text-ink/40 mb-6">Existe um caminho diferente</p>
+
+    <h2 class="text-3xl md:text-4xl font-bold leading-tight text-ink mb-6">
+      Seu crochê merece virar<br>uma renda de verdade
+    </h2>
+
+    <p class="text-base md:text-lg leading-relaxed text-ink/60 mb-10 max-w-md mx-auto">
+      Um método direto para você parar de dar suas peças de presente e começar a viver do que suas mãos já sabem fazer.
+    </p>
+
+    <div class="mb-4">
+      <p class="text-3xl md:text-4xl font-bold text-ink mb-1">12x de R$&nbsp;29,70</p>
+      <p class="text-sm text-ink/50">ou R$&nbsp;297,00 à vista</p>
+    </div>
+
+    <div class="mb-6 mt-8">
+      <a href="#oferta" class="cta-button">
+        Quero transformar meu crochê
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+
+    <p class="text-sm text-ink/40">Acesso imediato ao método completo · Garantia de 7 dias</p>
+
+  </div>
+</section>
+
+</body>
+</html>

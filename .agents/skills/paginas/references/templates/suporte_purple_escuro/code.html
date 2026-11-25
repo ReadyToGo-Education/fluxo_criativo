@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suporte. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.07) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+
+    .support-card {
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+    .support-card:hover {
+      border-color: rgba(108, 92, 231, 0.4);
+      background-color: rgba(18, 18, 26, 0.95);
+      transform: translateY(-3px);
+    }
+    .icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1.5px solid rgba(108, 92, 231, 0.25);
+      margin-bottom: 18px;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .support-card:hover .icon-wrap {
+      background: rgba(108, 92, 231, 0.2);
+      border-color: rgba(108, 92, 231, 0.5);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Você bem amparada
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Você não vai estar <span class="text-warm">sozinha nessa</span>
+        </h2>
+        <p class="text-ink/45 text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto mt-5">
+          Quatro frentes de apoio para garantir que cada dúvida vire avanço, e cada peça vire venda.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <div class="support-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="icon-wrap">
+            <span class="material-symbols-outlined text-warm text-[28px]">forum</span>
+          </div>
+          <h3 class="text-lg font-600 text-ink mb-3 leading-tight">
+            Comunidade ativa de alunas
+          </h3>
+          <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light">
+            Um grupo fechado, só para participantes do método, onde você troca dicas, mostra peças e encontra outras artesãs no mesmo caminho que o seu.
+          </p>
+        </div>
+
+        <div class="support-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="icon-wrap">
+            <span class="material-symbols-outlined text-warm text-[28px]">videocam</span>
+          </div>
+          <h3 class="text-lg font-600 text-ink mb-3 leading-tight">
+            Mentorias mensais ao vivo
+          </h3>
+          <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light">
+            Um encontro online por mês, gravado para quem não puder estar presente, para tirar dúvidas, ver peças das alunas e ajustar a rota da sua produção.
+          </p>
+        </div>
+
+        <div class="support-card fade-up delay-3 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="icon-wrap">
+            <span class="material-symbols-outlined text-warm text-[28px]">chat</span>
+          </div>
+          <h3 class="text-lg font-600 text-ink mb-3 leading-tight">
+            Acesso direto à equipe
+          </h3>
+          <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light">
+            Canal exclusivo para enviar dúvidas técnicas, fotos do que travou ou áudios. A equipe responde em até 48 horas úteis com orientação prática.
+          </p>
+        </div>
+
+        <div class="support-card fade-up delay-4 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="icon-wrap">
+            <span class="material-symbols-outlined text-warm text-[28px]">autorenew</span>
+          </div>
+          <h3 class="text-lg font-600 text-ink mb-3 leading-tight">
+            Atualizações para sempre
+          </h3>
+          <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light">
+            Novas aulas, novos modelos, novas técnicas. Tudo que entrar no método daqui pra frente já vem incluso na sua compra. Sem cobrança extra.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

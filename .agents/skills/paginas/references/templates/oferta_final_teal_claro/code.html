@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oferta Final. Crochê Lucrativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-oferta {
+      padding: 80px 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-oferta__header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-oferta__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-oferta__subtitle {
+      font-size: 1.1rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .oferta-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .oferta-stack {
+      margin-bottom: 32px;
+    }
+
+    .oferta-stack__title {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-mid);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .oferta-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      gap: 16px;
+    }
+
+    .oferta-item:last-child {
+      border-bottom: none;
+    }
+
+    .oferta-item__left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .oferta-item__check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0, 169, 157, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .oferta-item__check .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .oferta-item__name {
+      font-size: 0.98rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .oferta-item__value {
+      font-family: var(--font-heading);
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      flex-shrink: 0;
+    }
+
+    .oferta-total {
+      padding: 20px 0;
+      border-top: 2px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .oferta-total__label {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-mid);
+    }
+
+    .oferta-total__value {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-mid);
+      text-decoration: line-through;
+    }
+
+    .oferta-preco {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .oferta-preco__label {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+
+    .oferta-preco__parcelas {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      color: var(--teal-dark);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .oferta-preco__valor {
+      font-family: var(--font-heading);
+      font-size: 3.4rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      line-height: 1;
+      letter-spacing: -1.5px;
+    }
+
+    .oferta-preco__avista {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      margin-top: 10px;
+    }
+
+    .oferta-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 22px 32px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+      border: none;
+      border-radius: 100px;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      margin-bottom: 24px;
+    }
+
+    .oferta-cta:hover {
+      box-shadow: 0 12px 32px rgba(0, 169, 157, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .oferta-cta .material-symbols-outlined {
+      font-size: 22px;
+    }
+
+    .oferta-microcopy {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .oferta-microcopy__item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .oferta-microcopy__item .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--teal);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 680px) {
+      .section-oferta { padding: 56px 20px; }
+      .section-oferta__headline { font-size: 1.65rem; }
+      .oferta-card { padding: 32px 24px; border-radius: 20px; }
+      .oferta-item { padding: 12px 0; }
+      .oferta-item__name { font-size: 0.9rem; }
+      .oferta-item__value { font-size: 0.9rem; }
+      .oferta-preco__valor { font-size: 2.6rem; }
+      .oferta-cta { padding: 18px 24px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-oferta">
+    <div class="section-oferta__header">
+      <h2 class="section-oferta__headline">Sua entrada para o método completo</h2>
+      <p class="section-oferta__subtitle">Tudo o que você viu até aqui, em um único pacote, com acesso liberado em até dois minutos depois do pagamento.</p>
+    </div>
+
+    <div class="oferta-card">
+      <div class="oferta-stack">
+        <div class="oferta-stack__title">O que está incluído</div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Curso completo Crochê Lucrativo</span>
+          </div>
+          <span class="oferta-item__value">R$ 997</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Apostila e materiais complementares</span>
+          </div>
+          <span class="oferta-item__value">R$ 197</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Bônus 1. Fotografia com celular</span>
+          </div>
+          <span class="oferta-item__value">R$ 197</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Bônus 2. Pacote de legendas prontas</span>
+          </div>
+          <span class="oferta-item__value">R$ 147</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Bônus 3. Mentoria coletiva mensal</span>
+          </div>
+          <span class="oferta-item__value">R$ 497</span>
+        </div>
+      </div>
+
+      <div class="oferta-total">
+        <span class="oferta-total__label">Valor total real</span>
+        <span class="oferta-total__value">R$ 2.035</span>
+      </div>
+
+      <div class="oferta-preco">
+        <p class="oferta-preco__label">Por apenas</p>
+        <p class="oferta-preco__parcelas">12x de</p>
+        <p class="oferta-preco__valor">R$ 39,70</p>
+        <p class="oferta-preco__avista">ou R$ 397 à vista no Pix</p>
+      </div>
+
+      <a href="#" class="oferta-cta">
+        Quero garantir minha vaga agora
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+
+      <div class="oferta-microcopy">
+        <div class="oferta-microcopy__item">
+          <span class="material-symbols-outlined">lock</span>
+          Compra 100% segura
+        </div>
+        <div class="oferta-microcopy__item">
+          <span class="material-symbols-outlined">verified_user</span>
+          Garantia de 7 dias
+        </div>
+        <div class="oferta-microcopy__item">
+          <span class="material-symbols-outlined">bolt</span>
+          Acesso imediato
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

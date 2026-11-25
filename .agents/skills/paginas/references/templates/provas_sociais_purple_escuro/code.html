@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Provas Sociais. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.07) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+
+    .testimonial-card {
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+    .testimonial-card:hover {
+      border-color: rgba(108, 92, 231, 0.4);
+      background-color: rgba(18, 18, 26, 0.95);
+      transform: translateY(-3px);
+    }
+    .avatar-ring {
+      border: 2px solid rgba(108, 92, 231, 0.35);
+      box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.06);
+    }
+    .label-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .label-antes {
+      background: rgba(240, 240, 245, 0.04);
+      color: rgba(240, 240, 245, 0.55);
+      border: 1px solid rgba(240, 240, 245, 0.1);
+    }
+    .label-depois {
+      background: rgba(108, 92, 231, 0.12);
+      color: #a89bff;
+      border: 1px solid rgba(108, 92, 231, 0.3);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto w-full">
+
+      <!-- Headline -->
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Histórias reais
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Quem aplicou <span class="text-warm">já está vendo resultado</span>
+        </h2>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Card 1 -->
+        <div class="testimonial-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=47" alt="" class="w-14 h-14 rounded-full avatar-ring object-cover" />
+            <div>
+              <h3 class="text-base font-600 text-ink">Marisa Tavares</h3>
+              <p class="text-ink/45 text-sm font-light">Petrópolis, RJ</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="label-pill label-antes">Antes</span>
+              <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light mt-2">
+                Tinha pilhas de fios parados, vergonha de mostrar minhas peças e nunca passava de duas vendas por mês para vizinhas.
+              </p>
+            </div>
+            <div>
+              <span class="label-pill label-depois">Depois</span>
+              <p class="text-ink/75 text-[0.95rem] leading-relaxed font-400 mt-2">
+                Já fechei catorze encomendas no último mês, criei uma linha própria de mantas e abri um catálogo no celular que vende sozinho.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="testimonial-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=32" alt="" class="w-14 h-14 rounded-full avatar-ring object-cover" />
+            <div>
+              <h3 class="text-base font-600 text-ink">Heloísa Bertolini</h3>
+              <p class="text-ink/45 text-sm font-light">Joinville, SC</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="label-pill label-antes">Antes</span>
+              <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light mt-2">
+                Crochetava por hobby há anos, mas travava sempre que alguém pedia preço. Achava que ninguém pagaria pelo meu trabalho.
+              </p>
+            </div>
+            <div>
+              <span class="label-pill label-depois">Depois</span>
+              <p class="text-ink/75 text-[0.95rem] leading-relaxed font-400 mt-2">
+                Aprendi a precificar do jeito certo e hoje vendo cada peça por três vezes o que cobrava antes, com fila de espera.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="testimonial-card fade-up delay-3 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=44" alt="" class="w-14 h-14 rounded-full avatar-ring object-cover" />
+            <div>
+              <h3 class="text-base font-600 text-ink">Cláudia Resende</h3>
+              <p class="text-ink/45 text-sm font-light">Belo Horizonte, MG</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="label-pill label-antes">Antes</span>
+              <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light mt-2">
+                Postava fotos das peças no perfil pessoal e o engajamento era das tias e da prima. Ninguém comprava de verdade.
+              </p>
+            </div>
+            <div>
+              <span class="label-pill label-depois">Depois</span>
+              <p class="text-ink/75 text-[0.95rem] leading-relaxed font-400 mt-2">
+                Em três meses montei uma página própria, ganhei seguidoras de outras cidades e tirei minha primeira renda fixa do crochê.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="testimonial-card fade-up delay-4 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=16" alt="" class="w-14 h-14 rounded-full avatar-ring object-cover" />
+            <div>
+              <h3 class="text-base font-600 text-ink">Rosângela Pinheiro</h3>
+              <p class="text-ink/45 text-sm font-light">Fortaleza, CE</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="label-pill label-antes">Antes</span>
+              <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light mt-2">
+                Tentava vender em feirinha de bairro nos fins de semana e voltava cansada para casa com quase tudo nas sacolas.
+              </p>
+            </div>
+            <div>
+              <span class="label-pill label-depois">Depois</span>
+              <p class="text-ink/75 text-[0.95rem] leading-relaxed font-400 mt-2">
+                Hoje vendo pelo direct, organizo o estoque numa planilha simples e quase não paro mais em feira porque tudo sai antes.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="testimonial-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=49" alt="" class="w-14 h-14 rounded-full avatar-ring object-cover" />
+            <div>
+              <h3 class="text-base font-600 text-ink">Ivone Caldeira</h3>
+              <p class="text-ink/45 text-sm font-light">Curitiba, PR</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="label-pill label-antes">Antes</span>
+              <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light mt-2">
+                Comprei meia dúzia de cursos de crochê e nenhum me ensinou a transformar a habilidade em renda de verdade.
+              </p>
+            </div>
+            <div>
+              <span class="label-pill label-depois">Depois</span>
+              <p class="text-ink/75 text-[0.95rem] leading-relaxed font-400 mt-2">
+                Em sessenta dias estruturei uma vitrine no Instagram, fechei minha primeira encomenda corporativa e parei de duvidar do meu trabalho.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="testimonial-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=20" alt="" class="w-14 h-14 rounded-full avatar-ring object-cover" />
+            <div>
+              <h3 class="text-base font-600 text-ink">Tereza Mascarenhas</h3>
+              <p class="text-ink/45 text-sm font-light">Salvador, BA</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="label-pill label-antes">Antes</span>
+              <p class="text-ink/55 text-[0.92rem] leading-relaxed font-light mt-2">
+                Comparava meu trabalho com o de outras artesãs no Instagram e desistia de postar antes mesmo de tirar a foto.
+              </p>
+            </div>
+            <div>
+              <span class="label-pill label-depois">Depois</span>
+              <p class="text-ink/75 text-[0.95rem] leading-relaxed font-400 mt-2">
+                Encontrei minha voz, comecei a contar a história por trás de cada peça e dobrei meu faturamento sem mudar o que produzo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

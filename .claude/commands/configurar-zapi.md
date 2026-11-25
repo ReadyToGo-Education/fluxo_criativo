@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:configurar-zapi
 description: Guia para criar conta na Z-API, configurar uma instância e conectar o WhatsApp para envio de mensagens automatizadas.
+categoria: Configurações
 allowed-tools: Read, Edit, Bash, WebFetch, WebSearch
 model: sonnet
 ---

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:avat-whisk
 description: Gerar briefings visuais prontos para o Whisk (Google Labs). Cria os 3 inputs do Whisk (Subject, Scene, Style) para anuncios, carrossel e capa de produto, mantendo personagem e estetica consistentes entre pecas.
+categoria: Conteúdo e Criativos
 ---
 
 # Imagem com Whisk. Briefings Visuais para Personagem Consistente
@@ -26,7 +27,7 @@ Gera briefings prontos para colar no Whisk (labs.google/fx/tools/whisk). O Whisk
 
 ### 0. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md`. Se nao existirem, oriente o aluno a rodar `/produto-editar` primeiro.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md; se o produto ainda não tiver perfil, oriente o aluno a rodar `/produto-concepcao` primeiro).
 
 Extraia:
 - Quadro (transformacao principal)

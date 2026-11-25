@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-excluir
 description: Excluir um produto cadastrado e todas as suas entregas e pastas. Use esta skill SEMPRE que o usuário quiser deletar, remover ou apagar um produto do sistema.
+categoria: Produto
 ---
 
 # Excluir Produto. Remover Produto e Todas as Entregas
@@ -127,7 +128,7 @@ Rode no terminal para regenerar `meus-produtos/index.js` (remove o produto exclu
 Produto "{nome excluído}" excluído com sucesso.
 Produto ativo agora: {novo produto ativo}
 
-Use /produto-editar para editar o perfil ou /produto-trocar para alternar entre produtos.
+Use /produto-concepcao para editar o perfil ou /produto-trocar para alternar entre produtos.
 ```
 
 **Se não há mais produtos:**

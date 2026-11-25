@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:comercial-playbook
 description: Gerar o playbook comercial completo de venda 1:1 por WhatsApp (middle e low ticket) do produto ativo. Cobre moldura DEF (Descoberta, Encantamento, Fechamento), abordagem ativa, abordagem receptiva, SPIN, recuperação de carrinho, follow-up, quebra de objeções pelo Framework dos 7 Argumentos e dicionário do comercial. Entrega em HTML único, pronto para leitura e exportação em PDF.
+categoria: Comercial
 ---
 
 # Playbook Comercial. Venda 1:1 por WhatsApp (Middle e Low Ticket)
@@ -64,8 +65,8 @@ Leia, nesta ordem:
 
 1. `meus-produtos/.ativo`. Identificador do produto ativo.
 2. Listagem de `meus-produtos/`. Conte quantos produtos estão cadastrados (subpastas com `perfil.md`).
-3. `meus-produtos/{ativo}/perfil.md`. Obrigatório. Quadro, Furadeira, Decorados, 3 Identidades (Produto, Consumidor, Comunicador), Urgências Ocultas (7 categorias × 10 itens), preço, oferta, Argumentos Incontestáveis e diferenciais.
-4. `meus-produtos/{ativo}/idconsumidor.md`. Obrigatório para este comando. Contém as 5 objeções com as 7 quebras de 2 parágrafos cada (Framework dos 7 Argumentos), paliativos, frases do público, tom e baldes de para quem é.
+3. `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md). Obrigatório. Quadro, Furadeira, Decorados principais, 3 Identidades (Produto, Consumidor, Comunicador), Urgências Ocultas (7 categorias × 10 itens), preço, Argumentos Incontestáveis, diferencial, paliativos, frases do público e tom.
+4. Para a quebra de objeções, leia também só a seção `## Objeções de Compra` de `meus-produtos/{ativo}/idconsumidor.md`. Obrigatória para este comando. Contém as 5 objeções com as 7 quebras de 2 parágrafos cada (Framework dos 7 Argumentos).
 5. `meus-produtos/{ativo}/painel-entregas.html`. Se existir. Fonte visual de referência com os mesmos dados organizados.
 6. Arquivos complementares em `meus-produtos/{ativo}/entregas/*` (páginas, concepção, anúncios). Leitura leve, para capturar linguagem e argumentos já aprovados.
 

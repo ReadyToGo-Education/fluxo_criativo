@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier. Método</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        canvas: '#ffffff',
+        surface: '#f4f4f5',
+        ink: '#18181b',
+        accent: '#e4e4e7',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; color: #18181b; background: #ffffff; -webkit-font-smoothing: antialiased; }
+.flat-border { border: 1.5px solid #18181b; }
+
+/* Fade-up animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Step connector line */
+.step-connector {
+  display: none;
+}
+@media (min-width: 768px) {
+  .step-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+  }
+  .step-connector .material-symbols-outlined {
+    font-size: 28px;
+    color: #18181b;
+    opacity: 0.25;
+  }
+}
+
+/* Mobile connector */
+.step-connector-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+@media (min-width: 768px) {
+  .step-connector-mobile {
+    display: none;
+  }
+}
+
+/* Step card image */
+.step-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  border-bottom: 1.5px solid #18181b;
+}
+
+/* Step number */
+.step-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #18181b;
+  opacity: 0.08;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}
+
+/* Micro-step bullets */
+.micro-list {
+  list-style: none;
+  padding: 0;
+}
+.micro-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #18181b;
+  opacity: 0.7;
+}
+.micro-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid #18181b;
+  border-radius: 0;
+}
+</style>
+</head>
+<body>
+
+<section class="py-24 px-6 md:py-32 bg-surface">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Intro -->
+    <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20 fade-up">
+      <p class="text-sm tracking-widest uppercase text-ink/40 mb-6">A solução</p>
+      <h2 class="text-3xl md:text-4xl font-bold leading-tight text-ink mb-6">
+        O Método Atelier: 3 etapas para<br>transformar seu crochê em renda
+      </h2>
+      <p class="text-base md:text-lg leading-relaxed text-ink/60 max-w-lg mx-auto">
+        Um caminho claro, sem enrolação. Cada etapa foi desenhada para resolver um problema real que trava a maioria das artesãs. do preço errado até a falta de clientes.
+      </p>
+    </div>
+
+    <!-- 3 Steps -->
+    <div class="flex flex-col md:flex-row md:items-stretch md:justify-center">
+
+      <!-- Step 1 -->
+      <div class="flex-1 fade-up flex">
+        <div class="flat-border bg-canvas relative overflow-hidden flex flex-col w-full">
+          <img
+            src="https://picsum.photos/seed/crochet-pricing-calculator/600/300"
+            alt="Precificação de peças artesanais"
+            class="step-image"
+            loading="lazy"
+          >
+          <span class="step-number">01</span>
+          <div class="p-6 pt-5 relative">
+            <span class="material-symbols-outlined text-ink/30 mb-3 block" style="font-size:28px;">calculate</span>
+            <h3 class="text-lg font-bold text-ink mb-1">Precificação Inteligente</h3>
+            <p class="text-sm text-ink/50 mb-4">Saber exatamente quanto cobrar. sem medo, sem chute.</p>
+            <ul class="micro-list">
+              <li>Custo real de cada peça (linha, tempo, energia)</li>
+              <li>Margem de lucro que sustenta o negócio</li>
+              <li>Tabela de preços pronta para usar</li>
+              <li>Como apresentar o preço sem hesitar</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector desktop -->
+      <div class="step-connector">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+      <!-- Connector mobile -->
+      <div class="step-connector-mobile">
+        <span class="material-symbols-outlined text-ink/20" style="font-size:28px;">arrow_downward</span>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="flex-1 fade-up flex" style="transition-delay: 0.15s;">
+        <div class="flat-border bg-canvas relative overflow-hidden flex flex-col w-full">
+          <img
+            src="https://picsum.photos/seed/phone-instagram-vitrine/600/300"
+            alt="Vitrine digital de artesanato"
+            class="step-image"
+            loading="lazy"
+          >
+          <span class="step-number">02</span>
+          <div class="p-6 pt-5 relative">
+            <span class="material-symbols-outlined text-ink/30 mb-3 block" style="font-size:28px;">storefront</span>
+            <h3 class="text-lg font-bold text-ink mb-1">Vitrine que Vende</h3>
+            <p class="text-sm text-ink/50 mb-4">Mostrar suas peças de um jeito que atrai e convence.</p>
+            <ul class="micro-list">
+              <li>Fotos que valorizam o trabalho manual</li>
+              <li>Descrições que despertam desejo</li>
+              <li>Perfil no Instagram que funciona como loja</li>
+              <li>Catálogo digital simples e bonito</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector desktop -->
+      <div class="step-connector">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+      <!-- Connector mobile -->
+      <div class="step-connector-mobile">
+        <span class="material-symbols-outlined text-ink/20" style="font-size:28px;">arrow_downward</span>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="flex-1 fade-up flex" style="transition-delay: 0.3s;">
+        <div class="flat-border bg-canvas relative overflow-hidden flex flex-col w-full">
+          <img
+            src="https://picsum.photos/seed/customer-happy-delivery/600/300"
+            alt="Clientes comprando artesanato"
+            class="step-image"
+            loading="lazy"
+          >
+          <span class="step-number">03</span>
+          <div class="p-6 pt-5 relative">
+            <span class="material-symbols-outlined text-ink/30 mb-3 block" style="font-size:28px;">group</span>
+            <h3 class="text-lg font-bold text-ink mb-1">Clientes Todo Dia</h3>
+            <p class="text-sm text-ink/50 mb-4">Atrair compradores sem depender de sorte ou indicação.</p>
+            <ul class="micro-list">
+              <li>Estratégia de conteúdo que gera pedidos</li>
+              <li>Mensagens de venda sem parecer vendedora</li>
+              <li>Rotina semanal de atração de clientes</li>
+              <li>Fidelização para vendas recorrentes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /steps -->
+
+  </div>
+</section>
+
+<script>
+// Fade-up on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

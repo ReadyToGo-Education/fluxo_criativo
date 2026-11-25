@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bônus. Minimal Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .bonus-card { transition: transform 0.2s ease; }
+    .bonus-card:hover { transform: translateY(-2px); }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .price-old {
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Bônus exclusivos
+          <span class="text-gray-400">para quem entrar agora.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Três materiais extras pensados para destravar a primeira venda nos primeiros dias dentro do método.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <div class="bonus-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <span class="badge flat-border bg-surface text-ink">Bônus 01</span>
+          <h3 class="text-lg md:text-xl font-semibold mt-5 mb-3 leading-tight">Pacote de moldes para precificar fio nobre</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">
+            Planilha com 14 fórmulas prontas para calcular preço de manta, sousplat, almofada e amigurumi sem chutar.
+          </p>
+          <p class="text-sm">
+            <span class="price-old">R$ 197</span>
+            <span class="ml-2 font-semibold text-ink">Grátis</span>
+          </p>
+        </div>
+
+        <div class="bonus-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <span class="badge flat-border bg-surface text-ink">Bônus 02</span>
+          <h3 class="text-lg md:text-xl font-semibold mt-5 mb-3 leading-tight">Mini curso de fotografia com luz de janela</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">
+            Quatro aulas curtas mostrando como fotografar peça em casa, com celular, e fazer o cliente parar de rolar o feed.
+          </p>
+          <p class="text-sm">
+            <span class="price-old">R$ 297</span>
+            <span class="ml-2 font-semibold text-ink">Grátis</span>
+          </p>
+        </div>
+
+        <div class="bonus-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <span class="badge flat-border bg-surface text-ink">Bônus 03</span>
+          <h3 class="text-lg md:text-xl font-semibold mt-5 mb-3 leading-tight">Encontro ao vivo de lançamento de coleção</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">
+            Aula ao vivo de duas horas, uma vez por mês, mostrando como abrir a próxima coleção e esgotar antes do envio.
+          </p>
+          <p class="text-sm">
+            <span class="price-old">R$ 397</span>
+            <span class="ml-2 font-semibold text-ink">Grátis</span>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

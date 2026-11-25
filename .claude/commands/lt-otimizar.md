@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:lt-otimizar
-description: Analisar planilhas exportadas do Gerenciador de Anuncios do Meta Ads e recomendar acoes praticas de otimizacao para campanhas de produtos low ticket. Baseado em CPA dos ultimos 7 dias, estrutura CBO/ABO, Advantage+ e volume de compras em 28 dias.
+description: Analisar planilhas exportadas do Gerenciador de Anúncios do Meta Ads e recomendar ações práticas de otimização para campanhas de produtos low ticket. Baseado em CPA dos ultimos 7 dias, estrutura CBO/ABO, Advantage+ e volume de compras em 28 dias.
+categoria: Low Ticket
 user-invocable: false
 ---
 
@@ -18,7 +19,7 @@ Agente especialista em analise e otimizacao de campanhas de trafego pago para pr
 
 ### 1. Contexto
 
-Leia `meus-produtos/{ativo}/perfil.md` para saber o valor do produto (se disponivel).
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) para saber o valor do produto (se disponivel).
 Consulte `.claude/skills/trafego-pago/SKILL.md` para referencia de metricas.
 
 ### 2. Coleta de Dados
@@ -154,6 +155,7 @@ Aplicar SOMENTE se TODAS as condicoes forem verdadeiras:
 1. Conjunto esta dentro do CPA nos ultimos 7 dias
 2. Possui mais de 50 compras nos ultimos 28 dias
 3. NAO possui campanha Advantage+ ativa
+4. O aluno está no nível Hard ou acima e o analisador concorda (caso a caso). Abaixo de 50 compras, nada de Advantage+: público, posicionamento e criativo manuais (régua da seção 1.3 do `/trafego-criar-campanha`).
 
 **Acao: Criar campanha Advantage+:**
 - 1 campanha

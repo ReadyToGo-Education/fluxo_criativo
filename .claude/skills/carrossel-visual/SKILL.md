@@ -18,14 +18,14 @@ Antes de qualquer geração de prompt de imagem, carregar:
 
 ## Passo 0. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 Extrair internamente (não mostrar ao usuário):
 - Urgências Ocultas completas (70 itens, 7 categorias)
-- Decorados (50 benefícios)
+- Decorados principais (10 benefícios)
 - Quadro (transformação principal)
 - Nicho, público-alvo e handle do produto
-- Paleta de cores do produto (se especificada no perfil)
+- Paleta de cores do produto (se especificada no resumo)
 
 Verificar carrosséis anteriores em `meus-produtos/{ativo}/entregas/criativos/` para evitar ângulos repetidos.
 
@@ -231,7 +231,7 @@ Regras fixas:
 - Card 1 (Capa): sempre foto full-bleed
 - Card N (CTA): sempre fundo claro
 
-Derivar cores de destaque do produto ativo. Se o `perfil.md` não especifica paleta, usar `#FF6B01` (escuro) e `#8B5CF6` (claro) como padrão. Apresentar e perguntar se quer manter ou trocar.
+Derivar cores de destaque do produto ativo. Se o `resumo-produto.md` não especifica paleta, usar `#FF6B01` (escuro) e `#8B5CF6` (claro) como padrão. Apresentar e perguntar se quer manter ou trocar.
 
 ---
 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academy. CTA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: '#0a0a0f',
+        surface: '#12121a',
+        ink: '#f0f0f5',
+        accent: '#2a2a3a',
+        warm: '#6c5ce7',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; color: #f0f0f5; background: #0a0a0f; -webkit-font-smoothing: antialiased; }
+.flat-border { border: 1.5px solid #2a2a3a; }
+
+.cta-glow {
+  position: relative;
+}
+.cta-glow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(108,92,231,0.15) 0%, rgba(108,92,231,0.04) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #6c5ce7;
+  color: #f0f0f5;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 1rem 2.25rem;
+  border: 1.5px solid #6c5ce7;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+}
+.cta-button:hover {
+  background: transparent;
+  color: #6c5ce7;
+  border-color: #6c5ce7;
+}
+.cta-button .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 0.25s ease;
+}
+.cta-button:hover .material-symbols-outlined {
+  transform: translateX(4px);
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<section class="py-28 px-6 md:py-36 bg-base">
+  <div class="max-w-2xl mx-auto text-center cta-glow">
+
+    <h2 class="fade-up text-3xl md:text-4xl font-bold leading-tight text-ink mb-6 max-w-2xl mx-auto">
+      Sua carreira não vai mudar sozinha. Mas pode mudar agora.
+    </h2>
+
+    <p class="fade-up text-base md:text-lg font-light leading-relaxed text-ink/50 mb-12 max-w-lg mx-auto">
+      Um método estruturado para você sair da estagnação e construir uma trajetória profissional com direção, clareza e resultado.
+    </p>
+
+    <div class="fade-up mb-4">
+      <p class="text-3xl md:text-4xl font-bold text-ink mb-1">12x de R$&nbsp;49,70</p>
+      <p class="text-sm text-ink/40">ou R$&nbsp;497,00 à vista</p>
+    </div>
+
+    <div class="fade-up mb-6 mt-8">
+      <a href="#oferta" class="cta-button">
+        Quero começar agora
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+
+    <p class="fade-up text-sm font-light text-ink/30">Acesso imediato ao método completo · Garantia de 30 dias</p>
+
+  </div>
+</section>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 120);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

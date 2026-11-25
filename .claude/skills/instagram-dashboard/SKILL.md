@@ -1,10 +1,10 @@
 ---
 name: instagram-dashboard
 description: >
-  Configura dashboard HTML de metricas do Instagram via Apify. Coleta dados
+  Configura dashboard HTML de métricas do Instagram via Apify. Coleta dados
   publicos do perfil (seguidores, bio, foto), posts recentes e Reels (likes,
   comentarios, views). Todas as imagens embutidas em base64. Busca expandida
-  para substituir posts com likes ocultos (ate 100 posts). Roda localmente
+  para substituir posts com likes ocultos (até 100 posts). Roda localmente
   na maquina do mentorado, sem servidor, sem GitHub, sem agendamento automatico.
 user-invocable: false
 ---

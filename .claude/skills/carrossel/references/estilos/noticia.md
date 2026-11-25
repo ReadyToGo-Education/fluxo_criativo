@@ -11,13 +11,13 @@
 O fluxo de coleta da Notícia **ignora** o `passo-coleta-base.md` padrão. A coleta é a Etapa 1 do `prompt-noticia.md` (3 perguntas):
 
 ### 1.1. @ do Instagram
-Se `.env` tiver `IG_USER` ou `perfil.md` tiver handle, pré-preencha como sugestão.
+Se `.env` tiver `IG_USER` ou `resumo-produto.md` tiver handle, pré-preencha como sugestão.
 
 ### 1.2. Nicho
-Se `perfil.md` tiver nicho, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver nicho, pré-preencha como sugestão.
 
 ### 1.3. Produto
-Se `perfil.md` tiver Quadro/formato/público, pré-preencha como sugestão.
+Se `resumo-produto.md` tiver Quadro/formato/público, pré-preencha como sugestão.
 
 > Tema e tom NÃO são coletados aqui. Tema é escolhido na Etapa 3 do prompt (depois da busca na web); tom na Etapa 4. No modo "Gerar todos", veja a regra abaixo.
 
@@ -28,7 +28,7 @@ Se `perfil.md` tiver Quadro/formato/público, pré-preencha como sugestão.
 A skill `/carrossel` no estilo Notícia faz o seguinte:
 
 1. **Carrega** `references/prompt-noticia.md` inteiro.
-2. **Executa a Etapa 1** (coleta de @, nicho, produto), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `perfil.md`/`.env`.
+2. **Executa a Etapa 1** (coleta de @, nicho, produto), uma pergunta por turno, com pré-preenchimento de sugestão a partir do `resumo-produto.md`/`.env`.
 3. Passa pela **confirmação consolidada** (Passo 2.5 da SKILL.md).
 4. **Executa o prompt da Etapa 2 à Etapa 7 exatamente como está**, na sessão atual:
    - Etapa 2: busca de 5 notícias trend dos últimos 7 dias via `WebSearch`.

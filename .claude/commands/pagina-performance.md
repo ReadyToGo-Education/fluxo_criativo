@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:pagina-performance
 description: Auditar performance de uma página HTML pronta (peso, imagens, fontes, CSS/JS, Core Web Vitals estimados) e corrigir os problemas automaticamente. Roda offline, sem chamar PageSpeed externo. Pensada pra rodar logo após gerar a página.
+categoria: Infraestrutura de Página
 ---
 
 # Página Performance. Auditoria e Correção Automática

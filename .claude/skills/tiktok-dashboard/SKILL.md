@@ -1,9 +1,9 @@
 ---
 name: tiktok-dashboard
 description: >
-  Configura dashboard HTML de metricas do TikTok via Apify. Coleta dados
-  publicos do perfil (seguidores, likes totais, bio, avatar), videos recentes
-  (views, likes, comentarios, compartilhamentos, saves, duracao). Todas as
+  Configura dashboard HTML de métricas do TikTok via Apify. Coleta dados
+  publicos do perfil (seguidores, likes totais, bio, avatar), vídeos recentes
+  (views, likes, comentarios, compartilhamentos, saves, duração). Todas as
   thumbnails embutidas em base64. Roda localmente na maquina do mentorado,
   sem servidor, sem GitHub, sem agendamento automatico.
 user-invocable: false

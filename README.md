@@ -42,9 +42,9 @@ Distribuição empacotada para alunos. O instalador (`instalador/script-windows.
 | Ferramenta | Ativa |
 |---|---|
 | **Vercel CLI** | `/pagina-vercel` (publicar páginas) |
-| **FFmpeg** | `/video-editar` (corte, legenda, compressão) |
+| **FFmpeg** | `/video-editar` (legenda automática, corte de erros e de silêncios, compressão) |
 | **Remotion** | `/video-remotion` (vídeo animado para Ads) |
-| **whisper.cpp** | `/video-editar` (transcrição e legenda automática, instalado sob demanda em `.claude/tools/whisper/`) |
+| **whisper.cpp** | `/video-editar` (transcrição para a legenda e o corte de erros; roda só no processador, instalado sob demanda em `.claude/tools/whisper/`) |
 
 ### APIs (todas opcionais. O toolkit funciona 100% sem nenhuma)
 
@@ -53,7 +53,7 @@ Copie `.env.example` para `.env` e preencha apenas o que for usar:
 | Nível | O que preencher | O que desbloqueia |
 |---|---|---|
 | **Básico** | Nada | Todos os entregáveis em arquivo local |
-| **Intermediário** | `VERCEL_TOKEN`, `FREEPIK_API_KEY` ou `OPENROUTER_API_KEY`, `APIFY_API_TOKEN` | Páginas publicadas, criativos automáticos, dashboards de redes |
+| **Intermediário** | `VERCEL_API_TOKEN`, `FREEPIK_API_KEY` ou `OPENROUTER_API_KEY`, `APIFY_API_TOKEN` | Páginas publicadas, criativos automáticos, dashboards de redes |
 | **Avançado** | `HEYGEN_API_KEY`, `FB_ACCESS_TOKEN_PERMANENTE` (ou MCP oficial Claude + Meta), `TELEGRAM_BOT_TOKEN`, `Z-API` | Vídeo com avatar IA, tráfego Meta Ads via API ou MCP, relatório diário automático |
 
 Para configurar qualquer integração, use o comando correspondente no chat (`/configurar-heygen`, `/configurar-apify`, `/configurar-telegram`, `/configurar-zapi`, `/trafego-conexao`, etc.). Ele guia o processo completo, mascara tokens na exibição e grava sempre no `.env` (regra global do projeto: token nunca aparece hardcoded em outro arquivo).
@@ -63,7 +63,7 @@ Para configurar qualquer integração, use o comando correspondente no chat (`/c
 - **VTSD (Venda Todo Santo Dia).** Quadro (transformação), Furadeira (método estruturado em macroetapas e microetapas), Decorados (50 benefícios em 5 categorias), 3 Identidades (Comunicador, Consumidor, Produto), Urgências Ocultas (7 categorias x 10 itens = 70 itens por produto), Mandala da Criatividade (18 tipos de anúncio x 4 objetivos x 3 momentos), Estrutura 8D (11 seções de página de vendas), VVV (vídeo de vendas), 26 Elementos Literários.
 - **Light Copy.** Argumentativa, lógica, conversacional, não óbvia. Proibições duras codificadas em `.claude/rules/copy/checklist-light-copy.md` (12 itens): travessão, ponto de exclamação, pergunta no gancho, "Não é X. É Y.", "mesmo que", "sem precisar", nome do produto no lead, lero-lero, copy sem tese, sigla sem explicação, depoimento sem resultado, venda só do Quadro sem Decorado.
 - **C10X (High Ticket).** Retiros online, webinar, pitch de palco, call SPIN, WhatsApp, proposta comercial, follow-up pós-evento. Disponível via skills globais do plugin C10X (`ht-big-idea`, `ht-oferta`, `ht-pitch-palco`, etc.) e via agente `estrategista-ht`.
-- **Low Ticket.** Produto de entrada (R$37-97) com quiz ou página direta, desafio, agente GPT, copy para Hotmart/Kiwify, otimização de Ads via planilha colada do Gerenciador.
+- **Low Ticket.** Produto de entrada (R$37-97) com quiz ou página direta, desafio, agente de IA, copy para Hotmart/Kiwify, otimização de Ads via planilha colada do Gerenciador.
 
 ## Regras absolutas de estilo
 
@@ -88,8 +88,8 @@ Checklists completos (Light Copy + Design HTML) estão no topo do `CLAUDE.md` e 
 | **Commands** | `.claude/commands/*.md` | Slash commands interativos (`/copy-pagina`, `/lt-funil`, etc.) |
 | **Agents** | `.claude/agents/*.md` | Subprocessos autônomos (orquestradores e especialistas) |
 | **Skills** | `.claude/skills/` | Base de conhecimento consultada por commands e agents |
-| **Rules** | `.claude/rules/` | Regras compartilhadas (checklist Light Copy, tempos calibrados, etc.) |
-| **Hooks** | `.claude/hooks/` | Scripts disparados por eventos (acentuação pt_BR, status de agentes para a Sala) |
+| **Rules** | `.claude/rules/` | Regras compartilhadas (checklist Light Copy, checklist de segurança, tempos calibrados, etc.) |
+| **Hooks** | `.claude/hooks/` | Scripts disparados por eventos (acentuação pt_BR, bloqueio de token fora do `.env`, status de agentes para a Sala) |
 
 **Fluxo típico:**
 ```
@@ -121,7 +121,7 @@ workshop_inteligente/
 │   ├── commands/                Slash commands (80+ arquivos .md)
 │   ├── agents/                  Agentes orquestradores e especialistas
 │   ├── skills/                  Base de conhecimento (50+ pastas)
-│   ├── rules/                   Regras compartilhadas (Light Copy, tempos estimados)
+│   ├── rules/                   Regras compartilhadas (Light Copy, segurança, tempos estimados)
 │   ├── hooks/                   Hooks de sessão (verificar-acentuacao, agent-status-writer)
 │   ├── settings.json            Permissões
 │   └── settings.local.json      Permissões locais (não sobe, contém allow patterns)
@@ -197,7 +197,7 @@ Espelho visual em tempo real do trabalho do Claude no projeto. Cada um dos 7 age
 - `/produto-consumidor`. Obsoleto, redireciona para `/produto-concepcao`.
 
 ### Copy
-`/copy-pagina`, `/copy-anuncio`, `/copy-social`, `/copy-roteiro`, `/copy-variacao-post`, `/elementos-literarios`
+`/copy-pagina`, `/copy-anuncio`, `/copy-bullets`, `/copy-social`, `/copy-roteiro`, `/copy-variacao-post`, `/elementos-literarios`
 
 Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 blocos de checklist) antes de ser exibida ao usuário. Auto-revisão invisível.
 
@@ -210,28 +210,37 @@ Toda copy passa obrigatoriamente pela skill `revisora` (Manual da Copy + 4 bloco
 - `/furadeira-visual`. Gera a imagem PNG da Furadeira a partir do que já está escrito no `perfil.md`. Decide o layout sozinho conforme mecânica + nicho, monta prompt em inglês para o aluno colar no ChatGPT, recebe a imagem de volta e salva no projeto + painel de entregas.
 - `/video-heygen`. Vídeo com avatar IA via HeyGen, múltiplas cenas, avatares rotacionados, backgrounds variados, direção baseada em dados reais (Apify/dashboard) ou Urgências Ocultas.
 - `/video-remotion`. Vídeo animado para Meta Ads via Remotion.
-- `/video-editar`. Edita vídeos existentes com FFmpeg (corte, legenda via Whisper, compressão).
+- `/video-editar`. Edita vídeos existentes com FFmpeg. A edição automática da fala coloca a legenda, tira as frases com erro (fica a última tomada) e corta as pausas longas, tudo no computador do aluno, sem placa de vídeo. Também corta, junta, redimensiona e comprime.
 - `/video-efeitos`. Aplica efeitos visuais em vídeo (transições, scrub, otimização).
 
 ### Carrossel
-- `/carrossel`. Gera carrosséis virais para Instagram em 7 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana). Inclui 3 caminhos de geração de imagem (manual, Claude in Chrome, API paralela).
+- `/carrossel`. Gera carrosséis virais para Instagram em 9 estilos (Nunca, Sempre, Odeio, Erros, Amo, Ninguém Conta, Notícia da semana, Curiosidade, Editorial). Inclui 3 caminhos de geração de imagem (manual, Claude in Chrome, API paralela).
 - `/programar-carrossel-noticia`. Programa tarefa recorrente no `/schedule` do Claude para gerar carrossel de notícia automaticamente.
 
 ### Low Ticket
-- `/lt-funil`. Cria produto de entrada low ticket (quiz, desafio, agente GPT).
+- `/lt-funil`. Cria produto de entrada low ticket (quiz, desafio, agente de IA).
 - `/lt-criar-produto`. Cria o conteúdo real do produto digital.
 - `/lt-quiz`. Gera perguntas do quiz.
-- `/lt-pagina`. Gera as 4 leads low ticket (incluindo Estrutura E — Categoria Padrão).
+- `/lt-pagina`. Cria a página de vendas low ticket pela régua v16 do time de criativos: promessa central, 7 aberturas com tabela de prioridade de testes, copy completa e um prompt único para o Lovable montar a página.
 - `/lt-otimizar`. Analisa planilha do Gerenciador e otimiza campanhas low ticket.
 
 ### Tráfego Pago (Meta Ads via API ou MCP oficial)
-- `/trafego-conexao`. Configura conexão com Meta Ads. Pergunta se quer usar o **conector oficial Claude + Meta (MCP via OAuth)** ou o caminho do **App Facebook Developers (token permanente no `.env`)**. Salva preferência em `META_AUTH_MODO`. Toda skill de tráfego depende dessa variável e aciona `/trafego-conexao` se ela não existir (Passo 0 obrigatório).
-- `/trafego-insights`. Leitura de métricas (campanha única ou conta completa com ranking de urgência) com cálculo automático de derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate).
-- `/trafego-criar-campanha`. Cria campanha via Marketing API. PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo. Cobre objetivos OUTCOME_SALES (perpétuo) e OUTCOME_LEADS (lançamento).
-- `/trafego-otimizar`. Diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high). Propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh) e emite sinal de prontidão para escala. Inclui sub-skill `acoes-lote` (em massa por filtro).
-- `/trafego-analise`. Análise narrada VTSD em 9 outputs (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B).
+- `/trafego-conexao`. Configura conexão com Meta Ads. Conecta sempre primeiro pelo **conector oficial Claude + Meta (MCP via OAuth)** e testa a conta. O **App Facebook Developers (token permanente no `.env`)** só é oferecido depois desse teste, para quem tem a conta de anúncios ainda não liberada pela Meta no MCP. Salva o modo em `META_AUTH_MODO`. Toda skill de tráfego depende dessa variável e aciona `/trafego-conexao` se ela não existir (Passo 0 obrigatório).
+- `/trafego-insights`. Leitura de métricas (campanha única ou conta completa com ranking de urgência) com cálculo automático de derivadas (connect rate, taxa de conversão por etapa, custo por etapa, hook rate) e série diária.
+- `/trafego-criar-campanha`. Cria campanha pela Marketing API ou pelo MCP. PAUSED por padrão, preview YAML obrigatório, gate de pixel ativo. Cobre objetivos OUTCOME_SALES (perpétuo) e OUTCOME_LEADS (lançamento).
+- `/trafego-otimizar`. Confere se o dado é confiável e faz o diagnóstico em 2 camadas (tendência cruzando 3 janelas + gargalo). Classifica em 6 trilhas (perpétuo low/mid/high, lançamento low/mid/high), calcula lucro e ponto de equilíbrio, propõe ações graduais que preservam aprendizado (reduzir -20%, pausar criativo, refresh, realocar verba, cost cap) e emite sinal de prontidão para escala. Inclui sub-skills `acoes-lote` (em massa por filtro), `atalhos-compostos` e painel de decisão em HTML.
+- `/trafego-escalar`. Escala com score de risco de 0 a 100, guardião de caixa e freios escalonados. Também é acionada pelo `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
+- `/trafego-analise`. Análise narrada VTSD com gráficos e 3 temas no HTML (Diagnóstico Rápido, Performance & Funil, Criativos & Copy com Mandala 18 tipos, Geo & Demografia, Timing & Sazonalidade, Investigação Profunda, Lifecycle & Histórico, Problemas Ocultos, Orçamento & Projeção, Comparativo A x B).
+- `/trafego-diagnostico`. Investiga antes de agir: 3 hipóteses com peso, auditoria da estrutura da conta, falso vencedor e score de confiança de 0 a 100. Apenas leitura.
+- `/trafego-criativos`. Atenção, intenção e conversão dos criativos, DNA dos que vencem ligado à Mandala e briefing do próximo teste. Apenas leitura.
+- `/trafego-oferta-funil`. Funil depois do clique (visita, carrinho, checkout, compra), congruência anúncio x página, nota da oferta e plano de correção. Apenas leitura.
+- `/trafego-pixel`. Diagnóstico de pixels da conta (status, último disparo, eventos rastreados, pixels parados). Apenas leitura.
+- `/trafego-publicos`. Cria públicos (evento do pixel, visualização de vídeo, engajamento, semelhante, lista de clientes com hash feito no computador do aluno, bases por nível a partir do produto ativo). Toda criação passa por preview e confirmação.
+- `/trafego-regras`. Desenha regras automáticas (no MCP, criadas à mão no Gerenciador com o roteiro da skill) e programa liga e pausa por horário. Toda regra nasce desativada.
+- `/trafego-testes`. Testes A/B disciplinados, duplicação variando uma coisa só, campanha de remarketing e leitura do resultado no 7º dia.
+- `/trafego-dashboard`. Dashboard da conta de anúncios publicado como artefato do Claude conectado ao MCP da Meta, montado a partir de um modelo pronto (visão geral com comparação, funil, ritmo do dia, campanhas com anúncios, dia a dia). Com credenciais da Hotmart ou da Kiwify no `.env`, inclui as vendas reais com bump, upsell e origem. Se o aluno já tem um, entrega o link (salvo em `meus-produtos/dashboard-trafego.md`); se não tem, cria. Sem MCP, monta o dashboard estático (legado).
 
-Skill interna acionada automaticamente: `trafego-escalar` (5 modos de escala, 3 velocidades, freios escalonados, tetos), invocada por `/trafego-otimizar` quando `sinal_para_escala.pronta: true`.
+Onde salvam: relatórios em `meus-produtos/{ativo}/entregas/trafego/`, dados de trabalho do produto em `meus-produtos/{ativo}/trafego/` e o que é da conta de anúncios (públicos, regras, pixel) em `meus-produtos/_global/trafego/`.
 
 ### Estratégia
 `/estrategia-funil`, `/estrategia-lancamento`
@@ -245,7 +254,7 @@ Skill interna acionada automaticamente: `trafego-escalar` (5 modos de escala, 3 
 `/pagina-visual` cria a página a partir de prints de referência do aluno: cada print vira uma cópia HTML com design 100% preservado, e a montagem final concatena via `scripts/montar-pagina-copias.py`.
 
 ### Feedback e auditoria
-`/feedback-pagina`, `/feedback-low-ticket`. Ambos fazem auditoria completa contra o Manual da Copy e podem editar o HTML de saída.
+`/feedback-pagina`, `/feedback-low-ticket`. O `/feedback-pagina` audita contra o Manual da Copy e pode editar o HTML de saída. O `/feedback-low-ticket` audita pela régua v16 e entrega a copy corrigida e um prompt novo para o Lovable.
 
 ### Toolkit (projetos estruturados)
 `/toolkit-novo`, `/toolkit-planejar`, `/toolkit-executar`, `/toolkit-verificar`, `/toolkit-progresso`, `/toolkit-anotar`, `/toolkit-pausar`, `/toolkit-retomar`
@@ -257,7 +266,7 @@ Fluxo proprietário para conduzir projetos grandes (lançamento, funil completo,
 - `/enviar-relatorio-ads`. Dispara o relatório agora.
 - `/dados-instagram`. Análise pontual de perfil do Instagram (insights de copy + dashboard HTML com filtros).
 - `/app-saas`. Gera PRD + prompt técnico de mini-SaaS relevante para os alunos do infoprodutor, pronto para colar no Lovable.dev.
-- `/criar-gpt`. Gera agente GPT personalizado para infoprodutores com 10 ideias, metodologia e prompt final.
+- `/criar-agente`. Cria o agente de IA do produto com 10 ideias que entregam algo pronto: Agente de IA da Hotmart ou plugin do ChatGPT em .zip, com as 8 mensagens de teste. Substitui o `/criar-gpt` (os GPTs saem do ar em 11/12/2026).
 - `/adaptar-plataforma`. Converte scripts e instruções Windows/PowerShell para Mac ou Linux (Task Scheduler → cron/launchd).
 
 ### Dashboards de redes sociais
@@ -318,7 +327,7 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 - `carrossel/`, `carrossel-visual/`. Carrosséis de Instagram (texto + foto IA por card).
 - `copy-variacao-post/`. Variações de conteúdo validado pelo algoritmo.
 - `conteudo/`. Frameworks de copy, gatilhos, exemplos de VSL.
-- `criacao-produto-low-ticket/`. Conteúdo real do produto LT (e-book, checklist, mini-curso, desafio, agente GPT, planilha).
+- `criacao-produto-low-ticket/`. Conteúdo real do produto LT (e-book, checklist, mini-curso, desafio, agente de IA, planilha).
 
 **Anúncios e criativos**
 - `anuncios/`, `anuncios-texto/`, `anuncios-video/`. Mandala da Criatividade, formatos Meta Ads e Google Ads, especificações técnicas.
@@ -330,12 +339,20 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 
 **Tráfego pago (Meta Ads)**
 - `trafego-pago/`. Base geral (pixel, métricas, campanhas, regras).
-- `trafego-conexao/`. Setup de conexão (MCP oficial ou App Facebook Developers).
-- `trafego-insights/`. Fonte única de leitura da Graph API com cálculo de derivadas.
+- `trafego-conexao/`. Setup de conexão (MCP oficial recomendado, App Facebook Developers de reserva).
+- `trafego-insights/`. Fonte única de leitura (Graph API ou MCP) com cálculo de derivadas.
 - `trafego-criar-campanha/`. Fluxo de criação com preview YAML.
-- `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + sub-skill acoes-lote.
-- `trafego-escalar/`. 5 modos de escala (vertical, horizontal, vertical+horizontal, consolidação CBO, Advantage).
-- `trafego-analise/`. 9 outputs narrativos VTSD.
+- `trafego-otimizar/`. Diagnóstico em 2 camadas + 6 trilhas + camada de lucro + sub-skills acoes-lote, atalhos-compostos e painel de decisão.
+- `trafego-escalar/`. Modos de escala (vertical, horizontal, consolidação CBO, Advantage, Carteira), score de risco e guardião de caixa.
+- `trafego-analise/`. Outputs narrativos VTSD, scripts de busca, processamento e gráficos.
+- `trafego-diagnostico/`. Diagnóstico diferencial, auditoria estrutural, falso vencedor e score de confiança.
+- `trafego-criativos/`. Atenção, intenção, conversão, DNA e briefing de criativos.
+- `trafego-oferta-funil/`. Funil depois do clique, página, oferta, checkout, upsell e downsell.
+- `trafego-pixel/`. Diagnóstico de pixels (leitura).
+- `trafego-publicos/`. Públicos personalizados, semelhantes, engajamento, lista de clientes e bases por nível.
+- `trafego-regras/`. Regras automáticas e liga e pausa por horário.
+- `trafego-testes/`. Testes A/B disciplinados, duplicação e remarketing.
+- `trafego-dashboard/`. Modelo do dashboard (`assets/dashboard.html`), scripts de montagem e de vendas da Hotmart e da Kiwify e o roteiro do dashboard estático legado.
 
 **Pesquisa e dados**
 - `pesquisa-mercado/`. 9 eixos completos.
@@ -348,12 +365,12 @@ Em `.claude/skills/`. Não são acionadas diretamente pelo usuário: são consul
 - `dashboard-social/`. Orquestrador unificado.
 
 **Programação de conteúdo**
-- `programar-carrossel/`. Tarefa recorrente no `/schedule` do Claude para gerar carrossel automaticamente em 1 dos 7 estilos.
+- `programar-carrossel/`. Tarefa recorrente no `/schedule` do Claude para gerar carrossel automaticamente em 1 dos 9 estilos.
 - `programar-carrossel-noticia/`. Variante focada em carrossel de notícia.
 
 **Painel e suporte**
 - `painel-revisar/`. Audita estado e completude do painel.
-- `agente-gpt/`. Base para criar agentes GPT personalizados.
+- `agente-ia/`. Base do `/criar-agente`: agente na Hotmart ou plugin do ChatGPT, com o script que monta o .zip.
 - `app-saas/`. Ideação e PRD de mini-SaaS para alunos do infoprodutor.
 - `ferramentas/`. Integrações externas.
 - `adaptar-plataforma/`. Adaptação cross-platform (Windows/Mac/Linux).
@@ -452,18 +469,20 @@ Configuradas via `.env` (veja `.env.example`). Token sempre lido do `.env`, nunc
 ### Low Ticket
 1. `/produto-concepcao`
 2. `/lt-funil` (após framework Quiz vs. Página descrito no `CLAUDE.md`)
-3. `/lt-criar-produto` (e-book, checklist, agente GPT, etc.)
+3. `/lt-criar-produto` (e-book, checklist, agente de IA, etc.)
 4. `/lt-pagina` ou `/lt-quiz`
 5. `/copy-anuncio` (formatos low ticket)
 6. `/lt-otimizar` (com planilha do Gerenciador)
 
 ### Tráfego Pago (Meta Ads)
 1. `/trafego-conexao` (uma vez, define MCP ou App, salva `META_AUTH_MODO`)
-2. `/trafego-criar-campanha` (PAUSED por padrão)
-3. `/trafego-insights` (após 48h rodando)
-4. `/trafego-otimizar` (diagnóstico em 2 camadas + 6 trilhas)
-5. `/trafego-analise` (análise narrada VTSD em 9 outputs)
-6. Escala automática (`/trafego-otimizar` → `trafego-escalar` quando `sinal_para_escala.pronta: true`)
+2. `/trafego-pixel` (confere se o pixel está disparando)
+3. `/trafego-publicos` (públicos base: evento, engajamento, semelhante)
+4. `/trafego-criar-campanha` (PAUSED por padrão)
+5. `/trafego-insights` (após 48h rodando)
+6. `/trafego-diagnostico` ou `/trafego-otimizar` (investigar e otimizar)
+7. `/trafego-analise`, `/trafego-criativos` e `/trafego-oferta-funil` (leituras aprofundadas)
+8. `/trafego-testes` ou escala (`/trafego-otimizar` → `trafego-escalar` quando `sinal_para_escala.pronta: true`)
 
 ### High Ticket C10X
 Use o agente `estrategista-ht` ou invoque diretamente as skills globais do plugin C10X. Fluxo típico:

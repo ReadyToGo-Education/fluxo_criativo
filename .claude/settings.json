@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Write(meus-produtos/**)",
+      "Edit(meus-produtos/**)",
       "Read(.claude/commands/**)",
       "Read(.claude/agents/**)",
       "Read(.claude/skills/**)",
@@ -52,6 +52,26 @@
             "command": "bash .claude/hooks/gsd-session-state.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/sincronizar-meus-produtos.js",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/sincronizar-meus-produtos.js",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -96,6 +116,16 @@
         ]
       },
       {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/resumo-invalidar.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "Write|Edit|Bash|Agent|Task|WebFetch|WebSearch",
         "hooks": [
           {
@@ -113,6 +143,16 @@
           {
             "type": "command",
             "command": "node .claude/hooks/no-emdash-guard.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/segredo-guard.js",
             "timeout": 5
           }
         ]

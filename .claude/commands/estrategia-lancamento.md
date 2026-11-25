@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:estrategia-lancamento
 description: Planejar lançamento ou evento completo. cronograma, estrutura de pico de vendas, comunicação pré-evento, pitch e oferta. Baseado nas metodologias VTSD e C10X.
+categoria: Estratégia
 ---
 
 # Lançamento. Planejamento Completo de Evento
@@ -16,7 +17,7 @@ Planeja lançamento ou evento usando a estrutura C10X (High Ticket via eventos) 
 ## O Que Fazer
 
 ### 1. Contexto
-Leia `meus-produtos/{ativo}/perfil.md`.
+Leia `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 ### 2. Entrevista (UMA pergunta por vez, com progresso visual)
 

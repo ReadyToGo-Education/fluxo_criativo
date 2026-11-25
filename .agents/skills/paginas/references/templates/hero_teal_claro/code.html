@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier - Método Crochê</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #F8F8F8;
+            --white: #ffffff;
+            --teal: #00A99D;
+            --teal-dark: #0A6561;
+            --teal-deep: #0D5450;
+            --green-cta: #1BAF1B;
+            --green-top: #57E957;
+            --green-bottom: #0A760A;
+            --green-hover: #003333;
+            --text-dark: #363636;
+            --text-mid: #666666;
+            --text-light: #B8B8B8;
+            --border: #EAEAEA;
+            --mint: #90FFEB;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::selection {
+            background: rgba(0, 169, 157, 0.2);
+            color: var(--text-dark);
+        }
+
+        /* ── Header ── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(248, 248, 248, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            letter-spacing: -0.48px;
+            color: var(--text-dark);
+        }
+        .logo span {
+            color: var(--teal);
+        }
+
+        /* ── Main ── */
+        main {
+            max-width: 76rem;
+            margin: 0 auto;
+            padding: 72px 24px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 56px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* ── Left column ── */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: var(--teal-dark);
+            color: var(--mint);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 3.75rem;
+            letter-spacing: -0.96px;
+            color: var(--text-dark);
+        }
+
+        h1 .accent {
+            color: var(--teal);
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            color: var(--text-mid);
+            font-weight: 400;
+            max-width: 480px;
+        }
+
+        /* ── Checklist ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            list-style: none;
+            margin: 8px 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 200ms ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .check-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .check-icon .material-symbols-outlined {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .check-item span:last-child {
+            font-size: 0.9375rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* ── CTA Button (VTSD pill style) ── */
+        .cta-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            height: 4.25rem;
+            padding: 0 32px;
+            border-radius: 3rem;
+            border: 2px solid;
+            border-top-color: var(--green-top);
+            border-bottom-color: var(--green-bottom);
+            border-left-color: var(--green-cta);
+            border-right-color: var(--green-cta);
+            background: var(--green-cta);
+            color: #FEFEFF;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 300ms ease-in-out;
+            box-shadow: 0 27.2px 18.133px -27.2px rgba(0, 11, 10, 0.58);
+            width: fit-content;
+        }
+        .cta-button:hover {
+            background: var(--green-hover);
+            border-color: var(--teal-deep);
+            box-shadow: 0 24px 16px -24px rgba(0, 11, 10, 0.58);
+            transform: translateY(-1px);
+        }
+        .cta-button .arrow-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 300ms ease;
+        }
+        .cta-button:hover .arrow-circle {
+            background: #fff;
+        }
+        .cta-button .arrow-circle .material-symbols-outlined {
+            font-size: 18px;
+            color: #fff;
+            transition: color 300ms ease;
+        }
+        .cta-button:hover .arrow-circle .material-symbols-outlined {
+            color: var(--text-dark);
+        }
+
+        .cta-sub {
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            font-weight: 400;
+            padding-left: 4px;
+        }
+
+        /* ── Right column. Video ── */
+        .video-card {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: var(--white);
+            box-shadow: 0 4px 8px -4px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: var(--white);
+        }
+        .video-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-mid);
+        }
+        .video-meta-item .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--teal);
+        }
+        .video-meta-divider {
+            width: 1px;
+            height: 14px;
+            background: var(--border);
+        }
+
+        /* ── Teal glow decoration ── */
+        .video-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 80px;
+            background: rgba(0, 169, 157, 0.08);
+            filter: blur(40px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.15s; }
+        .delay-3 { animation-delay: 0.25s; }
+        .delay-4 { animation-delay: 0.35s; }
+        .delay-5 { animation-delay: 0.45s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            main {
+                padding: 48px 16px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            h1 {
+                font-size: 1.75rem;
+                line-height: 2rem;
+                letter-spacing: -0.56px;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .tag {
+                font-size: 0.75rem;
+            }
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+                font-size: 1rem;
+                height: 3.75rem;
+                padding: 0 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Atelier<span>.</span></div>
+    </header>
+
+    <main>
+        <div class="grid">
+
+            <div class="content">
+
+                <h1 class="anim delay-2">
+                    Transforme seu croche em uma renda de verdade.
+                </h1>
+
+                <p class="subtitle anim delay-3">
+                    O metodo completo para voce que faz pecas lindas mas nao sabe como vender e deseja elevar sua arte ao patamar de atelier.
+                </p>
+
+                <ul class="checklist anim delay-4">
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Aprenda a precificar sem trabalhar no prejuizo</span>
+                    </li>
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Descubra quais pecas dao lucro e saida rapida</span>
+                    </li>
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Monte sua vitrine online e atraia clientes todos os dias</span>
+                    </li>
+                </ul>
+
+                <div class="cta-wrap anim delay-5">
+                    <button class="cta-button">
+                        Quero transformar meu croche
+                        <div class="arrow-circle">
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </div>
+                    </button>
+                    <span class="cta-sub">Acesso imediato ao metodo completo</span>
+                </div>
+
+            </div>
+
+            <div class="anim delay-3">
+                <div class="video-card">
+                    <div class="video-embed">
+                        <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentacao do Metodo"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-meta">
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">play_circle</span>
+                            Assista a aula gratuita
+                        </div>
+                        <div class="video-meta-divider"></div>
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">timer</span>
+                            15 minutos
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

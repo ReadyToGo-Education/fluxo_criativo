@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bônus. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.08) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+
+    .bonus-card {
+      position: relative;
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+    .bonus-card:hover {
+      border-color: rgba(108, 92, 231, 0.5);
+      background-color: rgba(18, 18, 26, 0.95);
+      transform: translateY(-4px);
+    }
+    .bonus-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(108, 92, 231, 0.15);
+      border: 1.5px solid rgba(108, 92, 231, 0.4);
+      color: #a89bff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .price-strike {
+      color: rgba(240, 240, 245, 0.4);
+      text-decoration: line-through;
+      font-weight: 500;
+    }
+    .price-free {
+      color: #6c5ce7;
+      font-weight: 700;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Presentes da casa
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Bônus exclusivos para quem <span class="text-warm">entrar agora</span>
+        </h2>
+        <p class="text-ink/45 text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto mt-5">
+          Três presentes pensados para acelerar seus primeiros resultados, sem custo extra na compra.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Bônus 1 -->
+        <div class="bonus-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center justify-between mb-5">
+            <span class="bonus-badge">Bônus 01</span>
+            <span class="material-symbols-outlined text-warm/60 text-[26px]">redeem</span>
+          </div>
+          <h3 class="text-xl font-700 text-ink mb-3 leading-tight">
+            Caderno de 30 receitas de peças que vendem
+          </h3>
+          <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light mb-6">
+            Trinta gráficos prontos das peças mais procuradas do mercado, do amigurumi de bichinhos ao tapete redondo de barbante. Cada receita vem com lista de fios, tamanho final e tempo médio de produção.
+          </p>
+          <div class="pt-5 border-t border-accent/60 flex items-baseline justify-between">
+            <span class="text-ink/40 text-xs uppercase tracking-wider font-500">Valor avulso</span>
+            <div class="text-right">
+              <p class="price-strike text-base">R$ 197,00</p>
+              <p class="price-free text-lg">Grátis</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bônus 2 -->
+        <div class="bonus-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center justify-between mb-5">
+            <span class="bonus-badge">Bônus 02</span>
+            <span class="material-symbols-outlined text-warm/60 text-[26px]">storefront</span>
+          </div>
+          <h3 class="text-xl font-700 text-ink mb-3 leading-tight">
+            Mini curso. Vitrine de Instagram que vende sozinha
+          </h3>
+          <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light mb-6">
+            Sete aulas curtas mostrando como organizar seu perfil, escolher capas, escrever legendas e usar o destaque para que clientes te encontrem e cheguem prontos para comprar.
+          </p>
+          <div class="pt-5 border-t border-accent/60 flex items-baseline justify-between">
+            <span class="text-ink/40 text-xs uppercase tracking-wider font-500">Valor avulso</span>
+            <div class="text-right">
+              <p class="price-strike text-base">R$ 247,00</p>
+              <p class="price-free text-lg">Grátis</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bônus 3 -->
+        <div class="bonus-card fade-up delay-3 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex items-center justify-between mb-5">
+            <span class="bonus-badge">Bônus 03</span>
+            <span class="material-symbols-outlined text-warm/60 text-[26px]">edit_note</span>
+          </div>
+          <h3 class="text-xl font-700 text-ink mb-3 leading-tight">
+            Pack de modelos de etiqueta e cartão de marca
+          </h3>
+          <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light mb-6">
+            Vinte modelos editáveis de etiqueta de tecido, cartão de cuidados e tag de presente. Você troca o nome, manda imprimir e suas peças saem da casa parecendo de loja.
+          </p>
+          <div class="pt-5 border-t border-accent/60 flex items-baseline justify-between">
+            <span class="text-ink/40 text-xs uppercase tracking-wider font-500">Valor avulso</span>
+            <div class="text-right">
+              <p class="price-strike text-base">R$ 147,00</p>
+              <p class="price-free text-lg">Grátis</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fade-up text-center mt-14">
+        <p class="text-ink/45 text-base font-light leading-relaxed max-w-xl mx-auto">
+          Os três bônus somam R$ 591 em valor real. Você recebe junto com o método principal, sem pagar nada a mais.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

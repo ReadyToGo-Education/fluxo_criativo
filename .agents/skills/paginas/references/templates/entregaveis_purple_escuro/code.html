@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entregáveis. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.07) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.06s; }
+    .delay-2 { transition-delay: 0.12s; }
+    .delay-3 { transition-delay: 0.18s; }
+    .delay-4 { transition-delay: 0.24s; }
+    .delay-5 { transition-delay: 0.30s; }
+    .delay-6 { transition-delay: 0.36s; }
+
+    .deliverable-card {
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    }
+    .deliverable-card:hover {
+      border-color: rgba(108, 92, 231, 0.4);
+      background-color: rgba(18, 18, 26, 0.95);
+      transform: translateY(-3px);
+    }
+    .icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      border-radius: 14px;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1.5px solid rgba(108, 92, 231, 0.25);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .deliverable-card:hover .icon-wrap {
+      background: rgba(108, 92, 231, 0.2);
+      border-color: rgba(108, 92, 231, 0.5);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          O que está incluso
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Tudo que você recebe <span class="text-warm">quando entrar</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="deliverable-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">play_circle</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Módulo principal em vídeo</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Quarenta e duas aulas curtas e diretas, gravadas em alta qualidade. Você assiste no tempo que tem, no celular ou no computador.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">menu_book</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Apostila ilustrada para imprimir</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Material em PDF com gráficos, pontos e diagramas das peças. Tudo pronto para você consultar enquanto produz, sem precisar voltar no vídeo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-3 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">groups</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Comunidade fechada de alunas</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Acesso a um grupo só para participantes do método, onde você troca dicas, mostra suas peças e tira dúvidas com outras artesãs no mesmo caminho.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-4 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">calculate</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Calculadora de precificação justa</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Planilha pronta que considera fios, tempo, mão de obra e margem. Você digita os dados da peça e descobre o preço de venda em segundos.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-5 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">photo_camera</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Guia visual de fotos que vendem</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Passo a passo de como fotografar peças de crochê com luz natural, fundo simples e enquadramento que valoriza o trabalho artesanal.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-6 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">support_agent</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Suporte por email em até 48 horas</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Travou em algum ponto? Manda sua dúvida, foto ou áudio. A equipe responde em até dois dias úteis com orientação direta e prática.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-1 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">update</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Atualizações vitalícias do método</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Toda vez que novas técnicas, modelos ou aulas forem adicionados, você recebe sem pagar nada a mais. Pra sempre.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-card fade-up delay-2 flat-border rounded-2xl bg-surface/60 p-7">
+          <div class="flex gap-5 items-start">
+            <div class="icon-wrap"><span class="material-symbols-outlined text-warm text-[28px]">workspace_premium</span></div>
+            <div>
+              <h3 class="text-lg font-600 text-ink mb-2">Certificado de conclusão</h3>
+              <p class="text-ink/55 text-[0.94rem] leading-relaxed font-light">
+                Ao terminar todos os módulos, você emite seu certificado digital com seu nome. Útil para mostrar a clientes e validar sua trajetória.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

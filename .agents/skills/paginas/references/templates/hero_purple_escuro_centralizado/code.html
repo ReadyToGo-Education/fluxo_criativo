@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy - Metodo Completo</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: "#0a0a0f",
+                        surface: "#12121a",
+                        ink: "#f0f0f5",
+                        accent: "#2a2a3a",
+                        warm: "#6c5ce7"
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #0a0a0f;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(108, 92, 231, 0.05) 0%, transparent 40%);
+        }
+
+        .flat-border {
+            border: 1.5px solid #2a2a3a;
+        }
+
+        .cta-button {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-button:hover {
+            background-color: #6c5ce7;
+            border-color: #6c5ce7;
+            transform: translateY(-1px);
+        }
+
+        .check-item {
+            transition: transform 0.2s ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .video-wrapper {
+            position: relative;
+        }
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: -8px;
+            bottom: -8px;
+            border: 1.5px solid #2a2a3a;
+            z-index: 0;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+        .animate-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .animate-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .animate-in-delay-5 { animation-delay: 0.5s; opacity: 0; }
+        .animate-in-delay-6 { animation-delay: 0.6s; opacity: 0; }
+    </style>
+</head>
+<body class="text-ink font-sans antialiased selection:bg-warm selection:text-base min-h-screen flex flex-col">
+
+    <header class="w-full border-b border-accent/60 bg-base/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-center items-center">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">Academy<span class="text-warm">.</span></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-16 md:py-24 flex-grow flex items-center">
+
+        <section class="flex flex-col items-center text-center gap-8 w-full">
+
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.08] tracking-tighter text-ink animate-in animate-in-delay-2">
+                Domine as habilidades que<br>o mercado mais valoriza.
+            </h1>
+
+            <p class="text-lg text-gray-400 max-w-3xl leading-relaxed font-light animate-in animate-in-delay-3">
+                O metodo completo para voce sair do zero e construir uma carreira solida com resultados reais em poucas semanas.
+            </p>
+
+            <ul class="flex flex-col gap-3.5 my-2 animate-in animate-in-delay-4 text-left">
+                <li class="flex items-center gap-3 check-item">
+                    <span class="w-5 h-5 rounded-full bg-warm flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-white text-sm">check</span>
+                    </span>
+                    <span class="text-ink font-medium text-[15px]">Aprenda no seu ritmo com aulas praticas e diretas</span>
+                </li>
+                <li class="flex items-center gap-3 check-item">
+                    <span class="w-5 h-5 rounded-full bg-warm flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-white text-sm">check</span>
+                    </span>
+                    <span class="text-ink font-medium text-[15px]">Aplique o metodo e veja resultados desde a primeira semana</span>
+                </li>
+                <li class="flex items-center gap-3 check-item">
+                    <span class="w-5 h-5 rounded-full bg-warm flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-white text-sm">check</span>
+                    </span>
+                    <span class="text-ink font-medium text-[15px]">Tenha suporte e comunidade para acelerar sua evolucao</span>
+                </li>
+            </ul>
+
+            <div class="w-full max-w-3xl animate-in animate-in-delay-5">
+                <div class="video-wrapper">
+                    <div class="relative w-full aspect-video flat-border bg-surface z-10">
+                        <iframe
+                            class="absolute top-0 left-0 w-full h-full"
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentação da Academy - Metodo Completo"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-4 mt-6">
+                    <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                        <span class="material-symbols-outlined text-sm">play_circle</span>
+                        Assista a aula gratuita
+                    </div>
+                    <div class="w-px h-3 bg-accent"></div>
+                    <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                        <span class="material-symbols-outlined text-sm">timer</span>
+                        15 minutos
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center gap-3 animate-in animate-in-delay-6">
+                <button class="flat-border bg-warm text-white px-8 py-4 uppercase tracking-widest text-sm font-bold cta-button flex items-center gap-3">
+                    Quero comecar agora
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </button>
+                <span class="text-xs text-gray-500 font-light">Acesso imediato. garantia de 30 dias</span>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

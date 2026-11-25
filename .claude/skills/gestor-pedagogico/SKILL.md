@@ -1,17 +1,17 @@
 ---
 name: gestor-pedagogico
 description: >
-  Gestor pedagogico. O mentorado manda um material de ensino (texto colado ou
+  Gestor pedagógico. O mentorado manda um material de ensino (texto colado ou
   link do YouTube) e a skill pergunta o que ele quer gerar a partir dele, entre
-  8 entregaveis: transcricao, mapa mental, apostila, avaliacao Q&A, checklist de
-  implementacao, resumo, sequencia logica do ensinamento e a aula resumida em
+  8 entregáveis: transcrição, mapa mental, apostila, avaliação Q&A, checklist de
+  implementação, resumo, sequência lógica do ensinamento e a aula resumida em
   5 a 7 conceitos principais. Nao gera tudo de uma vez: o mentorado escolhe.
-  A geracao roda em paralelo (um sub-agente por entregavel) para terminar rapido,
-  com fallback sequencial quando o ambiente nao suporta sub-agentes. Material
+  A geração roda em paralelo (um sub-agente por entregável) para terminar rápido,
+  com fallback sequencial quando o ambiente não suporta sub-agentes. Material
   longo (curso, palestra) passa por uma digestao em blocos antes de gerar. Use
-  quando o mentorado pedir para "estudar esse video", "transformar essa palestra
+  quando o mentorado pedir para "estudar esse vídeo", "transformar essa palestra
   em material", "fazer apostila disso", "mapa mental dessa aula", "resumir esse
-  curso", "criar prova/Q&A desse conteudo" ou variantes.
+  curso", "criar prova/Q&A desse conteúdo" ou variantes.
 allowed-tools: Read, Write, Edit, Bash, Agent
 ---
 
@@ -51,7 +51,7 @@ Leia `meus-produtos/.ativo`. Se estiver vazio ou ausente, pare e informe:
 Nenhum produto ativo. Use /produto-novo ou /produto-trocar primeiro.
 ```
 
-O `{ativo}` define onde os entregaveis sao salvos. Se existir `meus-produtos/{ativo}/perfil.md`, voce pode le-lo de leve para, no checklist de implementacao, conectar o ensinamento ao produto do mentorado. Nao e obrigatorio.
+O `{ativo}` define onde os entregaveis sao salvos. Se existir `meus-produtos/{ativo}/perfil.md`, você pode ler de leve o resumo do produto em `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) para, no checklist de implementação, conectar o ensinamento ao produto do mentorado. Não é obrigatório.
 
 ### Passo 1. Receber o material
 
@@ -304,7 +304,7 @@ Transforme o ensinamento em passos que o mentorado pode executar. Cada item:
 - Vem na ordem de execucao real.
 Agrupe os itens em fases ou blocos quando fizer sentido (ex: "Antes de comecar",
 "Execucao", "Revisao"). Use checkboxes markdown "- [ ]".
-Se o perfil do produto ativo foi fornecido no contexto, voce pode adaptar 1 ou 2 itens
+Se o resumo do produto ativo foi fornecido no contexto, você pode adaptar 1 ou 2 itens
 para conectar com o produto do mentorado, sem distorcer o ensinamento do material.
 Foco total em acao. Teoria fica na apostila, nao aqui.
 ```

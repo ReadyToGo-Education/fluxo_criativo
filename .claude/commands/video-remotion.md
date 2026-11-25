@@ -1,5 +1,6 @@
 ---
 description: Criar vídeo para Meta Ads com Remotion. storytelling, assets e narração
+categoria: Vídeo
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 model: opus
 ---

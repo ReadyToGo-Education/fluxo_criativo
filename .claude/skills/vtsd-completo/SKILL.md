@@ -332,6 +332,8 @@ Identifique e quebre as principais objeções do público.
 
 ### Os 18 Tipos de Anúncios
 
+Lista oficial, com descrições, exemplos e os 3 extras (Pesquisa Científica, Atualidades e Atualidades Trend): `.claude/skills/mandala-de-anuncios/SKILL.md`.
+
 1. **Comparação**. Compare duas situações mostrando qual é melhor
 2. **Apelo Emocional**. Histórias que tocam sentimentos
 3. **Certo vs Errado**. Erros comuns vs forma correta
@@ -788,7 +790,7 @@ Metodologia para criar e vender produtos de entrada rápidos e lucrativos.
 - Checklist
 - Mini-curso (até 2h)
 - Desafio (3-7 dias)
-- Agente GPT
+- Agente de IA (Hotmart ou plugin do ChatGPT)
 - Template
 
 **Não recomendado para low ticket:**
@@ -878,7 +880,7 @@ Mesmas regras do quadro perpétuo, mas com foco em:
 
 ---
 
-### 10.6 AGENTE GPT COMO PRODUTO
+### 10.6 AGENTE DE IA COMO PRODUTO
 
 **Tipos de agentes vendáveis:**
 - Gerador de conteúdo
@@ -888,7 +890,7 @@ Mesmas regras do quadro perpétuo, mas com foco em:
 - Tutor especializado
 
 **Estrutura do produto:**
-- Link do agente
+- O agente: Agente de IA da Hotmart ou plugin do ChatGPT em .zip, criado pelo `/criar-agente` (os GPTs do ChatGPT saem do ar em 11/12/2026)
 - Manual de uso
 - Prompts prontos
 - Suporte básico

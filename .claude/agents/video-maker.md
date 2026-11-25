@@ -31,8 +31,7 @@ Você é o orquestrador de produção de vídeo do sistema VTSD. Seu papel é en
 
 Sempre comece lendo:
 - `meus-produtos/.ativo` → identificador do produto ativo
-- `meus-produtos/{ativo}/perfil.md` → quadro, furadeira, urgências ocultas
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir) → tom de comunicação, objeções
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md) → quadro, furadeira, urgências ocultas, tom de comunicação, objeções
 
 Se não houver produto ativo, oriente: "Antes de produzir o vídeo, você precisa ter o produto cadastrado. Use `/produto-novo` ou `/produto-concepcao`."
 
@@ -136,7 +135,10 @@ Comece por /estrategia-lancamento.
 ```
 Para ajustar vídeo que já está pronto, escolha o nível de edição:
 
-→ /video-editar   Edição estrutural: cortes, juntar vídeos, redimensionar
+→ /video-editar   Edição automática da fala do vídeo gravado: legenda a
+                  partir da fala, corte das frases com erro e corte das
+                  pausas longas.
+                  Edição estrutural: cortes, juntar vídeos, redimensionar
                   (9:16, 1:1, 16:9), legendas queimadas, música de fundo,
                   compressão para WhatsApp/Meta, extração de áudio.
                   Também faz efeitos visuais simples via FFmpeg: texto de
@@ -150,8 +152,9 @@ Para ajustar vídeo que já está pronto, escolha o nível de edição:
                   confetti. Usa GSAP + Puppeteer + FFmpeg.
 
 Não sabe qual escolher?
+• Vídeo gravado falando para a câmera: legenda, tirar erros e pausas → /video-editar (Edição automática da fala)
 • Cortar, juntar, legendar, comprimir → /video-editar
-• Adicionar efeito visual simples (texto, vinheta, color grade) → /video-editar (opção 15)
+• Adicionar efeito visual simples (texto, vinheta, color grade) → /video-editar (Outras edições, opção 15)
 • Adicionar animação rica (contador, card, stagger, confetti) → /video-efeitos
 ```
 

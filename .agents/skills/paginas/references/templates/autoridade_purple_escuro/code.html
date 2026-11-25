@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autoridade. Purple Escuro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#0a0a0f',
+            surface: '#12121a',
+            ink: '#f0f0f5',
+            accent: '#2a2a3a',
+            warm: '#6c5ce7',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #f0f0f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .flat-border { border: 1.5px solid #2a2a3a; }
+    .gradient-bg {
+      background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.07) 0%, transparent 60%);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+
+    .photo-frame {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a1a26, #12121a);
+      border: 1.5px solid rgba(108, 92, 231, 0.25);
+      box-shadow: 0 0 80px rgba(108, 92, 231, 0.1);
+    }
+    .photo-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: rgba(240, 240, 245, 0.35);
+    }
+    .photo-placeholder .material-symbols-outlined {
+      font-size: 64px;
+      color: rgba(108, 92, 231, 0.4);
+    }
+    .photo-placeholder p {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .credibility-card {
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .credibility-card:hover {
+      border-color: rgba(108, 92, 231, 0.4);
+      background-color: rgba(18, 18, 26, 0.95);
+    }
+    .icon-mini {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 11px;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1.5px solid rgba(108, 92, 231, 0.25);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="gradient-bg py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto w-full">
+
+      <div class="fade-up text-center mb-14">
+        <p class="text-warm/70 text-sm font-medium tracking-widest uppercase mb-5">
+          Quem te conduz
+        </p>
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.65rem] font-700 leading-tight tracking-tight text-ink">
+          Quem está por trás <span class="text-warm">do método</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Photo column -->
+        <div class="fade-up delay-1">
+          <div class="photo-frame">
+            <div class="photo-placeholder">
+              <span class="material-symbols-outlined">person</span>
+              <p>Sua foto aqui</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio column -->
+        <div class="fade-up delay-2">
+          <h3 class="text-2xl sm:text-3xl font-700 text-ink mb-2 leading-tight">
+            Dona Aparecida Bueno
+          </h3>
+          <p class="text-warm/80 text-sm font-500 tracking-wide uppercase mb-6">
+            Artesã há mais de 30 anos
+          </p>
+
+          <div class="space-y-4 text-ink/65 text-[0.98rem] leading-relaxed font-300 mb-8">
+            <p>
+              Aprendi a fazer crochê com a minha avó aos sete anos, sentada no quintal da casa dela em Bragança Paulista. Cresci vendo as mãos dela transformarem novelo em roupa, em manta, em renda de pano de prato. Achava que aquilo era mágica.
+            </p>
+            <p>
+              Aos vinte poucos anos, comecei a vender minhas peças para vizinhas, depois para feiras, depois para lojinhas da região. Foram anos cobrando barato, errando preço, presenteando demais. Até o dia que percebi que tinha um método na cabeça que ninguém estava ensinando.
+            </p>
+            <p>
+              Hoje, depois de mais de três décadas vivendo de crochê, formei mais de quatro mil alunas que transformaram a habilidade em renda mensal. Esse método é tudo que eu queria ter recebido pronto quando comecei.
+            </p>
+          </div>
+
+          <!-- Mini credibility cards -->
+          <div class="grid grid-cols-2 gap-3">
+
+            <div class="credibility-card flat-border rounded-xl bg-surface/60 p-4 flex items-center gap-3">
+              <div class="icon-mini">
+                <span class="material-symbols-outlined text-warm text-[22px]">school</span>
+              </div>
+              <div>
+                <p class="text-ink text-sm font-600 leading-tight">+4 mil alunas</p>
+                <p class="text-ink/45 text-xs font-400">formadas</p>
+              </div>
+            </div>
+
+            <div class="credibility-card flat-border rounded-xl bg-surface/60 p-4 flex items-center gap-3">
+              <div class="icon-mini">
+                <span class="material-symbols-outlined text-warm text-[22px]">history_edu</span>
+              </div>
+              <div>
+                <p class="text-ink text-sm font-600 leading-tight">30 anos</p>
+                <p class="text-ink/45 text-xs font-400">de ofício</p>
+              </div>
+            </div>
+
+            <div class="credibility-card flat-border rounded-xl bg-surface/60 p-4 flex items-center gap-3">
+              <div class="icon-mini">
+                <span class="material-symbols-outlined text-warm text-[22px]">stars</span>
+              </div>
+              <div>
+                <p class="text-ink text-sm font-600 leading-tight">Capa de revista</p>
+                <p class="text-ink/45 text-xs font-400">Casa & Crochê</p>
+              </div>
+            </div>
+
+            <div class="credibility-card flat-border rounded-xl bg-surface/60 p-4 flex items-center gap-3">
+              <div class="icon-mini">
+                <span class="material-symbols-outlined text-warm text-[22px]">handshake</span>
+              </div>
+              <div>
+                <p class="text-ink text-sm font-600 leading-tight">Parcerias</p>
+                <p class="text-ink/45 text-xs font-400">com lojas regionais</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

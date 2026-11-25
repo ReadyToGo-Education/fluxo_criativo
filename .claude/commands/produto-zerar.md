@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-zerar
 description: Apaga todas as informações de contexto pessoal de negócio. produto ativo, perfil, identidade do consumidor e entregas. permitindo recomeçar do zero.
+categoria: Produto
 ---
 
 # Zerar Contexto. Limpeza Completa do Contexto
@@ -116,7 +117,7 @@ Para começar um novo produto, use /produto-novo.
 Pronto. Perfil e identidade do consumidor foram zerados.
 As suas entregas continuam salvas.
 
-Use /produto-editar para preencher o perfil novamente.
+Use /produto-concepcao para preencher o perfil novamente.
 ```
 
 **Se apagou só entregas (Opção 3):**

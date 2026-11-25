@@ -1,6 +1,7 @@
 ---
 name: vtsd-correcao-pv
 description: Faz correção completa de página de vendas como Nav do Fluxo. Analisa copy (estrutura 8D, light copy, premissas, bullets), design (hierarquia visual, CTA, legibilidade, anti-cara-de-IA) e depoimentos em vídeo, em blocos separados para resposta rápida. Carrega citações originais do Leandro Ladeira como régua de feedback, usa páginas de referência VTSD como ponto de comparação, aplica checklist anti-cara-de-IA no design e tem protocolo de escalada para casos difíceis. Use esta skill SEMPRE que o usuário quiser revisar ou corrigir uma página de vendas, pedir feedback de PV, mencionar "corrigir minha página", "analisar minha PV", "o que está errado na minha página", "feedback de depoimentos", "avaliar meus depoimentos", ou enviar um link de página de vendas para revisão. Também acione quando o usuário disser "olha minha PV" ou "pode dar um feedback?".
+categoria: Feedback
 ---
 
 # VTSD. Correção de Página de Vendas
@@ -38,7 +39,7 @@ Headline que empilha benefícios sem premissa lógica ou curiosidade não conver
 > *"Se prometer alguma coisa, tem que prometer que vai aprender algo. Mas é melhor que seja algo mais específico."*
 
 **Bullet points com "mesmo que" e objeções em vez de curiosidade**
-Bullets no padrão "mesmo que... sem precisar..." são clichê. O que funciona é curiosidade ou especificidade: lista numerada, inadequação, ou pergunta implícita com resposta adiada.
+Bullets no padrão "mesmo que... sem precisar..." são clichê. O que funciona é curiosidade ou especificidade: lista numerada, inadequação, ou pergunta implícita com resposta adiada. Se existir `meus-produtos/{ativo}/entregas/copy-pagina/bullets-{produto}.md` (gerado pelo `/copy-bullets`), sugira a troca pelos bullets salvos que falam da mesma entrega; se não existir, indique o `/copy-bullets`.
 
 **Furadeira sem argumentação de cada etapa**
 Cada etapa precisa de: como era feito antes, como vai ser feito com o método, e qual argumento sustenta a diferença.

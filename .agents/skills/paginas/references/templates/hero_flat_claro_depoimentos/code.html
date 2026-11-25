@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depoimentos - Atelier</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: "#fafafa",
+                        surface: "#f0f0f2",
+                        ink: "#18181b",
+                        accent: "#d4d4d8",
+                        warm: "#c2956b"
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #fafafa;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(194, 149, 107, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(194, 149, 107, 0.04) 0%, transparent 40%);
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            padding: 0 8px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            border: 1.5px solid #18181b;
+            background: #fafafa;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: transform 0.2s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border: 1.5px solid #18181b;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background: #18181b;
+            color: #fafafa;
+        }
+
+        .dot-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d4d4d8;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .dot-indicator.active {
+            background: #18181b;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="text-ink font-sans antialiased selection:bg-ink selection:text-base min-h-screen flex flex-col">
+
+    <header class="w-full border-b border-accent/60 bg-base/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-center items-center">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">Atelier<span class="text-warm">.</span></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-16 md:py-24 flex-grow w-full">
+
+        <section class="flex flex-col items-center gap-12 w-full animate-in">
+
+            <div class="text-center flex flex-col gap-4">
+                <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tighter text-ink">
+                    O que nossas alunas dizem
+                </h2>
+                <p class="text-lg text-gray-500 font-light max-w-2xl mx-auto">
+                    Historias reais de quem transformou o croche em renda com o metodo Atelier.
+                </p>
+            </div>
+
+            <div class="w-full overflow-hidden">
+                <div class="carousel-track" id="carousel">
+
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide">
+                        <div class="card-grid">
+                            <div class="testimonial-card">
+                                <div class="flex gap-1">
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <p class="text-sm font-bold text-ink">"Faturei mais do que no meu emprego"</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed font-light">
+                                    "Eu fazia croche ha 8 anos e nunca consegui viver disso. Em 3 meses aplicando o metodo, faturei mais do que no meu emprego anterior. Mudou minha vida."
+                                </p>
+                                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-accent">
+                                    <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold">MC</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-ink">Maria Clara</p>
+                                        <p class="text-xs text-gray-400">Artesa em Belo Horizonte</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-card">
+                                <div class="flex gap-1">
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <p class="text-sm font-bold text-ink">"Hoje tenho lista de espera"</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed font-light">
+                                    "A parte de precificacao foi o divisor de aguas. Eu cobrava R$30 em pecas que valiam R$150. Hoje tenho lista de espera e consigo planejar meu mes."
+                                </p>
+                                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-accent">
+                                    <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold">AF</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-ink">Ana Flavia</p>
+                                        <p class="text-xs text-gray-400">Artesa em Curitiba</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-card">
+                                <div class="flex gap-1">
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <p class="text-sm font-bold text-ink">"Em 2 semanas ja tinha encomendas"</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed font-light">
+                                    "Montei minha vitrine no Instagram seguindo o passo a passo e em 2 semanas ja tinha encomendas. O metodo e simples e funciona de verdade."
+                                </p>
+                                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-accent">
+                                    <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold">RL</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-ink">Renata Lima</p>
+                                        <p class="text-xs text-gray-400">Artesa em Recife</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <div class="card-grid">
+                            <div class="testimonial-card">
+                                <div class="flex gap-1">
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <p class="text-sm font-bold text-ink">"Vendo pelo WhatsApp todos os dias"</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed font-light">
+                                    "Sempre tive medo de vender online. O modulo de vitrine digital me deu a confianca que eu precisava. Hoje vendo pelo WhatsApp e Instagram todos os dias."
+                                </p>
+                                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-accent">
+                                    <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold">PS</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-ink">Patricia Santos</p>
+                                        <p class="text-xs text-gray-400">Artesa em Salvador</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-card">
+                                <div class="flex gap-1">
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <p class="text-sm font-bold text-ink">"Minha renda triplicou em 4 meses"</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed font-light">
+                                    "Minha renda triplicou em 4 meses. O segredo foi entender quais pecas dao lucro e focar nelas. Parece obvio, mas ninguem tinha me ensinado isso antes."
+                                </p>
+                                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-accent">
+                                    <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold">JO</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-ink">Julia Oliveira</p>
+                                        <p class="text-xs text-gray-400">Artesa em Florianopolis</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-card">
+                                <div class="flex gap-1">
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-warm text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <p class="text-sm font-bold text-ink">"Do zero ao primeiro cliente em 60 dias"</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed font-light">
+                                    "Sai do zero e em 60 dias ja tinha meu primeiro cliente recorrente. O metodo Atelier e direto ao ponto, sem enrolacao. Recomendo para todas as artesas."
+                                </p>
+                                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-accent">
+                                    <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold">CM</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-ink">Camila Martins</p>
+                                        <p class="text-xs text-gray-400">Artesa em Goiania</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center gap-6">
+                <button class="nav-btn" onclick="moveCarousel(-1)">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <div class="flex items-center gap-2" id="dots"></div>
+                <button class="nav-btn" onclick="moveCarousel(1)">
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        const carousel = document.getElementById('carousel');
+        const dotsContainer = document.getElementById('dots');
+        const slides = carousel.children;
+        let current = 0;
+        const total = slides.length;
+
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot-indicator' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goTo(i);
+            dotsContainer.appendChild(dot);
+        }
+
+        function goTo(index) {
+            current = index;
+            carousel.style.transform = `translateX(-${current * 100}%)`;
+            document.querySelectorAll('.dot-indicator').forEach((d, i) => {
+                d.classList.toggle('active', i === current);
+            });
+        }
+
+        function moveCarousel(dir) {
+            let next = current + dir;
+            if (next < 0) next = total - 1;
+            if (next >= total) next = 0;
+            goTo(next);
+        }
+    </script>
+
+</body>
+</html>

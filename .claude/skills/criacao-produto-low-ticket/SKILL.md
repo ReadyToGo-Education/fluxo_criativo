@@ -2,7 +2,8 @@
 name: criacao-produto-low-ticket
 description: >
   Base de conhecimento para criação do conteúdo real de produtos digitais de entrada (low ticket).
-  Cobre 6 formatos: e-book, checklist, mini-curso, desafio, agente GPT e planilha.
+  Cobre 6 formatos: e-book, checklist, mini-curso, desafio, agente de IA e planilha, mais o order bump
+  (o que oferecer, preço e texto), que entra desde o começo do funil low ticket.
   Acionada automaticamente pelo agente estrategista-low-ticket na Etapa 2.
 ---
 
@@ -18,7 +19,7 @@ description: >
    1. Aprovar e salvar
    2. Quero ajustar algo
    ```
-5. **Usar dados do perfil.** Quadro, Furadeira e Urgências Ocultas do `perfil.md` devem guiar o conteúdo gerado. não inventar do zero.
+5. **Usar dados do perfil.** Quadro, Furadeira e Urgências Ocultas do `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md) devem guiar o conteúdo gerado. não inventar do zero.
 6. **Tom de escrita:** claro, direto, acessível. Mesmo padrão Light Copy do restante do sistema.
 
 ---
@@ -66,7 +67,7 @@ Após todos os capítulos aprovados, gere um HTML com:
 - Rodapé com instruções: "Para salvar como PDF: Ctrl+P → Salvar como PDF → Layout: Retrato"
 - Design limpo e profissional (sem excesso de cor, foco em legibilidade)
 
-**Onde salvar:** `entregas/{ativo}/produto/ebook-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/ebook-[slug-produto].html`
 
 ---
 
@@ -105,7 +106,7 @@ Gere HTML com:
 - Instruções de uso no topo ("Como usar este checklist...")
 - Layout otimizado para impressão A4 e uso em tela
 
-**Onde salvar:** `entregas/{ativo}/produto/checklist-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/checklist-[slug-produto].html`
 
 ---
 
@@ -155,8 +156,8 @@ Quer que eu gere um material de apoio para o aluno (slides ou apostila resumo)?
 Se sim: gere HTML com slides/apostila simples. tópicos de cada aula, espaço para anotações, design clean.
 
 **Onde salvar:**
-- Roteiros: `entregas/{ativo}/produto/roteiros-[slug-produto].md`
-- Material de apoio (se gerado): `entregas/{ativo}/produto/material-apoio-[slug-produto].html`
+- Roteiros: `meus-produtos/{ativo}/entregas/produto/roteiros-[slug-produto].md`
+- Material de apoio (se gerado): `meus-produtos/{ativo}/entregas/produto/material-apoio-[slug-produto].html`
 
 ---
 
@@ -204,19 +205,33 @@ Gere HTML como "caderno do desafio" com:
 - Design motivacional (cores energizantes, não sóbrias demais)
 - Barra de progresso visual ao longo do desafio
 
-**Onde salvar:** `entregas/{ativo}/produto/desafio-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/desafio-[slug-produto].html`
 
 ---
 
-## Formato 5. Agente GPT (assistente de IA personalizado)
+## Formato 5. Agente de IA (assistente de IA do produto)
 
-**Objetivo:** assistente de IA configurado para ajudar o comprador com o tema do produto, disponível 24h.
+**Objetivo:** assistente de IA configurado para ajudar o comprador com o tema do produto, disponível 24h, que termina sempre em algo pronto na mão do comprador.
+
+**Onde o agente fica.** Os GPTs personalizados do ChatGPT saem do ar em 11/12/2026 e não são mais uma opção. O agente é entregue por um de dois caminhos, conforme a plataforma onde o aluno vende (detalhes em `.claude/skills/agente-ia/SKILL.md`):
+- **Hotmart:** produto do tipo Agentes de IA da Hotmart, vendido pelo preço do low ticket. As instruções têm até 10.000 caracteres.
+- **Outra plataforma (Kiwify, Eduzz, Greenn):** plugin do ChatGPT em .zip, entregue numa aula da área de membros, que o comprador instala no ChatGPT dele (até na conta gratuita).
+
+Pergunte onde o aluno vende antes do Passo 1, se ainda não souber:
+```
+Onde você vai vender este produto?
+
+1. Hotmart
+2. Outra plataforma (Kiwify, Eduzz, Greenn, a sua)
+
+Digite o número:
+```
 
 ### Antes de começar — Leitura obrigatória
 
 Leia **obrigatoriamente** os dois arquivos abaixo antes de gerar qualquer coisa:
-- `produtos/{ativo}/perfil.md` — para extrair: Quadro, Furadeira (cada etapa do método), Tom de voz, Vocabulário do comunicador
-- `produtos/{ativo}/idconsumidor.md` — para extrair: frases que o público diria, palavras que conectam, palavras que afastam, objeções de compra
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md). Para extrair: Quadro, Furadeira (cada etapa do método), Tom de voz, Vocabulário do comunicador, frases que o público diria, objeções de compra
+- Para as palavras que conectam e as palavras que afastam, leia também só a seção `## Como se Comunicar` de `meus-produtos/{ativo}/idconsumidor.md`
 
 Esses dados são insumos diretos do prompt. Sem eles, o agente ficará genérico.
 
@@ -227,10 +242,10 @@ Esses dados são insumos diretos do prompt. Sem eles, o agente ficará genérico
 Com base no que leu dos dois arquivos, proponha:
 - Nome do agente (deve soar como um assistente pessoal, não uma ferramenta genérica)
 - Função principal em 1 frase (o que ele faz de melhor, baseada no Quadro do produto)
-- Tom de voz (extraído do perfil.md e do idconsumidor.md — nunca genérico)
+- Tom de voz (extraído do resumo-produto.md, nunca genérico)
 - Lista do que o agente FAZ (5 a 8 capacidades, derivadas da Furadeira/método)
 - Lista do que o agente NÃO FAZ (3 a 5 limitações claras, incluindo não diagnosticar, não substituir profissional)
-- 3 exemplos de como o comprador usaria o agente no dia a dia (use frases reais do idconsumidor.md)
+- 3 exemplos de como o comprador usaria o agente no dia a dia (use frases reais do resumo-produto.md)
 
 Mostre e pergunte:
 ```
@@ -244,7 +259,7 @@ Gere o prompt de configuração. O prompt DEVE conter obrigatoriamente todas as 
 
 **2.1 Identidade**
 - Nome do agente sem placeholder — nunca deixar `[nome]` ou `[produto]` no texto final
-- Nome real da criadora (extraído do perfil.md — campo Identidade do Comunicador)
+- Nome real da criadora (extraído do resumo-produto.md, seção Identidade do Comunicador)
 - Credencial real (anos de experiência, formação)
 - Propósito em 1 frase clara
 
@@ -254,18 +269,18 @@ Gere o prompt de configuração. O prompt DEVE conter obrigatoriamente todas as 
 - Para temas fora do escopo: incluir frase de redirecionamento gentil pronta para o agente usar
 
 **2.3 Tom de voz**
-- Adjetivos do tom (extraídos do perfil.md)
+- Adjetivos do tom (extraídos do resumo-produto.md)
 - Proibições absolutas de estilo: nunca usar ponto de exclamação, nunca usar travessão, nunca usar perguntas retóricas como gancho, nunca usar "Não é X. É Y."
 - **Vocabulário que conecta:** extrair do idconsumidor.md (campo "Palavras que conectam")
 - **Vocabulário proibido:** extrair do idconsumidor.md (campo "Palavras que afastam")
 
 **2.4 Reconhecer o vocabulário do público**
-- Lista de frases que o público usa (extraídas do idconsumidor.md, campo "Frases que essa pessoa diria")
+- Lista de frases que o público usa (extraídas do resumo-produto.md, campo "Frases que diria")
 - Para cada frase: instrução de como o agente deve reagir (validar, acolher, perguntar, etc.)
 - Esta seção torna o agente capaz de identificar o estado emocional da usuária pelo vocabulário, não só pelo conteúdo
 
 **2.5 Conhecimento base**
-- Principais conceitos do nicho (extraídos do perfil.md)
+- Principais conceitos do nicho (extraídos do resumo-produto.md)
 - Para produtos com método em etapas (desafio, mini-curso): detalhar CADA etapa com:
   - Quando usar após o produto (situação que indica essa prática)
   - Duração e o que a usuária precisa (posição, material, ambiente)
@@ -293,7 +308,7 @@ Formato de tabela ou lista:
 
 **2.9 Exemplos de resposta dentro do prompt (mínimo 3)**
 - Incluir pares Usuária/Agente diretamente no prompt, não só no arquivo .md
-- Os exemplos devem cobrir: pergunta sobre prática, crise leve, frase do idconsumidor.md
+- Os exemplos devem cobrir: pergunta sobre prática, crise leve, frase do público (resumo-produto.md)
 
 **Verificação obrigatória antes de salvar o prompt:**
 Antes de mostrar para aprovação, passe por este checklist:
@@ -310,15 +325,16 @@ Mostre o prompt completo e pergunte:
 2. Quero ajustar algo
 ```
 
-**Passo 3. Instruções de configuração**
+**Passo 3. Entregar pelo caminho certo**
 
-Inclua no arquivo salvo um bloco de instruções com:
-- Como configurar no ChatGPT (GPTs customizados): passo a passo numerado
-- Como configurar no Claude (Projects): passo a passo numerado
-- Sugestão de ícone com prompt de geração pronto
-- 4 iniciadores de conversa sugeridos (use frases do idconsumidor.md como base)
+O prompt aprovado vira as instruções do agente. Feche a marcação do tipo e siga a skill `agente-ia`:
+- Hotmart: Passo 5A (ficha, instruções com no máximo 10.000 caracteres contados pelo script, cadastro na Hotmart com o preço do produto).
+- Outra plataforma: Passo 5B (plugin montado em .zip pelo script, instalação pelo Plugin Creator e texto da aula da área de membros).
+- Nos dois: Passo 6 (as 8 mensagens de teste) e uma sugestão de imagem para o agente com o prompt de geração pronto.
 
-**Onde salvar:** `entregas/{ativo}/produto/agente-gpt-[slug-produto].md`
+No plugin, se o prompt passar de um momento só (ex: montar o plano e revisar a semana), divida em até três habilidades, como manda o Passo 3 da skill `agente-ia`.
+
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/agente-{slug-produto}/` (o `.md` com ficha, instruções e testes e, no plugin, o `.zip`)
 
 ---
 
@@ -368,4 +384,35 @@ No final do arquivo HTML, inclua um bloco colapsável "Como recriar no Google Sh
 - Fórmulas do Google Sheets prontas para copiar e colar em cada célula de resultado
 - Dica de formatação (cores, negrito, largura de coluna)
 
-**Onde salvar:** `entregas/{ativo}/produto/planilha-[slug-produto].html`
+**Onde salvar:** `meus-produtos/{ativo}/entregas/produto/planilha-[slug-produto].html`
+
+---
+
+## Order Bump (entra desde o começo do funil low ticket)
+
+Todo funil low ticket já nasce com order bump: a oferta de 1 clique que aparece no checkout do produto principal. Para quem está começando (Newbie e Soft), ele faz parte do primeiro plano de ação, junto do produto e da página. Entregar três coisas: o que oferecer, o preço e o texto do bump.
+
+### 1. O que oferecer
+- **Complemento lógico do produto principal:** acelera, facilita ou aprofunda o mesmo resultado, para a mesma pessoa, no mesmo momento da compra. Nunca outro assunto.
+- **Rápido de usar no mesmo dia:** checklist, planilha, template, pack de prompts, modelos prontos ou uma aula curta.
+- **Ponto de partida:** os Decorados e as Urgências Ocultas do `resumo-produto.md` que o produto principal não cobre inteiro.
+- Apresentar **3 opções**, cada uma com nome, o que entrega e por que combina com o produto principal. O aluno escolhe uma.
+- O bump escolhido pode ser criado com os formatos desta skill (checklist, planilha, agente de IA, e-book curto), seguindo as mesmas Regras Gerais.
+
+### 2. Preço
+- Preço de impulso, sempre abaixo do preço do produto principal.
+- Referência do Severino: de R$ 17 a R$ 47 (a mesma do `/estrategia-funil`), sem passar do preço do principal.
+- Taxa de aceite saudável: de 15% a 25% de quem compra o principal (referência na seção 4.5 de `.claude/skills/trafego-oferta-funil/SKILL.md`), útil para acompanhar depois.
+
+### 3. Texto do bump
+- Título curto com o resultado do bump.
+- 1 ou 2 frases ligando ao produto principal: por que levar junto agora.
+- Preço visível e, só se for real, o valor cheio para comparação.
+- Passa pela rotina de auto-revisão de copy do CLAUDE.md (Manual da Copy e `revisora`) antes de aparecer para o aluno.
+
+### 4. Onde configurar
+- O bump é configurado na plataforma do checkout (Hotmart ou Kiwify), na área de order bump do produto principal, e precisa estar cadastrado como produto na plataforma.
+- Na página low ticket montada no Lovable, o bump fica só no checkout da plataforma. Em página HTML feita no projeto, o `/pagina-checkout` também instala a caixinha do bump na página.
+
+### 5. Salvar
+`meus-produtos/{ativo}/entregas/textos-de-venda/order-bump-{produto}.md`, com as 3 opções, a escolhida, o preço e o texto. Mostrar e pedir aprovação antes de salvar.

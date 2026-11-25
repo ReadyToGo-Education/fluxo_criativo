@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack de Valor. Teal Claro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-stack {
+      padding: 80px 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-stack__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-stack__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-stack__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .stack-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stack-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .stack-card__label {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 100px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      margin-bottom: 28px;
+    }
+    .stack-card__label .material-symbols-outlined { font-size: 14px; }
+
+    .stack-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    .stack-item:last-child { border-bottom: none; }
+
+    .stack-item__name {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .stack-item__name .material-symbols-outlined {
+      font-size: 20px; color: var(--teal);
+    }
+
+    .stack-item__value {
+      font-family: var(--font-heading);
+      font-weight: 600; color: var(--text-mid);
+      white-space: nowrap;
+    }
+
+    .stack-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 20px; padding-top: 20px;
+      border-top: 2px solid var(--text-dark);
+    }
+    .stack-total__label {
+      font-size: 0.9rem; color: var(--text-mid);
+    }
+    .stack-total__value {
+      font-family: var(--font-heading);
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--text-mid);
+      text-decoration: line-through;
+      text-decoration-color: var(--teal);
+      text-decoration-thickness: 2px;
+    }
+
+    .stack-footer {
+      text-align: center; margin-top: 20px;
+      font-size: 0.95rem; color: var(--text-mid); line-height: 1.7;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 680px) {
+      .section-stack { padding: 56px 20px; }
+      .section-stack__headline { font-size: 1.65rem; }
+      .stack-card { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-stack">
+    <div class="section-stack__header">
+      <h2 class="section-stack__headline">Veja tudo que você recebe hoje</h2>
+      <p class="section-stack__subtitle">Cada entregável foi pensado para funcionar junto. Veja o valor individual de cada um.</p>
+    </div>
+
+    <div class="stack-card">
+
+      <span class="stack-card__label">
+        <span class="material-symbols-outlined">inventory_2</span>
+        O que está incluso
+      </span>
+
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Método completo em vídeo (42 aulas)
+        </span>
+        <span class="stack-item__value">R$ 697</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Mini curso de fotografia com celular
+        </span>
+        <span class="stack-item__value">R$ 197</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Pacote de 30 legendas prontas
+        </span>
+        <span class="stack-item__value">R$ 147</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Bônus 01. Fotografia com celular
+        </span>
+        <span class="stack-item__value">R$ 197</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Bônus 02. Legendas prontas
+        </span>
+        <span class="stack-item__value">R$ 147</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Bônus 03. Mentoria coletiva ao vivo
+        </span>
+        <span class="stack-item__value">R$ 497</span>
+      </div>
+
+      <div class="stack-total">
+        <span class="stack-total__label">Valor total do pacote</span>
+        <span class="stack-total__value">R$ 1.882</span>
+      </div>
+
+      <p class="stack-footer">
+        Mas você não vai pagar isso. Continue para ver a condição especial.
+      </p>
+
+    </div>
+  </section>
+
+</body>
+</html>

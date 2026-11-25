@@ -1,0 +1,1 @@
+> **No Codex, as imagens são geradas aqui mesmo, sem menu.** Pule as seções 3.3 a 3.5 e siga a seção "/carrossel" de `.agents/skills/imagem-no-codex/SKILL.md`. A regra dura de sempre exibir o menu não vale no Codex. Os caminhos Manual e API só entram se o aluno pedir ou se não der para gerar aqui.

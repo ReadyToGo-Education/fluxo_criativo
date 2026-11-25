@@ -12,7 +12,7 @@ O toolkit funciona 100% sem nenhuma ferramenta externa (nivel basico). As integr
 
 **O que faz:** Publica paginas HTML na internet com URL propria.
 **Usada por:** `/copy-pagina`, agent `construtor-de-paginas`
-**Chave necessaria:** `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`
+**Chave necessaria:** `VERCEL_API_TOKEN`
 
 **Como configurar:**
 1. Acesse vercel.com e crie uma conta gratuita
@@ -219,11 +219,11 @@ O OpenRouter nao gera video diretamente. Para videos, use o fluxo:
 
 ### OpenRouter. Mesma chave para imagens da landing (HTML)
 
-**O que faz:** Grava PNG em `entregas/{slug}/paginas/assets/` para ilustrar secoes da pagina (hero, dor, autoridade, OG, etc.), usando modelo de imagem via API (ver script).
+**O que faz:** Grava PNG em `meus-produtos/{slug}/entregas/paginas/assets/` para ilustrar secoes da pagina (hero, dor, autoridade, OG, etc.), usando modelo de imagem via API (ver script).
 **Quando usar:** No fluxo **`/pagina-ajuste`**, quando o aluno escolher **gerar imagens com IA** em vez de enviar arquivos.
 **Chave:** a mesma `OPENROUTER_API_KEY` no `.env` na raiz do repositorio (ver `.env.example`).
 
-**Script:** `scripts/generate-openrouter-nano-banana-images.py` na raiz do projeto. O arquivo lista `JOBS` com nome do PNG, proporcao e `prompt` (em ingles costuma funcionar melhor). Saida direta em `entregas/{slug}/paginas/assets/`.
+**Script:** `scripts/generate-openrouter-nano-banana-images.py` na raiz do projeto. O arquivo lista `JOBS` com nome do PNG, proporcao e `prompt` (em ingles costuma funcionar melhor). Saida direta em `meus-produtos/{slug}/entregas/paginas/assets/`.
 
 **Comando tipico (na raiz):** `{python} scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
 Opcoes uteis: `--skip N` e `--max M` para gerar so parte da lista (ver cabecalho do script).
@@ -259,7 +259,7 @@ Anuncio -> Quiz (Lovable) -> Pagina Final do Quiz (toolkit) -> Checkout (Hotmart
 
 | Ferramenta | Chave .env | Nivel | Automacao |
 | --- | --- | --- | --- |
-| Vercel | VERCEL_TOKEN | Intermediario | Deploy de paginas |
+| Vercel | VERCEL_API_TOKEN | Intermediario | Deploy de paginas |
 | OpenRouter | OPENROUTER_API_KEY | Intermediario | Criativos de anuncio (`/criativo-estatico`) e assets de landing (`generate-openrouter-nano-banana-images.py`, ver playbook) |
 | Freepik (Magnific) | FREEPIK_API_KEY | Intermediario | Geracao de imagens (alternativa) |
 | HeyGen | HEYGEN_API_KEY | Intermediario | Criacao de videos com avatar IA |

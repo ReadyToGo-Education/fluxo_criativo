@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier - Método Crochê</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: "#ffffff",
+                        surface: "#f4f4f5",
+                        ink: "#18181b",
+                        accent: "#e4e4e7"
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .flat-button {
+            transition: all 0.2s ease;
+        }
+        .flat-button:hover {
+            background-color: #f4f4f5;
+            color: #18181b;
+        }
+
+        /* Destaque do título: contraste legível (evita gray-400 no branco) */
+        .hero-headline-accent {
+            color: #3f3f46;
+        }
+
+        /* Bloco de vídeo alinhado às outras páginas (card, sombra, raio) */
+        .hero-video-card {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1.5px solid #18181b;
+            background: #0a0a0a;
+            box-shadow:
+                6px 6px 0 0 rgba(24, 24, 27, 0.06),
+                0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        .hero-video-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            pointer-events: none;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+        .hero-video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e5e5;
+            font-size: 0.875rem;
+            color: #3f3f46;
+        }
+        .hero-cta-below-video {
+            margin-top: 0.5rem;
+        }
+        .hero-video-meta .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .hero-video-meta .material-symbols-outlined {
+            font-size: 18px;
+            color: #3f3f46;
+        }
+    </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased selection:bg-ink selection:text-white">
+
+    <div class="max-w-3xl mx-auto px-6 pt-10 pb-16 md:pt-12 md:pb-24 text-center">
+
+        <p class="text-lg md:text-xl font-bold tracking-tight uppercase text-ink mb-10 md:mb-12" role="presentation">
+            Atelier<span class="text-zinc-600">.</span>
+        </p>
+
+        <section class="flex flex-col gap-8 md:gap-10 w-full items-center">
+
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.08] tracking-tighter text-ink max-w-3xl">
+                Transforme seu crochê em uma <span class="hero-headline-accent">renda de verdade.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-zinc-700 leading-relaxed font-light max-w-2xl">
+                O método completo para você que faz peças lindas mas não sabe como vender e deseja elevar sua arte ao patamar de atelier.
+            </p>
+
+            <ul class="flex flex-col gap-4 text-base text-zinc-800 font-normal w-full max-w-xl mx-auto">
+                <li class="flex justify-center items-start gap-3 leading-snug">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-ink rounded-full shrink-0" aria-hidden="true"></span>
+                    <span class="text-left">Precificação exata para valorizar cada ponto</span>
+                </li>
+                <li class="flex justify-center items-start gap-3 leading-snug">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-ink rounded-full shrink-0" aria-hidden="true"></span>
+                    <span class="text-left">Descubra quais peças dão mais lucro e saída rápida</span>
+                </li>
+                <li class="flex justify-center items-start gap-3 leading-snug">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-ink rounded-full shrink-0" aria-hidden="true"></span>
+                    <span class="text-left">Monte sua vitrine online e atraia clientes todos os dias</span>
+                </li>
+            </ul>
+
+            <div class="flex flex-col gap-5 w-full max-w-2xl mx-auto">
+                <div class="hero-video-card aspect-video w-full">
+                    <iframe
+                        class="w-full h-full"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                        title="Apresentação do método"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+                <div class="hero-video-meta w-full">
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+                        Assista à aula gratuita
+                    </span>
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined" aria-hidden="true">timer</span>
+                        Cerca de 15 minutos
+                    </span>
+                </div>
+                <button class="flat-border bg-ink text-base w-full sm:w-fit px-8 py-4 uppercase tracking-widest text-sm font-medium flat-button inline-flex items-center justify-center gap-3 hero-cta-below-video mx-auto">
+                    Quero transformar meu crochê
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </button>
+            </div>
+
+        </section>
+
+    </div>
+
+</body>
+</html>

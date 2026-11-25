@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O que você já tentou</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#fafafa',
+            surface: '#f0f0f2',
+            ink: '#18181b',
+            accent: '#d4d4d8',
+            warm: '#c2956b',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(194,149,107,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(194,149,107,0.05) 0%, transparent 70%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .paliativo-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .paliativo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(24,24,27,0.06);
+    }
+    .paliativo-card:hover .x-icon {
+      background-color: #c2956b;
+      border-color: #c2956b;
+    }
+    .paliativo-card:hover .x-icon .material-symbols-outlined {
+      color: #fff;
+    }
+    .x-icon {
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+  </style>
+</head>
+<body class="text-ink font-sans antialiased">
+
+  <section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Headline -->
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Caminhos que parecem lógicos.
+          <span class="text-gray-400">E ainda assim não viram padrão.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          A maioria dos MEIs e pequenos negócios passa por isso antes de encaixar modelo, vídeo e rotina no mesmo lugar.
+        </p>
+      </div>
+
+      <!-- Cards Grid 2x2 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Card 1 -->
+        <div class="paliativo-card fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/phone/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Planilha grátis de banco ou fintech</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Resolve um recorte (fluxo ou orçamento), mas não amarra venda, meta e operação no mesmo vocabulário. Você continua com buraco entre áreas.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paliativo-card fade-up fade-up-delay-2 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/market/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Modelo genérico de blog ou grupo</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Baixou, duplicou, virou três versões “oficiais”. Ninguém sabe qual usar. O retrabalho volta no mês seguinte.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paliativo-card fade-up fade-up-delay-3 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/friends/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Super pack barato com milhares de arquivos</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Volume não virou uso. Você abriu quase nada e ficou com desconfiança na qualidade. Sem método, arquivo demais vira ruído.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paliativo-card fade-up fade-up-delay-4 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-7 md:p-8">
+          <div class="-mx-7 -mt-7 md:-mx-8 md:-mt-8 mb-5 overflow-hidden rounded-t-[1rem]">
+            <img src="https://picsum.photos/seed/coins/600/300" alt="" class="w-full h-40 md:h-48 object-cover opacity-[0.85] sepia-[0.2] saturate-[0.9]">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="x-icon w-10 h-10 rounded-full flat-border flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Curso longo de Excel</h3>
+          </div>
+          <p class="text-sm md:text-[15px] font-light text-gray-500 leading-relaxed">
+            Certificado não fecha mês. O que faltava era modelo pronto para o seu negócio e vídeo no ponto da dúvida, não aula infinita.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Bridge -->
+      <div class="fade-up mt-14 md:mt-20 text-center">
+        <p class="text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Nenhuma dessas saídas segura porque nenhuma cria padrão único entre áreas.
+          <span class="text-warm font-semibold">O que falta é sequência repetível com modelo pronto.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

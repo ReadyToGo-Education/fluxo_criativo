@@ -1,0 +1,1 @@
+> **No Codex, a imagem é gerada aqui mesmo, sem perguntar.** Antes do menu de formatos e do passo de gerar a imagem de qualquer formato, leia a seção "/criativo-estatico" de `.agents/skills/imagem-no-codex/SKILL.md`. No Codex não existe a pergunta "Como você quer gerar a imagem?": depois da aprovação, a imagem é gerada direto. O resto do fluxo continua igual.

@@ -76,7 +76,7 @@ Use os comandos na ordem que fizer sentido para voce.
 ### Para quem quer vender low ticket
 
 1. `/produto-concepcao` — Cadastrar produto e gerar identidade do consumidor
-2. `/lt-funil` — Criar produto de entrada (quiz, desafio, agente GPT)
+2. `/lt-funil` — Criar produto de entrada (quiz, desafio, agente de IA)
 3. `/lt-criar-produto` — Criar o conteudo real do produto digital
 4. `/lt-pagina` ou `/lt-quiz` — Gerar a pagina ou quiz de venda
 5. `/copy-anuncio` — Criar anuncios low ticket
@@ -151,7 +151,7 @@ Resultado: `meus-produtos/{ativo}/entregas/criativos/`
 
 ### /lt-funil
 
-Cria produto de entrada usando a metodologia low ticket (R$37-97): define o formato (quiz, desafio ou agente GPT), estrategia e estrutura do funil.
+Cria produto de entrada usando a metodologia low ticket (R$37-97): define o formato (quiz, desafio ou agente de IA), estrategia e estrutura do funil.
 
 Resultado: definicao do funil e direcionamento para `/lt-criar-produto`, `/lt-quiz` ou `/lt-pagina`.
 
@@ -191,7 +191,7 @@ Faz ajustes pontuais em uma pagina HTML ja gerada: headline, cores, CTA, FAQ, SE
 
 ### /pagina-lovable
 
-Publica a pagina HTML diretamente no Lovable.
+Leva a pagina HTML para o Lovable e publica. Com o conector do Lovable ligado no Claude, ele cria, confere e publica sozinho; sem o conector, entrega um prompt pronto para colar. O Lovable recria a pagina com IA: para copia identica ao arquivo, use o /pagina-vercel.
 
 ### /pagina-vercel
 

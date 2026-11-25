@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:produto-concepcao
 description: Cadastrar produto/negócio do aluno com Quadro, Furadeira, Decorados e 3 Identidades da metodologia VTSD.
+categoria: Produto
 ---
 
 # Produto. Cadastro Completo do Negócio
@@ -233,13 +234,13 @@ Assim que o Quadro estiver aprovado, verifique se `meus-produtos/{ativo}/pesquis
 
 **Bloco 2/6. Furadeira (Mecanismo Único):**
 
-**Detecção de tipo de produto:** Verifique em `meus-produtos/{ativo}/tipo.md` se o produto é Low Ticket (R$37-97) ou se o formato é planilha, checklist, e-book, agente GPT, template ou desafio. Se for produto de entrada, siga a regra abaixo. Se for Middle Ticket, siga o fluxo padrão.
+**Detecção de tipo de produto:** Verifique em `meus-produtos/{ativo}/tipo.md` se o produto é Low Ticket (R$37-97) ou se o formato é planilha, checklist, e-book, agente de IA, template ou desafio. Se for produto de entrada, siga a regra abaixo. Se for Middle Ticket, siga o fluxo padrão.
 
 **Se for produto Low Ticket:** A Furadeira É o próprio produto/ferramenta. Não pergunte sobre macroetapas. Pergunte:
 
 ```
 Qual ferramenta o comprador vai receber? O que ela faz? Como ele usa no dia a dia?
-(ex: "Planilha com fórmulas prontas para calcular precificação de doces. O comprador preenche os custos e vê o preço sugerido automaticamente", "30 vídeos curtos de 10 minutos com exercício de sombra. O comprador assiste 1 por dia durante 30 dias", "Agente GPT que responde dúvidas sobre legislação trabalhista. O comprador cola a pergunta e recebe a resposta em segundos")
+(ex: "Planilha com fórmulas prontas para calcular precificação de doces. O comprador preenche os custos e vê o preço sugerido automaticamente", "30 vídeos curtos de 10 minutos com exercício de sombra. O comprador assiste 1 por dia durante 30 dias", "Agente de IA que calcula a rescisão trabalhista. O comprador informa salário, datas e motivo da saída e recebe o cálculo pronto, verba por verba")
 ```
 
 Com a resposta, derive automaticamente **3 macroetapas** que representem a jornada de uso da ferramenta, no formato:
@@ -799,9 +800,11 @@ Após o aluno aprovar:
 
 4. Após o revisor retornar: rode `{python} scripts/painel-incremental.py --secao identidade-consumidor --slug {slug}`.
 
-5. Avise o aluno: `✅ Tudo revisado. Recarregue o painel para ver a identidade do consumidor completa.`
+5. Gere o resumo do produto: dispare um sub-agente síncrono com `subagent_type: "gerador-resumo-produto"`. Prompt: `Gere o resumo do produto {slug}.` (substitua `{slug}` pelo slug real). O agente lê `perfil.md`, `idconsumidor.md` e `pesquisa-mercado.md` e grava `meus-produtos/{slug}/resumo-produto.md`, o contexto que todas as entregas vão usar daqui para frente (modelo em `.claude/skills/resumo-produto/SKILL.md`). Não mostre o conteúdo do resumo ao aluno.
 
-6. Não interrompa o fluxo se o aluno estiver respondendo algo. Processe a notificação na primeira oportunidade natural.
+6. Avise o aluno: `✅ Tudo revisado. Recarregue o painel para ver a identidade do consumidor completa.`
+
+7. Não interrompa o fluxo se o aluno estiver respondendo algo. Processe a notificação na primeira oportunidade natural.
 
 
 ### 5. Gerar Painel de Entregas (primeira versão imediata, atualização automática)
@@ -863,6 +866,8 @@ Quer refazer alguma parte antes de seguir?
 
 Se escolher de 1 a 7, volte ao bloco correspondente e regere apenas aquela parte. Se escolher 8, siga para a recomendação de próximo passo abaixo.
 
+**Antes da recomendação, confira o resumo do produto.** Tente ler `meus-produtos/{ativo}/resumo-produto.md`. Se não for encontrado (o aluno refez uma parte e o resumo antigo foi apagado sozinho), acione o sub-agente síncrono `gerador-resumo-produto` com o slug, como no passo 5 da notificação da Seção 4.
+
 **Se Middle Ticket:**
 ```
 Perfil salvo em meus-produtos/{ativo}/perfil.md.
@@ -874,25 +879,9 @@ Próximo passo: /copy-pagina para criar a página de vendas 8D do produto.
 
 **Se Low Ticket:**
 
-Aplique o framework de decisão Quiz vs. Página com base no produto:
-
-| Critério | QUIZ | PÁGINA |
-|---|---|---|
-| Tipo de produto | Emocional, dor, identificação | Prático, ferramenta, direto ao ponto |
-| Nível de consciência | Não sabe que tem o problema | Já sabe o que quer |
-| Complexidade | Precisa diagnosticar ou explicar | Decisão simples e direta |
-| Faixa de preço | Até R$47 | Acima de R$97 |
-| Tipo de público | Emocional | Analítico ou pragmático |
-
-Regra: 2 ou mais critérios para o mesmo lado definem a recomendação. Em caso de empate: QUIZ.
-
-Apresente a análise aplicada ao produto específico com justificativa e recomende:
+Página é o padrão do low ticket. O quiz é exceção: só quando o aluno pedir ou o analisador indicar, e é montado no Inlead. O funil já nasce com order bump.
 
 ```
-Com base no seu produto, a recomendação é: [QUIZ / PÁGINA]
-
-[Justificativa com os critérios que definiram a escolha]
-
-Próximo passo: /lt-quiz   (se QUIZ)
-              /lt-pagina  (se PÁGINA)
+Próximo passo: /lt-criar-produto  (conteúdo do produto e order bump)
+              /lt-pagina         (página de vendas, régua com 4 aberturas)
 ```

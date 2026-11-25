@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Quem. Minimal Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+
+    .list-card { transition: transform 0.2s ease; }
+    .list-card:hover { transform: translateY(-2px); }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f4f4f5;
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Este método é para
+          <span class="text-gray-400">um perfil específico.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Confira se o seu momento combina com o que vamos entregar.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="list-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <p class="text-[11px] uppercase tracking-widest font-medium text-ink mb-5">Para quem é</p>
+
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Quer transformar sua habilidade manual em uma fonte de renda previsível</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Já produz peças mas ainda não consegue vender com consistência</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Está disposta a seguir um passo a passo e aplicar por pelo menos 30 dias</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Quer aprender a precificar, fotografar e divulgar sem depender de terceiros</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Busca independência financeira trabalhando de casa</span>
+          </div>
+        </div>
+
+        <div class="list-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <p class="text-[11px] uppercase tracking-widest font-medium text-gray-400 mb-5">Para quem no &#xe9;</p>
+
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Procura resultado sem esforço ou atalhos mágicos</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Não tem disposição para aprender algo novo e testar na prática</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Espera que o método funcione sozinho, sem dedicação pessoal</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Acredita que o problema está sempre no mercado, nunca no processo</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Quer aprender a teoria mas não pretende colocar em prática</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

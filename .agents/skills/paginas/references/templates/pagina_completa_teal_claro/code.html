@@ -1,0 +1,4431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nome do Produto. Transformação Principal</title>
+  <meta name="description" content="Descrição de até 160 caracteres com a promessa principal do produto.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+/* === hero_teal_claro === */
+
+*, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #F8F8F8;
+            --white: #ffffff;
+            --teal: #00A99D;
+            --teal-dark: #0A6561;
+            --teal-deep: #0D5450;
+            --green-cta: #1BAF1B;
+            --green-top: #57E957;
+            --green-bottom: #0A760A;
+            --green-hover: #003333;
+            --text-dark: #363636;
+            --text-mid: #666666;
+            --text-light: #B8B8B8;
+            --border: #EAEAEA;
+            --mint: #90FFEB;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::selection {
+            background: rgba(0, 169, 157, 0.2);
+            color: var(--text-dark);
+        }
+
+        /* ── Header ── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(248, 248, 248, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            letter-spacing: -0.48px;
+            color: var(--text-dark);
+        }
+        .logo span {
+            color: var(--teal);
+        }
+
+        /* ── Main ── */
+        main {
+            max-width: 76rem;
+            margin: 0 auto;
+            padding: 72px 24px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 56px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* ── Left column ── */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: var(--teal-dark);
+            color: var(--mint);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 3.75rem;
+            letter-spacing: -0.96px;
+            color: var(--text-dark);
+        }
+
+        h1 .accent {
+            color: var(--teal);
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            color: var(--text-mid);
+            font-weight: 400;
+            max-width: 480px;
+        }
+
+        /* ── Checklist ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            list-style: none;
+            margin: 8px 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 200ms ease;
+        }
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .check-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .check-icon .material-symbols-outlined {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .check-item span:last-child {
+            font-size: 0.9375rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* ── CTA Button (VTSD pill style) ── */
+        .cta-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .tpl-hero-teal .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            height: 4.25rem;
+            padding: 0 32px;
+            border-radius: 3rem;
+            border: 2px solid;
+            border-top-color: var(--green-top);
+            border-bottom-color: var(--green-bottom);
+            border-left-color: var(--green-cta);
+            border-right-color: var(--green-cta);
+            background: var(--green-cta);
+            color: #FEFEFF;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 300ms ease-in-out;
+            box-shadow: 0 27.2px 18.133px -27.2px rgba(0, 11, 10, 0.58);
+            width: fit-content;
+        }
+        .tpl-hero-teal .cta-button:hover {
+            background: var(--green-hover);
+            border-color: var(--teal-deep);
+            box-shadow: 0 24px 16px -24px rgba(0, 11, 10, 0.58);
+            transform: translateY(-1px);
+        }
+        .tpl-hero-teal .cta-button .arrow-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 300ms ease;
+        }
+        .tpl-hero-teal .cta-button:hover .arrow-circle {
+            background: #fff;
+        }
+        .tpl-hero-teal .cta-button .arrow-circle .material-symbols-outlined {
+            font-size: 18px;
+            color: #fff;
+            transition: color 300ms ease;
+        }
+        .tpl-hero-teal .cta-button:hover .arrow-circle .material-symbols-outlined {
+            color: var(--text-dark);
+        }
+
+        .cta-sub {
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            font-weight: 400;
+            padding-left: 4px;
+        }
+
+        /* ── Right column. Video ── */
+        .video-card {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: var(--white);
+            box-shadow: 0 4px 8px -4px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: var(--white);
+        }
+        .video-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-mid);
+        }
+        .video-meta-item .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--teal);
+        }
+        .video-meta-divider {
+            width: 1px;
+            height: 14px;
+            background: var(--border);
+        }
+
+        /* ── Teal glow decoration ── */
+        .video-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 80px;
+            background: rgba(0, 169, 157, 0.08);
+            filter: blur(40px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.15s; }
+        .delay-3 { animation-delay: 0.25s; }
+        .delay-4 { animation-delay: 0.35s; }
+        .delay-5 { animation-delay: 0.45s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            main {
+                padding: 48px 16px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            h1 {
+                font-size: 1.75rem;
+                line-height: 2rem;
+                letter-spacing: -0.56px;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .tag {
+                font-size: 0.75rem;
+            }
+            .tpl-hero-teal .cta-button {
+                width: 100%;
+                justify-content: center;
+                font-size: 1rem;
+                height: 3.75rem;
+                padding: 0 24px;
+            }
+        }
+
+/* === dor === */
+
+:root {
+            --teal: #00A99D;
+            --teal-dark: #0A6561;
+            --text-dark: #363636;
+            --text-mid: #666666;
+            --border: #EAEAEA;
+            --mint: #90FFEB;
+            --bg: #F8F8F8;
+            --white: #FFFFFF;
+            --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 4px 24px rgba(0, 169, 157, 0.12);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(248, 248, 248, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-dot {
+            color: var(--teal);
+        }
+
+        .header-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .header-cta:hover {
+            box-shadow: 0 0 20px rgba(0, 169, 157, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .header-cta .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        /* Pain Section */
+        .pain-section {
+            padding: 140px 24px 100px;
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        .pain-header {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 64px;
+        }
+
+        .pain-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--teal-dark);
+            background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                        linear-gradient(135deg, var(--teal), var(--mint)) border-box;
+            border: 1.5px solid transparent;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            letter-spacing: 0.3px;
+        }
+
+        .pain-label .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--teal);
+        }
+
+        .pain-headline {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+        }
+
+        .pain-headline em {
+            font-style: normal;
+            color: var(--teal);
+        }
+
+        .pain-subheadline {
+            font-size: 1.15rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pain Cards Grid */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 56px;
+        }
+
+        .pain-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pain-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--teal), var(--mint));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pain-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+            border-color: rgba(0, 169, 157, 0.2);
+        }
+
+        .pain-card:hover::before {
+            opacity: 1;
+        }
+
+        .pain-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 169, 157, 0.08), rgba(144, 255, 235, 0.12));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .pain-icon-wrap .material-symbols-outlined {
+            font-size: 26px;
+            color: var(--teal);
+        }
+
+        .pain-card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .pain-card-text {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+
+        /* Bottom CTA */
+        .pain-bottom {
+            text-align: center;
+        }
+
+        .pain-bottom-text {
+            font-size: 1.1rem;
+            color: var(--text-mid);
+            margin-bottom: 28px;
+            line-height: 1.7;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pain-bottom-text strong {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .cta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            position: relative;
+        }
+
+        .cta-pill::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, var(--teal), var(--mint), var(--teal));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-pill:hover {
+            box-shadow: 0 0 28px rgba(0, 169, 157, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .cta-pill:hover::before {
+            opacity: 1;
+        }
+
+        .cta-pill .material-symbols-outlined {
+            font-size: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .cta-pill:hover .material-symbols-outlined {
+            transform: translateX(3px);
+        }
+
+        /* FadeUp Animation */
+        .fadeUp {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fadeUp.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fadeUp:nth-child(2) { transition-delay: 0.08s; }
+        .fadeUp:nth-child(3) { transition-delay: 0.16s; }
+        .fadeUp:nth-child(4) { transition-delay: 0.24s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pain-section {
+                padding: 120px 20px 72px;
+            }
+
+            .pain-headline {
+                font-size: 1.75rem;
+                letter-spacing: -0.5px;
+            }
+
+            .pain-subheadline {
+                font-size: 1rem;
+            }
+
+            .pain-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .pain-card {
+                padding: 24px;
+            }
+
+            .pain-header {
+                margin-bottom: 40px;
+            }
+
+            .cta-pill {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+            }
+
+            .header-cta span:not(.material-symbols-outlined) {
+                display: none;
+            }
+
+            .header-cta {
+                padding: 10px 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pain-headline {
+                font-size: 1.5rem;
+            }
+
+            .pain-card {
+                padding: 20px;
+            }
+
+            .pain-icon-wrap {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+            }
+
+            .pain-icon-wrap .material-symbols-outlined {
+                font-size: 22px;
+            }
+        }
+
+/* === paliativo === */
+
+*, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-paliativo {
+      padding: 80px 24px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .section-paliativo__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-paliativo__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+    }
+
+    .paliativo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .paliativo-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .paliativo-card:nth-child(1) { animation-delay: 0.1s; }
+    .paliativo-card:nth-child(2) { animation-delay: 0.2s; }
+    .paliativo-card:nth-child(3) { animation-delay: 0.3s; }
+    .paliativo-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .paliativo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      margin: -32px -32px 24px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .card-img-wrap img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.15);
+    }
+
+    .card-img-wrap .card-img-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, white, transparent);
+      pointer-events: none;
+    }
+
+    @media (min-width: 681px) {
+      .card-img-wrap img {
+        height: 200px;
+      }
+    }
+
+    .paliativo-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 169, 157, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .paliativo-card__icon .material-symbols-outlined {
+      font-size: 28px;
+      color: var(--teal);
+    }
+
+    .paliativo-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .paliativo-card__text {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .section-paliativo__bridge {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.55s forwards;
+    }
+
+    .section-paliativo__bridge p {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+      line-height: 1.5;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .section-paliativo {
+        padding: 56px 20px;
+      }
+
+      .section-paliativo__headline {
+        font-size: 1.65rem;
+      }
+
+      .section-paliativo__subtitle {
+        font-size: 1rem;
+        margin-bottom: 40px;
+      }
+
+      .paliativo-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .paliativo-card {
+        padding: 24px;
+      }
+
+      .card-img-wrap {
+        margin: -24px -24px 20px;
+      }
+
+      .section-paliativo__bridge p {
+        font-size: 1.15rem;
+      }
+    }
+
+/* === provas === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-provas {
+      padding: 80px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-provas__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-provas__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+    }
+
+    .provas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .prova-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .prova-card:nth-child(1) { animation-delay: 0.1s; }
+    .prova-card:nth-child(2) { animation-delay: 0.2s; }
+    .prova-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .prova-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .prova-card__header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .prova-card__avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(0, 169, 157, 0.15);
+    }
+
+    .prova-card__identity {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .prova-card__name {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .prova-card__location {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .prova-block {
+      border-left: 3px solid var(--border);
+      padding-left: 16px;
+      margin-bottom: 16px;
+    }
+
+    .prova-block.depois {
+      border-left-color: var(--teal);
+    }
+
+    .prova-block__label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-mid);
+      margin-bottom: 6px;
+    }
+
+    .prova-block.depois .prova-block__label {
+      color: var(--teal-dark);
+    }
+
+    .prova-block__text {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      line-height: 1.65;
+    }
+
+    .prova-card__rating {
+      display: flex;
+      gap: 4px;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .prova-card__rating .material-symbols-outlined {
+      font-size: 20px;
+      color: #FFB800;
+      font-variation-settings: 'FILL' 1;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .provas-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .section-provas { padding: 56px 20px; }
+      .section-provas__headline { font-size: 1.65rem; }
+      .section-provas__subtitle { font-size: 1rem; margin-bottom: 40px; }
+      .provas-grid { grid-template-columns: 1fr; gap: 20px; }
+      .prova-card { padding: 24px; }
+    }
+
+/* === cta === */
+
+:root {
+    --teal: #00A99D;
+    --teal-dark: #0A6561;
+    --teal-deep: #0D5450;
+    --green-cta: #1BAF1B;
+    --green-top: #57E957;
+    --green-bottom: #0A760A;
+    --text-dark: #363636;
+    --text-mid: #666666;
+    --border: #EAEAEA;
+    --mint: #90FFEB;
+    --bg: #F8F8F8;
+  }
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Fade-up animation ── */
+  .fadeUp {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fadeUp.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Section ── */
+  .cta-section {
+    padding: 5rem 1.5rem;
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* ── Headline ── */
+  .cta-headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .cta-headline .accent {
+    color: var(--teal);
+  }
+
+  /* ── Paragraph ── */
+  .cta-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-mid);
+    max-width: 460px;
+    margin: 0 auto 2.5rem;
+  }
+
+  /* ── Green pill CTA button ── */
+  .tpl-cta-teal .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #fff;
+    background: var(--green-cta);
+    border: none;
+    border-top: 2.5px solid var(--green-top);
+    border-bottom: 2.5px solid var(--green-bottom);
+    border-radius: 3rem;
+    padding: 1rem 2.25rem;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(27, 175, 27, 0.35),
+                0 1px 4px rgba(27, 175, 27, 0.18);
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .tpl-cta-teal .cta-btn:hover {
+    background: var(--green-bottom);
+    box-shadow: 0 6px 24px rgba(10, 118, 10, 0.4),
+                0 2px 6px rgba(10, 118, 10, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .tpl-cta-teal .cta-btn .arrow-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+
+  .tpl-cta-teal .cta-btn:hover .arrow-circle {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateX(2px);
+  }
+
+  .tpl-cta-teal .cta-btn .arrow-circle .material-symbols-outlined {
+    font-size: 18px;
+    color: #fff;
+    transition: color 0.25s ease;
+  }
+
+  .tpl-cta-teal .cta-btn:hover .arrow-circle .material-symbols-outlined {
+    color: var(--green-bottom);
+  }
+
+  /* ── Trust line ── */
+  .cta-trust {
+    margin-top: 1.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .cta-trust .material-symbols-outlined {
+    font-size: 16px;
+    color: var(--teal);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .cta-section {
+      padding: 3.5rem 1.25rem;
+    }
+
+    .cta-text {
+      font-size: 0.95rem;
+    }
+
+    .tpl-cta-teal .cta-btn {
+      font-size: 0.95rem;
+      padding: 0.9rem 1.75rem;
+    }
+  }
+
+/* === metodo === */
+
+:root {
+    --teal: #00A99D;
+    --teal-dark: #0A6561;
+    --teal-deep: #0D5450;
+    --text-dark: #363636;
+    --text-mid: #666666;
+    --border: #EAEAEA;
+    --mint: #90FFEB;
+    --bg: #F8F8F8;
+  }
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Fade-up animation ── */
+  .fadeUp {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fadeUp.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Section ── */
+  .metodo-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .metodo-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  /* ── Headline ── */
+  .metodo-headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .metodo-headline .accent {
+    color: var(--teal);
+  }
+
+  /* ── Paragraph ── */
+  .metodo-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-mid);
+    max-width: 560px;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+
+  /* ── Steps grid ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  /* ── Connector ── */
+  .step-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 180px;
+    width: 48px;
+  }
+
+  .step-connector .connector-line {
+    width: 48px;
+    border-top: 2.5px dashed var(--teal);
+    opacity: 0.45;
+    position: relative;
+  }
+
+  .step-connector .connector-line::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: -5px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid var(--teal);
+    opacity: 0.7;
+  }
+
+  /* ── Card ── */
+  .step-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+  }
+
+  /* ── Card image ── */
+  .step-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+  }
+
+  .step-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(1.15);
+    display: block;
+  }
+
+  .step-img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, #fff 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* ── Card body ── */
+  .step-body {
+    padding: 1.25rem 1.5rem 1.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .micro-steps {
+    margin-top: auto;
+  }
+
+  /* ── Step number ── */
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Step title ── */
+  .step-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    line-height: 1.35;
+  }
+
+  /* ── Micro-steps ── */
+  .micro-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .micro-steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-mid);
+  }
+
+  .micro-steps li .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--teal);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 820px) {
+    .steps-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .step-connector {
+      display: flex;
+      padding-top: 0;
+      width: 100%;
+      height: 48px;
+      justify-content: center;
+    }
+
+    .step-connector .connector-line {
+      width: 0;
+      height: 48px;
+      border-top: none;
+      border-left: 2.5px dashed var(--teal);
+    }
+
+    .step-connector .connector-line::after {
+      right: auto;
+      left: -5px;
+      top: auto;
+      bottom: -3px;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--teal);
+      border-bottom: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .metodo-section {
+      padding: 3.5rem 1.25rem;
+    }
+
+    .metodo-text {
+      font-size: 0.95rem;
+    }
+
+    .step-img-wrap {
+      height: 160px;
+    }
+  }
+
+/* === para_quem === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --fail-red: #d9534f;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-paraquem {
+      padding: 80px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-paraquem__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-paraquem__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-paraquem__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .paraquem-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .paraquem-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .paraquem-card:nth-child(1) { animation-delay: 0.1s; }
+    .paraquem-card:nth-child(2) { animation-delay: 0.2s; }
+    .paraquem-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .paraquem-card__label {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+    .label-yes {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+    }
+    .label-no {
+      background: rgba(217, 83, 79, 0.1);
+      color: var(--fail-red);
+      border: 1px solid rgba(217, 83, 79, 0.25);
+    }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+
+    .icon-yes {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(0, 169, 157, 0.08);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-yes .material-symbols-outlined { font-size: 18px; color: var(--teal); }
+
+    .icon-no {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(217, 83, 79, 0.06);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-no .material-symbols-outlined { font-size: 18px; color: var(--fail-red); }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 780px) {
+      .paraquem-grid { grid-template-columns: 1fr; }
+      .section-paraquem { padding: 56px 20px; }
+      .section-paraquem__headline { font-size: 1.65rem; }
+    }
+
+/* === entregaveis === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-entregaveis {
+      padding: 80px 24px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .section-entregaveis__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-entregaveis__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-entregaveis__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .entregaveis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .entregavel-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .entregavel-card:nth-child(1) { animation-delay: 0.05s; }
+    .entregavel-card:nth-child(2) { animation-delay: 0.1s; }
+    .entregavel-card:nth-child(3) { animation-delay: 0.15s; }
+    .entregavel-card:nth-child(4) { animation-delay: 0.2s; }
+    .entregavel-card:nth-child(5) { animation-delay: 0.25s; }
+    .entregavel-card:nth-child(6) { animation-delay: 0.3s; }
+
+    .entregavel-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 169, 157, 0.2);
+    }
+
+    .entregavel-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(0, 169, 157, 0.1), rgba(0, 169, 157, 0.04));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .entregavel-card__icon .material-symbols-outlined {
+      font-size: 30px;
+      color: var(--teal);
+    }
+
+    .entregavel-card__content {
+      flex: 1;
+    }
+
+    .entregavel-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .entregavel-card__text {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 760px) {
+      .section-entregaveis { padding: 56px 20px; }
+      .section-entregaveis__headline { font-size: 1.65rem; }
+      .section-entregaveis__subtitle { font-size: 1rem; }
+      .entregaveis-grid { grid-template-columns: 1fr; }
+      .entregavel-card { padding: 22px; gap: 16px; }
+      .entregavel-card__icon { width: 48px; height: 48px; }
+      .entregavel-card__icon .material-symbols-outlined { font-size: 26px; }
+    }
+
+/* === bonus === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-bonus {
+      padding: 80px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-bonus__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-bonus__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-bonus__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .bonus-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bonus-card:nth-child(1) { animation-delay: 0.1s; }
+    .bonus-card:nth-child(2) { animation-delay: 0.2s; }
+    .bonus-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .bonus-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .bonus-card__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .bonus-card__badge .material-symbols-outlined {
+      font-size: 14px;
+    }
+
+    .bonus-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(0, 169, 157, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .bonus-card__icon .material-symbols-outlined {
+      font-size: 30px;
+      color: var(--teal);
+    }
+
+    .bonus-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .bonus-card__text {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+
+    .bonus-card__value {
+      padding-top: 20px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bonus-card__value-label {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .bonus-card__value-amount {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-mid);
+      text-decoration: line-through;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .bonus-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .section-bonus { padding: 56px 20px; }
+      .section-bonus__headline { font-size: 1.65rem; }
+      .section-bonus__subtitle { font-size: 1rem; margin-bottom: 40px; }
+      .bonus-grid { grid-template-columns: 1fr; gap: 20px; }
+      .bonus-card { padding: 26px 24px; }
+    }
+
+/* === stack === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-stack {
+      padding: 80px 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-stack__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-stack__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-stack__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .stack-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stack-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .stack-card__label {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 100px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      margin-bottom: 28px;
+    }
+    .stack-card__label .material-symbols-outlined { font-size: 14px; }
+
+    .stack-card .stack-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    .stack-card .stack-item:last-child { border-bottom: none; }
+
+    .stack-card .stack-item__name {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .stack-card .stack-item__name .material-symbols-outlined {
+      font-size: 20px; color: var(--teal);
+    }
+
+    .stack-card .stack-item__value {
+      font-family: var(--font-heading);
+      font-weight: 600; color: var(--text-mid);
+      white-space: nowrap;
+    }
+
+    .stack-card .stack-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 20px; padding-top: 20px;
+      border-top: 2px solid var(--text-dark);
+    }
+    .stack-card .stack-total__label {
+      font-size: 0.9rem; color: var(--text-mid);
+    }
+    .stack-card .stack-total__value {
+      font-family: var(--font-heading);
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--text-mid);
+      text-decoration: line-through;
+      text-decoration-color: var(--teal);
+      text-decoration-thickness: 2px;
+    }
+
+    .stack-card .stack-footer {
+      text-align: center; margin-top: 20px;
+      font-size: 0.95rem; color: var(--text-mid); line-height: 1.7;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 680px) {
+      .section-stack { padding: 56px 20px; }
+      .section-stack__headline { font-size: 1.65rem; }
+      .stack-card { padding: 28px 24px; }
+    }
+
+/* === suporte === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-suporte {
+      padding: 80px 24px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .section-suporte__header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+
+    .section-suporte__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-suporte__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .suporte-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .suporte-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .suporte-card:nth-child(1) { animation-delay: 0.1s; }
+    .suporte-card:nth-child(2) { animation-delay: 0.2s; }
+    .suporte-card:nth-child(3) { animation-delay: 0.3s; }
+    .suporte-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .suporte-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 169, 157, 0.2);
+    }
+
+    .suporte-card__icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0, 169, 157, 0.12), rgba(0, 169, 157, 0.04));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .suporte-card__icon .material-symbols-outlined {
+      font-size: 32px;
+      color: var(--teal);
+    }
+
+    .suporte-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .suporte-card__text {
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .suporte-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .section-suporte { padding: 56px 20px; }
+      .section-suporte__headline { font-size: 1.65rem; }
+      .section-suporte__subtitle { font-size: 1rem; margin-bottom: 40px; }
+      .suporte-grid { grid-template-columns: 1fr; gap: 18px; }
+      .suporte-card { padding: 28px 22px; }
+    }
+
+/* === garantia === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-garantia {
+      padding: 80px 24px;
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .garantia-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 64px 48px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .garantia-selo {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 4px solid var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      position: relative;
+      box-shadow: 0 0 0 8px rgba(0, 169, 157, 0.08);
+    }
+
+    .garantia-selo::before {
+      content: '';
+      position: absolute;
+      inset: -16px;
+      border: 2px dashed rgba(0, 169, 157, 0.3);
+      border-radius: 50%;
+      animation: spin 30s linear infinite;
+    }
+
+    .garantia-selo__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .garantia-selo .material-symbols-outlined {
+      font-size: 56px;
+      color: var(--teal);
+      font-variation-settings: 'FILL' 1;
+      margin-bottom: 4px;
+    }
+
+    .garantia-selo__days {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      line-height: 1;
+    }
+
+    .garantia-selo__label {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--teal);
+      margin-top: 4px;
+    }
+
+    .garantia-card__headline {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+
+    .garantia-card__text {
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      line-height: 1.75;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+
+    .garantia-card__signature {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(0, 169, 157, 0.08);
+      border-radius: 100px;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+    }
+
+    .garantia-card__signature .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--teal);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 680px) {
+      .section-garantia { padding: 56px 20px; }
+      .garantia-card { padding: 44px 28px; border-radius: 20px; }
+      .garantia-selo { width: 140px; height: 140px; }
+      .garantia-selo .material-symbols-outlined { font-size: 44px; }
+      .garantia-selo__days { font-size: 1.3rem; }
+      .garantia-card__headline { font-size: 1.5rem; }
+      .garantia-card__text { font-size: 0.98rem; }
+    }
+
+/* === autoridade === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-autoridade {
+      padding: 80px 24px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .section-autoridade__header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 56px;
+    }
+
+    .section-autoridade__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-autoridade__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .autoridade-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .autoridade-foto {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .foto-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(0, 169, 157, 0.12), rgba(0, 169, 157, 0.04));
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .foto-placeholder .material-symbols-outlined {
+      font-size: 56px;
+      color: var(--teal);
+    }
+
+    .foto-placeholder span:last-child {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .autoridade-conteudo {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+
+    .autoridade-nome {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .autoridade-cargo {
+      font-size: 0.95rem;
+      color: var(--teal-dark);
+      font-weight: 500;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .autoridade-bio p {
+      font-size: 1rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .credenciais-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .credencial-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .credencial-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .credencial-card__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(0, 169, 157, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .credencial-card__icon .material-symbols-outlined {
+      font-size: 22px;
+      color: var(--teal);
+    }
+
+    .credencial-card__text {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.3;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 880px) {
+      .autoridade-grid { grid-template-columns: 1fr; gap: 40px; }
+      .autoridade-foto { max-width: 320px; margin: 0 auto; }
+    }
+
+    @media (max-width: 680px) {
+      .section-autoridade { padding: 56px 20px; }
+      .section-autoridade__headline { font-size: 1.65rem; }
+      .autoridade-nome { font-size: 1.5rem; }
+      .credenciais-grid { grid-template-columns: 1fr; }
+    }
+
+/* === faq === */
+
+:root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --mint: #90FFEB;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      --shadow-hover: 0 4px 24px rgba(0, 169, 157, 0.12);
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* Section */
+    .faq-section {
+      padding: 100px 24px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .faq-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 56px;
+    }
+
+    .faq-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, var(--teal), var(--mint)) border-box;
+      border: 1.5px solid transparent;
+      border-radius: 100px;
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+
+    .faq-label .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--teal);
+    }
+
+    .faq-headline {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.2;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .faq-headline em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .faq-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Accordion */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+    }
+
+    .faq-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--teal), var(--mint));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .faq-item.open::before {
+      opacity: 1;
+    }
+
+    .faq-item.open {
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(0, 169, 157, 0.2);
+    }
+
+    .faq-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 22px 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      gap: 16px;
+    }
+
+    .faq-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0, 169, 157, 0.08), rgba(144, 255, 235, 0.12));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    .faq-item.open .faq-icon-wrap {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    }
+
+    .faq-icon-wrap .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--teal);
+      transition: transform 0.35s ease, color 0.3s ease;
+    }
+
+    .faq-item.open .faq-icon-wrap .material-symbols-outlined {
+      transform: rotate(45deg);
+      color: var(--white);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    .faq-answer-inner {
+      padding: 0 24px 22px;
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.75;
+    }
+
+    /* Footer */
+    .faq-footer {
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .faq-footer-text {
+      font-size: 1rem;
+      color: var(--text-mid);
+      margin-bottom: 20px;
+    }
+
+    .faq-footer-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .faq-footer-cta:hover {
+      box-shadow: 0 0 20px rgba(0, 169, 157, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .faq-footer-cta .material-symbols-outlined {
+      font-size: 18px;
+    }
+
+    /* FadeUp */
+    .fadeUp {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fadeUp.visible { opacity: 1; transform: translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .faq-section { padding: 72px 20px; }
+      .faq-headline { font-size: 1.75rem; letter-spacing: -0.5px; }
+      .faq-subtitle { font-size: 1rem; }
+      .faq-trigger { padding: 18px 20px; font-size: 0.95rem; }
+      .faq-answer-inner { padding: 0 20px 18px; font-size: 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+      .faq-headline { font-size: 1.5rem; }
+      .faq-trigger { padding: 16px 18px; }
+      .faq-icon-wrap { width: 32px; height: 32px; border-radius: 8px; }
+      .faq-icon-wrap .material-symbols-outlined { font-size: 18px; }
+    }
+
+/* === oferta === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --teal: #00A99D;
+      --teal-dark: #0A6561;
+      --text-dark: #363636;
+      --text-mid: #666666;
+      --border: #EAEAEA;
+      --bg: #F8F8F8;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section-oferta {
+      padding: 80px 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-oferta__header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-oferta__headline {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-oferta__subtitle {
+      font-size: 1.1rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .oferta-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .oferta-stack {
+      margin-bottom: 32px;
+    }
+
+    .oferta-stack__title {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-mid);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .oferta-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+      gap: 16px;
+    }
+
+    .oferta-item:last-child {
+      border-bottom: none;
+    }
+
+    .oferta-item__left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .oferta-item__check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0, 169, 157, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .oferta-item__check .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .oferta-item__name {
+      font-size: 0.98rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .oferta-item__value {
+      font-family: var(--font-heading);
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      flex-shrink: 0;
+    }
+
+    .oferta-total {
+      padding: 20px 0;
+      border-top: 2px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .oferta-total__label {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-mid);
+    }
+
+    .oferta-total__value {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-mid);
+      text-decoration: line-through;
+    }
+
+    .oferta-preco {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .oferta-preco__label {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+
+    .oferta-preco__parcelas {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      color: var(--teal-dark);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .oferta-preco__valor {
+      font-family: var(--font-heading);
+      font-size: 3.4rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      line-height: 1;
+      letter-spacing: -1.5px;
+    }
+
+    .oferta-preco__avista {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      margin-top: 10px;
+    }
+
+    .oferta-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 22px 32px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+      border: none;
+      border-radius: 100px;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      margin-bottom: 24px;
+    }
+
+    .oferta-cta:hover {
+      box-shadow: 0 12px 32px rgba(0, 169, 157, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .oferta-cta .material-symbols-outlined {
+      font-size: 22px;
+    }
+
+    .oferta-microcopy {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .oferta-microcopy__item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .oferta-microcopy__item .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--teal);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 680px) {
+      .section-oferta { padding: 56px 20px; }
+      .section-oferta__headline { font-size: 1.65rem; }
+      .oferta-card { padding: 32px 24px; border-radius: 20px; }
+      .oferta-item { padding: 12px 0; }
+      .oferta-item__name { font-size: 0.9rem; }
+      .oferta-item__value { font-size: 0.9rem; }
+      .oferta-preco__valor { font-size: 2.6rem; }
+      .oferta-cta { padding: 18px 24px; font-size: 1rem; }
+    }
+
+/* === hero_teal_claro_depoimentos === */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #F8F8F8;
+            --white: #ffffff;
+            --teal: #00A99D;
+            --teal-dark: #0A6561;
+            --text-dark: #363636;
+            --text-mid: #666666;
+            --text-light: #B8B8B8;
+            --border: #EAEAEA;
+            --mint: #90FFEB;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .depoimentos-wrap .depoimentos-inner {
+            max-width: 1280px; margin: 0 auto; padding: 72px 24px;
+            flex-grow: 1; width: 100%;
+        }
+
+        .section-header { text-align: center; margin-bottom: 56px; }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem; font-weight: 700; line-height: 1.1;
+            letter-spacing: -0.96px; color: var(--text-dark);
+            margin-bottom: 14px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem; color: var(--text-mid); max-width: 520px; margin: 0 auto;
+        }
+
+        .carousel-wrapper { overflow: hidden; width: 100%; }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide { min-width: 100%; padding: 0 8px; }
+
+        .card-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+        }
+
+        .testimonial-card {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            padding: 28px;
+            display: flex; flex-direction: column; gap: 18px;
+            box-shadow: 0 2px 4px -2px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.1);
+        }
+
+        .stars { display: flex; gap: 2px; }
+        .stars .material-symbols-outlined {
+            font-size: 16px; color: var(--teal);
+            font-variation-settings: 'FILL' 1, 'wght' 400;
+        }
+
+        .quote {
+            font-size: 0.9375rem; color: var(--text-mid); line-height: 1.6;
+        }
+
+        .author {
+            display: flex; align-items: center; gap: 12px;
+            margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--teal); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8125rem; font-weight: 600;
+        }
+
+        .author-name { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); }
+        .author-role { font-size: 0.75rem; color: var(--text-light); }
+
+        .controls {
+            display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 48px;
+        }
+
+        .nav-btn {
+            width: 48px; height: 48px; border-radius: 50%;
+            border: 1px solid var(--border); background: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-dark);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px -2px rgba(0,0,0,0.06);
+        }
+        .nav-btn:hover {
+            background: var(--teal); color: #fff; border-color: var(--teal);
+        }
+
+        .dots { display: flex; gap: 8px; }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--border); transition: all 0.3s ease; cursor: pointer;
+        }
+        .dot.active { background: var(--teal); width: 24px; border-radius: 4px; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .anim { animation: fadeUp 0.6s ease-out forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        @media (max-width: 768px) {
+            .depoimentos-wrap .depoimentos-inner { padding: 48px 16px; }
+            .card-grid { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 2rem; }
+        }
+  </style>
+</head>
+<body>
+
+<div class="tpl-hero-teal">
+<header>
+        <div class="logo">Atelier<span>.</span></div>
+    </header>
+
+    <main>
+        <div class="grid">
+
+            <div class="content">
+
+                <h1 class="anim delay-2">
+                    Transforme seu croche em uma renda de verdade.
+                </h1>
+
+                <p class="subtitle anim delay-3">
+                    O metodo completo para voce que faz pecas lindas mas nao sabe como vender e deseja elevar sua arte ao patamar de atelier.
+                </p>
+
+                <ul class="checklist anim delay-4">
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Aprenda a precificar sem trabalhar no prejuizo</span>
+                    </li>
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Descubra quais pecas dao lucro e saida rapida</span>
+                    </li>
+                    <li class="check-item">
+                        <div class="check-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <span>Monte sua vitrine online e atraia clientes todos os dias</span>
+                    </li>
+                </ul>
+
+                <div class="cta-wrap anim delay-5">
+                    <button type="button" class="cta-button" onclick="document.getElementById('oferta').scrollIntoView({behavior:'smooth'})">
+                        Quero transformar meu croche
+                        <div class="arrow-circle">
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </div>
+                    </button>
+                    <span class="cta-sub">Acesso imediato ao metodo completo</span>
+                </div>
+
+            </div>
+
+            <div class="anim delay-3">
+                <div class="video-card">
+                    <div class="video-embed">
+                        <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Apresentacao do Metodo"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-meta">
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">play_circle</span>
+                            Assista a aula gratuita
+                        </div>
+                        <div class="video-meta-divider"></div>
+                        <div class="video-meta-item">
+                            <span class="material-symbols-outlined">timer</span>
+                            15 minutos
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Problema / Dor -->
+    <section class="pain-section">
+        <div class="pain-header fadeUp">
+            <div class="pain-label">
+                <span class="material-symbols-outlined">heart_broken</span>
+                Isso soa familiar?
+            </div>
+            <h2 class="pain-headline">Você faz peças <em>incríveis</em>, mas sente que ninguém enxerga o valor delas</h2>
+            <p class="pain-subheadline">Se alguma dessas cenas faz parte do seu dia a dia, saiba que o problema não é o seu crochê. É a forma como você apresenta e vende.</p>
+        </div>
+
+        <div class="pain-grid">
+            <div class="pain-card fadeUp">
+                <div class="pain-icon-wrap">
+                    <span class="material-symbols-outlined">schedule</span>
+                </div>
+                <h3 class="pain-card-title">Horas de trabalho, centavos de retorno</h3>
+                <p class="pain-card-text">Você passa a tarde inteira dedicada a uma peça. escolhendo a linha, acertando cada ponto, caprichando no acabamento. Na hora de vender, percebe que o preço mal cobre o material. O seu tempo, o seu talento, ficaram de graça.</p>
+            </div>
+
+            <div class="pain-card fadeUp">
+                <div class="pain-icon-wrap">
+                    <span class="material-symbols-outlined">trending_down</span>
+                </div>
+                <h3 class="pain-card-title">"Faz por quanto? Ui, tá caro..."</h3>
+                <p class="pain-card-text">A pessoa elogia, tira foto, diz que amou. Aí pergunta o preço. e o sorriso some. Começa a pechinchar, pede desconto, sugere que "na feira vi mais barato". E você, pra não perder a venda, cede. De novo.</p>
+            </div>
+
+            <div class="pain-card fadeUp">
+                <div class="pain-icon-wrap">
+                    <span class="material-symbols-outlined">visibility_off</span>
+                </div>
+                <h3 class="pain-card-title">Vergonha de cobrar o que vale</h3>
+                <p class="pain-card-text">Lá no fundo, você sabe que a peça merece um preço justo. Mas na hora de falar o valor, a voz trava. Parece que cobrar bem é errado, que vão achar caro demais. Então você abaixa. e depois se arrepende em silêncio.</p>
+            </div>
+
+            <div class="pain-card fadeUp">
+                <div class="pain-icon-wrap">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                </div>
+                <h3 class="pain-card-title">Estoque que só cresce e dinheiro que não entra</h3>
+                <p class="pain-card-text">Peças prontas se acumulam na prateleira, no armário, dentro de sacolas. Você faz porque ama, mas a pilha cresce e as vendas não acompanham. O dinheiro investido em linha e material fica ali, parado, sem voltar.</p>
+            </div>
+        </div>
+
+        <div class="pain-bottom fadeUp">
+            <p class="pain-bottom-text">Enquanto isso, produtos industrializados sem nenhum charme vendem aos montes na internet. <strong>O problema nunca foi a qualidade do seu trabalho. foi a falta de um método para transformar talento em renda de verdade.</strong></p>
+            <a href="#" class="cta-pill">
+                Quero aprender a vender minhas peças
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+        </div>
+    </section>
+
+<section class="section-paliativo">
+    <h2 class="section-paliativo__headline">Você já tentou de tudo para vender seu crochê. e nada funcionou de verdade</h2>
+    <p class="section-paliativo__subtitle">Se você está aqui, provavelmente já passou por pelo menos uma dessas tentativas. E não foi por falta de esforço.</p>
+
+    <div class="paliativo-grid">
+      <div class="paliativo-card">
+        <div class="card-img-wrap">
+          <img src="https://picsum.photos/seed/phone/600/300" alt="Instagram sem estratégia">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="paliativo-card__icon">
+          <span class="material-symbols-outlined">close</span>
+        </div>
+        <h3 class="paliativo-card__title">Postar no Instagram sem estratégia</h3>
+        <p class="paliativo-card__text">Você posta fotos das peças, coloca hashtags, mas os seguidores só curtem e não compram. Sem um método para transformar visualizações em pedidos, o perfil vira um portfólio bonito que não paga as contas.</p>
+      </div>
+
+      <div class="paliativo-card">
+        <div class="card-img-wrap">
+          <img src="https://picsum.photos/seed/market/600/300" alt="Feiras e bazares">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="paliativo-card__icon">
+          <span class="material-symbols-outlined">close</span>
+        </div>
+        <h3 class="paliativo-card__title">Vender em feiras e bazares</h3>
+        <p class="paliativo-card__text">Horas de preparação, aluguel de barraca, sol ou chuva. e no fim do dia, o lucro mal cobre os custos. Você depende do movimento do evento e compete com dezenas de artesãs oferecendo peças parecidas por preços cada vez mais baixos.</p>
+      </div>
+
+      <div class="paliativo-card">
+        <div class="card-img-wrap">
+          <img src="https://picsum.photos/seed/friends/600/300" alt="Amigos e família">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="paliativo-card__icon">
+          <span class="material-symbols-outlined">close</span>
+        </div>
+        <h3 class="paliativo-card__title">Pedir para amigos e família divulgarem</h3>
+        <p class="paliativo-card__text">No começo até funciona, mas rapidamente o círculo se esgota. Amigos compartilham por carinho, não por interesse real. Você fica sem novos clientes e com a sensação de estar incomodando quem ama.</p>
+      </div>
+
+      <div class="paliativo-card">
+        <div class="card-img-wrap">
+          <img src="https://picsum.photos/seed/coins/600/300" alt="Baixar preço">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="paliativo-card__icon">
+          <span class="material-symbols-outlined">close</span>
+        </div>
+        <h3 class="paliativo-card__title">Baixar o preço para competir</h3>
+        <p class="paliativo-card__text">Você reduz o valor achando que vai vender mais, mas o que acontece é o oposto: trabalha o dobro, ganha menos e as pessoas ainda acham caro. Preço baixo atrai quem não valoriza. e desvaloriza o seu trabalho.</p>
+      </div>
+    </div>
+
+    <div class="section-paliativo__bridge">
+      <p>Nenhuma dessas saídas resolve o problema de verdade, porque todas ignoram o que realmente faz uma artesã vender todos os dias.</p>
+    </div>
+  </section>
+
+<section class="section-provas">
+    <h2 class="section-provas__headline">Quem aplicou já está vendo resultado</h2>
+    <p class="section-provas__subtitle">Histórias reais de artesãs que pararam de depender de feiras e começaram a vender pela internet de forma constante.</p>
+
+    <div class="provas-grid">
+
+      <div class="prova-card">
+        <div class="prova-card__header">
+          <img class="prova-card__avatar" src="https://i.pravatar.cc/150?img=47" alt="Marisa Tavares">
+          <div class="prova-card__identity">
+            <span class="prova-card__name">Marisa Tavares</span>
+            <span class="prova-card__location">Curitiba, PR</span>
+          </div>
+        </div>
+        <div class="prova-block">
+          <div class="prova-block__label">Antes</div>
+          <p class="prova-block__text">Vendia uma ou duas peças por mês para vizinhas, e ainda parcelava no fiado. O Instagram tinha 280 seguidores parados.</p>
+        </div>
+        <div class="prova-block depois">
+          <div class="prova-block__label">Depois</div>
+          <p class="prova-block__text">Em 90 dias passou a fechar oito a doze encomendas por semana pelo Direct, com pagamento antecipado via Pix.</p>
+        </div>
+        <div class="prova-card__rating">
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+        </div>
+      </div>
+
+      <div class="prova-card">
+        <div class="prova-card__header">
+          <img class="prova-card__avatar" src="https://i.pravatar.cc/150?img=32" alt="Joana Reis">
+          <div class="prova-card__identity">
+            <span class="prova-card__name">Joana Reis</span>
+            <span class="prova-card__location">Recife, PE</span>
+          </div>
+        </div>
+        <div class="prova-block">
+          <div class="prova-block__label">Antes</div>
+          <p class="prova-block__text">Achava que precisava baixar o preço do amigurumi para vender. Trabalhava o dia todo e fechava o mês no zero a zero.</p>
+        </div>
+        <div class="prova-block depois">
+          <div class="prova-block__label">Depois</div>
+          <p class="prova-block__text">Reposicionou os produtos, dobrou o preço e hoje fatura R$ 4.300 por mês trabalhando três horas por dia.</p>
+        </div>
+        <div class="prova-card__rating">
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+        </div>
+      </div>
+
+      <div class="prova-card">
+        <div class="prova-card__header">
+          <img class="prova-card__avatar" src="https://i.pravatar.cc/150?img=26" alt="Cláudia Bento">
+          <div class="prova-card__identity">
+            <span class="prova-card__name">Cláudia Bento</span>
+            <span class="prova-card__location">Belo Horizonte, MG</span>
+          </div>
+        </div>
+        <div class="prova-block">
+          <div class="prova-block__label">Antes</div>
+          <p class="prova-block__text">Tentava postar nos grupos do Facebook e ninguém respondia. Quase desistiu de viver do crochê depois de dois anos sem evolução.</p>
+        </div>
+        <div class="prova-block depois">
+          <div class="prova-block__label">Depois</div>
+          <p class="prova-block__text">Construiu uma lista de 600 clientes em quatro meses. Hoje tem fila de espera e abre encomendas só uma vez por mês.</p>
+        </div>
+        <div class="prova-card__rating">
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+          <span class="material-symbols-outlined">star</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<section class="cta-section tpl-cta-teal">
+  <div class="cta-inner fadeUp">
+
+    <h2 class="cta-headline">
+      Suas mãos já sabem criar.<br>
+      Agora é hora de <span class="accent">lucrar</span> com elas.
+    </h2>
+
+    <p class="cta-text">
+      O Método Atelier mostra o caminho direto entre a peça que você já faz e a renda que você merece receber por ela.
+    </p>
+
+    <div style="margin-bottom: 2rem;">
+      <p style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">12x de R$&nbsp;29,70</p>
+      <p style="font-size: 0.9375rem; color: var(--text-mid);">ou R$&nbsp;297,00 à vista</p>
+    </div>
+
+    <a href="#oferta" class="cta-btn">
+      Quero começar agora
+      <span class="arrow-circle">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </span>
+    </a>
+
+    <p class="cta-trust">
+      <span class="material-symbols-outlined">verified</span>
+      Acesso imediato · Garantia de 7 dias
+    </p>
+
+  </div>
+</section>
+
+<section class="metodo-section">
+  <div class="metodo-inner">
+
+    <h2 class="metodo-headline fadeUp">
+      O <span class="accent">Método Atelier</span> em 3 passos
+    </h2>
+
+    <p class="metodo-text fadeUp">
+      Um caminho claro que leva você da peça pronta ao lucro real, sem achismo e sem trabalhar no prejuízo.
+    </p>
+
+    <div class="steps-grid">
+
+      <!-- Step 1 -->
+      <div class="step-card fadeUp">
+        <div class="step-img-wrap">
+          <img src="https://images.unsplash.com/photo-1585914924626-15adac1e6402?w=600&q=80" alt="Técnica de crochê com agulhas e fios coloridos">
+        </div>
+        <div class="step-body">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Base Técnica Sólida</h3>
+          <ul class="micro-steps">
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Domine os pontos essenciais com segurança
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Aprenda a ler gráficos e receitas
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Escolha os materiais certos para cada peça
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Ganhe agilidade e acabamento profissional
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Connector 1→2 -->
+      <div class="step-connector fadeUp">
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card fadeUp">
+        <div class="step-img-wrap">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80" alt="Caderno de precificação e calculadora sobre mesa">
+        </div>
+        <div class="step-body">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Peças que Vendem + Preço Justo</h3>
+          <ul class="micro-steps">
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Descubra quais peças têm mais saída no mercado
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Calcule o preço certo sem trabalhar no prejuízo
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Organize sua produção para render mais
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Monte um catálogo com peças lucrativas
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Connector 2→3 -->
+      <div class="step-connector fadeUp">
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card fadeUp">
+        <div class="step-img-wrap">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80" alt="Mulher embalando produto artesanal para envio">
+        </div>
+        <div class="step-body">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Vendas e Clientes Fiéis</h3>
+          <ul class="micro-steps">
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Monte sua vitrine online no Instagram e WhatsApp
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Atraia clientes sem precisar aparecer o tempo todo
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Faça vendas recorrentes com quem já comprou
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Fidelize clientes com atendimento que encanta
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="section-paraquem">
+    <div class="section-paraquem__header">
+      <h2 class="section-paraquem__headline">Este método foi pensado para um perfil bem específico</h2>
+      <p class="section-paraquem__subtitle">Veja se o seu momento combina com o que vamos entregar antes de seguir em frente.</p>
+    </div>
+
+    <div class="paraquem-grid">
+
+      <div class="paraquem-card">
+        <span class="paraquem-card__label label-yes">
+          <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span>
+          Para quem é
+        </span>
+
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Quer transformar sua habilidade manual em uma fonte de renda previsível</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Já produz peças mas ainda não consegue vender com consistência</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Está disposta a seguir um passo a passo e aplicar por pelo menos 30 dias</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Quer aprender a precificar, fotografar e divulgar sem depender de terceiros</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-yes"><span class="material-symbols-outlined">check</span></span>
+          <span>Busca independência financeira trabalhando de casa</span>
+        </div>
+      </div>
+
+      <div class="paraquem-card">
+        <span class="paraquem-card__label label-no">
+          <span class="material-symbols-outlined" style="font-size:14px;">cancel</span>
+          Para quem não é
+        </span>
+
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Procura resultado sem esforço ou atalhos mágicos</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Não tem disposição para aprender algo novo e testar na prática</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Espera que o método funcione sozinho, sem dedicação pessoal</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Acredita que o problema está sempre no mercado, nunca no processo</span>
+        </div>
+        <div class="check-row">
+          <span class="icon-no"><span class="material-symbols-outlined">close</span></span>
+          <span style="color: var(--text-mid);">Quer aprender a teoria mas não pretende colocar em prática</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<section class="section-entregaveis">
+    <div class="section-entregaveis__header">
+      <h2 class="section-entregaveis__headline">Tudo que você recebe quando entrar</h2>
+      <p class="section-entregaveis__subtitle">Um pacote completo, organizado em módulos práticos, para você sair do lugar e começar a vender pela internet desde a primeira semana.</p>
+    </div>
+
+    <div class="entregaveis-grid">
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">play_circle</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">42 videoaulas em alta definição</h3>
+          <p class="entregavel-card__text">Aulas curtas, direto ao ponto, organizadas em seis módulos. Você assiste no celular, no tablet ou no computador, no horário que conseguir.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">menu_book</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Apostila Crochê Lucrativo em PDF</h3>
+          <p class="entregavel-card__text">Material completo com 84 páginas resumindo o método, com espaço para anotações e checklists para imprimir e seguir passo a passo.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">photo_library</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Banco de fotos profissionais</h3>
+          <p class="entregavel-card__text">Mais de 120 fotos de peças de crochê em alta resolução para você usar nos seus posts, anúncios e catálogos sem precisar sair de casa.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">chat_bubble</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Modelos de mensagens prontas</h3>
+          <p class="entregavel-card__text">Scripts de Direct, WhatsApp e legenda de Instagram que você só precisa adaptar com o nome da peça e o preço, em menos de um minuto.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">calculate</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Planilha de precificação justa</h3>
+          <p class="entregavel-card__text">A planilha que faz o cálculo automático do preço, considerando linha, tempo de produção, lucro real e margem para promoções.</p>
+        </div>
+      </div>
+
+      <div class="entregavel-card">
+        <div class="entregavel-card__icon">
+          <span class="material-symbols-outlined">groups</span>
+        </div>
+        <div class="entregavel-card__content">
+          <h3 class="entregavel-card__title">Comunidade fechada de alunas</h3>
+          <p class="entregavel-card__text">Grupo no Telegram com mais de 1.800 artesãs ativas trocando dicas, divulgando peças e ajudando umas às outras todos os dias.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<section class="section-bonus">
+    <div class="section-bonus__header">
+      <h2 class="section-bonus__headline">Bônus exclusivos para quem entrar agora</h2>
+      <p class="section-bonus__subtitle">Materiais extras que aceleram o seu resultado nos primeiros 30 dias e que você só recebe se garantir sua vaga nesta turma.</p>
+    </div>
+
+    <div class="bonus-grid">
+
+      <div class="bonus-card">
+        <div class="bonus-card__badge">
+          <span class="material-symbols-outlined">card_giftcard</span>
+          Bônus 01
+        </div>
+        <div class="bonus-card__icon">
+          <span class="material-symbols-outlined">photo_camera</span>
+        </div>
+        <h3 class="bonus-card__title">Mini curso de fotografia com celular</h3>
+        <p class="bonus-card__text">Aprenda a fotografar suas peças de crochê em casa, com luz natural, e deixar cada foto digna de revista. São oito aulas práticas em vídeo.</p>
+        <div class="bonus-card__value">
+          <span class="bonus-card__value-label">Valor avulso</span>
+          <span class="bonus-card__value-amount">R$ 197</span>
+        </div>
+      </div>
+
+      <div class="bonus-card">
+        <div class="bonus-card__badge">
+          <span class="material-symbols-outlined">card_giftcard</span>
+          Bônus 02
+        </div>
+        <div class="bonus-card__icon">
+          <span class="material-symbols-outlined">campaign</span>
+        </div>
+        <h3 class="bonus-card__title">Pacote de 30 legendas prontas</h3>
+        <p class="bonus-card__text">Trinta legendas testadas para postar no Instagram durante o primeiro mês, organizadas por dia da semana e tipo de peça. Você só copia e adapta.</p>
+        <div class="bonus-card__value">
+          <span class="bonus-card__value-label">Valor avulso</span>
+          <span class="bonus-card__value-amount">R$ 147</span>
+        </div>
+      </div>
+
+      <div class="bonus-card">
+        <div class="bonus-card__badge">
+          <span class="material-symbols-outlined">card_giftcard</span>
+          Bônus 03
+        </div>
+        <div class="bonus-card__icon">
+          <span class="material-symbols-outlined">workspace_premium</span>
+        </div>
+        <h3 class="bonus-card__title">Mentoria coletiva ao vivo</h3>
+        <p class="bonus-card__text">Encontro mensal de uma hora com a equipe para tirar dúvidas, mostrar suas peças e receber direcionamento personalizado durante seis meses.</p>
+        <div class="bonus-card__value">
+          <span class="bonus-card__value-label">Valor avulso</span>
+          <span class="bonus-card__value-amount">R$ 497</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<section class="section-stack">
+    <div class="section-stack__header">
+      <h2 class="section-stack__headline">Veja tudo que você recebe hoje</h2>
+      <p class="section-stack__subtitle">Cada entregável foi pensado para funcionar junto. Veja o valor individual de cada um.</p>
+    </div>
+
+    <div class="stack-card">
+
+      <span class="stack-card__label">
+        <span class="material-symbols-outlined">inventory_2</span>
+        O que está incluso
+      </span>
+
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Método completo em vídeo (42 aulas)
+        </span>
+        <span class="stack-item__value">R$ 697</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Mini curso de fotografia com celular
+        </span>
+        <span class="stack-item__value">R$ 197</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Pacote de 30 legendas prontas
+        </span>
+        <span class="stack-item__value">R$ 147</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Bônus 01. Fotografia com celular
+        </span>
+        <span class="stack-item__value">R$ 197</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Bônus 02. Legendas prontas
+        </span>
+        <span class="stack-item__value">R$ 147</span>
+      </div>
+      <div class="stack-item">
+        <span class="stack-item__name">
+          <span class="material-symbols-outlined">check_circle</span>
+          Bônus 03. Mentoria coletiva ao vivo
+        </span>
+        <span class="stack-item__value">R$ 497</span>
+      </div>
+
+      <div class="stack-total">
+        <span class="stack-total__label">Valor total do pacote</span>
+        <span class="stack-total__value">R$ 1.882</span>
+      </div>
+
+      <p class="stack-footer">
+        Mas você não vai pagar isso. Continue para ver a condição especial.
+      </p>
+
+    </div>
+  </section>
+
+<div class="depoimentos-wrap">
+<div class="depoimentos-inner">
+        <div class="section-header anim delay-1">
+            <h2>O que nossas alunas dizem</h2>
+            <p>Historias reais de quem transformou o croche em renda com o metodo Atelier.</p>
+        </div>
+
+        <div class="carousel-wrapper anim delay-2">
+            <div class="carousel-track" id="carousel">
+
+                <!-- Slide 1 -->
+                <div class="carousel-slide">
+                    <div class="card-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Faturei mais do que no meu emprego"</p>
+                            <p class="quote">"Eu fazia croche ha 8 anos e nunca consegui viver disso. Em 3 meses aplicando o metodo, faturei mais do que no meu emprego anterior. Mudou minha vida."</p>
+                            <div class="author">
+                                <div class="avatar">MC</div>
+                                <div>
+                                    <div class="author-name">Maria Clara</div>
+                                    <div class="author-role">Artesa em Belo Horizonte</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Hoje tenho lista de espera"</p>
+                            <p class="quote">"A parte de precificacao foi o divisor de aguas. Eu cobrava R$30 em pecas que valiam R$150. Hoje tenho lista de espera e consigo planejar meu mes."</p>
+                            <div class="author">
+                                <div class="avatar">AF</div>
+                                <div>
+                                    <div class="author-name">Ana Flavia</div>
+                                    <div class="author-role">Artesa em Curitiba</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Em 2 semanas ja tinha encomendas"</p>
+                            <p class="quote">"Montei minha vitrine no Instagram seguindo o passo a passo e em 2 semanas ja tinha encomendas. O metodo e simples e funciona de verdade."</p>
+                            <div class="author">
+                                <div class="avatar">RL</div>
+                                <div>
+                                    <div class="author-name">Renata Lima</div>
+                                    <div class="author-role">Artesa em Recife</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-slide">
+                    <div class="card-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Vendo pelo WhatsApp todos os dias"</p>
+                            <p class="quote">"Sempre tive medo de vender online. O modulo de vitrine digital me deu a confianca que eu precisava. Hoje vendo pelo WhatsApp e Instagram todos os dias."</p>
+                            <div class="author">
+                                <div class="avatar">PS</div>
+                                <div>
+                                    <div class="author-name">Patricia Santos</div>
+                                    <div class="author-role">Artesa em Salvador</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Minha renda triplicou em 4 meses"</p>
+                            <p class="quote">"Minha renda triplicou em 4 meses. O segredo foi entender quais pecas dao lucro e focar nelas. Parece obvio, mas ninguem tinha me ensinado isso antes."</p>
+                            <div class="author">
+                                <div class="avatar">JO</div>
+                                <div>
+                                    <div class="author-name">Julia Oliveira</div>
+                                    <div class="author-role">Artesa em Florianopolis</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="stars">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <p class="quote" style="font-weight: 600; color: var(--text-dark); font-size: 0.875rem;">"Do zero ao primeiro cliente em 60 dias"</p>
+                            <p class="quote">"Sai do zero e em 60 dias ja tinha meu primeiro cliente recorrente. O metodo Atelier e direto ao ponto, sem enrolacao. Recomendo para todas as artesas."</p>
+                            <div class="author">
+                                <div class="avatar">CM</div>
+                                <div>
+                                    <div class="author-name">Camila Martins</div>
+                                    <div class="author-role">Artesa em Goiania</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="controls anim delay-2">
+            <button class="nav-btn" onclick="moveCarousel(-1)">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div class="dots" id="dots"></div>
+            <button class="nav-btn" onclick="moveCarousel(1)">
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<section class="section-suporte">
+    <div class="section-suporte__header">
+      <h2 class="section-suporte__headline">Você não vai estar sozinha nessa</h2>
+      <p class="section-suporte__subtitle">Aqui dentro, cada dúvida tem resposta e cada passo tem uma artesã ao seu lado para te empurrar para frente.</p>
+    </div>
+
+    <div class="suporte-grid">
+
+      <div class="suporte-card">
+        <div class="suporte-card__icon">
+          <span class="material-symbols-outlined">groups</span>
+        </div>
+        <h3 class="suporte-card__title">Comunidade fechada</h3>
+        <p class="suporte-card__text">Grupo no Telegram com mais de 1.800 alunas ativas, trocando dicas, mostrando peças e celebrando as primeiras vendas todos os dias.</p>
+      </div>
+
+      <div class="suporte-card">
+        <div class="suporte-card__icon">
+          <span class="material-symbols-outlined">video_call</span>
+        </div>
+        <h3 class="suporte-card__title">Mentorias ao vivo</h3>
+        <p class="suporte-card__text">Encontros mensais de uma hora com a Helena para tirar dúvidas, mostrar suas peças e receber direcionamento personalizado para o seu negócio.</p>
+      </div>
+
+      <div class="suporte-card">
+        <div class="suporte-card__icon">
+          <span class="material-symbols-outlined">support_agent</span>
+        </div>
+        <h3 class="suporte-card__title">Acesso direto à equipe</h3>
+        <p class="suporte-card__text">Tirou uma dúvida específica? Nosso time responde em até 24 horas úteis pelo email e pelo grupo de suporte exclusivo das alunas.</p>
+      </div>
+
+      <div class="suporte-card">
+        <div class="suporte-card__icon">
+          <span class="material-symbols-outlined">update</span>
+        </div>
+        <h3 class="suporte-card__title">Atualizações vitalícias</h3>
+        <p class="suporte-card__text">Tudo o que for adicionado ao curso entra automaticamente na sua área de aluna, sem precisar pagar nada a mais por isso. para sempre.</p>
+      </div>
+
+    </div>
+  </section>
+
+<section class="section-garantia">
+    <div class="garantia-card">
+      <div class="garantia-selo">
+        <div class="garantia-selo__inner">
+          <span class="material-symbols-outlined">verified</span>
+          <span class="garantia-selo__days">7 dias</span>
+          <span class="garantia-selo__label">Garantia</span>
+        </div>
+      </div>
+
+      <h2 class="garantia-card__headline">Garantia incondicional de 7 dias</h2>
+      <p class="garantia-card__text">Você tem uma semana inteira para acessar todas as aulas, baixar os materiais e testar o método na prática. Se em qualquer momento desses 7 dias você sentir que não é para você, basta enviar uma mensagem e devolvemos 100% do valor investido. Sem perguntas, sem burocracia, sem precisar justificar.</p>
+      <div class="garantia-card__signature">
+        <span class="material-symbols-outlined">handshake</span>
+        Compromisso da nossa equipe com você
+      </div>
+    </div>
+  </section>
+
+<section class="section-autoridade">
+    <div class="section-autoridade__header">
+      <h2 class="section-autoridade__headline">Quem está por trás do método</h2>
+      <p class="section-autoridade__subtitle">Conheça a artesã que viveu na pele cada dificuldade que você está enfrentando agora.</p>
+    </div>
+
+    <div class="autoridade-grid">
+
+      <div class="autoridade-foto">
+        <div class="foto-placeholder">
+          <span class="material-symbols-outlined">photo_camera</span>
+          <span>Sua foto aqui</span>
+        </div>
+      </div>
+
+      <div class="autoridade-conteudo">
+        <h3 class="autoridade-nome">Helena Vasconcelos</h3>
+        <p class="autoridade-cargo">Criadora do Crochê Lucrativo</p>
+
+        <div class="autoridade-bio">
+          <p>Helena começou no crochê em 2014, depois de pedir demissão de um emprego que sugava todas as suas energias. Nos primeiros dois anos, vendia peças por preços baixos em feiras e via o lucro evaporar a cada fim de semana de chuva.</p>
+          <p>Em 2017 mudou de estratégia. Largou as feiras, abriu o Instagram e em oito meses passou a receber encomendas de todo o Brasil. Hoje fatura mais de R$ 18 mil por mês trabalhando de casa, com a filha do lado, e ensina mais de 4.300 alunas a fazerem o mesmo.</p>
+          <p>O método nasceu da prática real, do erro repetido e do ajuste fino. Não é teoria de palco. É o que ela faz todos os dias para manter o negócio dela vivo e crescendo.</p>
+        </div>
+
+        <div class="credenciais-grid">
+          <div class="credencial-card">
+            <div class="credencial-card__icon">
+              <span class="material-symbols-outlined">school</span>
+            </div>
+            <span class="credencial-card__text">+4.300 alunas formadas em 6 anos</span>
+          </div>
+          <div class="credencial-card">
+            <div class="credencial-card__icon">
+              <span class="material-symbols-outlined">trending_up</span>
+            </div>
+            <span class="credencial-card__text">R$ 18 mil de faturamento mensal</span>
+          </div>
+          <div class="credencial-card">
+            <div class="credencial-card__icon">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <span class="credencial-card__text">Comunidade ativa de 1.800 artesãs</span>
+          </div>
+          <div class="credencial-card">
+            <div class="credencial-card__icon">
+              <span class="material-symbols-outlined">workspace_premium</span>
+            </div>
+            <span class="credencial-card__text">10 anos vivendo de crochê</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<section class="faq-section">
+    <div class="faq-header fadeUp">
+      <div class="faq-label">
+        <span class="material-symbols-outlined">help</span>
+        Perguntas frequentes
+      </div>
+      <h2 class="faq-headline">Tudo o que você precisa <em>saber</em> antes de começar</h2>
+      <p class="faq-subtitle">Reunimos aqui as dúvidas mais comuns. Se a sua não estiver na lista, fale com a gente.</p>
+    </div>
+
+    <div class="faq-list fadeUp">
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Funciona mesmo para quem está começando do zero?</span>
+          <div class="faq-icon-wrap">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Funciona. O método foi desenhado para quem não tem experiência prévia. Cada etapa parte do básico e avança no seu ritmo. Você não precisa de conhecimento técnico para começar.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Por quanto tempo terei acesso ao conteúdo?</span>
+          <div class="faq-icon-wrap">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Acesso vitalício. Uma vez dentro, o conteúdo é seu para sempre. incluindo todas as atualizações futuras que fizermos no material.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Tem alguma garantia?</span>
+          <div class="faq-icon-wrap">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sim. Você tem 7 dias para acessar o material, assistir às aulas e decidir se faz sentido para você. Se não fizer, devolvemos 100% do valor sem perguntas.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Preciso de alguma ferramenta ou equipamento especial?</span>
+          <div class="faq-icon-wrap">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Não. Tudo que você precisa é de um celular ou computador com acesso à internet. O método usa ferramentas simples e acessíveis que você provavelmente já tem.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Consigo conciliar com meu trabalho atual?</span>
+          <div class="faq-icon-wrap">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Com certeza. As aulas são gravadas e curtas. Você assiste quando puder. de manhã, no intervalo do almoço ou à noite. O importante é manter a constância, não a velocidade.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Como funciona o suporte?</span>
+          <div class="faq-icon-wrap">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Você terá acesso à comunidade exclusiva de alunos e ao suporte direto da equipe. Dúvidas são respondidas em até 24 horas úteis.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="faq-footer fadeUp">
+      <p class="faq-footer-text">Ainda tem alguma dúvida?</p>
+      <a href="#" class="faq-footer-cta">
+        Falar com a equipe
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+
+<section id="oferta" class="section-oferta">
+    <div class="section-oferta__header">
+      <h2 class="section-oferta__headline">Sua entrada para o método completo</h2>
+      <p class="section-oferta__subtitle">Tudo o que você viu até aqui, em um único pacote, com acesso liberado em até dois minutos depois do pagamento.</p>
+    </div>
+
+    <div class="oferta-card">
+      <div class="oferta-stack">
+        <div class="oferta-stack__title">O que está incluído</div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Curso completo Crochê Lucrativo</span>
+          </div>
+          <span class="oferta-item__value">R$ 997</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Apostila e materiais complementares</span>
+          </div>
+          <span class="oferta-item__value">R$ 197</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Bônus 1. Fotografia com celular</span>
+          </div>
+          <span class="oferta-item__value">R$ 197</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Bônus 2. Pacote de legendas prontas</span>
+          </div>
+          <span class="oferta-item__value">R$ 147</span>
+        </div>
+        <div class="oferta-item">
+          <div class="oferta-item__left">
+            <div class="oferta-item__check"><span class="material-symbols-outlined">check</span></div>
+            <span class="oferta-item__name">Bônus 3. Mentoria coletiva mensal</span>
+          </div>
+          <span class="oferta-item__value">R$ 497</span>
+        </div>
+      </div>
+
+      <div class="oferta-total">
+        <span class="oferta-total__label">Valor total real</span>
+        <span class="oferta-total__value">R$ 2.035</span>
+      </div>
+
+      <div class="oferta-preco">
+        <p class="oferta-preco__label">Por apenas</p>
+        <p class="oferta-preco__parcelas">12x de</p>
+        <p class="oferta-preco__valor">R$ 39,70</p>
+        <p class="oferta-preco__avista">ou R$ 397 à vista no Pix</p>
+      </div>
+
+      <a href="#" class="oferta-cta">
+        Quero garantir minha vaga agora
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+
+      <div class="oferta-microcopy">
+        <div class="oferta-microcopy__item">
+          <span class="material-symbols-outlined">lock</span>
+          Compra 100% segura
+        </div>
+        <div class="oferta-microcopy__item">
+          <span class="material-symbols-outlined">verified_user</span>
+          Garantia de 7 dias
+        </div>
+        <div class="oferta-microcopy__item">
+          <span class="material-symbols-outlined">bolt</span>
+          Acesso imediato
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="padding:40px 24px; text-align:center; border-top:1px solid #EAEAEA; background:#F8F8F8;">
+    <p style="font-size:0.85rem; color:#666;">SuaMarca &copy; 2026. Todos os direitos reservados.</p>
+    <p style="font-size:0.75rem; color:#888; margin-top:8px;"><a href="#" style="color:#666; text-decoration:underline;">Termos de uso</a> &middot; <a href="#" style="color:#666; text-decoration:underline;">Política de privacidade</a></p>
+  </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fadeUpObs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.fadeUp').forEach((el) => fadeUpObs.observe(el));
+});
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+
+const carousel = document.getElementById('carousel');
+        const dotsContainer = document.getElementById('dots');
+        const slides = carousel.children;
+        let current = 0;
+        const total = slides.length;
+
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goTo(i);
+            dotsContainer.appendChild(dot);
+        }
+
+        function goTo(index) {
+            current = index;
+            carousel.style.transform = `translateX(-${current * 100}%)`;
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+        function moveCarousel(dir) {
+            let next = current + dir;
+            if (next < 0) next = total - 1;
+            if (next >= total) next = 0;
+            goTo(next);
+        }
+</script>
+
+
+</body>
+</html>

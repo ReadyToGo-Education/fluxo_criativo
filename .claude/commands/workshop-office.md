@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:workshop-office
 description: Liga a Sala dos Agentes (live-office). Registra o hook agent-status-writer.js no settings.json e abre o painel no navegador. Sem servidor — tudo roda em file://.
+categoria: Dados e Automações
 ---
 
 # Sala dos Agentes (Workshop Live Office)

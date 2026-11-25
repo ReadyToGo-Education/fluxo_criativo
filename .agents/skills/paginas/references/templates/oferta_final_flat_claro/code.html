@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oferta Final. Flat Claro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#fafafa',
+            surface: '#f0f0f2',
+            ink: '#18181b',
+            accent: '#d4d4d8',
+            warm: '#c2956b',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fafafa;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(194,149,107,0.09) 0%, transparent 65%);
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .warm-line { width: 48px; height: 2px; background-color: #c2956b; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+
+    .stack-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px dashed rgba(24,24,27,0.15);
+      font-size: 0.95rem;
+    }
+    .stack-item:last-child { border-bottom: none; }
+    .stack-item .material-symbols-outlined {
+      color: #c2956b;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+    .valor-total {
+      text-decoration: line-through;
+      text-decoration-color: #c2956b;
+      text-decoration-thickness: 2px;
+    }
+
+    .cta-btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #c2956b;
+      color: #fafafa;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 20px 40px;
+      border: 1.5px solid #18181b;
+      border-radius: 0;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+    .cta-btn:hover {
+      background: #b0844f;
+      transform: translateY(-2px);
+    }
+    .cta-btn .material-symbols-outlined {
+      font-size: 22px;
+      transition: transform 0.25s ease;
+    }
+    .cta-btn:hover .material-symbols-outlined { transform: translateX(4px); }
+  </style>
+</head>
+<body class="text-ink font-sans antialiased">
+
+  <section class="w-full py-20 md:py-28 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="fade-up text-center mb-12">
+        <div class="warm-line mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+          Oferta final
+        </h2>
+        <p class="mt-6 text-base md:text-lg font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
+          Biblioteca Planilhas Pro com pacotes alinhados ao Método Modelo Pronto em 4 Passos, vídeos, melhorias, suporte e os três bônus. Valor de referência total acima de mil reais em itens separados.
+        </p>
+      </div>
+
+      <div class="fade-up fade-up-delay-1 flat-border rounded-2xl bg-white/70 backdrop-blur-sm p-8 md:p-10">
+
+        <p class="text-xs uppercase tracking-widest text-warm font-bold mb-5">O que está incluso</p>
+
+        <div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Biblioteca Planilhas Pro</span>
+            <span class="font-semibold">R$ 697,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Vídeos de uso por pacote</span>
+            <span class="font-semibold">R$ 397,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Melhorias e atualizações</span>
+            <span class="font-semibold">R$ 297,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Suporte direto com o produtor</span>
+            <span class="font-semibold">R$ 197,00</span>
+          </div>
+          <div class="stack-item">
+            <span class="flex items-center"><span class="material-symbols-outlined">check</span>Três bônus (checklist, precificação, pasta contador)</span>
+            <span class="font-semibold">R$ 321,00</span>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t-2 border-ink">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-medium text-gray-500">Total ancorado (referência)</span>
+            <span class="valor-total text-lg font-semibold text-gray-500">R$ 1.909,00</span>
+          </div>
+          <div class="text-center mt-6">
+            <p class="text-sm font-medium text-gray-500">Investimento hoje</p>
+            <p class="text-5xl md:text-6xl font-extrabold mt-2 leading-none">12x R$&nbsp;16,42</p>
+            <p class="text-sm text-gray-500 mt-2">ou R$&nbsp;197,00 à vista (conforme plataforma)</p>
+          </div>
+
+          <p class="text-xs text-center text-gray-500 mt-4 max-w-lg mx-auto leading-relaxed">
+            Sem escassez artificial inventada. Se houver data de reajuste real (ex.: virada de versão), mencione com transparência na página do produto.
+          </p>
+
+          <div class="mt-8">
+            <a class="cta-btn" href="https://COLOCAR_LINK_HOTMART_OU_KIWIFY">
+              Quero entrar na Planilhas Pro agora
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+          </div>
+
+          <p class="text-xs text-center text-gray-400 mt-6 max-w-xl mx-auto leading-relaxed">
+            Ao continuar, você concorda com os termos da plataforma de pagamento e com a política de privacidade do site. Dados tratados conforme LGPD na medida em que você preencher formulários ou entrar em lista.
+          </p>
+
+          <div class="mt-6 flex flex-wrap justify-center gap-4 md:gap-6 text-xs font-medium text-gray-500">
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">lock</span>
+              Compra 100% segura
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">credit_card</span>
+              Cartão, pix ou boleto
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">shield</span>
+              Garantia de 7 dias
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-warm" style="font-size:16px;">bolt</span>
+              Acesso imediato
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

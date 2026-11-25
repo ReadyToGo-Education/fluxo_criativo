@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier - Problema</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: "#ffffff",
+                        surface: "#f4f4f5",
+                        ink: "#18181b",
+                        accent: "#e4e4e7"
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .flat-button {
+            transition: all 0.2s ease;
+        }
+        .flat-button:hover {
+            background-color: #f4f4f5;
+            color: #18181b;
+        }
+    </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased selection:bg-ink selection:text-white">
+
+    <main class="max-w-7xl mx-auto px-6 py-16 md:py-24">
+
+        <section class="max-w-3xl mx-auto text-center mb-16 md:mb-20">
+            <h2 class="text-4xl md:text-6xl font-semibold leading-[1.1] tracking-tighter text-ink">
+                Você faz peças incríveis. Mas no final do mês, <span class="text-gray-400">o saldo não fecha.</span>
+            </h2>
+            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light mt-8">
+                Se você se reconhece em alguma dessas cenas, saiba que não é culpa da sua habilidade. É um problema de método.
+            </p>
+        </section>
+
+        <section class="grid md:grid-cols-2 gap-6">
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">schedule</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">Horas de trabalho por centavos</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    Você passa a tarde inteira terminando um amigurumi. Conta a linha, monta, arremata. São 6, 7 horas de trabalho. Na hora de vender, ouve: "Quarenta reais tá caro". E aceita por trinta. Menos que o custo da linha e do seu tempo juntos.
+                </p>
+            </div>
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">chat_bubble</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">A pechincha que dói na alma</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    Você manda o preço e a pessoa responde: "Faz por menos?". Ou pior: visualiza e some. Você sente um nó no estômago. Começa a duvidar do próprio trabalho. Abaixa o valor só para não perder a venda. E depois se arrepende em silêncio.
+                </p>
+            </div>
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">visibility_off</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">Vergonha de cobrar o que vale</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    A amiga elogia a toalha de mesa. Você agradece e muda de assunto. Porque se ela perguntar o preço, você não sabe o que dizer. Cobrar caro parece pretensão. Cobrar barato é desperdício. Então você dá de presente. Ou nem oferece.
+                </p>
+            </div>
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">dark_mode</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">Crochê de madrugada, conta de manhã</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    A casa dorme e você fica ali, no sofá, tentando terminar mais uma encomenda. O olho arde, o dedo dói. De manhã, acorda e a conta de luz chegou. A de material também. E o dinheiro que entrou mal cobre o que saiu. Parece que quanto mais você trabalha, menos sobra.
+                </p>
+            </div>
+
+        </section>
+
+        <section class="mt-16 md:mt-20 max-w-2xl mx-auto text-center">
+            <p class="text-xl md:text-2xl text-ink font-medium leading-relaxed tracking-tight">
+                Nenhuma dessas cenas acontece porque falta talento. Acontece porque ninguém ensinou você a transformar crochê em negócio.
+            </p>
+        </section>
+
+    </main>
+
+</body>
+</html>

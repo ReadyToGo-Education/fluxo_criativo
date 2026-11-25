@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier. CTA Intermediário</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<style>
+  :root {
+    --teal: #00A99D;
+    --teal-dark: #0A6561;
+    --teal-deep: #0D5450;
+    --green-cta: #1BAF1B;
+    --green-top: #57E957;
+    --green-bottom: #0A760A;
+    --text-dark: #363636;
+    --text-mid: #666666;
+    --border: #EAEAEA;
+    --mint: #90FFEB;
+    --bg: #F8F8F8;
+  }
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Fade-up animation ── */
+  .fadeUp {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fadeUp.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Section ── */
+  .cta-section {
+    padding: 5rem 1.5rem;
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* ── Headline ── */
+  .cta-headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .cta-headline .accent {
+    color: var(--teal);
+  }
+
+  /* ── Paragraph ── */
+  .cta-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-mid);
+    max-width: 460px;
+    margin: 0 auto 2.5rem;
+  }
+
+  /* ── Green pill CTA button ── */
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #fff;
+    background: var(--green-cta);
+    border: none;
+    border-top: 2.5px solid var(--green-top);
+    border-bottom: 2.5px solid var(--green-bottom);
+    border-radius: 3rem;
+    padding: 1rem 2.25rem;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(27, 175, 27, 0.35),
+                0 1px 4px rgba(27, 175, 27, 0.18);
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .cta-btn:hover {
+    background: var(--green-bottom);
+    box-shadow: 0 6px 24px rgba(10, 118, 10, 0.4),
+                0 2px 6px rgba(10, 118, 10, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .cta-btn .arrow-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+
+  .cta-btn:hover .arrow-circle {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateX(2px);
+  }
+
+  .cta-btn .arrow-circle .material-symbols-outlined {
+    font-size: 18px;
+    color: #fff;
+    transition: color 0.25s ease;
+  }
+
+  .cta-btn:hover .arrow-circle .material-symbols-outlined {
+    color: var(--green-bottom);
+  }
+
+  /* ── Trust line ── */
+  .cta-trust {
+    margin-top: 1.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .cta-trust .material-symbols-outlined {
+    font-size: 16px;
+    color: var(--teal);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .cta-section {
+      padding: 3.5rem 1.25rem;
+    }
+
+    .cta-text {
+      font-size: 0.95rem;
+    }
+
+    .cta-btn {
+      font-size: 0.95rem;
+      padding: 0.9rem 1.75rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<section class="cta-section">
+  <div class="cta-inner fadeUp">
+
+    <h2 class="cta-headline">
+      Suas mãos já sabem criar.<br>
+      Agora é hora de <span class="accent">lucrar</span> com elas.
+    </h2>
+
+    <p class="cta-text">
+      O Método Atelier mostra o caminho direto entre a peça que você já faz e a renda que você merece receber por ela.
+    </p>
+
+    <div style="margin-bottom: 2rem;">
+      <p style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">12x de R$&nbsp;29,70</p>
+      <p style="font-size: 0.9375rem; color: var(--text-mid);">ou R$&nbsp;297,00 à vista</p>
+    </div>
+
+    <a href="#oferta" class="cta-btn">
+      Quero começar agora
+      <span class="arrow-circle">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </span>
+    </a>
+
+    <p class="cta-trust">
+      <span class="material-symbols-outlined">verified</span>
+      Acesso imediato · Garantia de 7 dias
+    </p>
+
+  </div>
+</section>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fadeUp').forEach((el) => observer.observe(el));
+</script>
+
+</body>
+</html>

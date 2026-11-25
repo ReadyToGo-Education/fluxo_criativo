@@ -34,7 +34,34 @@ def get_slug():
 
 # ── estrutura ─────────────────────────────────────────────────────────
 
-def check_estrutura(text):
+BALDE_FORMATOS = [
+    ("canonico ### Balde N:", re.compile(r"^###\s+Balde\s+\d+\s*:", re.MULTILINE | re.IGNORECASE)),
+    ("legado seta Pra quem", re.compile(r"[➤➜➢]\s*Pra quem", re.IGNORECASE)),
+    ("legado **Balde N -**", re.compile(r"\*\*Balde\s+\d+\s*[-–—]", re.IGNORECASE)),
+]
+
+
+def contar_baldes(text):
+    for nome, rx in BALDE_FORMATOS:
+        n = len(rx.findall(text))
+        if n:
+            return n, nome
+    return 0, "nenhum"
+
+
+def ler_tipo(slug):
+    """Retorna 'low', 'middle', 'high' ou None, lendo meus-produtos/{slug}/tipo.md."""
+    path = PRODUTOS / slug / "tipo.md"
+    if not path.exists():
+        return None
+    t = path.read_text(encoding="utf-8").lower()
+    for chave in ("low", "middle", "high"):
+        if chave in t:
+            return chave
+    return None
+
+
+def check_estrutura(text, tipo=None):
     ok = []
     prob = []
 
@@ -71,11 +98,26 @@ def check_estrutura(text):
     else:
         prob.append(f"Argumentos: {n_args}/{esperado} (esperado {esperado})")
 
-    # Baldes
-    baldes = re.findall(r"➤ Pra quem", text, re.IGNORECASE)
-    n_baldes = len(baldes)
+    # Paliativos: obrigatorio so em Middle Ticket. Low Ticket nao tem.
+    tem_paliativos = re.search(r"^## Paliativos", text, re.MULTILINE | re.IGNORECASE)
+    if tipo == "low":
+        if tem_paliativos:
+            prob.append("Paliativos: secao presente, mas Low Ticket nao tem paliativos (remover)")
+        else:
+            ok.append("Paliativos: ausente (correto para Low Ticket)")
+    elif tipo == "middle":
+        if tem_paliativos:
+            ok.append("Paliativos: presente (Middle Ticket)")
+        else:
+            prob.append("Paliativos: secao nao encontrada (obrigatoria em Middle Ticket)")
+    else:
+        ok.append("Paliativos: tipo.md ausente ou desconhecido, verificacao pulada")
+
+    # Baldes: formato canonico e "### Balde N: Nome" (gerador-idconsumidor).
+    # Formatos legados continuam aceitos na leitura, mesma ordem do parser do painel.
+    n_baldes, formato = contar_baldes(text)
     if 3 <= n_baldes <= 5:
-        ok.append(f"Baldes: {n_baldes} (ok)")
+        ok.append(f"Baldes: {n_baldes} (ok, formato {formato})")
     else:
         prob.append(f"Baldes: {n_baldes} (esperado 3-5)")
 
@@ -163,7 +205,7 @@ def main():
     print("=" * 52)
 
     print("\nESTRUTURA")
-    ok_e, prob_e = check_estrutura(text)
+    ok_e, prob_e = check_estrutura(text, ler_tipo(slug))
     for item in ok_e:
         print(f"  [OK] {item}")
     for item in prob_e:

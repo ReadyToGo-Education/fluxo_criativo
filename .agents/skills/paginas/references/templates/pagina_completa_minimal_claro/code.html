@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nome do Produto. Transformação Principal</title>
+  <meta name="description" content="Descrição de até 160 caracteres com a promessa principal do produto.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            canvas: '#ffffff',
+            surface: '#f4f4f5',
+            ink: '#18181b',
+            accent: '#e4e4e7',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+/* === page_chrome === */
+
+/* Barra de progresso + landmark único na página completa */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  z-index: 300;
+  background: linear-gradient(90deg, #18181b, #52525b);
+  pointer-events: none;
+  transition: width 0.12s ease-out;
+}
+
+/* === hero_minimal_claro === */
+
+.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .tpl-hero-minimal .flat-button {
+            transition: all 0.2s ease;
+        }
+        .tpl-hero-minimal .flat-button:hover {
+            background-color: #f4f4f5;
+            color: #18181b;
+        }
+
+        /* Destaque do título: contraste legível (evita gray-400 no branco) */
+        .hero-headline-accent {
+            color: #3f3f46;
+        }
+
+        /* Bloco de vídeo alinhado às outras páginas (card, sombra, raio) */
+        .hero-video-card {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1.5px solid #18181b;
+            background: #0a0a0a;
+            box-shadow:
+                6px 6px 0 0 rgba(24, 24, 27, 0.06),
+                0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        .hero-video-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            pointer-events: none;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+        .hero-video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e5e5;
+            font-size: 0.875rem;
+            color: #3f3f46;
+        }
+        .hero-cta-below-video {
+            margin-top: 0.5rem;
+        }
+        .hero-video-meta .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .hero-video-meta .material-symbols-outlined {
+            font-size: 18px;
+            color: #3f3f46;
+        }
+
+/* === dor === */
+
+.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .flat-border {
+            border: 1.5px solid #18181b;
+        }
+
+        .tpl-minimal-dor .flat-button {
+            transition: all 0.2s ease;
+        }
+        .tpl-minimal-dor .flat-button:hover {
+            background-color: #f4f4f5;
+            color: #18181b;
+        }
+
+/* === paliativo === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+
+    .paliativo-card {
+      transition: transform 0.2s ease;
+    }
+    .paliativo-card:hover {
+      transform: translateY(-2px);
+    }
+    .card-img-wrapper {
+      overflow: hidden;
+    }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%);
+      opacity: 0.6;
+    }
+
+/* === provas === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 9999px;
+      object-fit: cover;
+      filter: grayscale(100%);
+      opacity: 0.85;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+    .depo-card { transition: transform 0.2s ease; }
+    .depo-card:hover { transform: translateY(-2px); }
+
+/* === cta === */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; color: #18181b; background: #ffffff; -webkit-font-smoothing: antialiased; }
+.flat-border { border: 1.5px solid #18181b; }
+.tpl-cta-minimal .cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #18181b;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  border: 1.5px solid #18181b;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+}
+.tpl-cta-minimal .cta-button:hover {
+  background: #ffffff;
+  color: #18181b;
+}
+.tpl-cta-minimal .cta-button .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+.tpl-cta-minimal .cta-button:hover .material-symbols-outlined {
+  transform: translateX(4px);
+}
+
+/* === metodo === */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; color: #18181b; background: #ffffff; -webkit-font-smoothing: antialiased; }
+.flat-border { border: 1.5px solid #18181b; }
+
+/* Fade-up animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Step connector line */
+.step-connector {
+  display: none;
+}
+@media (min-width: 768px) {
+  .step-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+  }
+  .step-connector .material-symbols-outlined {
+    font-size: 28px;
+    color: #18181b;
+    opacity: 0.25;
+  }
+}
+
+/* Mobile connector */
+.step-connector-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+@media (min-width: 768px) {
+  .step-connector-mobile {
+    display: none;
+  }
+}
+
+/* Step card image */
+.step-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  border-bottom: 1.5px solid #18181b;
+}
+
+/* Step number */
+.step-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #18181b;
+  opacity: 0.08;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}
+
+/* Micro-step bullets */
+.micro-list {
+  list-style: none;
+  padding: 0;
+}
+.micro-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #18181b;
+  opacity: 0.7;
+}
+.micro-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid #18181b;
+  border-radius: 0;
+}
+
+/* === para_quem === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+
+    .list-card { transition: transform 0.2s ease; }
+    .list-card:hover { transform: translateY(-2px); }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f4f4f5;
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    .check-row:last-child { border-bottom: none; }
+
+/* === entregaveis === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.06s; }
+    .fade-up-delay-2 { transition-delay: 0.12s; }
+    .fade-up-delay-3 { transition-delay: 0.18s; }
+    .fade-up-delay-4 { transition-delay: 0.24s; }
+    .fade-up-delay-5 { transition-delay: 0.30s; }
+    .fade-up-delay-6 { transition-delay: 0.36s; }
+    .entregavel-card { transition: transform 0.2s ease; }
+    .entregavel-card:hover { transform: translateY(-2px); }
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f5;
+    }
+
+/* === bonus === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .bonus-card { transition: transform 0.2s ease; }
+    .bonus-card:hover { transform: translateY(-2px); }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .price-old {
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      color: #9ca3af;
+    }
+
+/* === stack === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+
+    .stack-card { transition: transform 0.2s ease; }
+    .stack-card:hover { transform: translateY(-2px); }
+
+    .stack-card .stack-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #f4f4f5;
+      font-size: 0.95rem;
+    }
+    .stack-card .stack-item:last-child { border-bottom: none; }
+
+    .stack-card .price-old {
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      color: #9ca3af;
+    }
+
+/* === suporte === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+    .fade-up-delay-4 { transition-delay: 0.32s; }
+    .suporte-card { transition: transform 0.2s ease; }
+    .suporte-card:hover { transform: translateY(-2px); }
+    .icon-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f5;
+    }
+
+/* === garantia === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .seal {
+      width: 200px;
+      height: 200px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: #ffffff;
+      margin: 0 auto;
+    }
+    .seal-ring {
+      width: 220px;
+      height: 220px;
+      border-radius: 9999px;
+      border: 1.5px solid #18181b;
+      padding: 8px;
+      margin: 0 auto;
+    }
+
+/* === autoridade === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .flat-border { border: 1.5px solid #18181b; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .author-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      filter: grayscale(100%);
+      opacity: 0.85;
+      display: block;
+    }
+    .credibility-card {
+      padding: 18px;
+    }
+
+/* === faq === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .flat-border { border: 1.5px solid #18181b; }
+
+    /* Accordion */
+    .faq-item {
+      border-bottom: 1.5px solid #18181b;
+    }
+
+    .faq-item:first-child {
+      border-top: 1.5px solid #18181b;
+    }
+
+    .faq-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 24px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: #18181b;
+      letter-spacing: -0.02em;
+      gap: 20px;
+    }
+
+    .faq-trigger .material-symbols-outlined {
+      font-size: 24px;
+      color: #18181b;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-trigger .material-symbols-outlined {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    .faq-answer-inner {
+      padding-bottom: 24px;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: #71717a;
+      max-width: 90%;
+    }
+
+/* === oferta === */
+
+.material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .oferta-card .oferta-inclui-label {
+      text-align: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #71717a;
+      margin-bottom: 1.25rem;
+    }
+
+    .oferta-card .stack-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px dashed #d4d4d8;
+    }
+    .oferta-card .stack-row--last {
+      border-bottom: none;
+      padding-bottom: 1.25rem;
+    }
+
+    .oferta-card .stack-row-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .oferta-card .stack-check-wrap {
+      flex-shrink: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 9999px;
+      background: #ccfbf1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .oferta-card .stack-check-wrap .material-symbols-outlined {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0d9488;
+    }
+
+    .oferta-card .stack-row .stack-label {
+      font-size: 0.875rem;
+      line-height: 1.45;
+      font-weight: 500;
+      color: #3f3f46;
+      text-align: left;
+    }
+    @media (min-width: 768px) {
+      .oferta-card .stack-row .stack-label {
+        font-size: 1rem;
+      }
+    }
+
+    .oferta-card .stack-price {
+      flex-shrink: 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #27272a;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    @media (min-width: 768px) {
+      .oferta-card .stack-price {
+        font-size: 1rem;
+      }
+    }
+
+    .oferta-card .stack-total-real {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 1rem 0 1.25rem;
+      border-top: 1px solid #a1a1aa;
+      border-bottom: 1px solid #a1a1aa;
+      margin-bottom: 0.5rem;
+    }
+    .oferta-card .stack-total-real-label {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #3f3f46;
+    }
+    .oferta-card .stack-total-real-value {
+      font-size: 1.125rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .oferta-card .price-old {
+      text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+      color: #3f3f46;
+    }
+
+    .oferta-card .oferta-trust-line {
+      color: #3f3f46;
+    }
+    .oferta-card .oferta-trust-line .material-symbols-outlined {
+      color: #27272a;
+    }
+
+    #oferta .cta-btn {
+      display: inline-block;
+      background: #18181b;
+      color: #ffffff;
+      padding: 20px 48px;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+      border: 1.5px solid #18181b;
+    }
+    #oferta .cta-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased selection:bg-ink selection:text-white">
+
+<main id="conteudo-principal">
+<div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
+<div class="tpl-hero-minimal">
+<div class="max-w-3xl mx-auto px-6 pt-10 pb-16 md:pt-12 md:pb-24 text-center">
+
+        <p class="text-lg md:text-xl font-bold tracking-tight uppercase text-ink mb-10 md:mb-12" role="presentation">
+            Atelier<span class="text-zinc-600">.</span>
+        </p>
+
+        <section class="flex flex-col gap-8 md:gap-10 w-full items-center">
+
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.08] tracking-tighter text-ink max-w-3xl">
+                Transforme seu crochê em uma <span class="hero-headline-accent">renda de verdade.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-zinc-700 leading-relaxed font-light max-w-2xl">
+                O método completo para você que faz peças lindas mas não sabe como vender e deseja elevar sua arte ao patamar de atelier.
+            </p>
+
+            <ul class="flex flex-col gap-4 text-base text-zinc-800 font-normal w-full max-w-xl mx-auto">
+                <li class="flex justify-center items-start gap-3 leading-snug">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-ink rounded-full shrink-0" aria-hidden="true"></span>
+                    <span class="text-left">Precificação exata para valorizar cada ponto</span>
+                </li>
+                <li class="flex justify-center items-start gap-3 leading-snug">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-ink rounded-full shrink-0" aria-hidden="true"></span>
+                    <span class="text-left">Descubra quais peças dão mais lucro e saída rápida</span>
+                </li>
+                <li class="flex justify-center items-start gap-3 leading-snug">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-ink rounded-full shrink-0" aria-hidden="true"></span>
+                    <span class="text-left">Monte sua vitrine online e atraia clientes todos os dias</span>
+                </li>
+            </ul>
+
+            <div class="flex flex-col gap-5 w-full max-w-2xl mx-auto">
+                <div class="hero-video-card aspect-video w-full">
+                    <iframe
+                        class="w-full h-full"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0"
+                        title="Apresentação do método"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+                <div class="hero-video-meta w-full">
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+                        Assista à aula gratuita
+                    </span>
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined" aria-hidden="true">timer</span>
+                        Cerca de 15 minutos
+                    </span>
+                </div>
+                <button type="button" class="flat-border bg-ink text-base w-full sm:w-fit px-8 py-4 uppercase tracking-widest text-sm font-medium flat-button inline-flex items-center justify-center gap-3 hero-cta-below-video mx-auto" onclick="document.getElementById('oferta').scrollIntoView({behavior:'smooth'})">
+                    Quero transformar meu crochê
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </button>
+            </div>
+
+        </section>
+
+    </div>
+</div>
+
+<div class="tpl-minimal-dor">
+<div class="max-w-7xl mx-auto px-6 py-16 md:py-24">
+
+        <section class="max-w-3xl mx-auto text-center mb-16 md:mb-20">
+            <h2 class="text-4xl md:text-6xl font-semibold leading-[1.1] tracking-tighter text-ink">
+                Você faz peças incríveis. Mas no final do mês, <span class="text-gray-400">o saldo não fecha.</span>
+            </h2>
+            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light mt-8">
+                Se você se reconhece em alguma dessas cenas, saiba que não é culpa da sua habilidade. É um problema de método.
+            </p>
+        </section>
+
+        <section class="grid md:grid-cols-2 gap-6">
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">schedule</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">Horas de trabalho por centavos</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    Você passa a tarde inteira terminando um amigurumi. Conta a linha, monta, arremata. São 6, 7 horas de trabalho. Na hora de vender, ouve: "Quarenta reais tá caro". E aceita por trinta. Menos que o custo da linha e do seu tempo juntos.
+                </p>
+            </div>
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">chat_bubble</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">A pechincha que dói na alma</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    Você manda o preço e a pessoa responde: "Faz por menos?". Ou pior: visualiza e some. Você sente um nó no estômago. Começa a duvidar do próprio trabalho. Abaixa o valor só para não perder a venda. E depois se arrepende em silêncio.
+                </p>
+            </div>
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">visibility_off</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">Vergonha de cobrar o que vale</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    A amiga elogia a toalha de mesa. Você agradece e muda de assunto. Porque se ela perguntar o preço, você não sabe o que dizer. Cobrar caro parece pretensão. Cobrar barato é desperdício. Então você dá de presente. Ou nem oferece.
+                </p>
+            </div>
+
+            <div class="flat-border p-8 md:p-10 flex flex-col gap-5 bg-canvas">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 flat-border flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">dark_mode</span>
+                    </div>
+                    <h3 class="text-lg font-semibold tracking-tight leading-snug">Crochê de madrugada, conta de manhã</h3>
+                </div>
+                <p class="text-gray-600 font-light leading-relaxed">
+                    A casa dorme e você fica ali, no sofá, tentando terminar mais uma encomenda. O olho arde, o dedo dói. De manhã, acorda e a conta de luz chegou. A de material também. E o dinheiro que entrou mal cobre o que saiu. Parece que quanto mais você trabalha, menos sobra.
+                </p>
+            </div>
+
+        </section>
+
+        <section class="mt-16 md:mt-20 max-w-2xl mx-auto text-center">
+            <p class="text-xl md:text-2xl text-ink font-medium leading-relaxed tracking-tight">
+                Nenhuma dessas cenas acontece porque falta talento. Acontece porque ninguém ensinou você a transformar crochê em negócio.
+            </p>
+        </section>
+
+    </div>
+</div>
+
+<div class="tpl-minimal-paliativo">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Headline -->
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Você já tentou de tudo para vender seu crochê.
+          <span class="text-gray-400">E nada funcionou de verdade.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          O problema nunca foi a qualidade das suas peças. É que ninguém te ensinou a transformar talento em faturamento.
+        </p>
+      </div>
+
+      <!-- Cards Grid 2x2 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Card 1 -->
+        <div class="paliativo-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/phone/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Postar no Instagram sem estratégia</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Fotos caprichadas, hashtags populares, stories todo dia. O feed ficou lindo, mas o caixa continuou vazio. Curtida não vira pedido quando não existe um caminho claro entre o post e a venda.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paliativo-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/market/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Vender em feiras e bazares</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Horas em pé debaixo do sol, montando e desmontando barraca, disputando espaço com produto industrializado de R$&nbsp;10. No fim do dia, o cansaço é enorme e o lucro mal cobre o almoço.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paliativo-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/friends/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Pedir para amigos e família divulgarem</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Eles compartilham por carinho, não por convicção. Compram uma vez por pena, nunca voltam, e você fica sem jeito de insistir. Quando o ciclo de conhecidos acaba, as vendas secam junto.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paliativo-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="card-img-wrapper -mt-7 -mx-7 md:-mt-8 md:-mx-8 mb-5">
+            <img src="https://picsum.photos/seed/coins/600/300" alt="" class="card-img">
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-10 h-10 flat-border flex items-center justify-center bg-surface flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:20px;">close</span>
+            </div>
+            <h3 class="text-base md:text-lg font-semibold">Baixar o preço para competir</h3>
+          </div>
+          <p class="text-sm md:text-[15px] text-gray-500 leading-relaxed">
+            Parecia lógico: preço menor, mais vendas. Mas virou uma corrida para o fundo. Margem zero, horas de trabalho por centavos. Quem compete por preço sempre perde para quem tem menos custo que você.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Bridge -->
+      <div class="fade-up mt-14 md:mt-20 text-center">
+        <p class="text-base md:text-lg text-gray-500 font-light max-w-xl mx-auto leading-relaxed">
+          Nenhuma dessas saídas funciona porque todas atacam o sintoma, não a causa.
+          <span class="text-ink font-semibold">O que falta é um método.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-provas">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Quem aplicou
+          <span class="text-gray-400">já está vendo resultado.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Histórias reais de artesãs que pararam de competir por preço e passaram a vender com margem.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=47" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Marlene Almeida</p>
+              <p class="text-xs text-gray-500 font-light">Caxias do Sul, RS</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Vendia amigurumi por R$ 25 em feira de bairro. Saía no zero depois do material.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Cobra R$ 180 por peça pelo Instagram. Faturou R$ 4.300 no último mês sem sair de casa.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=32" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Cleide Rezende</p>
+              <p class="text-xs text-gray-500 font-light">Belo Horizonte, MG</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Pedia para amigos divulgarem no zap. Vendia uma peça por mês com sorte.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Tem fila de encomenda há quatro meses. Já recusa pedido para não atrasar entrega.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=20" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Iara Bonfim</p>
+              <p class="text-xs text-gray-500 font-light">Salvador, BA</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Achava que o crochê era hobby. Vendia por preço de custo para ver se alguém queria.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Hoje vive do crochê. Largou o trabalho de balconista no terceiro mês de método.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=44" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Sueli Marques</p>
+              <p class="text-xs text-gray-500 font-light">Curitiba, PR</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Tinha vergonha de pedir mais de R$ 50 por uma manta gigante de fio nobre.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Vende mantas a R$ 420 e a primeira coleção esgotou em onze dias.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=16" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Rosa Linhares</p>
+              <p class="text-xs text-gray-500 font-light">Recife, PE</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Postava foto bonita no feed e ninguém respondia. Achou que era falta de seguidor.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Faz R$ 6 mil por mês com 800 seguidores. O segredo estava no jeito de oferecer.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<section class="py-24 px-6 md:py-32 bg-canvas tpl-cta-minimal">
+  <div class="max-w-xl mx-auto text-center">
+
+    <p class="text-sm tracking-widest uppercase text-ink/40 mb-6">Existe um caminho diferente</p>
+
+    <h2 class="text-3xl md:text-4xl font-bold leading-tight text-ink mb-6">
+      Seu crochê merece virar<br>uma renda de verdade
+    </h2>
+
+    <p class="text-base md:text-lg leading-relaxed text-ink/60 mb-10 max-w-md mx-auto">
+      Um método direto para você parar de dar suas peças de presente e começar a viver do que suas mãos já sabem fazer.
+    </p>
+
+    <div class="mb-4">
+      <p class="text-3xl md:text-4xl font-bold text-ink mb-1">12x de R$&nbsp;29,70</p>
+      <p class="text-sm text-ink/50">ou R$&nbsp;297,00 à vista</p>
+    </div>
+
+    <div class="mb-6 mt-8">
+      <a href="#oferta" class="cta-button">
+        Quero transformar meu crochê
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+
+    <p class="text-sm text-ink/40">Acesso imediato ao método completo · Garantia de 7 dias</p>
+
+  </div>
+</section>
+
+<div class="tpl-minimal-metodo">
+<section class="py-24 px-6 md:py-32 bg-surface">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Intro -->
+    <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20 fade-up">
+      <p class="text-sm tracking-widest uppercase text-ink/40 mb-6">A solução</p>
+      <h2 class="text-3xl md:text-4xl font-bold leading-tight text-ink mb-6">
+        O Método Atelier: 3 etapas para<br>transformar seu crochê em renda
+      </h2>
+      <p class="text-base md:text-lg leading-relaxed text-ink/60 max-w-lg mx-auto">
+        Um caminho claro, sem enrolação. Cada etapa foi desenhada para resolver um problema real que trava a maioria das artesãs. do preço errado até a falta de clientes.
+      </p>
+    </div>
+
+    <!-- 3 Steps -->
+    <div class="flex flex-col md:flex-row md:items-stretch md:justify-center">
+
+      <!-- Step 1 -->
+      <div class="flex-1 fade-up flex">
+        <div class="flat-border bg-canvas relative overflow-hidden flex flex-col w-full">
+          <img
+            src="https://picsum.photos/seed/crochet-pricing-calculator/600/300"
+            alt="Precificação de peças artesanais"
+            class="step-image"
+            loading="lazy"
+          >
+          <span class="step-number">01</span>
+          <div class="p-6 pt-5 relative">
+            <span class="material-symbols-outlined text-ink/30 mb-3 block" style="font-size:28px;">calculate</span>
+            <h3 class="text-lg font-bold text-ink mb-1">Precificação Inteligente</h3>
+            <p class="text-sm text-ink/50 mb-4">Saber exatamente quanto cobrar. sem medo, sem chute.</p>
+            <ul class="micro-list">
+              <li>Custo real de cada peça (linha, tempo, energia)</li>
+              <li>Margem de lucro que sustenta o negócio</li>
+              <li>Tabela de preços pronta para usar</li>
+              <li>Como apresentar o preço sem hesitar</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector desktop -->
+      <div class="step-connector">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+      <!-- Connector mobile -->
+      <div class="step-connector-mobile">
+        <span class="material-symbols-outlined text-ink/20" style="font-size:28px;">arrow_downward</span>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="flex-1 fade-up flex" style="transition-delay: 0.15s;">
+        <div class="flat-border bg-canvas relative overflow-hidden flex flex-col w-full">
+          <img
+            src="https://picsum.photos/seed/phone-instagram-vitrine/600/300"
+            alt="Vitrine digital de artesanato"
+            class="step-image"
+            loading="lazy"
+          >
+          <span class="step-number">02</span>
+          <div class="p-6 pt-5 relative">
+            <span class="material-symbols-outlined text-ink/30 mb-3 block" style="font-size:28px;">storefront</span>
+            <h3 class="text-lg font-bold text-ink mb-1">Vitrine que Vende</h3>
+            <p class="text-sm text-ink/50 mb-4">Mostrar suas peças de um jeito que atrai e convence.</p>
+            <ul class="micro-list">
+              <li>Fotos que valorizam o trabalho manual</li>
+              <li>Descrições que despertam desejo</li>
+              <li>Perfil no Instagram que funciona como loja</li>
+              <li>Catálogo digital simples e bonito</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector desktop -->
+      <div class="step-connector">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+      <!-- Connector mobile -->
+      <div class="step-connector-mobile">
+        <span class="material-symbols-outlined text-ink/20" style="font-size:28px;">arrow_downward</span>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="flex-1 fade-up flex" style="transition-delay: 0.3s;">
+        <div class="flat-border bg-canvas relative overflow-hidden flex flex-col w-full">
+          <img
+            src="https://picsum.photos/seed/customer-happy-delivery/600/300"
+            alt="Clientes comprando artesanato"
+            class="step-image"
+            loading="lazy"
+          >
+          <span class="step-number">03</span>
+          <div class="p-6 pt-5 relative">
+            <span class="material-symbols-outlined text-ink/30 mb-3 block" style="font-size:28px;">group</span>
+            <h3 class="text-lg font-bold text-ink mb-1">Clientes Todo Dia</h3>
+            <p class="text-sm text-ink/50 mb-4">Atrair compradores sem depender de sorte ou indicação.</p>
+            <ul class="micro-list">
+              <li>Estratégia de conteúdo que gera pedidos</li>
+              <li>Mensagens de venda sem parecer vendedora</li>
+              <li>Rotina semanal de atração de clientes</li>
+              <li>Fidelização para vendas recorrentes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /steps -->
+
+  </div>
+</section>
+</div>
+
+<div class="tpl-minimal-paraquem">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Este método é para
+          <span class="text-gray-400">um perfil específico.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Confira se o seu momento combina com o que vamos entregar.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="list-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <p class="text-[11px] uppercase tracking-widest font-medium text-ink mb-5">Para quem é</p>
+
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Quer transformar sua habilidade manual em uma fonte de renda previsível</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Já produz peças mas ainda não consegue vender com consistência</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Está disposta a seguir um passo a passo e aplicar por pelo menos 30 dias</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Quer aprender a precificar, fotografar e divulgar sem depender de terceiros</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px; margin-top:2px;">check_circle</span>
+            <span>Busca independência financeira trabalhando de casa</span>
+          </div>
+        </div>
+
+        <div class="list-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <p class="text-[11px] uppercase tracking-widest font-medium text-gray-400 mb-5">Para quem no &#xe9;</p>
+
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Procura resultado sem esforço ou atalhos mágicos</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Não tem disposição para aprender algo novo e testar na prática</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Espera que o método funcione sozinho, sem dedicação pessoal</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Acredita que o problema está sempre no mercado, nunca no processo</span>
+          </div>
+          <div class="check-row">
+            <span class="material-symbols-outlined text-gray-300" style="font-size:18px; margin-top:2px;">cancel</span>
+            <span class="text-gray-400">Quer aprender a teoria mas não pretende colocar em prática</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-entregaveis">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Tudo que você recebe
+          <span class="text-gray-400">quando entrar.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Material direto, sem rodeio. Cada peça foi pensada para tirar a artesã do improviso e colocar no jogo.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="entregavel-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">play_circle</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Método em vídeo</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Sete módulos gravados, do posicionamento ao primeiro pedido pago. Aulas curtas para assistir no celular enquanto trabalha.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">menu_book</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Caderno de exercícios</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                PDF para imprimir com tabelas de precificação, cálculo de hora e ficha de cliente. Tudo pronto para usar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">edit_note</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Banco de legendas</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Trinta legendas testadas para Instagram. Você troca palavra por palavra e publica sem precisar pensar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">photo_camera</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Guia de fotos com celular</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Roteiro de 12 cenas e 8 ângulos para fotografar peça em casa, sem estúdio, sem ring light, sem fundo branco.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-5 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">forum</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Comunidade fechada</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Grupo de alunas só para mulheres. Espaço para mostrar peça, pedir feedback honesto e celebrar a primeira venda.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="entregavel-card fade-up fade-up-delay-6 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-start gap-5">
+            <div class="icon-box flat-border flex-shrink-0">
+              <span class="material-symbols-outlined text-ink" style="font-size:24px;">support_agent</span>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold mb-2">Suporte por mensagem</h3>
+              <p class="text-sm text-gray-500 leading-relaxed font-light">
+                Você manda dúvida pelo formulário interno e recebe resposta da equipe em até 24 horas úteis.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-bonus">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Bônus exclusivos
+          <span class="text-gray-400">para quem entrar agora.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Três materiais extras pensados para destravar a primeira venda nos primeiros dias dentro do método.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <div class="bonus-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <span class="badge flat-border bg-surface text-ink">Bônus 01</span>
+          <h3 class="text-lg md:text-xl font-semibold mt-5 mb-3 leading-tight">Pacote de moldes para precificar fio nobre</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">
+            Planilha com 14 fórmulas prontas para calcular preço de manta, sousplat, almofada e amigurumi sem chutar.
+          </p>
+          <p class="text-sm">
+            <span class="price-old">R$ 197</span>
+            <span class="ml-2 font-semibold text-ink">Grátis</span>
+          </p>
+        </div>
+
+        <div class="bonus-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <span class="badge flat-border bg-surface text-ink">Bônus 02</span>
+          <h3 class="text-lg md:text-xl font-semibold mt-5 mb-3 leading-tight">Mini curso de fotografia com luz de janela</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">
+            Quatro aulas curtas mostrando como fotografar peça em casa, com celular, e fazer o cliente parar de rolar o feed.
+          </p>
+          <p class="text-sm">
+            <span class="price-old">R$ 297</span>
+            <span class="ml-2 font-semibold text-ink">Grátis</span>
+          </p>
+        </div>
+
+        <div class="bonus-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <span class="badge flat-border bg-surface text-ink">Bônus 03</span>
+          <h3 class="text-lg md:text-xl font-semibold mt-5 mb-3 leading-tight">Encontro ao vivo de lançamento de coleção</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">
+            Aula ao vivo de duas horas, uma vez por mês, mostrando como abrir a próxima coleção e esgotar antes do envio.
+          </p>
+          <p class="text-sm">
+            <span class="price-old">R$ 397</span>
+            <span class="ml-2 font-semibold text-ink">Grátis</span>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-stack">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Tudo que está
+          <span class="text-gray-400">incluso no pacote.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Cada entregável foi desenhado para funcionar junto. Veja o valor individual de cada um.
+        </p>
+      </div>
+
+      <div class="stack-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-10">
+
+        <p class="text-[11px] uppercase tracking-widest font-medium text-ink mb-6">O que você recebe</p>
+
+        <div class="stack-item">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px;">check_circle</span>
+            Método completo em 42 aulas
+          </span>
+          <span class="font-semibold">R$ 697</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px;">check_circle</span>
+            Planilha de precificação
+          </span>
+          <span class="font-semibold">R$ 147</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px;">check_circle</span>
+            Biblioteca de textos prontos
+          </span>
+          <span class="font-semibold">R$ 167</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px;">check_circle</span>
+            Bônus 01. Pacote de moldes
+          </span>
+          <span class="font-semibold">R$ 197</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px;">check_circle</span>
+            Bônus 02. Mini curso de fotografia
+          </span>
+          <span class="font-semibold">R$ 297</span>
+        </div>
+        <div class="stack-item">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-ink" style="font-size:18px;">check_circle</span>
+            Bônus 03. Encontro ao vivo mensal
+          </span>
+          <span class="font-semibold">R$ 397</span>
+        </div>
+
+        <div class="mt-6 pt-6 border-t-2 border-ink flex justify-between items-center">
+          <span class="text-sm text-gray-500">Valor total</span>
+          <span class="price-old text-2xl font-bold">R$ 1.902</span>
+        </div>
+
+        <p class="mt-5 text-center text-sm text-gray-500 font-light">
+          Mas você não vai pagar isso. Continue para ver a condição especial.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-provas">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Quem aplicou
+          <span class="text-gray-400">já está vendo resultado.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Histórias reais de artesãs que pararam de competir por preço e passaram a vender com margem.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=47" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Marlene Almeida</p>
+              <p class="text-xs text-gray-500 font-light">Caxias do Sul, RS</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Vendia amigurumi por R$ 25 em feira de bairro. Saía no zero depois do material.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Cobra R$ 180 por peça pelo Instagram. Faturou R$ 4.300 no último mês sem sair de casa.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=32" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Cleide Rezende</p>
+              <p class="text-xs text-gray-500 font-light">Belo Horizonte, MG</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Pedia para amigos divulgarem no zap. Vendia uma peça por mês com sorte.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Tem fila de encomenda há quatro meses. Já recusa pedido para não atrasar entrega.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=20" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Iara Bonfim</p>
+              <p class="text-xs text-gray-500 font-light">Salvador, BA</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Achava que o crochê era hobby. Vendia por preço de custo para ver se alguém queria.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Hoje vive do crochê. Largou o trabalho de balconista no terceiro mês de método.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=44" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Sueli Marques</p>
+              <p class="text-xs text-gray-500 font-light">Curitiba, PR</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Tinha vergonha de pedir mais de R$ 50 por uma manta gigante de fio nobre.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Vende mantas a R$ 420 e a primeira coleção esgotou em onze dias.
+          </p>
+        </div>
+
+        <div class="depo-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="flex items-center gap-4 mb-5">
+            <img src="https://i.pravatar.cc/150?img=16" alt="" class="avatar flat-border">
+            <div>
+              <p class="text-sm font-semibold">Rosa Linhares</p>
+              <p class="text-xs text-gray-500 font-light">Recife, PE</p>
+            </div>
+          </div>
+          <p class="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Antes</p>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4 font-light">
+            Postava foto bonita no feed e ninguém respondia. Achou que era falta de seguidor.
+          </p>
+          <p class="text-xs uppercase tracking-wider text-ink mb-2 font-medium">Depois</p>
+          <p class="text-sm text-ink leading-relaxed font-light">
+            Faz R$ 6 mil por mês com 800 seguidores. O segredo estava no jeito de oferecer.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-suporte">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Você não vai estar
+          <span class="text-gray-400">sozinha nessa.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed font-light">
+          Quatro frentes de apoio caminham junto com você do primeiro vídeo até a primeira venda paga.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="suporte-card fade-up fade-up-delay-1 flat-border bg-canvas p-7 md:p-8">
+          <div class="icon-circle flat-border mb-5">
+            <span class="material-symbols-outlined text-ink" style="font-size:26px;">groups</span>
+          </div>
+          <h3 class="text-base md:text-lg font-semibold mb-2">Comunidade fechada</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light">
+            Espaço só para mulheres dentro do método. Mostre sua peça, peça opinião sobre preço, conte a primeira venda e leia histórias parecidas com a sua.
+          </p>
+        </div>
+
+        <div class="suporte-card fade-up fade-up-delay-2 flat-border bg-canvas p-7 md:p-8">
+          <div class="icon-circle flat-border mb-5">
+            <span class="material-symbols-outlined text-ink" style="font-size:26px;">videocam</span>
+          </div>
+          <h3 class="text-base md:text-lg font-semibold mb-2">Mentorias ao vivo</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light">
+            Encontro mensal de duas horas comigo, ao vivo, para tirar dúvida em tempo real e ver outras alunas sendo orientadas no mesmo dia.
+          </p>
+        </div>
+
+        <div class="suporte-card fade-up fade-up-delay-3 flat-border bg-canvas p-7 md:p-8">
+          <div class="icon-circle flat-border mb-5">
+            <span class="material-symbols-outlined text-ink" style="font-size:26px;">forum</span>
+          </div>
+          <h3 class="text-base md:text-lg font-semibold mb-2">Acesso direto à equipe</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light">
+            Canal interno de mensagens para dúvida pontual de método, precificação ou postagem. Resposta em até 24 horas úteis.
+          </p>
+        </div>
+
+        <div class="suporte-card fade-up fade-up-delay-4 flat-border bg-canvas p-7 md:p-8">
+          <div class="icon-circle flat-border mb-5">
+            <span class="material-symbols-outlined text-ink" style="font-size:26px;">update</span>
+          </div>
+          <h3 class="text-base md:text-lg font-semibold mb-2">Atualizações vitalícias</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-light">
+            Cada vez que o método ganha um módulo novo, uma aula extra ou um modelo atualizado, ele entra na sua área de aluna sem custo extra.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-garantia">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-3xl mx-auto text-center">
+
+      <div class="fade-up mb-12">
+        <div class="seal-ring flat-border">
+          <div class="seal flat-border">
+            <span class="material-symbols-outlined text-ink" style="font-size:56px;">verified</span>
+            <p class="text-2xl font-bold mt-2 leading-none">14 dias</p>
+            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-light">de garantia</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-up">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Garantia incondicional
+          <span class="text-gray-400">de 14 dias.</span>
+        </h2>
+        <p class="mt-8 text-base md:text-lg text-gray-500 leading-relaxed font-light max-w-xl mx-auto">
+          Entre, assista todas as aulas, baixe os materiais, faça os exercícios. Se em qualquer momento dos primeiros 14 dias você sentir que isso não é para você, devolvemos cada centavo. Sem perguntas, sem formulário extenso, sem desculpa.
+        </p>
+        <p class="mt-6 text-base md:text-lg text-ink leading-relaxed font-medium max-w-xl mx-auto">
+          O risco fica todo do nosso lado. O seu papel é só aplicar.
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-autoridade">
+<section class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="fade-up max-w-2xl mx-auto text-center mb-14 md:mb-20">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Quem está por trás
+          <span class="text-gray-400">do método.</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-14 items-start">
+
+        <div class="fade-up md:col-span-2">
+          <div class="flat-border">
+            <img src="https://i.pravatar.cc/400?img=49" alt="" class="author-photo">
+          </div>
+          <p class="mt-5 text-base font-semibold">Helena Verdi</p>
+          <p class="text-sm text-gray-500 font-light">Artesã de crochê há 18 anos</p>
+        </div>
+
+        <div class="fade-up fade-up-delay-1 md:col-span-3 space-y-5">
+          <p class="text-base md:text-lg text-gray-600 leading-relaxed font-light">
+            Comecei vendendo amigurumi numa feira de bairro em 2007. Ganhava o suficiente para pagar o fio do mês seguinte e mais nada. Demorei cinco anos para entender que o problema nunca tinha sido a minha mão, era a forma como eu oferecia.
+          </p>
+          <p class="text-base md:text-lg text-gray-600 leading-relaxed font-light">
+            Quando troquei a feira pelo Instagram e passei a contar a história por trás de cada peça, o preço médio saiu de R$ 35 para R$ 280. Hoje vivo só do crochê, atendo clientes de seis estados e ensino o método para mais de 1.200 alunas.
+          </p>
+          <p class="text-base md:text-lg text-ink leading-relaxed font-medium">
+            Esse curso é tudo que eu queria ter aprendido em 2007.
+          </p>
+
+          <div class="grid grid-cols-2 gap-4 mt-10">
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">1.200+</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Alunas formadas em todo o Brasil</p>
+            </div>
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">18 anos</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Vivendo de crochê em tempo integral</p>
+            </div>
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">R$ 280</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Ticket médio atual por peça vendida</p>
+            </div>
+
+            <div class="credibility-card flat-border">
+              <p class="text-2xl font-bold leading-none">6 estados</p>
+              <p class="text-xs text-gray-500 mt-2 font-light leading-relaxed">Clientes ativas sem sair de casa</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="tpl-minimal-faq">
+<div class="max-w-3xl mx-auto px-6 py-16 md:py-24">
+
+    <section class="max-w-2xl mx-auto text-center mb-14 md:mb-18">
+      <h2 class="text-4xl md:text-6xl font-semibold leading-[1.1] tracking-tighter text-ink">
+        Perguntas <span class="text-gray-400">frequentes</span>
+      </h2>
+      <p class="text-lg md:text-xl text-gray-600 max-w-xl mx-auto leading-relaxed font-light mt-8">
+        Respostas diretas para as dúvidas mais comuns. Se a sua não estiver aqui, é só nos chamar.
+      </p>
+    </section>
+
+    <section class="max-w-2xl mx-auto">
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Funciona mesmo para quem está começando do zero?</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Funciona. O método foi desenhado para quem não tem experiência prévia. Cada etapa parte do básico e avança no seu ritmo. Você não precisa de conhecimento técnico para começar.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Por quanto tempo terei acesso ao conteúdo?</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Acesso vitalício. Uma vez dentro, o conteúdo é seu para sempre. incluindo todas as atualizações futuras que fizermos no material.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Tem alguma garantia?</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sim. Você tem 7 dias para acessar o material, assistir às aulas e decidir se faz sentido para você. Se não fizer, devolvemos 100% do valor sem perguntas.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Preciso de alguma ferramenta ou equipamento especial?</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Não. Tudo que você precisa é de um celular ou computador com acesso à internet. O método usa ferramentas simples e acessíveis que você provavelmente já tem.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Consigo conciliar com meu trabalho atual?</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Com certeza. As aulas são gravadas e curtas. Você assiste quando puder. de manhã, no intervalo do almoço ou à noite. O importante é manter a constância, não a velocidade.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFaq(this)">
+          <span>Como funciona o suporte?</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Você terá acesso à comunidade exclusiva de alunos e ao suporte direto da equipe. Dúvidas são respondidas em até 24 horas úteis.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="mt-16 md:mt-20 max-w-2xl mx-auto text-center">
+      <p class="text-lg text-gray-400 font-light">
+        Ainda com dúvida? Fale com a gente pelo WhatsApp.
+      </p>
+    </section>
+
+  </div>
+</div>
+
+<div class="tpl-minimal-oferta">
+<section id="oferta" class="w-full px-6 py-20 md:py-28">
+    <div class="max-w-2xl mx-auto">
+
+      <div class="fade-up text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">
+          Sua entrada para o
+          <span class="text-zinc-700">método completo.</span>
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-zinc-700 leading-relaxed font-light">
+          Veja tudo que entra na sua mão hoje e quanto cada peça custaria por fora.
+        </p>
+      </div>
+
+      <div class="oferta-card fade-up oferta-card-shell rounded-xl border border-zinc-200 bg-canvas p-8 md:p-10 shadow-sm">
+
+        <p class="oferta-inclui-label">O que está incluído</p>
+
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Método em 7 módulos</span>
+          </div>
+          <span class="stack-price">R$ 897</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Caderno de exercícios</span>
+          </div>
+          <span class="stack-price">R$ 147</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Banco de legendas</span>
+          </div>
+          <span class="stack-price">R$ 197</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Comunidade fechada</span>
+          </div>
+          <span class="stack-price">R$ 297</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Bônus 01. Planilha de precificação</span>
+          </div>
+          <span class="stack-price">R$ 197</span>
+        </div>
+        <div class="stack-row">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Bônus 02. Mini curso de fotografia</span>
+          </div>
+          <span class="stack-price">R$ 297</span>
+        </div>
+        <div class="stack-row stack-row--last">
+          <div class="stack-row-left">
+            <span class="stack-check-wrap" aria-hidden="true">
+              <span class="material-symbols-outlined">check</span>
+            </span>
+            <span class="stack-label">Bônus 03. Encontros ao vivo</span>
+          </div>
+          <span class="stack-price">R$ 397</span>
+        </div>
+
+        <div class="stack-total-real">
+          <span class="stack-total-real-label">Valor total real</span>
+          <span class="stack-total-real-value price-old">R$ 2.429</span>
+        </div>
+
+        <div class="mt-8 text-center">
+          <p class="text-sm text-ink uppercase tracking-wider font-semibold mb-2">Por apenas</p>
+          <p class="text-5xl md:text-6xl font-bold tracking-tight leading-none text-ink tabular-nums">R$ 297</p>
+          <p class="text-sm text-zinc-800 mt-3 font-medium">à vista ou em até 12x de R$ 29,70</p>
+        </div>
+
+        <div class="mt-10 text-center">
+          <a href="#" class="cta-btn">Quero entrar agora</a>
+        </div>
+
+        <div class="oferta-trust-line mt-8 flex items-center justify-center gap-2 text-xs sm:text-sm font-medium">
+          <span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">lock</span>
+          <span>Pagamento seguro. Garantia de 14 dias.</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</div>
+</main>
+
+  <footer class="border-t border-ink/10 py-10 px-6 text-center bg-base">
+    <p class="text-sm text-gray-500">SuaMarca &copy; 2026. Todos os direitos reservados.</p>
+    <p class="text-xs text-gray-400 mt-2">
+      <a href="#" class="underline hover:text-ink/70">Termos de uso</a>
+      <span class="mx-2">&middot;</span>
+      <a href="#" class="underline hover:text-ink/70">Política de privacidade</a>
+    </p>
+  </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fadeUpObs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.fade-up').forEach((el) => fadeUpObs.observe(el));
+
+  const bar = document.getElementById('scroll-progress');
+  const onScroll = () => {
+    const el = document.documentElement;
+    const max = el.scrollHeight - el.clientHeight;
+    const p = max > 0 ? (el.scrollTop / max) * 100 : 0;
+    if (bar) bar.style.width = Math.min(100, Math.max(0, p)) + '%';
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+});
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+</script>
+
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:copy-roteiro
 description: Criar roteiros de vídeo para os 3 formatos principais. Avatar IA (HeyGen), Reels 60 segundos e VVV (vídeo de vendas completo). Salva em meus-produtos/{ativo}/entregas/criativos/.
+categoria: Copy
 ---
 
 # Roteiro de Vídeo
@@ -11,7 +12,7 @@ Cria roteiros nos 3 formatos principais do marketing VTSD, seguindo Light Copy.
 
 ### 1. Contexto
 
-Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/perfil.md` e `meus-produtos/{ativo}/idconsumidor.md` se existir.
+Leia `meus-produtos/.ativo`, depois `meus-produtos/{ativo}/resumo-produto.md` (se não existir, gere conforme o CLAUDE.md).
 
 Extraia internamente: Quadro, Furadeira, Urgências Ocultas, tom do público.
 
@@ -105,6 +106,7 @@ Resumo do que vou criar:
 Antes de escrever, leia `.claude/skills/revisora/references/manual-copy.md` e aplique.
 
 - Gancho nos primeiros 3 segundos: afirmação, paradoxo ou revelação. NUNCA pergunta.
+- **Filtro de copy no começo:** pelo menos um sinal que só o público reconhece (ambiente, palavras, objetos, frases ou sons do nicho) nos 3 primeiros segundos, na primeira imagem ou na primeira linha, para quem não é do público passar reto. Regra e exemplos em `.claude/skills/revisora/references/filtro-de-copy.md`.
 - Entregar valor real dentro do vídeo: quem assiste aprende ou se reconhece.
 - Produto não aparece nos primeiros blocos.
 - Argumento antes de oferta.

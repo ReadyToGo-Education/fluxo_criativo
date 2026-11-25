@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-retomar
 description: Retomar um projeto pausado do produto ativo. Lê o handoff anterior, reativa o projeto e mostra o próximo passo.
+categoria: Toolkit
 ---
 
 # Toolkit. Retomar Projeto

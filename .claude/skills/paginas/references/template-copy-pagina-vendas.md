@@ -2,7 +2,7 @@
 
 Use **exatamente** estes títulos `##` na ordem abaixo (um por bloco). O HTML da página deve ser preenchido **só** com o texto de cada seção correspondente, sem inventar conteúdo fora do que está aprovado aqui.
 
-**Arquivo de entrega:** `entregas/{ativo}/copy-pagina/copy-{slug-do-produto}.md`
+**Arquivo de entrega:** `meus-produtos/{ativo}/entregas/copy-pagina/copy-{slug-do-produto}.md`
 
 ---
 

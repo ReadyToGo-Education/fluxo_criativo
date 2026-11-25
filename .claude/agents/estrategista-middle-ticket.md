@@ -40,9 +40,7 @@ Conduzir uma sessão completa em 4 etapas que entrega:
 
 Antes de qualquer coisa, leia:
 - `meus-produtos/.ativo` (para saber o produto ativo)
-- `meus-produtos/{ativo}/perfil.md` (se existir)
-- `meus-produtos/{ativo}/idconsumidor.md` (se existir)
-- `meus-produtos/{ativo}/pesquisa-mercado.md` (se existir)
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto, se a concepção já existir; se o resumo não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md)
 
 ## Pesquisa de Mercado. OBRIGATÓRIA
 

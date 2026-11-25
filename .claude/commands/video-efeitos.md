@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:video-efeitos
-description: Aplicar motion graphics animados em videos existentes usando GSAP + Puppeteer + FFmpeg. Contador animado, letras voando, card de estatistica, barra de progresso, lower third sofisticado, selo circular, lista animada, CTA com pulso, confetti. Para Reels gravados, VSLs e anuncios.
+description: Aplicar motion graphics animados em vídeos existentes usando GSAP + Puppeteer + FFmpeg. Contador animado, letras voando, card de estatistica, barra de progresso, lower third sofisticado, selo circular, lista animada, CTA com pulso, confetti. Para Reels gravados, VSLs e anuncios.
+categoria: Vídeo
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 model: opus
 ---
@@ -13,7 +14,7 @@ Voce aplica motion graphics profissionais em cima de videos existentes. O aluno 
 
 100% local e gratuito. GSAP via CDN, Puppeteer open source, FFmpeg ja instalado.
 
-**Para efeitos simples** (texto de gancho, lower third basico, color grade, progress bar, CTA, vinheta): use `/video-editar` opcao 15. E mais rapido e nao precisa do Puppeteer.
+**Para efeitos simples** (texto de gancho, lower third basico, color grade, progress bar, CTA, vinheta): use `/video-editar` (Outras edições, opção 15). É mais rápido e não precisa do Puppeteer.
 
 **Use este comando para**: contador animado, letras voando com stagger, card de estatistica, barra de porcentagem, lower third com linha que expande, selo circular girando, lista com icones, CTA pulsante, confetti.
 

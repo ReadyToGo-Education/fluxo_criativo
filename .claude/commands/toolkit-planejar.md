@@ -1,6 +1,7 @@
 ---
 name: workshop-marketing:toolkit-planejar
 description: Gerar o plano em etapas do projeto ativo a partir do roteiro. Quebra o objetivo em etapas sequenciais com skill/comando associado, entregável esperado e ordem de execução.
+categoria: Toolkit
 ---
 
 # Toolkit. Gerar Plano
@@ -26,8 +27,7 @@ Guarde o slug do projeto na variável `{projeto}`.
 ### 2. Ler contexto
 
 Leia nesta ordem (se existirem):
-- `meus-produtos/{ativo}/perfil.md`
-- `meus-produtos/{ativo}/idconsumidor.md`
+- `meus-produtos/{ativo}/resumo-produto.md` (resumo do produto; se não existir, gerar conforme "Contexto Persistente do Negócio" no CLAUDE.md)
 - `meus-produtos/{ativo}/tipo.md`
 - `meus-produtos/{ativo}/projeto/{projeto}/roteiro.md`
 
