@@ -609,7 +609,7 @@ Após capturar o link (ou registrar como pendente), o agente faz silenciosamente
 
 1. Salva os metadados do quiz em `meus-produtos/{ativo}/entregas/quiz/quiz-meta.json` (estrutura: `prompt_path`, `lovable_url`, `generated_at`, `url_updated_at`, `produto_nome`, `produto_slug`)
 2. Faz upsert da seção `## Quiz` no `perfil.md` (campos `_prompt`, `_lovable_url`, `_meta`, `_atualizado`)
-3. Roda `py -3 scripts/painel-incremental.py --secao copy-pagina` para atualizar a aba do quiz no painel
+3. Roda `{python} scripts/painel-incremental.py --secao copy-pagina` para atualizar a aba do quiz no painel
 
 O painel já renderiza o card do Quiz lendo o JSON automaticamente. Tudo isso é invisível para o aluno, ele só vê a mensagem do passo 6.6.
 

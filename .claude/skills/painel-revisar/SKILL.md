@@ -80,7 +80,7 @@ Colete as seções afetadas de todos os agentes (sem duplicatas).
 Para cada seção afetada, execute em sequência:
 
 ```bash
-py -3 scripts/painel-incremental.py --secao {secao} --slug {slug}
+{python} scripts/painel-incremental.py --secao {secao} --slug {slug}
 ```
 
 Seções válidas e seus arquivos-fonte:

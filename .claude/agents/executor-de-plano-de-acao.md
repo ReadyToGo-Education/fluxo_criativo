@@ -2,7 +2,7 @@
 name: executor-de-plano-de-acao
 description: Agente autônomo que recebe a transcrição da última análise e a lista de tarefas do plano de ação, e executa cada tarefa acionando as skills e agentes necessários. Ideal para transformar diagnóstico em entrega sem o usuário precisar rodar comando por comando.
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill, Agent, TodoWrite
-model: claude-sonnet-4-6
+model: claude-opus-5-5
 ---
 
 ## Passo 0. Memória do agente

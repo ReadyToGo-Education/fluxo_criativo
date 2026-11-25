@@ -94,8 +94,8 @@ Antes de qualquer pergunta, abra o painel no navegador do aluno. Esta é a prime
 **Antes de abrir, garanta que o painel existe e o manifest está atualizado:**
 
 1. Verifique se `meus-produtos/{ativo}/painel-entregas.html` existe com o Read tool.
-   - Se não existir: rode `py -3 scripts/painel-incremental.py --secao quadro` para criá-lo.
-2. Rode `py -3 scripts/painel-atualizar.py` para garantir que o manifest está sincronizado.
+   - Se não existir: rode `{python} scripts/painel-incremental.py --secao quadro` para criá-lo.
+2. Rode `{python} scripts/painel-atualizar.py` para garantir que o manifest está sincronizado.
 
 **Detecção de SO via Bash** (rode `uname -s 2>/dev/null || echo Windows`):
 - Se a saída contém `Darwin`: rode `open "meus-produtos/{ativo}/painel-entregas.html#sala-dos-agentes"`
@@ -576,7 +576,7 @@ Dispare dois sub-agentes na mesma mensagem, **sem avisar o aluno** (sem `run_in_
 
 **Após os dois revisores retornarem:**
 1. Para cada revisor, parse a linha `SECOES_AFETADAS:` do relatório retornado.
-2. Para cada seção listada (ex: `quadro,furadeira,decorados`), rode: `py -3 scripts/painel-incremental.py --secao {secao} --slug {slug}`
+2. Para cada seção listada (ex: `quadro,furadeira,decorados`), rode: `{python} scripts/painel-incremental.py --secao {secao} --slug {slug}`
 3. Não avise o aluno. Siga para a Seção 3 (Confirmação).
 
 ### 3. Confirmação + Consolidação do Perfil
@@ -771,7 +771,7 @@ Após o aluno aprovar:
 
    Em seguida, marque a seção no painel como "Gerando...":
    ```
-   py -3 scripts/painel-incremental.py --secao identidade-consumidor --gerando --slug {slug}
+   {python} scripts/painel-incremental.py --secao identidade-consumidor --gerando --slug {slug}
    ```
 
 3. Dispare um sub-agente síncrono com `subagent_type: "gerador-idconsumidor"` (sem `run_in_background`). Aguarde o agente concluir. O prompt deve conter:
@@ -790,14 +790,14 @@ Após o aluno aprovar:
 
 2. Rode o script de verificação:
    ```
-   py -3 scripts/verificar-idconsumidor.py
+   {python} scripts/verificar-idconsumidor.py
    ```
    - Se a saída contiver `[!!]`: informe o aluno dos problemas encontrados. Ex: `⚠ Identidade do consumidor gerada com 2 problema(s): [lista resumida]. O revisor aplicou o que pôde. Recomendo refazer a seção afetada com /produto-concepcao opção 6.`
    - Se a saída for `OK`: siga direto para o próximo passo sem mencionar o script ao aluno.
 
 3. Dispare um sub-agente síncrono com `subagent_type: "revisor-idconsumidor"` (sem `run_in_background`). Prompt: `Revise o arquivo meus-produtos/{slug}/idconsumidor.md. Caminho completo: meus-produtos/{slug}/idconsumidor.md` (substitua `{slug}` pelo slug real). Aguarde o retorno do revisor antes de continuar.
 
-4. Após o revisor retornar: rode `py -3 scripts/painel-incremental.py --secao identidade-consumidor --slug {slug}`.
+4. Após o revisor retornar: rode `{python} scripts/painel-incremental.py --secao identidade-consumidor --slug {slug}`.
 
 5. Avise o aluno: `✅ Tudo revisado. Recarregue o painel para ver a identidade do consumidor completa.`
 
@@ -811,13 +811,13 @@ Neste ponto o sub-agente da identidade do consumidor ainda está rodando em back
 Rode no terminal, uma chamada por seção. O script `painel-incremental.py` cria o shell do painel na primeira execução (com design escuro Fluxo Criativo) e atualiza apenas a seção pedida em cada chamada subsequente, preservando o que já está preenchido:
 
 ```
-py -3 scripts/painel-incremental.py --secao pesquisa --slug {slug}
-py -3 scripts/painel-incremental.py --secao quadro --slug {slug}
-py -3 scripts/painel-incremental.py --secao furadeira --slug {slug}
-py -3 scripts/painel-incremental.py --secao decorados --slug {slug}
-py -3 scripts/painel-incremental.py --secao urgencias --slug {slug}
-py -3 scripts/painel-incremental.py --secao identidade-produto --slug {slug}
-py -3 scripts/painel-incremental.py --secao identidade-comunicador --slug {slug}
+{python} scripts/painel-incremental.py --secao pesquisa --slug {slug}
+{python} scripts/painel-incremental.py --secao quadro --slug {slug}
+{python} scripts/painel-incremental.py --secao furadeira --slug {slug}
+{python} scripts/painel-incremental.py --secao decorados --slug {slug}
+{python} scripts/painel-incremental.py --secao urgencias --slug {slug}
+{python} scripts/painel-incremental.py --secao identidade-produto --slug {slug}
+{python} scripts/painel-incremental.py --secao identidade-comunicador --slug {slug}
 ```
 
 A seção `identidade-consumidor` é atualizada depois, quando o sub-agente em background termina (veja final da Seção 4). O aluno já tem o painel navegável com todas as outras seções (Quadro, Furadeira, Decorados, Urgências, etc.) imediatamente após esta etapa.

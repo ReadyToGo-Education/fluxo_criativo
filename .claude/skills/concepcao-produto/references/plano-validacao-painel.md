@@ -354,7 +354,7 @@ RESULTADO: 4 avisos. Painel gerado com secoes incompletas.
 Secoes afetadas: Urgencias Ocultas, Comunicador, Consumidor, Pesquisa.
 
 Corrigir e rodar novamente:
-  py -3 scripts/build-painel-entregas.py
+  {python} scripts/painel-incremental.py --secao {secao} --slug {slug}
 ```
 
 ---
@@ -374,4 +374,4 @@ Corrigir e rodar novamente:
 
 ## Regra pro agente (adicionar nos commands)
 
-Apos rodar `py -3 scripts/build-painel-entregas.py`, leia o output do script. Se houver avisos `[!!]`, corrija os campos no .md correspondente e rode o script novamente. Repita ate nao ter mais avisos. So entao informe o aluno que o painel esta pronto.
+Apos rodar `{python} scripts/painel-incremental.py --secao {secao} --slug {slug}`, leia o output do script. Se houver avisos `[!!]`, corrija os campos no .md correspondente e rode o script novamente. Repita ate nao ter mais avisos. So entao informe o aluno que o painel esta pronto.

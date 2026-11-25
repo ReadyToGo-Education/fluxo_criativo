@@ -2,7 +2,7 @@
 name: revisor-pesquisa
 description: Agente revisor de pesquisa-mercado.md. Aplica checklist de completude estrutural (KPIs, concorrentes, assuntos, YouTube, biblioteca, oportunidades, cuidados) e revisão de português (acentuação, travessão, exclamação). Corrige o que pode automaticamente e sinaliza o que precisa de intervenção humana. Retorna relatório estruturado com seções afetadas e lista de fixes e flags.
 tools: Read, Edit
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 # Agente Revisor de Pesquisa de Mercado

@@ -625,7 +625,7 @@ Referência: [caminho da referência OU "sem referência"]
 Após aprovação, executar:
 
 ```bash
-py -3 scripts/gerar-carrossel-foto.py --config [caminho-do-config] --only 01
+{python} scripts/gerar-carrossel-foto.py --config [caminho-do-config] --only 01
 ```
 
 ---
@@ -639,7 +639,7 @@ Para cada card:
 3. Após aprovação, atualizar o JSON config e executar apenas o card:
 
 ```bash
-py -3 scripts/gerar-carrossel-foto.py --config [caminho] --only [id]
+{python} scripts/gerar-carrossel-foto.py --config [caminho] --only [id]
 ```
 
 4. Entregar e perguntar: 1. Aprovado / 2. Gerar nova versão / 3. Ajustes

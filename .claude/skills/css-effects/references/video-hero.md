@@ -288,7 +288,7 @@ Já incluído no `video-hero-scroll-scrub` acima (`.hero-overlay` faz o gradient
 
 ```bash
 # Windows
-py -3 scripts/otimizar-video-scrub.py meus-produtos/{slug}/entregas/paginas/assets/video.mp4
+{python} scripts/otimizar-video-scrub.py meus-produtos/{slug}/entregas/paginas/assets/video.mp4
 
 # macOS / Linux
 python3 scripts/otimizar-video-scrub.py meus-produtos/{slug}/entregas/paginas/assets/video.mp4

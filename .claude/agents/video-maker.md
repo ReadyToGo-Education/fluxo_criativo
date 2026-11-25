@@ -2,7 +2,7 @@
 name: video-maker
 description: Agente orquestrador de produção de vídeo. Lê o contexto do produto ativo, diagnostica o objetivo do vídeo (anúncio, VSL, conteúdo, lançamento) e direciona para as skills /video-heygen, /video-remotion, /video-editar e /video-efeitos na ordem certa. Não escreve roteiros, aciona as skills de produção e edição.
 tools: Read, Write, Edit, Glob
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente

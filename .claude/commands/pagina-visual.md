@@ -201,7 +201,7 @@ Arquivos em: meus-produtos/{slug}/entregas/paginas/copias/
 Rode o script Python de montagem:
 
 ```bash
-py -3 scripts/montar-pagina-copias.py --slug {slug} --verbose
+{python} scripts/montar-pagina-copias.py --slug {slug} --verbose
 ```
 
 O script:

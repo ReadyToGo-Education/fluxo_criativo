@@ -2,7 +2,7 @@
 
 Referência para **agentes e skills** ao melhorar páginas já existentes em `entregas/{slug}/paginas/*.html`, com ou sem merge prévio. Vale para **qualquer infoproduto ou projeto** que use o mesmo padrão de entrega (HTML único, Tailwind via CDN, marca verde `#0f7937` quando aplicável).
 
-**Criação da página (ordem correta):** antes de qualquer evolução visual aqui, o fluxo padrão é **copiar** o tema para `entregas/{slug}/paginas/templates-{estilo}/` com `scripts/workshop-copy-template-tema.py`, **colocar a copy** nos `code.html` dessa cópia e rodar `scripts/workshop-merge-pagina.py` com `--templates-root`. Este playbook entra **depois**, na página já mergeada (`vendas-{slug}.html`).
+**Criação da página (ordem correta):** antes de qualquer evolução visual aqui, o fluxo padrão é aprovar a copy nos 16 blocos, gerar as seções isoladas com o `/pagina-visual` e rodar `scripts/montar-pagina-copias.py --slug {slug}`. Este playbook entra **depois**, na página já montada (`vendas-{slug}.html`).
 
 Este documento consolida **processos** testados na prática: troca de estética “cartoon”, geração ou substituição de imagens, tipografia, contraste de texto, interação por abas e revisão de overlays.
 
@@ -61,7 +61,7 @@ Entregar uma sequência **repetível** para o assistente:
 1. Definir nomes finais dos arquivos (ex.: `hero-depois-compra-membros.png`) e pasta `entregas/{slug}/paginas/assets/`.
 2. Acrescentar entradas em `JOBS` ou usar modo `--output` + `--prompt` para teste único.
 3. Rodar na raiz do repositório, exemplo:  
-   `py -3 scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
+   `{python} scripts/generate-openrouter-nano-banana-images.py --slug nome-do-produto`  
 4. Limitar lote com `--skip N` e `--max M` quando só faltam imagens novas no fim da lista.
 5. **Placeholder:** até a API rodar, pode-se copiar um PNG existente para o nome novo para não quebrar `src` no HTML.
 

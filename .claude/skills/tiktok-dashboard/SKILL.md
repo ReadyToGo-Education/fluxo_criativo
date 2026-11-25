@@ -268,7 +268,7 @@ tail -10 meus-produtos/{ativo}/entregas/tiktok-dashboard/log.txt
 Apos confirmar sucesso no log, atualize o painel de entregas:
 
 ```bash
-py -3 scripts/painel-incremental.py --secao dashboards
+{python} scripts/painel-incremental.py --secao dashboards
 ```
 
 (macOS/Linux: `python3 scripts/painel-incremental.py --secao dashboards`)
@@ -290,7 +290,7 @@ meus-produtos/{ativo}/painel-entregas.html  (aba Dashboards)
 
 Para atualizar os dados quando quiser:
 python .claude/skills/tiktok-dashboard/scripts/atualizar.py
-(depois rode: py -3 scripts/painel-incremental.py --secao dashboards)
+(depois rode: {python} scripts/painel-incremental.py --secao dashboards)
 
 Perfil monitorado: @{username}
 ```

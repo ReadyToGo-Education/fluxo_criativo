@@ -2,7 +2,7 @@
 name: consultor-comercial
 description: Agente orquestrador de playbooks comerciais. Lê o contexto do produto ativo, diagnostica em qual etapa da venda 1:1 o usuário está (call high ticket com /ht-* ou WhatsApp middle/low ticket com /comercial-playbook) e direciona para a skill certa. Não repete scripts, aciona as skills.
 tools: Read, Write, Edit, Glob
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente

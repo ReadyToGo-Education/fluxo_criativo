@@ -166,7 +166,7 @@ Pergunta única, com duas opções:
 Se o aluno escolher **1. Compra**: definir `optimization_goal = OFFSITE_CONVERSIONS` com evento `Purchase` e seguir para 5.3.
 
 Se o aluno escolher **2. Personalizado**: chamar a Marketing API para listar conversões personalizadas da conta:
-- Tool MCP: `mcp__claude_ai_Meta_Ads__ads_get_ad_entities` filtrando por `level: customconversion` e `ad_account_id` da `META_AD_ACCOUNT_ID`. Caminho alternativo via App: `GET https://graph.facebook.com/v22.0/act_{ad_account_id}/customconversions?fields=id,name,custom_event_type,description&limit=10` usando token salvo em `META_ACCESS_TOKEN` (ou `FB_ACCESS_TOKEN_PERMANENTE` no modo APP).
+- Tool MCP: `ads_get_ad_entities` (o prefixo `mcp__*__` varia por conexão) filtrando por `level: customconversion` e `ad_account_id` da `META_AD_ACCOUNT_ID`. Caminho alternativo via App: `GET https://graph.facebook.com/v22.0/act_{ad_account_id}/customconversions?fields=id,name,custom_event_type,description&limit=10` usando token salvo em `META_ACCESS_TOKEN` (ou `FB_ACCESS_TOKEN_PERMANENTE` no modo APP).
 - Mostrar até **10 primeiras** conversões personalizadas, numeradas, com nome e tipo. Se a conta tiver mais que 10, avisar: "Mostrando 10 primeiras de N conversões. Se a desejada não aparecer, digite o nome ou ID."
 - Se a conta não tiver nenhuma conversão personalizada, avisar: "Não encontrei conversões personalizadas nesta conta. Crie uma no Gerenciador de Eventos > Conversões personalizadas, ou volte para a opção 1 (Compra)."
 - Aluno escolhe pelo número, nome ou ID. Salvar `custom_conversion_id` para usar no `promoted_object` do conjunto de anúncios.

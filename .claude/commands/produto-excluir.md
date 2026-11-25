@@ -117,7 +117,7 @@ Após confirmação:
 Rode no terminal para regenerar `meus-produtos/index.js` (remove o produto excluído da lista do painel global):
 
 ```
-py -3 scripts/painel-atualizar.py
+{python} scripts/painel-atualizar.py
 ```
 
 ### 7. Confirmar e sugerir próximo passo

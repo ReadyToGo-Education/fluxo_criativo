@@ -127,9 +127,9 @@ Blocos ainda sem medição: B2g, B2Bg, B3g (estimativa conservadora: +90s cada =
 | Pesquisa de mercado completa (9 eixos) | 8 a 12 min | — | pendente |
 | Gerar 50 ideias de produto | 60s | — | pendente |
 | `painel-atualizar.py` + `painel-incremental.py` (bloco) | 15s + 30s | ~38s | medido |
-| Gerar prompt visual Furadeira (`/furadeira-visual`) | não registrado | ~98s | medido |
+| Gerar prompt visual Furadeira (`/furadeira-visual`) | não registrado | ~98s | medido, aplicado em tempo-estimado.md (2026-11-25) |
 | Decorados + Urgências + Argumentos (bloco paralelo) | 90s+90s+45s | ~97s (paralelo) | medido |
 | Revisores perfil + pesquisa (paralelo) + demográfico | não registrado | ~117s | medido |
-| gerador-idconsumidor + revisores + painel (bloco final) | 3 a 5 min | ~9 min | medido — corrigir |
+| gerador-idconsumidor + revisores + painel (bloco final) | 3 a 5 min | ~9 min | medido, aplicado em tempo-estimado.md (2026-11-25) |
 | `/produto-concepcao` completo (sistema) | não registrado | ~22 min | estimado |
 | `/produto-concepcao` completo (realista) | não registrado | 45 a 75 min | estimado |

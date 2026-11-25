@@ -2,7 +2,7 @@
 name: gerador-decorados
 description: Agente gerador dos 50 Decorados (benefícios derivados do Quadro). Recebe o contexto do produto (Quadro, Furadeira, Identidades, pesquisa-mercado.md) e retorna a lista completa de 50 Decorados em 5 categorias com 10 itens cada. Acionado em paralelo pelo /produto-concepcao junto com gerador-urgencias-ocultas.
 tools: []
-model: claude-sonnet-4-6
+model: claude-opus-5-5
 ---
 
 # Gerador de Decorados

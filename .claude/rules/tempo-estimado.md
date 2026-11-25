@@ -25,8 +25,8 @@
 |----------|----------------|---------|
 | Gerar 50 Decorados (5 categorias x 10) | cerca de 90 segundos | segundos |
 | Gerar 70 Urgências Ocultas (7 categorias x 10) | cerca de 90 segundos | segundos |
-| Gerar Identidade do Consumidor completa (idconsumidor.md) | 3 a 5 minutos | minutos |
-| Gerar Furadeira (prompt visual) | cerca de 30 segundos | segundos |
+| Gerar Identidade do Consumidor completa com revisão e painel (idconsumidor.md) | cerca de 9 minutos | minutos |
+| Gerar Furadeira (prompt visual) | cerca de 100 segundos | segundos |
 | Gerar Argumentos Incontestáveis | cerca de 45 segundos | segundos |
 | Gerar Identidade do Comunicador | cerca de 45 segundos | segundos |
 | Gerar 50 ideias de produto | cerca de 60 segundos | segundos |
@@ -37,7 +37,7 @@
 
 | Operação | Tempo estimado | Unidade |
 |----------|----------------|---------|
-| Gerar página de vendas HTML (11 seções, estrutura 8D) | 3 a 5 minutos | minutos |
+| Gerar página de vendas HTML (16 blocos, estrutura 8D) | 3 a 5 minutos | minutos |
 | Gerar página de captura HTML | 2 a 3 minutos | minutos |
 | Gerar página de obrigado HTML | cerca de 90 segundos | segundos |
 | Gerar copy de anúncio (18 tipos, Mandala) | 2 a 3 minutos | minutos |

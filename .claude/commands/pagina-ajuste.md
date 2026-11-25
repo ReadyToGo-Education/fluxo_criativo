@@ -33,7 +33,7 @@ O HTML final em `meus-produtos/{slug}/entregas/paginas/vendas-{slug}.html` é **
 4. **Rodar o merge Python** pra regerar o HTML final:
 
    ```bash
-   py -3 scripts/montar-pagina-copias.py --slug {slug}
+   {python} scripts/montar-pagina-copias.py --slug {slug}
    ```
 
    O script lê `paginas/copias/manifest.json`, recompõe o HTML final escopando CSS de cada cópia e salva em `paginas/vendas-{slug}.html`.
@@ -165,7 +165,7 @@ Se escolher **4 (gerar com IA)**, não pular referências. Fazer nesta ordem:
 3. **Passar referências de estilo** (o assistente resume em linguagem humana, sem obrigar o aluno a abrir tudo):
    - **Playbook de evolução visual e prompts:** `.claude/skills/paginas/references/playbook-evolucao-visual-html-landing.md` (direção Fluent ou corporativa, negativos tipo “sem personagem cartoon”, uso de cor da marca `#0f7937` só como detalhe quando fizer sentido).
    - **Script de geração em lote:** `scripts/generate-openrouter-nano-banana-images.py` (lê `JOBS` com `file`, `aspect_ratio`, `prompt` em inglês; grava em `meus-produtos/{slug}/entregas/paginas/assets/`).
-   - **Ferramenta:** comando típico na raiz: `py -3 scripts/generate-openrouter-nano-banana-images.py --slug {ativo}`; para só algumas imagens novas no fim da lista, usar `--skip N` e `--max M` conforme o cabeçalho do script.
+   - **Ferramenta:** comando típico na raiz: `{python} scripts/generate-openrouter-nano-banana-images.py --slug {ativo}`; para só algumas imagens novas no fim da lista, usar `--skip N` e `--max M` conforme o cabeçalho do script.
 4. **Coletar intenção por imagem:** nicho, tom (ex.: produto digital sério, MEI, planilha), o que não pode aparecer (texto legível na arte, logos de terceiros, estilo infantil). Isso vira trecho do prompt ou entrada em `JOBS`.
 5. **Depois que os PNG existirem na pasta `assets/`:** atualizar o HTML (`src`, `alt`, OG se for o caso) como na opção 1. Se o merge for rodado de novo, relembrar reaplicar `src` se o template sobrescrever.
 
@@ -203,7 +203,7 @@ Só usar se o usuário escolher **12**. Aí sim seguir a checklist de `etapa-aju
 
 ### 7. Entrega e lembrete
 
-- Lembrar que novo `workshop-merge-pagina.py` pode sobrescrever title e meta; reaplicar ajustes após novo merge.
+- Lembrar que rodar de novo o `montar-pagina-copias.py` pode sobrescrever title e meta; reaplicar ajustes após uma nova montagem.
 - Sugerir próximos passos: `/feedback-pagina`, `/pagina-performance`, `/pagina-pixel`, `/pagina-checkout`.
 
 ## Regras

@@ -2,7 +2,7 @@
 name: estrategista-de-produto
 description: Agente orquestrador de concepção de produto VTSD. Lê o contexto do produto ativo, diagnostica em qual etapa da concepção o usuário está (produto novo, perfil incompleto, falta identidade do consumidor) e direciona para as skills /produto-novo e /produto-concepcao (que cobre o fluxo unificado, incluindo Identidade do Consumidor e Painel de Entregas). Não repete metodologia, aciona as skills.
 tools: Read, Write, Edit, Glob
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente

@@ -2,7 +2,7 @@
 name: clonador-de-bloco-visual
 description: Agente especialista em reproduzir fielmente UMA seção de página de vendas a partir de UM print de referência + UM bloco de copy aprovada. Retorna o HTML da seção com design 100% preservado do print e a copy já adaptada aos slots (sem variáveis CSS globais, sem mesclar cores com outras seções). Chamado pelo /pagina-visual em paralelo (uma chamada por seção).
 tools: Read, Write, Skill
-model: claude-sonnet-4-6
+model: claude-opus-5-5
 ---
 
 # Clonador de Seção Visual

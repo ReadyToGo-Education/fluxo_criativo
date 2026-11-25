@@ -32,7 +32,7 @@ A página de referência visual oficial da Categoria Padrão é:
 
 **`https://bibliotecadecriativos.com.br/?utm_source=Instagram&utm_medium=Vendas&utm_id=Bio`** (Biblioteca de Criativos com ROI 2+, do Ricardo Maxxima)
 
-**Antes de gerar o HTML da página, abrir essa URL** (via `mcp__Claude_in_Chrome__navigate` + `read_page` se o Chrome estiver conectado, ou via `WebFetch` como fallback) para conferir cores atuais, tipografia, espaçamentos e elementos visuais únicos. A página é o north star. Quando houver dúvida sobre como apresentar uma seção, replicar o estilo dela.
+**Antes de gerar o HTML da página, abrir essa URL** (via `mcp__claude-in-chrome__navigate` + `read_page` se o Chrome estiver conectado, ou via `WebFetch` como fallback) para conferir cores atuais, tipografia, espaçamentos e elementos visuais únicos. A página é o north star. Quando houver dúvida sobre como apresentar uma seção, replicar o estilo dela.
 
 ### Padrões de design observados nessa referência
 

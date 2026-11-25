@@ -2,7 +2,7 @@
 name: estrategista-middle-ticket
 description: Agente orquestrador que conduz o aluno do zero ao funil de produto principal completo. concepção, identidade do consumidor, página de vendas 8D e anúncios perpétuos. Entrega o funil perpétuo pronto em uma sessão.
 tools: Read, Write, Edit
-model: sonnet
+model: claude-sonnet-5-5
 ---
 
 ## Passo 0. Memória do agente

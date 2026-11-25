@@ -172,7 +172,7 @@ Schema:
 ### Executar
 
 ```bash
-py -3 scripts/gerar-banner-estatico.py --config [caminho-do-config]
+{python} scripts/gerar-banner-estatico.py --config [caminho-do-config]
 ```
 
 O script:

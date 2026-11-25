@@ -2,7 +2,7 @@
 name: revisor-idconsumidor
 description: Agente revisor de idconsumidor.md. Verifica completude das seções exatas que o parser parse_identidade_consumidor() e parse_objecoes_do_idconsumidor() esperam (Para Quem É, Identidade do Consumidor com campos chave-valor, Objeções com Framework dos 7 Argumentos, Paliativos, Baldes, Como se Comunicar). Faz revisão de português. Retorna relatório com seções afetadas, fixes e flags.
 tools: Read, Edit
-model: claude-sonnet-4-6
+model: claude-sonnet-5-5
 ---
 
 # Agente Revisor de Identidade do Consumidor

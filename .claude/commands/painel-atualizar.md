@@ -23,7 +23,7 @@ Os comandos `/produto-novo`, `/produto-excluir` e `/produto-trocar` **já chamam
 1. Rodar no terminal o script na raiz do projeto:
 
    ```
-   py -3 scripts/painel-atualizar.py
+   {python} scripts/painel-atualizar.py
    ```
 
 2. O script:

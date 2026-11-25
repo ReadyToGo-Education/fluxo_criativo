@@ -44,16 +44,16 @@ Antes de oferecer os caminhos, **detecte duas coisas** sobre a sessão e o ambie
 
 ### 3.3.A. MCP do Claude in Chrome disponível
 
-Verifique se as tools `mcp__Claude_in_Chrome__*` estão presentes na sessão. Tools esperadas:
+Verifique se as tools `mcp__claude-in-chrome__*` estão presentes na sessão. Tools esperadas:
 
-- `mcp__Claude_in_Chrome__navigate`
-- `mcp__Claude_in_Chrome__send_message` (ou equivalente para enviar texto na conversa do ChatGPT)
-- `mcp__Claude_in_Chrome__get_page_text`
-- `mcp__Claude_in_Chrome__wait_for_element` (se existir)
+- `mcp__claude-in-chrome__navigate`
+- `mcp__claude-in-chrome__computer` (digitar o texto e clicar para enviar na conversa do ChatGPT)
+- `mcp__claude-in-chrome__get_page_text`
+- `mcp__claude-in-chrome__computer` com a ação `wait` (esperar a página carregar)
 
 Se disponíveis: `tem_chrome_mcp = true`. Senão: `tem_chrome_mcp = false`.
 
-**REGRA IMPORTANTE — Claude in Chrome é Desktop-only.** A extensão Claude in Chrome só roda no aplicativo Desktop do Claude (claude.ai pelo navegador, ou Claude Desktop). **Se o aluno está rodando o `/carrossel` pelo Claude Code no terminal (CLI), o MCP do Claude in Chrome NÃO está disponível, mesmo que ele tenha a extensão instalada no navegador.** A skill detecta isso pela ausência das tools `mcp__Claude_in_Chrome__*`, e nesse caso a opção "Automatizado via Chrome" simplesmente não aparece no menu (a skill explica o motivo).
+**REGRA IMPORTANTE — Claude in Chrome é Desktop-only.** A extensão Claude in Chrome só roda no aplicativo Desktop do Claude (claude.ai pelo navegador, ou Claude Desktop). **Se o aluno está rodando o `/carrossel` pelo Claude Code no terminal (CLI), o MCP do Claude in Chrome NÃO está disponível, mesmo que ele tenha a extensão instalada no navegador.** A skill detecta isso pela ausência das tools `mcp__claude-in-chrome__*`, e nesse caso a opção "Automatizado via Chrome" simplesmente não aparece no menu (a skill explica o motivo).
 
 ### 3.3.B. API de imagem configurada
 
@@ -185,7 +185,7 @@ AGUARDE A RESPOSTA.
    ⏳ Vou abrir o Claude in Chrome agora. Aprove os pop-ups conforme aparecerem (cerca de 6 a 8 cliques).
    ```
 2. Execute via MCP:
-   - `mcp__Claude_in_Chrome__navigate` para `https://chatgpt.com/?model=gpt-image` (ou modelo de imagem ativo)
+   - `mcp__claude-in-chrome__navigate` para `https://chatgpt.com/?model=gpt-image` (ou modelo de imagem ativo)
    - Aguarde a página carregar
    - Para cada prompt (1 a 6), na ordem:
      - Use a tool de envio de mensagem do Claude in Chrome para colar e enviar o prompt

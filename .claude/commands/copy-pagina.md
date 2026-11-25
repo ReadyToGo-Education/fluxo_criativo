@@ -202,7 +202,7 @@ Gere, salve e valide **um bloco por vez**. Loop para NN de 01 a 16:
 2. Gere o texto do bloco com parágrafos desenvolvidos (persona, cenas, elementos literários onde couber), sob o título exato `## Bloco NN — {Nome}`.
 3. Aplique a revisão A4 só neste bloco (travessão, vícios, nome do produto no hero, emojis, etc.) **antes** de mostrar.
 4. **Salve imediatamente:** se o arquivo `copy-[produto].md` ainda não existir, crie-o com esse bloco. Se já existir, **acrescente** o novo bloco no final preservando os blocos anteriores. Nunca apague blocos aprovados.
-5. **Atualize o painel de entregas** rodando no terminal: `py -3 scripts/painel-incremental.py --secao copy-pagina` (no Mac/Linux use `python3`). Esse script atualiza apenas a aba **Copy da Página** do `meus-produtos/{ativo}/painel-entregas.html`, preservando todas as outras seções já preenchidas (Quadro, Furadeira, Decorados, Urgências, Identidades, Pesquisa). O design escuro Fluxo Criativo é mantido. Em caso de erro, não pare o fluxo, apenas avise que o painel pode ser atualizado depois.
+5. **Atualize o painel de entregas** rodando no terminal: `{python} scripts/painel-incremental.py --secao copy-pagina` (no Mac/Linux use `python3`). Esse script atualiza apenas a aba **Copy da Página** do `meus-produtos/{ativo}/painel-entregas.html`, preservando todas as outras seções já preenchidas (Quadro, Furadeira, Decorados, Urgências, Identidades, Pesquisa). O design escuro Fluxo Criativo é mantido. Em caso de erro, não pare o fluxo, apenas avise que o painel pode ser atualizado depois.
 6. Confirme: `✅ Concluído: Bloco NN salvo e painel atualizado. Caminho: meus-produtos/{ativo}/entregas/copy-pagina/copy-[produto].md.`
 7. Mostre o conteúdo do bloco no chat e pergunte:
 
@@ -217,7 +217,7 @@ Digite o número:
 ```
 
 - Se **1:** avance para o próximo bloco.
-- Se **2:** peça o ajuste, regenere **apenas este bloco**, sobrescreva a seção `## Bloco NN — …` no arquivo (mantendo os demais blocos intactos), rode de novo `py -3 scripts/painel-incremental.py --secao copy-pagina` para atualizar o painel, e volte ao passo 7.
+- Se **2:** peça o ajuste, regenere **apenas este bloco**, sobrescreva a seção `## Bloco NN — …` no arquivo (mantendo os demais blocos intactos), rode de novo `{python} scripts/painel-incremental.py --secao copy-pagina` para atualizar o painel, e volte ao passo 7.
 - Se **3:** pare o loop, informe em que bloco parou e encerre. A próxima execução do command vê o arquivo com os blocos até NN-1 e pode continuar de NN. O painel de entregas já reflete o progresso parcial.
 
 Exceção: se o usuário pediu explicitamente "ir direto à versão final" nesta sessão, pule a pergunta em cada bloco, gere os 16 em sequência salvando um a um, e só apresente no fim.
@@ -234,11 +234,11 @@ Gere em **duas partes** no mesmo arquivo.
 
 Anuncie: `🔍 Próximo passo: gerar Parte 1 (Blocos 01 a 09). Tempo estimado: cerca de 90 segundos.`
 
-Gere e salve no arquivo. **Atualize o painel** rodando `py -3 scripts/painel-incremental.py --secao copy-pagina` (Mac/Linux: `python3`). Ao terminar, informe: `Parte 1 pronta (Blocos 01 a 09) e painel atualizado. Gerando a Parte 2 agora...`
+Gere e salve no arquivo. **Atualize o painel** rodando `{python} scripts/painel-incremental.py --secao copy-pagina` (Mac/Linux: `python3`). Ao terminar, informe: `Parte 1 pronta (Blocos 01 a 09) e painel atualizado. Gerando a Parte 2 agora...`
 
 **PARTE 2. Blocos 10 a 16**
 
-Continue no **mesmo arquivo**, mesmo nível de detalhe. **Atualize o painel novamente** com `py -3 scripts/painel-incremental.py --secao copy-pagina` após salvar. Ao terminar, siga para A4.
+Continue no **mesmo arquivo**, mesmo nível de detalhe. **Atualize o painel novamente** com `{python} scripts/painel-incremental.py --secao copy-pagina` após salvar. Ao terminar, siga para A4.
 
 ### A4. Revisão e Correção Automática (OBRIGATÓRIO antes de entregar)
 

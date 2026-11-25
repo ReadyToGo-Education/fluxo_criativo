@@ -228,13 +228,13 @@ Anuncie:
 Rode:
 
 ```
-py -3 scripts/painel-incremental.py --slug {ativo}
+{python} scripts/painel-incremental.py --slug {ativo}
 ```
 
 Se o script falhar, avise:
 ```
 Não foi possível atualizar o painel automaticamente. Rode manualmente quando puder:
-py -3 scripts/painel-incremental.py --slug {ativo}
+{python} scripts/painel-incremental.py --slug {ativo}
 ```
 
 ### 11. Mensagem final
